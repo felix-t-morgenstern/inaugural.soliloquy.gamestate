@@ -91,4 +91,14 @@ public class StatusEffectTypeStub implements IStatusEffectType {
     public String getInterfaceName() {
         return null;
     }
+
+    @Override
+    public boolean stopsAtZero() {
+        return false;
+    }
+
+    @Override
+    public String nameAtValue(int i) throws UnsupportedOperationException {
+        return null;
+    }
 }

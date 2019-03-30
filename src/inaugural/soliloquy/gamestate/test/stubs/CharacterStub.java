@@ -5,6 +5,7 @@ import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
 import soliloquy.gamestate.specs.*;
+import soliloquy.ruleset.gameentities.specs.ICharacterAIEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
@@ -90,6 +91,11 @@ public class CharacterStub implements ICharacter {
 
     @Override
     public IGenericParamsSet characterAIParams() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public IMap<String, ICollection<ICharacterAIEvent>> characterAIEvents() {
         return null;
     }
 

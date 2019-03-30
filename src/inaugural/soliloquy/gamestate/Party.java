@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.common.specs.*;
 import soliloquy.gamestate.specs.*;
+import soliloquy.ruleset.gameentities.specs.ICharacterAIEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
@@ -120,6 +121,11 @@ public class Party implements IParty {
 
         @Override
         public IGenericParamsSet characterAIParams() throws IllegalStateException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public IMap<String, ICollection<ICharacterAIEvent>> characterAIEvents() {
             throw new UnsupportedOperationException();
         }
 
