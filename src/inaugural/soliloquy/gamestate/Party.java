@@ -109,12 +109,17 @@ public class Party implements IParty {
         }
 
         @Override
-        public ICharacterAI getAI() throws IllegalStateException, IllegalStateException {
+        public String getAITypeId() throws IllegalStateException {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setAI(ICharacterAI iCharacterAI) throws IllegalArgumentException, IllegalStateException {
+        public void setAITypeId(String s) throws IllegalArgumentException, IllegalStateException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public IGenericParamsSet characterAIParams() throws IllegalStateException {
             throw new UnsupportedOperationException();
         }
 
