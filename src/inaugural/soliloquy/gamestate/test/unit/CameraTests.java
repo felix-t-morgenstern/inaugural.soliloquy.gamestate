@@ -10,6 +10,7 @@ import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.ICamera;
 import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.logger.specs.ILogger;
+import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +26,7 @@ class CameraTests {
         _logger = new LoggerStub();
 
         _camera = new Camera(_game, _logger, new CoordinateFactoryStub(),
-                new CollectionFactoryStub(), new MapFactoryStub());
+                new CollectionFactoryStub(), new MapFactoryStub(), new GameStateStub());
     }
 
     @Test
@@ -133,8 +134,19 @@ class CameraTests {
     }
 
     @Test
-    void testCalculateVisibleTilesWithAllTilesVisible() {
-        // TODO: Implement this test
+    void testSetAndGetTileVisibility() {
+        ITileVisibility tileVisibility = new TileVisibilityStub();
+        _camera.setTileVisibility(tileVisibility);
+        assertSame(_camera.getTileVisibility(), tileVisibility);
+    }
+
+    @Test
+    void testCalculateVisibleTilesWithAllTilesVisibleAndMinimumCoordinateBoundaries() {
+        _camera.setAllTilesVisible(true);
+        _camera.setTileLocation(2,2);
+        _camera.setTileRenderingRadius(5);
+        _camera.calculateVisibileTiles();
+        assertSame(_camera.visibileTiles().size(), 49);
     }
 
     @Test

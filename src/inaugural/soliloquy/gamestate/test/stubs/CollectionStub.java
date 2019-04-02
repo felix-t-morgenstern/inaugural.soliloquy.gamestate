@@ -58,7 +58,7 @@ public class CollectionStub<V> implements ICollection<V> {
     @Override
     public void clear() throws UnsupportedOperationException {
         // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        _collection.clear();
     }
 
     @Override

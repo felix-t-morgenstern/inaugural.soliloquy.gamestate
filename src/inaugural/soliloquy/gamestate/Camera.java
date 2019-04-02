@@ -4,7 +4,9 @@ import soliloquy.common.specs.*;
 import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.ICamera;
 import soliloquy.gamestate.specs.ICharacter;
+import soliloquy.gamestate.specs.IGameState;
 import soliloquy.logger.specs.ILogger;
+import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
 
 public class Camera implements ICamera {
     private final IGame GAME;
@@ -13,6 +15,7 @@ public class Camera implements ICamera {
     private final IMap<ICharacter,Integer> CHARACTERS_PROVIDING_VISIBILITY;
     private final IMap<ICoordinate,Integer> COORDINATES_PROVIDING_VISIBILITY;
     private final ICollection<ICoordinate> VISIBLE_TILES;
+    private final IGameState GAME_STATE;
 
     private int _tileLocationX;
     private int _tileLocationY;
@@ -21,14 +24,18 @@ public class Camera implements ICamera {
     private int _tileRenderingRadius;
     private boolean _allTilesVisible;
 
+    private ITileVisibility _tileVisibility;
+
     public Camera(IGame game, ILogger logger, ICoordinateFactory coordinateFactory,
-                  ICollectionFactory collectionFactory, IMapFactory mapFactory) {
+                  ICollectionFactory collectionFactory, IMapFactory mapFactory,
+                  IGameState gameState) {
         GAME = game;
         LOGGER = logger;
         COORDINATE_FACTORY = coordinateFactory;
         CHARACTERS_PROVIDING_VISIBILITY = mapFactory.make(new CharacterArchetype(), 0);
         COORDINATES_PROVIDING_VISIBILITY = mapFactory.make(new CoordinateArchetype(), 0);
         VISIBLE_TILES = collectionFactory.make(new CoordinateArchetype());
+        GAME_STATE = gameState;
     }
 
     @Override
@@ -105,8 +112,37 @@ public class Camera implements ICamera {
     }
 
     @Override
+    public ITileVisibility getTileVisibility() {
+        return _tileVisibility;
+    }
+
+    @Override
+    public void setTileVisibility(ITileVisibility tileVisibility) {
+        _tileVisibility = tileVisibility;
+    }
+
+    @Override
     public void calculateVisibileTiles() {
-        // TODO: Implement!
+        visibileTiles().clear();
+        // TODO: Add a test to ensure that this behaves appropriately
+        if (_tileRenderingRadius == 0) {
+            return;
+        }
+        if (_allTilesVisible) {
+            int minX = Math.max(0, _tileLocationX - (_tileRenderingRadius - 1));
+            // TODO: Add a test to ensure that maximum coordinates behave properly
+            int maxX = Math.min(GAME_STATE.getCurrentGameZone().getDimensions().getX(),
+                    _tileLocationX + (_tileRenderingRadius - 1));
+            int minY = Math.max(0, _tileLocationY - (_tileRenderingRadius - 1));
+            // TODO: Add a test to ensure that maximum coordinates behave properly
+            int maxY = Math.min(GAME_STATE.getCurrentGameZone().getDimensions().getY(),
+                    _tileLocationY + (_tileRenderingRadius - 1));
+            for(int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    visibileTiles().add(COORDINATE_FACTORY.make(x,y));
+                }
+            }
+        }
     }
 
     @Override
