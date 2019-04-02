@@ -1,4 +1,4 @@
-package inaugural.soliloquy.gamestate.test.stubs;
+package inaugural.soliloquy.gamestate;
 
 import soliloquy.common.specs.ICollection;
 import soliloquy.common.specs.IEntityUuid;
@@ -10,145 +10,140 @@ import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
 
-public class CharacterStub implements ICharacter {
-    private boolean _isDeleted;
-    private boolean _isDead;
-
-    static int _visibilityRadius = 13;
-
+public class CharacterArchetype implements ICharacter {
     @Override
     public void setGameZone(IGameZone iGameZone) throws IllegalArgumentException, IllegalStateException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ICharacterType characterType() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ICollection<ICharacterClassification> classifications() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ITile getTile() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, String> pronouns() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IGenericParamsSet traits() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getStance() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setStance(String s) throws IllegalStateException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getDirection() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setDirection(String s) throws IllegalArgumentException, IllegalStateException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ISpriteSet getSpriteSet() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setSpriteSet(ISpriteSet iSpriteSet) throws IllegalArgumentException, IllegalStateException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getAITypeId() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setAITypeId(String characterAITypeId) throws IllegalArgumentException, IllegalStateException {
-
+    public void setAITypeId(String s) throws IllegalArgumentException, IllegalStateException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IGenericParamsSet characterAIParams() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, ICollection<ICharacterAIEvent>> characterAIEvents() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, ICharacterEquipmentSlot> equipment() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<Integer, IItem> inventory() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, ICharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, ICharacterValueFromModifiers> attributes() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ICharacterStatusEffects statusEffects() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, ICharacterAbility> activeAbilities() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, ICharacterAbility> reactiveAbilities() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IMap<String, ICharacterValueFromModifiers> aptitudes() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean isPC() throws IllegalStateException {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int getVisibilityRadius() {
-        return _visibilityRadius;
+        return 0;
     }
 
     @Override
@@ -158,76 +153,76 @@ public class CharacterStub implements ICharacter {
 
     @Override
     public boolean isHidden() throws IllegalStateException {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setHidden(boolean b) throws IllegalStateException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean isDead() throws IllegalStateException {
-        return _isDead;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setIsDead(boolean b) throws IllegalStateException {
-        _isDead = b;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void kill(ICharacter iCharacter) throws IllegalStateException {
-        _isDead = true;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IGameZone getGameZone() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IGenericParamsSet params() throws IllegalStateException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void delete() throws IllegalStateException {
-        _isDeleted = true;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean isDeleted() {
-        return _isDeleted;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IEntityUuid id() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getName() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setName(String s) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void read(String s, boolean b) throws IllegalArgumentException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String write() throws IllegalArgumentException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getInterfaceName() {
-        return null;
+        return "soliloquy.specs.gamestate.ICharacter";
     }
 }
