@@ -142,16 +142,6 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public int getVisibilityRadius() {
-        return 0;
-    }
-
-    @Override
-    public void setVisibilityRadius(int i) throws IllegalArgumentException {
-
-    }
-
-    @Override
     public boolean isHidden() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }

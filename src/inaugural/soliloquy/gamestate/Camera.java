@@ -8,6 +8,9 @@ import soliloquy.gamestate.specs.IGameState;
 import soliloquy.logger.specs.ILogger;
 import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Camera implements ICamera {
     private final IGame GAME;
     private final ILogger LOGGER;
@@ -122,24 +125,62 @@ public class Camera implements ICamera {
     }
 
     @Override
-    public void calculateVisibileTiles() {
+    public void calculateVisibileTiles() throws IllegalStateException {
+        if (_tileVisibility == null) {
+            throw new IllegalStateException("Camera.calculateVisibleTiles: tileVisibility is null");
+        }
         visibileTiles().clear();
-        // TODO: Add a test to ensure that this behaves appropriately
         if (_tileRenderingRadius == 0) {
             return;
         }
+
+        int minRenderingX = Math.max(0, _tileLocationX - (_tileRenderingRadius - 1));
+        int maxRenderingX = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates().getX(),
+                _tileLocationX + (_tileRenderingRadius - 1));
+        int minRenderingY = Math.max(0, _tileLocationY - (_tileRenderingRadius - 1));
+        int maxRenderingY = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates().getY(),
+                _tileLocationY + (_tileRenderingRadius - 1));
+
         if (_allTilesVisible) {
-            int minX = Math.max(0, _tileLocationX - (_tileRenderingRadius - 1));
-            // TODO: Add a test to ensure that maximum coordinates behave properly
-            int maxX = Math.min(GAME_STATE.getCurrentGameZone().getDimensions().getX(),
-                    _tileLocationX + (_tileRenderingRadius - 1));
-            int minY = Math.max(0, _tileLocationY - (_tileRenderingRadius - 1));
-            // TODO: Add a test to ensure that maximum coordinates behave properly
-            int maxY = Math.min(GAME_STATE.getCurrentGameZone().getDimensions().getY(),
-                    _tileLocationY + (_tileRenderingRadius - 1));
-            for(int x = minX; x <= maxX; x++) {
-                for (int y = minY; y <= maxY; y++) {
+            for(int x = minRenderingX; x <= maxRenderingX; x++) {
+                for (int y = minRenderingY; y <= maxRenderingY; y++) {
                     visibileTiles().add(COORDINATE_FACTORY.make(x,y));
+                }
+            }
+        } else {
+            HashMap<ICoordinate,Integer> coordinatesProvidingVisibility = new HashMap<>();
+            for(IPair<ICharacter,Integer> characterProvidingVisibility
+                    : CHARACTERS_PROVIDING_VISIBILITY) {
+                coordinatesProvidingVisibility.put(characterProvidingVisibility.getItem1().getTile()
+                        .getLocation(), characterProvidingVisibility.getItem2());
+            }
+            for(IPair<ICoordinate,Integer> coordinateProvidingVisibility
+                    : COORDINATES_PROVIDING_VISIBILITY) {
+                coordinatesProvidingVisibility.put(coordinateProvidingVisibility.getItem1(),
+                        coordinateProvidingVisibility.getItem2());
+            }
+            for(Map.Entry<ICoordinate,Integer> coordinateProvidingVisibility
+                    : coordinatesProvidingVisibility.entrySet()) {
+                ICoordinate coordinate = coordinateProvidingVisibility.getKey();
+                Integer coordinateVisibilityRadius = coordinateProvidingVisibility.getValue();
+                int minVisibleX = Math.max(0,
+                        coordinate.getX() - (coordinateVisibilityRadius - 1));
+                int maxVisibleX = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates()
+                        .getX(), coordinate.getX() + (coordinateVisibilityRadius - 1));
+                int minVisibleY = Math.max(0,
+                        coordinate.getY() - (coordinateVisibilityRadius - 1));
+                int maxVisibleY = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates()
+                        .getY(), coordinate.getY() + (coordinateVisibilityRadius - 1));
+
+                int minXToAdd = Math.max(minVisibleX, minRenderingX);
+                int maxXToAdd = Math.min(maxVisibleX, maxRenderingX);
+                int minYToAdd = Math.max(minVisibleY, minRenderingY);
+                int maxYToAdd = Math.min(maxVisibleY, maxRenderingY);
+
+                for (int x = minXToAdd; x <= maxXToAdd; x++) {
+                    for (int y = minYToAdd; y <= maxYToAdd; y++) {
+                        visibileTiles().add(COORDINATE_FACTORY.make(x,y));
+                    }
                 }
             }
         }

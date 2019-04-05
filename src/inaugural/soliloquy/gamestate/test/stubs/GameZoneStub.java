@@ -18,7 +18,7 @@ public class GameZoneStub implements IGameZone {
     }
 
     @Override
-    public ICoordinate getDimensions() {
+    public ICoordinate getMaxCoordinates() {
         return new CoordinateStub(_maxX,_maxY);
     }
 

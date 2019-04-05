@@ -1,21 +1,18 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IFunction;
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IPair;
+import soliloquy.common.specs.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class MapStub<K,V> implements IMap<K,V> {
-    private HashMap<K,V> _map = new HashMap<K,V>();
+    private HashMap<K,V> _map = new HashMap<>();
 
     @Override
     public Iterator<IPair<K, V>> iterator() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        return new MapIterator(_map, new PairFactoryStub());
     }
 
     @Override
@@ -84,7 +81,7 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     @Override
     public ICollection<K> getKeys() {
-        ICollection<K> keys = new CollectionStub<K>();
+        ICollection<K> keys = new CollectionStub<>();
         for (K key : _map.keySet())
         {
             keys.add(key);
@@ -153,5 +150,27 @@ public class MapStub<K,V> implements IMap<K,V> {
     public String getUnparameterizedInterfaceName() {
         // Stub method; unimplemented
         throw new UnsupportedOperationException();
+    }
+
+    private class MapIterator implements Iterator<IPair<K,V>> {
+        private Iterator<Map.Entry<K,V>> _hashMapIterator;
+        private IPairFactory _pairFactory;
+
+        MapIterator(HashMap<K,V> hashMap, IPairFactory pairFactory) {
+            _hashMapIterator = hashMap.entrySet().iterator();
+            _pairFactory = pairFactory;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return _hashMapIterator.hasNext();
+        }
+
+        @Override
+        public IPair<K, V> next() {
+            Map.Entry<K,V> entry = _hashMapIterator.next();
+            return _pairFactory.make(entry.getKey(), entry.getValue());
+        }
+
     }
 }

@@ -13,7 +13,7 @@ import soliloquy.sprites.specs.ISprite;
 public class TileStub implements ITile {
     public ICoordinate _tileLocation;
 
-    TileStub(ICoordinate tileLocation) {
+    public TileStub(ICoordinate tileLocation) {
         _tileLocation = tileLocation;
     }
 

@@ -13,8 +13,7 @@ import soliloquy.sprites.specs.ISpriteSet;
 public class CharacterStub implements ICharacter {
     private boolean _isDeleted;
     private boolean _isDead;
-
-    static int _visibilityRadius = 13;
+    private ITile _tile;
 
     @Override
     public void setGameZone(IGameZone iGameZone) throws IllegalArgumentException, IllegalStateException {
@@ -33,12 +32,12 @@ public class CharacterStub implements ICharacter {
 
     @Override
     public ITile getTile() throws IllegalStateException {
-        return null;
+        return _tile;
     }
 
     @Override
-    public void setTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
-
+    public void setTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
+        _tile = tile;
     }
 
     @Override
@@ -144,16 +143,6 @@ public class CharacterStub implements ICharacter {
     @Override
     public boolean isPC() throws IllegalStateException {
         return false;
-    }
-
-    @Override
-    public int getVisibilityRadius() {
-        return _visibilityRadius;
-    }
-
-    @Override
-    public void setVisibilityRadius(int i) throws IllegalArgumentException {
-
     }
 
     @Override

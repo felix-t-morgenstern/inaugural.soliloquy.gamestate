@@ -9,6 +9,7 @@ import soliloquy.common.specs.ICoordinate;
 import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.ICamera;
 import soliloquy.gamestate.specs.ICharacter;
+import soliloquy.gamestate.specs.ITile;
 import soliloquy.logger.specs.ILogger;
 import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
 
@@ -36,12 +37,12 @@ class CameraTests {
 
     @Test
     void testGame() {
-        assertSame(_camera.game(), _game);
+        assertSame(_game, _camera.game());
     }
 
     @Test
     void testLogger() {
-        assertSame(_camera.logger(), _logger);
+        assertSame(_logger, _camera.logger());
     }
 
     @Test
@@ -62,7 +63,7 @@ class CameraTests {
         _camera.setTileLocation(123,456);
         ICoordinate tileLocation = _camera.getTileLocation();
         tileLocation.setX(789);
-        assertSame(_camera.getTileLocation().getX(), 123);
+        assertSame(123, _camera.getTileLocation().getX());
     }
 
     @Test
@@ -83,13 +84,13 @@ class CameraTests {
         _camera.setPixelOffset(123,456);
         ICoordinate pixelOffset = _camera.getPixelOffset();
         pixelOffset.setX(789);
-        assertSame(_camera.getPixelOffset().getX(), 123);
+        assertSame(123, _camera.getPixelOffset().getX());
     }
 
     @Test
     void testGetAndSetTileRenderingRadius() {
         _camera.setTileRenderingRadius(123);
-        assertSame(_camera.getTileRenderingRadius(), 123);
+        assertSame(123, _camera.getTileRenderingRadius());
     }
 
     @Test
@@ -100,10 +101,10 @@ class CameraTests {
     @Test
     void testGetAndSetAllTilesVisible() {
         _camera.setAllTilesVisible(true);
-        assertSame(_camera.getAllTilesVisible(), true);
+        assertSame(true, _camera.getAllTilesVisible());
 
         _camera.setAllTilesVisible(false);
-        assertSame(_camera.getAllTilesVisible(), false);
+        assertSame(false, _camera.getAllTilesVisible());
     }
 
     @Test
@@ -112,7 +113,7 @@ class CameraTests {
 
         ICharacter character = new CharacterArchetype();
         _camera.charactersProvidingVisibility().put(character,123);
-        assertSame(_camera.charactersProvidingVisibility().get(character), 123);
+        assertSame(123, _camera.charactersProvidingVisibility().get(character));
     }
 
     @Test
@@ -130,27 +131,69 @@ class CameraTests {
 
         ICoordinate coordinate = new CoordinateStub(123,456);
         _camera.visibileTiles().add(coordinate);
-        assertSame(_camera.visibileTiles().get(0), coordinate);
+        assertEquals(123, _camera.visibileTiles().get(0).getX());
+        assertEquals(456, _camera.visibileTiles().get(0).getY());
     }
 
     @Test
     void testSetAndGetTileVisibility() {
         ITileVisibility tileVisibility = new TileVisibilityStub();
         _camera.setTileVisibility(tileVisibility);
-        assertSame(_camera.getTileVisibility(), tileVisibility);
+        assertSame(tileVisibility, _camera.getTileVisibility());
+    }
+
+    @Test
+    void testCalculateVisibleTilesWithoutTileVisibility() {
+        _camera.setTileVisibility(null);
+        assertThrows(IllegalStateException.class, () -> _camera.calculateVisibileTiles());
     }
 
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMinimumCoordinateBoundaries() {
+        _camera.setTileVisibility(new TileVisibilityStub());
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);
         _camera.calculateVisibileTiles();
-        assertSame(_camera.visibileTiles().size(), 49);
+        assertSame(49, _camera.visibileTiles().size());
+    }
+
+    @Test
+    void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
+        GameZoneStub._maxX = 4;
+        GameZoneStub._maxY = 4;
+        _camera.setTileVisibility(new TileVisibilityStub());
+        _camera.setAllTilesVisible(true);
+        _camera.setTileLocation(2,2);
+        _camera.setTileRenderingRadius(5);
+        _camera.calculateVisibileTiles();
+        assertSame(25, _camera.visibileTiles().size());
+    }
+
+    @Test
+    void testCalculateVisibleTilesWithZeroVisibilityRadius() {
+        _camera.setTileVisibility(new TileVisibilityStub());
+        _camera.setTileRenderingRadius(0);
+        _camera.calculateVisibileTiles();
+
+        assertSame(0, _camera.visibileTiles().size());
     }
 
     @Test
     void testCalculateVisibleTiles() {
-        // TODO: Implement this test
+        _camera.setTileVisibility(new TileVisibilityStub());
+        _camera.setAllTilesVisible(false);
+        _camera.setTileLocation(10,10);
+        _camera.setTileRenderingRadius(8);
+
+        ICharacter character1 = new CharacterStub();
+        character1.setTile(new TileStub(new CoordinateStub(4,4)));
+
+        _camera.charactersProvidingVisibility().put(character1,3);
+        _camera.coordinatesProvidingVisibility().put(new CoordinateStub(17,13),2);
+
+        _camera.calculateVisibileTiles();
+
+        assertEquals(22, _camera.visibileTiles().size());
     }
 }
