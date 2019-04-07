@@ -1,4 +1,4 @@
-package inaugural.soliloquy.gamestate;
+package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.common.specs.ICoordinate;
 
