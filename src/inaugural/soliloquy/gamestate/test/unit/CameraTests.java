@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.Camera;
-import inaugural.soliloquy.gamestate.CharacterArchetype;
+import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import soliloquy.common.specs.ICoordinate;
 import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.ICamera;
 import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ITile;
 import soliloquy.logger.specs.ILogger;
 import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
 
@@ -181,7 +180,8 @@ class CameraTests {
 
     @Test
     void testCalculateVisibleTiles() {
-        _camera.setTileVisibility(new TileVisibilityStub());
+        ITileVisibility tileVisibility = new TileVisibilityStub();
+        _camera.setTileVisibility(tileVisibility);
         _camera.setAllTilesVisible(false);
         _camera.setTileLocation(10,10);
         _camera.setTileRenderingRadius(8);
@@ -195,5 +195,6 @@ class CameraTests {
         _camera.calculateVisibileTiles();
 
         assertEquals(22, _camera.visibileTiles().size());
+        assertEquals(22, ((TileVisibilityStub) tileVisibility)._tilesChecked.size());
     }
 }

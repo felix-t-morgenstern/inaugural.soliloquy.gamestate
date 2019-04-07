@@ -1,10 +1,13 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
+import inaugural.soliloquy.gamestate.archetypes.CoordinateArchetype;
 import soliloquy.common.specs.*;
 import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.ICamera;
 import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.gamestate.specs.IGameState;
+import soliloquy.gamestate.specs.ITile;
 import soliloquy.logger.specs.ILogger;
 import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
 
@@ -163,6 +166,7 @@ public class Camera implements ICamera {
                     : coordinatesProvidingVisibility.entrySet()) {
                 ICoordinate coordinate = coordinateProvidingVisibility.getKey();
                 Integer coordinateVisibilityRadius = coordinateProvidingVisibility.getValue();
+                ITile originTile = GAME_STATE.getCurrentGameZone().tile(coordinate);
                 int minVisibleX = Math.max(0,
                         coordinate.getX() - (coordinateVisibilityRadius - 1));
                 int maxVisibleX = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates()
@@ -179,11 +183,27 @@ public class Camera implements ICamera {
 
                 for (int x = minXToAdd; x <= maxXToAdd; x++) {
                     for (int y = minYToAdd; y <= maxYToAdd; y++) {
-                        visibileTiles().add(COORDINATE_FACTORY.make(x,y));
+                        ICoordinate targetCoordinate = COORDINATE_FACTORY.make(x,y);
+                        if (!visibleTilesContainsCoordinate(x, y)) {
+                            ITile targetTile =
+                                    GAME_STATE.getCurrentGameZone().tile(targetCoordinate);
+                            if(_tileVisibility.canSeeTile(originTile, targetTile)) {
+                                visibileTiles().add(targetCoordinate);
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    private boolean visibleTilesContainsCoordinate(int x, int y) {
+        for(ICoordinate coordinate : visibileTiles()) {
+            if (coordinate.getX() == x && coordinate.getY() == y) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

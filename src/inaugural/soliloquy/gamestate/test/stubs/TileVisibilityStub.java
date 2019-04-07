@@ -16,7 +16,7 @@ public class TileVisibilityStub implements ITileVisibility {
     @Override
     public boolean canSeeTile(ITile origin, ITile target) throws IllegalArgumentException {
         _tilesChecked.add(new PairStub<>(origin.getLocation(),target.getLocation()));
-        return false;
+        return true;
     }
 
     @Override
