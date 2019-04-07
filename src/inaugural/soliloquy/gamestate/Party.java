@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import soliloquy.common.specs.ICollection;
 import soliloquy.common.specs.ICollectionFactory;
 import soliloquy.common.specs.IGenericParamsSet;
