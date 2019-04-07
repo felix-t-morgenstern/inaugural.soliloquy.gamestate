@@ -8,3 +8,4 @@
 *.class
 *.iml
 .idea/codeStyles/codeStyleConfig.xml
+target/classes/META-INF/inaugural.soliloquy.gamestate.kotlin_module
