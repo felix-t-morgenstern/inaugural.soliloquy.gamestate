@@ -22,7 +22,7 @@ class OneTimeTimerTests {
 
     @BeforeEach
     void setUp() {
-        _oneTimeTimer = new OneTimeTimer(TIMER_ID, TIMER_ACTION_ID, GAME, LOGGER);
+        _oneTimeTimer = new OneTimeTimer(TIMER_ID, TIMER_ACTION_ID, 0L, GAME, LOGGER);
     }
 
     @Test

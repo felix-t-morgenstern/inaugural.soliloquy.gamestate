@@ -22,7 +22,7 @@ public class RecurringTimerTests {
 
     @BeforeEach
     public void setUp() {
-        _recurringTimer = new RecurringTimer(TIMER_ID, TIMER_ACTION_ID, GAME, LOGGER);
+        _recurringTimer = new RecurringTimer(TIMER_ID, TIMER_ACTION_ID, 0, 0, GAME, LOGGER);
     }
 
     @Test

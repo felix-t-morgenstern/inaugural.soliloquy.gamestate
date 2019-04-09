@@ -8,8 +8,11 @@ public class RecurringTimer extends Timer implements IRecurringTimer {
     private int _roundModulo;
     private int _roundOffset;
 
-    public RecurringTimer(String timerId, String timerActionId, IGame game, ILogger logger) {
+    public RecurringTimer(String timerId, String timerActionId, int roundModulo, int roundOffset,
+                          IGame game, ILogger logger) {
         super(timerId, timerActionId, game, logger);
+        _roundModulo = roundModulo;
+        _roundOffset = roundOffset;
     }
 
     @Override
