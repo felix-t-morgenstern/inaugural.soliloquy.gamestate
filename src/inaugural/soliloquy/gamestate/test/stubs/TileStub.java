@@ -13,6 +13,9 @@ import soliloquy.sprites.specs.ISprite;
 public class TileStub implements ITile {
     public ICoordinate _tileLocation;
 
+    public TileStub() {
+    }
+
     public TileStub(ICoordinate tileLocation) {
         _tileLocation = tileLocation;
     }
@@ -35,6 +38,11 @@ public class TileStub implements ITile {
     @Override
     public boolean isDeleted() {
         return false;
+    }
+
+    @Override
+    public IGameZone gameZone() throws IllegalStateException {
+        return null;
     }
 
     @Override
