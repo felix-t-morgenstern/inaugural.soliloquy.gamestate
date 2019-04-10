@@ -8,15 +8,12 @@ import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.gamestate.specs.IGameZone;
 import soliloquy.logger.specs.ILogger;
+import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
 import soliloquy.ruleset.gameentities.specs.IElement;
 import soliloquy.ruleset.gameentities.specs.IVitalAttributeType;
 import soliloquy.sprites.specs.ISprite;
 
 public class VitalAttributeTypeStub implements IVitalAttributeType {
-    @Override
-    public void alterCurrentValue(ICharacter iCharacter, int i, IElement iElement) throws IllegalArgumentException {
-
-    }
 
     @Override
     public String getName() {
@@ -106,5 +103,10 @@ public class VitalAttributeTypeStub implements IVitalAttributeType {
     @Override
     public IPair<ISprite, Integer> getIcon(String s, IEntityUuid iEntityUuid) {
         return null;
+    }
+
+    @Override
+    public void alterCurrentValue(ICharacter iCharacter, int i, boolean b, IElement iElement, IAbilitySource iAbilitySource) throws IllegalArgumentException {
+
     }
 }

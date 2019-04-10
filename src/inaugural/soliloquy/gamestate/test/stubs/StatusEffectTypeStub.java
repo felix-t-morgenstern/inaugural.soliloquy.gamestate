@@ -8,6 +8,8 @@ import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.gamestate.specs.IGameZone;
 import soliloquy.logger.specs.ILogger;
+import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
+import soliloquy.ruleset.gameentities.specs.IElement;
 import soliloquy.ruleset.gameentities.specs.IStatusEffectType;
 import soliloquy.sprites.specs.ISprite;
 
@@ -100,5 +102,10 @@ public class StatusEffectTypeStub implements IStatusEffectType {
     @Override
     public String nameAtValue(int i) throws UnsupportedOperationException {
         return null;
+    }
+
+    @Override
+    public void alterCurrentValue(ICharacter iCharacter, int i, boolean b, IElement iElement, IAbilitySource iAbilitySource) throws IllegalArgumentException {
+
     }
 }
