@@ -116,7 +116,7 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterValueFromModifiers> attributes() throws IllegalStateException {
+    public IMap<String, ICharacterAttribute> attributes() throws IllegalStateException {
         return null;
     }
 
@@ -136,7 +136,7 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterValueFromModifiers> aptitudes() throws IllegalStateException {
+    public IMap<String, ICharacterAptitude> aptitudes() throws IllegalStateException {
         return null;
     }
 
