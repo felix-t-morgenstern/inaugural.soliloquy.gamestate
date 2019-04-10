@@ -16,11 +16,6 @@ public class CharacterStub implements ICharacter {
     private ITile _tile;
 
     @Override
-    public void setGameZone(IGameZone iGameZone) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
     public ICharacterType characterType() throws IllegalStateException {
         return null;
     }

@@ -12,11 +12,6 @@ import soliloquy.sprites.specs.ISpriteSet;
 
 public class CharacterArchetype implements ICharacter {
     @Override
-    public void setGameZone(IGameZone iGameZone) throws IllegalArgumentException, IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public ICharacterType characterType() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
@@ -112,7 +107,7 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterValueFromModifiers> attributes() throws IllegalStateException {
+    public IMap<String, ICharacterAttribute> attributes() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
@@ -132,7 +127,7 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterValueFromModifiers> aptitudes() throws IllegalStateException {
+    public IMap<String, ICharacterAptitude> aptitudes() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
