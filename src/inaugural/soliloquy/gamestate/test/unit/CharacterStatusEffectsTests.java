@@ -87,7 +87,7 @@ class CharacterStatusEffectsTests {
 
     @Test
     void testClearGetAndSetNullDeadOrDeletedCharacter() {
-        _character.setIsDead(true);
+        _character.setDead(true);
         assertThrows(IllegalStateException.class, () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID));
         assertThrows(IllegalStateException.class, () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID, 0));
         assertThrows(IllegalStateException.class, _characterStatusEffects::clearStatusEffects);
@@ -129,7 +129,7 @@ class CharacterStatusEffectsTests {
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1_ID, 111, true,
                         null, _abilitySource));
 
-        _character.setIsDead(true);
+        _character.setDead(true);
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1_ID, 111, true,
                         _element, _abilitySource));

@@ -72,12 +72,12 @@ public class Item implements IItem {
     }
 
     @Override
-    public IGameZone getGameZone() throws IllegalStateException {
+    public IGameZone gameZone() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IGenericParamsSet params() throws IllegalStateException {
+    public IGenericParamsSet data() throws IllegalStateException {
         return null;
     }
 

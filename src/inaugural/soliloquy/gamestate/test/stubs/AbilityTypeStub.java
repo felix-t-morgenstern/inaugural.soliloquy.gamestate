@@ -11,12 +11,12 @@ public class AbilityTypeStub implements IAbilityType {
     }
 
     @Override
-    public IGameZone getGameZone() throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public IGameZone gameZone() throws IllegalStateException {
+        return null;
     }
 
     @Override
-    public IGenericParamsSet params() throws IllegalStateException {
+    public IGenericParamsSet data() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

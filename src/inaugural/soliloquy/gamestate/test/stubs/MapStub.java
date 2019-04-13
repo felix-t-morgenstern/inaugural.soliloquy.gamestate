@@ -52,8 +52,7 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     @Override
     public boolean containsValue(V value) {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        return _map.containsValue(value);
     }
 
     @Override

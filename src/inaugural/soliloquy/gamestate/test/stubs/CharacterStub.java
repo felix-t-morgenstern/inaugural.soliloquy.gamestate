@@ -5,7 +5,7 @@ import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
 import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.ICharacterAIEvent;
+import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
@@ -33,6 +33,11 @@ public class CharacterStub implements ICharacter {
     @Override
     public void setTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
         _tile = tile;
+    }
+
+    @Override
+    public void setTile(ITile iTile, int i) throws IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override
@@ -91,7 +96,7 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICollection<ICharacterAIEvent>> characterAIEvents() {
+    public IMap<String, ICollection<ICharacterEvent>> characterEvents() {
         return null;
     }
 
@@ -136,12 +141,17 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public boolean isPC() throws IllegalStateException {
+    public boolean getPlayerControlled() throws IllegalStateException {
         return false;
     }
 
     @Override
-    public boolean isHidden() throws IllegalStateException {
+    public void setPlayerControlled(boolean b) throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean getHidden() throws IllegalStateException {
         return false;
     }
 
@@ -151,27 +161,22 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public boolean isDead() throws IllegalStateException {
+    public boolean getDead() throws IllegalStateException {
         return _isDead;
     }
 
     @Override
-    public void setIsDead(boolean b) throws IllegalStateException {
+    public void setDead(boolean b) throws IllegalStateException {
         _isDead = b;
     }
 
     @Override
-    public void kill(ICharacter iCharacter) throws IllegalStateException {
-        _isDead = true;
-    }
-
-    @Override
-    public IGameZone getGameZone() throws IllegalStateException {
+    public IGameZone gameZone() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IGenericParamsSet params() throws IllegalStateException {
+    public IGenericParamsSet data() throws IllegalStateException {
         return null;
     }
 

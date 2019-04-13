@@ -39,7 +39,7 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
         if (CHARACTER == null) {
             throw new IllegalStateException("CharacterStatusEffects.getStatusEffectLevel: character is null");
         }
-        if (CHARACTER.isDead()) {
+        if (CHARACTER.getDead()) {
             throw new IllegalStateException("CharacterStatusEffects.getStatusEffectLevel: character is dead");
         }
         if (CHARACTER.isDeleted()) {
@@ -61,7 +61,7 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
     public void alterStatusEffect(String statusEffectTypeId, int baseAmount, boolean stopAtZero,
                                   IElement element, IAbilitySource abilitySource)
             throws IllegalStateException, IllegalArgumentException {
-        if (CHARACTER.isDead()) {
+        if (CHARACTER.getDead()) {
             throw new IllegalStateException(
                     "CharacterStatusEffects.alterStatusEffect: character is dead");
         }
@@ -101,7 +101,7 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
         if (CHARACTER == null) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is null");
         }
-        if (CHARACTER.isDead()) {
+        if (CHARACTER.getDead()) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
         }
         if (CHARACTER.isDeleted()) {
@@ -119,7 +119,7 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
         if (CHARACTER == null) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is null");
         }
-        if (CHARACTER.isDead()) {
+        if (CHARACTER.getDead()) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
         }
         if (CHARACTER.isDeleted()) {

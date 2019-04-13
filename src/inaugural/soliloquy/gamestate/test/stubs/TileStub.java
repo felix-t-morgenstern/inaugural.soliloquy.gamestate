@@ -11,7 +11,11 @@ import soliloquy.ruleset.gameentities.specs.IGroundType;
 import soliloquy.sprites.specs.ISprite;
 
 public class TileStub implements ITile {
+    public static final IGameZone GAME_ZONE = new GameZoneStub();
+
     public ICoordinate _tileLocation;
+
+    private IMap<ICharacter, Integer> _characters = new MapStub<>();
 
     public TileStub() {
     }
@@ -21,12 +25,7 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public IGameZone getGameZone() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public IGenericParamsSet params() throws IllegalStateException {
+    public IGenericParamsSet data() throws IllegalStateException {
         return null;
     }
 
@@ -42,7 +41,7 @@ public class TileStub implements ITile {
 
     @Override
     public IGameZone gameZone() throws IllegalStateException {
-        return null;
+        return GAME_ZONE;
     }
 
     @Override
@@ -56,8 +55,8 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public IMap<Integer, ICharacter> characters() throws IllegalStateException {
-        return null;
+    public IMap<ICharacter, Integer> characters() throws IllegalStateException {
+        return _characters;
     }
 
     @Override

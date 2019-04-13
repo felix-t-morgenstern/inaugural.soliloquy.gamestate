@@ -5,7 +5,7 @@ import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
 import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.ICharacterAIEvent;
+import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
@@ -29,6 +29,11 @@ public class CharacterArchetype implements ICharacter {
     @Override
     public void setTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setTile(ITile iTile, int i) throws IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override
@@ -87,7 +92,7 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICollection<ICharacterAIEvent>> characterAIEvents() {
+    public IMap<String, ICollection<ICharacterEvent>> characterEvents() {
         throw new UnsupportedOperationException();
     }
 
@@ -132,12 +137,17 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public boolean isPC() throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public boolean getPlayerControlled() throws IllegalStateException {
+        return false;
     }
 
     @Override
-    public boolean isHidden() throws IllegalStateException {
+    public void setPlayerControlled(boolean b) throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean getHidden() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
@@ -147,27 +157,22 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public boolean isDead() throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public boolean getDead() throws IllegalStateException {
+        return false;
     }
 
     @Override
-    public void setIsDead(boolean b) throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public void setDead(boolean b) throws IllegalStateException {
+
     }
 
     @Override
-    public void kill(ICharacter iCharacter) throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public IGameZone gameZone() throws IllegalStateException {
+        return null;
     }
 
     @Override
-    public IGameZone getGameZone() throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public IGenericParamsSet params() throws IllegalStateException {
+    public IGenericParamsSet data() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
