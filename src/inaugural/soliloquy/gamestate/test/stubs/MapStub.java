@@ -10,6 +10,14 @@ import java.util.Map;
 public class MapStub<K,V> implements IMap<K,V> {
     private HashMap<K,V> _map = new HashMap<>();
 
+    public MapStub() {
+
+    }
+
+    private MapStub(HashMap<K,V> map) {
+        _map = map;
+    }
+
     @Override
     public Iterator<IPair<K, V>> iterator() {
         return new MapIterator(_map, new PairFactoryStub());
@@ -35,8 +43,7 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     @Override
     public IMap<K, V> makeClone() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        return new MapStub<>((HashMap<K,V>) _map.clone());
     }
 
     @Override

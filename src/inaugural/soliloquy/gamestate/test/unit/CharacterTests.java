@@ -8,7 +8,6 @@ import soliloquy.common.specs.ICollection;
 import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
-import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
 import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
@@ -83,7 +82,7 @@ class CharacterTests {
         _character.setTile(tile, 123);
 
         assertSame(tile, _character.getTile());
-        assertEquals((Integer) 123, tile.characters().get(_character));
+        assertEquals((Integer) 123, tile.getCharacters().get(_character));
     }
 
     @Test
@@ -240,14 +239,14 @@ class CharacterTests {
         _character.setTile(tile);
         assertFalse(_character.isDeleted());
         assertEquals(gameZone, _character.gameZone());
-        assertEquals(_character, _character.gameZone().characters().get(_character.id()));
-        assertTrue(_character.getTile().characters().containsKey(_character));
+        assertEquals(_character, _character.gameZone().getCharacters().get(_character.id()));
+        assertTrue(_character.getTile().getCharacters().containsKey(_character));
 
         _character.delete();
 
         assertTrue(_character.isDeleted());
-        assertNull(gameZone.characters().get(id));
-        assertFalse(tile.characters().containsKey(_character));
+        assertNull(gameZone.getCharacters().get(id));
+        assertFalse(tile.getCharacters().containsKey(_character));
     }
 
     @Test
@@ -286,6 +285,54 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.setDead(true));
         assertThrows(IllegalStateException.class, () -> _character.gameZone());
         assertThrows(IllegalStateException.class, () -> _character.data());
+        assertThrows(IllegalStateException.class, () -> _character.getName());
+        assertThrows(IllegalStateException.class, () -> _character.setName(""));
+        assertThrows(IllegalStateException.class, () -> _character.id());
+        assertThrows(IllegalStateException.class, () -> _character.read("", false));
+        assertThrows(IllegalStateException.class, () -> _character.write());
+        assertThrows(IllegalStateException.class, () -> _character.getInterfaceName());
+    }
+
+    @Test
+    void testEnforceGameZoneInvariant() {
+        TileStub tile = new TileStub();
+        _character.setTile(tile);
+        tile._characters.removeByKey(_character);
+
+        assertThrows(IllegalStateException.class, () -> _character.characterType());
+        assertThrows(IllegalStateException.class, () -> _character.classifications());
+        assertThrows(IllegalStateException.class, () -> _character.getTile());
+        assertThrows(IllegalStateException.class, () -> _character.setTile(new TileStub()));
+        assertThrows(IllegalStateException.class, () -> _character.setTile(new TileStub(), 0));
+        assertThrows(IllegalStateException.class, () -> _character.pronouns());
+        assertThrows(IllegalStateException.class, () -> _character.traits());
+        assertThrows(IllegalStateException.class, () -> _character.getStance());
+        assertThrows(IllegalStateException.class, () -> _character.setStance(""));
+        assertThrows(IllegalStateException.class, () -> _character.getDirection());
+        assertThrows(IllegalStateException.class, () -> _character.setDirection(""));
+        assertThrows(IllegalStateException.class, () -> _character.getSpriteSet());
+        assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
+        assertThrows(IllegalStateException.class, () -> _character.getAITypeId());
+        assertThrows(IllegalStateException.class, () -> _character.setAITypeId(CHARACTER_AI_TYPE_1_ID));
+        assertThrows(IllegalStateException.class, () -> _character.characterAIParams());
+        assertThrows(IllegalStateException.class, () -> _character.characterEvents());
+        assertThrows(IllegalStateException.class, () -> _character.equipment());
+        assertThrows(IllegalStateException.class, () -> _character.inventory());
+        assertThrows(IllegalStateException.class, () -> _character.vitalAttributes());
+        assertThrows(IllegalStateException.class, () -> _character.attributes());
+        assertThrows(IllegalStateException.class, () -> _character.statusEffects());
+        assertThrows(IllegalStateException.class, () -> _character.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> _character.aptitudes());
+        assertThrows(IllegalStateException.class, () -> _character.getPlayerControlled());
+        assertThrows(IllegalStateException.class, () -> _character.setPlayerControlled(true));
+        assertThrows(IllegalStateException.class, () -> _character.getHidden());
+        assertThrows(IllegalStateException.class, () -> _character.setHidden(true));
+        assertThrows(IllegalStateException.class, () -> _character.getDead());
+        assertThrows(IllegalStateException.class, () -> _character.setDead(true));
+        assertThrows(IllegalStateException.class, () -> _character.gameZone());
+        assertThrows(IllegalStateException.class, () -> _character.data());
+        assertThrows(IllegalStateException.class, () -> _character.delete());
+        assertThrows(IllegalStateException.class, () -> _character.isDeleted());
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());

@@ -77,129 +77,98 @@ public class Character implements ICharacter {
 
     @Override
     public ICharacterType characterType() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.characterType: Character is deleted");
-        }
+        enforceInvariant("characterType", true);
         return CHARACTER_TYPE;
     }
 
     @Override
     public ICollection<ICharacterClassification> classifications() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.classifications: Character is deleted");
-        }
+        enforceInvariant("classifications", true);
         return CHARACTER_CLASSIFICATIONS;
     }
 
     @Override
     public ITile getTile() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getTile: Character is deleted");
-        }
+        enforceInvariant("getTile", true);
         return _tile;
     }
 
     @Override
     public void setTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setTile(ITile): Character is deleted");
-        }
         setTile(tile, 0);
     }
 
     @Override
     public void setTile(ITile tile, int zIndex) throws IllegalArgumentException, IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setTile(ITile, int): Character is deleted");
+        enforceInvariant("setTile(ITile, int)", true);
+        if (tile != null) {
+            tile.addCharacter(this, zIndex);
+        }
+        IGameZone gameZone = tile.gameZone();
+        if (gameZone != null && !gameZone.getCharacters().containsValue(this)) {
+            gameZone.addCharacter(this);
         }
         _tile = tile;
-        if (tile != null) {
-            tile.characters().put(this, zIndex);
-        }
-        IGameZone gameZone = gameZone();
-        if (gameZone != null && !gameZone.characters().containsValue(this)) {
-            gameZone.characters().put(ID, this);
-        }
     }
 
     @Override
     public IMap<String, String> pronouns() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.pronouns: Character is deleted");
-        }
+        enforceInvariant("pronouns", true);
         return PRONOUNS;
     }
 
     @Override
     public IGenericParamsSet traits() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.traits: Character is deleted");
-        }
+        enforceInvariant("traits", true);
         return TRAITS;
     }
 
     @Override
     public String getStance() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getStance: Character is deleted");
-        }
+        enforceInvariant("getStance", true);
         return _stance;
     }
 
     @Override
     public void setStance(String stance) throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setStance: Character is deleted");
-        }
+        enforceInvariant("setStance", true);
         _stance = stance;
     }
 
     @Override
     public String getDirection() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getDirection: Character is deleted");
-        }
+        enforceInvariant("getDirection", true);
         return _direction;
     }
 
     @Override
     public void setDirection(String direction) throws IllegalArgumentException, IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setDirection: Character is deleted");
-        }
+        enforceInvariant("setDirection", true);
         _direction = direction;
     }
 
     @Override
     public ISpriteSet getSpriteSet() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getSpriteSet: Character is deleted");
-        }
+        enforceInvariant("getSpriteSet", true);
         return _spriteSet;
     }
 
     @Override
     public void setSpriteSet(ISpriteSet spriteSet) throws IllegalArgumentException, IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setSpriteSet: Character is deleted");
-        }
+        enforceInvariant("setSpriteSet", true);
         _spriteSet = spriteSet;
     }
 
     @Override
     public String getAITypeId() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getAITypeId: Character is deleted");
-        }
+        enforceInvariant("getAITypeId", true);
         return _characterAITypeId;
     }
 
     @Override
     public void setAITypeId(String characterAITypeId)
             throws IllegalArgumentException, IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setAITypeId: Character is deleted");
-        }
+        enforceInvariant("setAITypeId", true);
         if (!AI_TYPES.containsKey(characterAITypeId)) {
             throw new IllegalArgumentException("Character.setAITypeId: \"" + characterAITypeId
                     + "\" is not a valid AI Type Id");
@@ -209,137 +178,103 @@ public class Character implements ICharacter {
 
     @Override
     public IGenericParamsSet characterAIParams() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.characterAIParams: Character is deleted");
-        }
+        enforceInvariant("characterAIParams", true);
         return AI_PARAMS;
     }
 
     @Override
     public IMap<String, ICollection<ICharacterEvent>> characterEvents() {
-        if (_deleted) {
-            throw new IllegalStateException("Character.characterEvents: Character is deleted");
-        }
+        enforceInvariant("characterEvents", true);
         return AI_EVENTS;
     }
 
     @Override
     public IMap<String, ICharacterEquipmentSlot> equipment() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.equipment: Character is deleted");
-        }
+        enforceInvariant("equipment", true);
         return EQUIPMENT_SLOTS;
     }
 
     @Override
     public IMap<Integer, IItem> inventory() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.inventory: Character is deleted");
-        }
+        enforceInvariant("inventory", true);
         return INVENTORY;
     }
 
     @Override
     public IMap<String, ICharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.vitalAttributes: Character is deleted");
-        }
+        enforceInvariant("vitalAttributes", true);
         return VITAL_ATTRIBUTES;
     }
 
     @Override
     public IMap<String, ICharacterAttribute> attributes() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.attributes: Character is deleted");
-        }
+        enforceInvariant("attributes", true);
         return ATTRIBUTES;
     }
 
     @Override
     public ICharacterStatusEffects statusEffects() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.statusEffects: Character is deleted");
-        }
+        enforceInvariant("statusEffects", true);
         return STATUS_EFFECTS;
     }
 
     @Override
     public IMap<String, ICharacterAbility> activeAbilities() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.activeAbilities: Character is deleted");
-        }
+        enforceInvariant("activeAbilities", true);
         return ACTIVE_ABILITIES;
     }
 
     @Override
     public IMap<String, ICharacterAbility> reactiveAbilities() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.reactiveAbilities: Character is deleted");
-        }
+        enforceInvariant("reactiveAbilities", true);
         return REACTIVE_ABILITIES;
     }
 
     @Override
     public IMap<String, ICharacterAptitude> aptitudes() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.aptitudes: Character is deleted");
-        }
+        enforceInvariant("aptitudes", true);
         return APTITUDES;
     }
 
     @Override
     public boolean getPlayerControlled() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getPlayerControlled: Character is deleted");
-        }
+        enforceInvariant("getPlayerControlled", true);
         return _playerControlled;
     }
 
     @Override
     public void setPlayerControlled(boolean playerControlled) throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setPlayerControlled: Character is deleted");
-        }
+        enforceInvariant("setPlayerControlled", true);
         _playerControlled = playerControlled;
     }
 
     @Override
     public boolean getHidden() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getHidden: Character is deleted");
-        }
+        enforceInvariant("getHidden", true);
         return _hidden;
     }
 
     @Override
     public void setHidden(boolean hidden) throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setHidden: Character is deleted");
-        }
+        enforceInvariant("setHidden", true);
         _hidden = hidden;
     }
 
     @Override
     public boolean getDead() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getDead: Character is deleted");
-        }
+        enforceInvariant("getDead", true);
         return _dead;
     }
 
     @Override
     public void setDead(boolean dead) throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setDead: Character is deleted");
-        }
+        enforceInvariant("setDead", true);
         _dead = dead;
     }
 
     @Override
     public IGameZone gameZone() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.gameZone: Character is deleted");
-        }
+        enforceInvariant("gameZone", true);
         if (_tile != null) {
             return _tile.gameZone();
         } else {
@@ -349,78 +284,79 @@ public class Character implements ICharacter {
 
     @Override
     public IGenericParamsSet data() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.data: Character is deleted");
-        }
+        enforceInvariant("data", true);
         return DATA;
     }
 
     @Override
     public void delete() throws IllegalStateException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.delete: Character is deleted");
-        }
+        enforceInvariant("characterType", false);
         IGameZone gameZone = gameZone();
         if (gameZone != null) {
-            gameZone.characters().removeByKey(ID);
+            gameZone.removeCharacter(this);
         }
         if (_tile != null) {
-            _tile.characters().removeByKey(this);
+            _tile.removeCharacter(this);
         }
         _tile = null;
+        // TODO: Call
         _deleted = true;
     }
 
     @Override
     public boolean isDeleted() {
+        enforceInvariant("characterType", false);
         return _deleted;
     }
 
     @Override
     public String getName() {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getName: Character is deleted");
-        }
+        enforceInvariant("getName", true);
         return _name;
     }
 
     @Override
     public void setName(String name) {
-        if (_deleted) {
-            throw new IllegalStateException("Character.setName: Character is deleted");
-        }
+        enforceInvariant("setName", true);
         _name = name;
     }
 
     @Override
     public IEntityUuid id() {
-        if (_deleted) {
-            throw new IllegalStateException("Character.id: Character is deleted");
-        }
+        enforceInvariant("id", true);
         return ID;
     }
 
     @Override
     public void read(String s, boolean b) throws IllegalArgumentException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.read: Character is deleted");
-        }
+        enforceInvariant("read", true);
 
     }
 
     @Override
     public String write() throws IllegalArgumentException {
-        if (_deleted) {
-            throw new IllegalStateException("Character.write: Character is deleted");
-        }
+        enforceInvariant("write", true);
         return null;
     }
 
     @Override
     public String getInterfaceName() {
-        if (_deleted) {
-            throw new IllegalStateException("Character.getInterfaceName: Character is deleted");
-        }
+        enforceInvariant("getInterfaceName", true);
         return "soliloquy.gamestate.specs.ICharacter";
+    }
+
+    private void enforceInvariant(String methodName, boolean cannotBeDeleted) {
+        if (cannotBeDeleted && _deleted) {
+            throw new IllegalStateException("Character." + methodName + ": Character is deleted");
+        }
+        if (_tile != null && !_tile.getCharacters().containsKey(this)) {
+            throw new IllegalStateException("Character." + methodName +
+                    ": Character is not present on its specified Tile");
+        }
+        if (_tile != null && _tile.gameZone() != null &&
+                _tile.gameZone().getCharacters().get(ID) != this) {
+            throw new IllegalStateException("Character." + methodName +
+                    ": Character is not registered in its specified Tile's GameZone");
+        }
     }
 }

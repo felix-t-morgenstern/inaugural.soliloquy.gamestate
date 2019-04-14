@@ -35,13 +35,33 @@ public class GameZoneStub implements IGameZone {
     }
 
     @Override
-    public IMap<IEntityUuid, ICharacter> characters() {
-        return _characters;
+    public IMap<IEntityUuid, ICharacter> getCharacters() {
+        return _characters.makeClone();
     }
 
     @Override
-    public IMap<IEntityUuid, IItem> items() {
+    public void addCharacter(ICharacter character) throws IllegalArgumentException {
+        _characters.put(character.id(), character);
+    }
+
+    @Override
+    public boolean removeCharacter(ICharacter character) throws IllegalArgumentException {
+        return _characters.removeByKey(character.id()) != null;
+    }
+
+    @Override
+    public IMap<IEntityUuid, IItem> getItems() {
         return null;
+    }
+
+    @Override
+    public void addItem(IItem item) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public boolean removeItem(IItem item) throws IllegalArgumentException {
+        return false;
     }
 
     @Override

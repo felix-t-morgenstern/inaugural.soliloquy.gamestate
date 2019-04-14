@@ -14,8 +14,7 @@ public class TileStub implements ITile {
     public static final IGameZone GAME_ZONE = new GameZoneStub();
 
     public ICoordinate _tileLocation;
-
-    private IMap<ICharacter, Integer> _characters = new MapStub<>();
+    public IMap<ICharacter, Integer> _characters = new MapStub<>();
 
     public TileStub() {
     }
@@ -55,8 +54,18 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public IMap<ICharacter, Integer> characters() throws IllegalStateException {
-        return _characters;
+    public IMap<ICharacter, Integer> getCharacters() throws IllegalStateException {
+        return _characters.makeClone();
+    }
+
+    @Override
+    public void addCharacter(ICharacter character, int zIndex) throws IllegalArgumentException {
+        _characters.put(character, zIndex);
+    }
+
+    @Override
+    public boolean removeCharacter(ICharacter character) {
+        return _characters.removeByKey(character) != null;
     }
 
     @Override
