@@ -12,7 +12,7 @@ public class GameZoneStub implements IGameZone {
     public static int _maxX = 999;
     public static int _maxY = 999;
 
-    private IMap<IEntityUuid, ICharacter> _characters = new MapStub<>();
+    public IMap<IEntityUuid, ICharacter> _characters = new MapStub<>();
 
     @Override
     public String zoneType() {
