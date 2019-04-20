@@ -7,6 +7,7 @@ import soliloquy.common.specs.ICollection;
 
 public class CollectionStub<V> implements ICollection<V> {
     private V _archetype;
+    private ArrayList<V> _collection = new ArrayList<V>();
 
     public CollectionStub() {
     }
@@ -14,8 +15,6 @@ public class CollectionStub<V> implements ICollection<V> {
     public CollectionStub(V archetype) {
         _archetype = archetype;
     }
-
-    private ArrayList<V> _collection = new ArrayList<V>();
 
     @Override
     public Iterator<V> iterator() {
@@ -69,8 +68,10 @@ public class CollectionStub<V> implements ICollection<V> {
 
     @Override
     public boolean equals(ICollection<V> items) {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        if (items == null) return false;
+        if (_collection.size() != items.size()) return false;
+        for(V item : _collection) if(!items.contains(item)) return false;
+        return true;
     }
 
     @Override

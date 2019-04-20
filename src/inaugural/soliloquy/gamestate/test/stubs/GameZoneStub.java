@@ -13,6 +13,7 @@ public class GameZoneStub implements IGameZone {
     public static int _maxY = 999;
 
     public IMap<IEntityUuid, ICharacter> _characters = new MapStub<>();
+    public IMap<IEntityUuid, IItem> _items = new MapStub<>();
 
     @Override
     public String zoneType() {
@@ -35,32 +36,22 @@ public class GameZoneStub implements IGameZone {
     }
 
     @Override
-    public IMap<IEntityUuid, ICharacter> getCharacters() {
+    public IMap<IEntityUuid, ICharacter> getCharactersRepresentation() {
         return _characters.makeClone();
     }
 
     @Override
-    public void addCharacter(ICharacter character) throws IllegalArgumentException {
-        _characters.put(character.id(), character);
+    public boolean containsCharacter(ICharacter iCharacter) {
+        return false;
     }
 
     @Override
-    public boolean removeCharacter(ICharacter character) throws IllegalArgumentException {
-        return _characters.removeByKey(character.id()) != null;
+    public IMap<IEntityUuid, IItem> getItemsRepresentation() {
+        return _items.makeClone();
     }
 
     @Override
-    public IMap<IEntityUuid, IItem> getItems() {
-        return null;
-    }
-
-    @Override
-    public void addItem(IItem item) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public boolean removeItem(IItem item) throws IllegalArgumentException {
+    public boolean containsItem(IItem iItem) {
         return false;
     }
 

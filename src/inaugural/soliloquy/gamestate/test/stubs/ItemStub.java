@@ -1,11 +1,13 @@
-package inaugural.soliloquy.gamestate;
+package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.specs.IItemType;
 
-public class Item implements IItem {
+public class ItemStub implements IItem {
+    private boolean _deleted;
+
     @Override
     public IItemType itemType() throws IllegalStateException {
         return null;
@@ -48,13 +50,11 @@ public class Item implements IItem {
 
     @Override
     public void assignCharacterInventoryToItem(ICharacter iCharacter) throws IllegalStateException, IllegalArgumentException {
-        // TODO: Implement and test!
 
     }
 
     @Override
     public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlot iCharacterEquipmentSlot) throws IllegalStateException, IllegalArgumentException {
-        // TODO: Implement and test!
 
     }
 
@@ -85,12 +85,12 @@ public class Item implements IItem {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _deleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _deleted;
     }
 
     @Override
@@ -115,6 +115,6 @@ public class Item implements IItem {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.IItem";
+        return null;
     }
 }

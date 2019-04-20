@@ -15,11 +15,8 @@ public class Character implements ICharacter {
     private final ICollection<ICharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final IMap<String,String> PRONOUNS;
     private final IGenericParamsSet TRAITS;
-    private final IMap<String, ICharacterAIType> AI_TYPES;
     private final IGenericParamsSet AI_PARAMS;
     private final IMap<String, ICollection<ICharacterEvent>> AI_EVENTS;
-    private final IMap<String, ICharacterEquipmentSlot> EQUIPMENT_SLOTS;
-    private final IMap<Integer, IItem> INVENTORY;
     private final IMap<String, ICharacterVitalAttribute> VITAL_ATTRIBUTES;
     private final IMap<String, ICharacterAttribute> ATTRIBUTES;
     private final ICharacterStatusEffects STATUS_EFFECTS;
@@ -32,7 +29,6 @@ public class Character implements ICharacter {
     private String _stance;
     private String _direction;
     private ISpriteSet _spriteSet;
-    private String _characterAITypeId;
     private boolean _playerControlled;
     private boolean _hidden;
     private boolean _dead;
@@ -44,11 +40,8 @@ public class Character implements ICharacter {
                      ICollectionFactory collectionFactory,
                      IMapFactory mapFactory,
                      IGenericParamsSet traits,
-                     IMap<String,ICharacterAIType> aiTypes,
                      IGenericParamsSet aiParams,
                      IMap<String, ICollection<ICharacterEvent>> aiEvents,
-                     IMap<String,ICharacterEquipmentSlot> equipmentSlots,
-                     IMap<Integer, IItem> inventory,
                      IMap<String, ICharacterVitalAttribute> vitalAttributes,
                      IMap<String, ICharacterAttribute> attributes,
                      ICharacterStatusEffects statusEffects,
@@ -61,11 +54,8 @@ public class Character implements ICharacter {
         CHARACTER_CLASSIFICATIONS = collectionFactory.make(new CharacterClassificationArchetype());
         PRONOUNS = mapFactory.make("","");
         TRAITS = traits;
-        AI_TYPES = aiTypes;
         AI_PARAMS = aiParams;
         AI_EVENTS = aiEvents;
-        EQUIPMENT_SLOTS = equipmentSlots;
-        INVENTORY = inventory;
         VITAL_ATTRIBUTES = vitalAttributes;
         ATTRIBUTES = attributes;
         STATUS_EFFECTS = statusEffects;
@@ -88,30 +78,6 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public ITile getTile() throws IllegalStateException {
-        enforceInvariant("getTile", true);
-        return _tile;
-    }
-
-    @Override
-    public void setTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
-        setTile(tile, 0);
-    }
-
-    @Override
-    public void setTile(ITile tile, int zIndex) throws IllegalArgumentException, IllegalStateException {
-        enforceInvariant("setTile(ITile, int)", true);
-        if (tile != null) {
-            tile.addCharacter(this, zIndex);
-        }
-        IGameZone gameZone = tile.gameZone();
-        if (gameZone != null && !gameZone.getCharacters().containsValue(this)) {
-            gameZone.addCharacter(this);
-        }
-        _tile = tile;
-    }
-
-    @Override
     public IMap<String, String> pronouns() throws IllegalStateException {
         enforceInvariant("pronouns", true);
         return PRONOUNS;
@@ -121,6 +87,11 @@ public class Character implements ICharacter {
     public IGenericParamsSet traits() throws IllegalStateException {
         enforceInvariant("traits", true);
         return TRAITS;
+    }
+
+    @Override
+    public ITile tile() throws IllegalStateException {
+        return _tile;
     }
 
     @Override
@@ -160,20 +131,13 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public String getAITypeId() throws IllegalStateException {
-        enforceInvariant("getAITypeId", true);
-        return _characterAITypeId;
+    public ICharacterAIType getAIType() throws IllegalStateException {
+        return null;
     }
 
     @Override
-    public void setAITypeId(String characterAITypeId)
-            throws IllegalArgumentException, IllegalStateException {
-        enforceInvariant("setAITypeId", true);
-        if (!AI_TYPES.containsKey(characterAITypeId)) {
-            throw new IllegalArgumentException("Character.setAITypeId: \"" + characterAITypeId
-                    + "\" is not a valid AI Type Id");
-        }
-        _characterAITypeId = characterAITypeId;
+    public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override
@@ -189,15 +153,13 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterEquipmentSlot> equipment() throws IllegalStateException {
-        enforceInvariant("equipment", true);
-        return EQUIPMENT_SLOTS;
+    public ICharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
+        return null;
     }
 
     @Override
-    public IMap<Integer, IItem> inventory() throws IllegalStateException {
-        enforceInvariant("inventory", true);
-        return INVENTORY;
+    public ICharacterInventory inventory() throws IllegalStateException {
+        return null;
     }
 
     @Override
@@ -291,16 +253,13 @@ public class Character implements ICharacter {
     @Override
     public void delete() throws IllegalStateException {
         enforceInvariant("characterType", false);
-        IGameZone gameZone = gameZone();
-        if (gameZone != null) {
-            gameZone.removeCharacter(this);
-        }
-        if (_tile != null) {
-            _tile.removeCharacter(this);
-        }
-        _tile = null;
-        // TODO: Call
+        // TODO: Implement and test!
         _deleted = true;
+    }
+
+    @Override
+    public void assignCharacterToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override
@@ -349,12 +308,12 @@ public class Character implements ICharacter {
         if (cannotBeDeleted && _deleted) {
             throw new IllegalStateException("Character." + methodName + ": Character is deleted");
         }
-        if (_tile != null && !_tile.getCharacters().containsKey(this)) {
+        if (_tile != null && !_tile.characters().containsCharacter(this)) {
             throw new IllegalStateException("Character." + methodName +
                     ": Character is not present on its specified Tile");
         }
         if (_tile != null && _tile.gameZone() != null &&
-                _tile.gameZone().getCharacters().get(ID) != this) {
+                _tile.gameZone().getCharactersRepresentation().get(ID) != this) {
             throw new IllegalStateException("Character." + methodName +
                     ": Character is not registered in its specified Tile's GameZone");
         }

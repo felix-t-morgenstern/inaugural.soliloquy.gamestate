@@ -54,26 +54,6 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public IMap<ICharacter, Integer> getCharacters() throws IllegalStateException {
-        return _characters.makeClone();
-    }
-
-    @Override
-    public void addCharacter(ICharacter character, int zIndex) throws IllegalArgumentException {
-        _characters.put(character, zIndex);
-    }
-
-    @Override
-    public boolean removeCharacter(ICharacter character) {
-        return _characters.removeByKey(character) != null;
-    }
-
-    @Override
-    public IMap<Integer, IItem> items() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
     public int getHeight() throws IllegalStateException {
         return 0;
     }
@@ -94,22 +74,32 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public IMap<Integer, ITileFixture> fixtures() throws IllegalStateException {
+    public ITileCharacters characters() {
         return null;
     }
 
     @Override
-    public IMap<Integer, IMap<Integer, ITileWallSegment>> nTileWallSegments() throws IllegalStateException {
+    public ITileItems items() {
         return null;
     }
 
     @Override
-    public IMap<Integer, IMap<Integer, ITileWallSegment>> nwTileWallSegments() throws IllegalStateException {
+    public ITileFixtures fixtures() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<Integer, IMap<Integer, ITileWallSegment>> wTileWallSegments() throws IllegalStateException {
+    public ITileWallSegments nTileWallSegments() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public ITileWallSegments nwTileWallSegments() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public ITileWallSegments wTileWallSegments() throws IllegalStateException {
         return null;
     }
 

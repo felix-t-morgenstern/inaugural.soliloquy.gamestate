@@ -5,6 +5,7 @@ import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
 import soliloquy.gamestate.specs.*;
+import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
 import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
@@ -22,21 +23,6 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public ITile getTile() throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setTile(ITile iTile, int i) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
     public IMap<String, String> pronouns() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
@@ -44,6 +30,11 @@ public class CharacterArchetype implements ICharacter {
     @Override
     public IGenericParamsSet traits() throws IllegalStateException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ITile tile() throws IllegalStateException {
+        return null;
     }
 
     @Override
@@ -77,13 +68,13 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public String getAITypeId() throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public ICharacterAIType getAIType() throws IllegalStateException {
+        return null;
     }
 
     @Override
-    public void setAITypeId(String s) throws IllegalArgumentException, IllegalStateException {
-        throw new UnsupportedOperationException();
+    public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override
@@ -97,13 +88,13 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterEquipmentSlot> equipment() throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public ICharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
+        return null;
     }
 
     @Override
-    public IMap<Integer, IItem> inventory() throws IllegalStateException {
-        throw new UnsupportedOperationException();
+    public ICharacterInventory inventory() throws IllegalStateException {
+        return null;
     }
 
     @Override
@@ -178,6 +169,11 @@ public class CharacterArchetype implements ICharacter {
 
     @Override
     public void delete() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void assignCharacterToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

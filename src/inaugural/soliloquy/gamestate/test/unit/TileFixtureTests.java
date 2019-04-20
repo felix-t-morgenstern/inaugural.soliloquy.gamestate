@@ -4,7 +4,6 @@ import inaugural.soliloquy.gamestate.TileFixture;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICollection;
 import soliloquy.common.specs.ICoordinate;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
@@ -21,7 +20,6 @@ class TileFixtureTests {
     private ITileFixture _tileFixture;
 
     private final IFixtureType FIXTURE_TYPE = new FixtureTypeStub();
-    private final ICollection<IItem> CONTAINED_ITEMS = new CollectionStub<>();
     private final ICoordinate PIXEL_OFFSET = new CoordinateStub();
     private final IMap<String, IActiveAbility> ACTIVE_ABILITIES = new MapStub<>();
     private final IMap<String, IReactiveAbility> REACTIVE_ABILITIES = new MapStub<>();
@@ -30,8 +28,20 @@ class TileFixtureTests {
 
     @BeforeEach
     void setUp() {
-        _tileFixture = new TileFixture(FIXTURE_TYPE, CONTAINED_ITEMS, PIXEL_OFFSET,
-                ACTIVE_ABILITIES, REACTIVE_ABILITIES, GAME_ZONE, DATA);
+        _tileFixture = new TileFixture(FIXTURE_TYPE, PIXEL_OFFSET, ACTIVE_ABILITIES,
+                REACTIVE_ABILITIES, GAME_ZONE, DATA);
+    }
+
+    @Test
+    void testConstructorWithNullParams() {
+        // TODO: Write this test!!!
+        // TODO: Write this test!!!
+        // TODO: Write this test!!!
+        // TODO: Write this test!!!
+        // TODO: Write this test!!!
+        // TODO: Write this test!!!
+        // TODO: Write this test!!!
+        // TODO: Write this test!!!
     }
 
     @Test
@@ -42,11 +52,6 @@ class TileFixtureTests {
     @Test
     void testFixtureType () {
         assertSame(FIXTURE_TYPE, _tileFixture.fixtureType());
-    }
-
-    @Test
-    void testContainedItems() {
-        assertSame(CONTAINED_ITEMS, _tileFixture.containedItems());
     }
 
     @Test
@@ -75,8 +80,17 @@ class TileFixtureTests {
     }
 
     @Test
+    void testAddAndRemoveContainedItem() {
+
+    }
+
+    @Test
     void testDelete() {
-        // TODO: Implement and test deletion of Items within the Fixture
+        // TODO: Implement and test deletion of Items within the Fixture\
+        IItem item = new ItemStub();
+
+        // TODO: Implement and test!
+
         _tileFixture.delete();
 
         assertTrue(_tileFixture.isDeleted());

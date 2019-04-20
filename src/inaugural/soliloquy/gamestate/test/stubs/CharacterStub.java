@@ -5,6 +5,7 @@ import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
 import soliloquy.gamestate.specs.*;
+import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
 import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
@@ -26,21 +27,6 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public ITile getTile() throws IllegalStateException {
-        return _tile;
-    }
-
-    @Override
-    public void setTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
-        _tile = tile;
-    }
-
-    @Override
-    public void setTile(ITile iTile, int i) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
     public IMap<String, String> pronouns() throws IllegalStateException {
         return null;
     }
@@ -48,6 +34,11 @@ public class CharacterStub implements ICharacter {
     @Override
     public IGenericParamsSet traits() throws IllegalStateException {
         return null;
+    }
+
+    @Override
+    public ITile tile() throws IllegalStateException {
+        return _tile;
     }
 
     @Override
@@ -81,12 +72,12 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public String getAITypeId() throws IllegalStateException {
+    public ICharacterAIType getAIType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void setAITypeId(String characterAITypeId) throws IllegalArgumentException, IllegalStateException {
+    public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
 
     }
 
@@ -101,12 +92,12 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterEquipmentSlot> equipment() throws IllegalStateException {
+    public ICharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<Integer, IItem> inventory() throws IllegalStateException {
+    public ICharacterInventory inventory() throws IllegalStateException {
         return null;
     }
 
@@ -183,6 +174,11 @@ public class CharacterStub implements ICharacter {
     @Override
     public void delete() throws IllegalStateException {
         _isDeleted = true;
+    }
+
+    @Override
+    public void assignCharacterToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override

@@ -154,7 +154,7 @@ public class Camera implements ICamera {
             HashMap<ICoordinate,Integer> coordinatesProvidingVisibility = new HashMap<>();
             for(IPair<ICharacter,Integer> characterProvidingVisibility
                     : CHARACTERS_PROVIDING_VISIBILITY) {
-                coordinatesProvidingVisibility.put(characterProvidingVisibility.getItem1().getTile()
+                coordinatesProvidingVisibility.put(characterProvidingVisibility.getItem1().tile()
                         .getLocation(), characterProvidingVisibility.getItem2());
             }
             for(IPair<ICoordinate,Integer> coordinateProvidingVisibility

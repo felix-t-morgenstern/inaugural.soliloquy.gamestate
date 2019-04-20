@@ -6,6 +6,9 @@ public class CoordinateStub implements ICoordinate {
     private int _x;
     private int _y;
 
+    public CoordinateStub() {
+    }
+
     public CoordinateStub(int x, int y) {
         _x = x;
         _y = y;
