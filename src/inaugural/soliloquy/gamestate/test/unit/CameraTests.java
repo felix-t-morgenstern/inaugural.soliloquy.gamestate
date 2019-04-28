@@ -31,7 +31,7 @@ class CameraTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.gamestate.specs.ICamera", _camera.getInterfaceName());
+        assertEquals(ICamera.class.getCanonicalName(), _camera.getInterfaceName());
     }
 
     @Test

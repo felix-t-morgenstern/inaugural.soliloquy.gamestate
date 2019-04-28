@@ -19,8 +19,18 @@ public class ItemStub implements IItem {
     }
 
     @Override
+    public void setCharges(int integer) throws UnsupportedOperationException, IllegalStateException {
+
+    }
+
+    @Override
     public Integer getNumberInStack() throws IllegalStateException {
         return null;
+    }
+
+    @Override
+    public void setNumberInStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override

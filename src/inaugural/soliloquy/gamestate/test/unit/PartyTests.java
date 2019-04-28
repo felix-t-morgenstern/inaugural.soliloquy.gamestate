@@ -9,30 +9,28 @@ import soliloquy.common.specs.ICollection;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.gamestate.specs.IParty;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class PartyTests {
+class PartyTests {
     private IParty _party;
 
     @BeforeEach
-    protected void setUp() {
+    void setUp() {
         _party = new Party(new CollectionFactoryStub(), new GenericParamsSetFactoryStub());
     }
 
     @Test
-    public void testGetInterfaceName() {
-        assertTrue(_party.getInterfaceName().equals("soliloquy.gamestate.specs.IParty"));
+    void testGetInterfaceName() {
+        assertEquals(IParty.class.getCanonicalName(), _party.getInterfaceName());
     }
 
     @Test
-    public void testPlayerCharacters() {
-        assertTrue(_party.playerCharacters() != null);
-        assertTrue(_party.playerCharacters() instanceof ICollection);
+    void testPlayerCharacters() {
+        assertNotNull(_party.playerCharacters());
     }
 
     @Test
-    public void testPartyAttributes() {
-        assertTrue(_party.partyAttributes() != null);
-        assertTrue(_party.partyAttributes() instanceof IGenericParamsSet);
+    void testPartyAttributes() {
+        assertNotNull(_party.partyAttributes());
     }
 }

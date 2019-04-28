@@ -117,6 +117,6 @@ public class TileFixture implements ITileFixture {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.ITileFixture";
+        return ITileFixture.class.getCanonicalName();
     }
 }

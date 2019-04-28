@@ -26,8 +26,7 @@ public class TimerFactoryTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.gamestate.specs.ITimerFactory",
-                _timerFactory.getInterfaceName());
+        assertEquals(ITimerFactory.class.getCanonicalName(), _timerFactory.getInterfaceName());
     }
 
     @Test

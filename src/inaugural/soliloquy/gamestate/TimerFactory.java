@@ -31,6 +31,6 @@ public class TimerFactory implements ITimerFactory {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.ITimerFactory";
+        return ITimerFactory.class.getCanonicalName();
     }
 }

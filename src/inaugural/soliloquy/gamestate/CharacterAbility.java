@@ -42,6 +42,6 @@ public class CharacterAbility implements ICharacterAbility {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.ICharacterAbility";
+        return ICharacterAbility.class.getCanonicalName();
     }
 }

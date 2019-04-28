@@ -46,7 +46,7 @@ class TileFixtureTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.gamestate.specs.ITileFixture", _tileFixture.getInterfaceName());
+        assertEquals(ITileFixture.class.getCanonicalName(), _tileFixture.getInterfaceName());
     }
 
     @Test

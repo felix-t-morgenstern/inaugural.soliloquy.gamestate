@@ -11,7 +11,7 @@ import soliloquy.logger.specs.ILogger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RecurringTimerTests {
+class RecurringTimerTests {
     private IRecurringTimer _recurringTimer;
 
     private final String TIMER_ID = "TimerId";
@@ -21,14 +21,13 @@ public class RecurringTimerTests {
     private final ILogger LOGGER = new LoggerStub();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         _recurringTimer = new RecurringTimer(TIMER_ID, TIMER_ACTION_ID, 0, 0, GAME, LOGGER);
     }
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.gamestate.specs.IRecurringTimer",
-                _recurringTimer.getInterfaceName());
+        assertEquals(IRecurringTimer.class.getCanonicalName(), _recurringTimer.getInterfaceName());
     }
 
     @Test

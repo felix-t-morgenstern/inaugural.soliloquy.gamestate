@@ -223,6 +223,6 @@ public class Camera implements ICamera {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.ICamera";
+        return ICamera.class.getCanonicalName();
     }
 }

@@ -36,6 +36,6 @@ public class OneTimeTimer extends Timer implements IOneTimeTimer {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.IOneTimeTimer";
+        return IOneTimeTimer.class.getCanonicalName();
     }
 }

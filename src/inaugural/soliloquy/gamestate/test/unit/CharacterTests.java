@@ -60,7 +60,7 @@ class CharacterTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.gamestate.specs.ICharacter", _character.getInterfaceName());
+        assertEquals(ICharacter.class.getCanonicalName(), _character.getInterfaceName());
     }
 
     @Test

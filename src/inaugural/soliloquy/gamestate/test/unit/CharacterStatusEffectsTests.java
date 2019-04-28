@@ -44,7 +44,8 @@ class CharacterStatusEffectsTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.specs.gamestate.ICharacterStatusEffects", _characterStatusEffects.getInterfaceName());
+        assertEquals(ICharacterStatusEffects.class.getCanonicalName(),
+                _characterStatusEffects.getInterfaceName());
     }
 
     @Test

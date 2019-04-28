@@ -130,7 +130,7 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.specs.gamestate.ICharacterStatusEffects";
+        return ICharacterStatusEffects.class.getCanonicalName();
     }
 
     @Override

@@ -27,8 +27,7 @@ class OneTimeTimerTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.gamestate.specs.IOneTimeTimer",
-                _oneTimeTimer.getInterfaceName());
+        assertEquals(IOneTimeTimer.class.getCanonicalName(), _oneTimeTimer.getInterfaceName());
     }
 
     @Test

@@ -29,7 +29,7 @@ class CharacterVitalAttributeTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals("soliloquy.gamestate.specs.ICharacterVitalAttribute",
+        assertEquals(ICharacterVitalAttribute.class.getCanonicalName(),
                 _characterVitalAttribute.getInterfaceName());
     }
 

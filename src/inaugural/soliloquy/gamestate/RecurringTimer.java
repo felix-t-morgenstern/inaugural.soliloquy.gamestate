@@ -47,6 +47,6 @@ public class RecurringTimer extends Timer implements IRecurringTimer {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.IRecurringTimer";
+        return IRecurringTimer.class.getCanonicalName();
     }
 }

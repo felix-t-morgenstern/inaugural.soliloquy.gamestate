@@ -301,7 +301,7 @@ public class Character implements ICharacter {
     @Override
     public String getInterfaceName() {
         enforceInvariant("getInterfaceName", true);
-        return "soliloquy.gamestate.specs.ICharacter";
+        return ICharacter.class.getCanonicalName();
     }
 
     private void enforceInvariant(String methodName, boolean cannotBeDeleted) {

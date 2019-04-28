@@ -40,6 +40,6 @@ public class Party implements IParty {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.IParty";
+        return IParty.class.getCanonicalName();
     }
 }

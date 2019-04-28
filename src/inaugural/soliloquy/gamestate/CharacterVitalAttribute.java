@@ -96,6 +96,6 @@ public class CharacterVitalAttribute implements ICharacterVitalAttribute {
             throw new IllegalStateException(
                     "CharacterVitalAttribute.getInterfaceName: character is deleted");
         }
-        return "soliloquy.gamestate.specs.ICharacterVitalAttribute";
+        return ICharacterVitalAttribute.class.getCanonicalName();
     }
 }
