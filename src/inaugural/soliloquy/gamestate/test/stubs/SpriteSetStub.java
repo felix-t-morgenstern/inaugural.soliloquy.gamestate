@@ -6,6 +6,11 @@ import soliloquy.sprites.specs.ISpriteSet;
 
 public class SpriteSetStub implements ISpriteSet {
     @Override
+    public String spriteSetTypeId() {
+        return null;
+    }
+
+    @Override
     public ISprite getSprite(String s) {
         return null;
     }

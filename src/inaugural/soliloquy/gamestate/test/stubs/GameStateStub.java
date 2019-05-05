@@ -4,6 +4,7 @@ import soliloquy.common.specs.IMap;
 import soliloquy.common.specs.IPersistentVariableCache;
 import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
+import soliloquy.ruleset.primary.specs.IRuleset;
 
 public class GameStateStub implements IGameState {
     @Override
@@ -47,12 +48,12 @@ public class GameStateStub implements IGameState {
     }
 
     @Override
-    public IMap<String, ITimerAction> timerActions() {
+    public IMap<Integer, IKeyBindingContext> keyBindingContexts() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<Integer, IKeyBindingContext> keyBindingContexts() throws IllegalStateException {
+    public IRuleset ruleset() {
         return null;
     }
 

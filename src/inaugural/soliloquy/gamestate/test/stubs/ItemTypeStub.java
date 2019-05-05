@@ -14,6 +14,7 @@ import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
 import soliloquy.ruleset.gameentities.specs.IEquipmentType;
 import soliloquy.ruleset.gameentities.specs.IItemType;
 import soliloquy.sprites.specs.ISprite;
+import soliloquy.sprites.specs.ISpriteSet;
 
 public class ItemTypeStub implements IItemType {
     public static boolean _hasCharges = true;
@@ -95,7 +96,7 @@ public class ItemTypeStub implements IItemType {
     }
 
     @Override
-    public ISprite sprite() {
+    public ISpriteSet spriteSet() {
         return null;
     }
 
