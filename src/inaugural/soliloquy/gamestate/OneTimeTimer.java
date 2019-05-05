@@ -24,17 +24,6 @@ public class OneTimeTimer extends Timer implements IOneTimeTimer {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-        // TODO: Implement and test soon!
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        // TODO: Implement and test soon!
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
         return IOneTimeTimer.class.getCanonicalName();
     }

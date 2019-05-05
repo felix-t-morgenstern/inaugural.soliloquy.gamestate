@@ -287,18 +287,6 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-        enforceInvariant("read", true);
-
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        enforceInvariant("write", true);
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
         enforceInvariant("getInterfaceName", true);
         return ICharacter.class.getCanonicalName();

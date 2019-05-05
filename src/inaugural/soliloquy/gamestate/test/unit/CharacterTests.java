@@ -292,8 +292,6 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());
-        assertThrows(IllegalStateException.class, () -> _character.read("", false));
-        assertThrows(IllegalStateException.class, () -> _character.write());
         assertThrows(IllegalStateException.class, () -> _character.getInterfaceName());
     }
 

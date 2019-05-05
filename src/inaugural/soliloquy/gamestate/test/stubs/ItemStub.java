@@ -114,16 +114,6 @@ public class ItemStub implements IItem {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
         return null;
     }

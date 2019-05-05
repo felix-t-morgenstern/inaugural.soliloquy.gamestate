@@ -41,16 +41,6 @@ public class AbilityTypeStub implements IAbilityType {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public String getInterfaceName() {
         throw new UnsupportedOperationException();
     }

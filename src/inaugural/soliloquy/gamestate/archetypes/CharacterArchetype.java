@@ -198,16 +198,6 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public String getInterfaceName() {
         return "soliloquy.specs.gamestate.ICharacter";
     }

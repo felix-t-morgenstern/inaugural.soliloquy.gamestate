@@ -104,18 +104,6 @@ public class TileFixture implements ITileFixture {
     }
 
     @Override
-    public void read(String data, boolean overridePreviousData) throws IllegalArgumentException {
-        // TODO: Implement and test!
-
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        // TODO: Implement and test!
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
         return ITileFixture.class.getCanonicalName();
     }

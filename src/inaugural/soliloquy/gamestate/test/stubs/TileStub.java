@@ -129,16 +129,6 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
         return null;
     }

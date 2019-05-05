@@ -28,17 +28,6 @@ public class Party implements IParty {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-        // TODO: Implement and test
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        // TODO: Implement and test
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
         return IParty.class.getCanonicalName();
     }

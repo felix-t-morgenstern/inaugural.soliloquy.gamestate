@@ -132,14 +132,4 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
     public String getInterfaceName() {
         return ICharacterStatusEffects.class.getCanonicalName();
     }
-
-    @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        return null;
-    }
 }

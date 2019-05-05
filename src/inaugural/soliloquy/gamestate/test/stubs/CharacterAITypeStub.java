@@ -29,17 +29,12 @@ public class CharacterAITypeStub implements ICharacterAIType {
     }
 
     @Override
-    public void read(String s, boolean b) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
+    public String getInterfaceName() {
         return null;
     }
 
     @Override
-    public String getInterfaceName() {
+    public String id() throws IllegalStateException {
         return null;
     }
 }
