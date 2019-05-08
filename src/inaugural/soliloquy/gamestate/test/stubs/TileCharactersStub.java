@@ -1,0 +1,48 @@
+package inaugural.soliloquy.gamestate.test.stubs;
+
+import soliloquy.common.specs.IMap;
+import soliloquy.gamestate.specs.ICharacter;
+import soliloquy.gamestate.specs.ITile;
+import soliloquy.gamestate.specs.ITileCharacters;
+
+import java.util.HashMap;
+
+public class TileCharactersStub implements ITileCharacters {
+    private final HashMap<ICharacter,Integer> CHARACTERS = new HashMap<>();
+    private final ITile TILE;
+
+    public TileCharactersStub(ITile tile) {
+        TILE = tile;
+    }
+
+    @Override
+    public IMap<ICharacter, Integer> getCharactersRepresentation() {
+        return null;
+    }
+
+    @Override
+    public void addCharacter(ICharacter character) throws IllegalArgumentException {
+        addCharacter(character,0);
+    }
+
+    @Override
+    public void addCharacter(ICharacter character, int zIndex) throws IllegalArgumentException {
+        CHARACTERS.put(character,zIndex);
+        character.assignCharacterToTile(TILE);
+    }
+
+    @Override
+    public boolean removeCharacter(ICharacter character) throws IllegalArgumentException {
+        return CHARACTERS.remove(character) != null;
+    }
+
+    @Override
+    public boolean containsCharacter(ICharacter character) throws IllegalArgumentException {
+        return CHARACTERS.containsKey(character);
+    }
+
+    @Override
+    public String getInterfaceName() {
+        return null;
+    }
+}

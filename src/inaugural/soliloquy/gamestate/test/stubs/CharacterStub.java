@@ -177,8 +177,8 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public void assignCharacterToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
-
+    public void assignCharacterToTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
+        _tile = tile;
     }
 
     @Override
