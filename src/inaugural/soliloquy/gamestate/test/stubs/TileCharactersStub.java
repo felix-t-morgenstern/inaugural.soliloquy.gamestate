@@ -37,6 +37,16 @@ public class TileCharactersStub implements ITileCharacters {
     }
 
     @Override
+    public Integer getZIndex(ICharacter iCharacter) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public void setZIndex(ICharacter iCharacter, int i) throws IllegalArgumentException {
+
+    }
+
+    @Override
     public boolean containsCharacter(ICharacter character) throws IllegalArgumentException {
         return CHARACTERS.containsKey(character);
     }
