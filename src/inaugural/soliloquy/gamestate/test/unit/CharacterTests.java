@@ -21,41 +21,42 @@ class CharacterTests {
 
     private final IEntityUuid ID = new EntityUuidStub();
     private final ICharacterType CHARACTER_TYPE = new CharacterTypeStub();
-    private final IGenericParamsSet CHARACTER_TRAITS = new GenericParamsSetStub();
-    private final ICharacterAIType CHARACTER_AI_TYPE_1 = new CharacterAITypeStub();
-    private final ICharacterAIType CHARACTER_AI_TYPE_2 = new CharacterAITypeStub();
-    private final IMap<String, ICharacterAIType> CHARACTER_AI_TYPES = new MapStub<>();
-    private final IGenericParamsSet CHARACTER_AI_PARAMS = new GenericParamsSetStub();
-    private final IMap<String, ICollection<ICharacterEvent>> CHARACTER_EVENTS = new MapStub<>();
-    private final IMap<String, ICharacterVitalAttribute> CHARACTER_VITAL_ATTRIBUTES = new MapStub<>();
-    private final IMap<String, ICharacterAttribute> CHARACTER_ATTRIBUTES = new MapStub<>();
-    private final ICharacterStatusEffects CHARACTER_STATUS_EFFECTS = new CharacterStatusEffectsStub();
-    private final IMap<String, ICharacterAbility> CHARACTER_ACTIVE_ABILITIES = new MapStub<>();
-    private final IMap<String, ICharacterAbility> CHARACTER_REACTIVE_ABILITIES = new MapStub<>();
-    private final IMap<String, ICharacterAptitude> CHARACTER_APTITUDES = new MapStub<>();
+    private final IGenericParamsSet TRAITS = new GenericParamsSetStub();
+    private final ICharacterAIType AI_TYPE_1 = new CharacterAITypeStub();
+    private final ICharacterAIType AI_TYPE_2 = new CharacterAITypeStub();
+    private final IGenericParamsSet AI_PARAMS = new GenericParamsSetStub();
+    private final IMap<String, ICollection<ICharacterEvent>> EVENTS = new MapStub<>();
+    private final ICharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new CharacterEquipmentSlotsFactoryStub();
+    private final ICharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryStubFactoryStub();
+    private final IMap<String, ICharacterVitalAttribute> VITAL_ATTRIBUTES = new MapStub<>();
+    private final IMap<String, ICharacterAttribute> ATTRIBUTES = new MapStub<>();
+    private final ICharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
+    private final IMap<String, ICharacterAbility> ACTIVE_ABILITIES = new MapStub<>();
+    private final IMap<String, ICharacterAbility> REACTIVE_ABILITIES = new MapStub<>();
+    private final IMap<String, ICharacterAptitude> APTITUDES = new MapStub<>();
     private final IGenericParamsSet DATA = new GenericParamsSetStub();
 
     @BeforeEach
     void setUp() {
-        String CHARACTER_AI_TYPE_1_ID = "characterAIType1Id";
-        CHARACTER_AI_TYPES.put(CHARACTER_AI_TYPE_1_ID, CHARACTER_AI_TYPE_1);
-        String CHARACTER_AI_TYPE_2_ID = "characterAIType2Id";
-        CHARACTER_AI_TYPES.put(CHARACTER_AI_TYPE_2_ID, CHARACTER_AI_TYPE_2);
 
         _character = new Character(
                 ID,
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
-                CHARACTER_TRAITS,
-                CHARACTER_AI_PARAMS,
-                CHARACTER_EVENTS,
-                CHARACTER_VITAL_ATTRIBUTES,
-                CHARACTER_ATTRIBUTES,
-                CHARACTER_STATUS_EFFECTS,
-                CHARACTER_ACTIVE_ABILITIES,
-                CHARACTER_REACTIVE_ABILITIES,
-                CHARACTER_APTITUDES, DATA);
+                TRAITS,
+                AI_TYPE_1,
+                AI_PARAMS,
+                EVENTS,
+                EQUIPMENT_SLOTS_FACTORY,
+                INVENTORY_FACTORY,
+                VITAL_ATTRIBUTES,
+                ATTRIBUTES,
+                STATUS_EFFECTS,
+                ACTIVE_ABILITIES,
+                REACTIVE_ABILITIES,
+                APTITUDES,
+                DATA);
     }
 
     @Test
@@ -85,7 +86,7 @@ class CharacterTests {
 
     @Test
     void testSetAndGetStance() {
-        String stance = "CharacterStance";
+        final String stance = "CharacterStance";
         _character.setStance(stance);
 
         assertEquals(stance, _character.getStance());
@@ -108,75 +109,70 @@ class CharacterTests {
     }
 
     @Test
-    void testSetInvalidAIType() {
-        // TODO: Implement and test!
+    void testSetAndGetAIType() {
+        assertSame(AI_TYPE_1, _character.getAIType());
+
+        _character.setAIType(AI_TYPE_2);
+
+        assertSame(AI_TYPE_2, _character.getAIType());
     }
 
     @Test
-    void testSetAndGetAIType() {
-        // TODO: Implement and test!
+    void testSetNullAIType() {
+        assertThrows(IllegalArgumentException.class, () -> _character.setAIType(null));
     }
 
     @Test
     void testCharacterAIParams() {
-        assertEquals(CHARACTER_AI_PARAMS, _character.characterAIParams());
+        assertEquals(AI_PARAMS, _character.characterAIParams());
     }
 
     @Test
     void testCharacterEvents() {
-        assertEquals(CHARACTER_EVENTS, _character.characterEvents());
+        assertEquals(EVENTS, _character.characterEvents());
     }
 
     @Test
     void testEquipment() {
-        // TODO: Implement and test!
+        assertNotNull(_character.equipmentSlots());
+        assertSame(_character,
+                ((CharacterEquipmentSlotsStub) _character.equipmentSlots()).CHARACTER);
     }
 
     @Test
     void testInventory() {
-        // TODO: Implement and test!
-    }
-
-    @Test
-    void testAddAndRemoveItemFromInventory() {
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
+        assertNotNull(_character.inventory());
+        assertSame(_character, ((CharacterInventoryStub) _character.inventory()).CHARACTER);
     }
 
     @Test
     void testVitalAttributes() {
-        assertEquals(CHARACTER_VITAL_ATTRIBUTES, _character.vitalAttributes());
+        assertEquals(VITAL_ATTRIBUTES, _character.vitalAttributes());
     }
 
     @Test
     void testAttributes() {
-        assertEquals(CHARACTER_ATTRIBUTES, _character.attributes());
+        assertEquals(ATTRIBUTES, _character.attributes());
     }
 
     @Test
     void testStatusEffects() {
-        assertEquals(CHARACTER_STATUS_EFFECTS, _character.statusEffects());
+        assertEquals(STATUS_EFFECTS, _character.statusEffects());
     }
 
     @Test
     void testActiveAbilities() {
-        assertEquals(CHARACTER_ACTIVE_ABILITIES, _character.activeAbilities());
+        assertEquals(ACTIVE_ABILITIES, _character.activeAbilities());
     }
 
     @Test
     void testReactiveAbilities() {
-        assertEquals(CHARACTER_REACTIVE_ABILITIES, _character.reactiveAbilities());
+        assertEquals(REACTIVE_ABILITIES, _character.reactiveAbilities());
     }
 
     @Test
     void testAptitudes() {
-        assertEquals(CHARACTER_APTITUDES, _character.aptitudes());
+        assertEquals(APTITUDES, _character.aptitudes());
     }
 
     @Test

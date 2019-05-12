@@ -17,6 +17,8 @@ public class Character implements ICharacter {
     private final IGenericParamsSet TRAITS;
     private final IGenericParamsSet AI_PARAMS;
     private final IMap<String, ICollection<ICharacterEvent>> AI_EVENTS;
+    private final ICharacterEquipmentSlots EQUIPMENT_SLOTS;
+    private final ICharacterInventory INVENTORY;
     private final IMap<String, ICharacterVitalAttribute> VITAL_ATTRIBUTES;
     private final IMap<String, ICharacterAttribute> ATTRIBUTES;
     private final ICharacterStatusEffects STATUS_EFFECTS;
@@ -34,14 +36,18 @@ public class Character implements ICharacter {
     private boolean _dead;
     private boolean _deleted;
     private String _name;
+    private ICharacterAIType _aiType;
 
     public Character(IEntityUuid id,
                      ICharacterType characterType,
                      ICollectionFactory collectionFactory,
                      IMapFactory mapFactory,
                      IGenericParamsSet traits,
+                     ICharacterAIType characterAIType,
                      IGenericParamsSet aiParams,
                      IMap<String, ICollection<ICharacterEvent>> aiEvents,
+                     ICharacterEquipmentSlotsFactory equipmentSlotsFactory,
+                     ICharacterInventoryFactory inventoryFactory,
                      IMap<String, ICharacterVitalAttribute> vitalAttributes,
                      IMap<String, ICharacterAttribute> attributes,
                      ICharacterStatusEffects statusEffects,
@@ -54,8 +60,11 @@ public class Character implements ICharacter {
         CHARACTER_CLASSIFICATIONS = collectionFactory.make(new CharacterClassificationArchetype());
         PRONOUNS = mapFactory.make("","");
         TRAITS = traits;
+        _aiType = characterAIType;
         AI_PARAMS = aiParams;
         AI_EVENTS = aiEvents;
+        EQUIPMENT_SLOTS = equipmentSlotsFactory.make(this);
+        INVENTORY = inventoryFactory.make(this);
         VITAL_ATTRIBUTES = vitalAttributes;
         ATTRIBUTES = attributes;
         STATUS_EFFECTS = statusEffects;
@@ -113,7 +122,8 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public void setDirection(String direction) throws IllegalArgumentException, IllegalStateException {
+    public void setDirection(String direction)
+            throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("setDirection", true);
         _direction = direction;
     }
@@ -125,19 +135,25 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public void setSpriteSet(ISpriteSet spriteSet) throws IllegalArgumentException, IllegalStateException {
+    public void setSpriteSet(ISpriteSet spriteSet)
+            throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("setSpriteSet", true);
         _spriteSet = spriteSet;
     }
 
     @Override
     public ICharacterAIType getAIType() throws IllegalStateException {
-        return null;
+        return _aiType;
     }
 
     @Override
-    public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
-
+    public void setAIType(ICharacterAIType characterAIType)
+            throws IllegalArgumentException, IllegalStateException {
+        if (characterAIType == null) {
+            throw new IllegalArgumentException(
+                    "Character.setAIType: characterAIType cannot be null");
+        }
+        _aiType = characterAIType;
     }
 
     @Override
@@ -154,12 +170,12 @@ public class Character implements ICharacter {
 
     @Override
     public ICharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
-        return null;
+        return EQUIPMENT_SLOTS;
     }
 
     @Override
     public ICharacterInventory inventory() throws IllegalStateException {
-        return null;
+        return INVENTORY;
     }
 
     @Override
@@ -258,7 +274,8 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public void assignCharacterToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
+    public void assignCharacterToTile(ITile tile)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 
