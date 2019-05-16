@@ -6,23 +6,65 @@ import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.specs.IItemType;
 
 public class Item implements IItem {
+    private final IEntityUuid ID;
+    private final IItemType ITEM_TYPE;
+
+    private int _charges;
+    private int _numberInStack;
+
+    public Item(IEntityUuid id, IItemType itemType) {
+        ID = id;
+        ITEM_TYPE = itemType;
+    }
+
     @Override
     public IItemType itemType() throws IllegalStateException {
-        return null;
+        return ITEM_TYPE;
     }
 
     @Override
     public Integer getCharges() throws IllegalStateException {
-        return null;
+        if (!ITEM_TYPE.hasCharges()) {
+            return null;
+        } else {
+            return _charges;
+        }
+    }
+
+    @Override
+    public void setCharges(int charges) throws UnsupportedOperationException, IllegalStateException {
+        if (!ITEM_TYPE.hasCharges()) {
+            throw new UnsupportedOperationException(
+                    "Item.setCharges: ItemType doesn't have charges");
+        }
+        if (charges < 0) {
+            throw new IllegalArgumentException(String.format(
+                    "Item.setCharges: charges (%d) cannot be less than 0"));
+        }
+        _charges = charges;
     }
 
     @Override
     public Integer getNumberInStack() throws IllegalStateException {
-        return null;
+        if (!ITEM_TYPE.isStackable()) {
+            return null;
+        } else {
+            return _numberInStack;
+        }
     }
 
     @Override
-    public IItem takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+    public void setNumberInStack(int numberInStack) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+        if (!ITEM_TYPE.isStackable()) {
+            throw new UnsupportedOperationException(
+                    "Item.setNumberInStack: ItemType isn't stackable");
+        }
+        _numberInStack = numberInStack;
+    }
+
+    @Override
+    public IItem takeFromStack(int numberToTake) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+        // TODO: Implement and test this near the end
         return null;
     }
 
@@ -70,7 +112,7 @@ public class Item implements IItem {
 
     @Override
     public IEntityUuid id() {
-        return null;
+        return ID;
     }
 
     @Override
@@ -105,6 +147,6 @@ public class Item implements IItem {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.gamestate.specs.IItem";
+        return IItem.class.getCanonicalName();
     }
 }
