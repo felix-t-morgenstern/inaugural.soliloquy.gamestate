@@ -33,18 +33,6 @@ class TileFixtureTests {
     }
 
     @Test
-    void testConstructorWithNullParams() {
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-        // TODO: Write this test!!!
-    }
-
-    @Test
     void testGetInterfaceName() {
         assertEquals(ITileFixture.class.getCanonicalName(), _tileFixture.getInterfaceName());
     }
@@ -77,11 +65,6 @@ class TileFixtureTests {
     @Test
     void testData() {
         assertSame(DATA, _tileFixture.data());
-    }
-
-    @Test
-    void testAddAndRemoveContainedItem() {
-
     }
 
     @Test
