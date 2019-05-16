@@ -46,6 +46,11 @@ public class GameZoneStub implements IGameZone {
     }
 
     @Override
+    public void assignCharacterToGameZone(ICharacter character) {
+        _characters.put(character.id(), character);
+    }
+
+    @Override
     public IMap<IEntityUuid, IItem> getItemsRepresentation() {
         return _items.makeClone();
     }

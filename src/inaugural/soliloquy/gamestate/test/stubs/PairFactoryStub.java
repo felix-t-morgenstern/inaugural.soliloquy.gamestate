@@ -6,7 +6,7 @@ import soliloquy.common.specs.IPairFactory;
 public class PairFactoryStub implements IPairFactory {
     @Override
     public <T1, T2> IPair<T1, T2> make(T1 item1, T2 item2) throws IllegalArgumentException {
-        return new PairStub(item1, item2);
+        return new PairStub<>(item1, item2);
     }
 
     @Override

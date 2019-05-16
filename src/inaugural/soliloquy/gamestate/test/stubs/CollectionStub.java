@@ -62,8 +62,7 @@ public class CollectionStub<V> implements ICollection<V> {
 
     @Override
     public boolean contains(V item) {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        return _collection.contains(item);
     }
 
     @Override

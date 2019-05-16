@@ -13,7 +13,6 @@ public class TileFixture implements ITileFixture {
     private final ICoordinate PIXEL_OFFSET;
     private final IMap<String, IActiveAbility> ACTIVE_ABILITIES;
     private final IMap<String, IReactiveAbility> REACTIVE_ABILITIES;
-    private final IGameZone GAME_ZONE;
     private final IGenericParamsSet DATA;
 
     private String _name;
@@ -23,13 +22,11 @@ public class TileFixture implements ITileFixture {
                        ICoordinate pixelOffset,
                        IMap<String, IActiveAbility> activeAbilities,
                        IMap<String, IReactiveAbility> reactiveAbilities,
-                       IGameZone gameZone,
                        IGenericParamsSet data) {
         FIXTURE_TYPE = fixtureType;
         PIXEL_OFFSET = pixelOffset;
         ACTIVE_ABILITIES = activeAbilities;
         REACTIVE_ABILITIES = reactiveAbilities;
-        GAME_ZONE = gameZone;
         DATA = data;
     }
 
@@ -68,11 +65,6 @@ public class TileFixture implements ITileFixture {
     @Override
     public void assignTileFixtureToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
         // TODO: Implement and test!
-    }
-
-    @Override
-    public IGameZone gameZone() throws IllegalStateException {
-        return GAME_ZONE;
     }
 
     @Override

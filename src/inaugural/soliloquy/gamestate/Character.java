@@ -100,6 +100,7 @@ public class Character implements ICharacter {
 
     @Override
     public ITile tile() throws IllegalStateException {
+        enforceInvariant("tile", true);
         return _tile;
     }
 
@@ -143,12 +144,14 @@ public class Character implements ICharacter {
 
     @Override
     public ICharacterAIType getAIType() throws IllegalStateException {
+        enforceInvariant("getAIType", true);
         return _aiType;
     }
 
     @Override
     public void setAIType(ICharacterAIType characterAIType)
             throws IllegalArgumentException, IllegalStateException {
+        enforceInvariant("setAIType", true);
         if (characterAIType == null) {
             throw new IllegalArgumentException(
                     "Character.setAIType: characterAIType cannot be null");
@@ -170,11 +173,13 @@ public class Character implements ICharacter {
 
     @Override
     public ICharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
+        enforceInvariant("equipmentSlots", true);
         return EQUIPMENT_SLOTS;
     }
 
     @Override
     public ICharacterInventory inventory() throws IllegalStateException {
+        enforceInvariant("inventory", true);
         return INVENTORY;
     }
 
@@ -251,16 +256,6 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public IGameZone gameZone() throws IllegalStateException {
-        enforceInvariant("gameZone", true);
-        if (_tile != null) {
-            return _tile.gameZone();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public IGenericParamsSet data() throws IllegalStateException {
         enforceInvariant("data", true);
         return DATA;
@@ -269,14 +264,20 @@ public class Character implements ICharacter {
     @Override
     public void delete() throws IllegalStateException {
         enforceInvariant("characterType", false);
-        // TODO: Implement and test!
+        // delete should remove the Character from its Tile, via its TileCharacters, which will
+        // handle removal from the GameZone.
         _deleted = true;
+        if (_tile != null) {
+            _tile.characters().removeCharacter(this);
+        }
+        _tile = null;
     }
 
     @Override
     public void assignCharacterToTile(ITile tile)
             throws IllegalArgumentException, IllegalStateException {
-
+        enforceInvariant("assignCharacterToTile", true);
+        _tile = tile;
     }
 
     @Override

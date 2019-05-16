@@ -239,11 +239,6 @@ public class TileCharacters implements ITileCharacters {
         }
 
         @Override
-        public IGameZone gameZone() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
         public IGenericParamsSet data() throws IllegalStateException {
             return null;
         }

@@ -116,11 +116,6 @@ public class Item implements IItem {
     }
 
     @Override
-    public IGameZone gameZone() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
     public IGenericParamsSet data() throws IllegalStateException {
         return null;
     }

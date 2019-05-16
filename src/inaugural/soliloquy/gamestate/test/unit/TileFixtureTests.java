@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import soliloquy.common.specs.ICoordinate;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.IGameZone;
 import soliloquy.gamestate.specs.IItem;
 import soliloquy.gamestate.specs.ITileFixture;
 import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbility;
@@ -23,13 +22,12 @@ class TileFixtureTests {
     private final ICoordinate PIXEL_OFFSET = new CoordinateStub();
     private final IMap<String, IActiveAbility> ACTIVE_ABILITIES = new MapStub<>();
     private final IMap<String, IReactiveAbility> REACTIVE_ABILITIES = new MapStub<>();
-    private final IGameZone GAME_ZONE = new GameZoneStub();
     private final IGenericParamsSet DATA = new GenericParamsSetStub();
 
     @BeforeEach
     void setUp() {
         _tileFixture = new TileFixture(FIXTURE_TYPE, PIXEL_OFFSET, ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES, GAME_ZONE, DATA);
+                REACTIVE_ABILITIES, DATA);
     }
 
     @Test
@@ -55,11 +53,6 @@ class TileFixtureTests {
     @Test
     void testReactiveAbilities() {
         assertSame(REACTIVE_ABILITIES, _tileFixture.reactiveAbilities());
-    }
-
-    @Test
-    void testGameZone() {
-        assertSame(GAME_ZONE, _tileFixture.gameZone());
     }
 
     @Test
