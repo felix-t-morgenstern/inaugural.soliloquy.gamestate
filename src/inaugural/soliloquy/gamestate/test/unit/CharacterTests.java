@@ -248,7 +248,6 @@ class CharacterTests {
 
     @Test
     void testThrowsIllegalStateExceptionWhenDeleted() {
-        // TODO: Add other methods here, and ensure that the invariant is called!
         _character.delete();
 
         assertThrows(IllegalStateException.class, () -> _character.characterType());
