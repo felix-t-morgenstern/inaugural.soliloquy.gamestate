@@ -7,18 +7,6 @@ import soliloquy.common.specs.IMap;
 public class GenericParamsSetStub implements IGenericParamsSet {
 
     @Override
-    public void read(String data) throws IllegalArgumentException {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String write() throws IllegalArgumentException {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public IGenericParamsSet makeClone() {
         // Stub class; no implementation needed
         throw new UnsupportedOperationException();
