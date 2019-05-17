@@ -36,4 +36,14 @@ public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
     public String getInterfaceName() {
         return null;
     }
+
+    @Override
+    public void delete() throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
 }

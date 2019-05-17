@@ -13,7 +13,8 @@ import soliloquy.sprites.specs.ISprite;
 public class TileStub implements ITile {
     public static final IGameZone GAME_ZONE = new GameZoneStub();
 
-    private final ITileCharacters TILE_CHARACTERS = new TileCharactersStub(this);
+    private final ITileCharacters CHARACTERS = new TileCharactersStub(this);
+    private final ITileFixtures FIXTURES = new TileFixturesStub(this);
 
     public ICoordinate _tileLocation;
     public IMap<ICharacter, Integer> _characters = new MapStub<>();
@@ -77,7 +78,7 @@ public class TileStub implements ITile {
 
     @Override
     public ITileCharacters characters() {
-        return TILE_CHARACTERS;
+        return CHARACTERS;
     }
 
     @Override
@@ -87,7 +88,7 @@ public class TileStub implements ITile {
 
     @Override
     public ITileFixtures fixtures() throws IllegalStateException {
-        return null;
+        return FIXTURES;
     }
 
     @Override

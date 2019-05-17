@@ -91,6 +91,16 @@ public class TileCharacters implements ITileCharacters {
         return ITileCharacters.class.getCanonicalName();
     }
 
+    @Override
+    public void delete() throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
+
     private class CharacterArchetype implements ICharacter {
 
         @Override

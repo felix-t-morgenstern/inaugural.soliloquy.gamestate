@@ -8,6 +8,8 @@ import soliloquy.gamestate.specs.ITileFixtureItems;
 public class TileFixtureItemsStub implements ITileFixtureItems {
     public final ITileFixture TILE_FIXTURE;
 
+    private boolean _deleted;
+
     public TileFixtureItemsStub(ITileFixture tileFixture) {
         TILE_FIXTURE = tileFixture;
     }
@@ -35,5 +37,15 @@ public class TileFixtureItemsStub implements ITileFixtureItems {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        _deleted = true;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return _deleted;
     }
 }

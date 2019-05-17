@@ -31,4 +31,19 @@ public class CharacterInventoryStub implements ICharacterInventory {
     public boolean containsItem(IItem iItem) throws IllegalArgumentException, IllegalStateException {
         return false;
     }
+
+    @Override
+    public void delete() throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
+
+    @Override
+    public String getInterfaceName() {
+        return null;
+    }
 }
