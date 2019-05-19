@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.gamestate.specs.ICharacterEquipmentSlotsFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEquipmentSlotsFactoryTests {
     private final ICharacter CHARACTER = new CharacterStub();
@@ -29,5 +28,11 @@ class CharacterEquipmentSlotsFactoryTests {
     @Test
     void testMake() {
         assertNotNull(_characterEquipmentSlotsFactory.make(CHARACTER));
+    }
+
+    @Test
+    void testMakeWithNull() {
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterEquipmentSlotsFactory.make(null));
     }
 }

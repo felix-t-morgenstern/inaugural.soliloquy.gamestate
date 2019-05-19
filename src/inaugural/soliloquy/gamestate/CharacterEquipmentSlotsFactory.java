@@ -7,6 +7,10 @@ import soliloquy.gamestate.specs.ICharacterEquipmentSlotsFactory;
 public class CharacterEquipmentSlotsFactory implements ICharacterEquipmentSlotsFactory {
     @Override
     public ICharacterEquipmentSlots make(ICharacter character) throws IllegalArgumentException {
+        if (character == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlotsFactory: character must not be null");
+        }
         return new CharacterEquipmentSlots(character);
     }
 
