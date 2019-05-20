@@ -2,8 +2,10 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterInventoryFactory;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
+import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import soliloquy.common.specs.ICollectionFactory;
 import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.gamestate.specs.ICharacterInventoryFactory;
 
@@ -11,12 +13,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterInventoryFactoryTests {
     private final ICharacter CHARACTER = new CharacterStub();
+    private final ICollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
 
     private ICharacterInventoryFactory _characterInventoryFactory;
 
     @BeforeEach
     void setUp() {
-        _characterInventoryFactory = new CharacterInventoryFactory();
+        _characterInventoryFactory = new CharacterInventoryFactory(COLLECTION_FACTORY);
+    }
+
+    @Test
+    void testConstructorWithNullInput() {
+        assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryFactory(null));
     }
 
     @Test

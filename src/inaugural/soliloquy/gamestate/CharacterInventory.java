@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.common.specs.ICollection;
+import soliloquy.common.specs.ICollectionFactory;
 import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.gamestate.specs.ICharacterInventory;
 import soliloquy.gamestate.specs.IItem;
@@ -8,7 +9,7 @@ import soliloquy.gamestate.specs.IItem;
 public class CharacterInventory implements ICharacterInventory {
     // TODO: Implement and test this class (currently implemented as a shell for CharacterInventoryFactory)
 
-    public CharacterInventory(ICharacter character) {
+    public CharacterInventory(ICharacter character, ICollectionFactory collectionFactory) {
 
     }
 
