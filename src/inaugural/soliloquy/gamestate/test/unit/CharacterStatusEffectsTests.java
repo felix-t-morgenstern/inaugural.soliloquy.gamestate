@@ -110,17 +110,19 @@ class CharacterStatusEffectsTests {
 
     @Test
     void testAlterStatusEffect() {
-        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1_ID, 111, true, _element, _abilitySource);
+        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1_ID, 111, true, _element,
+                _abilitySource);
 
-        assertTrue(_characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID)
-                .equals(ResistanceCalculationStub.STATUS_EFFECT_TYPE_RESULT));
-        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._statusEffectType ==
+        assertEquals((int) _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID),
+                ResistanceCalculationStub.STATUS_EFFECT_TYPE_RESULT);
+        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._statusEffectType,
                 _statusEffectTypes.get(STATUS_EFFECT_TYPE_1_ID));
-        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._character == _character);
-        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._baseAmount == 111);
-        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._stopAtZero == true);
-        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._element == _element);
-        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._abilitySource == _abilitySource);
+        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._character, _character);
+        assertEquals(111, ((ResistanceCalculationStub) _resistanceCalculation)._baseAmount);
+        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._stopAtZero);
+        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._element, _element);
+        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._abilitySource,
+                _abilitySource);
     }
 
     @Test
