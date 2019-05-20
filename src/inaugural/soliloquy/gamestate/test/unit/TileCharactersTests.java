@@ -44,10 +44,10 @@ class TileCharactersTests {
     void testAddCharacterWithZIndexAndGetZIndex() {
         assertNull(_tileCharacters.getZIndex(CHARACTER));
 
-        final Integer Z_INDEX = 123;
+        final int Z_INDEX = 123;
         _tileCharacters.addCharacter(CHARACTER, Z_INDEX);
 
-        assertEquals(Z_INDEX, _tileCharacters.getZIndex(CHARACTER));
+        assertEquals((Integer) Z_INDEX, _tileCharacters.getZIndex(CHARACTER));
     }
 
     @Test
@@ -55,10 +55,10 @@ class TileCharactersTests {
         _tileCharacters.addCharacter(CHARACTER);
         assertEquals((Integer) 0, _tileCharacters.getZIndex(CHARACTER));
 
-        final Integer Z_INDEX = 123;
+        final int Z_INDEX = 123;
         _tileCharacters.setZIndex(CHARACTER, Z_INDEX);
 
-        assertEquals(Z_INDEX, _tileCharacters.getZIndex(CHARACTER));
+        assertEquals((Integer) Z_INDEX, _tileCharacters.getZIndex(CHARACTER));
     }
 
     @Test
@@ -78,13 +78,13 @@ class TileCharactersTests {
 
     @Test
     void testGetCharactersRepresentation() {
-        final Integer Z_INDEX = 123;
+        final int Z_INDEX = 123;
         _tileCharacters.addCharacter(CHARACTER, Z_INDEX);
 
         IMap<ICharacter,Integer> characters = _tileCharacters.getCharactersRepresentation();
 
         assertEquals(1, characters.size());
-        assertEquals(characters.get(CHARACTER), Z_INDEX);
+        assertEquals((Integer) Z_INDEX, characters.get(CHARACTER));
     }
 
     @Test
