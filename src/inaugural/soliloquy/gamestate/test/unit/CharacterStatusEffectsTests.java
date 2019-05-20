@@ -39,7 +39,8 @@ class CharacterStatusEffectsTests {
         _element = new ElementStub();
         _abilitySource = new AbilitySourceStub();
 
-        _characterStatusEffects = new CharacterStatusEffects(_statusEffectTypes, _character, new MapFactoryStub(), _resistanceCalculation);
+        _characterStatusEffects = new CharacterStatusEffects(_character, _statusEffectTypes,
+                new MapFactoryStub(), _resistanceCalculation);
     }
 
     @Test
@@ -100,7 +101,8 @@ class CharacterStatusEffectsTests {
         assertThrows(IllegalStateException.class, _characterStatusEffects::clearStatusEffects);
 
         ICharacterStatusEffects characterStatusEffects =
-                new CharacterStatusEffects(_statusEffectTypes, null, new MapFactoryStub(), _resistanceCalculation);
+                new CharacterStatusEffects(null, _statusEffectTypes, new MapFactoryStub(),
+                        _resistanceCalculation);
         assertThrows(IllegalStateException.class, () -> characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID));
         assertThrows(IllegalStateException.class, () -> characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID, 0));
         assertThrows(IllegalStateException.class, characterStatusEffects::clearStatusEffects);

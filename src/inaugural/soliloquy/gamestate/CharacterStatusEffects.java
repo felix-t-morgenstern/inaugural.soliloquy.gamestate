@@ -19,8 +19,9 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
     private final IResistanceCalculation RESISTANCE_CALCULATION;
     private final HashMap<String,Integer> STATUS_EFFECT_LEVELS;
 
-    public CharacterStatusEffects(IMap<String, IStatusEffectType> statusEffectTypes,
-                                  ICharacter character, IMapFactory mapFactory,
+    public CharacterStatusEffects(ICharacter character,
+                                  IMap<String, IStatusEffectType> statusEffectTypes,
+                                  IMapFactory mapFactory,
                                   IResistanceCalculation resistanceCalculation){
         STATUS_EFFECT_TYPES = statusEffectTypes;
         CHARACTER = character;
