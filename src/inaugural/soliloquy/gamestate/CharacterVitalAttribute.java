@@ -98,4 +98,15 @@ public class CharacterVitalAttribute implements ICharacterVitalAttribute {
         }
         return ICharacterVitalAttribute.class.getCanonicalName();
     }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        // TODO: Test and implement
+    }
+
+    @Override
+    public boolean isDeleted() {
+        // TODO: Test and implement
+        return false;
+    }
 }

@@ -44,4 +44,14 @@ public class CharacterAbility implements ICharacterAbility {
     public String getInterfaceName() {
         return ICharacterAbility.class.getCanonicalName();
     }
+
+    @Override
+    public void delete() throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
 }

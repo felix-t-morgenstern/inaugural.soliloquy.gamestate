@@ -97,8 +97,11 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     @Override
     public ICollection<V> getValues() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        ICollection<V> values = new CollectionStub<>();
+        for(V value : _map.values()) {
+            values.add(value);
+        }
+        return values;
     }
 
     @Override

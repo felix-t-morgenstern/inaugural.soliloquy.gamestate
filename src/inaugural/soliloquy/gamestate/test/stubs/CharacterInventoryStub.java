@@ -8,6 +8,8 @@ import soliloquy.gamestate.specs.IItem;
 public class CharacterInventoryStub implements ICharacterInventory {
     public final ICharacter CHARACTER;
 
+    public boolean _isDeleted;
+
     public CharacterInventoryStub(ICharacter character) {
         CHARACTER = character;
     }
@@ -34,12 +36,12 @@ public class CharacterInventoryStub implements ICharacterInventory {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     @Override

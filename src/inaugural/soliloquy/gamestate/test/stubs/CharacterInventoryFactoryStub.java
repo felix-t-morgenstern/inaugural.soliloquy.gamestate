@@ -4,7 +4,7 @@ import soliloquy.gamestate.specs.ICharacter;
 import soliloquy.gamestate.specs.ICharacterInventory;
 import soliloquy.gamestate.specs.ICharacterInventoryFactory;
 
-public class CharacterInventoryStubFactoryStub implements ICharacterInventoryFactory {
+public class CharacterInventoryFactoryStub implements ICharacterInventoryFactory {
     @Override
     public ICharacterInventory make(ICharacter character) {
         return new CharacterInventoryStub(character);

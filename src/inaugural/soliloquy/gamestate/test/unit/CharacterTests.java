@@ -9,8 +9,9 @@ import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
 import soliloquy.gamestate.specs.*;
+import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
+import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
 import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
-import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
 
@@ -27,12 +28,12 @@ class CharacterTests {
     private final IGenericParamsSet AI_PARAMS = new GenericParamsSetStub();
     private final IMap<String, ICollection<ICharacterEvent>> EVENTS = new MapStub<>();
     private final ICharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new CharacterEquipmentSlotsFactoryStub();
-    private final ICharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryStubFactoryStub();
+    private final ICharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryFactoryStub();
     private final IMap<String, ICharacterVitalAttribute> VITAL_ATTRIBUTES = new MapStub<>();
     private final IMap<String, ICharacterAttribute> ATTRIBUTES = new MapStub<>();
     private final ICharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
-    private final IMap<String, ICharacterAbility> ACTIVE_ABILITIES = new MapStub<>();
-    private final IMap<String, ICharacterAbility> REACTIVE_ABILITIES = new MapStub<>();
+    private final IMap<String, ICharacterAbility<IActiveAbilityType>> ACTIVE_ABILITIES = new MapStub<>();
+    private final IMap<String, ICharacterAbility<IReactiveAbilityType>> REACTIVE_ABILITIES = new MapStub<>();
     private final IMap<String, ICharacterAptitude> APTITUDES = new MapStub<>();
     private final IGenericParamsSet DATA = new GenericParamsSetStub();
 
@@ -237,13 +238,40 @@ class CharacterTests {
     void testDelete() {
         ITile tile = new TileStub();
         tile.characters().addCharacter(_character);
+        // TODO: After defining ICharacterEvents, test its deletion here
+        CharacterEquipmentSlotsStub equipmentSlots =
+                (CharacterEquipmentSlotsStub) _character.equipmentSlots();
+        CharacterInventoryStub inventory = (CharacterInventoryStub) _character.inventory();
+        CharacterVitalAttributeStub vitalAttribute = new CharacterVitalAttributeStub();
+        _character.vitalAttributes().put("vitalAttribute", vitalAttribute);
+        CharacterAttributeStub attribute = new CharacterAttributeStub();
+        _character.attributes().put("attribute", attribute);
+        CharacterStatusEffectsStub statusEffects =
+                (CharacterStatusEffectsStub) _character.statusEffects();
+        CharacterAbilityStub<IActiveAbilityType> characterActiveAbility =
+                new CharacterAbilityStub<>();
+        _character.activeAbilities().put("characterActiveAbility", characterActiveAbility);
+        CharacterAbilityStub<IReactiveAbilityType> characterReactiveAbility =
+                new CharacterAbilityStub<>();
+        _character.reactiveAbilities().put("characterReactiveAbility", characterReactiveAbility);
+        CharacterAptitudeStub aptitude = new CharacterAptitudeStub();
+        _character.aptitudes().put("aptitude", aptitude);
         assertFalse(_character.isDeleted());
-        assertFalse(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS.contains(_character));
+        assertFalse(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS
+                .contains(_character));
 
         _character.delete();
 
         assertTrue(_character.isDeleted());
         assertTrue(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS.contains(_character));
+        assertTrue(equipmentSlots._isDeleted);
+        assertTrue(inventory._isDeleted);
+        assertTrue(vitalAttribute._isDeleted);
+        assertTrue(attribute._isDeleted);
+        assertTrue(statusEffects._isDeleted);
+        assertTrue(characterActiveAbility._isDeleted);
+        assertTrue(characterReactiveAbility._isDeleted);
+        assertTrue(aptitude._isDeleted);
     }
 
     @Test

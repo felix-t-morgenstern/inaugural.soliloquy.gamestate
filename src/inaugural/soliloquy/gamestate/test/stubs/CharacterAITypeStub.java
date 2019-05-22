@@ -3,8 +3,8 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.common.specs.ICollection;
 import soliloquy.common.specs.IMap;
 import soliloquy.game.primary.specs.IGame;
+import soliloquy.gamestate.specs.ICharacterEvent;
 import soliloquy.logger.specs.ILogger;
-import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
 
 public class CharacterAITypeStub implements ICharacterAIType {

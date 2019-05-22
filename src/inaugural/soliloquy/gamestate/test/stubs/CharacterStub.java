@@ -5,8 +5,9 @@ import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.common.specs.IMap;
 import soliloquy.gamestate.specs.*;
+import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
+import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
 import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
-import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
@@ -117,12 +118,14 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterAbility> activeAbilities() throws IllegalStateException {
+    public IMap<String, ICharacterAbility<IActiveAbilityType>> activeAbilities()
+            throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, ICharacterAbility> reactiveAbilities() throws IllegalStateException {
+    public IMap<String, ICharacterAbility<IReactiveAbilityType>> reactiveAbilities()
+            throws IllegalStateException {
         return null;
     }
 

@@ -3,7 +3,8 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterClassificationArchetype;
 import soliloquy.common.specs.*;
 import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.ICharacterEvent;
+import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
+import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
 import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
 import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
 import soliloquy.ruleset.gameentities.specs.ICharacterType;
@@ -16,14 +17,14 @@ public class Character implements ICharacter {
     private final IMap<String,String> PRONOUNS;
     private final IGenericParamsSet TRAITS;
     private final IGenericParamsSet AI_PARAMS;
-    private final IMap<String, ICollection<ICharacterEvent>> AI_EVENTS;
+    private final IMap<String, ICollection<ICharacterEvent>> EVENTS;
     private final ICharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final ICharacterInventory INVENTORY;
     private final IMap<String, ICharacterVitalAttribute> VITAL_ATTRIBUTES;
     private final IMap<String, ICharacterAttribute> ATTRIBUTES;
     private final ICharacterStatusEffects STATUS_EFFECTS;
-    private final IMap<String, ICharacterAbility> ACTIVE_ABILITIES;
-    private final IMap<String, ICharacterAbility> REACTIVE_ABILITIES;
+    private final IMap<String, ICharacterAbility<IActiveAbilityType>> ACTIVE_ABILITIES;
+    private final IMap<String, ICharacterAbility<IReactiveAbilityType>> REACTIVE_ABILITIES;
     private final IMap<String, ICharacterAptitude> APTITUDES;
     private final IGenericParamsSet DATA;
 
@@ -51,8 +52,8 @@ public class Character implements ICharacter {
                      IMap<String, ICharacterVitalAttribute> vitalAttributes,
                      IMap<String, ICharacterAttribute> attributes,
                      ICharacterStatusEffects statusEffects,
-                     IMap<String, ICharacterAbility> activeAbilities,
-                     IMap<String, ICharacterAbility> reactiveAbilities,
+                     IMap<String, ICharacterAbility<IActiveAbilityType>> activeAbilities,
+                     IMap<String, ICharacterAbility<IReactiveAbilityType>> reactiveAbilities,
                      IMap<String, ICharacterAptitude> aptitudes,
                      IGenericParamsSet data) {
         ID = id;
@@ -62,7 +63,7 @@ public class Character implements ICharacter {
         TRAITS = traits;
         _aiType = characterAIType;
         AI_PARAMS = aiParams;
-        AI_EVENTS = aiEvents;
+        EVENTS = aiEvents;
         EQUIPMENT_SLOTS = equipmentSlotsFactory.make(this);
         INVENTORY = inventoryFactory.make(this);
         VITAL_ATTRIBUTES = vitalAttributes;
@@ -168,7 +169,7 @@ public class Character implements ICharacter {
     @Override
     public IMap<String, ICollection<ICharacterEvent>> characterEvents() {
         enforceInvariant("characterEvents", true);
-        return AI_EVENTS;
+        return EVENTS;
     }
 
     @Override
@@ -202,13 +203,15 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public IMap<String, ICharacterAbility> activeAbilities() throws IllegalStateException {
+    public IMap<String, ICharacterAbility<IActiveAbilityType>> activeAbilities()
+            throws IllegalStateException {
         enforceInvariant("activeAbilities", true);
         return ACTIVE_ABILITIES;
     }
 
     @Override
-    public IMap<String, ICharacterAbility> reactiveAbilities() throws IllegalStateException {
+    public IMap<String, ICharacterAbility<IReactiveAbilityType>> reactiveAbilities()
+            throws IllegalStateException {
         enforceInvariant("reactiveAbilities", true);
         return REACTIVE_ABILITIES;
     }
@@ -271,6 +274,20 @@ public class Character implements ICharacter {
             _tile.characters().removeCharacter(this);
         }
         _tile = null;
+        EQUIPMENT_SLOTS.delete();
+        INVENTORY.delete();
+        deleteAll(VITAL_ATTRIBUTES);
+        deleteAll(ATTRIBUTES);
+        STATUS_EFFECTS.delete();
+        deleteAll(ACTIVE_ABILITIES);
+        deleteAll(REACTIVE_ABILITIES);
+        deleteAll(APTITUDES);
+    }
+
+    private <V extends IDeletable> void deleteAll(IMap<?,V> deletables) {
+        for(IDeletable deletable : deletables.getValues()) {
+            deletable.delete();
+        }
     }
 
     @Override

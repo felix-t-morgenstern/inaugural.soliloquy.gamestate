@@ -133,4 +133,14 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
     public String getInterfaceName() {
         return ICharacterStatusEffects.class.getCanonicalName();
     }
+
+    @Override
+    public void delete() throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
+    }
 }

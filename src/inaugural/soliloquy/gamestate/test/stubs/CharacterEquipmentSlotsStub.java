@@ -8,6 +8,8 @@ import soliloquy.gamestate.specs.ICharacterEquipmentSlots;
 public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
     public final ICharacter CHARACTER;
 
+    public boolean _isDeleted;
+
     public CharacterEquipmentSlotsStub(ICharacter character) {
         CHARACTER = character;
     }
@@ -39,11 +41,11 @@ public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 }

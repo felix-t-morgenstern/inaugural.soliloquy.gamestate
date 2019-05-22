@@ -6,6 +6,8 @@ import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
 import soliloquy.ruleset.gameentities.specs.IElement;
 
 public class CharacterStatusEffectsStub implements ICharacterStatusEffects {
+    public boolean _isDeleted;
+
     @Override
     public Integer getStatusEffectLevel(String s) throws IllegalStateException, IllegalArgumentException {
         return null;
@@ -34,5 +36,15 @@ public class CharacterStatusEffectsStub implements ICharacterStatusEffects {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        _isDeleted = true;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return _isDeleted;
     }
 }
