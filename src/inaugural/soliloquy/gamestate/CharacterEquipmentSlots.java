@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CharacterEquipmentSlots implements ICharacterEquipmentSlots {
-    // TODO: Implement and test this class (currently implemented as a shell for CharacterEquipmentSlotsFactory)
     private final ICharacter CHARACTER;
     private final IPairFactory PAIR_FACTORY;
     private final IMapFactory MAP_FACTORY;
