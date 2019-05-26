@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
+import soliloquy.common.specs.IPair;
 import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.specs.IItemType;
 
@@ -74,7 +75,7 @@ public class Item implements IItem {
     }
 
     @Override
-    public ICharacterEquipmentSlot getCharacterEquipmentSlot() throws IllegalStateException {
+    public IPair<ICharacter, String> getCharacterEquipmentSlot() throws IllegalStateException {
         return null;
     }
 
@@ -95,8 +96,7 @@ public class Item implements IItem {
     }
 
     @Override
-    public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlot iCharacterEquipmentSlot) throws IllegalStateException, IllegalArgumentException {
-        // TODO: Implement and test!
+    public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlots iCharacterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
 
     }
 

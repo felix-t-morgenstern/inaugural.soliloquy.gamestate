@@ -1,50 +1,330 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlot;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlots;
+import soliloquy.common.specs.*;
+import soliloquy.gamestate.specs.*;
+import soliloquy.ruleset.gameentities.specs.IItemType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class CharacterEquipmentSlots implements ICharacterEquipmentSlots {
     // TODO: Implement and test this class (currently implemented as a shell for CharacterEquipmentSlotsFactory)
     private final ICharacter CHARACTER;
+    private final IPairFactory PAIR_FACTORY;
+    private final IMapFactory MAP_FACTORY;
+    private final HashMap<String, IPair<IItem,Boolean>> EQUIPMENT_SLOTS;
 
-    public CharacterEquipmentSlots(ICharacter character) {
+    private static final IItem ITEM_ARCHETYPE = new ItemArchetype();
+
+    private boolean _isDeleted;
+
+    public CharacterEquipmentSlots(ICharacter character, IPairFactory pairFactory,
+                                   IMapFactory mapFactory) {
+        if (character == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots: character must be non-null");
+        }
+        if (pairFactory == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots: pairFactory must be non-null");
+        }
+        if (mapFactory == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots: mapFactory must be non-null");
+        }
+
         CHARACTER = character;
-    }
-
-    @Override
-    public ICollection<ICharacterEquipmentSlot> getCharacterEquipmentSlotsRepresentation() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void addCharacterEquipmentSlot(ICharacterEquipmentSlot iCharacterEquipmentSlot) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public boolean removeCharacterEquipmentSlot(ICharacterEquipmentSlot iCharacterEquipmentSlot) throws IllegalArgumentException, IllegalStateException {
-        return false;
-    }
-
-    @Override
-    public boolean containsCharacterEquipmentSlot(ICharacterEquipmentSlot iCharacterEquipmentSlot) throws IllegalArgumentException, IllegalStateException {
-        return false;
+        PAIR_FACTORY = pairFactory;
+        MAP_FACTORY = mapFactory;
+        EQUIPMENT_SLOTS = new HashMap<>();
     }
 
     @Override
     public void delete() throws IllegalStateException {
-
+        enforceDeletionInvariants("delete");
+        _isDeleted = true;
+        for(Map.Entry<String,IPair<IItem,Boolean>> entry : EQUIPMENT_SLOTS.entrySet()) {
+            if(entry.getValue().getItem1() != null) {
+                entry.getValue().getItem1().delete();
+            }
+        }
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     @Override
     public String getInterfaceName() {
-        return null;
+        enforceDeletionInvariants("getInterfaceName");
+        return ICharacterEquipmentSlots.class.getCanonicalName();
+    }
+
+    @Override
+    public IMap<String, IItem> getRepresentation()
+            throws IllegalStateException {
+        enforceDeletionInvariants("getRepresentation");
+        IMap<String, IItem> characterEquipmentSlotsRepresentation =
+                MAP_FACTORY.make("", ITEM_ARCHETYPE);
+        for(Map.Entry<String,IPair<IItem,Boolean>> equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
+            characterEquipmentSlotsRepresentation.put(equipmentSlot.getKey(),
+                    equipmentSlot.getValue().getItem1());
+        }
+        return characterEquipmentSlotsRepresentation;
+    }
+
+    @Override
+    public void addCharacterEquipmentSlot(String equipmentSlotType)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("addCharacterEquipmentSlot");
+        if (equipmentSlotType == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.addCharacterEquipmentSlot: equipmentSlotType must be non-null");
+        }
+        if (equipmentSlotType.equals("")) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.addCharacterEquipmentSlot: equipmentSlotType must be non-empty");
+        }
+        if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
+            EQUIPMENT_SLOTS.putIfAbsent(equipmentSlotType,
+                    PAIR_FACTORY.make(null, true, ITEM_ARCHETYPE, true));
+        }
+    }
+
+    @Override
+    public boolean equipmentSlotExists(String equipmentSlotType)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("equipmentSlotExists");
+        if (equipmentSlotType == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.equipmentSlotExists: equipmentSlotType must be non-null");
+        }
+        if (equipmentSlotType.equals("")) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.equipmentSlotExists: equipmentSlotType must be non-empty");
+        }
+        return EQUIPMENT_SLOTS.containsKey(equipmentSlotType);
+    }
+
+    @Override
+    public IItem removeCharacterEquipmentSlot(String equipmentSlotType)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("removeCharacterEquipmentSlot");
+        if (equipmentSlotType == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.removeCharacterEquipmentSlot: equipmentSlotType must be non-null");
+        }
+        if (equipmentSlotType.equals("")) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.removeCharacterEquipmentSlot: equipmentSlotType must be non-empty");
+        }
+        IItem itemInSlot = EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
+        EQUIPMENT_SLOTS.remove(equipmentSlotType);
+        return itemInSlot;
+    }
+
+    @Override
+    public IItem itemInSlot(String equipmentSlotType)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("itemInSlot");
+        if (equipmentSlotType == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.itemInSlot: equipmentSlotType must be non-null");
+        }
+        if (equipmentSlotType.equals("")) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.itemInSlot: equipmentSlotType must be non-empty");
+        }
+        if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.itemInSlot: no equipment slot of specified type");
+        }
+        return EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
+    }
+
+    @Override
+    public boolean canEquipItemToSlot(String equipmentSlotType, IItem item)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("canEquipItemToSlot");
+        if (equipmentSlotType == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.canEquipItemToSlot: equipmentSlotType must be non-null");
+        }
+        if (equipmentSlotType.equals("")) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.canEquipItemToSlot: equipmentSlotType must be non-empty");
+        }
+        if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.canEquipToSlot: " +
+                            equipmentSlotType +
+                            " is not an equipment slot present for this Character");
+        }
+        if (item == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.canEquipItemToSlot: item must be non-null");
+        }
+        return item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType);
+    }
+
+    @Override
+    public IItem equipItemToSlot(String equipmentSlotType, IItem item)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+        enforceDeletionInvariants("equipItemToSlot");
+        if (!EQUIPMENT_SLOTS.get(equipmentSlotType).getItem2()) {
+            throw new UnsupportedOperationException(
+                    "CharacterEquipmentSlots.equipItemToSlot: item in equipmentSlotType is set to prohibit alteration");
+        }
+        if (item != null &&
+                !item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType)) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.equipItemToSlot: item cannot be equiped to slot of provided type");
+        }
+        IItem previousItem = EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
+        EQUIPMENT_SLOTS.get(equipmentSlotType).setItem1(item);
+        return previousItem;
+    }
+
+    @Override
+    public boolean getCanAlterEquipmentInSlot(String equipmentSlotType)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("getCanAlterEquipmentInSlot");
+        if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.getCanAlterEquipmentInSlot: no equipment slot of specified type");
+        }
+        return EQUIPMENT_SLOTS.get(equipmentSlotType).getItem2();
+    }
+
+    @Override
+    public void setCanAlterEquipmentInSlot(String equipmentSlotType,
+                                           boolean canAlterEquipmentInSlot)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("setCanAlterEquipmentInSlot");
+        if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.setCanAlterEquipmentInSlot: no equipment slot of specified type");
+        }
+        EQUIPMENT_SLOTS.get(equipmentSlotType).setItem2(canAlterEquipmentInSlot);
+    }
+
+    private void enforceDeletionInvariants(String methodName) {
+        if (_isDeleted) {
+            throw new IllegalStateException("CharacterEquipmentSlots." + methodName +
+                    ": object has already been deleted");
+        }
+        if (CHARACTER.isDeleted()) {
+            throw new IllegalStateException("CharacterEquipmentSlots." + methodName +
+                    ": character has already been deleted");
+        }
+    }
+
+    private static class ItemArchetype implements IItem {
+
+        @Override
+        public IItemType itemType() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public Integer getCharges() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public void setCharges(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+
+        }
+
+        @Override
+        public Integer getNumberInStack() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public void setNumberInStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+
+        }
+
+        @Override
+        public IItem takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public ICharacter getInventoryCharacter() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public IPair<ICharacter, String> getCharacterEquipmentSlot() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public ITile getTile() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public ITileFixture getTileFixture() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public void assignCharacterInventoryToItem(ICharacter iCharacter) throws IllegalStateException, IllegalArgumentException {
+
+        }
+
+        @Override
+        public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlots iCharacterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
+
+        }
+
+        @Override
+        public void assignTileToItem(ITile iTile) throws IllegalStateException, IllegalArgumentException {
+
+        }
+
+        @Override
+        public void assignTileFixtureToItem(ITileFixture iTileFixture) throws IllegalArgumentException, IllegalStateException {
+
+        }
+
+        @Override
+        public IGenericParamsSet data() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+
+        @Override
+        public void setName(String s) {
+
+        }
+
+        @Override
+        public IEntityUuid id() {
+            return null;
+        }
+
+        @Override
+        public void delete() throws IllegalStateException {
+
+        }
+
+        @Override
+        public boolean isDeleted() {
+            return false;
+        }
+
+        @Override
+        public String getInterfaceName() {
+            return IItem.class.getCanonicalName();
+        }
     }
 }

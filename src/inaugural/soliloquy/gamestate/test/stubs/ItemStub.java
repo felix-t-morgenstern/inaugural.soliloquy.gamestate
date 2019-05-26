@@ -2,15 +2,18 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.common.specs.IEntityUuid;
 import soliloquy.common.specs.IGenericParamsSet;
+import soliloquy.common.specs.IPair;
 import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.specs.IItemType;
 
 public class ItemStub implements IItem {
+    private final IItemType ITEM_TYPE = new ItemTypeStub();
+
     private boolean _deleted;
 
     @Override
     public IItemType itemType() throws IllegalStateException {
-        return null;
+        return ITEM_TYPE;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class ItemStub implements IItem {
     }
 
     @Override
-    public ICharacterEquipmentSlot getCharacterEquipmentSlot() throws IllegalStateException {
+    public IPair<ICharacter, String> getCharacterEquipmentSlot() throws IllegalStateException {
         return null;
     }
 
@@ -64,7 +67,7 @@ public class ItemStub implements IItem {
     }
 
     @Override
-    public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlot iCharacterEquipmentSlot) throws IllegalStateException, IllegalArgumentException {
+    public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlots iCharacterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
 
     }
 

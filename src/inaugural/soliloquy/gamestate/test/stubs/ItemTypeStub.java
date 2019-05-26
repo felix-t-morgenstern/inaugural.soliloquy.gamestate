@@ -5,7 +5,6 @@ import soliloquy.common.specs.ICoordinate;
 import soliloquy.common.specs.IFunction;
 import soliloquy.common.specs.IGenericParamsSet;
 import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlot;
 import soliloquy.gamestate.specs.IItem;
 import soliloquy.gamestate.specs.ITile;
 import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbility;
@@ -13,12 +12,13 @@ import soliloquy.ruleset.gameentities.abilities.specs.IPassiveAbility;
 import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
 import soliloquy.ruleset.gameentities.specs.IEquipmentType;
 import soliloquy.ruleset.gameentities.specs.IItemType;
-import soliloquy.sprites.specs.ISprite;
 import soliloquy.sprites.specs.ISpriteSet;
 
 public class ItemTypeStub implements IItemType {
     public static boolean _hasCharges = true;
     public static boolean _isStackable = true;
+
+    public static IEquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
 
     @Override
     public IItem generateOnTile(ITile iTile, ICoordinate iCoordinate, Integer integer, IGenericParamsSet iGenericParamsSet) throws IllegalArgumentException {
@@ -31,13 +31,13 @@ public class ItemTypeStub implements IItemType {
     }
 
     @Override
-    public IItem generateInEquipment(ICharacterEquipmentSlot iCharacterEquipmentSlot, IGenericParamsSet iGenericParamsSet) throws IllegalArgumentException {
+    public IItem generateInEquipment(ICharacter iCharacter, String s, IGenericParamsSet iGenericParamsSet) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public IEquipmentType getEquipmentType() {
-        return null;
+    public IEquipmentType equipmentType() {
+        return EQUIPMENT_TYPE;
     }
 
     @Override
