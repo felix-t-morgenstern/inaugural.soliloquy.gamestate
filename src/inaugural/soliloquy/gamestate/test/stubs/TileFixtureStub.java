@@ -11,6 +11,8 @@ import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
 import soliloquy.ruleset.gameentities.specs.IFixtureType;
 
 public class TileFixtureStub implements ITileFixture {
+    private boolean _isDeleted;
+
     @Override
     public ITile tile() throws IllegalStateException {
         return null;
@@ -63,12 +65,12 @@ public class TileFixtureStub implements ITileFixture {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     @Override

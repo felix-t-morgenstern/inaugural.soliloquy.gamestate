@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.common.specs.*;
 import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.IItemType;
 
 import java.util.HashMap;
-import java.util.Map;
 
+import java.util.Map;
 public class CharacterEquipmentSlots implements ICharacterEquipmentSlots {
     private final ICharacter CHARACTER;
     private final IPairFactory PAIR_FACTORY;
@@ -43,8 +43,9 @@ public class CharacterEquipmentSlots implements ICharacterEquipmentSlots {
         enforceDeletionInvariants("delete");
         _isDeleted = true;
         for(Map.Entry<String,IPair<IItem,Boolean>> entry : EQUIPMENT_SLOTS.entrySet()) {
-            if(entry.getValue().getItem1() != null) {
-                entry.getValue().getItem1().delete();
+            IItem item = entry.getValue().getItem1();
+            if(item != null && !item.isDeleted()) {
+                item.delete();
             }
         }
     }
@@ -216,114 +217,6 @@ public class CharacterEquipmentSlots implements ICharacterEquipmentSlots {
         if (CHARACTER.isDeleted()) {
             throw new IllegalStateException("CharacterEquipmentSlots." + methodName +
                     ": character has already been deleted");
-        }
-    }
-
-    private static class ItemArchetype implements IItem {
-
-        @Override
-        public IItemType itemType() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public Integer getCharges() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public void setCharges(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-
-        }
-
-        @Override
-        public Integer getNumberInStack() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public void setNumberInStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-
-        }
-
-        @Override
-        public IItem takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public ICharacter getInventoryCharacter() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public IPair<ICharacter, String> getCharacterEquipmentSlot() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public ITile getTile() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public ITileFixture getTileFixture() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public void assignCharacterInventoryToItem(ICharacter iCharacter) throws IllegalStateException, IllegalArgumentException {
-
-        }
-
-        @Override
-        public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlots iCharacterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
-
-        }
-
-        @Override
-        public void assignTileToItem(ITile iTile) throws IllegalStateException, IllegalArgumentException {
-
-        }
-
-        @Override
-        public void assignTileFixtureToItem(ITileFixture iTileFixture) throws IllegalArgumentException, IllegalStateException {
-
-        }
-
-        @Override
-        public IGenericParamsSet data() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public String getName() {
-            return null;
-        }
-
-        @Override
-        public void setName(String s) {
-
-        }
-
-        @Override
-        public IEntityUuid id() {
-            return null;
-        }
-
-        @Override
-        public void delete() throws IllegalStateException {
-
-        }
-
-        @Override
-        public boolean isDeleted() {
-            return false;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return IItem.class.getCanonicalName();
         }
     }
 }

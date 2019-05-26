@@ -15,26 +15,6 @@ public class TileFixtureItemsStub implements ITileFixtureItems {
     }
 
     @Override
-    public ICollection<IItem> getContainedItemsRepresentation() throws UnsupportedOperationException, IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void addContainedItem(IItem iItem) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public boolean removeContainedItem(IItem iItem) throws IllegalArgumentException, IllegalStateException {
-        return false;
-    }
-
-    @Override
-    public boolean containsContainedItem(IItem iItem) throws IllegalArgumentException, IllegalStateException {
-        return false;
-    }
-
-    @Override
     public String getInterfaceName() {
         return null;
     }
@@ -47,5 +27,25 @@ public class TileFixtureItemsStub implements ITileFixtureItems {
     @Override
     public boolean isDeleted() {
         return _deleted;
+    }
+
+    @Override
+    public ICollection<IItem> getRepresentation() throws UnsupportedOperationException, IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void add(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
+    public boolean remove(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+        return false;
+    }
+
+    @Override
+    public boolean contains(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+        return false;
     }
 }
