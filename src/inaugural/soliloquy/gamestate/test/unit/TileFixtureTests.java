@@ -69,7 +69,7 @@ class TileFixtureTests {
         // NB: TileFixture.TILE should NOT be exposed, and calling TileFixture.assignCharacterToTile
         // violates the invariant condition; therefore, TileFixturesStub calls
         // TileFixture.assignCharacterToTile indirectly, as it should be in production code
-        tile.fixtures().addTileFixture(_tileFixture);
+        tile.fixtures().add(_tileFixture);
 
         assertSame(tile, _tileFixture.tile());
     }
@@ -119,7 +119,7 @@ class TileFixtureTests {
     @Test
     void testContainingTileInvariant() {
         ITile tile = new TileStub();
-        tile.fixtures().addTileFixture(_tileFixture);
+        tile.fixtures().add(_tileFixture);
         ((TileFixturesStub) tile.fixtures()).FIXTURES.remove(_tileFixture);
 
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());

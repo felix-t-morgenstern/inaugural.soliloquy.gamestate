@@ -118,7 +118,7 @@ public class TileFixture implements ITileFixture {
             throw new IllegalStateException(
                     "TileFixture." + methodName + ": TileFixture is deleted");
         }
-        if (_tile != null && !_tile.fixtures().containsTileFixture(this)) {
+        if (_tile != null && !_tile.fixtures().contains(this)) {
             throw new IllegalStateException("TileFixture." + methodName +
                     ": TileFixture is not present on its specified Tile");
         }

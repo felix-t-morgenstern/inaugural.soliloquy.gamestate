@@ -18,27 +18,27 @@ public class TileFixturesStub implements ITileFixtures {
     }
 
     @Override
-    public IMap<ITileFixture, Integer> getTileFixturesRepresentation() throws IllegalStateException {
+    public IMap<ITileFixture, Integer> getRepresentation() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void addTileFixture(ITileFixture tileFixture) throws IllegalArgumentException {
+    public void add(ITileFixture tileFixture) throws IllegalArgumentException {
         FIXTURES.add(tileFixture);
         tileFixture.assignTileFixtureToTile(TILE);
     }
 
     @Override
-    public void addTileFixture(ITileFixture iTileFixture, int i) throws IllegalArgumentException {
+    public void add(ITileFixture iTileFixture, int i) throws IllegalArgumentException {
     }
 
     @Override
-    public boolean removeTileFixture(ITileFixture iTileFixture) {
+    public boolean remove(ITileFixture iTileFixture) {
         return false;
     }
 
     @Override
-    public boolean containsTileFixture(ITileFixture tileFixture) throws IllegalArgumentException {
+    public boolean contains(ITileFixture tileFixture) throws IllegalArgumentException {
         return FIXTURES.contains(tileFixture);
     }
 

@@ -81,6 +81,9 @@ class TileFixtureItemsTests {
         ICollection<IItem> representation = _tileFixtureItems.getRepresentation();
 
         assertNotNull(representation);
+        assertNotNull(representation.getArchetype());
+        assertEquals(IItem.class.getCanonicalName(),
+                representation.getArchetype().getInterfaceName());
         assertEquals(3, representation.size());
         assertTrue(representation.contains(ITEM));
         assertTrue(representation.contains(ITEM_2));

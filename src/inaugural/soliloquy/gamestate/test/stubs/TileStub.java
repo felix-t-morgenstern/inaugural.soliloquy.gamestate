@@ -16,6 +16,8 @@ public class TileStub implements ITile {
     private final ITileCharacters CHARACTERS = new TileCharactersStub(this);
     private final ITileFixtures FIXTURES = new TileFixturesStub(this);
 
+    private boolean _isDeleted;
+
     public ICoordinate _tileLocation;
     public IMap<ICharacter, Integer> _characters = new MapStub<>();
 
@@ -33,12 +35,12 @@ public class TileStub implements ITile {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     @Override

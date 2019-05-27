@@ -10,8 +10,16 @@ import java.util.Map;
 public class MapStub<K,V> implements IMap<K,V> {
     private HashMap<K,V> _map = new HashMap<>();
 
+    private K _archetype1;
+    private V _archetype2;
+
     public MapStub() {
 
+    }
+
+    public MapStub(K archetype1, V archetype2) {
+        _archetype1 = archetype1;
+        _archetype2 = archetype2;
     }
 
     private MapStub(HashMap<K,V> map) {
@@ -25,14 +33,12 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     @Override
     public K getFirstArchetype() throws IllegalStateException {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        return _archetype1;
     }
 
     @Override
     public V getSecondArchetype() throws IllegalStateException {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        return _archetype2;
     }
 
     @Override
