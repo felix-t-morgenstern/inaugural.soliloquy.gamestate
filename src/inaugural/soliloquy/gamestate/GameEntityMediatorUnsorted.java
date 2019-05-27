@@ -39,9 +39,7 @@ abstract class GameEntityMediatorUnsorted<TEntity extends IDeletable>
     public ICollection<TEntity> getRepresentation() {
         enforceDeletionInvariants("getRepresentation");
         ICollection<TEntity> representation = COLLECTION_FACTORY.make(getArchetype());
-        for (TEntity entity : ENTITIES) {
-            representation.add(entity);
-        }
+        ENTITIES.forEach(representation::add);
         return representation;
     }
 
