@@ -1,52 +1,48 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.ICollection;
+import inaugural.soliloquy.gamestate.archetypes.TileWallSegmentArchetype;
 import soliloquy.common.specs.ICollectionFactory;
 import soliloquy.gamestate.specs.ITile;
 import soliloquy.gamestate.specs.ITileWallSegment;
 import soliloquy.gamestate.specs.ITileWallSegments;
 
-public class TileWallSegments implements ITileWallSegments {
+public class TileWallSegments extends GameEntityMediatorUnsorted<ITileWallSegment>
+        implements ITileWallSegments {
     private final ITile TILE;
-    private final ICollectionFactory COLLECTION_FACTORY;
+    private final static ITileWallSegment TILE_WALL_SEGMENT_ARCHETYPE =
+            new TileWallSegmentArchetype();
 
     public TileWallSegments(ITile tile, ICollectionFactory collectionFactory) {
+        super(collectionFactory);
+        if (tile == null) {
+            throw new IllegalArgumentException("TileWallSegments: tile must be non-null");
+        }
         TILE = tile;
-        COLLECTION_FACTORY = collectionFactory;
-    }
-
-    @Override
-    public ICollection<ITileWallSegment> getTileWallSegmentsRepresentation() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void addTileWallSegment(ITileWallSegment iTileWallSegment) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public boolean removeTileWallSegment(ITileWallSegment iTileWallSegment) throws IllegalArgumentException, IllegalStateException {
-        return false;
-    }
-
-    @Override
-    public boolean containsTileWallSegment(ITileWallSegment iTileWallSegment) throws IllegalArgumentException, IllegalStateException {
-        return false;
-    }
-
-    @Override
-    public void delete() throws IllegalStateException {
-
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return false;
     }
 
     @Override
     public String getInterfaceName() {
-        return null;
+        enforceDeletionInvariants("getInterfaceName");
+        return ITileWallSegments.class.getCanonicalName();
+    }
+
+    @Override
+    protected ITileWallSegment getArchetype() {
+        return TILE_WALL_SEGMENT_ARCHETYPE;
+    }
+
+    @Override
+    protected String className() {
+        return "TileWallSegments";
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "tile";
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return TILE.isDeleted();
     }
 }
