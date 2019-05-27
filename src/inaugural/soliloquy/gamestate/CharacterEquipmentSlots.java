@@ -7,7 +7,7 @@ import soliloquy.gamestate.specs.*;
 import java.util.HashMap;
 
 import java.util.Map;
-public class CharacterEquipmentSlots implements ICharacterEquipmentSlots {
+public class CharacterEquipmentSlots extends HasDeletionInvariants implements ICharacterEquipmentSlots {
     private final ICharacter CHARACTER;
     private final IPairFactory PAIR_FACTORY;
     private final IMapFactory MAP_FACTORY;
@@ -209,14 +209,18 @@ public class CharacterEquipmentSlots implements ICharacterEquipmentSlots {
         EQUIPMENT_SLOTS.get(equipmentSlotType).setItem2(canAlterEquipmentInSlot);
     }
 
-    private void enforceDeletionInvariants(String methodName) {
-        if (_isDeleted) {
-            throw new IllegalStateException("CharacterEquipmentSlots." + methodName +
-                    ": object has already been deleted");
-        }
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException("CharacterEquipmentSlots." + methodName +
-                    ": character has already been deleted");
-        }
+    @Override
+    protected String className() {
+        return "CharacterEquipmentSlots";
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "character";
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return CHARACTER.isDeleted();
     }
 }

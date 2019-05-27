@@ -9,7 +9,7 @@ import soliloquy.gamestate.specs.ITileFixtureItems;
 
 import java.util.ArrayList;
 
-public class TileFixtureItems implements ITileFixtureItems {
+public class TileFixtureItems extends HasDeletionInvariants implements ITileFixtureItems {
     private final ITileFixture TILE_FIXTURE;
     private final ICollectionFactory COLLECTION_FACTORY;
     private final ArrayList<IItem> CONTAINED_ITEMS;
@@ -89,14 +89,18 @@ public class TileFixtureItems implements ITileFixtureItems {
         return CONTAINED_ITEMS.contains(item);
     }
 
-    private void enforceDeletionInvariants(String methodName) {
-        if (_isDeleted) {
-            throw new IllegalStateException("TileFixtureItems." + methodName
-                    + ": object is deleted");
-        }
-        if (TILE_FIXTURE.isDeleted()) {
-            throw new IllegalStateException("TileFixtureItems." + methodName
-                    + ": encasing TileFixture is deleted");
-        }
+    @Override
+    protected String className() {
+        return "TileFixtureItems";
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "tile fixture";
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return TILE_FIXTURE.isDeleted();
     }
 }

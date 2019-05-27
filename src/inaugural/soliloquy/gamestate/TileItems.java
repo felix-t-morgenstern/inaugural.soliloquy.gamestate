@@ -1,57 +1,46 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.IMap;
+import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.common.specs.IMapFactory;
 import soliloquy.gamestate.specs.IItem;
 import soliloquy.gamestate.specs.ITile;
 import soliloquy.gamestate.specs.ITileItems;
 
-public class TileItems implements ITileItems {
+public class TileItems extends GameEntityMediatorWithZIndex<IItem> implements ITileItems {
     private final ITile TILE;
-    private final IMapFactory MAP_FACTORY;
+    private static final IItem ITEM_ARCHETYPE = new ItemArchetype();
 
     public TileItems(ITile tile, IMapFactory mapFactory) {
+        super(mapFactory);
+        if (tile == null) {
+            throw new IllegalArgumentException("TileItems: tile must be non-null");
+        }
         TILE = tile;
-        MAP_FACTORY = mapFactory;
-    }
-
-    @Override
-    public IMap<IItem, Integer> getItemsRepresentation() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void addItem(IItem iItem) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public void addItem(IItem iItem, int i) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public boolean removeItem(IItem iItem) throws IllegalArgumentException {
-        return false;
-    }
-
-    @Override
-    public boolean containsItem(IItem iItem) throws IllegalArgumentException {
-        return false;
-    }
-
-    @Override
-    public void delete() throws IllegalStateException {
-
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return false;
     }
 
     @Override
     public String getInterfaceName() {
-        return null;
+        enforceDeletionInvariants("getInterfaceName");
+        return ITileItems.class.getCanonicalName();
+    }
+
+    @Override
+    protected String className() {
+        return "TileItems";
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "tile";
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return TILE.isDeleted();
+    }
+
+    @Override
+    protected IItem getArchetype() {
+        return ITEM_ARCHETYPE;
     }
 }

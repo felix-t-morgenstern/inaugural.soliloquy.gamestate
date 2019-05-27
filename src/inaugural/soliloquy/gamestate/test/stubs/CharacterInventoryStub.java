@@ -15,26 +15,6 @@ public class CharacterInventoryStub implements ICharacterInventory {
     }
 
     @Override
-    public ICollection<IItem> getInventoryRepresentation() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void addItemToInventory(IItem iItem) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public boolean removeItemFromInventory(IItem iItem) throws IllegalArgumentException, IllegalStateException {
-        return false;
-    }
-
-    @Override
-    public boolean containsItem(IItem iItem) throws IllegalArgumentException, IllegalStateException {
-        return false;
-    }
-
-    @Override
     public void delete() throws IllegalStateException {
         _isDeleted = true;
     }
@@ -47,5 +27,25 @@ public class CharacterInventoryStub implements ICharacterInventory {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public ICollection<IItem> getRepresentation() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void add(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
+    public boolean remove(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+        return false;
+    }
+
+    @Override
+    public boolean contains(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+        return false;
     }
 }
