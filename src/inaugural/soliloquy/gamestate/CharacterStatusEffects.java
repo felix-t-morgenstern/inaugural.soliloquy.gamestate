@@ -122,6 +122,7 @@ public class CharacterStatusEffects extends HasDeletionInvariants
 
     @Override
     public void delete() throws IllegalStateException {
+        enforceInvariants("delete");
         _isDeleted = true;
     }
 

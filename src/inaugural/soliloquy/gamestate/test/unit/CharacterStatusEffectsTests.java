@@ -163,5 +163,7 @@ class CharacterStatusEffectsTests {
                 () -> _characterStatusEffects.clearStatusEffects());
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.getInterfaceName());
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.delete());
     }
 }
