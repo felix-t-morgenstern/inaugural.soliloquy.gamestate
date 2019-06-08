@@ -12,8 +12,6 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends IDeletable>
     private final IMapFactory MAP_FACTORY;
     private final HashMap<TEntity,Integer> ENTITIES;
 
-    private boolean _isDeleted;
-
     GameEntityMediatorWithZIndex(IMapFactory mapFactory) {
         if (mapFactory == null) {
             throw new IllegalArgumentException(className() + ": mapFactory must be non-null");
@@ -29,11 +27,6 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends IDeletable>
         for(Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
             entry.getKey().delete();
         }
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return _isDeleted;
     }
 
     protected abstract TEntity getArchetype();

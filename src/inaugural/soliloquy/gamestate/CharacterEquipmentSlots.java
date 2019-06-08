@@ -7,7 +7,8 @@ import soliloquy.gamestate.specs.*;
 import java.util.HashMap;
 
 import java.util.Map;
-public class CharacterEquipmentSlots extends HasDeletionInvariants implements ICharacterEquipmentSlots {
+public class CharacterEquipmentSlots extends HasDeletionInvariants
+        implements ICharacterEquipmentSlots {
     private final ICharacter CHARACTER;
     private final IPairFactory PAIR_FACTORY;
     private final IMapFactory MAP_FACTORY;
@@ -15,8 +16,7 @@ public class CharacterEquipmentSlots extends HasDeletionInvariants implements IC
 
     private static final IItem ITEM_ARCHETYPE = new ItemArchetype();
 
-    private boolean _isDeleted;
-
+    @SuppressWarnings("ConstantConditions")
     public CharacterEquipmentSlots(ICharacter character, IPairFactory pairFactory,
                                    IMapFactory mapFactory) {
         if (character == null) {
@@ -48,11 +48,6 @@ public class CharacterEquipmentSlots extends HasDeletionInvariants implements IC
                 item.delete();
             }
         }
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return _isDeleted;
     }
 
     @Override

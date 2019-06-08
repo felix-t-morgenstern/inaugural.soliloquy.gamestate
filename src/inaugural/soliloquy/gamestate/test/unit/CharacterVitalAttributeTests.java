@@ -73,5 +73,22 @@ class CharacterVitalAttributeTests {
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.calculateValue());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.modifiers());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.totalValue());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.delete());
+    }
+
+    @Test
+    void testEnforceDeletionInvariant() {
+        _characterVitalAttribute.delete();
+
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.character());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.getCurrentValue());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.setCurrentValue(0));
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.setCurrentValue(0));
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.vitalAttributeType());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.getInterfaceName());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.calculateValue());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.modifiers());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.totalValue());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.delete());
     }
 }

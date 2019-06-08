@@ -10,7 +10,7 @@ abstract class HasDeletionInvariants implements IDeletable {
     protected abstract boolean containingObjectIsDeleted();
 
     void enforceDeletionInvariants(String methodName) {
-        if (isDeleted()) {
+        if (_isDeleted) {
             throw new IllegalStateException(className() + "." + methodName +
                     ": object is deleted");
         }
@@ -18,5 +18,10 @@ abstract class HasDeletionInvariants implements IDeletable {
             throw new IllegalStateException(className() + "." + methodName + ": containing " +
                     containingClassName() + " is deleted");
         }
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return _isDeleted;
     }
 }

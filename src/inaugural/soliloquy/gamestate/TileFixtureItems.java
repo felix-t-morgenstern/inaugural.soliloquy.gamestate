@@ -16,8 +16,7 @@ public class TileFixtureItems extends HasDeletionInvariants implements ITileFixt
 
     private static final IItem ITEM_ARCHETYPE = new ItemArchetype();
 
-    private boolean _isDeleted;
-
+    @SuppressWarnings("ConstantConditions")
     public TileFixtureItems(ITileFixture tileFixture, ICollectionFactory collectionFactory) {
         if (tileFixture == null) {
             throw new IllegalArgumentException("TileFixtureItems: tileFixture must be non-null");
@@ -39,11 +38,6 @@ public class TileFixtureItems extends HasDeletionInvariants implements ITileFixt
                 item.delete();
             }
         }
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return _isDeleted;
     }
 
     @Override

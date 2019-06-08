@@ -7,7 +7,8 @@ import soliloquy.gamestate.specs.ICharacterVitalAttribute;
 import soliloquy.ruleset.gameconcepts.specs.IVitalAttributeCalculation;
 import soliloquy.ruleset.gameentities.specs.IVitalAttributeType;
 
-public class CharacterVitalAttribute implements ICharacterVitalAttribute {
+public class CharacterVitalAttribute extends HasDeletionInvariants
+        implements ICharacterVitalAttribute {
     private final ICharacter CHARACTER;
     private final IVitalAttributeType VITAL_ATTRIBUTE_TYPE;
     private final IVitalAttributeCalculation VITAL_ATTRIBUTE_CALCULATION;
@@ -25,64 +26,44 @@ public class CharacterVitalAttribute implements ICharacterVitalAttribute {
 
     @Override
     public IVitalAttributeType vitalAttributeType() throws IllegalStateException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.vitalAttributeType: character is deleted");
-        }
+        enforceDeletionInvariants("vitalAttributeType");
         return VITAL_ATTRIBUTE_TYPE;
     }
 
     @Override
     public int getCurrentValue() throws IllegalStateException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.getCurrentValue: character is deleted");
-        }
+        enforceDeletionInvariants("getCurrentValue");
         return _currentValue;
     }
 
     @Override
-    public void setCurrentValue(int currentValue) throws IllegalStateException, IllegalArgumentException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.setCurrentValue: character is deleted");
-        }
+    public void setCurrentValue(int currentValue)
+            throws IllegalStateException, IllegalArgumentException {
+        enforceDeletionInvariants("setCurrentValue");
         _currentValue = currentValue;
     }
 
     @Override
     public ICharacter character() throws IllegalStateException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.character: character is deleted");
-        }
+        enforceDeletionInvariants("character");
         return CHARACTER;
     }
 
     @Override
     public int totalValue() throws IllegalStateException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.totalValue: character is deleted");
-        }
+        enforceDeletionInvariants("totalValue");
         return _totalValue;
     }
 
     @Override
     public IMap<String, Integer> modifiers() throws IllegalStateException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.modifiers: character is deleted");
-        }
+        enforceDeletionInvariants("modifiers");
         return _modifiers;
     }
 
     @Override
     public void calculateValue() throws IllegalStateException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.calculateValue: character is deleted");
-        }
+        enforceDeletionInvariants("calculateValue");
         IPair<Integer,IMap<String,Integer>> calculatedValueAndModifiers =
                 VITAL_ATTRIBUTE_CALCULATION.calculateVitalAttributeMaxValue(
                         CHARACTER, VITAL_ATTRIBUTE_TYPE);
@@ -92,21 +73,28 @@ public class CharacterVitalAttribute implements ICharacterVitalAttribute {
 
     @Override
     public String getInterfaceName() throws IllegalStateException {
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterVitalAttribute.getInterfaceName: character is deleted");
-        }
+        enforceDeletionInvariants("getInterfaceName");
         return ICharacterVitalAttribute.class.getCanonicalName();
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        // TODO: Test and implement
+    protected String className() {
+        return "CharacterVitalAttribute";
     }
 
     @Override
-    public boolean isDeleted() {
-        // TODO: Test and implement
-        return false;
+    protected String containingClassName() {
+        return "Character";
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return CHARACTER.isDeleted();
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        enforceDeletionInvariants("delete");
+        _isDeleted = true;
     }
 }
