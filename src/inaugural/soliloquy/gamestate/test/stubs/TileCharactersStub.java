@@ -31,7 +31,7 @@ public class TileCharactersStub implements ITileCharacters {
     public void addCharacter(ICharacter character, int zIndex) throws IllegalArgumentException {
         CHARACTERS.put(character,zIndex);
         TILE.gameZone().assignCharacterToGameZone(character);
-        character.assignCharacterToTile(TILE);
+        character.assignToTile(TILE);
     }
 
     @Override

@@ -79,12 +79,12 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public IGenericParamsSet characterAIParams() throws IllegalStateException {
+    public IGenericParamsSet aiParams() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IMap<String, ICollection<ICharacterEvent>> characterEvents() {
+    public IMap<String, ICollection<ICharacterEvent>> events() {
         throw new UnsupportedOperationException();
     }
 
@@ -171,7 +171,7 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public void assignCharacterToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
+    public void assignToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

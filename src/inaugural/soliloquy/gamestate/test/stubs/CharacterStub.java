@@ -83,12 +83,12 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IGenericParamsSet characterAIParams() throws IllegalStateException {
+    public IGenericParamsSet aiParams() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, ICollection<ICharacterEvent>> characterEvents() {
+    public IMap<String, ICollection<ICharacterEvent>> events() {
         return null;
     }
 
@@ -175,7 +175,7 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public void assignCharacterToTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
+    public void assignToTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
         _tile = tile;
     }
 

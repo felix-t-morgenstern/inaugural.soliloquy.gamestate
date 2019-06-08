@@ -19,13 +19,7 @@ public class GenericParamsSetStub implements IGenericParamsSet {
     }
 
     @Override
-    public <T> void addParam(String name, T value, T archetype) throws IllegalArgumentException {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <T> void addParamsSet(IMap<String, T> paramsSet, T paramArchetype)
+    public <T> void addParamsSet(IMap<String, T> iMap)
             throws IllegalArgumentException, UnsupportedOperationException {
         // Stub class; no implementation needed
         throw new UnsupportedOperationException();

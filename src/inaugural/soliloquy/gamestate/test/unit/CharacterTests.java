@@ -60,6 +60,7 @@ class CharacterTests {
                 DATA);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new Character(
@@ -435,12 +436,12 @@ class CharacterTests {
 
     @Test
     void testCharacterAIParams() {
-        assertEquals(AI_PARAMS, _character.characterAIParams());
+        assertEquals(AI_PARAMS, _character.aiParams());
     }
 
     @Test
     void testCharacterEvents() {
-        assertEquals(EVENTS, _character.characterEvents());
+        assertEquals(EVENTS, _character.events());
     }
 
     @Test
@@ -544,11 +545,15 @@ class CharacterTests {
         assertSame(tile, _character.tile());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testDelete() {
         ITile tile = new TileStub();
         tile.characters().addCharacter(_character);
-        // TODO: After defining ICharacterEvents, test its deletion here
+        IMap<String,ICollection<ICharacterEvent>> characterEvents = _character.events();
+        CharacterEventStub characterEvent = new CharacterEventStub();
+        characterEvents.put("eventType", new CollectionStub<>());
+        characterEvents.get("eventType").add(characterEvent);
         CharacterEquipmentSlotsStub equipmentSlots =
                 (CharacterEquipmentSlotsStub) _character.equipmentSlots();
         CharacterInventoryStub inventory = (CharacterInventoryStub) _character.inventory();
@@ -574,6 +579,7 @@ class CharacterTests {
 
         assertTrue(_character.isDeleted());
         assertTrue(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS.contains(_character));
+        assertTrue(characterEvent._isDeleted);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
         assertTrue(vitalAttribute._isDeleted);
@@ -601,8 +607,8 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
-        assertThrows(IllegalStateException.class, () -> _character.characterAIParams());
-        assertThrows(IllegalStateException.class, () -> _character.characterEvents());
+        assertThrows(IllegalStateException.class, () -> _character.aiParams());
+        assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
         assertThrows(IllegalStateException.class, () -> _character.vitalAttributes());
@@ -618,7 +624,7 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.getDead());
         assertThrows(IllegalStateException.class, () -> _character.setDead(true));
         assertThrows(IllegalStateException.class, () -> _character.data());
-        assertThrows(IllegalStateException.class, () -> _character.assignCharacterToTile(null));
+        assertThrows(IllegalStateException.class, () -> _character.assignToTile(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());
@@ -644,8 +650,8 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
-        assertThrows(IllegalStateException.class, () -> _character.characterAIParams());
-        assertThrows(IllegalStateException.class, () -> _character.characterEvents());
+        assertThrows(IllegalStateException.class, () -> _character.aiParams());
+        assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
         assertThrows(IllegalStateException.class, () -> _character.vitalAttributes());
@@ -663,7 +669,7 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.data());
         assertThrows(IllegalStateException.class, () -> _character.delete());
         assertThrows(IllegalStateException.class, () -> _character.isDeleted());
-        assertThrows(IllegalStateException.class, () -> _character.assignCharacterToTile(null));
+        assertThrows(IllegalStateException.class, () -> _character.assignToTile(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());
@@ -689,8 +695,8 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
-        assertThrows(IllegalStateException.class, () -> _character.characterAIParams());
-        assertThrows(IllegalStateException.class, () -> _character.characterEvents());
+        assertThrows(IllegalStateException.class, () -> _character.aiParams());
+        assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
         assertThrows(IllegalStateException.class, () -> _character.vitalAttributes());
@@ -708,7 +714,7 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.data());
         assertThrows(IllegalStateException.class, () -> _character.delete());
         assertThrows(IllegalStateException.class, () -> _character.isDeleted());
-        assertThrows(IllegalStateException.class, () -> _character.assignCharacterToTile(null));
+        assertThrows(IllegalStateException.class, () -> _character.assignToTile(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());

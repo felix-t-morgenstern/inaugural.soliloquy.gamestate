@@ -39,7 +39,7 @@ public class TileCharacters implements ITileCharacters {
                     "TileCharacters.addCharacter: character cannot be null");
         }
         CHARACTERS.put(character, zIndex);
-        character.assignCharacterToTile(TILE);
+        character.assignToTile(TILE);
     }
 
     @Override

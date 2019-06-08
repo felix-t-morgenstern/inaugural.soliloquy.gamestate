@@ -213,13 +213,13 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public IGenericParamsSet characterAIParams() throws IllegalStateException {
+    public IGenericParamsSet aiParams() throws IllegalStateException {
         enforceInvariant("characterAIParams", true);
         return AI_PARAMS;
     }
 
     @Override
-    public IMap<String, ICollection<ICharacterEvent>> characterEvents() {
+    public IMap<String, ICollection<ICharacterEvent>> events() {
         enforceInvariant("characterEvents", true);
         return EVENTS;
     }
@@ -326,6 +326,11 @@ public class Character implements ICharacter {
             _tile.characters().removeCharacter(this);
         }
         _tile = null;
+        for(ICollection<ICharacterEvent> events : EVENTS.getValues()) {
+            for(ICharacterEvent event : events) {
+                event.delete();
+            }
+        }
         EQUIPMENT_SLOTS.delete();
         INVENTORY.delete();
         deleteAll(VITAL_ATTRIBUTES);
@@ -343,7 +348,7 @@ public class Character implements ICharacter {
     }
 
     @Override
-    public void assignCharacterToTile(ITile tile)
+    public void assignToTile(ITile tile)
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("assignCharacterToTile", true);
         _tile = tile;
