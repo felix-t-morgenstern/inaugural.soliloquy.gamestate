@@ -39,6 +39,7 @@ public class Character implements ICharacter {
     private String _name;
     private ICharacterAIType _aiType;
 
+    @SuppressWarnings("ConstantConditions")
     public Character(IEntityUuid id,
                      ICharacterType characterType,
                      ICollectionFactory collectionFactory,
@@ -56,22 +57,73 @@ public class Character implements ICharacter {
                      IMap<String, ICharacterAbility<IReactiveAbilityType>> reactiveAbilities,
                      IMap<String, ICharacterAptitude> aptitudes,
                      IGenericParamsSet data) {
+        if (id == null) {
+            throw new IllegalArgumentException("Character: id must be non-null");
+        }
         ID = id;
+        if (characterType == null) {
+            throw new IllegalArgumentException("Character: characterType must be non-null");
+        }
         CHARACTER_TYPE = characterType;
+        if (collectionFactory == null) {
+            throw new IllegalArgumentException("Character: collectionFactory must be non-null");
+        }
         CHARACTER_CLASSIFICATIONS = collectionFactory.make(new CharacterClassificationArchetype());
+        if (mapFactory == null) {
+            throw new IllegalArgumentException("Character: mapFactory must be non-null");
+        }
         PRONOUNS = mapFactory.make("","");
+        if (traits == null) {
+            throw new IllegalArgumentException("Character: traits must be non-null");
+        }
         TRAITS = traits;
+        if (characterAIType == null) {
+            throw new IllegalArgumentException("Character: characterAIType must be non-null");
+        }
         _aiType = characterAIType;
+        if (aiParams == null) {
+            throw new IllegalArgumentException("Character: aiParams must be non-null");
+        }
         AI_PARAMS = aiParams;
+        if (aiEvents == null) {
+            throw new IllegalArgumentException("Character: aiEvents must be non-null");
+        }
         EVENTS = aiEvents;
+        if (equipmentSlotsFactory == null) {
+            throw new IllegalArgumentException("Character: equipmentSlotsFactory must be non-null");
+        }
         EQUIPMENT_SLOTS = equipmentSlotsFactory.make(this);
+        if (inventoryFactory == null) {
+            throw new IllegalArgumentException("Character: inventoryFactory must be non-null");
+        }
         INVENTORY = inventoryFactory.make(this);
+        if (vitalAttributes == null) {
+            throw new IllegalArgumentException("Character: vitalAttributes must be non-null");
+        }
         VITAL_ATTRIBUTES = vitalAttributes;
+        if (attributes == null) {
+            throw new IllegalArgumentException("Character: attributes must be non-null");
+        }
         ATTRIBUTES = attributes;
+        if (statusEffects == null) {
+            throw new IllegalArgumentException("Character: statusEffects must be non-null");
+        }
         STATUS_EFFECTS = statusEffects;
+        if (activeAbilities == null) {
+            throw new IllegalArgumentException("Character: activeAbilities must be non-null");
+        }
         ACTIVE_ABILITIES = activeAbilities;
+        if (reactiveAbilities == null) {
+            throw new IllegalArgumentException("Character: reactiveAbilities must be non-null");
+        }
         REACTIVE_ABILITIES = reactiveAbilities;
+        if (aptitudes == null) {
+            throw new IllegalArgumentException("Character: aptitudes must be non-null");
+        }
         APTITUDES = aptitudes;
+        if (data == null) {
+            throw new IllegalArgumentException("Character: data must be non-null");
+        }
         DATA = data;
     }
 
