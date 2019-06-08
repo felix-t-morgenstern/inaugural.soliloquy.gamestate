@@ -145,4 +145,23 @@ class CharacterStatusEffectsTests {
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1_ID, 111, true,
                         _element, _abilitySource));
     }
+
+    @Test
+    void testEnforceDeletionInvariant() {
+        _characterStatusEffects.delete();
+
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID));
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.getAllStatusEffects());
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1_ID, 0, false,
+                        _element, _abilitySource));
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID, 0));
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.clearStatusEffects());
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.getInterfaceName());
+    }
 }

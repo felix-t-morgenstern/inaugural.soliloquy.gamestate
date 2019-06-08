@@ -12,7 +12,8 @@ import soliloquy.ruleset.gameentities.specs.IStatusEffectType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CharacterStatusEffects implements ICharacterStatusEffects {
+public class CharacterStatusEffects extends HasDeletionInvariants
+        implements ICharacterStatusEffects {
     private final IMap<String,IStatusEffectType> STATUS_EFFECT_TYPES;
     private final ICharacter CHARACTER;
     private final IMapFactory MAP_FACTORY;
@@ -37,20 +38,16 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
             throw new IllegalArgumentException(
                     "CharacterStatusEffects.getStatusEffectLevel: statusEffectTypeId is not a valid value");
         }
-        if (CHARACTER == null) {
-            throw new IllegalStateException("CharacterStatusEffects.getStatusEffectLevel: character is null");
-        }
+        enforceInvariants("getStatusEffectLevel");
         if (CHARACTER.getDead()) {
-            throw new IllegalStateException("CharacterStatusEffects.getStatusEffectLevel: character is dead");
-        }
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException("CharacterStatusEffects.getStatusEffectLevel: character is deleted");
+            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
         }
         return STATUS_EFFECT_LEVELS.getOrDefault(statusEffectTypeId, 0);
     }
 
     @Override
     public IMap<String, Integer> getAllStatusEffects() {
+        enforceInvariants("getAllStatusEffects");
         IMap<String, Integer> statusEffectLevels = MAP_FACTORY.make("", 0);
         for (Map.Entry<String, Integer> statusEffectLevel : STATUS_EFFECT_LEVELS.entrySet()) {
             statusEffectLevels.put(statusEffectLevel.getKey(), statusEffectLevel.getValue());
@@ -62,13 +59,10 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
     public void alterStatusEffect(String statusEffectTypeId, int baseAmount, boolean stopAtZero,
                                   IElement element, IAbilitySource abilitySource)
             throws IllegalStateException, IllegalArgumentException {
+        enforceInvariants("alterStatusEffect");
         if (CHARACTER.getDead()) {
             throw new IllegalStateException(
                     "CharacterStatusEffects.alterStatusEffect: character is dead");
-        }
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException(
-                    "CharacterStatusEffects.alterStatusEffect: character is deleted");
         }
         if (statusEffectTypeId == null) {
             throw new IllegalArgumentException(
@@ -94,19 +88,15 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
     }
 
     @Override
-    public void setStatusEffectLevel(String statusEffectTypeId, int level) throws IllegalStateException {
+    public void setStatusEffectLevel(String statusEffectTypeId, int level)
+            throws IllegalStateException {
         if (!STATUS_EFFECT_TYPES.containsKey(statusEffectTypeId)) {
             throw new IllegalArgumentException(
                     "CharacterStatusEffects.setStatusEffectLevel: statusEffectTypeId is not a valid value");
         }
-        if (CHARACTER == null) {
-            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is null");
-        }
+        enforceInvariants("alterStatusEffect");
         if (CHARACTER.getDead()) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
-        }
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is deleted");
         }
         if (level == 0) {
             STATUS_EFFECT_LEVELS.remove(statusEffectTypeId);
@@ -117,30 +107,44 @@ public class CharacterStatusEffects implements ICharacterStatusEffects {
 
     @Override
     public void clearStatusEffects() throws IllegalStateException {
-        if (CHARACTER == null) {
-            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is null");
-        }
+        enforceInvariants("alterStatusEffect");
         if (CHARACTER.getDead()) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
-        }
-        if (CHARACTER.isDeleted()) {
-            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is deleted");
         }
         STATUS_EFFECT_LEVELS.clear();
     }
 
     @Override
     public String getInterfaceName() {
+        enforceInvariants("alterStatusEffect");
         return ICharacterStatusEffects.class.getCanonicalName();
     }
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
-    public boolean isDeleted() {
-        return false;
+    protected String className() {
+        return "CharacterStatusEffects";
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "Character";
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return CHARACTER.isDeleted();
+    }
+
+    private void enforceInvariants(String methodName) {
+        if (CHARACTER == null) {
+            throw new IllegalStateException("CharacterStatusEffects." + methodName +
+                    ": character is null");
+        }
+        enforceDeletionInvariants(methodName);
     }
 }
