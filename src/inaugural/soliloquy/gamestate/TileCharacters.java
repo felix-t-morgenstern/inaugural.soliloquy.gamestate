@@ -7,7 +7,7 @@ import soliloquy.gamestate.specs.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TileCharacters implements ITileCharacters {
+public class TileCharacters extends HasDeletionInvariants implements ITileCharacters {
     private final ITile TILE;
     private final IMapFactory MAP_FACTORY;
     private final HashMap<ICharacter,Integer> CHARACTERS = new HashMap<>();
@@ -20,6 +20,7 @@ public class TileCharacters implements ITileCharacters {
 
     @Override
     public IMap<ICharacter, Integer> getCharactersRepresentation() {
+        enforceDeletionInvariants("getCharactersRepresentation");
         IMap<ICharacter,Integer> charactersRepresentation = MAP_FACTORY.make(ARCHETYPE,0);
         for (Map.Entry<ICharacter,Integer> entry : CHARACTERS.entrySet()) {
             charactersRepresentation.put(entry.getKey(), entry.getValue());
@@ -34,6 +35,7 @@ public class TileCharacters implements ITileCharacters {
 
     @Override
     public void addCharacter(ICharacter character, int zIndex) throws IllegalArgumentException {
+        enforceDeletionInvariants("addCharacter");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.addCharacter: character cannot be null");
@@ -44,6 +46,7 @@ public class TileCharacters implements ITileCharacters {
 
     @Override
     public boolean removeCharacter(ICharacter character) throws IllegalArgumentException {
+        enforceDeletionInvariants("removeCharacter");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.removeCharacter: character cannot be null");
@@ -53,6 +56,7 @@ public class TileCharacters implements ITileCharacters {
 
     @Override
     public Integer getZIndex(ICharacter character) throws IllegalArgumentException {
+        enforceDeletionInvariants("getZIndex");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.getZIndex: character cannot be null");
@@ -62,6 +66,7 @@ public class TileCharacters implements ITileCharacters {
 
     @Override
     public void setZIndex(ICharacter character, int zIndex) throws IllegalArgumentException {
+        enforceDeletionInvariants("setZIndex");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.setZIndex: character cannot be null");
@@ -75,6 +80,7 @@ public class TileCharacters implements ITileCharacters {
 
     @Override
     public boolean containsCharacter(ICharacter character) throws IllegalArgumentException {
+        enforceDeletionInvariants("containsCharacter");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.containsCharacter: character cannot be null");
@@ -84,16 +90,29 @@ public class TileCharacters implements ITileCharacters {
 
     @Override
     public String getInterfaceName() {
+        enforceDeletionInvariants("getInterfaceName");
         return ITileCharacters.class.getCanonicalName();
     }
 
     @Override
     public void delete() throws IllegalStateException {
-
+        enforceDeletionInvariants("delete");
+        _isDeleted = true;
+        CHARACTERS.forEach((c,i) -> c.delete());
     }
 
     @Override
-    public boolean isDeleted() {
-        return false;
+    protected String className() {
+        return "TileCharacters";
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "Tile";
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return TILE.isDeleted();
     }
 }

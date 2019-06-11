@@ -95,4 +95,44 @@ class TileCharactersTests {
         assertThrows(IllegalArgumentException.class, () -> _tileCharacters.setZIndex(null, 0));
         assertThrows(IllegalArgumentException.class, () -> _tileCharacters.containsCharacter(null));
     }
+
+    @Test
+    void testDelete() {
+        _tileCharacters.addCharacter(CHARACTER);
+
+        _tileCharacters.delete();
+
+        assertTrue(_tileCharacters.isDeleted());
+        assertTrue(CHARACTER.isDeleted());
+    }
+
+    @Test
+    void testDeletedInvariant() {
+        _tileCharacters.delete();
+
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.getCharactersRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.removeCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.getZIndex(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.setZIndex(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.containsCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.getInterfaceName());
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.delete());
+    }
+
+    @Test
+    void testTileDeletedInvariant() {
+        TILE.delete();
+
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.getCharactersRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.removeCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.getZIndex(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.setZIndex(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.containsCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.getInterfaceName());
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.delete());
+    }
 }
