@@ -5,9 +5,12 @@ import soliloquy.gamestate.specs.ICharacterEquipmentSlots;
 import soliloquy.gamestate.specs.ICharacterEquipmentSlotsFactory;
 
 public class CharacterEquipmentSlotsFactoryStub implements ICharacterEquipmentSlotsFactory {
+    public static final ICharacterEquipmentSlots CHARACTER_EQUIPMENT_SLOTS =
+            new CharacterEquipmentSlotsStub(null);
+
     @Override
     public ICharacterEquipmentSlots make(ICharacter character) throws IllegalArgumentException {
-        return new CharacterEquipmentSlotsStub(character);
+        return CHARACTER_EQUIPMENT_SLOTS;
     }
 
     @Override

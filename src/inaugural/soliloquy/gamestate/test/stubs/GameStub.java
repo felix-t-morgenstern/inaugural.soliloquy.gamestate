@@ -1,5 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.common.specs.IAction;
+import soliloquy.common.specs.IFunction;
+import soliloquy.common.specs.IMap;
 import soliloquy.game.primary.specs.IGame;
 import soliloquy.gamestate.specs.IGameState;
 import soliloquy.logger.specs.ILogger;
@@ -18,6 +21,16 @@ public class GameStub implements IGame {
 
     @Override
     public ILogger logger() {
+        return null;
+    }
+
+    @Override
+    public IMap<String, IAction> actionsLibrary() {
+        return null;
+    }
+
+    @Override
+    public IMap<String, IFunction> functionsLibrary() {
         return null;
     }
 }

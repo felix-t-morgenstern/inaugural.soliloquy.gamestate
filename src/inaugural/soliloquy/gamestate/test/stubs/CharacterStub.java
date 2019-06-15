@@ -33,11 +33,6 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IGenericParamsSet traits() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
     public ITile tile() throws IllegalStateException {
         return _tile;
     }
@@ -80,11 +75,6 @@ public class CharacterStub implements ICharacter {
     @Override
     public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
 
-    }
-
-    @Override
-    public IGenericParamsSet aiParams() throws IllegalStateException {
-        return null;
     }
 
     @Override

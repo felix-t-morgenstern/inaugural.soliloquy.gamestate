@@ -1,13 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.Character;
+import inaugural.soliloquy.gamestate.CharacterEquipmentSlotsFactory;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IEntityUuid;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IMap;
+import soliloquy.common.specs.*;
 import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
 import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
@@ -22,20 +20,11 @@ class CharacterTests {
 
     private final IEntityUuid ID = new EntityUuidStub();
     private final ICharacterType CHARACTER_TYPE = new CharacterTypeStub();
-    private final IGenericParamsSet TRAITS = new GenericParamsSetStub();
-    private final ICharacterAIType AI_TYPE_1 = new CharacterAITypeStub();
-    private final ICharacterAIType AI_TYPE_2 = new CharacterAITypeStub();
-    private final IGenericParamsSet AI_PARAMS = new GenericParamsSetStub();
-    private final IMap<String, ICollection<ICharacterEvent>> EVENTS = new MapStub<>();
+    private final ICharacterAIType AI_TYPE = new CharacterAITypeStub();
     private final ICharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new CharacterEquipmentSlotsFactoryStub();
     private final ICharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryFactoryStub();
-    private final IMap<String, ICharacterVitalAttribute> VITAL_ATTRIBUTES = new MapStub<>();
-    private final IMap<String, ICharacterAttribute> ATTRIBUTES = new MapStub<>();
-    private final ICharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
-    private final IMap<String, ICharacterAbility<IActiveAbilityType>> ACTIVE_ABILITIES = new MapStub<>();
-    private final IMap<String, ICharacterAbility<IReactiveAbilityType>> REACTIVE_ABILITIES = new MapStub<>();
-    private final IMap<String, ICharacterAptitude> APTITUDES = new MapStub<>();
-    private final IGenericParamsSet DATA = new GenericParamsSetStub();
+    private final ICharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new CharacterStatusEffectsFactoryStub();
+    private final IGenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY = new GenericParamsSetFactoryStub();
 
     @BeforeEach
     void setUp() {
@@ -45,19 +34,10 @@ class CharacterTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA);
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -68,306 +48,72 @@ class CharacterTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new Character(
                 ID,
                 null,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new Character(
                 ID,
                 CHARACTER_TYPE,
                 null,
                 new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new Character(
                 ID,
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 null,
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new Character(
                 ID,
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
                 null,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new Character(
                 ID,
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
-                TRAITS,
-                null,
-                AI_PARAMS,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                null,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                null,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
-                null,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 null,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new Character(
                 ID,
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 null,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new Character(
                 ID,
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                null,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                null,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                null,
-                REACTIVE_ABILITIES,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                null,
-                APTITUDES,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                null,
-                DATA));
-        assertThrows(IllegalArgumentException.class, () -> new Character(
-                ID,
-                CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
-                TRAITS,
-                AI_TYPE_1,
-                AI_PARAMS,
-                EVENTS,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VITAL_ATTRIBUTES,
-                ATTRIBUTES,
-                STATUS_EFFECTS,
-                ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES,
-                APTITUDES,
+                STATUS_EFFECTS_FACTORY,
                 null));
     }
 
@@ -389,11 +135,6 @@ class CharacterTests {
     @Test
     void testPronouns() {
         assertNotNull(_character.pronouns());
-    }
-
-    @Test
-    void testTraits() {
-        assertNotNull(_character.traits());
     }
 
     @Test
@@ -422,11 +163,11 @@ class CharacterTests {
 
     @Test
     void testSetAndGetAIType() {
-        assertSame(AI_TYPE_1, _character.getAIType());
+        assertNull(_character.getAIType());
 
-        _character.setAIType(AI_TYPE_2);
+        _character.setAIType(AI_TYPE);
 
-        assertSame(AI_TYPE_2, _character.getAIType());
+        assertSame(AI_TYPE, _character.getAIType());
     }
 
     @Test
@@ -435,56 +176,49 @@ class CharacterTests {
     }
 
     @Test
-    void testCharacterAIParams() {
-        assertEquals(AI_PARAMS, _character.aiParams());
-    }
-
-    @Test
     void testCharacterEvents() {
-        assertEquals(EVENTS, _character.events());
+        assertNotNull(_character.events());
     }
 
     @Test
     void testEquipment() {
-        assertNotNull(_character.equipmentSlots());
-        assertSame(_character,
-                ((CharacterEquipmentSlotsStub) _character.equipmentSlots()).CHARACTER);
+        assertSame(CharacterEquipmentSlotsFactoryStub.CHARACTER_EQUIPMENT_SLOTS,
+                _character.equipmentSlots());
     }
 
     @Test
     void testInventory() {
         assertNotNull(_character.inventory());
-        assertSame(_character, ((CharacterInventoryStub) _character.inventory()).CHARACTER);
     }
 
     @Test
     void testVitalAttributes() {
-        assertEquals(VITAL_ATTRIBUTES, _character.vitalAttributes());
+        assertNotNull(_character.vitalAttributes());
     }
 
     @Test
     void testAttributes() {
-        assertEquals(ATTRIBUTES, _character.attributes());
+        assertNotNull(_character.attributes());
     }
 
     @Test
     void testStatusEffects() {
-        assertEquals(STATUS_EFFECTS, _character.statusEffects());
+        assertNotNull(_character.statusEffects());
     }
 
     @Test
     void testActiveAbilities() {
-        assertEquals(ACTIVE_ABILITIES, _character.activeAbilities());
+        assertNotNull(_character.activeAbilities());
     }
 
     @Test
     void testReactiveAbilities() {
-        assertEquals(REACTIVE_ABILITIES, _character.reactiveAbilities());
+        assertNotNull(_character.reactiveAbilities());
     }
 
     @Test
     void testAptitudes() {
-        assertEquals(APTITUDES, _character.aptitudes());
+        assertNotNull(_character.aptitudes());
     }
 
     @Test
@@ -516,7 +250,7 @@ class CharacterTests {
 
     @Test
     void testData() {
-        assertEquals(DATA, _character.data());
+        assertNotNull(_character.data());
     }
 
     @Test
@@ -597,7 +331,6 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.characterType());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
         assertThrows(IllegalStateException.class, () -> _character.pronouns());
-        assertThrows(IllegalStateException.class, () -> _character.traits());
         assertThrows(IllegalStateException.class, () -> _character.tile());
         assertThrows(IllegalStateException.class, () -> _character.getStance());
         assertThrows(IllegalStateException.class, () -> _character.setStance(""));
@@ -607,7 +340,6 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
-        assertThrows(IllegalStateException.class, () -> _character.aiParams());
         assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
@@ -640,7 +372,6 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.characterType());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
         assertThrows(IllegalStateException.class, () -> _character.pronouns());
-        assertThrows(IllegalStateException.class, () -> _character.traits());
         assertThrows(IllegalStateException.class, () -> _character.tile());
         assertThrows(IllegalStateException.class, () -> _character.getStance());
         assertThrows(IllegalStateException.class, () -> _character.setStance(""));
@@ -650,7 +381,6 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
-        assertThrows(IllegalStateException.class, () -> _character.aiParams());
         assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
@@ -685,7 +415,6 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.characterType());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
         assertThrows(IllegalStateException.class, () -> _character.pronouns());
-        assertThrows(IllegalStateException.class, () -> _character.traits());
         assertThrows(IllegalStateException.class, () -> _character.tile());
         assertThrows(IllegalStateException.class, () -> _character.getStance());
         assertThrows(IllegalStateException.class, () -> _character.setStance(""));
@@ -695,7 +424,6 @@ class CharacterTests {
         assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
-        assertThrows(IllegalStateException.class, () -> _character.aiParams());
         assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());

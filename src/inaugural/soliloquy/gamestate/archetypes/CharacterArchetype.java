@@ -29,11 +29,6 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public IGenericParamsSet traits() throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public ITile tile() throws IllegalStateException {
         return null;
     }
@@ -76,11 +71,6 @@ public class CharacterArchetype implements ICharacter {
     @Override
     public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
 
-    }
-
-    @Override
-    public IGenericParamsSet aiParams() throws IllegalStateException {
-        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterClassificationArchetype;
+import inaugural.soliloquy.gamestate.archetypes.*;
 import soliloquy.common.specs.*;
 import soliloquy.gamestate.specs.*;
 import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
@@ -11,12 +11,22 @@ import soliloquy.ruleset.gameentities.specs.ICharacterType;
 import soliloquy.sprites.specs.ISpriteSet;
 
 public class Character implements ICharacter {
+    private final static ICharacterEvent CHARACTER_EVENT_ARCHETYPE = new CharacterEventArchetype();
+    private final static ICharacterVitalAttribute CHARACTER_VITAL_ATTRIBUTE_ARCHETYPE =
+            new CharacterVitalAttributeArchetype();
+    private final static ICharacterAttribute CHARACTER_ATTRIBUTE_ARCHETYPE =
+            new CharacterAttributeArchetype();
+    private final static ICharacterAbility<IActiveAbilityType> CHARACTER_ACTIVE_ABILITY_ARCHETYPE =
+            new CharacterActiveAbilityArchetype();
+    private final static ICharacterAbility<IReactiveAbilityType> CHARACTER_REACTIVE_ABILITY_ARCHETYPE =
+            new CharacterReactiveAbilityArchetype();
+    private final static ICharacterAptitude CHARACTER_APTITUDE_ARCHETYPE =
+            new CharacterAptitudeArchetype();
+
     private final IEntityUuid ID;
     private final ICharacterType CHARACTER_TYPE;
     private final ICollection<ICharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final IMap<String,String> PRONOUNS;
-    private final IGenericParamsSet TRAITS;
-    private final IGenericParamsSet AI_PARAMS;
     private final IMap<String, ICollection<ICharacterEvent>> EVENTS;
     private final ICharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final ICharacterInventory INVENTORY;
@@ -44,19 +54,10 @@ public class Character implements ICharacter {
                      ICharacterType characterType,
                      ICollectionFactory collectionFactory,
                      IMapFactory mapFactory,
-                     IGenericParamsSet traits,
-                     ICharacterAIType characterAIType,
-                     IGenericParamsSet aiParams,
-                     IMap<String, ICollection<ICharacterEvent>> aiEvents,
                      ICharacterEquipmentSlotsFactory equipmentSlotsFactory,
                      ICharacterInventoryFactory inventoryFactory,
-                     IMap<String, ICharacterVitalAttribute> vitalAttributes,
-                     IMap<String, ICharacterAttribute> attributes,
-                     ICharacterStatusEffects statusEffects,
-                     IMap<String, ICharacterAbility<IActiveAbilityType>> activeAbilities,
-                     IMap<String, ICharacterAbility<IReactiveAbilityType>> reactiveAbilities,
-                     IMap<String, ICharacterAptitude> aptitudes,
-                     IGenericParamsSet data) {
+                     ICharacterStatusEffectsFactory statusEffectsFactory,
+                     IGenericParamsSetFactory genericParamsSetFactory) {
         if (id == null) {
             throw new IllegalArgumentException("Character: id must be non-null");
         }
@@ -73,58 +74,30 @@ public class Character implements ICharacter {
             throw new IllegalArgumentException("Character: mapFactory must be non-null");
         }
         PRONOUNS = mapFactory.make("","");
-        if (traits == null) {
-            throw new IllegalArgumentException("Character: traits must be non-null");
-        }
-        TRAITS = traits;
-        if (characterAIType == null) {
-            throw new IllegalArgumentException("Character: characterAIType must be non-null");
-        }
-        _aiType = characterAIType;
-        if (aiParams == null) {
-            throw new IllegalArgumentException("Character: aiParams must be non-null");
-        }
-        AI_PARAMS = aiParams;
-        if (aiEvents == null) {
-            throw new IllegalArgumentException("Character: aiEvents must be non-null");
-        }
-        EVENTS = aiEvents;
+        EVENTS = mapFactory.make("", collectionFactory.make(CHARACTER_EVENT_ARCHETYPE));
         if (equipmentSlotsFactory == null) {
-            throw new IllegalArgumentException("Character: equipmentSlotsFactory must be non-null");
+            throw new IllegalArgumentException(
+                    "Character: equipmentSlotsFactory must be non-null");
         }
         EQUIPMENT_SLOTS = equipmentSlotsFactory.make(this);
         if (inventoryFactory == null) {
             throw new IllegalArgumentException("Character: inventoryFactory must be non-null");
         }
         INVENTORY = inventoryFactory.make(this);
-        if (vitalAttributes == null) {
-            throw new IllegalArgumentException("Character: vitalAttributes must be non-null");
+        VITAL_ATTRIBUTES = mapFactory.make("", CHARACTER_VITAL_ATTRIBUTE_ARCHETYPE);
+        ATTRIBUTES = mapFactory.make("", CHARACTER_ATTRIBUTE_ARCHETYPE);
+        if (statusEffectsFactory == null) {
+            throw new IllegalArgumentException("Character: statusEffectsFactory must be non-null");
         }
-        VITAL_ATTRIBUTES = vitalAttributes;
-        if (attributes == null) {
-            throw new IllegalArgumentException("Character: attributes must be non-null");
+        STATUS_EFFECTS = statusEffectsFactory.make(this);
+        ACTIVE_ABILITIES = mapFactory.make("", CHARACTER_ACTIVE_ABILITY_ARCHETYPE);
+        REACTIVE_ABILITIES = mapFactory.make("", CHARACTER_REACTIVE_ABILITY_ARCHETYPE);
+        APTITUDES = mapFactory.make("", CHARACTER_APTITUDE_ARCHETYPE);
+        if (genericParamsSetFactory == null) {
+            throw new IllegalArgumentException(
+                    "Character: genericParamsSetFactory must be non-null");
         }
-        ATTRIBUTES = attributes;
-        if (statusEffects == null) {
-            throw new IllegalArgumentException("Character: statusEffects must be non-null");
-        }
-        STATUS_EFFECTS = statusEffects;
-        if (activeAbilities == null) {
-            throw new IllegalArgumentException("Character: activeAbilities must be non-null");
-        }
-        ACTIVE_ABILITIES = activeAbilities;
-        if (reactiveAbilities == null) {
-            throw new IllegalArgumentException("Character: reactiveAbilities must be non-null");
-        }
-        REACTIVE_ABILITIES = reactiveAbilities;
-        if (aptitudes == null) {
-            throw new IllegalArgumentException("Character: aptitudes must be non-null");
-        }
-        APTITUDES = aptitudes;
-        if (data == null) {
-            throw new IllegalArgumentException("Character: data must be non-null");
-        }
-        DATA = data;
+        DATA = genericParamsSetFactory.make();
     }
 
     @Override
@@ -143,12 +116,6 @@ public class Character implements ICharacter {
     public IMap<String, String> pronouns() throws IllegalStateException {
         enforceInvariant("pronouns", true);
         return PRONOUNS;
-    }
-
-    @Override
-    public IGenericParamsSet traits() throws IllegalStateException {
-        enforceInvariant("traits", true);
-        return TRAITS;
     }
 
     @Override
@@ -210,12 +177,6 @@ public class Character implements ICharacter {
                     "Character.setAIType: characterAIType cannot be null");
         }
         _aiType = characterAIType;
-    }
-
-    @Override
-    public IGenericParamsSet aiParams() throws IllegalStateException {
-        enforceInvariant("characterAIParams", true);
-        return AI_PARAMS;
     }
 
     @Override

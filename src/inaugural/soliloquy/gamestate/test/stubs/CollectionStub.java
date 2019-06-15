@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import soliloquy.common.specs.ICollection;
+import soliloquy.common.specs.IFunction;
 
 public class CollectionStub<V> implements ICollection<V> {
     private V _archetype;
@@ -99,6 +100,11 @@ public class CollectionStub<V> implements ICollection<V> {
     public boolean removeItem(V item) throws UnsupportedOperationException {
         // Stub method; unimplemented
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ICollection<IFunction<V, String>> validators() {
+        return null;
     }
 
     @Override

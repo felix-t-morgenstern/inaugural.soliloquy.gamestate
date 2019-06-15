@@ -151,9 +151,8 @@ public class MapStub<K,V> implements IMap<K,V> {
     }
 
     @Override
-    public void setValidator(IFunction<IPair<K, V>, String> validator) {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+    public ICollection<IFunction<IPair<K, V>, String>> validators() {
+        return null;
     }
 
     @Override
