@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.Character;
-import inaugural.soliloquy.gamestate.CharacterEquipmentSlotsFactory;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -250,7 +249,7 @@ class CharacterTests {
 
     @Test
     void testData() {
-        assertNotNull(_character.data());
+        assertSame(GenericParamsSetFactoryStub.GENERIC_PARAMS_SET, _character.data());
     }
 
     @Test
