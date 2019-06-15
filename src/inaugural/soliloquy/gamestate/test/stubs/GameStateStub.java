@@ -13,12 +13,7 @@ public class GameStateStub implements IGameState {
     }
 
     @Override
-    public IPersistentVariableCache gameStatePVars() {
-        return null;
-    }
-
-    @Override
-    public ICharacterFactory characterFactory() {
+    public IPersistentVariableCache persistentVariables() {
         return null;
     }
 

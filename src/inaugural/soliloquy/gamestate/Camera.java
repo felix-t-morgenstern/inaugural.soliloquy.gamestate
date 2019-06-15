@@ -29,7 +29,6 @@ public class Camera implements ICamera {
     private int _pixelOffsetY;
     private int _tileRenderingRadius;
     private boolean _allTilesVisible;
-
     private ITileVisibility _tileVisibility;
 
     public Camera(IGame game, ILogger logger, ICoordinateFactory coordinateFactory,
@@ -129,6 +128,7 @@ public class Camera implements ICamera {
 
     @Override
     public void calculateVisibileTiles() throws IllegalStateException {
+        // TODO: Revisit whether this method truly needs to be this long
         if (_tileVisibility == null) {
             throw new IllegalStateException("Camera.calculateVisibleTiles: tileVisibility is null");
         }
