@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITileFixture;
-import soliloquy.gamestate.specs.ITileFixtureItems;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtureItems;
 
 import java.util.ArrayList;
 

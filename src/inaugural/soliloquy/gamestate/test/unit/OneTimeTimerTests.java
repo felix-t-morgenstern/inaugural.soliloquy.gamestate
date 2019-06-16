@@ -1,13 +1,15 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.OneTimeTimer;
+import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
 import inaugural.soliloquy.gamestate.test.stubs.GameStub;
 import inaugural.soliloquy.gamestate.test.stubs.LoggerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.IOneTimeTimer;
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.IOneTimeTimer;
+import soliloquy.specs.logger.ILogger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,14 +17,14 @@ class OneTimeTimerTests {
     private IOneTimeTimer _oneTimeTimer;
 
     private final String TIMER_ID = "TimerId";
-    private final String TIMER_ACTION_ID = "TimerActionId";
+    private final IAction<Void> ACTION = new ActionStub<>();
 
     private final IGame GAME = new GameStub();
     private final ILogger LOGGER = new LoggerStub();
 
     @BeforeEach
     void setUp() {
-        _oneTimeTimer = new OneTimeTimer(TIMER_ID, TIMER_ACTION_ID, 0L, GAME, LOGGER);
+        _oneTimeTimer = new OneTimeTimer(TIMER_ID, ACTION, 0L, GAME, LOGGER);
     }
 
     @Test
@@ -40,7 +42,7 @@ class OneTimeTimerTests {
 
     @Test
     void testTimerTypeId() {
-        assertEquals(TIMER_ACTION_ID, _oneTimeTimer.timerActionId());
+        assertEquals(ACTION, _oneTimeTimer.action());
     }
 
     @Test

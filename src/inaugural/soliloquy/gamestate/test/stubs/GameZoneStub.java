@@ -1,12 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.*;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.IGameZone;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.IGameZone;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.logger.ILogger;
 
 public class GameZoneStub implements IGameZone {
     public static int _maxX = 999;

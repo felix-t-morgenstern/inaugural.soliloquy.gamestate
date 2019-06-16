@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileFixture;
-import soliloquy.gamestate.specs.ITileFixtures;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtures;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class TileFixturesStub implements ITileFixtures {
 
     public final List<ITileFixture> FIXTURES = new ArrayList<>();
 
-    public TileFixturesStub(ITile tile) {
+    TileFixturesStub(ITile tile) {
         TILE = tile;
     }
 

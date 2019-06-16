@@ -6,11 +6,11 @@ import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileWallSegmentStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileWallSegment;
-import soliloquy.gamestate.specs.ITileWallSegments;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileWallSegment;
+import soliloquy.specs.gamestate.entities.ITileWallSegments;
 
 import static org.junit.jupiter.api.Assertions.*;
 

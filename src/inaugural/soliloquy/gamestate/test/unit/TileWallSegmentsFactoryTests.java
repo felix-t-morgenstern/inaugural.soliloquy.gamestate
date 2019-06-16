@@ -5,9 +5,9 @@ import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileWallSegmentsFactory;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.factories.ITileWallSegmentsFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +22,7 @@ class TileWallSegmentsFactoryTests {
         _tileWallSegmentsFactory = new TileWallSegmentsFactory(COLLECTION_FACTORY);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithNullInput() {
         assertThrows(IllegalArgumentException.class, () -> new TileWallSegmentsFactory(null));

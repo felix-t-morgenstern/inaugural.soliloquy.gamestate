@@ -4,12 +4,12 @@ import inaugural.soliloquy.gamestate.CharacterEquipmentSlots;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.common.specs.IPairFactory;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlots;
-import soliloquy.gamestate.specs.IItem;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.factories.IPairFactory;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
+import soliloquy.specs.gamestate.entities.IItem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +29,7 @@ class CharacterEquipmentSlotsTests {
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
@@ -181,6 +182,7 @@ class CharacterEquipmentSlotsTests {
                 () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(""));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testGetRepresentation() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);

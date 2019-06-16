@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
+import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
 
 public class CharacterClassificationArchetype implements ICharacterClassification {
     @Override

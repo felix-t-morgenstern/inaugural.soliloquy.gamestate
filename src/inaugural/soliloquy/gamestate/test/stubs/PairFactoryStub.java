@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IPair;
-import soliloquy.common.specs.IPairFactory;
+import soliloquy.specs.common.factories.IPairFactory;
+import soliloquy.specs.common.valueobjects.IPair;
 
 public class PairFactoryStub implements IPairFactory {
     @Override

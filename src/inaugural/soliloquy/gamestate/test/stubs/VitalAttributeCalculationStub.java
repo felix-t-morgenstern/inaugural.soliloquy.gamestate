@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IPair;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.ruleset.gameconcepts.specs.IVitalAttributeCalculation;
-import soliloquy.ruleset.gameentities.specs.IVitalAttributeType;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.ruleset.entities.IVitalAttributeType;
+import soliloquy.specs.ruleset.gameconcepts.IVitalAttributeCalculation;
 
 public class VitalAttributeCalculationStub implements IVitalAttributeCalculation {
     public static final int VALUE = 123123;

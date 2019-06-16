@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IGenericParamsSetFactory;
-import soliloquy.gamestate.specs.ITileWallSegment;
-import soliloquy.ruleset.gameentities.specs.IWallSegmentType;
+import soliloquy.specs.common.factories.IGenericParamsSetFactory;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.gamestate.entities.ITileWallSegment;
+import soliloquy.specs.ruleset.entities.IWallSegmentType;
 
 public class TileWallSegment extends HasDeletionInvariants implements ITileWallSegment {
     private final IGenericParamsSet DATA;

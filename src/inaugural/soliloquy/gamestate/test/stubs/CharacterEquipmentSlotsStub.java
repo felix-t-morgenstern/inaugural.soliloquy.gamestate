@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlots;
-import soliloquy.gamestate.specs.IItem;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
+import soliloquy.specs.gamestate.entities.IItem;
 
 public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
     public final ICharacter CHARACTER;
 
     public boolean _isDeleted;
 
-    public CharacterEquipmentSlotsStub(ICharacter character) {
+    CharacterEquipmentSlotsStub(ICharacter character) {
         CHARACTER = character;
     }
 

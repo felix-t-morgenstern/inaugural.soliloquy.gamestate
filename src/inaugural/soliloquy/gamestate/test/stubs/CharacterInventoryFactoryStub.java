@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterInventory;
-import soliloquy.gamestate.specs.ICharacterInventoryFactory;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterInventory;
+import soliloquy.specs.gamestate.factories.ICharacterInventoryFactory;
 
 public class CharacterInventoryFactoryStub implements ICharacterInventoryFactory {
     @Override

@@ -4,9 +4,17 @@ import inaugural.soliloquy.gamestate.CharacterFactory;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.*;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.ICharacterType;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.factories.IEntityUuidFactory;
+import soliloquy.specs.common.factories.IGenericParamsSetFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.factories.ICharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.factories.ICharacterFactory;
+import soliloquy.specs.gamestate.factories.ICharacterInventoryFactory;
+import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
+import soliloquy.specs.ruleset.entities.ICharacterType;
 
 import static org.junit.jupiter.api.Assertions.*;
 

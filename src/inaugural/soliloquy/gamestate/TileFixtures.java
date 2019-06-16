@@ -1,15 +1,16 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileFixture;
-import soliloquy.gamestate.specs.ITileFixtures;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtures;
 
 public class TileFixtures extends GameEntityMediatorWithZIndex<ITileFixture> implements ITileFixtures {
     private final ITile TILE;
     private final static ITileFixture TILE_FIXTURE_ARCHETYPE = new TileFixtureArchetype();
 
+    @SuppressWarnings("ConstantConditions")
     public TileFixtures(ITile tile, IMapFactory mapFactory) {
         super(mapFactory);
         if (tile == null) {

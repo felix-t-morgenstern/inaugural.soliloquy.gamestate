@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.ruleset.entities.abilities.IAbility;
+import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
 
 public class AbilitySourceStub implements IAbilitySource {
     @Override

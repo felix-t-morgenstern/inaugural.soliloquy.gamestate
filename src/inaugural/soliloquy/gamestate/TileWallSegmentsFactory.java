@@ -1,13 +1,14 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileWallSegments;
-import soliloquy.gamestate.specs.ITileWallSegmentsFactory;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileWallSegments;
+import soliloquy.specs.gamestate.factories.ITileWallSegmentsFactory;
 
 public class TileWallSegmentsFactory implements ITileWallSegmentsFactory {
     private final ICollectionFactory COLLECTION_FACTORY;
 
+    @SuppressWarnings("ConstantConditions")
     public TileWallSegmentsFactory(ICollectionFactory collectionFactory) {
         if (collectionFactory == null) {
             throw new IllegalArgumentException(

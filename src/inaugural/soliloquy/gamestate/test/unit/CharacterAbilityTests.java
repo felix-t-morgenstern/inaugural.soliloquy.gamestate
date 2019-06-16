@@ -5,9 +5,9 @@ import inaugural.soliloquy.gamestate.test.stubs.AbilityTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilityType;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterAbility;
+import soliloquy.specs.ruleset.entities.abilities.IAbilityType;
 
 import static org.junit.jupiter.api.Assertions.*;
 

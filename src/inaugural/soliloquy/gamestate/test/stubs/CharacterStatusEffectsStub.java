@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ICharacterStatusEffects;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
-import soliloquy.ruleset.gameentities.specs.IElement;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
+import soliloquy.specs.ruleset.entities.IElement;
+import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
 
 public class CharacterStatusEffectsStub implements ICharacterStatusEffects {
     public boolean _isDeleted;

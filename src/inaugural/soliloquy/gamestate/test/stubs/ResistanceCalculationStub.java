@@ -1,23 +1,22 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.ruleset.gameconcepts.specs.IResistanceCalculation;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
-import soliloquy.ruleset.gameentities.specs.IElement;
-import soliloquy.ruleset.gameentities.specs.IStatusEffectType;
-import soliloquy.ruleset.gameentities.specs.IVitalAttributeType;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.ruleset.entities.IElement;
+import soliloquy.specs.ruleset.entities.IStatusEffectType;
+import soliloquy.specs.ruleset.entities.IVitalAttributeType;
+import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
+import soliloquy.specs.ruleset.gameconcepts.IResistanceCalculation;
 
 public class ResistanceCalculationStub implements IResistanceCalculation {
     public ICharacter _character;
     public IStatusEffectType _statusEffectType;
-    public IVitalAttributeType _vitalAttributeType;
     public int _baseAmount;
     public boolean _stopAtZero;
     public IElement _element;
     public IAbilitySource _abilitySource;
 
     public static final int STATUS_EFFECT_TYPE_RESULT = 123;
-    public static final int VITAL_ATTRIBUTE_TYPE_RESULT = 456;
+    private static final int VITAL_ATTRIBUTE_TYPE_RESULT = 456;
 
     @Override
     public int calculateEffectiveChange(ICharacter character, IStatusEffectType statusEffectType,
@@ -39,7 +38,6 @@ public class ResistanceCalculationStub implements IResistanceCalculation {
                                         IAbilitySource abilitySource)
             throws IllegalStateException, IllegalArgumentException {
         _character = character;
-        _vitalAttributeType = vitalAttributeType;
         _baseAmount = baseAmount;
         _stopAtZero = stopAtZero;
         _element = element;

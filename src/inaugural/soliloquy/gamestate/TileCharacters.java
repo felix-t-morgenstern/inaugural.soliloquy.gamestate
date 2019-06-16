@@ -1,8 +1,11 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
-import soliloquy.common.specs.*;
-import soliloquy.gamestate.specs.*;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileCharacters;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,12 +1,15 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.ICoordinate;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
-import soliloquy.ruleset.gameentities.specs.IFixtureType;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtureItems;
+import soliloquy.specs.gamestate.factories.ITileFixtureItemsFactory;
+import soliloquy.specs.ruleset.entities.IFixtureType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
 
 public class TileFixture implements ITileFixture {
     private final IFixtureType FIXTURE_TYPE;

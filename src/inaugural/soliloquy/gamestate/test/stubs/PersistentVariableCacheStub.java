@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IPersistentVariableCache;
+import soliloquy.specs.common.entities.IPersistentVariableCache;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IMap;
 
 public class PersistentVariableCacheStub implements IPersistentVariableCache {
     @Override

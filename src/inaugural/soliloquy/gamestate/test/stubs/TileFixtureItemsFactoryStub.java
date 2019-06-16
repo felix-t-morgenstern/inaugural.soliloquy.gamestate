@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.ITileFixture;
-import soliloquy.gamestate.specs.ITileFixtureItems;
-import soliloquy.gamestate.specs.ITileFixtureItemsFactory;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtureItems;
+import soliloquy.specs.gamestate.factories.ITileFixtureItemsFactory;
 
 public class TileFixtureItemsFactoryStub implements ITileFixtureItemsFactory {
     @Override

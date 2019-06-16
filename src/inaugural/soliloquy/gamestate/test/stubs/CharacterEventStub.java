@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.ICharacterEvent;
-import soliloquy.ruleset.gameentities.specs.ICharacterEventType;
+import soliloquy.specs.gamestate.entities.ICharacterEvent;
+import soliloquy.specs.ruleset.entities.ICharacterEventType;
 
 public class CharacterEventStub implements ICharacterEvent {
     public boolean _isDeleted;

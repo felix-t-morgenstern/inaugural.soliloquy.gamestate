@@ -1,10 +1,11 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.IOneTimeTimer;
-import soliloquy.gamestate.specs.IRecurringTimer;
-import soliloquy.gamestate.specs.ITimerFactory;
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.IOneTimeTimer;
+import soliloquy.specs.gamestate.entities.IRecurringTimer;
+import soliloquy.specs.gamestate.factories.ITimerFactory;
+import soliloquy.specs.logger.ILogger;
 
 public class TimerFactory implements ITimerFactory {
     private final IGame GAME;
@@ -16,17 +17,17 @@ public class TimerFactory implements ITimerFactory {
     }
 
     @Override
-    public IOneTimeTimer makeOneTimeTimer(String timerId, String timerActionId,
+    public IOneTimeTimer makeOneTimeTimer(String timerId, IAction<Void> action,
                                           long roundWhenGoesOff)
             throws IllegalArgumentException {
-        return new OneTimeTimer(timerId, timerActionId, roundWhenGoesOff, GAME, LOGGER);
+        return new OneTimeTimer(timerId, action, roundWhenGoesOff, GAME, LOGGER);
     }
 
     @Override
-    public IRecurringTimer makeRecurringTimer(String timerId, String timerActionId, int roundModulo,
+    public IRecurringTimer makeRecurringTimer(String timerId, IAction<Void> action, int roundModulo,
                                               int roundOffset)
             throws IllegalArgumentException {
-        return new RecurringTimer(timerId, timerActionId, roundModulo, roundOffset, GAME, LOGGER);
+        return new RecurringTimer(timerId, action, roundModulo, roundOffset, GAME, LOGGER);
     }
 
     @Override

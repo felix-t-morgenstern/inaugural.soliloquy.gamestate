@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
 
 public class EntityUuidStub implements IEntityUuid {
     @Override

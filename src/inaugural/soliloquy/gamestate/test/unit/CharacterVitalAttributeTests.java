@@ -6,10 +6,10 @@ import inaugural.soliloquy.gamestate.test.stubs.VitalAttributeCalculationStub;
 import inaugural.soliloquy.gamestate.test.stubs.VitalAttributeTypeStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterVitalAttribute;
-import soliloquy.ruleset.gameconcepts.specs.IVitalAttributeCalculation;
-import soliloquy.ruleset.gameentities.specs.IVitalAttributeType;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterVitalAttribute;
+import soliloquy.specs.ruleset.entities.IVitalAttributeType;
+import soliloquy.specs.ruleset.gameconcepts.IVitalAttributeCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 

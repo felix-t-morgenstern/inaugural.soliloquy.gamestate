@@ -1,15 +1,15 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IAction;
-import soliloquy.common.specs.IEntityUuid;
-import soliloquy.common.specs.IPair;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.logger.specs.ILogger;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
-import soliloquy.ruleset.gameentities.specs.IElement;
-import soliloquy.ruleset.gameentities.specs.IVitalAttributeType;
-import soliloquy.sprites.specs.ISprite;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.ruleset.entities.IElement;
+import soliloquy.specs.ruleset.entities.IVitalAttributeType;
+import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
+import soliloquy.specs.sprites.entities.ISprite;
 
 public class VitalAttributeTypeStub implements IVitalAttributeType {
     @Override

@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IFunction;
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IPair;
-import soliloquy.gamestate.specs.IKeyBinding;
-import soliloquy.gamestate.specs.IKeyBindingContext;
+import soliloquy.specs.common.entities.IFunction;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.gamestate.entities.IKeyBinding;
+import soliloquy.specs.gamestate.entities.IKeyBindingContext;
 
 import java.util.Iterator;
 

@@ -5,9 +5,9 @@ import inaugural.soliloquy.gamestate.test.stubs.EntityUuidStub;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IEntityUuid;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.ruleset.gameentities.specs.IItemType;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.ruleset.entities.IItemType;
 
 import static org.junit.jupiter.api.Assertions.*;
 

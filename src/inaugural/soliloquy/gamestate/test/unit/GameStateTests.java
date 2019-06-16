@@ -4,10 +4,14 @@ import inaugural.soliloquy.gamestate.GameState;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.common.specs.IPersistentVariableCache;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.primary.specs.IRuleset;
+import soliloquy.specs.common.entities.IPersistentVariableCache;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.gamestate.entities.IGameZone;
+import soliloquy.specs.gamestate.entities.IParty;
+import soliloquy.specs.gamestate.entities.IRoundManager;
+import soliloquy.specs.gamestate.valueobjects.IGameState;
+import soliloquy.specs.gamestate.valueobjects.IGameZonesRepo;
+import soliloquy.specs.ruleset.IRuleset;
 
 import static org.junit.jupiter.api.Assertions.*;
 

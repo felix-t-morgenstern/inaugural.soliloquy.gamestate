@@ -4,13 +4,17 @@ import inaugural.soliloquy.gamestate.TileFixture;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICoordinate;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
-import soliloquy.ruleset.gameentities.specs.IFixtureType;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtureItems;
+import soliloquy.specs.gamestate.factories.ITileFixtureItemsFactory;
+import soliloquy.specs.ruleset.entities.IFixtureType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +25,8 @@ class TileFixtureTests {
     private final ICoordinate PIXEL_OFFSET = new CoordinateStub();
     private final IMap<String, IActiveAbility> ACTIVE_ABILITIES = new MapStub<>();
     private final IMap<String, IReactiveAbility> REACTIVE_ABILITIES = new MapStub<>();
-    private final ITileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY = new TileFixtureItemsFactoryStub();
+    private final ITileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
+            new TileFixtureItemsFactoryStub();
     private final IGenericParamsSet DATA = new GenericParamsSetStub();
 
     @BeforeEach

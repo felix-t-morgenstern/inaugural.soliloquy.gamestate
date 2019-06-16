@@ -1,14 +1,23 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.*;
-import soliloquy.common.specs.*;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
-import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
-import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
-import soliloquy.ruleset.gameentities.specs.ICharacterType;
-import soliloquy.sprites.specs.ISpriteSet;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.factories.IGenericParamsSetFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.factories.ICharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.factories.ICharacterInventoryFactory;
+import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
+import soliloquy.specs.ruleset.entities.ICharacterAIType;
+import soliloquy.specs.ruleset.entities.ICharacterType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbilityType;
+import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
+import soliloquy.specs.sprites.entities.ISpriteSet;
 
 public class Character implements ICharacter {
     private final static ICharacterEvent CHARACTER_EVENT_ARCHETYPE = new CharacterEventArchetype();

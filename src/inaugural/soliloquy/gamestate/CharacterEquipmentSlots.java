@@ -1,12 +1,17 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
-import soliloquy.common.specs.*;
-import soliloquy.gamestate.specs.*;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.factories.IPairFactory;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
+import soliloquy.specs.gamestate.entities.IItem;
 
 import java.util.HashMap;
-
 import java.util.Map;
+
 public class CharacterEquipmentSlots extends HasDeletionInvariants
         implements ICharacterEquipmentSlots {
     private final ICharacter CHARACTER;

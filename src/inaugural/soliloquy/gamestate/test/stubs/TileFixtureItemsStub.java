@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITileFixture;
-import soliloquy.gamestate.specs.ITileFixtureItems;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtureItems;
 
 public class TileFixtureItemsStub implements ITileFixtureItems {
     public final ITileFixture TILE_FIXTURE;
 
     private boolean _deleted;
 
-    public TileFixtureItemsStub(ITileFixture tileFixture) {
+    TileFixtureItemsStub(ITileFixture tileFixture) {
         TILE_FIXTURE = tileFixture;
     }
 

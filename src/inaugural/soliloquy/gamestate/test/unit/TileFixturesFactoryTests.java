@@ -5,9 +5,9 @@ import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileFixturesFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.factories.ITileFixturesFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +22,7 @@ class TileFixturesFactoryTests {
         _tileFixturesFactory = new TileFixturesFactory(MAP_FACTORY);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithNullInput() {
         assertThrows(IllegalArgumentException.class, () -> new TileFixturesFactory(null));

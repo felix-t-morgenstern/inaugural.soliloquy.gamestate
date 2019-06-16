@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.gamestate.specs.ICharacterEvent;
-import soliloquy.ruleset.gameentities.specs.ICharacterEventType;
+import soliloquy.specs.gamestate.entities.ICharacterEvent;
+import soliloquy.specs.ruleset.entities.ICharacterEventType;
 
 public class CharacterEventArchetype implements ICharacterEvent {
     @Override

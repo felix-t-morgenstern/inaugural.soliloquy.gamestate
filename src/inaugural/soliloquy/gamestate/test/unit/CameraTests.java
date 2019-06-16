@@ -5,13 +5,13 @@ import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICoordinate;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.ICamera;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.logger.specs.ILogger;
-import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.ICamera;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.ruleset.gameconcepts.ITileVisibility;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -181,7 +181,7 @@ class CameraTests {
 
     @Test
     void testCalculateVisibleTiles() {
-        ITileVisibility tileVisibility = new TileVisibilityStub();
+        TileVisibilityStub tileVisibility = new TileVisibilityStub();
         _camera.setTileVisibility(tileVisibility);
         _camera.setAllTilesVisible(false);
         _camera.setTileLocation(10,10);
@@ -197,6 +197,6 @@ class CameraTests {
 
         _camera.calculateVisibileTiles();
         assertEquals(22, _camera.visibileTiles().size());
-        assertEquals(22, ((TileVisibilityStub) tileVisibility)._tilesChecked.size());
+        assertEquals(22, tileVisibility._tilesChecked.size());
     }
 }

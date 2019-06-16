@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IPair;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.IOneTimeTimer;
-import soliloquy.gamestate.specs.IRecurringTimer;
-import soliloquy.gamestate.specs.IRoundManager;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.IOneTimeTimer;
+import soliloquy.specs.gamestate.entities.IRecurringTimer;
+import soliloquy.specs.gamestate.entities.IRoundManager;
 
 public class RoundManagerStub implements IRoundManager {
     @Override

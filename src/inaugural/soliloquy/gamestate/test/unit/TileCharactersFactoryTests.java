@@ -5,9 +5,9 @@ import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileCharactersFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.factories.ITileCharactersFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 

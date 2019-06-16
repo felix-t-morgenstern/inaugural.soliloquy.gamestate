@@ -6,11 +6,11 @@ import inaugural.soliloquy.gamestate.test.stubs.ItemStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileFixtureStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITileFixture;
-import soliloquy.gamestate.specs.ITileFixtureItems;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtureItems;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +28,7 @@ class TileFixtureItemsTests {
         _tileFixtureItems = new TileFixtureItems(TILE_FIXTURE, COLLECTION_FACTORY);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,

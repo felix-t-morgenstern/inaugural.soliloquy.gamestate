@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICoordinate;
-import soliloquy.common.specs.IPair;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.ruleset.gameconcepts.ITileVisibility;
 
 public class TileVisibilityStub implements ITileVisibility {
     public ICollection<IPair<ICoordinate, ICoordinate>> _tilesChecked;

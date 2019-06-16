@@ -6,10 +6,10 @@ import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.PairFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.common.specs.IPairFactory;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlotsFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.factories.IPairFactory;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.factories.ICharacterEquipmentSlotsFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +26,7 @@ class CharacterEquipmentSlotsFactoryTests {
                 MAP_FACTORY);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithNullInput() {
         assertThrows(IllegalArgumentException.class,

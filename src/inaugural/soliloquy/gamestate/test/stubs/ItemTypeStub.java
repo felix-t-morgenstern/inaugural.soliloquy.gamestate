@@ -1,18 +1,18 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICoordinate;
-import soliloquy.common.specs.IFunction;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IPassiveAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
-import soliloquy.ruleset.gameentities.specs.IEquipmentType;
-import soliloquy.ruleset.gameentities.specs.IItemType;
-import soliloquy.sprites.specs.ISpriteSet;
+import soliloquy.specs.common.entities.IFunction;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.ruleset.entities.IEquipmentType;
+import soliloquy.specs.ruleset.entities.IItemType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.IPassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
+import soliloquy.specs.sprites.entities.ISpriteSet;
 
 public class ItemTypeStub implements IItemType {
     public static boolean _hasCharges = true;

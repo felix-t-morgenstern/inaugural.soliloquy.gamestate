@@ -1,14 +1,14 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICoordinate;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
-import soliloquy.ruleset.gameentities.specs.IGroundType;
-import soliloquy.sprites.specs.ISprite;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.ruleset.entities.IGroundType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
+import soliloquy.specs.sprites.entities.ISprite;
 
 public class TileStub implements ITile {
     public static final IGameZone GAME_ZONE = new GameZoneStub();
@@ -18,7 +18,7 @@ public class TileStub implements ITile {
 
     private boolean _isDeleted;
 
-    public ICoordinate _tileLocation;
+    private ICoordinate _tileLocation;
     public IMap<ICharacter, Integer> _characters = new MapStub<>();
 
     public TileStub() {

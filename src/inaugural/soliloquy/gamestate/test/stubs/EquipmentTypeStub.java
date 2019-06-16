@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.ruleset.gameentities.specs.IEquipmentType;
+import soliloquy.specs.ruleset.entities.IEquipmentType;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,21 +1,22 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.common.entities.IFunction;
-import soliloquy.specs.common.valueobjects.IMap;
 import soliloquy.specs.game.IGame;
-import soliloquy.specs.gamestate.valueobjects.IGameState;
 import soliloquy.specs.logger.ILogger;
-import soliloquy.specs.ruleset.IRuleset;
 
-public class GameStub implements IGame {
+public class ActionStub<T> implements IAction<T> {
     @Override
-    public IGameState gameState() {
+    public void run(T t) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public String getUnparameterizedInterfaceName() {
         return null;
     }
 
     @Override
-    public IRuleset ruleset() {
+    public IGame game() {
         return null;
     }
 
@@ -25,12 +26,17 @@ public class GameStub implements IGame {
     }
 
     @Override
-    public IMap<String, IAction> actionsLibrary() {
+    public String id() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, IFunction> functionsLibrary() {
+    public T getArchetype() {
+        return null;
+    }
+
+    @Override
+    public String getInterfaceName() {
         return null;
     }
 }

@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.IParty;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.IParty;
 
 public class PartyStub implements IParty {
     @Override

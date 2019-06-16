@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.sprites.specs.ISprite;
-import soliloquy.sprites.specs.ISpriteSet;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.sprites.entities.ISprite;
+import soliloquy.specs.sprites.entities.ISpriteSet;
 
 public class SpriteSetStub implements ISpriteSet {
     @Override

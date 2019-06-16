@@ -6,11 +6,11 @@ import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileItems;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileItems;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,11 +87,11 @@ class TileItemsTests {
 
     @Test
     void testAddAtZIndex() {
-        final Integer zIndex = 123;
+        final int zIndex = 123;
         _tileItems.add(ITEM, zIndex);
         IMap<IItem,Integer> representation = _tileItems.getRepresentation();
 
-        assertEquals(zIndex, representation.get(ITEM));
+        assertEquals((Integer) zIndex, representation.get(ITEM));
     }
 
     @Test

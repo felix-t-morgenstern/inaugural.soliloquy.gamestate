@@ -1,10 +1,15 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IPersistentVariableCache;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
-import soliloquy.ruleset.primary.specs.IRuleset;
+import soliloquy.specs.common.entities.IPersistentVariableCache;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.IGameZone;
+import soliloquy.specs.gamestate.entities.IKeyBindingContext;
+import soliloquy.specs.gamestate.entities.IParty;
+import soliloquy.specs.gamestate.entities.IRoundManager;
+import soliloquy.specs.gamestate.valueobjects.IGameState;
+import soliloquy.specs.gamestate.valueobjects.IGameZonesRepo;
+import soliloquy.specs.ruleset.IRuleset;
+import soliloquy.specs.ruleset.entities.ICharacterAIType;
 
 public class GameStateStub implements IGameState {
     @Override

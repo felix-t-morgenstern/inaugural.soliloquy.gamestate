@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterVitalAttribute;
-import soliloquy.ruleset.gameentities.specs.IVitalAttributeType;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterVitalAttribute;
+import soliloquy.specs.ruleset.entities.IVitalAttributeType;
 
 public class CharacterVitalAttributeArchetype implements ICharacterVitalAttribute {
     @Override

@@ -1,15 +1,15 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IEntityGroup;
-import soliloquy.common.specs.ISettingsRepo;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
-import soliloquy.ruleset.gameentities.abilities.specs.IPassiveAbilityType;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
-import soliloquy.ruleset.gameentities.specs.*;
-import soliloquy.ruleset.primary.specs.IRuleset;
-import soliloquy.sprites.specs.ISpriteFactory;
-import soliloquy.sprites.specs.ISpriteSetFactory;
+import soliloquy.specs.common.entities.ISettingsRepo;
+import soliloquy.specs.common.shared.IEntityGroup;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.ruleset.IRuleset;
+import soliloquy.specs.ruleset.entities.*;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.IPassiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbilityType;
+import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
+import soliloquy.specs.ruleset.valueobjects.ITypesRegistry;
 
 public class RulesetStub implements IRuleset {
     @Override
@@ -33,7 +33,7 @@ public class RulesetStub implements IRuleset {
     }
 
     @Override
-    public IEntityGroup<IAttribute> attributes() {
+    public IEntityGroup<IAttributeType> attributes() {
         return null;
     }
 
@@ -88,11 +88,6 @@ public class RulesetStub implements IRuleset {
     }
 
     @Override
-    public ITypesRegistry<ITimerAction> timerActions() {
-        return null;
-    }
-
-    @Override
     public ITypesRegistry<IVitalAttributeType> vitalAttributes() {
         return null;
     }
@@ -104,16 +99,6 @@ public class RulesetStub implements IRuleset {
 
     @Override
     public ISettingsRepo rulesetSettings() {
-        return null;
-    }
-
-    @Override
-    public ISpriteFactory spriteFactory() {
-        return null;
-    }
-
-    @Override
-    public ISpriteSetFactory spriteSetFactory() {
         return null;
     }
 

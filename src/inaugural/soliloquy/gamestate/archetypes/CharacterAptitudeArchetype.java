@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterAptitude;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterAptitude;
 
 public class CharacterAptitudeArchetype implements ICharacterAptitude {
     @Override

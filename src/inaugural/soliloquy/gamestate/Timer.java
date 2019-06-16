@@ -1,27 +1,28 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.ITimer;
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.ITimer;
+import soliloquy.specs.logger.ILogger;
 
 public abstract class Timer implements ITimer {
-    protected final String ID;
-    protected final IGame GAME;
-    protected final ILogger LOGGER;
+    private final String ID;
+    private final IGame GAME;
+    private final ILogger LOGGER;
 
-    protected String _timerActionId;
-    protected int _priority;
+    private IAction<Void> _action;
+    private int _priority;
 
-    protected Timer(String timerId, String timerActionId, IGame game, ILogger logger) {
+    Timer(String timerId, IAction<Void> action, IGame game, ILogger logger) {
         ID = timerId;
-        _timerActionId = timerActionId;
+        _action = action;
         GAME = game;
         LOGGER = logger;
     }
 
     @Override
-    public String timerActionId() {
-        return _timerActionId;
+    public IAction<Void> action() {
+        return _action;
     }
 
     @Override

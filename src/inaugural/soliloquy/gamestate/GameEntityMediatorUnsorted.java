@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.IDeletable;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.gamestate.entities.IDeletable;
 
 import java.util.HashSet;
 
@@ -11,7 +11,7 @@ abstract class GameEntityMediatorUnsorted<TEntity extends IDeletable>
     private final ICollectionFactory COLLECTION_FACTORY;
     private final HashSet<TEntity> ENTITIES;
 
-    protected GameEntityMediatorUnsorted(ICollectionFactory collectionFactory) {
+    GameEntityMediatorUnsorted(ICollectionFactory collectionFactory) {
         if (collectionFactory == null) {
             throw new IllegalArgumentException(className() +
                     ": collectionFactory must be non-null");

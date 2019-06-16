@@ -1,15 +1,15 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterAttribute;
-import soliloquy.ruleset.gameentities.specs.IAttribute;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterAttribute;
+import soliloquy.specs.ruleset.entities.IAttributeType;
 
 public class CharacterAttributeStub implements ICharacterAttribute {
     public boolean _isDeleted;
 
     @Override
-    public IAttribute attribute() {
+    public IAttributeType attribute() {
         return null;
     }
 

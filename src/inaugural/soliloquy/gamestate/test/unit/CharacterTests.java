@@ -4,13 +4,21 @@ import inaugural.soliloquy.gamestate.Character;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.*;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
-import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
-import soliloquy.ruleset.gameentities.specs.ICharacterType;
-import soliloquy.sprites.specs.ISpriteSet;
+import soliloquy.specs.common.factories.IGenericParamsSetFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterEvent;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.factories.ICharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.factories.ICharacterInventoryFactory;
+import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
+import soliloquy.specs.ruleset.entities.ICharacterAIType;
+import soliloquy.specs.ruleset.entities.ICharacterType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbilityType;
+import soliloquy.specs.sprites.entities.ISpriteSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -283,7 +291,7 @@ class CharacterTests {
     void testDelete() {
         ITile tile = new TileStub();
         tile.characters().addCharacter(_character);
-        IMap<String,ICollection<ICharacterEvent>> characterEvents = _character.events();
+        IMap<String, ICollection<ICharacterEvent>> characterEvents = _character.events();
         CharacterEventStub characterEvent = new CharacterEventStub();
         characterEvents.put("eventType", new CollectionStub<>());
         characterEvents.get("eventType").add(characterEvent);

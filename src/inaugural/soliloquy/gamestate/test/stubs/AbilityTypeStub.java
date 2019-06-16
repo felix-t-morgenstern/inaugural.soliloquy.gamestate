@@ -1,8 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.gamestate.specs.IGameZone;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilityType;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.ruleset.entities.abilities.IAbilityType;
 
 public class AbilityTypeStub implements IAbilityType {
     @Override

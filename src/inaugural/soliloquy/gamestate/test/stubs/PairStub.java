@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IPair;
+import soliloquy.specs.common.valueobjects.IPair;
 
 public class PairStub<K,V> implements IPair<K,V> {
     private K _item1;
@@ -9,14 +9,14 @@ public class PairStub<K,V> implements IPair<K,V> {
     private K _archetype1;
     private V _archetype2;
 
-    public PairStub(K item1, V item2) {
+    PairStub(K item1, V item2) {
         _item1 = item1;
         _item2 = item2;
         _archetype1 = item1;
         _archetype2 = item2;
     }
 
-    public PairStub(K item1, V item2, K archetype1, V archetype2) {
+    PairStub(K item1, V item2, K archetype1, V archetype2) {
         _item1 = item1;
         _item2 = item2;
         _archetype1 = archetype1;

@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterInventory;
-import soliloquy.gamestate.specs.IItem;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterInventory;
+import soliloquy.specs.gamestate.entities.IItem;
 
 public class CharacterInventory implements ICharacterInventory {
     // TODO: Implement and test this class (currently implemented as a shell for CharacterInventoryFactory)

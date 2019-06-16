@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.TileWallSegmentArchetype;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileWallSegment;
-import soliloquy.gamestate.specs.ITileWallSegments;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileWallSegment;
+import soliloquy.specs.gamestate.entities.ITileWallSegments;
 
 public class TileWallSegments extends GameEntityMediatorUnsorted<ITileWallSegment>
         implements ITileWallSegments {
@@ -12,6 +12,7 @@ public class TileWallSegments extends GameEntityMediatorUnsorted<ITileWallSegmen
     private final static ITileWallSegment TILE_WALL_SEGMENT_ARCHETYPE =
             new TileWallSegmentArchetype();
 
+    @SuppressWarnings("ConstantConditions")
     public TileWallSegments(ITile tile, ICollectionFactory collectionFactory) {
         super(collectionFactory);
         if (tile == null) {

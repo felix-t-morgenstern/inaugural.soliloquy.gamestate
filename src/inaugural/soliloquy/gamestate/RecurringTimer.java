@@ -1,16 +1,17 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.IRecurringTimer;
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.IRecurringTimer;
+import soliloquy.specs.logger.ILogger;
 
 public class RecurringTimer extends Timer implements IRecurringTimer {
     private int _roundModulo;
     private int _roundOffset;
 
-    public RecurringTimer(String timerId, String timerActionId, int roundModulo, int roundOffset,
+    public RecurringTimer(String timerId, IAction<Void> action, int roundModulo, int roundOffset,
                           IGame game, ILogger logger) {
-        super(timerId, timerActionId, game, logger);
+        super(timerId, action, game, logger);
         _roundModulo = roundModulo;
         _roundOffset = roundOffset;
     }

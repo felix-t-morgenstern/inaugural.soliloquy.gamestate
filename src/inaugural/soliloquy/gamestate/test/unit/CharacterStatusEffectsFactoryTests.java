@@ -7,12 +7,12 @@ import inaugural.soliloquy.gamestate.test.stubs.MapStub;
 import inaugural.soliloquy.gamestate.test.stubs.ResistanceCalculationStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterStatusEffectsFactory;
-import soliloquy.ruleset.gameconcepts.specs.IResistanceCalculation;
-import soliloquy.ruleset.gameentities.specs.IStatusEffectType;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
+import soliloquy.specs.ruleset.entities.IStatusEffectType;
+import soliloquy.specs.ruleset.gameconcepts.IResistanceCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 

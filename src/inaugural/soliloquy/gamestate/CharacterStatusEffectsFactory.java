@@ -1,18 +1,19 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterStatusEffects;
-import soliloquy.gamestate.specs.ICharacterStatusEffectsFactory;
-import soliloquy.ruleset.gameconcepts.specs.IResistanceCalculation;
-import soliloquy.ruleset.gameentities.specs.IStatusEffectType;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
+import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
+import soliloquy.specs.ruleset.entities.IStatusEffectType;
+import soliloquy.specs.ruleset.gameconcepts.IResistanceCalculation;
 
 public class CharacterStatusEffectsFactory implements ICharacterStatusEffectsFactory {
     private final IMap<String, IStatusEffectType> STATUS_EFFECT_TYPES;
     private final IMapFactory MAP_FACTORY;
     private final IResistanceCalculation RESISTANCE_CALCULATION;
 
+    @SuppressWarnings("ConstantConditions")
     public CharacterStatusEffectsFactory(IMap<String, IStatusEffectType> statusEffectTypes,
                                          IMapFactory mapFactory,
                                          IResistanceCalculation resistanceCalculation) {

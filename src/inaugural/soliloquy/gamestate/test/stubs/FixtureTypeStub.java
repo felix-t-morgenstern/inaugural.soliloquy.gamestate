@@ -1,14 +1,14 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICoordinate;
-import soliloquy.common.specs.IMap;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.logger.specs.ILogger;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbility;
-import soliloquy.ruleset.gameentities.specs.IFixtureType;
-import soliloquy.sprites.specs.ISprite;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.ruleset.entities.IFixtureType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
+import soliloquy.specs.sprites.entities.ISprite;
 
 public class FixtureTypeStub implements IFixtureType {
     @Override

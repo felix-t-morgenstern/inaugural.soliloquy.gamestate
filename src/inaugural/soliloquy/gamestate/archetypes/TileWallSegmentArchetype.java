@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.gamestate.specs.ITileWallSegment;
-import soliloquy.ruleset.gameentities.specs.IWallSegmentType;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.gamestate.entities.ITileWallSegment;
+import soliloquy.specs.ruleset.entities.IWallSegmentType;
 
 public class TileWallSegmentArchetype implements ITileWallSegment {
     @Override

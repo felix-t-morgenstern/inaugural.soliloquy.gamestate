@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IMap;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.ICharacterEvent;
-import soliloquy.logger.specs.ILogger;
-import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.ICharacterEvent;
+import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.ruleset.entities.ICharacterAIType;
 
 public class CharacterAITypeStub implements ICharacterAIType {
     @Override

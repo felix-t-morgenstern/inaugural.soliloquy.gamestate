@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.IGameZone;
-import soliloquy.gamestate.specs.IGameZonesRepo;
+import soliloquy.specs.gamestate.entities.IGameZone;
+import soliloquy.specs.gamestate.valueobjects.IGameZonesRepo;
 
 public class GameZonesRepoStub implements IGameZonesRepo {
     @Override

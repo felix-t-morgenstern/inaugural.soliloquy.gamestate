@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileCharacters;
-import soliloquy.gamestate.specs.ITileCharactersFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileCharacters;
+import soliloquy.specs.gamestate.factories.ITileCharactersFactory;
 
 public class TileCharactersFactory implements ITileCharactersFactory {
     private final IMapFactory MAP_FACTORY;

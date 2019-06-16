@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileCharacters;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileCharacters;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ public class TileCharactersStub implements ITileCharacters {
     private final ITile TILE;
     public final ICollection<ICharacter> REMOVED_CHARACTERS = new CollectionStub<>();
 
-    public TileCharactersStub(ITile tile) {
+    TileCharactersStub(ITile tile) {
         TILE = tile;
     }
 

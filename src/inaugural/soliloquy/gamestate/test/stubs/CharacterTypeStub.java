@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.ruleset.gameentities.specs.ICharacterType;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.ruleset.entities.ICharacterType;
 
 public class CharacterTypeStub implements ICharacterType {
     @Override

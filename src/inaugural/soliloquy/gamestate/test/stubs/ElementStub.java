@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.ruleset.gameentities.specs.IElement;
-import soliloquy.sprites.specs.ISpriteSet;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.ruleset.entities.IElement;
+import soliloquy.specs.sprites.entities.ISpriteSet;
 
 public class ElementStub implements IElement {
     @Override

@@ -5,9 +5,7 @@ import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.GenericParamsSetFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.gamestate.specs.IParty;
+import soliloquy.specs.gamestate.entities.IParty;
 
 import static org.junit.jupiter.api.Assertions.*;
 

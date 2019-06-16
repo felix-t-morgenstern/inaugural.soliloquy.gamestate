@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.logger.ILogger;
 
 import java.io.IOException;
 

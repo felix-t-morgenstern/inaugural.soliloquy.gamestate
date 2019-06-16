@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICoordinate;
+import soliloquy.specs.common.valueobjects.ICoordinate;
 
 public class CoordinateStub implements ICoordinate {
     private int _x;

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IMap;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IMap;
 
 public class GenericParamsSetStub implements IGenericParamsSet {
 

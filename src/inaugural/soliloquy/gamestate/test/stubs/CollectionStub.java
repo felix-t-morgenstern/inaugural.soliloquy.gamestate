@@ -1,19 +1,19 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.entities.IFunction;
+import soliloquy.specs.common.valueobjects.ICollection;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IFunction;
-
 public class CollectionStub<V> implements ICollection<V> {
     private V _archetype;
-    private ArrayList<V> _collection = new ArrayList<V>();
+    private ArrayList<V> _collection = new ArrayList<>();
 
     public CollectionStub() {
     }
 
-    public CollectionStub(V archetype) {
+    CollectionStub(V archetype) {
         _archetype = archetype;
     }
 

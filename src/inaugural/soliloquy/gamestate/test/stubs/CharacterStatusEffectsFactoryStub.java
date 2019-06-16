@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterStatusEffects;
-import soliloquy.gamestate.specs.ICharacterStatusEffectsFactory;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
+import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
 
 public class CharacterStatusEffectsFactoryStub implements ICharacterStatusEffectsFactory {
     @Override

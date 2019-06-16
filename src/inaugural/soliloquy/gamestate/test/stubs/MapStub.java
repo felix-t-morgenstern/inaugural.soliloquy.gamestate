@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-
-import soliloquy.common.specs.*;
+import soliloquy.specs.common.entities.IFunction;
+import soliloquy.specs.common.factories.IPairFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.valueobjects.IPair;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,7 +20,7 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     }
 
-    public MapStub(K archetype1, V archetype2) {
+    MapStub(K archetype1, V archetype2) {
         _archetype1 = archetype1;
         _archetype2 = archetype2;
     }

@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.gamestate.specs.ITileFixture;
-import soliloquy.gamestate.specs.ITileFixtureItems;
-import soliloquy.gamestate.specs.ITileFixtureItemsFactory;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.gamestate.entities.ITileFixture;
+import soliloquy.specs.gamestate.entities.ITileFixtureItems;
+import soliloquy.specs.gamestate.factories.ITileFixtureItemsFactory;
 
 public class TileFixtureItemsFactory implements ITileFixtureItemsFactory {
     private final ICollectionFactory COLLECTION_FACTORY;

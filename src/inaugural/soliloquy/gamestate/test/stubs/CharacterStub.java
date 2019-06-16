@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.IEntityUuid;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
-import soliloquy.ruleset.gameentities.abilities.specs.IReactiveAbilityType;
-import soliloquy.ruleset.gameentities.specs.ICharacterAIType;
-import soliloquy.ruleset.gameentities.specs.ICharacterClassification;
-import soliloquy.ruleset.gameentities.specs.ICharacterType;
-import soliloquy.sprites.specs.ISpriteSet;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.ruleset.entities.ICharacterAIType;
+import soliloquy.specs.ruleset.entities.ICharacterType;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.IReactiveAbilityType;
+import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
+import soliloquy.specs.sprites.entities.ISpriteSet;
 
 public class CharacterStub implements ICharacter {
     private boolean _isDeleted;

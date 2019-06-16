@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.common.specs.ICoordinate;
+import soliloquy.specs.common.valueobjects.ICoordinate;
 
 public class CoordinateArchetype implements ICoordinate {
     @Override

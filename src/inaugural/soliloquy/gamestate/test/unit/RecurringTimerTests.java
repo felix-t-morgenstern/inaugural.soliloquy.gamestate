@@ -1,13 +1,15 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.RecurringTimer;
+import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
 import inaugural.soliloquy.gamestate.test.stubs.GameStub;
 import inaugural.soliloquy.gamestate.test.stubs.LoggerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.IRecurringTimer;
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.IRecurringTimer;
+import soliloquy.specs.logger.ILogger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,14 +17,14 @@ class RecurringTimerTests {
     private IRecurringTimer _recurringTimer;
 
     private final String TIMER_ID = "TimerId";
-    private final String TIMER_ACTION_ID = "TimerActionId";
+    private final IAction<Void> TIMER_ACTION = new ActionStub<>();
 
     private final IGame GAME = new GameStub();
     private final ILogger LOGGER = new LoggerStub();
 
     @BeforeEach
     void setUp() {
-        _recurringTimer = new RecurringTimer(TIMER_ID, TIMER_ACTION_ID, 0, 0, GAME, LOGGER);
+        _recurringTimer = new RecurringTimer(TIMER_ID, TIMER_ACTION, 0, 0, GAME, LOGGER);
     }
 
     @Test
@@ -45,8 +47,8 @@ class RecurringTimerTests {
     }
 
     @Test
-    void testTimerTypeId() {
-        assertEquals(TIMER_ACTION_ID, _recurringTimer.timerActionId());
+    void testTimerAction() {
+        assertEquals(TIMER_ACTION, _recurringTimer.action());
     }
 
     @Test

@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.ICollection;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterInventory;
-import soliloquy.gamestate.specs.IItem;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterInventory;
+import soliloquy.specs.gamestate.entities.IItem;
 
 public class CharacterInventoryStub implements ICharacterInventory {
     public final ICharacter CHARACTER;
 
     public boolean _isDeleted;
 
-    public CharacterInventoryStub(ICharacter character) {
+    CharacterInventoryStub(ICharacter character) {
         CHARACTER = character;
     }
 

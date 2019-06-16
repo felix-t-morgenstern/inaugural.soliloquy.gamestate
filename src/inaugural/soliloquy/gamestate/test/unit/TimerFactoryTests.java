@@ -1,19 +1,22 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TimerFactory;
+import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
 import inaugural.soliloquy.gamestate.test.stubs.GameStub;
 import inaugural.soliloquy.gamestate.test.stubs.LoggerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.IOneTimeTimer;
-import soliloquy.gamestate.specs.IRecurringTimer;
-import soliloquy.gamestate.specs.ITimerFactory;
-import soliloquy.logger.specs.ILogger;
+import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.IOneTimeTimer;
+import soliloquy.specs.gamestate.entities.IRecurringTimer;
+import soliloquy.specs.gamestate.factories.ITimerFactory;
+import soliloquy.specs.logger.ILogger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-public class TimerFactoryTests {
+class TimerFactoryTests {
     private ITimerFactory _timerFactory;
 
     private final IGame GAME = new GameStub();
@@ -32,29 +35,29 @@ public class TimerFactoryTests {
     @Test
     void testMakeOneTimeTimer() {
         String timerId = "TimerId";
-        String timerActionId = "TimerTypeId";
+        IAction<Void> action = new ActionStub<>();
         long roundWhenGoesOff = 123123L;
 
         IOneTimeTimer oneTimeTimer =
-                _timerFactory.makeOneTimeTimer(timerId, timerActionId, roundWhenGoesOff);
+                _timerFactory.makeOneTimeTimer(timerId, action, roundWhenGoesOff);
 
         assertEquals(timerId, oneTimeTimer.id());
-        assertEquals(timerActionId, oneTimeTimer.timerActionId());
+        assertSame(action, oneTimeTimer.action());
         assertEquals(roundWhenGoesOff, oneTimeTimer.getRoundWhenGoesOff());
     }
 
     @Test
     void testMakeRecurringTimer() {
         String timerId = "TimerId";
-        String timerActionId = "TimerTypeId";
+        IAction<Void> action = new ActionStub<>();
         int roundModulo = 123;
         int roundOffset = 12;
 
         IRecurringTimer recurringTimer =
-                _timerFactory.makeRecurringTimer(timerId, timerActionId, roundModulo, roundOffset);
+                _timerFactory.makeRecurringTimer(timerId, action, roundModulo, roundOffset);
 
         assertEquals(timerId, recurringTimer.id());
-        assertEquals(timerActionId, recurringTimer.timerActionId());
+        assertSame(action, recurringTimer.action());
         assertEquals(roundModulo, recurringTimer.getRoundModulo());
         assertEquals(roundOffset, recurringTimer.getRoundOffset());
     }

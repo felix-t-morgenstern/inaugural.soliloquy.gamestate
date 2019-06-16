@@ -2,14 +2,20 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CoordinateArchetype;
-import soliloquy.common.specs.*;
-import soliloquy.game.primary.specs.IGame;
-import soliloquy.gamestate.specs.ICamera;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.IGameState;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.logger.specs.ILogger;
-import soliloquy.ruleset.gameconcepts.specs.ITileVisibility;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.factories.ICoordinateFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.ICamera;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.valueobjects.IGameState;
+import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.ruleset.gameconcepts.ITileVisibility;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.gamestate.specs.ICharacterAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IActiveAbilityType;
+import soliloquy.specs.gamestate.entities.ICharacterAbility;
+import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
 
 public class CharacterActiveAbilityArchetype implements ICharacterAbility<IActiveAbilityType> {
     @Override

@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
-import soliloquy.common.specs.ICollection;
-import soliloquy.common.specs.ICollectionFactory;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IGenericParamsSetFactory;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.IParty;
+import soliloquy.specs.common.factories.ICollectionFactory;
+import soliloquy.specs.common.factories.IGenericParamsSetFactory;
+import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.IParty;
 
 public class Party implements IParty {
     private final ICollection<ICharacter> PCs;

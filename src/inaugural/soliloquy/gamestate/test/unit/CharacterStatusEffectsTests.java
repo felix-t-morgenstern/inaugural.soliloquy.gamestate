@@ -4,13 +4,13 @@ import inaugural.soliloquy.gamestate.CharacterStatusEffects;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.common.specs.IMap;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterStatusEffects;
-import soliloquy.ruleset.gameconcepts.specs.IResistanceCalculation;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilitySource;
-import soliloquy.ruleset.gameentities.specs.IElement;
-import soliloquy.ruleset.gameentities.specs.IStatusEffectType;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
+import soliloquy.specs.ruleset.entities.IElement;
+import soliloquy.specs.ruleset.entities.IStatusEffectType;
+import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
+import soliloquy.specs.ruleset.gameconcepts.IResistanceCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.IMap;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.IDeletable;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.gamestate.entities.IDeletable;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IEntityUuid;
-import soliloquy.common.specs.IEntityUuidFactory;
+import soliloquy.specs.common.factories.IEntityUuidFactory;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
 
 public class EntityUuidFactoryStub implements IEntityUuidFactory {
     public static final IEntityUuid RANDOM_ENTITY_UUID = new EntityUuidStub();

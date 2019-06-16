@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterAbility;
-import soliloquy.ruleset.gameentities.abilities.specs.IAbilityType;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterAbility;
+import soliloquy.specs.ruleset.entities.abilities.IAbilityType;
 
 public class CharacterAbility extends HasDeletionInvariants implements ICharacterAbility {
     private boolean _isHidden;

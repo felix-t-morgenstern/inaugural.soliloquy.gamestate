@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.common.specs.IPairFactory;
-import soliloquy.gamestate.specs.ICharacter;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlots;
-import soliloquy.gamestate.specs.ICharacterEquipmentSlotsFactory;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.common.factories.IPairFactory;
+import soliloquy.specs.gamestate.entities.ICharacter;
+import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
+import soliloquy.specs.gamestate.factories.ICharacterEquipmentSlotsFactory;
 
 public class CharacterEquipmentSlotsFactory implements ICharacterEquipmentSlotsFactory {
     private final IPairFactory PAIR_FACTORY;

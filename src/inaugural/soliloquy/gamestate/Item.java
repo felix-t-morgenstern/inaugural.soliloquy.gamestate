@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.common.specs.IEntityUuid;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IPair;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.IItemType;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.ruleset.entities.IItemType;
 
 public class Item implements IItem {
     private final IEntityUuid ID;
@@ -40,7 +40,7 @@ public class Item implements IItem {
         }
         if (charges < 0) {
             throw new IllegalArgumentException(String.format(
-                    "Item.setCharges: charges (%d) cannot be less than 0"));
+                    "Item.setCharges: charges (%d) cannot be less than 0", charges));
         }
         _charges = charges;
     }

@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
-import soliloquy.common.specs.IMapFactory;
-import soliloquy.gamestate.specs.IItem;
-import soliloquy.gamestate.specs.ITile;
-import soliloquy.gamestate.specs.ITileItems;
+import soliloquy.specs.common.factories.IMapFactory;
+import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.gamestate.entities.ITile;
+import soliloquy.specs.gamestate.entities.ITileItems;
 
 public class TileItems extends GameEntityMediatorWithZIndex<IItem> implements ITileItems {
     private final ITile TILE;

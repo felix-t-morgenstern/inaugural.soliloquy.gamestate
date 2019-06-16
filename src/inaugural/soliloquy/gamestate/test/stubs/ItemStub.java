@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.common.specs.IEntityUuid;
-import soliloquy.common.specs.IGenericParamsSet;
-import soliloquy.common.specs.IPair;
-import soliloquy.gamestate.specs.*;
-import soliloquy.ruleset.gameentities.specs.IItemType;
+import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.IGenericParamsSet;
+import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.ruleset.entities.IItemType;
 
 public class ItemStub implements IItem {
     private final IItemType ITEM_TYPE = new ItemTypeStub();
