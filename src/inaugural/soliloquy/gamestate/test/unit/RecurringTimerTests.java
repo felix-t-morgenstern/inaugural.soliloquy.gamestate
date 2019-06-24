@@ -33,6 +33,13 @@ class RecurringTimerTests {
     }
 
     @Test
+    void testEquals() {
+        IRecurringTimer recurringTimer =
+                new RecurringTimer(TIMER_ID, TIMER_ACTION, 0, 0, GAME, LOGGER);
+        assertEquals(_recurringTimer, recurringTimer);
+    }
+
+    @Test
     void testSetAndGetRoundModulo() {
         _recurringTimer.setRoundModulo(123);
 

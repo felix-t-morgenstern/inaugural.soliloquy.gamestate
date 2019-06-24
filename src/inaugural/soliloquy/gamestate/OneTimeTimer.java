@@ -8,8 +8,8 @@ import soliloquy.specs.logger.ILogger;
 public class OneTimeTimer extends Timer implements IOneTimeTimer {
     private long _roundWhenGoesOff;
 
-    public OneTimeTimer(String timerId, IAction<Void> timerActionId, long roundWhenGoesOff, IGame game,
-                        ILogger logger) {
+    public OneTimeTimer(String timerId, IAction<Void> timerActionId, long roundWhenGoesOff,
+                        IGame game, ILogger logger) {
         super(timerId, timerActionId, game, logger);
         _roundWhenGoesOff = roundWhenGoesOff;
     }
@@ -27,5 +27,17 @@ public class OneTimeTimer extends Timer implements IOneTimeTimer {
     @Override
     public String getInterfaceName() {
         return IOneTimeTimer.class.getCanonicalName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof IOneTimeTimer)) {
+            return false;
+        }
+        IOneTimeTimer oneTimeTimer = (IOneTimeTimer) o;
+        return oneTimeTimer.id().equals(ID);
     }
 }

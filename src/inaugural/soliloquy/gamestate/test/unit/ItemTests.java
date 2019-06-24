@@ -28,6 +28,13 @@ class ItemTests {
     }
 
     @Test
+    void testEquals() {
+        IItem item2 = new Item(ID, ITEM_TYPE);
+
+        assertEquals(_item, item2);
+    }
+
+    @Test
     void testItemType() {
         assertSame(ITEM_TYPE, _item.itemType());
     }

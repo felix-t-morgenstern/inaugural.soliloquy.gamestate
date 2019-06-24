@@ -354,6 +354,22 @@ public class Character implements ICharacter {
         return ICharacter.class.getCanonicalName();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof ICharacter)) {
+            return false;
+        }
+        ICharacter character = (ICharacter) o;
+        if (character.isDeleted())
+        {
+            return false;
+        }
+        return character.id().equals(ID);
+    }
+
     private void enforceInvariant(String methodName, boolean cannotBeDeleted) {
         if (cannotBeDeleted && _deleted) {
             throw new IllegalStateException("Character." + methodName + ": Character is deleted");

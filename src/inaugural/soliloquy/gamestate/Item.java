@@ -144,4 +144,20 @@ public class Item implements IItem {
     public String getInterfaceName() {
         return IItem.class.getCanonicalName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof IItem)) {
+            return false;
+        }
+        IItem item = (IItem) o;
+        if (item.isDeleted())
+        {
+            return false;
+        }
+        return item.id().equals(ID);
+    }
 }

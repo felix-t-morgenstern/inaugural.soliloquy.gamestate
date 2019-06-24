@@ -6,7 +6,7 @@ import soliloquy.specs.gamestate.entities.ITimer;
 import soliloquy.specs.logger.ILogger;
 
 public abstract class Timer implements ITimer {
-    private final String ID;
+    protected final String ID;
     private final IGame GAME;
     private final ILogger LOGGER;
 

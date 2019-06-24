@@ -33,6 +33,12 @@ class OneTimeTimerTests {
     }
 
     @Test
+    void testEquals() {
+        IOneTimeTimer oneTimeTimer = new OneTimeTimer(TIMER_ID, ACTION, 0L, GAME, LOGGER);
+        assertEquals(_oneTimeTimer, oneTimeTimer);
+    }
+
+    @Test
     void testSetAndGetRoundWhenGoesOff() {
         long roundWhenGoesOff = 123l;
         _oneTimeTimer.setRoundWhenGoesOff(roundWhenGoesOff);

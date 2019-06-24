@@ -130,6 +130,21 @@ class CharacterTests {
     }
 
     @Test
+
+    void testEquals() {
+        ICharacter character2 = new Character(
+                ID,
+                CHARACTER_TYPE,
+                new CollectionFactoryStub(),
+                new MapFactoryStub(),
+                EQUIPMENT_SLOTS_FACTORY,
+                INVENTORY_FACTORY,
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY);
+        assertEquals(_character, character2);
+    }
+
+    @Test
     void testCharacterType() {
         assertSame(CHARACTER_TYPE, _character.characterType());
     }
@@ -319,7 +334,9 @@ class CharacterTests {
         _character.delete();
 
         assertTrue(_character.isDeleted());
-        assertTrue(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS.contains(_character));
+        ICharacter removedCharacter =
+                ((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS.get(0);
+        assertSame(_character, removedCharacter);
         assertTrue(characterEvent._isDeleted);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
