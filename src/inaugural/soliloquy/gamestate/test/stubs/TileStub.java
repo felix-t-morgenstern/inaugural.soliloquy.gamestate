@@ -94,17 +94,7 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public ITileWallSegments nTileWallSegments() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public ITileWallSegments nwTileWallSegments() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public ITileWallSegments wTileWallSegments() throws IllegalStateException {
+    public ITileWallSegments tileWallSegments() throws IllegalStateException {
         return null;
     }
 

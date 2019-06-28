@@ -10,6 +10,21 @@ public class WallSegmentTypeStub implements IWallSegmentType {
     }
 
     @Override
+    public boolean blocksWest() {
+        return false;
+    }
+
+    @Override
+    public boolean blocksNorthwest() {
+        return false;
+    }
+
+    @Override
+    public boolean blocksNorth() {
+        return false;
+    }
+
+    @Override
     public String id() throws IllegalStateException {
         return null;
     }

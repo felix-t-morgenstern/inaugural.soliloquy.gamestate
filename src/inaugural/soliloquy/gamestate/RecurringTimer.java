@@ -40,4 +40,16 @@ public class RecurringTimer extends Timer implements IRecurringTimer {
     public String getInterfaceName() {
         return IRecurringTimer.class.getCanonicalName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (!(o instanceof IRecurringTimer)) {
+            return false;
+        }
+        IRecurringTimer recurringTimer = (IRecurringTimer) o;
+        return recurringTimer.id().equals(ID);
+    }
 }
