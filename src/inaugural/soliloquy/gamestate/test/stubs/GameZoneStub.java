@@ -1,10 +1,11 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.common.valueobjects.ICoordinate;
 import soliloquy.specs.common.valueobjects.IEntityUuid;
-import soliloquy.specs.common.valueobjects.IMap;
 import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.IGameZone;
@@ -40,13 +41,8 @@ public class GameZoneStub implements IGameZone {
     }
 
     @Override
-    public IMap<IEntityUuid, ICharacter> getCharactersRepresentation() {
+    public IReadOnlyMap<IEntityUuid, ICharacter> charactersRepresentation() {
         return _characters.makeClone();
-    }
-
-    @Override
-    public boolean containsCharacter(ICharacter iCharacter) {
-        return false;
     }
 
     @Override
@@ -55,7 +51,7 @@ public class GameZoneStub implements IGameZone {
     }
 
     @Override
-    public IMap<IEntityUuid, IItem> getItemsRepresentation() {
+    public IReadOnlyMap<IEntityUuid, IItem> itemsRepresentation() {
         return _items.makeClone();
     }
 

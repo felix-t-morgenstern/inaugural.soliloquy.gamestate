@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.ICollectionFactory;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterInventory;
 import soliloquy.specs.gamestate.entities.IItem;
@@ -29,7 +29,7 @@ public class CharacterInventory implements ICharacterInventory {
     }
 
     @Override
-    public ICollection<IItem> getRepresentation() throws IllegalStateException {
+    public IReadOnlyCollection<IItem> representation() throws IllegalStateException {
         return null;
     }
 

@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.IPersistentVariableCache;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IPersistentVariableCache;
 import soliloquy.specs.gamestate.entities.IGameZone;
 import soliloquy.specs.gamestate.entities.IKeyBindingContext;
 import soliloquy.specs.gamestate.entities.IParty;

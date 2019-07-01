@@ -1,8 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.ICollection;
-import soliloquy.specs.common.valueobjects.IGenericParamsSet;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IGenericParamsSet;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 
 public class GenericParamsSetStub implements IGenericParamsSet {
 
@@ -19,7 +20,7 @@ public class GenericParamsSetStub implements IGenericParamsSet {
     }
 
     @Override
-    public <T> void addParamsSet(IMap<String, T> iMap)
+    public <T> void addParamsSet(IReadOnlyMap<String, T> iMap)
             throws IllegalArgumentException, UnsupportedOperationException {
         // Stub class; no implementation needed
         throw new UnsupportedOperationException();

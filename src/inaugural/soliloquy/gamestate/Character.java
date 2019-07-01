@@ -4,10 +4,10 @@ import inaugural.soliloquy.gamestate.archetypes.*;
 import soliloquy.specs.common.factories.ICollectionFactory;
 import soliloquy.specs.common.factories.IGenericParamsSetFactory;
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IGenericParamsSet;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.common.valueobjects.IEntityUuid;
-import soliloquy.specs.common.valueobjects.IGenericParamsSet;
-import soliloquy.specs.common.valueobjects.IMap;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.factories.ICharacterEquipmentSlotsFactory;
 import soliloquy.specs.gamestate.factories.ICharacterInventoryFactory;
@@ -379,7 +379,7 @@ public class Character implements ICharacter {
                     ": Character is not present on its specified Tile");
         }
         if (_tile != null && _tile.gameZone() != null &&
-                _tile.gameZone().getCharactersRepresentation().get(ID) != this) {
+                _tile.gameZone().charactersRepresentation().get(ID) != this) {
             throw new IllegalStateException("Character." + methodName +
                     ": Character is not registered in its specified Tile's GameZone");
         }

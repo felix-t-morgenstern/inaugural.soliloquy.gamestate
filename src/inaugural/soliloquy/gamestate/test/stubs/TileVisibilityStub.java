@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IPair;
 import soliloquy.specs.common.valueobjects.ICoordinate;
-import soliloquy.specs.common.valueobjects.IPair;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.ruleset.gameconcepts.ITileVisibility;
 

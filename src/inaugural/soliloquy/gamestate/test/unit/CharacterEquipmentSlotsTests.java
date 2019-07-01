@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.IMapFactory;
 import soliloquy.specs.common.factories.IPairFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.IItem;
@@ -188,7 +188,7 @@ class CharacterEquipmentSlotsTests {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
-        IMap characterEquipmentSlotsRepresentation = _characterEquipmentSlots.getRepresentation();
+        IReadOnlyMap characterEquipmentSlotsRepresentation = _characterEquipmentSlots.representation();
 
         assertNotNull(characterEquipmentSlotsRepresentation);
         assertEquals(1, characterEquipmentSlotsRepresentation.size());
@@ -215,7 +215,7 @@ class CharacterEquipmentSlotsTests {
 
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.delete());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.representation());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
@@ -232,7 +232,7 @@ class CharacterEquipmentSlotsTests {
 
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.delete());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.representation());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));

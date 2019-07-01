@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.IItem;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileItems;
@@ -70,7 +70,7 @@ class TileItemsTests {
         _tileItems.add(ITEM_2);
         _tileItems.add(ITEM_3);
 
-        IMap<IItem,Integer> representation = _tileItems.getRepresentation();
+        IReadOnlyMap<IItem,Integer> representation = _tileItems.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());
@@ -89,7 +89,7 @@ class TileItemsTests {
     void testAddAtZIndex() {
         final int zIndex = 123;
         _tileItems.add(ITEM, zIndex);
-        IMap<IItem,Integer> representation = _tileItems.getRepresentation();
+        IReadOnlyMap<IItem,Integer> representation = _tileItems.representation();
 
         assertEquals((Integer) zIndex, representation.get(ITEM));
     }
@@ -116,7 +116,7 @@ class TileItemsTests {
         _tileItems.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileItems.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileItems.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileItems.representation());
         assertThrows(IllegalStateException.class, () -> _tileItems.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileItems.add(ITEM,0));
         assertThrows(IllegalStateException.class, () -> _tileItems.contains(ITEM));
@@ -128,7 +128,7 @@ class TileItemsTests {
         TILE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileItems.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileItems.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileItems.representation());
         assertThrows(IllegalStateException.class, () -> _tileItems.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileItems.add(ITEM,0));
         assertThrows(IllegalStateException.class, () -> _tileItems.contains(ITEM));

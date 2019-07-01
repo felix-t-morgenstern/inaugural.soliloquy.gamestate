@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileFixtureStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.ICollectionFactory;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 import soliloquy.specs.gamestate.entities.IItem;
 import soliloquy.specs.gamestate.entities.ITileFixture;
 import soliloquy.specs.gamestate.entities.ITileFixtureItems;
@@ -79,7 +79,7 @@ class TileFixtureItemsTests {
         _tileFixtureItems.add(ITEM_2);
         _tileFixtureItems.add(ITEM_3);
 
-        ICollection<IItem> representation = _tileFixtureItems.getRepresentation();
+        IReadOnlyCollection<IItem> representation = _tileFixtureItems.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getArchetype());
@@ -106,7 +106,7 @@ class TileFixtureItemsTests {
         _tileFixtureItems.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.representation());
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.contains(ITEM));
@@ -117,7 +117,7 @@ class TileFixtureItemsTests {
         TILE_FIXTURE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.representation());
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.contains(ITEM));

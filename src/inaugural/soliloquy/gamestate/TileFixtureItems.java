@@ -2,7 +2,8 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.specs.common.factories.ICollectionFactory;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 import soliloquy.specs.gamestate.entities.IItem;
 import soliloquy.specs.gamestate.entities.ITileFixture;
 import soliloquy.specs.gamestate.entities.ITileFixtureItems;
@@ -47,13 +48,13 @@ public class TileFixtureItems extends HasDeletionInvariants implements ITileFixt
     }
 
     @Override
-    public ICollection<IItem> getRepresentation() throws UnsupportedOperationException, IllegalStateException {
+    public IReadOnlyCollection<IItem> representation() throws UnsupportedOperationException, IllegalStateException {
         enforceDeletionInvariants("getRepresentation");
-        ICollection<IItem> representation = COLLECTION_FACTORY.make(ITEM_ARCHETYPE);
+        ICollection<IItem> items = COLLECTION_FACTORY.make(ITEM_ARCHETYPE);
         for(IItem item : CONTAINED_ITEMS) {
-            representation.add(item);
+            items.add(item);
         }
-        return representation;
+        return items.readOnlyRepresentation();
     }
 
     @Override

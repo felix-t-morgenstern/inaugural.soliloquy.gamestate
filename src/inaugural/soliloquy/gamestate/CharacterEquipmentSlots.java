@@ -3,8 +3,9 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.specs.common.factories.IMapFactory;
 import soliloquy.specs.common.factories.IPairFactory;
-import soliloquy.specs.common.valueobjects.IMap;
-import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IPair;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.IItem;
@@ -62,16 +63,16 @@ public class CharacterEquipmentSlots extends HasDeletionInvariants
     }
 
     @Override
-    public IMap<String, IItem> getRepresentation()
+    public IReadOnlyMap<String, IItem> representation()
             throws IllegalStateException {
         enforceDeletionInvariants("getRepresentation");
-        IMap<String, IItem> characterEquipmentSlotsRepresentation =
+        IMap<String, IItem> characterEquipmentSlots =
                 MAP_FACTORY.make("", ITEM_ARCHETYPE);
         for(Map.Entry<String,IPair<IItem,Boolean>> equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
-            characterEquipmentSlotsRepresentation.put(equipmentSlot.getKey(),
+            characterEquipmentSlots.put(equipmentSlot.getKey(),
                     equipmentSlot.getValue().getItem1());
         }
-        return characterEquipmentSlotsRepresentation;
+        return characterEquipmentSlots.readOnlyRepresentation();
     }
 
     @Override

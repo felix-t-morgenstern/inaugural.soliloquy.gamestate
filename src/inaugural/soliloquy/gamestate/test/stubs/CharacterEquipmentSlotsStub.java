@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.IItem;
@@ -30,7 +30,7 @@ public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
     }
 
     @Override
-    public IMap<String, IItem> getRepresentation() throws IllegalStateException {
+    public IReadOnlyMap<String, IItem> representation() throws IllegalStateException {
         return null;
     }
 

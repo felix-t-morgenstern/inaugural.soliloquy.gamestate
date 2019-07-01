@@ -1,17 +1,22 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.IOneTimeTimer;
-import soliloquy.specs.logger.ILogger;
+
+import java.util.function.Consumer;
 
 public class OneTimeTimer extends Timer implements IOneTimeTimer {
     private long _roundWhenGoesOff;
 
+    private final Consumer<IOneTimeTimer> REMOVE_ONE_TIME_TIMER_FROM_ROUND_MANAGER;
+
     public OneTimeTimer(String timerId, IAction<Void> timerActionId, long roundWhenGoesOff,
-                        IGame game, ILogger logger) {
-        super(timerId, timerActionId, game, logger);
+                        Consumer<IOneTimeTimer> addRecurringTimerToRoundManager,
+                        Consumer<IOneTimeTimer> removeOneTimeTimerFromRoundManager) {
+        super(timerId, timerActionId);
         _roundWhenGoesOff = roundWhenGoesOff;
+        REMOVE_ONE_TIME_TIMER_FROM_ROUND_MANAGER = removeOneTimeTimerFromRoundManager;
+        addRecurringTimerToRoundManager.accept(this);
     }
 
     @Override
@@ -39,5 +44,16 @@ public class OneTimeTimer extends Timer implements IOneTimeTimer {
         }
         IOneTimeTimer oneTimeTimer = (IOneTimeTimer) o;
         return oneTimeTimer.id().equals(ID);
+    }
+
+    @Override
+    protected String className() {
+        return "OneTimeTimer";
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        REMOVE_ONE_TIME_TIMER_FROM_ROUND_MANAGER.accept(this);
+        super.delete();
     }
 }

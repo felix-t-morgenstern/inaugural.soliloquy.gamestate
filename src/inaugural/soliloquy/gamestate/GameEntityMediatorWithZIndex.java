@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.IDeletable;
 
 import java.util.HashMap;
@@ -31,13 +32,13 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends IDeletable>
 
     protected abstract TEntity getArchetype();
 
-    public IMap<TEntity,Integer> getRepresentation() {
+    public IReadOnlyMap<TEntity,Integer> representation() {
         enforceDeletionInvariants("getRepresentation");
-        IMap<TEntity, Integer> representation = MAP_FACTORY.make(getArchetype(), 0);
+        IMap<TEntity, Integer> entities = MAP_FACTORY.make(getArchetype(), 0);
         for(Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
-            representation.put(entry.getKey(), entry.getValue());
+            entities.put(entry.getKey(), entry.getValue());
         }
-        return representation;
+        return entities.readOnlyRepresentation();
     }
 
     public void add(TEntity entity) throws IllegalArgumentException {

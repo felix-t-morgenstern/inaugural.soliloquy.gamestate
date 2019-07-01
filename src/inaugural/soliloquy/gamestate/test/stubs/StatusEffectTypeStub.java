@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.common.infrastructure.IPair;
 import soliloquy.specs.common.valueobjects.IEntityUuid;
-import soliloquy.specs.common.valueobjects.IPair;
 import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.logger.ILogger;
@@ -12,10 +12,6 @@ import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
 import soliloquy.specs.sprites.entities.ISprite;
 
 public class StatusEffectTypeStub implements IStatusEffectType {
-    @Override
-    public IPair<ISprite, Integer> getIcon(String s, IEntityUuid iEntityUuid) {
-        return null;
-    }
 
     @Override
     public IAction<ICharacter> onTurnStart() {
@@ -69,6 +65,11 @@ public class StatusEffectTypeStub implements IStatusEffectType {
 
     @Override
     public String id() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public IPair<ISprite, Integer> getIcon(String s, IEntityUuid iEntityUuid) {
         return null;
     }
 }

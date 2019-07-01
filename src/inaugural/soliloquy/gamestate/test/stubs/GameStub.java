@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IAction;
 import soliloquy.specs.common.entities.IFunction;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.valueobjects.IGameState;
 import soliloquy.specs.logger.ILogger;

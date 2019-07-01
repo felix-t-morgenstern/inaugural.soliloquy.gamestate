@@ -2,14 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.RecurringTimer;
 import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.GameStub;
-import inaugural.soliloquy.gamestate.test.stubs.LoggerStub;
+import inaugural.soliloquy.gamestate.test.stubs.RoundManagerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.IRecurringTimer;
-import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.gamestate.entities.IRoundManager;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,13 +16,12 @@ class RecurringTimerTests {
 
     private final String TIMER_ID = "TimerId";
     private final IAction<Void> TIMER_ACTION = new ActionStub<>();
-
-    private final IGame GAME = new GameStub();
-    private final ILogger LOGGER = new LoggerStub();
+    private final RoundManagerStub ROUND_MANAGER = new RoundManagerStub();
 
     @BeforeEach
     void setUp() {
-        _recurringTimer = new RecurringTimer(TIMER_ID, TIMER_ACTION, 0, 0, GAME, LOGGER);
+        _recurringTimer = new RecurringTimer(TIMER_ID, TIMER_ACTION, 0, 0,
+                ROUND_MANAGER.RECURRING_TIMERS::add, ROUND_MANAGER.RECURRING_TIMERS::removeItem);
     }
 
     @Test
@@ -35,7 +32,9 @@ class RecurringTimerTests {
     @Test
     void testEquals() {
         IRecurringTimer recurringTimer =
-                new RecurringTimer(TIMER_ID, TIMER_ACTION, 0, 0, GAME, LOGGER);
+                new RecurringTimer(TIMER_ID, TIMER_ACTION, 0, 0,
+                        ROUND_MANAGER.RECURRING_TIMERS::add,
+                        ROUND_MANAGER.RECURRING_TIMERS::removeItem);
         assertEquals(_recurringTimer, recurringTimer);
     }
 
@@ -63,16 +62,6 @@ class RecurringTimerTests {
         _recurringTimer.setPriority(123);
 
         assertEquals(123, _recurringTimer.getPriority());
-    }
-
-    @Test
-    void testGame() {
-        assertEquals(GAME, _recurringTimer.game());
-    }
-
-    @Test
-    void testLogger() {
-        assertEquals(LOGGER, _recurringTimer.logger());
     }
 
     @Test

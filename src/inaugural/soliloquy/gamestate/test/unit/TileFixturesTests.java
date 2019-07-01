@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileFixture;
 import soliloquy.specs.gamestate.entities.ITileFixtures;
@@ -61,12 +61,12 @@ class TileFixturesTests {
     }
 
     @Test
-    void testGetRepresentation() {
+    void testRepresentation() {
         _tileFixtures.add(TILE_FIXTURE);
         _tileFixtures.add(TILE_FIXTURE_2);
         _tileFixtures.add(TILE_FIXTURE_3);
 
-        IMap<ITileFixture,Integer> representation = _tileFixtures.getRepresentation();
+        IReadOnlyMap<ITileFixture,Integer> representation = _tileFixtures.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());
@@ -85,7 +85,7 @@ class TileFixturesTests {
     void testAddAtZIndex() {
         final int zIndex = 123;
         _tileFixtures.add(TILE_FIXTURE, zIndex);
-        IMap<ITileFixture,Integer> representation = _tileFixtures.getRepresentation();
+        IReadOnlyMap<ITileFixture,Integer> representation = _tileFixtures.representation();
 
         assertEquals((Integer) zIndex, representation.get(TILE_FIXTURE));
     }
@@ -112,7 +112,7 @@ class TileFixturesTests {
         _tileFixtures.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileFixtures.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileFixtures.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileFixtures.representation());
         assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE,0));
         assertThrows(IllegalStateException.class, () -> _tileFixtures.contains(TILE_FIXTURE));
@@ -124,7 +124,7 @@ class TileFixturesTests {
         TILE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileFixtures.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileFixtures.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileFixtures.representation());
         assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE,0));
         assertThrows(IllegalStateException.class, () -> _tileFixtures.contains(TILE_FIXTURE));

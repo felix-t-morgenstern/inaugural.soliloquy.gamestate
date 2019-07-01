@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
+import soliloquy.specs.common.infrastructure.IGenericParamsSet;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.common.valueobjects.ICoordinate;
-import soliloquy.specs.common.valueobjects.IGenericParamsSet;
-import soliloquy.specs.common.valueobjects.IMap;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileFixture;
 import soliloquy.specs.gamestate.entities.ITileFixtureItems;

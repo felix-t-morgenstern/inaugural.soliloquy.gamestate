@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.ISettingsRepo;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.ISettingsRepo;
 import soliloquy.specs.common.shared.IEntityGroup;
-import soliloquy.specs.common.valueobjects.ICollection;
 import soliloquy.specs.ruleset.IRuleset;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;

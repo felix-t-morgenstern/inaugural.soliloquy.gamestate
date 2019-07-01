@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.common.valueobjects.ICoordinate;
-import soliloquy.specs.common.valueobjects.IMap;
 import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.logger.ILogger;

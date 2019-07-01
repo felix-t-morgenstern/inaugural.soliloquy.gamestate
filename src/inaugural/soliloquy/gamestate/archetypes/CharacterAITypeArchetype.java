@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.valueobjects.ICollection;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.ICharacterEvent;
 import soliloquy.specs.logger.ILogger;

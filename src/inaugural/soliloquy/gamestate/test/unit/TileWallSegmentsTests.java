@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileWallSegmentStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.ICollectionFactory;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileWallSegment;
 import soliloquy.specs.gamestate.entities.ITileWallSegments;
@@ -71,7 +71,7 @@ class TileWallSegmentsTests {
         _tileWallSegments.add(TILE_WALL_SEGMENT_2);
         _tileWallSegments.add(TILE_WALL_SEGMENT_3);
 
-        ICollection<ITileWallSegment> representation = _tileWallSegments.getRepresentation();
+        IReadOnlyCollection<ITileWallSegment> representation = _tileWallSegments.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getArchetype());
@@ -105,7 +105,7 @@ class TileWallSegmentsTests {
         _tileWallSegments.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegments.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegments.representation());
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.add(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.contains(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.remove(TILE_WALL_SEGMENT));
@@ -116,7 +116,7 @@ class TileWallSegmentsTests {
         TILE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegments.getRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegments.representation());
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.add(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.contains(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.remove(TILE_WALL_SEGMENT));

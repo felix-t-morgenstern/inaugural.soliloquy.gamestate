@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.IMap;
-import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IPair;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.ruleset.entities.IVitalAttributeType;
 import soliloquy.specs.ruleset.gameconcepts.IVitalAttributeCalculation;

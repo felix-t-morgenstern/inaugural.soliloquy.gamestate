@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.ICollection;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileCharacters;
@@ -18,7 +18,7 @@ public class TileCharactersStub implements ITileCharacters {
     }
 
     @Override
-    public IMap<ICharacter, Integer> getCharactersRepresentation() {
+    public IReadOnlyMap<ICharacter, Integer> charactersRepresentation() {
         return null;
     }
 

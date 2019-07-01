@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IAction;
+import soliloquy.specs.common.infrastructure.IPair;
 import soliloquy.specs.common.valueobjects.IEntityUuid;
-import soliloquy.specs.common.valueobjects.IPair;
 import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.logger.ILogger;

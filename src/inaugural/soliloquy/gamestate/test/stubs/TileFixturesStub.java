@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileFixture;
 import soliloquy.specs.gamestate.entities.ITileFixtures;
@@ -18,7 +18,7 @@ public class TileFixturesStub implements ITileFixtures {
     }
 
     @Override
-    public IMap<ITileFixture, Integer> getRepresentation() throws IllegalStateException {
+    public IReadOnlyMap<ITileFixture, Integer> representation() throws IllegalStateException {
         return null;
     }
 

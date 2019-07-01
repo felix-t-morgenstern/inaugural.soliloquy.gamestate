@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.IElement;
@@ -46,13 +47,13 @@ public class CharacterStatusEffects extends HasDeletionInvariants
     }
 
     @Override
-    public IMap<String, Integer> getAllStatusEffects() {
+    public IReadOnlyMap<String, Integer> allStatusEffectsRepresentation() {
         enforceInvariants("getAllStatusEffects");
         IMap<String, Integer> statusEffectLevels = MAP_FACTORY.make("", 0);
         for (Map.Entry<String, Integer> statusEffectLevel : STATUS_EFFECT_LEVELS.entrySet()) {
             statusEffectLevels.put(statusEffectLevel.getKey(), statusEffectLevel.getValue());
         }
-        return statusEffectLevels;
+        return statusEffectLevels.readOnlyRepresentation();
     }
 
     @Override

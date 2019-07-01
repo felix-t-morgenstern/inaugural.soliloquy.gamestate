@@ -1,14 +1,18 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.ICollection;
-import soliloquy.specs.common.valueobjects.IMap;
-import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IPair;
+import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.IOneTimeTimer;
 import soliloquy.specs.gamestate.entities.IRecurringTimer;
 import soliloquy.specs.gamestate.entities.IRoundManager;
 
 public class RoundManagerStub implements IRoundManager {
+    public final ICollection<IOneTimeTimer> ONE_TIME_TIMERS = new CollectionStub<>();
+    public final ICollection<IRecurringTimer> RECURRING_TIMERS = new CollectionStub<>();
+
     @Override
     public IMap<Integer, IPair<ICharacter, Integer>> characterOrder() {
         return null;
@@ -40,13 +44,13 @@ public class RoundManagerStub implements IRoundManager {
     }
 
     @Override
-    public ICollection<IOneTimeTimer> oneTimeTimers() {
-        return null;
+    public IReadOnlyCollection<IOneTimeTimer> oneTimeTimersRepresentation() {
+        return ONE_TIME_TIMERS;
     }
 
     @Override
-    public ICollection<IRecurringTimer> recurringTimers() {
-        return null;
+    public IReadOnlyCollection<IRecurringTimer> recurringTimersRepresentation() {
+        return RECURRING_TIMERS;
     }
 
     @Override

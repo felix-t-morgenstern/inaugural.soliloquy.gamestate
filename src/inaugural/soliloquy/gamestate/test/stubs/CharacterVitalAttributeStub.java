@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterVitalAttribute;
 import soliloquy.specs.ruleset.entities.IVitalAttributeType;
@@ -34,7 +34,7 @@ public class CharacterVitalAttributeStub implements ICharacterVitalAttribute {
     }
 
     @Override
-    public IMap<String, Integer> modifiers() throws IllegalStateException {
+    public IReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
         return null;
     }
 

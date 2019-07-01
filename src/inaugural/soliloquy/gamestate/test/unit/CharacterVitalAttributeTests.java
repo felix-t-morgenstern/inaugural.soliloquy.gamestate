@@ -57,7 +57,7 @@ class CharacterVitalAttributeTests {
         assertSame(CHARACTER, VitalAttributeCalculationStub._character);
         assertSame(VITAL_ATTRIBUTE_TYPE, VitalAttributeCalculationStub._vitalAttributeType);
         assertEquals(VitalAttributeCalculationStub.VALUE, _characterVitalAttribute.totalValue());
-        assertSame(VitalAttributeCalculationStub.MODIFIERS, _characterVitalAttribute.modifiers());
+        assertSame(VitalAttributeCalculationStub.MODIFIERS, _characterVitalAttribute.modifiersRepresentation());
     }
 
     @Test
@@ -71,7 +71,7 @@ class CharacterVitalAttributeTests {
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.vitalAttributeType());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.calculateValue());
-        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.modifiers());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.modifiersRepresentation());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.totalValue());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.delete());
     }
@@ -87,7 +87,7 @@ class CharacterVitalAttributeTests {
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.vitalAttributeType());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.calculateValue());
-        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.modifiers());
+        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.modifiersRepresentation());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.totalValue());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.delete());
     }

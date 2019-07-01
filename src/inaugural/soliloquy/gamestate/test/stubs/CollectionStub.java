@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IFunction;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -67,7 +68,7 @@ public class CollectionStub<V> implements ICollection<V> {
     }
 
     @Override
-    public boolean equals(ICollection<V> items) {
+    public boolean equals(IReadOnlyCollection<V> items) {
         if (items == null) return false;
         if (_collection.size() != items.size()) return false;
         for(V item : _collection) if(!items.contains(item)) return false;
@@ -105,6 +106,12 @@ public class CollectionStub<V> implements ICollection<V> {
     @Override
     public ICollection<IFunction<V, String>> validators() {
         return null;
+    }
+
+    @Override
+    public IReadOnlyCollection<V> readOnlyRepresentation() {
+        // Stub method; unimplemented
+        throw new UnsupportedOperationException();
     }
 
     @Override

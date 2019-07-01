@@ -8,7 +8,7 @@ import inaugural.soliloquy.gamestate.test.stubs.ResistanceCalculationStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
 import soliloquy.specs.ruleset.entities.IStatusEffectType;

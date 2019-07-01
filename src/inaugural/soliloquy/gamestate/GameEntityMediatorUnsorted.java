@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.ICollectionFactory;
-import soliloquy.specs.common.valueobjects.ICollection;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 import soliloquy.specs.gamestate.entities.IDeletable;
 
 import java.util.HashSet;
@@ -36,11 +37,11 @@ abstract class GameEntityMediatorUnsorted<TEntity extends IDeletable>
 
     protected abstract TEntity getArchetype();
 
-    public ICollection<TEntity> getRepresentation() {
+    public IReadOnlyCollection<TEntity> representation() {
         enforceDeletionInvariants("getRepresentation");
         ICollection<TEntity> representation = COLLECTION_FACTORY.make(getArchetype());
         ENTITIES.forEach(representation::add);
-        return representation;
+        return representation.readOnlyRepresentation();
     }
 
     public void add(TEntity entity) throws IllegalArgumentException {

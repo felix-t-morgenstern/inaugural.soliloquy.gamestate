@@ -2,16 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TimerFactory;
 import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.GameStub;
-import inaugural.soliloquy.gamestate.test.stubs.LoggerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.IOneTimeTimer;
 import soliloquy.specs.gamestate.entities.IRecurringTimer;
 import soliloquy.specs.gamestate.factories.ITimerFactory;
-import soliloquy.specs.logger.ILogger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -19,12 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class TimerFactoryTests {
     private ITimerFactory _timerFactory;
 
-    private final IGame GAME = new GameStub();
-    private final ILogger LOGGER = new LoggerStub();
-
     @BeforeEach
     void setUp() {
-        _timerFactory = new TimerFactory(GAME, LOGGER);
+        _timerFactory = new TimerFactory();
     }
 
     @Test

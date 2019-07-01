@@ -2,7 +2,8 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileCharacters;
@@ -22,13 +23,13 @@ public class TileCharacters extends HasDeletionInvariants implements ITileCharac
     }
 
     @Override
-    public IMap<ICharacter, Integer> getCharactersRepresentation() {
+    public IReadOnlyMap<ICharacter, Integer> charactersRepresentation() {
         enforceDeletionInvariants("getCharactersRepresentation");
-        IMap<ICharacter,Integer> charactersRepresentation = MAP_FACTORY.make(ARCHETYPE,0);
+        IMap<ICharacter,Integer> characters = MAP_FACTORY.make(ARCHETYPE,0);
         for (Map.Entry<ICharacter,Integer> entry : CHARACTERS.entrySet()) {
-            charactersRepresentation.put(entry.getKey(), entry.getValue());
+            characters.put(entry.getKey(), entry.getValue());
         }
-        return charactersRepresentation;
+        return characters.readOnlyRepresentation();
     }
 
     @Override

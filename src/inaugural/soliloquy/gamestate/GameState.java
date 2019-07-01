@@ -2,9 +2,9 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterAITypeArchetype;
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
-import soliloquy.specs.common.entities.IPersistentVariableCache;
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IPersistentVariableCache;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.gamestate.entities.IGameZone;
 import soliloquy.specs.gamestate.entities.IKeyBindingContext;
 import soliloquy.specs.gamestate.entities.IParty;

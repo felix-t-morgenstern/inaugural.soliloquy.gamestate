@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
 import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;

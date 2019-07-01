@@ -1,19 +1,24 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.IRecurringTimer;
-import soliloquy.specs.logger.ILogger;
+
+import java.util.function.Consumer;
 
 public class RecurringTimer extends Timer implements IRecurringTimer {
     private int _roundModulo;
     private int _roundOffset;
 
+    private final Consumer<IRecurringTimer> REMOVE_RECURRING_TIMER_FROM_ROUND_MANAGER;
+
     public RecurringTimer(String timerId, IAction<Void> action, int roundModulo, int roundOffset,
-                          IGame game, ILogger logger) {
-        super(timerId, action, game, logger);
+                          Consumer<IRecurringTimer> addRecurringTimerToRoundManager,
+                          Consumer<IRecurringTimer> removeRecurringTimerFromRoundManager) {
+        super(timerId, action);
         _roundModulo = roundModulo;
         _roundOffset = roundOffset;
+        REMOVE_RECURRING_TIMER_FROM_ROUND_MANAGER = removeRecurringTimerFromRoundManager;
+        addRecurringTimerToRoundManager.accept(this);
     }
 
     @Override
@@ -50,6 +55,17 @@ public class RecurringTimer extends Timer implements IRecurringTimer {
             return false;
         }
         IRecurringTimer recurringTimer = (IRecurringTimer) o;
-        return recurringTimer.id().equals(ID);
+        return ID.equals(recurringTimer.id());
+    }
+
+    @Override
+    protected String className() {
+        return "RecurringTimer";
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        REMOVE_RECURRING_TIMER_FROM_ROUND_MANAGER.accept(this);
+        super.delete();
     }
 }

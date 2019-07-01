@@ -2,9 +2,10 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IFunction;
 import soliloquy.specs.common.factories.IPairFactory;
-import soliloquy.specs.common.valueobjects.ICollection;
-import soliloquy.specs.common.valueobjects.IMap;
-import soliloquy.specs.common.valueobjects.IPair;
+import soliloquy.specs.common.infrastructure.ICollection;
+import soliloquy.specs.common.infrastructure.IMap;
+import soliloquy.specs.common.infrastructure.IPair;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,7 +85,7 @@ public class MapStub<K,V> implements IMap<K,V> {
     }
 
     @Override
-    public boolean equals(IMap<K, V> map) throws IllegalArgumentException {
+    public boolean equals(IReadOnlyMap<K, V> map) throws IllegalArgumentException {
         // Stub method; unimplemented
         throw new UnsupportedOperationException();
     }
@@ -155,6 +156,11 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     @Override
     public ICollection<IFunction<IPair<K, V>, String>> validators() {
+        return null;
+    }
+
+    @Override
+    public IReadOnlyMap<K, V> readOnlyRepresentation() {
         return null;
     }
 

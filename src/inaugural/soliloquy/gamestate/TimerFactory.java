@@ -1,33 +1,33 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.game.IGame;
 import soliloquy.specs.gamestate.entities.IOneTimeTimer;
 import soliloquy.specs.gamestate.entities.IRecurringTimer;
 import soliloquy.specs.gamestate.factories.ITimerFactory;
-import soliloquy.specs.logger.ILogger;
 
 public class TimerFactory implements ITimerFactory {
-    private final IGame GAME;
-    private final ILogger LOGGER;
+    // TODO: Ensure that this is tested
 
-    public TimerFactory(IGame game, ILogger logger) {
-        GAME = game;
-        LOGGER = logger;
+    public TimerFactory() {
+        // TODO: Test nulls not allowed
     }
 
     @Override
     public IOneTimeTimer makeOneTimeTimer(String timerId, IAction<Void> action,
                                           long roundWhenGoesOff)
             throws IllegalArgumentException {
-        return new OneTimeTimer(timerId, action, roundWhenGoesOff, GAME, LOGGER);
+        // TODO: Refactor class to accept Consumers in constructor
+        //return new OneTimeTimer(timerId, action, roundWhenGoesOff, ROUND_MANAGER);
+        return null;
     }
 
     @Override
     public IRecurringTimer makeRecurringTimer(String timerId, IAction<Void> action, int roundModulo,
                                               int roundOffset)
             throws IllegalArgumentException {
-        return new RecurringTimer(timerId, action, roundModulo, roundOffset, GAME, LOGGER);
+        // TODO: Refactor class to accept Consumers in constructor
+        //return new RecurringTimer(timerId, action, roundModulo, roundOffset, ROUND_MANAGER);
+        return null;
     }
 
     @Override

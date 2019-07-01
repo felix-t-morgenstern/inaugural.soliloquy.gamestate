@@ -1,28 +1,24 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.game.IGame;
+import soliloquy.specs.gamestate.entities.IRoundManager;
 import soliloquy.specs.gamestate.entities.ITimer;
-import soliloquy.specs.logger.ILogger;
 
-public abstract class Timer implements ITimer {
+public abstract class Timer extends HasDeletionInvariants implements ITimer {
+    private final IAction<Void> ACTION;
+
     final String ID;
-    private final IGame GAME;
-    private final ILogger LOGGER;
 
-    private IAction<Void> _action;
     private int _priority;
 
-    Timer(String timerId, IAction<Void> action, IGame game, ILogger logger) {
+    Timer(String timerId, IAction<Void> action) {
         ID = timerId;
-        _action = action;
-        GAME = game;
-        LOGGER = logger;
+        ACTION = action;
     }
 
     @Override
     public IAction<Void> action() {
-        return _action;
+        return ACTION;
     }
 
     @Override
@@ -36,17 +32,22 @@ public abstract class Timer implements ITimer {
     }
 
     @Override
-    public IGame game() {
-        return GAME;
-    }
-
-    @Override
-    public ILogger logger() {
-        return LOGGER;
-    }
-
-    @Override
     public String id() throws IllegalStateException {
         return ID;
+    }
+
+    @Override
+    protected String containingClassName() {
+        return null;
+    }
+
+    @Override
+    protected boolean containingObjectIsDeleted() {
+        return false;
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        _isDeleted = true;
     }
 }

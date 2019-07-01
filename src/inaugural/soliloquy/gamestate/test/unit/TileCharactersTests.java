@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.valueobjects.IMap;
+import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ITile;
 import soliloquy.specs.gamestate.entities.ITileCharacters;
@@ -81,7 +81,7 @@ class TileCharactersTests {
         final int Z_INDEX = 123;
         _tileCharacters.addCharacter(CHARACTER, Z_INDEX);
 
-        IMap<ICharacter,Integer> characters = _tileCharacters.getCharactersRepresentation();
+        IReadOnlyMap<ICharacter, Integer> characters = _tileCharacters.charactersRepresentation();
 
         assertEquals(1, characters.size());
         assertEquals((Integer) Z_INDEX, characters.get(CHARACTER));
@@ -110,7 +110,7 @@ class TileCharactersTests {
     void testDeletedInvariant() {
         _tileCharacters.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.getCharactersRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.charactersRepresentation());
         assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER, 0));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.removeCharacter(CHARACTER));
@@ -125,7 +125,7 @@ class TileCharactersTests {
     void testTileDeletedInvariant() {
         TILE.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.getCharactersRepresentation());
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.charactersRepresentation());
         assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER, 0));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.removeCharacter(CHARACTER));
