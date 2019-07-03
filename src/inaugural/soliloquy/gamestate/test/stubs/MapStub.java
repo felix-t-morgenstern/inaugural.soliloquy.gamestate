@@ -1,133 +1,23 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.IFunction;
-import soliloquy.specs.common.factories.IPairFactory;
 import soliloquy.specs.common.infrastructure.ICollection;
 import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.common.infrastructure.IPair;
 import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-public class MapStub<K,V> implements IMap<K,V> {
-    private HashMap<K,V> _map = new HashMap<>();
-
-    private K _archetype1;
-    private V _archetype2;
+public class MapStub<K,V> extends ReadOnlyMapStub<K,V> implements IMap<K,V> {
 
     public MapStub() {
 
     }
 
     MapStub(K archetype1, V archetype2) {
-        _archetype1 = archetype1;
-        _archetype2 = archetype2;
-    }
-
-    private MapStub(HashMap<K,V> map) {
-        _map = map;
-    }
-
-    @Override
-    public Iterator<IPair<K, V>> iterator() {
-        return new MapIterator(_map, new PairFactoryStub());
-    }
-
-    @Override
-    public K getFirstArchetype() throws IllegalStateException {
-        return _archetype1;
-    }
-
-    @Override
-    public V getSecondArchetype() throws IllegalStateException {
-        return _archetype2;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public IMap<K, V> makeClone() {
-        return new MapStub<>((HashMap<K,V>) _map.clone());
+        super(archetype1, archetype2);
     }
 
     @Override
     public void clear() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean containsKey(K key) {
-        return _map.containsKey(key);
-    }
-
-    @Override
-    public boolean containsValue(V value) {
-        return _map.containsValue(value);
-    }
-
-    @Override
-    public boolean contains(IPair<K, V> item) throws IllegalArgumentException {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean equals(ICollection<V> items) throws IllegalArgumentException {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean equals(IReadOnlyMap<K, V> map) throws IllegalArgumentException {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public V get(K key) throws IllegalArgumentException, IllegalStateException {
-        return _map.get(key);
-    }
-
-    @Override
-    public ICollection<K> getKeys() {
-        ICollection<K> keys = new CollectionStub<>();
-        for (K key : _map.keySet())
-        {
-            keys.add(key);
-        }
-        return keys;
-    }
-
-    @Override
-    public ICollection<V> getValues() {
-        ICollection<V> values = new CollectionStub<>();
-        for(V value : _map.values()) {
-            values.add(value);
-        }
-        return values;
-    }
-
-    @Override
-    public ICollection<K> indicesOf(V item) {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean itemExists(K key) {
         // Stub method; unimplemented
         throw new UnsupportedOperationException();
     }
@@ -156,44 +46,18 @@ public class MapStub<K,V> implements IMap<K,V> {
 
     @Override
     public ICollection<IFunction<IPair<K, V>, String>> validators() {
-        return null;
+        // Stub method; unimplemented
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public IReadOnlyMap<K, V> readOnlyRepresentation() {
-        return null;
-    }
-
-    @Override
-    public int size() {
-        return _map.size();
+        return new ReadOnlyMapStub<>(_archetype1, _archetype2, _map);
     }
 
     @Override
     public String getUnparameterizedInterfaceName() {
         // Stub method; unimplemented
         throw new UnsupportedOperationException();
-    }
-
-    private class MapIterator implements Iterator<IPair<K,V>> {
-        private Iterator<Map.Entry<K,V>> _hashMapIterator;
-        private IPairFactory _pairFactory;
-
-        MapIterator(HashMap<K,V> hashMap, IPairFactory pairFactory) {
-            _hashMapIterator = hashMap.entrySet().iterator();
-            _pairFactory = pairFactory;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return _hashMapIterator.hasNext();
-        }
-
-        @Override
-        public IPair<K, V> next() {
-            Map.Entry<K,V> entry = _hashMapIterator.next();
-            return _pairFactory.make(entry.getKey(), entry.getValue());
-        }
-
     }
 }

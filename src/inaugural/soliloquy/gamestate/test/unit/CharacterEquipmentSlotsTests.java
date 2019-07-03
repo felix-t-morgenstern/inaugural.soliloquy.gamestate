@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.IMapFactory;
 import soliloquy.specs.common.factories.IPairFactory;
+import soliloquy.specs.common.infrastructure.IMap;
 import soliloquy.specs.common.infrastructure.IReadOnlyMap;
 import soliloquy.specs.gamestate.entities.ICharacter;
 import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
@@ -188,9 +189,11 @@ class CharacterEquipmentSlotsTests {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
-        IReadOnlyMap characterEquipmentSlotsRepresentation = _characterEquipmentSlots.representation();
+        IReadOnlyMap characterEquipmentSlotsRepresentation =
+                _characterEquipmentSlots.representation();
 
         assertNotNull(characterEquipmentSlotsRepresentation);
+        assertFalse(characterEquipmentSlotsRepresentation instanceof IMap);
         assertEquals(1, characterEquipmentSlotsRepresentation.size());
         assertSame(ITEM, characterEquipmentSlotsRepresentation.get(EQUIPMENT_SLOT_TYPE));
     }

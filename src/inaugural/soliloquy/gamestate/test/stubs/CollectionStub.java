@@ -4,39 +4,13 @@ import soliloquy.specs.common.entities.IFunction;
 import soliloquy.specs.common.infrastructure.ICollection;
 import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-public class CollectionStub<V> implements ICollection<V> {
-    private V _archetype;
-    private ArrayList<V> _collection = new ArrayList<>();
-
+public class CollectionStub<V> extends ReadOnlyCollectionStub<V> implements ICollection<V> {
     public CollectionStub() {
+        super();
     }
 
-    CollectionStub(V archetype) {
-        _archetype = archetype;
-    }
-
-    @Override
-    public Iterator<V> iterator() {
-        return _collection.iterator();
-    }
-
-    @Override
-    public ICollection<V> makeClone() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public V getArchetype() {
-        return _archetype;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return "soliloquy.common.specs.ICollection<" + _archetype.getClass().getCanonicalName() + ">";
+    public CollectionStub(V archetype) {
+        super(archetype);
     }
 
     @Override
@@ -58,43 +32,7 @@ public class CollectionStub<V> implements ICollection<V> {
 
     @Override
     public void clear() throws UnsupportedOperationException {
-        // Stub method; unimplemented
         _collection.clear();
-    }
-
-    @Override
-    public boolean contains(V item) {
-        return _collection.contains(item);
-    }
-
-    @Override
-    public boolean equals(IReadOnlyCollection<V> items) {
-        if (items == null) return false;
-        if (_collection.size() != items.size()) return false;
-        for(V item : _collection) if(!items.contains(item)) return false;
-        return true;
-    }
-
-    @Override
-    public V get(int index) {
-        return _collection.get(index);
-    }
-
-    @Override
-    public boolean isEmpty() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Object[] toArray() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int size() {
-        return _collection.size();
     }
 
     @Override
@@ -110,8 +48,7 @@ public class CollectionStub<V> implements ICollection<V> {
 
     @Override
     public IReadOnlyCollection<V> readOnlyRepresentation() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        return new ReadOnlyCollectionStub<>(_archetype, _collection);
     }
 
     @Override

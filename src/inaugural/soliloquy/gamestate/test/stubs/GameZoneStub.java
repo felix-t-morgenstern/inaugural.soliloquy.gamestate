@@ -42,7 +42,7 @@ public class GameZoneStub implements IGameZone {
 
     @Override
     public IReadOnlyMap<IEntityUuid, ICharacter> charactersRepresentation() {
-        return _characters.makeClone();
+        return _characters.readOnlyRepresentation();
     }
 
     @Override

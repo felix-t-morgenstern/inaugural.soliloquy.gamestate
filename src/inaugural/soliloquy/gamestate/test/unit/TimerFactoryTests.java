@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TimerFactory;
 import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
+import inaugural.soliloquy.gamestate.test.stubs.RoundManagerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.IAction;
@@ -13,11 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class TimerFactoryTests {
+    private final RoundManagerStub ROUND_MANAGER = new RoundManagerStub();
+
     private ITimerFactory _timerFactory;
 
     @BeforeEach
     void setUp() {
-        _timerFactory = new TimerFactory();
+        _timerFactory = new TimerFactory(ROUND_MANAGER.ONE_TIME_TIMERS::add,
+                ROUND_MANAGER.ONE_TIME_TIMERS::removeItem,
+                ROUND_MANAGER.RECURRING_TIMERS::add,
+                ROUND_MANAGER.RECURRING_TIMERS::removeItem);
     }
 
     @Test
