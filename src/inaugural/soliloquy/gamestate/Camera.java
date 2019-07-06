@@ -27,6 +27,7 @@ public class Camera implements ICamera {
     private final IMap<ICharacter,Integer> CHARACTERS_PROVIDING_VISIBILITY;
     private final IMap<ICoordinate,Integer> COORDINATES_PROVIDING_VISIBILITY;
     private final ICollection<ICoordinate> VISIBLE_TILES;
+    // TODO: Find a way to obtain the current GameZone via Consumer
     private final IGameState GAME_STATE;
 
     private int _tileLocationX;
