@@ -1,23 +1,23 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.valueobjects.ICoordinate;
-import soliloquy.specs.game.IGame;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.logger.ILogger;
-import soliloquy.specs.ruleset.entities.IFixtureType;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
-import soliloquy.specs.sprites.entities.ISprite;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.logger.Logger;
+import soliloquy.specs.ruleset.entities.FixtureType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+import soliloquy.specs.sprites.entities.Sprite;
 
-public class FixtureTypeStub implements IFixtureType {
+public class FixtureTypeStub implements FixtureType {
     @Override
     public boolean isContainer() throws IllegalStateException {
         return false;
     }
 
     @Override
-    public ICoordinate defaultOffset() throws IllegalStateException {
+    public Coordinate defaultOffset() throws IllegalStateException {
         return null;
     }
 
@@ -27,37 +27,37 @@ public class FixtureTypeStub implements IFixtureType {
     }
 
     @Override
-    public ISprite sprite() {
+    public Sprite sprite() {
         return null;
     }
 
     @Override
-    public boolean onStep(ICharacter iCharacter) {
+    public boolean onStep(Character character) {
         return false;
     }
 
     @Override
-    public boolean canStep(ICharacter iCharacter) {
+    public boolean canStep(Character character) {
         return false;
     }
 
     @Override
-    public IMap<String, IActiveAbility> activeAbilities() throws IllegalStateException {
+    public Map<String, ActiveAbility> activeAbilities() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, IReactiveAbility> reactiveAbilities() throws IllegalStateException {
+    public Map<String, ReactiveAbility> reactiveAbilities() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IGame game() {
+    public Game game() {
         return null;
     }
 
     @Override
-    public ILogger logger() {
+    public Logger logger() {
         return null;
     }
 

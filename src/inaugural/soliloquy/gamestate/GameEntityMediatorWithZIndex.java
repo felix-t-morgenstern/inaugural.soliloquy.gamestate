@@ -1,19 +1,18 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.IMapFactory;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.IDeletable;
+import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Deletable;
 
 import java.util.HashMap;
-import java.util.Map;
 
-abstract class GameEntityMediatorWithZIndex<TEntity extends IDeletable>
+abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
         extends HasDeletionInvariants {
-    private final IMapFactory MAP_FACTORY;
+    private final MapFactory MAP_FACTORY;
     private final HashMap<TEntity,Integer> ENTITIES;
 
-    GameEntityMediatorWithZIndex(IMapFactory mapFactory) {
+    GameEntityMediatorWithZIndex(MapFactory mapFactory) {
         if (mapFactory == null) {
             throw new IllegalArgumentException(className() + ": mapFactory must be non-null");
         }
@@ -25,17 +24,17 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends IDeletable>
     public void delete() throws IllegalStateException {
         _isDeleted = true;
 
-        for(Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
+        for(java.util.Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
             entry.getKey().delete();
         }
     }
 
     protected abstract TEntity getArchetype();
 
-    public IReadOnlyMap<TEntity,Integer> representation() {
+    public ReadOnlyMap<TEntity,Integer> representation() {
         enforceDeletionInvariants("getRepresentation");
-        IMap<TEntity, Integer> entities = MAP_FACTORY.make(getArchetype(), 0);
-        for(Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
+        Map<TEntity, Integer> entities = MAP_FACTORY.make(getArchetype(), 0);
+        for(java.util.Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
             entities.put(entry.getKey(), entry.getValue());
         }
         return entities.readOnlyRepresentation();

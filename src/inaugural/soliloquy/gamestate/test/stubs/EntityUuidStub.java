@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.valueobjects.EntityUuid;
 
-public class EntityUuidStub implements IEntityUuid {
+public class EntityUuidStub implements EntityUuid {
     @Override
     public long getMostSignificantBits() {
         return 0;

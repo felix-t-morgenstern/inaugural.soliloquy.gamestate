@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.factories.ICoordinateFactory;
-import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.valueobjects.Coordinate;
 
-public class CoordinateFactoryStub implements ICoordinateFactory {
+public class CoordinateFactoryStub implements CoordinateFactory {
     @Override
-    public ICoordinate make(int x, int y) {
+    public Coordinate make(int x, int y) {
         return new CoordinateStub(x,y);
     }
 

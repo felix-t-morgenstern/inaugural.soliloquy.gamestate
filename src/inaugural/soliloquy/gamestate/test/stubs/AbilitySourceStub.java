@@ -1,49 +1,49 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.IItem;
-import soliloquy.specs.gamestate.entities.ITile;
-import soliloquy.specs.ruleset.entities.abilities.IAbility;
-import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.ruleset.entities.abilities.Ability;
+import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 
-public class AbilitySourceStub implements IAbilitySource {
+public class AbilitySourceStub implements AbilitySource {
     @Override
-    public IAbility ability() throws IllegalStateException {
+    public Ability ability() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void initializeAbility(IAbility iAbility) throws IllegalArgumentException, UnsupportedOperationException {
+    public void initializeAbility(Ability ability) throws IllegalArgumentException, UnsupportedOperationException {
 
     }
 
     @Override
-    public void initializeItemSource(IItem iItem) throws IllegalArgumentException, UnsupportedOperationException {
+    public void initializeItemSource(Item item) throws IllegalArgumentException, UnsupportedOperationException {
 
     }
 
     @Override
-    public IItem item() throws IllegalStateException {
+    public Item item() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void initializeCharacterSource(ICharacter iCharacter) throws IllegalArgumentException, UnsupportedOperationException {
+    public void initializeCharacterSource(Character character) throws IllegalArgumentException, UnsupportedOperationException {
 
     }
 
     @Override
-    public ICharacter character() throws IllegalStateException {
+    public Character character() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void initializeTileSource(ITile iTile) throws IllegalArgumentException, UnsupportedOperationException {
+    public void initializeTileSource(Tile tile) throws IllegalArgumentException, UnsupportedOperationException {
 
     }
 
     @Override
-    public ITile tile() throws IllegalStateException {
+    public Tile tile() throws IllegalStateException {
         return null;
     }
 

@@ -1,35 +1,36 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.ruleset.entities.IGroundType;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
-import soliloquy.specs.sprites.entities.ISprite;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.ruleset.entities.GroundType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+import soliloquy.specs.sprites.entities.Sprite;
 
-public class TileStub implements ITile {
-    public static final IGameZone GAME_ZONE = new GameZoneStub();
+public class TileStub implements Tile {
+    public static final GameZone GAME_ZONE = new GameZoneStub();
 
-    private final ITileCharacters CHARACTERS = new TileCharactersStub(this);
-    private final ITileFixtures FIXTURES = new TileFixturesStub(this);
+    private final TileCharacters CHARACTERS = new TileCharactersStub(this);
+    private final TileFixtures FIXTURES = new TileFixturesStub(this);
 
     private boolean _isDeleted;
 
-    private ICoordinate _tileLocation;
-    public IMap<ICharacter, Integer> _characters = new MapStub<>();
+    private Coordinate _tileLocation;
+    public Map<Character, Integer> _characters = new MapStub<>();
 
     public TileStub() {
     }
 
-    public TileStub(ICoordinate tileLocation) {
+    public TileStub(Coordinate tileLocation) {
         _tileLocation = tileLocation;
     }
 
     @Override
-    public IGenericParamsSet data() throws IllegalStateException {
+    public GenericParamsSet data() throws IllegalStateException {
         return null;
     }
 
@@ -44,17 +45,17 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public IGameZone gameZone() throws IllegalStateException {
+    public GameZone gameZone() throws IllegalStateException {
         return GAME_ZONE;
     }
 
     @Override
-    public ICoordinate getLocation() throws IllegalStateException {
+    public Coordinate getLocation() throws IllegalStateException {
         return _tileLocation;
     }
 
     @Override
-    public void setLocation(ICoordinate iCoordinate) throws IllegalArgumentException, IllegalStateException {
+    public void setLocation(Coordinate coordinate) throws IllegalArgumentException, IllegalStateException {
 
     }
 
@@ -69,47 +70,47 @@ public class TileStub implements ITile {
     }
 
     @Override
-    public IGroundType getGroundType() throws IllegalStateException {
+    public GroundType getGroundType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void setGroundType(IGroundType iGroundType) throws IllegalStateException {
+    public void setGroundType(GroundType iGroundType) throws IllegalStateException {
 
     }
 
     @Override
-    public ITileCharacters characters() {
+    public TileCharacters characters() {
         return CHARACTERS;
     }
 
     @Override
-    public ITileItems items() {
+    public TileItems items() {
         return null;
     }
 
     @Override
-    public ITileFixtures fixtures() throws IllegalStateException {
+    public TileFixtures fixtures() throws IllegalStateException {
         return FIXTURES;
     }
 
     @Override
-    public ITileWallSegments tileWallSegments() throws IllegalStateException {
+    public TileWallSegments tileWallSegments() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<Integer, ICollection<ISprite>> sprites() throws IllegalStateException {
+    public Map<Integer, Collection<Sprite>> sprites() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, IActiveAbility> activeAbilities() throws IllegalStateException {
+    public Map<String, ActiveAbility> activeAbilities() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, IReactiveAbility> reactiveAbilities() throws IllegalStateException {
+    public Map<String, ReactiveAbility> reactiveAbilities() throws IllegalStateException {
         return null;
     }
 

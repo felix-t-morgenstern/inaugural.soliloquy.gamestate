@@ -1,17 +1,22 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.common.infrastructure.IPair;
-import soliloquy.specs.common.valueobjects.IEntityUuid;
-import soliloquy.specs.game.IGame;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.logger.ILogger;
-import soliloquy.specs.ruleset.entities.IElement;
-import soliloquy.specs.ruleset.entities.IVitalAttributeType;
-import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
-import soliloquy.specs.sprites.entities.ISprite;
+import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.valueobjects.EntityUuid;
+import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.logger.Logger;
+import soliloquy.specs.ruleset.entities.Element;
+import soliloquy.specs.ruleset.entities.VitalAttributeType;
+import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
+import soliloquy.specs.sprites.entities.Sprite;
 
-public class VitalAttributeTypeStub implements IVitalAttributeType {
+public class VitalAttributeTypeStub implements VitalAttributeType {
+    @Override
+    public String id() throws IllegalStateException {
+        return null;
+    }
+
     @Override
     public String getPluralName() {
         return null;
@@ -23,32 +28,32 @@ public class VitalAttributeTypeStub implements IVitalAttributeType {
     }
 
     @Override
-    public IAction<ICharacter> onTurnStart() {
+    public Action<Character> onTurnStart() {
         return null;
     }
 
     @Override
-    public IAction<ICharacter> onTurnEnd() {
+    public Action<Character> onTurnEnd() {
         return null;
     }
 
     @Override
-    public IAction<ICharacter> onRoundStart(Integer integer) {
+    public Action<Character> onRoundStart(Integer integer) {
         return null;
     }
 
     @Override
-    public IAction<ICharacter> onRoundEnd(Integer integer) {
+    public Action<Character> onRoundEnd(Integer integer) {
         return null;
     }
 
     @Override
-    public IGame game() {
+    public Game game() {
         return null;
     }
 
     @Override
-    public ILogger logger() {
+    public Logger logger() {
         return null;
     }
 
@@ -58,17 +63,12 @@ public class VitalAttributeTypeStub implements IVitalAttributeType {
     }
 
     @Override
-    public IPair<ISprite, Integer> getIcon(String s, IEntityUuid iEntityUuid) {
+    public Pair<Sprite, Integer> getIcon(String s, EntityUuid entityUuid) {
         return null;
     }
 
     @Override
-    public void alterCurrentValue(ICharacter iCharacter, int i, boolean b, IElement iElement, IAbilitySource iAbilitySource) throws IllegalArgumentException {
+    public void alterCurrentValue(Character character, int i, boolean b, Element element, AbilitySource abilitySource) throws IllegalArgumentException {
 
-    }
-
-    @Override
-    public String id() throws IllegalStateException {
-        return null;
     }
 }

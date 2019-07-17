@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
-import soliloquy.specs.ruleset.entities.IElement;
-import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
+import soliloquy.specs.ruleset.entities.Element;
+import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 
-public class CharacterStatusEffectsStub implements ICharacterStatusEffects {
+public class CharacterStatusEffectsStub implements CharacterStatusEffects {
     public boolean _isDeleted;
 
     @Override
@@ -14,12 +14,12 @@ public class CharacterStatusEffectsStub implements ICharacterStatusEffects {
     }
 
     @Override
-    public IReadOnlyMap<String, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
+    public ReadOnlyMap<String, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void alterStatusEffect(String s, int i, boolean b, IElement iElement, IAbilitySource iAbilitySource) throws IllegalStateException, IllegalArgumentException {
+    public void alterStatusEffect(String s, int i, boolean b, Element element, AbilitySource abilitySource) throws IllegalStateException, IllegalArgumentException {
 
     }
 

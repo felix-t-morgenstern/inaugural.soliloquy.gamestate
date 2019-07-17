@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 
-public class CoordinateArchetype implements ICoordinate {
+public class CoordinateArchetype implements Coordinate {
     @Override
     public int getX() {
         return 0;
@@ -24,12 +24,12 @@ public class CoordinateArchetype implements ICoordinate {
     }
 
     @Override
-    public int compareTo(ICoordinate o) {
+    public int compareTo(Coordinate o) {
         return 0;
     }
 
     @Override
-    public ICoordinate makeClone() {
+    public Coordinate makeClone() {
         return null;
     }
 

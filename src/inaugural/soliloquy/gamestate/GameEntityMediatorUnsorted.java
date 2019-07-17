@@ -1,18 +1,18 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.ICollectionFactory;
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
-import soliloquy.specs.gamestate.entities.IDeletable;
+import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.gamestate.entities.Deletable;
 
 import java.util.HashSet;
 
-abstract class GameEntityMediatorUnsorted<TEntity extends IDeletable>
+abstract class GameEntityMediatorUnsorted<TEntity extends Deletable>
         extends HasDeletionInvariants {
-    private final ICollectionFactory COLLECTION_FACTORY;
+    private final CollectionFactory COLLECTION_FACTORY;
     private final HashSet<TEntity> ENTITIES;
 
-    GameEntityMediatorUnsorted(ICollectionFactory collectionFactory) {
+    GameEntityMediatorUnsorted(CollectionFactory collectionFactory) {
         if (collectionFactory == null) {
             throw new IllegalArgumentException(className() +
                     ": collectionFactory must be non-null");
@@ -37,9 +37,9 @@ abstract class GameEntityMediatorUnsorted<TEntity extends IDeletable>
 
     protected abstract TEntity getArchetype();
 
-    public IReadOnlyCollection<TEntity> representation() {
+    public ReadOnlyCollection<TEntity> representation() {
         enforceDeletionInvariants("getRepresentation");
-        ICollection<TEntity> representation = COLLECTION_FACTORY.make(getArchetype());
+        Collection<TEntity> representation = COLLECTION_FACTORY.make(getArchetype());
         ENTITIES.forEach(representation::add);
         return representation.readOnlyRepresentation();
     }

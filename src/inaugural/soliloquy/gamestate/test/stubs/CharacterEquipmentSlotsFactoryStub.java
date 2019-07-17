@@ -1,15 +1,15 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
-import soliloquy.specs.gamestate.factories.ICharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
+import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
 
-public class CharacterEquipmentSlotsFactoryStub implements ICharacterEquipmentSlotsFactory {
-    public static final ICharacterEquipmentSlots CHARACTER_EQUIPMENT_SLOTS =
+public class CharacterEquipmentSlotsFactoryStub implements CharacterEquipmentSlotsFactory {
+    public static final CharacterEquipmentSlots CHARACTER_EQUIPMENT_SLOTS =
             new CharacterEquipmentSlotsStub(null);
 
     @Override
-    public ICharacterEquipmentSlots make(ICharacter character) throws IllegalArgumentException {
+    public CharacterEquipmentSlots make(Character character) throws IllegalArgumentException {
         return CHARACTER_EQUIPMENT_SLOTS;
     }
 

@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IPersistentVariableCache;
-import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
+import soliloquy.specs.common.infrastructure.PersistentVariableCache;
+import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
 
-public class PersistentVariableCacheStub implements IPersistentVariableCache {
+public class PersistentVariableCacheStub implements PersistentVariableCache {
     @Override
     public <T> void setVariable(String s, T t) throws IllegalArgumentException {
 
@@ -21,12 +21,12 @@ public class PersistentVariableCacheStub implements IPersistentVariableCache {
     }
 
     @Override
-    public IReadOnlyCollection<String> namesRepresentation() {
+    public ReadOnlyCollection<String> namesRepresentation() {
         return null;
     }
 
     @Override
-    public IReadOnlyMap<String, Object> variablesRepresentation() {
+    public ReadOnlyMap<String, Object> variablesRepresentation() {
         return null;
     }
 

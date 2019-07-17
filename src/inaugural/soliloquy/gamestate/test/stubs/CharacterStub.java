@@ -1,39 +1,40 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.ruleset.entities.ICharacterAIType;
-import soliloquy.specs.ruleset.entities.ICharacterType;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.IReactiveAbilityType;
-import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
-import soliloquy.specs.sprites.entities.ISpriteSet;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.ruleset.entities.CharacterAIType;
+import soliloquy.specs.ruleset.entities.CharacterType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
+import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
+import soliloquy.specs.sprites.entities.SpriteSet;
 
-public class CharacterStub implements ICharacter {
+public class CharacterStub implements Character {
     private boolean _isDeleted;
     private boolean _isDead;
-    private ITile _tile;
+    private Tile _tile;
 
     @Override
-    public ICharacterType characterType() throws IllegalStateException {
+    public CharacterType characterType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ICollection<ICharacterClassification> classifications() throws IllegalStateException {
+    public Collection<CharacterClassification> classifications() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, String> pronouns() throws IllegalStateException {
+    public Map<String, String> pronouns() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ITile tile() throws IllegalStateException {
+    public Tile tile() throws IllegalStateException {
         return _tile;
     }
 
@@ -58,69 +59,69 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public ISpriteSet getSpriteSet() throws IllegalStateException {
+    public SpriteSet getSpriteSet() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void setSpriteSet(ISpriteSet iSpriteSet) throws IllegalArgumentException, IllegalStateException {
+    public void setSpriteSet(SpriteSet spriteSet) throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public ICharacterAIType getAIType() throws IllegalStateException {
+    public CharacterAIType getAIType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
+    public void setAIType(CharacterAIType characterAIType) throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public IMap<String, ICollection<ICharacterEvent>> events() {
+    public Map<String, Collection<CharacterEvent>> events() {
         return null;
     }
 
     @Override
-    public ICharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
+    public CharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ICharacterInventory inventory() throws IllegalStateException {
+    public CharacterInventory inventory() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, ICharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
+    public Map<String, CharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, ICharacterAttribute> attributes() throws IllegalStateException {
+    public Map<String, CharacterAttribute> attributes() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ICharacterStatusEffects statusEffects() throws IllegalStateException {
+    public CharacterStatusEffects statusEffects() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, ICharacterAbility<IActiveAbilityType>> activeAbilities()
+    public Map<String, CharacterAbility<ActiveAbilityType>> activeAbilities()
             throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, ICharacterAbility<IReactiveAbilityType>> reactiveAbilities()
+    public Map<String, CharacterAbility<ReactiveAbilityType>> reactiveAbilities()
             throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, ICharacterAptitude> aptitudes() throws IllegalStateException {
+    public Map<String, CharacterAptitude> aptitudes() throws IllegalStateException {
         return null;
     }
 
@@ -155,7 +156,7 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IGenericParamsSet data() throws IllegalStateException {
+    public GenericParamsSet data() throws IllegalStateException {
         return null;
     }
 
@@ -165,7 +166,7 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public void assignToTile(ITile tile) throws IllegalArgumentException, IllegalStateException {
+    public void assignToTile(Tile tile) throws IllegalArgumentException, IllegalStateException {
         _tile = tile;
     }
 
@@ -175,7 +176,7 @@ public class CharacterStub implements ICharacter {
     }
 
     @Override
-    public IEntityUuid id() {
+    public EntityUuid id() {
         return null;
     }
 

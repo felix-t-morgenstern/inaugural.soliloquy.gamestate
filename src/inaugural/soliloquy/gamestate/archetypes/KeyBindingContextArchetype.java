@@ -1,22 +1,17 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.entities.IFunction;
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.infrastructure.IPair;
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.IKeyBinding;
-import soliloquy.specs.gamestate.entities.IKeyBindingContext;
+import soliloquy.specs.common.entities.Function;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.KeyBinding;
+import soliloquy.specs.gamestate.entities.KeyBindingContext;
 
 import java.util.Iterator;
 
-public class KeyBindingContextArchetype implements IKeyBindingContext {
-
-    @Override
-    public String getInterfaceName() {
-        return IKeyBindingContext.class.getCanonicalName();
-    }
-
+public class KeyBindingContextArchetype implements KeyBindingContext {
     @Override
     public boolean getBlocksAllLowerBindings() {
         return false;
@@ -33,32 +28,32 @@ public class KeyBindingContextArchetype implements IKeyBindingContext {
     }
 
     @Override
-    public void put(Character character, IKeyBinding iKeyBinding) throws IllegalArgumentException {
+    public void put(Character character, KeyBinding keyBinding) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void putAll(ICollection<IPair<Character, IKeyBinding>> iCollection) throws IllegalArgumentException {
+    public void putAll(Collection<Pair<Character, KeyBinding>> collection) throws IllegalArgumentException {
 
     }
 
     @Override
-    public IKeyBinding removeByKey(Character character) {
+    public KeyBinding removeByKey(Character character) {
         return null;
     }
 
     @Override
-    public boolean removeByKeyAndValue(Character character, IKeyBinding iKeyBinding) {
+    public boolean removeByKeyAndValue(Character character, KeyBinding keyBinding) {
         return false;
     }
 
     @Override
-    public ICollection<IFunction<IPair<Character, IKeyBinding>, String>> validators() {
+    public Collection<Function<Pair<Character, KeyBinding>, String>> validators() {
         return null;
     }
 
     @Override
-    public IReadOnlyMap<Character, IKeyBinding> readOnlyRepresentation() {
+    public ReadOnlyMap<Character, KeyBinding> readOnlyRepresentation() {
         return null;
     }
 
@@ -68,42 +63,42 @@ public class KeyBindingContextArchetype implements IKeyBindingContext {
     }
 
     @Override
-    public boolean containsValue(IKeyBinding iKeyBinding) {
+    public boolean containsValue(KeyBinding keyBinding) {
         return false;
     }
 
     @Override
-    public boolean contains(IPair<Character, IKeyBinding> iPair) throws IllegalArgumentException {
+    public boolean contains(Pair<Character, KeyBinding> pair) throws IllegalArgumentException {
         return false;
     }
 
     @Override
-    public boolean equals(ICollection<IKeyBinding> iCollection) throws IllegalArgumentException {
+    public boolean equals(Collection<KeyBinding> collection) throws IllegalArgumentException {
         return false;
     }
 
     @Override
-    public boolean equals(IReadOnlyMap<Character, IKeyBinding> iReadOnlyMap) throws IllegalArgumentException {
+    public boolean equals(ReadOnlyMap<Character, KeyBinding> readOnlyMap) throws IllegalArgumentException {
         return false;
     }
 
     @Override
-    public IKeyBinding get(Character character) throws IllegalArgumentException, IllegalStateException {
+    public KeyBinding get(Character character) throws IllegalArgumentException, IllegalStateException {
         return null;
     }
 
     @Override
-    public ICollection<Character> getKeys() {
+    public Collection<Character> getKeys() {
         return null;
     }
 
     @Override
-    public ICollection<IKeyBinding> getValues() {
+    public Collection<KeyBinding> getValues() {
         return null;
     }
 
     @Override
-    public ICollection<Character> indicesOf(IKeyBinding iKeyBinding) {
+    public Collection<Character> indicesOf(KeyBinding keyBinding) {
         return null;
     }
 
@@ -123,12 +118,12 @@ public class KeyBindingContextArchetype implements IKeyBindingContext {
     }
 
     @Override
-    public Iterator<IPair<Character, IKeyBinding>> iterator() {
+    public Iterator<Pair<Character, KeyBinding>> iterator() {
         return null;
     }
 
     @Override
-    public IMap<Character, IKeyBinding> makeClone() {
+    public Map<Character, KeyBinding> makeClone() {
         return null;
     }
 
@@ -138,12 +133,17 @@ public class KeyBindingContextArchetype implements IKeyBindingContext {
     }
 
     @Override
-    public IKeyBinding getSecondArchetype() throws IllegalStateException {
+    public KeyBinding getSecondArchetype() throws IllegalStateException {
         return null;
     }
 
     @Override
     public String getUnparameterizedInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public String getInterfaceName() {
         return null;
     }
 }

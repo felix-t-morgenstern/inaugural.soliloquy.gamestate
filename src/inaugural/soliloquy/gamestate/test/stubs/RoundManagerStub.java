@@ -1,25 +1,25 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.infrastructure.IPair;
-import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.IOneTimeTimer;
-import soliloquy.specs.gamestate.entities.IRecurringTimer;
-import soliloquy.specs.gamestate.entities.IRoundManager;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.OneTimeTimer;
+import soliloquy.specs.gamestate.entities.RecurringTimer;
+import soliloquy.specs.gamestate.entities.RoundManager;
 
-public class RoundManagerStub implements IRoundManager {
-    public final ICollection<IOneTimeTimer> ONE_TIME_TIMERS = new CollectionStub<>();
-    public final ICollection<IRecurringTimer> RECURRING_TIMERS = new CollectionStub<>();
+public class RoundManagerStub implements RoundManager {
+    public final Collection<OneTimeTimer> ONE_TIME_TIMERS = new CollectionStub<>();
+    public final Collection<RecurringTimer> RECURRING_TIMERS = new CollectionStub<>();
 
     @Override
-    public IMap<Integer, IPair<ICharacter, Integer>> characterOrder() {
+    public Map<Integer, Pair<Character, Integer>> characterOrder() {
         return null;
     }
 
     @Override
-    public IPair<ICharacter, Integer> endActiveCharacterTurn() {
+    public Pair<Character, Integer> endActiveCharacterTurn() {
         return null;
     }
 
@@ -44,12 +44,12 @@ public class RoundManagerStub implements IRoundManager {
     }
 
     @Override
-    public IReadOnlyCollection<IOneTimeTimer> oneTimeTimersRepresentation() {
+    public ReadOnlyCollection<OneTimeTimer> oneTimeTimersRepresentation() {
         return ONE_TIME_TIMERS;
     }
 
     @Override
-    public IReadOnlyCollection<IRecurringTimer> recurringTimersRepresentation() {
+    public ReadOnlyCollection<RecurringTimer> recurringTimersRepresentation() {
         return RECURRING_TIMERS;
     }
 

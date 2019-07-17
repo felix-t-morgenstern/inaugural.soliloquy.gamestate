@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterInventory;
-import soliloquy.specs.gamestate.factories.ICharacterInventoryFactory;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterInventory;
+import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
 
-public class CharacterInventoryFactoryStub implements ICharacterInventoryFactory {
+public class CharacterInventoryFactoryStub implements CharacterInventoryFactory {
     @Override
-    public ICharacterInventory make(ICharacter character) {
+    public CharacterInventory make(Character character) {
         return new CharacterInventoryStub(character);
     }
 

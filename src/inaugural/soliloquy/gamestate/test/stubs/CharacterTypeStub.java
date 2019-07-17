@@ -1,13 +1,13 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ITile;
-import soliloquy.specs.ruleset.entities.ICharacterType;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.ruleset.entities.CharacterType;
 
-public class CharacterTypeStub implements ICharacterType {
+public class CharacterTypeStub implements CharacterType {
     @Override
-    public ICharacter generate(ITile iTile, IGenericParamsSet iGenericParamsSet) throws IllegalArgumentException {
+    public Character generate(Tile tile, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
         return null;
     }
 

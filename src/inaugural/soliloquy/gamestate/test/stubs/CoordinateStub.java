@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.valueobjects.ICoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 
-public class CoordinateStub implements ICoordinate {
+public class CoordinateStub implements Coordinate {
     private int _x;
     private int _y;
 
@@ -35,12 +35,12 @@ public class CoordinateStub implements ICoordinate {
     }
 
     @Override
-    public int compareTo(ICoordinate o) {
+    public int compareTo(Coordinate o) {
         return 0;
     }
 
     @Override
-    public ICoordinate makeClone() {
+    public Coordinate makeClone() {
         return null;
     }
 

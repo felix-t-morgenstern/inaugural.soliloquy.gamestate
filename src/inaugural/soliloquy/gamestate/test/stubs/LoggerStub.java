@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.logger.Logger;
 
 import java.io.IOException;
 
-public class LoggerStub implements ILogger {
+public class LoggerStub implements Logger {
     @Override
     public void setLogfileLocation(String s) throws IOException {
 

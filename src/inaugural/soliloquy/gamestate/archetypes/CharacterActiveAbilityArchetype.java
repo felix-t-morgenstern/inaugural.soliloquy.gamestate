@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.gamestate.entities.ICharacterAbility;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
+import soliloquy.specs.gamestate.entities.CharacterAbility;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 
-public class CharacterActiveAbilityArchetype implements ICharacterAbility<IActiveAbilityType> {
+public class CharacterActiveAbilityArchetype implements CharacterAbility<ActiveAbilityType> {
     @Override
     public boolean getIsHidden() {
         return false;
@@ -25,7 +25,7 @@ public class CharacterActiveAbilityArchetype implements ICharacterAbility<IActiv
     }
 
     @Override
-    public IActiveAbilityType abilityType() {
+    public ActiveAbilityType abilityType() {
         return null;
     }
 
@@ -41,7 +41,7 @@ public class CharacterActiveAbilityArchetype implements ICharacterAbility<IActiv
 
     @Override
     public String getInterfaceName() {
-        return ICharacterAbility.class.getCanonicalName() + "<" +
-                IActiveAbilityType.class.getCanonicalName() + ">";
+        return CharacterAbility.class.getCanonicalName() + "<" +
+                ActiveAbilityType.class.getCanonicalName() + ">";
     }
 }

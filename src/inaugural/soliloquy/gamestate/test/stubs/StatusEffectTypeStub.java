@@ -1,53 +1,17 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.common.infrastructure.IPair;
-import soliloquy.specs.common.valueobjects.IEntityUuid;
-import soliloquy.specs.game.IGame;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.logger.ILogger;
-import soliloquy.specs.ruleset.entities.IElement;
-import soliloquy.specs.ruleset.entities.IStatusEffectType;
-import soliloquy.specs.ruleset.entities.abilities.IAbilitySource;
-import soliloquy.specs.sprites.entities.ISprite;
+import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.valueobjects.EntityUuid;
+import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.logger.Logger;
+import soliloquy.specs.ruleset.entities.Element;
+import soliloquy.specs.ruleset.entities.StatusEffectType;
+import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
+import soliloquy.specs.sprites.entities.Sprite;
 
-public class StatusEffectTypeStub implements IStatusEffectType {
-
-    @Override
-    public IAction<ICharacter> onTurnStart() {
-        return null;
-    }
-
-    @Override
-    public IAction<ICharacter> onTurnEnd() {
-        return null;
-    }
-
-    @Override
-    public IAction<ICharacter> onRoundStart(Integer integer) {
-        return null;
-    }
-
-    @Override
-    public IAction<ICharacter> onRoundEnd(Integer integer) {
-        return null;
-    }
-
-    @Override
-    public IGame game() {
-        return null;
-    }
-
-    @Override
-    public ILogger logger() {
-        return null;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
+public class StatusEffectTypeStub implements StatusEffectType {
     @Override
     public boolean stopsAtZero() {
         return false;
@@ -59,17 +23,52 @@ public class StatusEffectTypeStub implements IStatusEffectType {
     }
 
     @Override
-    public void alterCurrentValue(ICharacter iCharacter, int i, boolean b, IElement iElement, IAbilitySource iAbilitySource) throws IllegalArgumentException {
-
-    }
-
-    @Override
     public String id() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IPair<ISprite, Integer> getIcon(String s, IEntityUuid iEntityUuid) {
+    public Action<Character> onTurnStart() {
         return null;
+    }
+
+    @Override
+    public Action<Character> onTurnEnd() {
+        return null;
+    }
+
+    @Override
+    public Action<Character> onRoundStart(Integer integer) {
+        return null;
+    }
+
+    @Override
+    public Action<Character> onRoundEnd(Integer integer) {
+        return null;
+    }
+
+    @Override
+    public Game game() {
+        return null;
+    }
+
+    @Override
+    public Logger logger() {
+        return null;
+    }
+
+    @Override
+    public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public Pair<Sprite, Integer> getIcon(String s, EntityUuid entityUuid) {
+        return null;
+    }
+
+    @Override
+    public void alterCurrentValue(Character character, int i, boolean b, Element element, AbilitySource abilitySource) throws IllegalArgumentException {
+
     }
 }

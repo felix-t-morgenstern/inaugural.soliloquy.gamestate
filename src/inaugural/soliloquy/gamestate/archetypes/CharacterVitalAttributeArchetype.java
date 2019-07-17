@@ -1,13 +1,13 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterVitalAttribute;
-import soliloquy.specs.ruleset.entities.IVitalAttributeType;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
+import soliloquy.specs.ruleset.entities.VitalAttributeType;
 
-public class CharacterVitalAttributeArchetype implements ICharacterVitalAttribute {
+public class CharacterVitalAttributeArchetype implements CharacterVitalAttribute {
     @Override
-    public IVitalAttributeType vitalAttributeType() throws IllegalStateException {
+    public VitalAttributeType vitalAttributeType() throws IllegalStateException {
         return null;
     }
 
@@ -22,7 +22,7 @@ public class CharacterVitalAttributeArchetype implements ICharacterVitalAttribut
     }
 
     @Override
-    public ICharacter character() throws IllegalStateException {
+    public Character character() throws IllegalStateException {
         return null;
     }
 
@@ -32,7 +32,7 @@ public class CharacterVitalAttributeArchetype implements ICharacterVitalAttribut
     }
 
     @Override
-    public IReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
         return null;
     }
 
@@ -53,6 +53,6 @@ public class CharacterVitalAttributeArchetype implements ICharacterVitalAttribut
 
     @Override
     public String getInterfaceName() {
-        return ICharacterVitalAttribute.class.getCanonicalName();
+        return CharacterVitalAttribute.class.getCanonicalName();
     }
 }

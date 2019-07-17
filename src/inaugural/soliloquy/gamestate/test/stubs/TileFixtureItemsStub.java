@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
-import soliloquy.specs.gamestate.entities.IItem;
-import soliloquy.specs.gamestate.entities.ITileFixture;
-import soliloquy.specs.gamestate.entities.ITileFixtureItems;
+import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
-public class TileFixtureItemsStub implements ITileFixtureItems {
-    public final ITileFixture TILE_FIXTURE;
+public class TileFixtureItemsStub implements TileFixtureItems {
+    public final TileFixture TILE_FIXTURE;
 
     private boolean _deleted;
 
-    TileFixtureItemsStub(ITileFixture tileFixture) {
+    TileFixtureItemsStub(TileFixture tileFixture) {
         TILE_FIXTURE = tileFixture;
     }
 
@@ -30,22 +30,22 @@ public class TileFixtureItemsStub implements ITileFixtureItems {
     }
 
     @Override
-    public IReadOnlyCollection<IItem> representation() throws UnsupportedOperationException, IllegalStateException {
+    public ReadOnlyCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
         return null;
     }
 
     @Override
-    public void add(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+    public void add(Item item) throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public boolean remove(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+    public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public boolean contains(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+    public boolean contains(Item item) throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 }

@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.game.IGame;
-import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.game.Game;
+import soliloquy.specs.logger.Logger;
 
-public class ActionStub<T> implements IAction<T> {
+public class ActionStub<T> implements Action<T> {
     @Override
     public void run(T t) throws IllegalArgumentException {
 
@@ -16,12 +16,12 @@ public class ActionStub<T> implements IAction<T> {
     }
 
     @Override
-    public IGame game() {
+    public Game game() {
         return null;
     }
 
     @Override
-    public ILogger logger() {
+    public Logger logger() {
         return null;
     }
 

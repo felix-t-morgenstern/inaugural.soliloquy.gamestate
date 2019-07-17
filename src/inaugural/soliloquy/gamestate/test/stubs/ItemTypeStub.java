@@ -1,57 +1,57 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.IFunction;
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.common.valueobjects.ICoordinate;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.IItem;
-import soliloquy.specs.gamestate.entities.ITile;
-import soliloquy.specs.ruleset.entities.IEquipmentType;
-import soliloquy.specs.ruleset.entities.IItemType;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.IPassiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
-import soliloquy.specs.sprites.entities.ISpriteSet;
+import soliloquy.specs.common.entities.Function;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.ruleset.entities.EquipmentType;
+import soliloquy.specs.ruleset.entities.ItemType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+import soliloquy.specs.sprites.entities.SpriteSet;
 
-public class ItemTypeStub implements IItemType {
+public class ItemTypeStub implements ItemType {
     public static boolean _hasCharges = true;
     public static boolean _isStackable = true;
 
-    public static IEquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
+    public static EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
 
     @Override
-    public IItem generateOnTile(ITile iTile, ICoordinate iCoordinate, Integer integer, IGenericParamsSet iGenericParamsSet) throws IllegalArgumentException {
+    public Item generateOnTile(Tile tile, Coordinate coordinate, Integer integer, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public IItem generateInInventory(ICharacter iCharacter, IGenericParamsSet iGenericParamsSet) throws IllegalArgumentException {
+    public Item generateInInventory(Character character, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public IItem generateInEquipment(ICharacter iCharacter, String s, IGenericParamsSet iGenericParamsSet) throws IllegalArgumentException {
+    public Item generateInEquipment(Character character, String s, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public IEquipmentType equipmentType() {
+    public EquipmentType equipmentType() {
         return EQUIPMENT_TYPE;
     }
 
     @Override
-    public IFunction<ICharacter, String> getDescriptionFunction() {
+    public Function<Character, String> getDescriptionFunction() {
         return null;
     }
 
     @Override
-    public void setDescriptionFunction(IFunction<ICharacter, String> iFunction) {
+    public void setDescriptionFunction(Function<Character, String> function) {
 
     }
 
     @Override
-    public IGenericParamsSet traits() {
+    public GenericParamsSet traits() {
         return null;
     }
 
@@ -76,27 +76,27 @@ public class ItemTypeStub implements IItemType {
     }
 
     @Override
-    public ICoordinate defaultTilePixelOffset() {
+    public Coordinate defaultTilePixelOffset() {
         return null;
     }
 
     @Override
-    public ICollection<IActiveAbility> activeAbilities() {
+    public Collection<ActiveAbility> activeAbilities() {
         return null;
     }
 
     @Override
-    public ICollection<IReactiveAbility> reactiveAbilities() {
+    public Collection<ReactiveAbility> reactiveAbilities() {
         return null;
     }
 
     @Override
-    public ICollection<IPassiveAbility> passiveAbilities() {
+    public Collection<PassiveAbility> passiveAbilities() {
         return null;
     }
 
     @Override
-    public ISpriteSet spriteSet() {
+    public SpriteSet spriteSet() {
         return null;
     }
 

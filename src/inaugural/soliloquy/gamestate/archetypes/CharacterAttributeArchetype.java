@@ -1,18 +1,18 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterAttribute;
-import soliloquy.specs.ruleset.entities.IAttributeType;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterAttribute;
+import soliloquy.specs.ruleset.entities.AttributeType;
 
-public class CharacterAttributeArchetype implements ICharacterAttribute {
+public class CharacterAttributeArchetype implements CharacterAttribute {
     @Override
-    public IAttributeType attribute() {
+    public AttributeType attribute() {
         return null;
     }
 
     @Override
-    public ICharacter character() throws IllegalStateException {
+    public Character character() throws IllegalStateException {
         return null;
     }
 
@@ -22,7 +22,7 @@ public class CharacterAttributeArchetype implements ICharacterAttribute {
     }
 
     @Override
-    public IReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
         return null;
     }
 
@@ -43,6 +43,6 @@ public class CharacterAttributeArchetype implements ICharacterAttribute {
 
     @Override
     public String getInterfaceName() {
-        return ICharacterAttribute.class.getCanonicalName();
+        return CharacterAttribute.class.getCanonicalName();
     }
 }

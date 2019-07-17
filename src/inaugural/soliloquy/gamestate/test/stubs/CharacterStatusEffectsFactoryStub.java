@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterStatusEffects;
-import soliloquy.specs.gamestate.factories.ICharacterStatusEffectsFactory;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
+import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 
-public class CharacterStatusEffectsFactoryStub implements ICharacterStatusEffectsFactory {
+public class CharacterStatusEffectsFactoryStub implements CharacterStatusEffectsFactory {
     @Override
-    public ICharacterStatusEffects make(ICharacter iCharacter) throws IllegalArgumentException {
+    public CharacterStatusEffects make(Character character) throws IllegalArgumentException {
         return new CharacterStatusEffectsStub();
     }
 

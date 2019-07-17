@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
+import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
-public class CharacterClassificationArchetype implements ICharacterClassification {
+public class CharacterClassificationArchetype implements CharacterClassification {
     @Override
     public String getPluralName() {
         return null;

@@ -1,36 +1,48 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.ruleset.entities.ICharacterAIType;
-import soliloquy.specs.ruleset.entities.ICharacterType;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.IReactiveAbilityType;
-import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
-import soliloquy.specs.sprites.entities.ISpriteSet;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.ruleset.entities.CharacterAIType;
+import soliloquy.specs.ruleset.entities.CharacterType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
+import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
+import soliloquy.specs.sprites.entities.SpriteSet;
 
-public class CharacterArchetype implements ICharacter {
+public class CharacterArchetype implements Character {
+
     @Override
-    public ICharacterType characterType() throws IllegalStateException {
+    public String getInterfaceName() {
+        return "soliloquy.specs.gamestate.ICharacter";
+    }
+
+    @Override
+    public CharacterType characterType() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ICollection<ICharacterClassification> classifications() throws IllegalStateException {
+    public Collection<CharacterClassification> classifications() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IMap<String, String> pronouns() throws IllegalStateException {
+    public Map<String, String> pronouns() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ITile tile() throws IllegalStateException {
-        return null;
+    public GenericParamsSet data() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Tile tile() throws IllegalStateException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -54,80 +66,78 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public ISpriteSet getSpriteSet() throws IllegalStateException {
+    public SpriteSet getSpriteSet() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setSpriteSet(ISpriteSet iSpriteSet) throws IllegalArgumentException, IllegalStateException {
+    public void setSpriteSet(SpriteSet spriteSet) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ICharacterAIType getAIType() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void setAIType(ICharacterAIType iCharacterAIType) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public IMap<String, ICollection<ICharacterEvent>> events() {
+    public CharacterAIType getAIType() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ICharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public ICharacterInventory inventory() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public IMap<String, ICharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
+    public void setAIType(CharacterAIType characterAIType) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IMap<String, ICharacterAttribute> attributes() throws IllegalStateException {
+    public Map<String, Collection<CharacterEvent>> events() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public ICharacterStatusEffects statusEffects() throws IllegalStateException {
+    public CharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IMap<String, ICharacterAbility<IActiveAbilityType>> activeAbilities()
-            throws IllegalStateException {
+    public CharacterInventory inventory() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IMap<String, ICharacterAbility<IReactiveAbilityType>> reactiveAbilities()
-            throws IllegalStateException {
+    public Map<String, CharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IMap<String, ICharacterAptitude> aptitudes() throws IllegalStateException {
+    public Map<String, CharacterAttribute> attributes() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CharacterStatusEffects statusEffects() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Map<String, CharacterAbility<ActiveAbilityType>> activeAbilities() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Map<String, CharacterAbility<ReactiveAbilityType>> reactiveAbilities() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Map<String, CharacterAptitude> aptitudes() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean getPlayerControlled() throws IllegalStateException {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setPlayerControlled(boolean b) throws IllegalStateException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -142,16 +152,11 @@ public class CharacterArchetype implements ICharacter {
 
     @Override
     public boolean getDead() throws IllegalStateException {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setDead(boolean b) throws IllegalStateException {
-
-    }
-
-    @Override
-    public IGenericParamsSet data() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
@@ -161,17 +166,12 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public void assignToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public boolean isDeleted() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IEntityUuid id() {
+    public void assignToTile(Tile tile) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
@@ -186,7 +186,7 @@ public class CharacterArchetype implements ICharacter {
     }
 
     @Override
-    public String getInterfaceName() {
-        return "soliloquy.specs.gamestate.ICharacter";
+    public EntityUuid id() {
+        throw new UnsupportedOperationException();
     }
 }

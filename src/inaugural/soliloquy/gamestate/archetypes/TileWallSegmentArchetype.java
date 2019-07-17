@@ -1,17 +1,17 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.gamestate.entities.ITileWallSegment;
-import soliloquy.specs.ruleset.entities.IWallSegmentType;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-public class TileWallSegmentArchetype implements ITileWallSegment {
+public class TileWallSegmentArchetype implements TileWallSegment {
     @Override
-    public IWallSegmentType getWallSegmentType() throws IllegalStateException {
+    public WallSegmentType getWallSegmentType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void setWallSegmentType(IWallSegmentType iWallSegmentType) throws IllegalStateException {
+    public void setWallSegmentType(WallSegmentType iWallSegmentType) throws IllegalStateException {
 
     }
 
@@ -36,7 +36,7 @@ public class TileWallSegmentArchetype implements ITileWallSegment {
     }
 
     @Override
-    public IGenericParamsSet data() throws IllegalStateException {
+    public GenericParamsSet data() throws IllegalStateException {
         return null;
     }
 
@@ -62,6 +62,6 @@ public class TileWallSegmentArchetype implements ITileWallSegment {
 
     @Override
     public String getInterfaceName() {
-        return ITileWallSegment.class.getCanonicalName();
+        return TileWallSegment.class.getCanonicalName();
     }
 }

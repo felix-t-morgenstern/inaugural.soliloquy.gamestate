@@ -1,24 +1,24 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.common.valueobjects.ICoordinate;
-import soliloquy.specs.common.valueobjects.IEntityUuid;
-import soliloquy.specs.game.IGame;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.IGameZone;
-import soliloquy.specs.gamestate.entities.IItem;
-import soliloquy.specs.gamestate.entities.ITile;
-import soliloquy.specs.logger.ILogger;
+import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.EntityUuid;
+import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.GameZone;
+import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.logger.Logger;
 
-public class GameZoneStub implements IGameZone {
+public class GameZoneStub implements GameZone {
     public static int _maxX = 999;
     public static int _maxY = 999;
 
-    public IMap<IEntityUuid, ICharacter> _characters = new MapStub<>();
-    public IMap<IEntityUuid, IItem> _items = new MapStub<>();
+    public Map<EntityUuid, Character> _characters = new MapStub<>();
+    public Map<EntityUuid, Item> _items = new MapStub<>();
 
     @Override
     public String zoneType() {
@@ -26,57 +26,57 @@ public class GameZoneStub implements IGameZone {
     }
 
     @Override
-    public ICoordinate getMaxCoordinates() {
+    public Coordinate getMaxCoordinates() {
         return new CoordinateStub(_maxX,_maxY);
     }
 
     @Override
-    public void setDimensions(ICoordinate iCoordinate) throws IllegalArgumentException {
+    public void setDimensions(Coordinate iCoordinate) throws IllegalArgumentException {
 
     }
 
     @Override
-    public ITile tile(ICoordinate tileLocation) throws IllegalArgumentException {
+    public Tile tile(Coordinate tileLocation) throws IllegalArgumentException {
         return new TileStub(tileLocation);
     }
 
     @Override
-    public IReadOnlyMap<IEntityUuid, ICharacter> charactersRepresentation() {
+    public ReadOnlyMap<EntityUuid, Character> charactersRepresentation() {
         return _characters.readOnlyRepresentation();
     }
 
     @Override
-    public void assignCharacterToGameZone(ICharacter character) {
+    public void assignCharacterToGameZone(Character character) {
         _characters.put(character.id(), character);
     }
 
     @Override
-    public IReadOnlyMap<IEntityUuid, IItem> itemsRepresentation() {
+    public ReadOnlyMap<EntityUuid, Item> itemsRepresentation() {
         return _items.makeClone();
     }
 
     @Override
-    public boolean containsItem(IItem iItem) {
+    public boolean containsItem(Item item) {
         return false;
     }
 
     @Override
-    public ICollection<IAction<Void>> onEntry() {
+    public Collection<Action<Void>> onEntry() {
         return null;
     }
 
     @Override
-    public ICollection<IAction<Void>> onExit() {
+    public Collection<Action<Void>> onExit() {
         return null;
     }
 
     @Override
-    public IGame game() {
+    public Game game() {
         return null;
     }
 
     @Override
-    public ILogger logger() {
+    public Logger logger() {
         return null;
     }
 

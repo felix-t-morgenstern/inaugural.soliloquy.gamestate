@@ -1,14 +1,15 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.common.infrastructure.IPair;
-import soliloquy.specs.common.valueobjects.IEntityUuid;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.ruleset.entities.IItemType;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.ruleset.entities.ItemType;
 
-public class ItemArchetype implements IItem {
+public class ItemArchetype implements Item {
     @Override
-    public IItemType itemType() throws IllegalStateException {
+    public ItemType itemType() throws IllegalStateException {
         return null;
     }
 
@@ -33,52 +34,52 @@ public class ItemArchetype implements IItem {
     }
 
     @Override
-    public IItem takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+    public Item takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
         return null;
     }
 
     @Override
-    public ICharacter getInventoryCharacter() throws IllegalStateException {
+    public Character getInventoryCharacter() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IPair<ICharacter, String> getCharacterEquipmentSlot() throws IllegalStateException {
+    public Pair<Character, String> getCharacterEquipmentSlot() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ITile getTile() throws IllegalStateException {
+    public Tile getTile() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ITileFixture getTileFixture() throws IllegalStateException {
+    public TileFixture getTileFixture() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void assignCharacterInventoryToItem(ICharacter iCharacter) throws IllegalStateException, IllegalArgumentException {
+    public void assignCharacterInventoryToItem(Character character) throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignCharacterEquipmentSlotToItem(ICharacterEquipmentSlots iCharacterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
+    public void assignCharacterEquipmentSlotToItem(CharacterEquipmentSlots characterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileToItem(ITile iTile) throws IllegalStateException, IllegalArgumentException {
+    public void assignTileToItem(Tile iTile) throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileFixtureToItem(ITileFixture iTileFixture) throws IllegalArgumentException, IllegalStateException {
+    public void assignTileFixtureToItem(TileFixture iTileFixture) throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public IGenericParamsSet data() throws IllegalStateException {
+    public GenericParamsSet data() throws IllegalStateException {
         return null;
     }
 
@@ -93,7 +94,7 @@ public class ItemArchetype implements IItem {
     }
 
     @Override
-    public IEntityUuid id() {
+    public EntityUuid id() {
         return null;
     }
 
@@ -109,6 +110,6 @@ public class ItemArchetype implements IItem {
 
     @Override
     public String getInterfaceName() {
-        return IItem.class.getCanonicalName();
+        return Item.class.getCanonicalName();
     }
 }

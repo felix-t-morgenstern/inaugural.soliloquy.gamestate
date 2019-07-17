@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.gamestate.entities.IDeletable;
+import soliloquy.specs.gamestate.entities.Deletable;
 
-abstract class HasDeletionInvariants implements IDeletable {
+abstract class HasDeletionInvariants implements Deletable {
     protected boolean _isDeleted;
 
     protected abstract String className();

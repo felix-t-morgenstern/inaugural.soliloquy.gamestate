@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.IGameZone;
-import soliloquy.specs.gamestate.valueobjects.IGameZonesRepo;
+import soliloquy.specs.gamestate.entities.GameZone;
+import soliloquy.specs.gamestate.valueobjects.GameZonesRepo;
 
-public class GameZonesRepoStub implements IGameZonesRepo {
+public class GameZonesRepoStub implements GameZonesRepo {
     @Override
-    public IGameZone getGameZone(String s) throws IllegalArgumentException {
+    public GameZone getGameZone(String s) throws IllegalArgumentException {
         return null;
     }
 

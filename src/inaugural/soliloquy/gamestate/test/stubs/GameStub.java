@@ -1,36 +1,36 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.IAction;
-import soliloquy.specs.common.entities.IFunction;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.game.IGame;
-import soliloquy.specs.gamestate.valueobjects.IGameState;
-import soliloquy.specs.logger.ILogger;
-import soliloquy.specs.ruleset.IRuleset;
+import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Function;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.valueobjects.GameState;
+import soliloquy.specs.logger.Logger;
+import soliloquy.specs.ruleset.Ruleset;
 
-public class GameStub implements IGame {
+public class GameStub implements Game {
     @Override
-    public IGameState gameState() {
+    public GameState gameState() {
         return null;
     }
 
     @Override
-    public IRuleset ruleset() {
+    public Ruleset ruleset() {
         return null;
     }
 
     @Override
-    public ILogger logger() {
+    public Logger logger() {
         return null;
     }
 
     @Override
-    public IMap<String, IAction> actionsLibrary() {
+    public Map<String, Action> actionsLibrary() {
         return null;
     }
 
     @Override
-    public IMap<String, IFunction> functionsLibrary() {
+    public Map<String, Function> functionsLibrary() {
         return null;
     }
 }

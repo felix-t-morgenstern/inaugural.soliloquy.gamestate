@@ -1,64 +1,53 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
 
-public class GenericParamsSetStub implements IGenericParamsSet {
-
+public class GenericParamsSetStub implements GenericParamsSet {
     @Override
-    public IGenericParamsSet makeClone() {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public <T> void addParam(String s, T t) throws IllegalArgumentException {
+
     }
 
     @Override
-    public <T> void addParam(String name, T value) throws IllegalArgumentException {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public <T> void addParamsSet(ReadOnlyMap<String, T> readOnlyMap) throws IllegalArgumentException, UnsupportedOperationException {
+
     }
 
     @Override
-    public <T> void addParamsSet(IReadOnlyMap<String, T> iMap)
-            throws IllegalArgumentException, UnsupportedOperationException {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public <T> T getParam(String s, String s1) {
+        return null;
     }
 
     @Override
-    public <T> T getParam(String paramTypeName, String paramName) {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public <T> Map<String, T> getParamsSet(String s) throws IllegalArgumentException {
+        return null;
     }
 
     @Override
-    public <T> IMap<String, T> getParamsSet(String paramTypeName) throws IllegalArgumentException {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public <T> boolean paramExists(String s, String s1) {
+        return false;
     }
 
     @Override
-    public <T> boolean paramExists(String paramTypeName, String paramName) {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public Collection<String> paramTypes() {
+        return null;
     }
 
     @Override
-    public ICollection<String> paramTypes() {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public boolean removeParam(String s, String s1) {
+        return false;
     }
 
     @Override
-    public boolean removeParam(String paramTypeName, String paramName) {
-        // Stub class; no implementation needed
-        throw new UnsupportedOperationException();
+    public GenericParamsSet makeClone() {
+        return null;
     }
 
     @Override
     public String getInterfaceName() {
-        // Stub method, unimplemented
-        throw new UnsupportedOperationException();
+        return null;
     }
 }

@@ -1,19 +1,19 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.gamestate.entities.ITileWallSegment;
-import soliloquy.specs.ruleset.entities.IWallSegmentType;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-public class TileWallSegmentStub implements ITileWallSegment {
+public class TileWallSegmentStub implements TileWallSegment {
     private boolean _isDeleted;
 
     @Override
-    public IWallSegmentType getWallSegmentType() throws IllegalStateException {
+    public WallSegmentType getWallSegmentType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void setWallSegmentType(IWallSegmentType iWallSegmentType) throws IllegalStateException {
+    public void setWallSegmentType(WallSegmentType wallSegmentType) throws IllegalStateException {
 
     }
 
@@ -38,7 +38,7 @@ public class TileWallSegmentStub implements ITileWallSegment {
     }
 
     @Override
-    public IGenericParamsSet data() throws IllegalStateException {
+    public GenericParamsSet data() throws IllegalStateException {
         return null;
     }
 

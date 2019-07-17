@@ -1,13 +1,13 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.ICharacterEvent;
-import soliloquy.specs.ruleset.entities.ICharacterEventType;
+import soliloquy.specs.gamestate.entities.CharacterEvent;
+import soliloquy.specs.ruleset.entities.CharacterEventType;
 
-public class CharacterEventStub implements ICharacterEvent {
+public class CharacterEventStub implements CharacterEvent {
     public boolean _isDeleted;
 
     @Override
-    public ICharacterEventType characterEventType() {
+    public CharacterEventType characterEventType() {
         return null;
     }
 

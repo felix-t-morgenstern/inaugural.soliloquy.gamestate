@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.gamestate.entities.ICharacterEvent;
-import soliloquy.specs.ruleset.entities.ICharacterEventType;
+import soliloquy.specs.gamestate.entities.CharacterEvent;
+import soliloquy.specs.ruleset.entities.CharacterEventType;
 
-public class CharacterEventArchetype implements ICharacterEvent {
+public class CharacterEventArchetype implements CharacterEvent {
     @Override
-    public ICharacterEventType characterEventType() {
+    public CharacterEventType characterEventType() {
         return null;
     }
 
@@ -41,6 +41,6 @@ public class CharacterEventArchetype implements ICharacterEvent {
 
     @Override
     public String getInterfaceName() {
-        return ICharacterEvent.class.getCanonicalName();
+        return CharacterEvent.class.getCanonicalName();
     }
 }

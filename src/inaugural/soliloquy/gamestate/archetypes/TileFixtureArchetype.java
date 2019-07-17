@@ -1,53 +1,53 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.valueobjects.ICoordinate;
-import soliloquy.specs.gamestate.entities.ITile;
-import soliloquy.specs.gamestate.entities.ITileFixture;
-import soliloquy.specs.gamestate.entities.ITileFixtureItems;
-import soliloquy.specs.ruleset.entities.IFixtureType;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.IReactiveAbility;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.ruleset.entities.FixtureType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
-public class TileFixtureArchetype implements ITileFixture {
+public class TileFixtureArchetype implements TileFixture {
     @Override
-    public ITile tile() throws IllegalStateException {
+    public Tile tile() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IFixtureType fixtureType() throws IllegalStateException {
+    public FixtureType fixtureType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ICoordinate pixelOffset() throws IllegalStateException {
+    public Coordinate pixelOffset() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, IActiveAbility> activeAbilities() throws IllegalStateException {
+    public Map<String, ActiveAbility> activeAbilities() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IMap<String, IReactiveAbility> reactiveAbilities() throws IllegalStateException {
+    public Map<String, ReactiveAbility> reactiveAbilities() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public ITileFixtureItems containedItems() throws IllegalStateException {
+    public TileFixtureItems containedItems() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void assignTileFixtureToTile(ITile iTile) throws IllegalArgumentException, IllegalStateException {
+    public void assignTileFixtureToTile(Tile tile) throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public IGenericParamsSet data() throws IllegalStateException {
+    public GenericParamsSet data() throws IllegalStateException {
         return null;
     }
 
@@ -73,6 +73,6 @@ public class TileFixtureArchetype implements ITileFixture {
 
     @Override
     public String getInterfaceName() {
-        return ITileFixture.class.getCanonicalName();
+        return TileFixture.class.getCanonicalName();
     }
 }

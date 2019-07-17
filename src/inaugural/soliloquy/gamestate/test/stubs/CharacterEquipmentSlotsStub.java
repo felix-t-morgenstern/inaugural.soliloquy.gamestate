@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterEquipmentSlots;
-import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
+import soliloquy.specs.gamestate.entities.Item;
 
-public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
-    public final ICharacter CHARACTER;
+public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
+    public final Character CHARACTER;
 
     public boolean _isDeleted;
 
-    CharacterEquipmentSlotsStub(ICharacter character) {
+    CharacterEquipmentSlotsStub(Character character) {
         CHARACTER = character;
     }
 
@@ -30,7 +30,7 @@ public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
     }
 
     @Override
-    public IReadOnlyMap<String, IItem> representation() throws IllegalStateException {
+    public ReadOnlyMap<String, Item> representation() throws IllegalStateException {
         return null;
     }
 
@@ -45,22 +45,22 @@ public class CharacterEquipmentSlotsStub implements ICharacterEquipmentSlots {
     }
 
     @Override
-    public IItem removeCharacterEquipmentSlot(String s) throws IllegalArgumentException, IllegalStateException {
+    public Item removeCharacterEquipmentSlot(String s) throws IllegalArgumentException, IllegalStateException {
         return null;
     }
 
     @Override
-    public IItem itemInSlot(String s) throws IllegalArgumentException, IllegalStateException {
+    public Item itemInSlot(String s) throws IllegalArgumentException, IllegalStateException {
         return null;
     }
 
     @Override
-    public boolean canEquipItemToSlot(String s, IItem iItem) throws IllegalArgumentException, IllegalStateException {
+    public boolean canEquipItemToSlot(String s, Item item) throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public IItem equipItemToSlot(String s, IItem iItem) throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+    public Item equipItemToSlot(String s, Item item) throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
         return null;
     }
 

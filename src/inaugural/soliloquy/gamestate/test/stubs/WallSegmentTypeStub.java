@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.ruleset.entities.IWallSegmentType;
-import soliloquy.specs.sprites.entities.ISprite;
+import soliloquy.specs.ruleset.entities.WallSegmentType;
+import soliloquy.specs.sprites.entities.Sprite;
 
-public class WallSegmentTypeStub implements IWallSegmentType {
+public class WallSegmentTypeStub implements WallSegmentType {
     @Override
-    public ISprite getSprite() {
+    public Sprite getSprite() {
         return null;
     }
 

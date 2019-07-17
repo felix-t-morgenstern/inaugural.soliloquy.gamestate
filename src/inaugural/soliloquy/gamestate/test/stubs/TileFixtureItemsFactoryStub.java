@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.ITileFixture;
-import soliloquy.specs.gamestate.entities.ITileFixtureItems;
-import soliloquy.specs.gamestate.factories.ITileFixtureItemsFactory;
+import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 
-public class TileFixtureItemsFactoryStub implements ITileFixtureItemsFactory {
+public class TileFixtureItemsFactoryStub implements TileFixtureItemsFactory {
     @Override
-    public ITileFixtureItems make(ITileFixture tileFixture) {
+    public TileFixtureItems make(TileFixture tileFixture) {
         return new TileFixtureItemsStub(tileFixture);
     }
 

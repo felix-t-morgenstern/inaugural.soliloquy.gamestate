@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IPair;
+import soliloquy.specs.common.infrastructure.Pair;
 
-public class PairStub<K,V> implements IPair<K,V> {
+public class PairStub<K,V> implements Pair<K,V> {
     private K _item1;
     private V _item2;
 

@@ -1,30 +1,30 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.game.IGame;
-import soliloquy.specs.gamestate.entities.ICharacterEvent;
-import soliloquy.specs.logger.ILogger;
-import soliloquy.specs.ruleset.entities.ICharacterAIType;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.CharacterEvent;
+import soliloquy.specs.logger.Logger;
+import soliloquy.specs.ruleset.entities.CharacterAIType;
 
-public class CharacterAITypeStub implements ICharacterAIType {
+public class CharacterAITypeStub implements CharacterAIType {
     @Override
     public void act() {
 
     }
 
     @Override
-    public IMap<String, ICollection<ICharacterEvent>> events() {
+    public Map<String, Collection<CharacterEvent>> events() {
         return null;
     }
 
     @Override
-    public IGame game() {
+    public Game game() {
         return null;
     }
 
     @Override
-    public ILogger logger() {
+    public Logger logger() {
         return null;
     }
 

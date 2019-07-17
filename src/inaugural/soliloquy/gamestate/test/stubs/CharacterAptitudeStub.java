@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterAptitude;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterAptitude;
 
-public class CharacterAptitudeStub implements ICharacterAptitude {
+public class CharacterAptitudeStub implements CharacterAptitude {
     public boolean _isDeleted;
 
     @Override
@@ -13,7 +13,7 @@ public class CharacterAptitudeStub implements ICharacterAptitude {
     }
 
     @Override
-    public ICharacter character() throws IllegalStateException {
+    public Character character() throws IllegalStateException {
         return null;
     }
 
@@ -23,7 +23,7 @@ public class CharacterAptitudeStub implements ICharacterAptitude {
     }
 
     @Override
-    public IReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
         return null;
     }
 

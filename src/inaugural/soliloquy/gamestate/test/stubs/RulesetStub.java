@@ -1,104 +1,104 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ICollection;
-import soliloquy.specs.common.infrastructure.ISettingsRepo;
-import soliloquy.specs.common.shared.IEntityGroup;
-import soliloquy.specs.ruleset.IRuleset;
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.SettingsRepo;
+import soliloquy.specs.common.shared.EntityGroup;
+import soliloquy.specs.ruleset.Ruleset;
 import soliloquy.specs.ruleset.entities.*;
-import soliloquy.specs.ruleset.entities.abilities.IActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.IPassiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.IReactiveAbilityType;
-import soliloquy.specs.ruleset.valueobjects.ICharacterClassification;
-import soliloquy.specs.ruleset.valueobjects.ITypesRegistry;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
+import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
+import soliloquy.specs.ruleset.valueobjects.TypesRegistry;
 
-public class RulesetStub implements IRuleset {
+public class RulesetStub implements Ruleset {
     @Override
-    public IEntityGroup<IActiveAbilityType> activeAbilitiyTypes() {
+    public EntityGroup<ActiveAbilityType> activeAbilitiyTypes() {
         return null;
     }
 
     @Override
-    public IEntityGroup<IReactiveAbilityType> reactiveAbilitiyTypes() {
+    public EntityGroup<ReactiveAbilityType> reactiveAbilitiyTypes() {
         return null;
     }
 
     @Override
-    public IEntityGroup<IPassiveAbilityType> passiveAbilitiyTypes() {
+    public EntityGroup<PassiveAbilityType> passiveAbilitiyTypes() {
         return null;
     }
 
     @Override
-    public ICollection<String> aptitudes() {
+    public Collection<String> aptitudes() {
         return null;
     }
 
     @Override
-    public IEntityGroup<IAttributeType> attributes() {
+    public EntityGroup<AttributeType> attributes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<ICharacterClassification> characterClassifications() {
+    public TypesRegistry<CharacterClassification> characterClassifications() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<ICharacterType> characterTypes() {
+    public TypesRegistry<CharacterType> characterTypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<ICharacterAIType> characterAITypes() {
+    public TypesRegistry<CharacterAIType> characterAITypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<ICharacterEventType> characterEventTypes() {
+    public TypesRegistry<CharacterEventType> characterEventTypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IElement> elements() {
+    public TypesRegistry<Element> elements() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IEquipmentType> equipmentTypes() {
+    public TypesRegistry<EquipmentType> equipmentTypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IFixtureType> fixtureTypes() {
+    public TypesRegistry<FixtureType> fixtureTypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IGroundType> groundTypes() {
+    public TypesRegistry<GroundType> groundTypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IItemType> itemTypes() {
+    public TypesRegistry<ItemType> itemTypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IStatusEffectType> statusEffectTypes() {
+    public TypesRegistry<StatusEffectType> statusEffectTypes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IVitalAttributeType> vitalAttributes() {
+    public TypesRegistry<VitalAttributeType> vitalAttributes() {
         return null;
     }
 
     @Override
-    public ITypesRegistry<IWallSegmentType> wallSegmentTypes() {
+    public TypesRegistry<WallSegmentType> wallSegmentTypes() {
         return null;
     }
 
     @Override
-    public ISettingsRepo rulesetSettings() {
+    public SettingsRepo rulesetSettings() {
         return null;
     }
 

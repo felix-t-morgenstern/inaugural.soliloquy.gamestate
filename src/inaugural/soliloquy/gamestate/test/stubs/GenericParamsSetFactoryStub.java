@@ -1,13 +1,13 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.factories.IGenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
+import soliloquy.specs.common.factories.GenericParamsSetFactory;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 
-public class GenericParamsSetFactoryStub implements IGenericParamsSetFactory {
-    public static final IGenericParamsSet GENERIC_PARAMS_SET = new GenericParamsSetStub();
+public class GenericParamsSetFactoryStub implements GenericParamsSetFactory {
+    public static final GenericParamsSet GENERIC_PARAMS_SET = new GenericParamsSetStub();
 
     @Override
-    public IGenericParamsSet make() {
+    public GenericParamsSet make() {
         return GENERIC_PARAMS_SET;
     }
 

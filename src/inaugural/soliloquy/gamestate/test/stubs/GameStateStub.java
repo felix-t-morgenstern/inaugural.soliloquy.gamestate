@@ -1,59 +1,59 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IMap;
-import soliloquy.specs.common.infrastructure.IPersistentVariableCache;
-import soliloquy.specs.gamestate.entities.IGameZone;
-import soliloquy.specs.gamestate.entities.IKeyBindingContext;
-import soliloquy.specs.gamestate.entities.IParty;
-import soliloquy.specs.gamestate.entities.IRoundManager;
-import soliloquy.specs.gamestate.valueobjects.IGameState;
-import soliloquy.specs.gamestate.valueobjects.IGameZonesRepo;
-import soliloquy.specs.ruleset.IRuleset;
-import soliloquy.specs.ruleset.entities.ICharacterAIType;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.PersistentVariableCache;
+import soliloquy.specs.gamestate.entities.GameZone;
+import soliloquy.specs.gamestate.entities.KeyBindingContext;
+import soliloquy.specs.gamestate.entities.Party;
+import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.gamestate.valueobjects.GameState;
+import soliloquy.specs.gamestate.valueobjects.GameZonesRepo;
+import soliloquy.specs.ruleset.Ruleset;
+import soliloquy.specs.ruleset.entities.CharacterAIType;
 
-public class GameStateStub implements IGameState {
+public class GameStateStub implements GameState {
     @Override
-    public IParty party() throws IllegalStateException {
+    public Party party() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IPersistentVariableCache persistentVariables() {
+    public PersistentVariableCache persistentVariables() {
         return null;
     }
 
     @Override
-    public IMap<String, ICharacterAIType> characterAIs() {
+    public Map<String, CharacterAIType> characterAIs() {
         return null;
     }
 
     @Override
-    public IGameZonesRepo gameZonesRepo() {
+    public GameZonesRepo gameZonesRepo() {
         return null;
     }
 
     @Override
-    public IGameZone getCurrentGameZone() {
+    public GameZone getCurrentGameZone() {
         return new GameZoneStub();
     }
 
     @Override
-    public void setCurrentGameZone(IGameZone iGameZone) {
+    public void setCurrentGameZone(GameZone gameZone) {
 
     }
 
     @Override
-    public IRoundManager roundManager() {
+    public RoundManager roundManager() {
         return null;
     }
 
     @Override
-    public IMap<Integer, IKeyBindingContext> keyBindingContexts() throws IllegalStateException {
+    public Map<Integer, KeyBindingContext> keyBindingContexts() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public IRuleset ruleset() {
+    public Ruleset ruleset() {
         return null;
     }
 

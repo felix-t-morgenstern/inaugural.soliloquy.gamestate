@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyCollection;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterInventory;
-import soliloquy.specs.gamestate.entities.IItem;
+import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterInventory;
+import soliloquy.specs.gamestate.entities.Item;
 
-public class CharacterInventoryStub implements ICharacterInventory {
-    public final ICharacter CHARACTER;
+public class CharacterInventoryStub implements CharacterInventory {
+    public final Character CHARACTER;
 
     public boolean _isDeleted;
 
-    CharacterInventoryStub(ICharacter character) {
+    CharacterInventoryStub(Character character) {
         CHARACTER = character;
     }
 
@@ -30,22 +30,22 @@ public class CharacterInventoryStub implements ICharacterInventory {
     }
 
     @Override
-    public IReadOnlyCollection<IItem> representation() throws IllegalStateException {
+    public ReadOnlyCollection<Item> representation() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void add(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+    public void add(Item iItem) throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public boolean remove(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+    public boolean remove(Item iItem) throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public boolean contains(IItem iItem) throws IllegalArgumentException, IllegalStateException {
+    public boolean contains(Item iItem) throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 }

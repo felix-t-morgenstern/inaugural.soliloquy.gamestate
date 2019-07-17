@@ -1,44 +1,44 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.ITile;
-import soliloquy.specs.gamestate.entities.ITileFixture;
-import soliloquy.specs.gamestate.entities.ITileFixtures;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.gamestate.entities.TileFixtures;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TileFixturesStub implements ITileFixtures {
-    private final ITile TILE;
+public class TileFixturesStub implements TileFixtures {
+    private final Tile TILE;
 
-    public final List<ITileFixture> FIXTURES = new ArrayList<>();
+    public final List<TileFixture> FIXTURES = new ArrayList<>();
 
-    TileFixturesStub(ITile tile) {
+    TileFixturesStub(Tile tile) {
         TILE = tile;
     }
 
     @Override
-    public IReadOnlyMap<ITileFixture, Integer> representation() throws IllegalStateException {
+    public ReadOnlyMap<TileFixture, Integer> representation() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void add(ITileFixture tileFixture) throws IllegalArgumentException {
+    public void add(TileFixture tileFixture) throws IllegalArgumentException {
         FIXTURES.add(tileFixture);
         tileFixture.assignTileFixtureToTile(TILE);
     }
 
     @Override
-    public void add(ITileFixture iTileFixture, int i) throws IllegalArgumentException {
+    public void add(TileFixture iTileFixture, int i) throws IllegalArgumentException {
     }
 
     @Override
-    public boolean remove(ITileFixture iTileFixture) {
+    public boolean remove(TileFixture iTileFixture) {
         return false;
     }
 
     @Override
-    public boolean contains(ITileFixture tileFixture) throws IllegalArgumentException {
+    public boolean contains(TileFixture tileFixture) throws IllegalArgumentException {
         return FIXTURES.contains(tileFixture);
     }
 

@@ -1,26 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.IGenericParamsSet;
-import soliloquy.specs.ruleset.entities.abilities.IAbilityType;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 
-public class AbilityTypeStub implements IAbilityType {
+public class AbilityTypeStub implements AbilityType {
     @Override
-    public String description(IGenericParamsSet iGenericParamsSet) throws IllegalStateException {
+    public String description(GenericParamsSet genericParamsSet) throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IGenericParamsSet data() throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void delete() throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isDeleted() {
+    public GenericParamsSet data() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
@@ -31,6 +21,16 @@ public class AbilityTypeStub implements IAbilityType {
 
     @Override
     public void setName(String s) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isDeleted() {
         throw new UnsupportedOperationException();
     }
 

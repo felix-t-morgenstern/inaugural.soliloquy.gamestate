@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.gamestate.entities.ICharacterAbility;
-import soliloquy.specs.ruleset.entities.abilities.IAbilityType;
+import soliloquy.specs.gamestate.entities.CharacterAbility;
+import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 
-public class CharacterAbilityStub<TAbilityType extends IAbilityType> implements ICharacterAbility {
+public class CharacterAbilityStub<TAbilityType extends AbilityType> implements CharacterAbility {
     public boolean _isDeleted;
 
     @Override

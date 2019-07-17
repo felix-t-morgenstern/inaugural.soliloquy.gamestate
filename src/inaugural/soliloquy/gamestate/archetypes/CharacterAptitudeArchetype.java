@@ -1,17 +1,17 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.IReadOnlyMap;
-import soliloquy.specs.gamestate.entities.ICharacter;
-import soliloquy.specs.gamestate.entities.ICharacterAptitude;
+import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterAptitude;
 
-public class CharacterAptitudeArchetype implements ICharacterAptitude {
+public class CharacterAptitudeArchetype implements CharacterAptitude {
     @Override
     public String aptitudeId() {
         return null;
     }
 
     @Override
-    public ICharacter character() throws IllegalStateException {
+    public Character character() throws IllegalStateException {
         return null;
     }
 
@@ -21,7 +21,7 @@ public class CharacterAptitudeArchetype implements ICharacterAptitude {
     }
 
     @Override
-    public IReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
         return null;
     }
 
@@ -42,6 +42,6 @@ public class CharacterAptitudeArchetype implements ICharacterAptitude {
 
     @Override
     public String getInterfaceName() {
-        return ICharacterAptitude.class.getCanonicalName();
+        return CharacterAptitude.class.getCanonicalName();
     }
 }
