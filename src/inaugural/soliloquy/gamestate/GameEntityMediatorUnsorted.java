@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Deletable;
 
 import java.util.HashSet;
@@ -37,7 +37,7 @@ abstract class GameEntityMediatorUnsorted<TEntity extends Deletable>
 
     protected abstract TEntity getArchetype();
 
-    public ReadOnlyCollection<TEntity> representation() {
+    public ReadableCollection<TEntity> representation() {
         enforceDeletionInvariants("getRepresentation");
         Collection<TEntity> representation = COLLECTION_FACTORY.make(getArchetype());
         ENTITIES.forEach(representation::add);

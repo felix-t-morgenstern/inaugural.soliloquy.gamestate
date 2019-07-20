@@ -5,7 +5,7 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
@@ -62,7 +62,7 @@ class CharacterStatusEffectsImplTests {
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID, 123);
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2_ID, 456);
 
-        ReadOnlyMap<String,Integer> statusEffectLevels =
+        ReadableMap<String,Integer> statusEffectLevels =
                 _characterStatusEffects.allStatusEffectsRepresentation();
 
         assertEquals(2, statusEffectLevels.size());
@@ -74,7 +74,7 @@ class CharacterStatusEffectsImplTests {
     void testClearStatusEffects() {
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID, 123);
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2_ID, 456);
-        ReadOnlyMap<String,Integer> statusEffectLevels =
+        ReadableMap<String,Integer> statusEffectLevels =
                 _characterStatusEffects.allStatusEffectsRepresentation();
         assertEquals(2, statusEffectLevels.size());
 

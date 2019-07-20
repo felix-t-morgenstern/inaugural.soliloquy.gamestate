@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileFixtureStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -79,7 +79,7 @@ class TileFixtureItemsImplTests {
         _tileFixtureItems.add(ITEM_2);
         _tileFixtureItems.add(ITEM_3);
 
-        ReadOnlyCollection<Item> representation = _tileFixtureItems.representation();
+        ReadableCollection<Item> representation = _tileFixtureItems.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getArchetype());

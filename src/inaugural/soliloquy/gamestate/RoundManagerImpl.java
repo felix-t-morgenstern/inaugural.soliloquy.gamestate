@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
@@ -23,7 +23,7 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public ReadOnlyMap<Integer, Pair<Character, Integer>> characterOrder() {
+    public ReadableMap<Integer, Pair<Character, Integer>> characterOrder() {
         return null;
     }
 
@@ -53,12 +53,12 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public ReadOnlyCollection<OneTimeTimer> oneTimeTimersRepresentation() {
+    public ReadableCollection<OneTimeTimer> oneTimeTimersRepresentation() {
         return null;
     }
 
     @Override
-    public ReadOnlyCollection<RecurringTimer> recurringTimersRepresentation() {
+    public ReadableCollection<RecurringTimer> recurringTimersRepresentation() {
         return null;
     }
 

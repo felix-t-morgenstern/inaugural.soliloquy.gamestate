@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
@@ -46,7 +46,7 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public ReadOnlyMap<String, Integer> allStatusEffectsRepresentation() {
+    public ReadableMap<String, Integer> allStatusEffectsRepresentation() {
         enforceInvariants("getAllStatusEffects");
         Map<String, Integer> statusEffectLevels = MAP_FACTORY.make("", 0);
         for (java.util.Map.Entry<String, Integer> statusEffectLevel : STATUS_EFFECT_LEVELS.entrySet()) {

@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 
 public class GenericParamsSetStub implements GenericParamsSet {
     @Override
@@ -12,7 +12,7 @@ public class GenericParamsSetStub implements GenericParamsSet {
     }
 
     @Override
-    public <T> void addParamsSet(ReadOnlyMap<String, T> readOnlyMap) throws IllegalArgumentException, UnsupportedOperationException {
+    public <T> void addParamsSet(ReadableMap<String, T> ReadableMap) throws IllegalArgumentException, UnsupportedOperationException {
 
     }
 

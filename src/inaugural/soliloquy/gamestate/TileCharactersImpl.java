@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileCharacters;
@@ -22,7 +22,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     }
 
     @Override
-    public ReadOnlyMap<Character, Integer> charactersRepresentation() {
+    public ReadableMap<Character, Integer> charactersRepresentation() {
         enforceDeletionInvariants("getCharactersRepresentation");
         Map<Character,Integer> characters = MAP_FACTORY.make(ARCHETYPE,0);
         for (java.util.Map.Entry<Character,Integer> entry : CHARACTERS.entrySet()) {

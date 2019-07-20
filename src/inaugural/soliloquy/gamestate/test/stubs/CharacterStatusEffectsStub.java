@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
@@ -14,7 +14,7 @@ public class CharacterStatusEffectsStub implements CharacterStatusEffects {
     }
 
     @Override
-    public ReadOnlyMap<String, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
+    public ReadableMap<String, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
         return null;
     }
 

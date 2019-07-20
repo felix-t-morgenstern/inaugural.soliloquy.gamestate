@@ -1,10 +1,7 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.entities.Function;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
@@ -33,7 +30,7 @@ public class KeyBindingContextArchetype implements KeyBindingContext {
     }
 
     @Override
-    public void putAll(Collection<Pair<Character, KeyBinding>> collection) throws IllegalArgumentException {
+    public void putAll(ReadableCollection<Pair<Character, KeyBinding>> collection) throws IllegalArgumentException {
 
     }
 
@@ -53,7 +50,7 @@ public class KeyBindingContextArchetype implements KeyBindingContext {
     }
 
     @Override
-    public ReadOnlyMap<Character, KeyBinding> readOnlyRepresentation() {
+    public ReadableMap<Character, KeyBinding> readOnlyRepresentation() {
         return null;
     }
 
@@ -73,12 +70,12 @@ public class KeyBindingContextArchetype implements KeyBindingContext {
     }
 
     @Override
-    public boolean equals(Collection<KeyBinding> collection) throws IllegalArgumentException {
+    public boolean equals(ReadableCollection<KeyBinding> collection) throws IllegalArgumentException {
         return false;
     }
 
     @Override
-    public boolean equals(ReadOnlyMap<Character, KeyBinding> readOnlyMap) throws IllegalArgumentException {
+    public boolean equals(ReadableMap<Character, KeyBinding> ReadableMap) throws IllegalArgumentException {
         return false;
     }
 

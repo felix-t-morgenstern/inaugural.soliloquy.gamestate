@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
@@ -30,7 +30,7 @@ public class CharacterInventoryStub implements CharacterInventory {
     }
 
     @Override
-    public ReadOnlyCollection<Item> representation() throws IllegalStateException {
+    public ReadableCollection<Item> representation() throws IllegalStateException {
         return null;
     }
 

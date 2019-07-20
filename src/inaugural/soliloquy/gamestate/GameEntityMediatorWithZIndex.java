@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Deletable;
 
 import java.util.HashMap;
@@ -31,7 +31,7 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
 
     protected abstract TEntity getArchetype();
 
-    public ReadOnlyMap<TEntity,Integer> representation() {
+    public ReadableMap<TEntity,Integer> representation() {
         enforceDeletionInvariants("getRepresentation");
         Map<TEntity, Integer> entities = MAP_FACTORY.make(getArchetype(), 0);
         for(java.util.Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {

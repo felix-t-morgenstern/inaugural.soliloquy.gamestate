@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileCharacters;
@@ -18,7 +18,7 @@ public class TileCharactersStub implements TileCharacters {
     }
 
     @Override
-    public ReadOnlyMap<Character, Integer> charactersRepresentation() {
+    public ReadableMap<Character, Integer> charactersRepresentation() {
         return null;
     }
 

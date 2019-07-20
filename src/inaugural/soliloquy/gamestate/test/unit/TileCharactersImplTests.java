@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileCharacters;
@@ -81,7 +81,7 @@ class TileCharactersImplTests {
         final int Z_INDEX = 123;
         _tileCharacters.addCharacter(CHARACTER, Z_INDEX);
 
-        ReadOnlyMap<Character, Integer> characters = _tileCharacters.charactersRepresentation();
+        ReadableMap<Character, Integer> characters = _tileCharacters.charactersRepresentation();
 
         assertEquals(1, characters.size());
         assertEquals((Integer) Z_INDEX, characters.get(CHARACTER));

@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
 import soliloquy.specs.ruleset.entities.VitalAttributeType;
@@ -57,7 +57,7 @@ public class CharacterVitalAttributeImpl extends HasDeletionInvariants
     }
 
     @Override
-    public ReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadableMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
         // TODO: Test and implement whether truly read-only
         enforceDeletionInvariants("modifiers");
         return _modifiers.readOnlyRepresentation();

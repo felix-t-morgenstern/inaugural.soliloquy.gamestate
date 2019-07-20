@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OneTimeTimerImplTests {
     private OneTimeTimer _oneTimeTimer;
@@ -58,5 +58,14 @@ class OneTimeTimerImplTests {
     @Test
     void testId() {
         assertEquals(TIMER_ID, _oneTimeTimer.id());
+    }
+
+    @Test
+    void testDelete() {
+        assertTrue(ROUND_MANAGER.ONE_TIME_TIMERS.contains(_oneTimeTimer));
+
+        _oneTimeTimer.delete();
+
+        assertFalse(ROUND_MANAGER.ONE_TIME_TIMERS.contains(_oneTimeTimer));
     }
 }

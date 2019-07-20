@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -48,7 +48,7 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
     }
 
     @Override
-    public ReadOnlyCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
+    public ReadableCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
         enforceDeletionInvariants("getRepresentation");
         Collection<Item> items = COLLECTION_FACTORY.make(ITEM_ARCHETYPE);
         for(Item item : CONTAINED_ITEMS) {

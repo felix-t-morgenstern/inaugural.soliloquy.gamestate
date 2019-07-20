@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
@@ -30,7 +30,7 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
     }
 
     @Override
-    public ReadOnlyMap<String, Item> representation() throws IllegalStateException {
+    public ReadableMap<String, Item> representation() throws IllegalStateException {
         return null;
     }
 

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RecurringTimerImplTests {
     private RecurringTimer _recurringTimer;
@@ -66,5 +66,14 @@ class RecurringTimerImplTests {
     @Test
     void testId() {
         assertEquals(TIMER_ID, _recurringTimer.id());
+    }
+
+    @Test
+    void testDelete() {
+        assertTrue(ROUND_MANAGER.RECURRING_TIMERS.contains(_recurringTimer));
+
+        _recurringTimer.delete();
+
+        assertFalse(ROUND_MANAGER.RECURRING_TIMERS.contains(_recurringTimer));
     }
 }

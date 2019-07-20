@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
@@ -29,7 +29,7 @@ public class CharacterInventoryImpl implements CharacterInventory {
     }
 
     @Override
-    public ReadOnlyCollection<Item> representation() throws IllegalStateException {
+    public ReadableCollection<Item> representation() throws IllegalStateException {
         return null;
     }
 

@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -30,7 +30,7 @@ public class TileFixtureItemsStub implements TileFixtureItems {
     }
 
     @Override
-    public ReadOnlyCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
+    public ReadableCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
         return null;
     }
 

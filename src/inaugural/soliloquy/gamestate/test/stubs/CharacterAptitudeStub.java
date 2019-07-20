@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterAptitude;
 
@@ -23,7 +23,7 @@ public class CharacterAptitudeStub implements CharacterAptitude {
     }
 
     @Override
-    public ReadOnlyMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadableMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
         return null;
     }
 

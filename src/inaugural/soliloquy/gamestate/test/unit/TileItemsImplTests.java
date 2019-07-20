@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileItems;
@@ -70,7 +70,7 @@ class TileItemsImplTests {
         _tileItems.add(ITEM_2);
         _tileItems.add(ITEM_3);
 
-        ReadOnlyMap<Item,Integer> representation = _tileItems.representation();
+        ReadableMap<Item,Integer> representation = _tileItems.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());
@@ -89,7 +89,7 @@ class TileItemsImplTests {
     void testAddAtZIndex() {
         final int zIndex = 123;
         _tileItems.add(ITEM, zIndex);
-        ReadOnlyMap<Item,Integer> representation = _tileItems.representation();
+        ReadableMap<Item,Integer> representation = _tileItems.representation();
 
         assertEquals((Integer) zIndex, representation.get(ITEM));
     }

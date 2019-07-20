@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.PersistentVariableCache;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 
 public class PersistentVariableCacheStub implements PersistentVariableCache {
     @Override
@@ -21,12 +21,12 @@ public class PersistentVariableCacheStub implements PersistentVariableCache {
     }
 
     @Override
-    public ReadOnlyCollection<String> namesRepresentation() {
+    public ReadableCollection<String> namesRepresentation() {
         return null;
     }
 
     @Override
-    public ReadOnlyMap<String, Object> variablesRepresentation() {
+    public ReadableMap<String, Object> variablesRepresentation() {
         return null;
     }
 

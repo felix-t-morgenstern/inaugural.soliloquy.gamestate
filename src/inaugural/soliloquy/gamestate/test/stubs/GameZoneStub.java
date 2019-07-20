@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.game.Game;
@@ -41,7 +41,7 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public ReadOnlyMap<EntityUuid, Character> charactersRepresentation() {
+    public ReadableMap<EntityUuid, Character> charactersRepresentation() {
         return _characters.readOnlyRepresentation();
     }
 
@@ -51,7 +51,7 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public ReadOnlyMap<EntityUuid, Item> itemsRepresentation() {
+    public ReadableMap<EntityUuid, Item> itemsRepresentation() {
         return _items.makeClone();
     }
 

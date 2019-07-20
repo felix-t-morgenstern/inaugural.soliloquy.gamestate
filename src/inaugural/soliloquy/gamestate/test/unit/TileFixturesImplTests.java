@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtures;
@@ -66,7 +66,7 @@ class TileFixturesImplTests {
         _tileFixtures.add(TILE_FIXTURE_2);
         _tileFixtures.add(TILE_FIXTURE_3);
 
-        ReadOnlyMap<TileFixture,Integer> representation = _tileFixtures.representation();
+        ReadableMap<TileFixture,Integer> representation = _tileFixtures.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());
@@ -85,7 +85,7 @@ class TileFixturesImplTests {
     void testAddAtZIndex() {
         final int zIndex = 123;
         _tileFixtures.add(TILE_FIXTURE, zIndex);
-        ReadOnlyMap<TileFixture,Integer> representation = _tileFixtures.representation();
+        ReadableMap<TileFixture,Integer> representation = _tileFixtures.representation();
 
         assertEquals((Integer) zIndex, representation.get(TILE_FIXTURE));
     }

@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
@@ -44,12 +44,12 @@ public class RoundManagerStub implements RoundManager {
     }
 
     @Override
-    public ReadOnlyCollection<OneTimeTimer> oneTimeTimersRepresentation() {
+    public ReadableCollection<OneTimeTimer> oneTimeTimersRepresentation() {
         return ONE_TIME_TIMERS;
     }
 
     @Override
-    public ReadOnlyCollection<RecurringTimer> recurringTimersRepresentation() {
+    public ReadableCollection<RecurringTimer> recurringTimersRepresentation() {
         return RECURRING_TIMERS;
     }
 

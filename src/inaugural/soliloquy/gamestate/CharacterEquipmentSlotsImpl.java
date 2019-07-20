@@ -5,7 +5,7 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadOnlyMap;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
@@ -62,7 +62,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public ReadOnlyMap<String, Item> representation()
+    public ReadableMap<String, Item> representation()
             throws IllegalStateException {
         enforceDeletionInvariants("getRepresentation");
         Map<String, Item> characterEquipmentSlots =

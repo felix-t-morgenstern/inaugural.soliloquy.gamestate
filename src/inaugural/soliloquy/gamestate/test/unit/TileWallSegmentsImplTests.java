@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.TileWallSegmentStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.ReadOnlyCollection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegments;
@@ -71,7 +71,7 @@ class TileWallSegmentsImplTests {
         _tileWallSegments.add(TILE_WALL_SEGMENT_2);
         _tileWallSegments.add(TILE_WALL_SEGMENT_3);
 
-        ReadOnlyCollection<TileWallSegment> representation = _tileWallSegments.representation();
+        ReadableCollection<TileWallSegment> representation = _tileWallSegments.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getArchetype());
