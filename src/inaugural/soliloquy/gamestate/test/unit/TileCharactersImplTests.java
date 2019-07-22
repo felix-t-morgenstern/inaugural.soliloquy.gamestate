@@ -33,11 +33,14 @@ class TileCharactersImplTests {
 
     @Test
     void testAddCharacterAndContainsCharacter() {
-        assertFalse(_tileCharacters.containsCharacter(CHARACTER));
-        _tileCharacters.addCharacter(CHARACTER);
+        assertFalse(_tileCharacters.contains(CHARACTER));
 
-        assertTrue(_tileCharacters.containsCharacter(CHARACTER));
+        _tileCharacters.add(CHARACTER);
+
         assertSame(TILE, CHARACTER.tile());
+
+        _tileCharacters.remove(CHARACTER);
+        assertSame(null, CHARACTER.tile());
     }
 
     @Test
@@ -45,14 +48,14 @@ class TileCharactersImplTests {
         assertNull(_tileCharacters.getZIndex(CHARACTER));
 
         final int Z_INDEX = 123;
-        _tileCharacters.addCharacter(CHARACTER, Z_INDEX);
+        _tileCharacters.add(CHARACTER, Z_INDEX);
 
         assertEquals((Integer) Z_INDEX, _tileCharacters.getZIndex(CHARACTER));
     }
 
     @Test
     void testSetZIndex() {
-        _tileCharacters.addCharacter(CHARACTER);
+        _tileCharacters.add(CHARACTER);
         assertEquals((Integer) 0, _tileCharacters.getZIndex(CHARACTER));
 
         final int Z_INDEX = 123;
@@ -69,17 +72,17 @@ class TileCharactersImplTests {
 
     @Test
     void testRemoveCharacter() {
-        _tileCharacters.addCharacter(CHARACTER);
-        assertTrue(_tileCharacters.containsCharacter(CHARACTER));
+        _tileCharacters.add(CHARACTER);
+        assertTrue(_tileCharacters.contains(CHARACTER));
 
-        assertTrue(_tileCharacters.removeCharacter(CHARACTER));
-        assertFalse(_tileCharacters.containsCharacter(CHARACTER));
+        assertTrue(_tileCharacters.remove(CHARACTER));
+        assertFalse(_tileCharacters.contains(CHARACTER));
     }
 
     @Test
     void testGetCharactersRepresentation() {
         final int Z_INDEX = 123;
-        _tileCharacters.addCharacter(CHARACTER, Z_INDEX);
+        _tileCharacters.add(CHARACTER, Z_INDEX);
 
         ReadableMap<Character, Integer> characters = _tileCharacters.charactersRepresentation();
 
@@ -89,16 +92,16 @@ class TileCharactersImplTests {
 
     @Test
     void testCallsWithNullCharacter() {
-        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.addCharacter(null));
-        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.addCharacter(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.add(null));
+        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.add(null, 0));
         assertThrows(IllegalArgumentException.class, () -> _tileCharacters.getZIndex(null));
         assertThrows(IllegalArgumentException.class, () -> _tileCharacters.setZIndex(null, 0));
-        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.containsCharacter(null));
+        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.contains(null));
     }
 
     @Test
     void testDelete() {
-        _tileCharacters.addCharacter(CHARACTER);
+        _tileCharacters.add(CHARACTER);
 
         _tileCharacters.delete();
 
@@ -111,12 +114,12 @@ class TileCharactersImplTests {
         _tileCharacters.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileCharacters.charactersRepresentation());
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER));
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER, 0));
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.removeCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.remove(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.getZIndex(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.setZIndex(CHARACTER, 0));
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.containsCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.contains(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileCharacters.delete());
     }
@@ -126,12 +129,12 @@ class TileCharactersImplTests {
         TILE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileCharacters.charactersRepresentation());
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER));
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.addCharacter(CHARACTER, 0));
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.removeCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.remove(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.getZIndex(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.setZIndex(CHARACTER, 0));
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.containsCharacter(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.contains(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileCharacters.delete());
     }

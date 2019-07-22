@@ -18,6 +18,9 @@ public class CharacterStub implements Character {
     private boolean _isDead;
     private Tile _tile;
 
+    private final CharacterEquipmentSlotsStub EQUIPMENT = new CharacterEquipmentSlotsStub(this);
+    private final CharacterInventoryStub INVENTORY = new CharacterInventoryStub(this);
+
     @Override
     public CharacterType characterType() throws IllegalStateException {
         return null;
@@ -85,12 +88,12 @@ public class CharacterStub implements Character {
 
     @Override
     public CharacterEquipmentSlots equipmentSlots() throws IllegalStateException {
-        return null;
+        return EQUIPMENT;
     }
 
     @Override
     public CharacterInventory inventory() throws IllegalStateException {
-        return null;
+        return INVENTORY;
     }
 
     @Override

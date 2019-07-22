@@ -1,12 +1,15 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileCharactersFactoryImpl;
+import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileCharacters;
 import soliloquy.specs.gamestate.factories.TileCharactersFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,8 +25,9 @@ class TileCharactersFactoryImplTests {
         _tileCharactersFactory = new TileCharactersFactoryImpl(MAP_FACTORY);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
-    void testConstructorWithNullInput() {
+    void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new TileCharactersFactoryImpl(null));
     }
 
@@ -35,7 +39,13 @@ class TileCharactersFactoryImplTests {
 
     @Test
     void testMake() {
-        assertNotNull(_tileCharactersFactory.make(TILE));
+        Character character = new CharacterStub();
+
+        TileCharacters tileCharacters = _tileCharactersFactory.make(TILE);
+        tileCharacters.add(character);
+
+        assertNotNull(tileCharacters);
+        assertTrue(tileCharacters.contains(character));
     }
 
     @Test

@@ -294,7 +294,7 @@ public class CharacterImpl implements Character {
         // handle removal from the GameZone.
         _deleted = true;
         if (_tile != null) {
-            _tile.characters().removeCharacter(this);
+            _tile.characters().remove(this);
         }
         _tile = null;
         for(Collection<CharacterEvent> events : EVENTS.getValues()) {
@@ -375,14 +375,9 @@ public class CharacterImpl implements Character {
         if (cannotBeDeleted && _deleted) {
             throw new IllegalStateException("Character." + methodName + ": Character is deleted");
         }
-        if (_tile != null && !_tile.characters().containsCharacter(this)) {
+        if (_tile != null && !_tile.characters().contains(this)) {
             throw new IllegalStateException("Character." + methodName +
                     ": Character is not present on its specified Tile");
-        }
-        if (_tile != null && _tile.gameZone() != null &&
-                _tile.gameZone().charactersRepresentation().get(ID) != this) {
-            throw new IllegalStateException("Character." + methodName +
-                    ": Character is not registered in its specified Tile's GameZone");
         }
     }
 }

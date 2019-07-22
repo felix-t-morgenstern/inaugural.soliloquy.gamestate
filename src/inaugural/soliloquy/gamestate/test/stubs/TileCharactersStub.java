@@ -23,19 +23,18 @@ public class TileCharactersStub implements TileCharacters {
     }
 
     @Override
-    public void addCharacter(Character character) throws IllegalArgumentException {
-        addCharacter(character,0);
+    public void add(Character character) throws IllegalArgumentException {
+        add(character,0);
     }
 
     @Override
-    public void addCharacter(Character character, int zIndex) throws IllegalArgumentException {
+    public void add(Character character, int zIndex) throws IllegalArgumentException {
         CHARACTERS.put(character,zIndex);
-        TILE.gameZone().assignCharacterToGameZone(character);
         character.assignToTile(TILE);
     }
 
     @Override
-    public boolean removeCharacter(Character character) throws IllegalArgumentException {
+    public boolean remove(Character character) throws IllegalArgumentException {
         REMOVED_CHARACTERS.add(character);
         return CHARACTERS.remove(character) != null;
     }
@@ -51,7 +50,7 @@ public class TileCharactersStub implements TileCharacters {
     }
 
     @Override
-    public boolean containsCharacter(Character character) throws IllegalArgumentException {
+    public boolean contains(Character character) throws IllegalArgumentException {
         return CHARACTERS.containsKey(character);
     }
 

@@ -189,7 +189,7 @@ class CameraImplTests {
 
         Tile tile = new TileStub(new CoordinateStub(4,4));
         Character character1 = new CharacterStub();
-        tile.characters().addCharacter(character1);
+        tile.characters().add(character1);
         //character1.setTile(new TileStub(new CoordinateStub(4,4)));
 
         _camera.charactersProvidingVisibility().put(character1,3);

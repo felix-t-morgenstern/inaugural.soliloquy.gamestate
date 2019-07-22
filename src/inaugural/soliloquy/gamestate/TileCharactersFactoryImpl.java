@@ -8,6 +8,7 @@ import soliloquy.specs.gamestate.factories.TileCharactersFactory;
 public class TileCharactersFactoryImpl implements TileCharactersFactory {
     private final MapFactory MAP_FACTORY;
 
+    @SuppressWarnings("ConstantConditions")
     public TileCharactersFactoryImpl(MapFactory mapFactory) {
         if (mapFactory == null) {
             throw new IllegalArgumentException(
@@ -17,7 +18,8 @@ public class TileCharactersFactoryImpl implements TileCharactersFactory {
     }
 
     @Override
-    public TileCharacters make(Tile tile) throws IllegalArgumentException {
+    public TileCharacters make(Tile tile)
+            throws IllegalArgumentException {
         if (tile == null) {
             throw new IllegalArgumentException(
                     "TileCharactersFactory.make: tile must be non-null");

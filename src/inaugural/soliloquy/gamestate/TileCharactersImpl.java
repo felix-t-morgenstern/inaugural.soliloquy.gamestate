@@ -32,12 +32,12 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     }
 
     @Override
-    public void addCharacter(Character character) throws IllegalArgumentException {
-        addCharacter(character, 0);
+    public void add(Character character) throws IllegalArgumentException {
+        add(character, 0);
     }
 
     @Override
-    public void addCharacter(Character character, int zIndex) throws IllegalArgumentException {
+    public void add(Character character, int zIndex) throws IllegalArgumentException {
         enforceDeletionInvariants("addCharacter");
         if (character == null) {
             throw new IllegalArgumentException(
@@ -48,11 +48,14 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     }
 
     @Override
-    public boolean removeCharacter(Character character) throws IllegalArgumentException {
+    public boolean remove(Character character) throws IllegalArgumentException {
         enforceDeletionInvariants("removeCharacter");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.removeCharacter: character cannot be null");
+        }
+        if (CHARACTERS.containsKey(character)) {
+            character.assignToTile(null);
         }
         return CHARACTERS.remove(character) != null;
     }
@@ -82,7 +85,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     }
 
     @Override
-    public boolean containsCharacter(Character character) throws IllegalArgumentException {
+    public boolean contains(Character character) throws IllegalArgumentException {
         enforceDeletionInvariants("containsCharacter");
         if (character == null) {
             throw new IllegalArgumentException(

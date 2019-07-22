@@ -7,11 +7,15 @@ import soliloquy.specs.gamestate.entities.Item;
 
 public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
     public final Character CHARACTER;
+    public final Item ITEM = new ItemStub();
+
+    private final MapStub<String, Item> EQUIPMENT_SLOTS = new MapStub<>();
 
     public boolean _isDeleted;
 
     CharacterEquipmentSlotsStub(Character character) {
         CHARACTER = character;
+        EQUIPMENT_SLOTS.put("slot", ITEM);
     }
 
     @Override
@@ -31,7 +35,7 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
 
     @Override
     public ReadableMap<String, Item> representation() throws IllegalStateException {
-        return null;
+        return EQUIPMENT_SLOTS;
     }
 
     @Override
