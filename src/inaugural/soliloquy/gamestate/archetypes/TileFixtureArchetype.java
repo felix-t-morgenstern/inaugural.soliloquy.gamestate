@@ -42,7 +42,8 @@ public class TileFixtureArchetype implements TileFixture {
     }
 
     @Override
-    public void assignTileFixtureToTile(Tile tile) throws IllegalArgumentException, IllegalStateException {
+    public void assignTileFixtureToTileAfterAddingToTileFixtures(Tile tile)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 

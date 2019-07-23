@@ -74,8 +74,9 @@ public class TileFixtureImpl implements TileFixture {
     }
 
     @Override
-    public void assignTileFixtureToTile(Tile tile) throws IllegalArgumentException, IllegalStateException {
-        enforceInvariant("assignTileFixtureToTile", true);
+    public void assignTileFixtureToTileAfterAddingToTileFixtures(Tile tile)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceInvariant("assignTileFixtureToTileAfterAddingToTileFixtures", true);
         _tile = tile;
     }
 

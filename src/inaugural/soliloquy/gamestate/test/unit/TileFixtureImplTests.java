@@ -113,7 +113,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.activeAbilities());
         assertThrows(IllegalStateException.class, () -> _tileFixture.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _tileFixture.containedItems());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTile(null));
+        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
         assertThrows(IllegalStateException.class, () -> _tileFixture.delete());
         assertThrows(IllegalStateException.class, () -> _tileFixture.getName());
@@ -133,7 +133,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.activeAbilities());
         assertThrows(IllegalStateException.class, () -> _tileFixture.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _tileFixture.containedItems());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTile(null));
+        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
         assertThrows(IllegalStateException.class, () -> _tileFixture.delete());
         assertThrows(IllegalStateException.class, () -> _tileFixture.isDeleted());

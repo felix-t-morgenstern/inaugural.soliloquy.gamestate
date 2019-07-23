@@ -30,7 +30,7 @@ public class TileCharactersStub implements TileCharacters {
     @Override
     public void add(Character character, int zIndex) throws IllegalArgumentException {
         CHARACTERS.put(character,zIndex);
-        character.assignToTile(TILE);
+        character.assignToTileAfterAddingToTileCharacters(TILE);
     }
 
     @Override

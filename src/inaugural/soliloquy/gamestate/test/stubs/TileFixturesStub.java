@@ -25,7 +25,7 @@ public class TileFixturesStub implements TileFixtures {
     @Override
     public void add(TileFixture tileFixture) throws IllegalArgumentException {
         FIXTURES.add(tileFixture);
-        tileFixture.assignTileFixtureToTile(TILE);
+        tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(TILE);
     }
 
     @Override

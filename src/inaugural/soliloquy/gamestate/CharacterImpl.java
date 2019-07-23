@@ -319,9 +319,9 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public void assignToTile(Tile tile)
+    public void assignToTileAfterAddingToTileCharacters(Tile tile)
             throws IllegalArgumentException, IllegalStateException {
-        enforceInvariant("assignCharacterToTile", true);
+        enforceInvariant("assignToTileAfterAddingToTileCharacters", true);
         _tile = tile;
     }
 

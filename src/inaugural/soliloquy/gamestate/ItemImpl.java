@@ -91,23 +91,28 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public void assignCharacterInventoryToItem(Character iCharacter) throws IllegalStateException, IllegalArgumentException {
+    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
+            throws IllegalStateException, IllegalArgumentException {
         // TODO: Implement and test!
 
     }
 
     @Override
-    public void assignCharacterEquipmentSlotToItem(CharacterEquipmentSlots iCharacterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
+    public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
+            CharacterEquipmentSlots characterEquipmentSlots, String s)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileToItem(Tile iTile) throws IllegalStateException, IllegalArgumentException {
+    public void assignTileToItemAfterAddingItemToTileItems(Tile tile)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileFixtureToItem(TileFixture iTileFixture) throws IllegalStateException, IllegalArgumentException {
+    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 

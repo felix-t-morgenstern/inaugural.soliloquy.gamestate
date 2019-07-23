@@ -63,22 +63,27 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public void assignCharacterInventoryToItem(Character character) throws IllegalStateException, IllegalArgumentException {
+    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignCharacterEquipmentSlotToItem(CharacterEquipmentSlots characterEquipmentSlots, String s) throws IllegalStateException, IllegalArgumentException {
+    public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
+            CharacterEquipmentSlots characterEquipmentSlots, String s)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileToItem(Tile tile) throws IllegalStateException, IllegalArgumentException {
+    public void assignTileToItemAfterAddingItemToTileItems(Tile tile)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileFixtureToItem(TileFixture tileFixture) throws IllegalStateException, IllegalArgumentException {
+    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 

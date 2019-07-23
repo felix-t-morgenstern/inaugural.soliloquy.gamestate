@@ -380,7 +380,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.getDead());
         assertThrows(IllegalStateException.class, () -> _character.setDead(true));
         assertThrows(IllegalStateException.class, () -> _character.data());
-        assertThrows(IllegalStateException.class, () -> _character.assignToTile(null));
+        assertThrows(IllegalStateException.class, () -> _character.assignToTileAfterAddingToTileCharacters(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());
@@ -423,7 +423,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.data());
         assertThrows(IllegalStateException.class, () -> _character.delete());
         assertThrows(IllegalStateException.class, () -> _character.isDeleted());
-        assertThrows(IllegalStateException.class, () -> _character.assignToTile(null));
+        assertThrows(IllegalStateException.class, () -> _character.assignToTileAfterAddingToTileCharacters(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());

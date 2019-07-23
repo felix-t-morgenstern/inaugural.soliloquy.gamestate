@@ -44,7 +44,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
                     "TileCharacters.addCharacter: character cannot be null");
         }
         CHARACTERS.put(character, zIndex);
-        character.assignToTile(TILE);
+        character.assignToTileAfterAddingToTileCharacters(TILE);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
                     "TileCharacters.removeCharacter: character cannot be null");
         }
         if (CHARACTERS.containsKey(character)) {
-            character.assignToTile(null);
+            character.assignToTileAfterAddingToTileCharacters(null);
         }
         return CHARACTERS.remove(character) != null;
     }

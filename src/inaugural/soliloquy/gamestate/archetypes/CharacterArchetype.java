@@ -171,7 +171,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public void assignToTile(Tile tile) throws IllegalArgumentException, IllegalStateException {
+    public void assignToTileAfterAddingToTileCharacters(Tile tile) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
