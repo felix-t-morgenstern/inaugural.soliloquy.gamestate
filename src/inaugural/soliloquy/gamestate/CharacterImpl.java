@@ -323,6 +323,7 @@ public class CharacterImpl implements Character {
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("assignToTileAfterAddingToTileCharacters", true);
         _tile = tile;
+        enforceInvariant("assignToTileAfterAddingToTileCharacters", true);
     }
 
     @Override
@@ -373,10 +374,11 @@ public class CharacterImpl implements Character {
 
     private void enforceInvariant(String methodName, boolean cannotBeDeleted) {
         if (cannotBeDeleted && _deleted) {
-            throw new IllegalStateException("Character." + methodName + ": Character is deleted");
+            throw new IllegalStateException("CharacterImpl." + methodName +
+                    ": Character is deleted");
         }
         if (_tile != null && !_tile.characters().contains(this)) {
-            throw new IllegalStateException("Character." + methodName +
+            throw new IllegalStateException("CharacterImpl." + methodName +
                     ": Character is not present on its specified Tile");
         }
     }

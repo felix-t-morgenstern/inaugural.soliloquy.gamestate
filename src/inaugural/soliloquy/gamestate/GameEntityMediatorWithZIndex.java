@@ -50,6 +50,7 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
             throw new IllegalArgumentException(className() + ".add: entity must be non-null");
         }
         ENTITIES.put(entity, zIndex);
+        // TODO: Call assignment method
     }
 
     public boolean remove(TEntity entity) {
@@ -58,6 +59,7 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
             throw new IllegalArgumentException(className() + ".remove: entity must be non-null");
         }
         return ENTITIES.remove(entity) != null;
+        // TODO: Call assignment method
     }
 
     public boolean contains(TEntity entity) throws IllegalArgumentException {

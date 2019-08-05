@@ -17,6 +17,16 @@ public class CharacterTypeStub implements CharacterType {
     }
 
     @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setName(String s) {
+
+    }
+
+    @Override
     public String getPluralName() {
         return null;
     }

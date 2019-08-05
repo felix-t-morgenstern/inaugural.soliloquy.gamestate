@@ -4,7 +4,6 @@ import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 public class ItemStub implements Item {
@@ -23,7 +22,8 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public void setCharges(int integer) throws UnsupportedOperationException, IllegalStateException {
+    public void setCharges(int integer)
+            throws UnsupportedOperationException, IllegalStateException {
 
     }
 
@@ -33,37 +33,41 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public void setNumberInStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+    public void setNumberInStack(int i)
+            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public Item takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+    public Item takeFromStack(int i)
+            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
         return null;
     }
 
     @Override
-    public Character getInventoryCharacter() throws IllegalStateException {
+    public CharacterInventory getCharacterInventory() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public Pair<Character, String> getCharacterEquipmentSlot() throws IllegalStateException {
+    public Pair<CharacterEquipmentSlots, String> getCharacterEquipmentSlot()
+            throws IllegalStateException {
         return null;
     }
 
     @Override
-    public Tile getTile() throws IllegalStateException {
+    public TileItems getTileItems() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public TileFixture getTileFixture() throws IllegalStateException {
+    public TileFixtureItems getTileFixtureItems() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
+    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(
+            CharacterInventory characterInventory)
             throws IllegalStateException, IllegalArgumentException {
 
     }
@@ -76,14 +80,15 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public void assignTileToItemAfterAddingItemToTileItems(Tile tile)
+    public void assignTileItemsToItemAfterAddingItemToTileItems(TileItems tileItems)
             throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture)
-            throws IllegalStateException, IllegalArgumentException {
+    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
+            TileFixtureItems tileFixtureItems)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 
@@ -120,5 +125,15 @@ public class ItemStub implements Item {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public String getPluralName() {
+        return null;
+    }
+
+    @Override
+    public void setPluralName(String s) throws IllegalArgumentException {
+
     }
 }

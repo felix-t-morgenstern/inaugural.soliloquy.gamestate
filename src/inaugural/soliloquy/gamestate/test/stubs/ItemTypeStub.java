@@ -19,6 +19,8 @@ public class ItemTypeStub implements ItemType {
     public static boolean _isStackable = true;
 
     public static EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
+    public static String ITEM_TYPE_NAME = "ItemTypeName";
+    public static String ITEM_TYPE_PLURAL_NAME = "ItemTypePluralName";
 
     @Override
     public Item generateOnTile(Tile tile, Coordinate coordinate, Integer integer, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
@@ -106,17 +108,27 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public String getPluralName() {
+    public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public String getName() {
+        return ITEM_TYPE_NAME;
+    }
+
+    @Override
+    public void setName(String s) {
+
+    }
+
+    @Override
+    public String getPluralName() {
+        return ITEM_TYPE_PLURAL_NAME;
     }
 
     @Override
     public void setPluralName(String s) throws IllegalArgumentException {
 
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
     }
 }

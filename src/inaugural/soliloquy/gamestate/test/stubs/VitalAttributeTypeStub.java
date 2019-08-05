@@ -18,6 +18,16 @@ public class VitalAttributeTypeStub implements VitalAttributeType {
     }
 
     @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setName(String s) {
+
+    }
+
+    @Override
     public String getPluralName() {
         return null;
     }

@@ -64,6 +64,7 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
             throw new IllegalArgumentException("TileFixtureItems.add: item must be non-null");
         }
         CONTAINED_ITEMS.add(item);
+        // TODO: Call assignment method
     }
 
     @Override
@@ -73,6 +74,7 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
             throw new IllegalArgumentException("TileFixtureItems.remove: item must be non-null");
         }
         return CONTAINED_ITEMS.remove(item);
+        // TODO: Call assignment method
     }
 
     @Override

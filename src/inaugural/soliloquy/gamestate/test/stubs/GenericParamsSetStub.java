@@ -43,7 +43,7 @@ public class GenericParamsSetStub implements GenericParamsSet {
 
     @Override
     public GenericParamsSet makeClone() {
-        return null;
+        return this;
     }
 
     @Override

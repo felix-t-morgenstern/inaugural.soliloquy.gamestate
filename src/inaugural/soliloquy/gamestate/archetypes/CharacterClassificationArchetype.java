@@ -4,6 +4,16 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 public class CharacterClassificationArchetype implements CharacterClassification {
     @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setName(String s) {
+
+    }
+
+    @Override
     public String getPluralName() {
         return null;
     }

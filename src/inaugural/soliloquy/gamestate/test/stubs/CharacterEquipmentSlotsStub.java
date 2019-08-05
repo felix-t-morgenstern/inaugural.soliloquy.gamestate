@@ -9,11 +9,12 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
     public final Character CHARACTER;
     public final Item ITEM = new ItemStub();
 
-    private final MapStub<String, Item> EQUIPMENT_SLOTS = new MapStub<>();
+    public static MapStub<String, Item> EQUIPMENT_SLOTS = new MapStub<>();
+    public static Item ITEM_IN_SLOT_RESULT_OVERRIDE = null;
 
     public boolean _isDeleted;
 
-    CharacterEquipmentSlotsStub(Character character) {
+    public CharacterEquipmentSlotsStub(Character character) {
         CHARACTER = character;
         EQUIPMENT_SLOTS.put("slot", ITEM);
     }
@@ -40,7 +41,7 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
 
     @Override
     public void addCharacterEquipmentSlot(String s) throws IllegalArgumentException, IllegalStateException {
-
+        EQUIPMENT_SLOTS.put(s, null);
     }
 
     @Override
@@ -50,12 +51,19 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
 
     @Override
     public Item removeCharacterEquipmentSlot(String s) throws IllegalArgumentException, IllegalStateException {
-        return null;
+        Item item = EQUIPMENT_SLOTS.removeByKey(s);
+        if (item != null) {
+            item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(null, null);
+        }
+        return item;
     }
 
     @Override
     public Item itemInSlot(String s) throws IllegalArgumentException, IllegalStateException {
-        return null;
+        if (ITEM_IN_SLOT_RESULT_OVERRIDE != null) {
+            return ITEM_IN_SLOT_RESULT_OVERRIDE;
+        }
+        return EQUIPMENT_SLOTS.get(s);
     }
 
     @Override
@@ -65,6 +73,15 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
 
     @Override
     public Item equipItemToSlot(String s, Item item) throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+        Item originalItem = EQUIPMENT_SLOTS.get(s);
+        if (originalItem != null) {
+            originalItem.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
+                    null, null);
+        }
+        EQUIPMENT_SLOTS.put(s, item);
+        if (item != null) {
+            item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(this, s);
+        }
         return null;
     }
 

@@ -5,12 +5,16 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TileFixtureItemsStub implements TileFixtureItems {
     public final TileFixture TILE_FIXTURE;
+    public static List<Item> ITEMS = new ArrayList<>();
 
     private boolean _deleted;
 
-    TileFixtureItemsStub(TileFixture tileFixture) {
+    public TileFixtureItemsStub(TileFixture tileFixture) {
         TILE_FIXTURE = tileFixture;
     }
 
@@ -36,16 +40,21 @@ public class TileFixtureItemsStub implements TileFixtureItems {
 
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
-
+        ITEMS.add(item);
+        item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(this);
     }
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
-        return false;
+        boolean isPresent = ITEMS.remove(item);
+        if(isPresent) {
+            item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(null);
+        }
+        return isPresent;
     }
 
     @Override
     public boolean contains(Item item) throws IllegalArgumentException, IllegalStateException {
-        return false;
+        return ITEMS.contains(item);
     }
 }

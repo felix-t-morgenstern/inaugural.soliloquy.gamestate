@@ -181,7 +181,9 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipItemToSlot: item cannot be equiped to slot of provided type");
         }
+        // TODO: Call assignment method
         Item previousItem = EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
+        // TODO: Call assignment method
         EQUIPMENT_SLOTS.get(equipmentSlotType).setItem1(item);
         return previousItem;
     }
