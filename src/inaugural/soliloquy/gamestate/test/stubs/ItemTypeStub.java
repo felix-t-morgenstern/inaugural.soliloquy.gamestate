@@ -23,17 +23,7 @@ public class ItemTypeStub implements ItemType {
     public static String ITEM_TYPE_PLURAL_NAME = "ItemTypePluralName";
 
     @Override
-    public Item generateOnTile(Tile tile, Coordinate coordinate, Integer integer, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
-    public Item generateInInventory(Character character, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
-    public Item generateInEquipment(Character character, String s, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
+    public Item generate(GenericParamsSet genericParamsSet) throws IllegalArgumentException {
         return null;
     }
 

@@ -4,6 +4,8 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.FixtureType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -11,6 +13,11 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class FixtureTypeStub implements FixtureType {
+    @Override
+    public TileFixture generate(Tile tile) {
+        return null;
+    }
+
     @Override
     public boolean isContainer() throws IllegalStateException {
         return false;

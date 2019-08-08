@@ -1,11 +1,18 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class WallSegmentTypeStub implements WallSegmentType {
     @Override
-    public Sprite getSprite() {
+    public TileWallSegment generate(Tile tile) {
+        return null;
+    }
+
+    @Override
+    public Sprite sprite() {
         return null;
     }
 
