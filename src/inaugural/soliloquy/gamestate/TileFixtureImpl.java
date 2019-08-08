@@ -1,21 +1,21 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.gamestate.archetypes.GameEventArchetype;
+import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 public class TileFixtureImpl implements TileFixture {
     private final FixtureType FIXTURE_TYPE;
     private final Coordinate PIXEL_OFFSET;
-    private final Map<String, ActiveAbility> ACTIVE_ABILITIES;
-    private final Map<String, ReactiveAbility> REACTIVE_ABILITIES;
+    private final Collection<GameEvent> EVENTS;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final GenericParamsSet DATA;
 
@@ -25,14 +25,12 @@ public class TileFixtureImpl implements TileFixture {
 
     public TileFixtureImpl(FixtureType fixtureType,
                            Coordinate pixelOffset,
-                           Map<String, ActiveAbility> activeAbilities,
-                           Map<String, ReactiveAbility> reactiveAbilities,
+                           CollectionFactory collectionFactory,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
                            GenericParamsSet data) {
         FIXTURE_TYPE = fixtureType;
         PIXEL_OFFSET = pixelOffset;
-        ACTIVE_ABILITIES = activeAbilities;
-        REACTIVE_ABILITIES = reactiveAbilities;
+        EVENTS = collectionFactory.make(new GameEventArchetype());
         TILE_FIXTURE_ITEMS = tileFixtureItemsFactory.make(this);
         DATA = data;
     }
@@ -56,18 +54,6 @@ public class TileFixtureImpl implements TileFixture {
     }
 
     @Override
-    public Map<String, ActiveAbility> activeAbilities() throws IllegalStateException {
-        enforceInvariant("activeAbilities", true);
-        return ACTIVE_ABILITIES;
-    }
-
-    @Override
-    public Map<String, ReactiveAbility> reactiveAbilities() throws IllegalStateException {
-        enforceInvariant("reactiveAbilities", true);
-        return REACTIVE_ABILITIES;
-    }
-
-    @Override
     public TileFixtureItems containedItems() throws IllegalStateException {
         enforceInvariant("containedItems", true);
         return TILE_FIXTURE_ITEMS;
@@ -84,6 +70,12 @@ public class TileFixtureImpl implements TileFixture {
     public GenericParamsSet data() throws IllegalStateException {
         enforceInvariant("data", true);
         return DATA;
+    }
+
+    @Override
+    public Collection<GameEvent> events() throws IllegalStateException {
+        enforceInvariant("events", true);
+        return EVENTS;
     }
 
     @Override

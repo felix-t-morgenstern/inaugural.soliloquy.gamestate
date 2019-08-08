@@ -5,14 +5,12 @@ import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.ruleset.entities.GroundType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class TileStub implements Tile {
-    public static final GameZone GAME_ZONE = new GameZoneStub();
+    private static final GameZone GAME_ZONE = new GameZoneStub();
 
     private final TileCharacters CHARACTERS = new TileCharactersStub(this);
     private final TileFixtures FIXTURES = new TileFixturesStub(this);
@@ -20,7 +18,6 @@ public class TileStub implements Tile {
     private boolean _isDeleted;
 
     private Coordinate _tileLocation;
-    public Map<Character, Integer> _characters = new MapStub<>();
 
     public TileStub() {
     }
@@ -105,16 +102,6 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public Map<String, ActiveAbility> activeAbilities() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public Map<String, ReactiveAbility> reactiveAbilities() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
     public String getName() {
         return null;
     }
@@ -126,6 +113,11 @@ public class TileStub implements Tile {
 
     @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public Collection<GameEvent> events() throws IllegalStateException {
         return null;
     }
 }

@@ -5,16 +5,13 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,16 +20,14 @@ class TileFixtureImplTests {
 
     private final FixtureType FIXTURE_TYPE = new FixtureTypeStub();
     private final Coordinate PIXEL_OFFSET = new CoordinateStub();
-    private final Map<String, ActiveAbility> ACTIVE_ABILITIES = new MapStub<>();
-    private final Map<String, ReactiveAbility> REACTIVE_ABILITIES = new MapStub<>();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new TileFixtureItemsFactoryStub();
     private final GenericParamsSet DATA = new GenericParamsSetStub();
 
     @BeforeEach
     void setUp() {
-        _tileFixture = new TileFixtureImpl(FIXTURE_TYPE, PIXEL_OFFSET, ACTIVE_ABILITIES,
-                REACTIVE_ABILITIES, TILE_FIXTURE_ITEMS_FACTORY, DATA);
+        _tileFixture = new TileFixtureImpl(FIXTURE_TYPE, PIXEL_OFFSET, new CollectionFactoryStub(),
+                TILE_FIXTURE_ITEMS_FACTORY, DATA);
     }
 
     @Test
@@ -51,13 +46,10 @@ class TileFixtureImplTests {
     }
 
     @Test
-    void testActiveAbilities() {
-        assertSame(ACTIVE_ABILITIES, _tileFixture.activeAbilities());
-    }
-
-    @Test
-    void testReactiveAbilities() {
-        assertSame(REACTIVE_ABILITIES, _tileFixture.reactiveAbilities());
+    void testEvents() {
+        assertNotNull(_tileFixture.events());
+        assertEquals(GameEvent.class.getCanonicalName(),
+                _tileFixture.events().getArchetype().getInterfaceName());
     }
 
     @Test
@@ -86,7 +78,6 @@ class TileFixtureImplTests {
 
     @Test
     void testDelete() {
-        Item item = new ItemStub();
         TileFixtureItems containedItems = _tileFixture.containedItems();
 
         _tileFixture.delete();
@@ -110,8 +101,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.fixtureType());
         assertThrows(IllegalStateException.class, () -> _tileFixture.pixelOffset());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.activeAbilities());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.reactiveAbilities());
+        assertThrows(IllegalStateException.class, () -> _tileFixture.events());
         assertThrows(IllegalStateException.class, () -> _tileFixture.containedItems());
         assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
@@ -130,8 +120,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.fixtureType());
         assertThrows(IllegalStateException.class, () -> _tileFixture.pixelOffset());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.activeAbilities());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.reactiveAbilities());
+        assertThrows(IllegalStateException.class, () -> _tileFixture.events());
         assertThrows(IllegalStateException.class, () -> _tileFixture.containedItems());
         assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
