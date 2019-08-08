@@ -6,17 +6,17 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
-import soliloquy.specs.ruleset.gameconcepts.ResistanceCalculation;
+import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 public class CharacterStatusEffectsFactoryImpl implements CharacterStatusEffectsFactory {
     private final Map<String, StatusEffectType> STATUS_EFFECT_TYPES;
     private final MapFactory MAP_FACTORY;
-    private final ResistanceCalculation RESISTANCE_CALCULATION;
+    private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION;
 
     @SuppressWarnings("ConstantConditions")
     public CharacterStatusEffectsFactoryImpl(Map<String, StatusEffectType> statusEffectTypes,
                                              MapFactory mapFactory,
-                                             ResistanceCalculation resistanceCalculation) {
+                                             StatusEffectResistanceCalculation resistanceCalculation) {
         if (statusEffectTypes == null) {
             throw new IllegalArgumentException(
                     "CharacterStatusEffectsFactory: statusEffectTypes must be non-null");

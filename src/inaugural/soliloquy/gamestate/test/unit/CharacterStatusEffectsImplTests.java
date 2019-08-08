@@ -11,7 +11,7 @@ import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
-import soliloquy.specs.ruleset.gameconcepts.ResistanceCalculation;
+import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +23,7 @@ class CharacterStatusEffectsImplTests {
 
     private Map<String, StatusEffectType> _statusEffectTypes;
     private Character _character;
-    private ResistanceCalculation _resistanceCalculation;
+    private StatusEffectResistanceCalculation _statusEffectResistanceCalculation;
     private Element _element;
     private AbilitySource _abilitySource;
 
@@ -36,12 +36,12 @@ class CharacterStatusEffectsImplTests {
         _statusEffectTypes.put(STATUS_EFFECT_TYPE_2_ID, _statusEffectType2);
 
         _character = new CharacterStub();
-        _resistanceCalculation = new ResistanceCalculationStub();
+        _statusEffectResistanceCalculation = new StatusEffectResistanceCalculationStub();
         _element = new ElementStub();
         _abilitySource = new AbilitySourceStub();
 
         _characterStatusEffects = new CharacterStatusEffectsImpl(_character, _statusEffectTypes,
-                new MapFactoryStub(), _resistanceCalculation);
+                new MapFactoryStub(), _statusEffectResistanceCalculation);
     }
 
     @Test
@@ -105,7 +105,7 @@ class CharacterStatusEffectsImplTests {
 
         CharacterStatusEffects characterStatusEffects =
                 new CharacterStatusEffectsImpl(null, _statusEffectTypes, new MapFactoryStub(),
-                        _resistanceCalculation);
+                        _statusEffectResistanceCalculation);
         assertThrows(IllegalStateException.class, () -> characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID));
         assertThrows(IllegalStateException.class, () -> characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID, 0));
         assertThrows(IllegalStateException.class, characterStatusEffects::clearStatusEffects);
@@ -117,14 +117,14 @@ class CharacterStatusEffectsImplTests {
                 _abilitySource);
 
         assertEquals((int) _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1_ID),
-                ResistanceCalculationStub.STATUS_EFFECT_TYPE_RESULT);
-        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._statusEffectType,
+                StatusEffectResistanceCalculationStub.STATUS_EFFECT_TYPE_RESULT);
+        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._statusEffectType,
                 _statusEffectTypes.get(STATUS_EFFECT_TYPE_1_ID));
-        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._character, _character);
-        assertEquals(111, ((ResistanceCalculationStub) _resistanceCalculation)._baseAmount);
-        assertTrue(((ResistanceCalculationStub) _resistanceCalculation)._stopAtZero);
-        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._element, _element);
-        assertSame(((ResistanceCalculationStub) _resistanceCalculation)._abilitySource,
+        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._character, _character);
+        assertEquals(111, ((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._baseAmount);
+        assertTrue(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._stopAtZero);
+        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._element, _element);
+        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._abilitySource,
                 _abilitySource);
     }
 

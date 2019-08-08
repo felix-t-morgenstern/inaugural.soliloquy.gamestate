@@ -6,7 +6,6 @@ import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Item;
-import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.ruleset.entities.EquipmentType;
 import soliloquy.specs.ruleset.entities.ItemType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -18,7 +17,8 @@ public class ItemTypeStub implements ItemType {
     public static boolean _hasCharges = true;
     public static boolean _isStackable = true;
 
-    public static EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
+    private static EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
+
     public static String ITEM_TYPE_NAME = "ItemTypeName";
     public static String ITEM_TYPE_PLURAL_NAME = "ItemTypePluralName";
 

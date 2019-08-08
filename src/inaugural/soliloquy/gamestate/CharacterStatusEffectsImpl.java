@@ -8,7 +8,7 @@ import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
-import soliloquy.specs.ruleset.gameconcepts.ResistanceCalculation;
+import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 import java.util.HashMap;
 
@@ -17,13 +17,13 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     private final Map<String, StatusEffectType> STATUS_EFFECT_TYPES;
     private final Character CHARACTER;
     private final MapFactory MAP_FACTORY;
-    private final ResistanceCalculation RESISTANCE_CALCULATION;
+    private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION;
     private final HashMap<String,Integer> STATUS_EFFECT_LEVELS;
 
     public CharacterStatusEffectsImpl(Character character,
                                       Map<String, StatusEffectType> statusEffectTypes,
                                       MapFactory mapFactory,
-                                      ResistanceCalculation resistanceCalculation){
+                                      StatusEffectResistanceCalculation resistanceCalculation){
         STATUS_EFFECT_TYPES = statusEffectTypes;
         CHARACTER = character;
         MAP_FACTORY = mapFactory;
