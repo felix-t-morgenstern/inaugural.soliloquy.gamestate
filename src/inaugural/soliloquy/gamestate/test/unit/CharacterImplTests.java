@@ -5,11 +5,8 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterEvent;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
@@ -306,10 +303,6 @@ class CharacterImplTests {
     void testDelete() {
         Tile tile = new TileStub();
         tile.characters().add(_character);
-        Map<String, Collection<CharacterEvent>> characterEvents = _character.events();
-        CharacterEventStub characterEvent = new CharacterEventStub();
-        characterEvents.put("eventType", new CollectionStub<>());
-        characterEvents.get("eventType").add(characterEvent);
         CharacterEquipmentSlotsStub equipmentSlots =
                 (CharacterEquipmentSlotsStub) _character.equipmentSlots();
         CharacterInventoryStub inventory = (CharacterInventoryStub) _character.inventory();
@@ -337,7 +330,6 @@ class CharacterImplTests {
         Character removedCharacter =
                 ((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS.get(0);
         assertSame(_character, removedCharacter);
-        assertTrue(characterEvent._isDeleted);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
         assertTrue(vitalAttribute._isDeleted);

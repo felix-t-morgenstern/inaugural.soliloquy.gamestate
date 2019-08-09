@@ -10,6 +10,7 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
@@ -21,7 +22,7 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class CharacterImpl implements Character {
-    private final static CharacterEvent CHARACTER_EVENT_ARCHETYPE = new CharacterEventArchetype();
+    private final static GameEvent CHARACTER_EVENT_ARCHETYPE = new GameEventArchetype();
     private final static CharacterVitalAttribute CHARACTER_VITAL_ATTRIBUTE_ARCHETYPE =
             new CharacterVitalAttributeArchetype();
     private final static CharacterAttribute CHARACTER_ATTRIBUTE_ARCHETYPE =
@@ -37,7 +38,7 @@ public class CharacterImpl implements Character {
     private final CharacterType CHARACTER_TYPE;
     private final Collection<CharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final Map<String,String> PRONOUNS;
-    private final Map<String, Collection<CharacterEvent>> EVENTS;
+    private final Map<String, Collection<GameEvent>> EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
     private final Map<String, CharacterVitalAttribute> VITAL_ATTRIBUTES;
@@ -190,7 +191,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<String, Collection<CharacterEvent>> events() {
+    public Map<String, Collection<GameEvent>> events() {
         enforceInvariant("characterEvents", true);
         return EVENTS;
     }
@@ -297,11 +298,6 @@ public class CharacterImpl implements Character {
             _tile.characters().remove(this);
         }
         _tile = null;
-        for(Collection<CharacterEvent> events : EVENTS.getValues()) {
-            for(CharacterEvent event : events) {
-                event.delete();
-            }
-        }
         EQUIPMENT_SLOTS.delete();
         INVENTORY.delete();
         deleteAll(VITAL_ATTRIBUTES);

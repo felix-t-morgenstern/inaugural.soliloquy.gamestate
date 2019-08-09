@@ -2,8 +2,9 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.entities.Function;
-import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.gamestate.valueobjects.GameState;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.Ruleset;
@@ -25,12 +26,17 @@ public class GameStub implements Game {
     }
 
     @Override
-    public Map<String, Action> actionsLibrary() {
+    public Registry<Action> actions() {
         return null;
     }
 
     @Override
-    public Map<String, Function> functionsLibrary() {
+    public Registry<Function> functions() {
+        return null;
+    }
+
+    @Override
+    public Registry<GameEvent> gameEvents() {
         return null;
     }
 }

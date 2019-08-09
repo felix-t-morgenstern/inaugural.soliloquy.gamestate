@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.archetypes;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.game.Game;
-import soliloquy.specs.gamestate.entities.CharacterEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
@@ -14,7 +14,7 @@ public class CharacterAITypeArchetype implements CharacterAIType {
     }
 
     @Override
-    public Map<String, Collection<CharacterEvent>> events() {
+    public Map<String, Collection<GameEvent>> events() {
         return null;
     }
 

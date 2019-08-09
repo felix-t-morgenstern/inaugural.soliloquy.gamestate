@@ -1,15 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.SettingsRepo;
 import soliloquy.specs.common.shared.EntityGroup;
+import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.ruleset.Ruleset;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
-import soliloquy.specs.ruleset.valueobjects.TypesRegistry;
 
 public class RulesetStub implements Ruleset {
     @Override
@@ -38,62 +39,62 @@ public class RulesetStub implements Ruleset {
     }
 
     @Override
-    public TypesRegistry<CharacterClassification> characterClassifications() {
+    public Registry<CharacterClassification> characterClassifications() {
         return null;
     }
 
     @Override
-    public TypesRegistry<CharacterType> characterTypes() {
+    public Registry<CharacterType> characterTypes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<CharacterAIType> characterAITypes() {
+    public Registry<CharacterAIType> characterAITypes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<CharacterEventType> characterEventTypes() {
+    public Registry<Element> elements() {
         return null;
     }
 
     @Override
-    public TypesRegistry<Element> elements() {
+    public Registry<EquipmentType> equipmentTypes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<EquipmentType> equipmentTypes() {
+    public Registry<FixtureType> fixtureTypes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<FixtureType> fixtureTypes() {
+    public Registry<GameEvent> gameEvents() {
         return null;
     }
 
     @Override
-    public TypesRegistry<GroundType> groundTypes() {
+    public Registry<GroundType> groundTypes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<ItemType> itemTypes() {
+    public Registry<ItemType> itemTypes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<StatusEffectType> statusEffectTypes() {
+    public Registry<StatusEffectType> statusEffectTypes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<VitalAttributeType> vitalAttributes() {
+    public Registry<VitalAttributeType> vitalAttributes() {
         return null;
     }
 
     @Override
-    public TypesRegistry<WallSegmentType> wallSegmentTypes() {
+    public Registry<WallSegmentType> wallSegmentTypes() {
         return null;
     }
 
