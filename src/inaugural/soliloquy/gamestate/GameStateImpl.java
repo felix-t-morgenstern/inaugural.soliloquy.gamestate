@@ -3,8 +3,8 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterAITypeArchetype;
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.PersistentVariableCache;
 import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.Party;
@@ -16,7 +16,7 @@ import soliloquy.specs.ruleset.entities.CharacterAIType;
 
 public class GameStateImpl implements GameState {
     private final Party PARTY;
-    private final PersistentVariableCache PERSISTENT_VARIABLE_CACHE;
+    private final VariableCache VARIABLE_CACHE;
     private final Map<String, CharacterAIType> CHARACTER_AI_TYPES;
     private final GameZonesRepo GAME_ZONES_REPO;
     private final RoundManager ROUND_MANAGER;
@@ -27,7 +27,7 @@ public class GameStateImpl implements GameState {
 
     @SuppressWarnings("ConstantConditions")
     public GameStateImpl(Party party,
-                         PersistentVariableCache persistentVariableCache,
+                         VariableCache persistentVariableCache,
                          MapFactory mapFactory,
                          GameZonesRepo gameZonesRepo,
                          RoundManager roundManager,
@@ -40,7 +40,7 @@ public class GameStateImpl implements GameState {
             throw new IllegalArgumentException(
                     "GameState: persistentVariableCache must be non-null");
         }
-        PERSISTENT_VARIABLE_CACHE = persistentVariableCache;
+        VARIABLE_CACHE = persistentVariableCache;
         if (mapFactory == null) {
             throw new IllegalArgumentException("GameState: mapFactory must be non-null");
         }
@@ -66,8 +66,8 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public PersistentVariableCache persistentVariables() {
-        return PERSISTENT_VARIABLE_CACHE;
+    public VariableCache variableCache() {
+        return VARIABLE_CACHE;
     }
 
     @Override

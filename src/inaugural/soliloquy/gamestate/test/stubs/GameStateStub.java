@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.PersistentVariableCache;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.Party;
@@ -18,7 +18,7 @@ public class GameStateStub implements GameState {
     }
 
     @Override
-    public PersistentVariableCache persistentVariables() {
+    public VariableCache variableCache() {
         return null;
     }
 

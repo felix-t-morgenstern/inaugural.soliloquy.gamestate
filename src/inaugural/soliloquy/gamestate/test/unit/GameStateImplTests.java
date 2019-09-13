@@ -5,7 +5,7 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.PersistentVariableCache;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.entities.RoundManager;
@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameStateImplTests {
     private final Party PARTY = new PartyStub();
-    private final PersistentVariableCache PERSISTENT_VARIABLE_CACHE =
-            new PersistentVariableCacheStub();
+    private final VariableCache PERSISTENT_VARIABLE_CACHE =
+            new VariableCacheStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final GameZonesRepo GAME_ZONES_REPO = new GameZonesRepoStub();
     private final RoundManager ROUND_MANAGER = new RoundManagerStub();
@@ -95,7 +95,7 @@ class GameStateImplTests {
 
     @Test
     void testPersistentVariables() {
-        assertSame(PERSISTENT_VARIABLE_CACHE, _gameState.persistentVariables());
+        assertSame(PERSISTENT_VARIABLE_CACHE, _gameState.variableCache());
     }
 
     @Test

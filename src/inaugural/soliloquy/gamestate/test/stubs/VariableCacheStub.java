@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.PersistentVariableCache;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 
-public class PersistentVariableCacheStub implements PersistentVariableCache {
+public class VariableCacheStub implements VariableCache {
     @Override
     public <T> void setVariable(String s, T t) throws IllegalArgumentException {
 
