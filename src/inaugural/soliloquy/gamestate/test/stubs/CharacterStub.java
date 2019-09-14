@@ -19,8 +19,8 @@ public class CharacterStub implements Character {
     private boolean _isDead;
     private Tile _tile;
 
-    private final CharacterEquipmentSlotsStub EQUIPMENT = new CharacterEquipmentSlotsStub(this);
-    private final CharacterInventoryStub INVENTORY = new CharacterInventoryStub(this);
+    public final CharacterEquipmentSlotsStub EQUIPMENT = new CharacterEquipmentSlotsStub(this);
+    public final CharacterInventoryStub INVENTORY = new CharacterInventoryStub(this);
 
     @Override
     public CharacterType characterType() throws IllegalStateException {

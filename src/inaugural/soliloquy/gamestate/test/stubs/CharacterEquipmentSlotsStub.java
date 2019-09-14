@@ -80,9 +80,9 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
         }
         EQUIPMENT_SLOTS.put(s, item);
         if (item != null) {
-            item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(this, s);
+            item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(CHARACTER, s);
         }
-        return null;
+        return originalItem;
     }
 
     @Override

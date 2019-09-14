@@ -42,7 +42,7 @@ public class CharacterInventoryStub implements CharacterInventory {
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
         ITEMS.add(item);
-        item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(this);
+        item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(CHARACTER);
     }
 
     @Override

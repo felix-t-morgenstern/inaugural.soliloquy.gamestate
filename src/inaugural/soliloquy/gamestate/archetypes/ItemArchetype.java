@@ -4,6 +4,7 @@ import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 public class ItemArchetype implements Item {
@@ -41,12 +42,12 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public CharacterInventory getCharacterInventory() throws IllegalStateException {
+    public Character getInventoryCharacter() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public Pair<CharacterEquipmentSlots, String> getCharacterEquipmentSlot()
+    public Pair<Character, String> getCharacterEquipmentSlot()
             throws IllegalStateException {
         return null;
     }
@@ -62,15 +63,14 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(
-            CharacterInventory characterInventory)
+    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
             throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
     public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
-            CharacterEquipmentSlots characterEquipmentSlots, String s)
+            Character character, String s)
             throws IllegalStateException, IllegalArgumentException {
 
     }

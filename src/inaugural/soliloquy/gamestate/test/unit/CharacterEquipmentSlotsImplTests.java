@@ -135,6 +135,11 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
+    void testItemReferencesCorrectSlotInvariant() {
+        // TODO: Test and implement
+    }
+
+    @Test
     void testUnequipItemFromSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
