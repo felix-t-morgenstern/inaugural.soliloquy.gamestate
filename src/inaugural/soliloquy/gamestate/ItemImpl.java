@@ -166,6 +166,8 @@ public class ItemImpl implements Item {
         _characterInventoryCharacter = null;
         _tileFixtureItems = null;
         _tileItems = null;
+        enforceAssignmentInvariant(
+                "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot");
     }
 
     @Override
@@ -180,6 +182,8 @@ public class ItemImpl implements Item {
         _characterEquipmentSlotType = null;
         _tileFixtureItems = null;
         _tileItems = null;
+        enforceAssignmentInvariant(
+                "assignCharacterInventoryToItemAfterAddingToCharacterInventory");
     }
 
     @Override
@@ -193,6 +197,7 @@ public class ItemImpl implements Item {
         _characterEquipmentSlotType = null;
         _characterInventoryCharacter = null;
         _tileItems = null;
+        enforceAssignmentInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
     }
 
     @Override
