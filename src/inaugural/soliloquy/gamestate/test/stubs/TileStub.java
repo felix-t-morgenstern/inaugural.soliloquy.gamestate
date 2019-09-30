@@ -14,6 +14,7 @@ public class TileStub implements Tile {
 
     private final TileCharacters CHARACTERS = new TileCharactersStub(this);
     private final TileFixtures FIXTURES = new TileFixturesStub(this);
+    private final TileWallSegments TILE_WALL_SEGMENTS = new TileWallSegmentsStub(this);
 
     private boolean _isDeleted;
 
@@ -93,7 +94,7 @@ public class TileStub implements Tile {
 
     @Override
     public TileWallSegments tileWallSegments() throws IllegalStateException {
-        return null;
+        return TILE_WALL_SEGMENTS;
     }
 
     @Override

@@ -52,6 +52,11 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
+    void testAddItemAlreadyPresentInOtherLocationTypes() {
+        // TODO: Complete and pass this test
+    }
+
+    @Test
     void testAddAndContainsWithInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(null));
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.contains(null));

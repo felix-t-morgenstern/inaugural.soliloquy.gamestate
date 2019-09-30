@@ -1,11 +1,18 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
+import soliloquy.specs.gamestate.entities.TileWallSegments;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class TileWallSegmentStub implements TileWallSegment {
     private boolean _isDeleted;
+
+    public TileWallSegmentDirection _tileWallSegmentDirection;
+    public Tile _tile;
 
     @Override
     public WallSegmentType getWallSegmentType() throws IllegalStateException {
@@ -35,6 +42,20 @@ public class TileWallSegmentStub implements TileWallSegment {
     @Override
     public void setZIndex(int i) throws IllegalStateException {
 
+    }
+
+    @Override
+    public Pair<TileWallSegmentDirection, Tile> getTile() {
+        if (_tile == null) {
+            return null;
+        }
+        return new PairStub<>(_tileWallSegmentDirection, _tile);
+    }
+
+    @Override
+    public void assignTileWallSegmentsToTileAfterAddingToTileWallSegments(TileWallSegmentDirection tileWallSegmentDirection, Tile tile) throws IllegalArgumentException, IllegalStateException {
+        _tileWallSegmentDirection = tileWallSegmentDirection;
+        _tile = tile;
     }
 
     @Override

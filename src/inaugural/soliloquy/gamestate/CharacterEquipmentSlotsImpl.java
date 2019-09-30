@@ -17,7 +17,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     private final Character CHARACTER;
     private final PairFactory PAIR_FACTORY;
     private final MapFactory MAP_FACTORY;
-    private final HashMap<String, Pair<Item,Boolean>> EQUIPMENT_SLOTS;
+    private final HashMap<String, Pair<Item, Boolean>> EQUIPMENT_SLOTS;
 
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
@@ -47,9 +47,9 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     public void delete() throws IllegalStateException {
         enforceDeletionInvariants("delete");
         _isDeleted = true;
-        for(java.util.Map.Entry<String,Pair<Item,Boolean>> entry : EQUIPMENT_SLOTS.entrySet()) {
+        for (java.util.Map.Entry<String, Pair<Item, Boolean>> entry : EQUIPMENT_SLOTS.entrySet()) {
             Item item = entry.getValue().getItem1();
-            if(item != null && !item.isDeleted()) {
+            if (item != null && !item.isDeleted()) {
                 item.delete();
             }
         }
@@ -67,7 +67,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
         enforceDeletionInvariants("getRepresentation");
         Map<String, Item> characterEquipmentSlots =
                 MAP_FACTORY.make("", ITEM_ARCHETYPE);
-        for(java.util.Map.Entry<String,Pair<Item,Boolean>> equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
+        for (java.util.Map.Entry<String, Pair<Item, Boolean>> equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
             characterEquipmentSlots.put(equipmentSlot.getKey(),
                     equipmentSlot.getValue().getItem1());
         }
@@ -96,6 +96,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     public boolean equipmentSlotExists(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("equipmentSlotExists");
+        enforceItemReferencesCorrectSlotInvariant("equipmentSlotExists",
+                equipmentSlotType);
         if (equipmentSlotType == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipmentSlotExists: equipmentSlotType must be non-null");
@@ -111,6 +113,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     public Item removeCharacterEquipmentSlot(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("removeCharacterEquipmentSlot");
+        enforceItemReferencesCorrectSlotInvariant("removeCharacterEquipmentSlot",
+                equipmentSlotType);
         if (equipmentSlotType == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.removeCharacterEquipmentSlot: equipmentSlotType must be non-null");
@@ -121,6 +125,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
         }
         Item itemInSlot = EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
         EQUIPMENT_SLOTS.remove(equipmentSlotType);
+        enforceItemReferencesCorrectSlotInvariant("removeCharacterEquipmentSlot",
+                equipmentSlotType);
         return itemInSlot;
     }
 
@@ -128,6 +134,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     public Item itemInSlot(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("itemInSlot");
+        enforceItemReferencesCorrectSlotInvariant("itemInSlot",
+                equipmentSlotType);
         if (equipmentSlotType == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.itemInSlot: equipmentSlotType must be non-null");
@@ -140,6 +148,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.itemInSlot: no equipment slot of specified type");
         }
+        enforceItemReferencesCorrectSlotInvariant("itemInSlot",
+                equipmentSlotType);
         return EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
     }
 
@@ -147,6 +157,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     public boolean canEquipItemToSlot(String equipmentSlotType, Item item)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("canEquipItemToSlot");
+        enforceItemReferencesCorrectSlotInvariant("canEquipItemToSlot",
+                equipmentSlotType);
         if (equipmentSlotType == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.canEquipItemToSlot: equipmentSlotType must be non-null");
@@ -165,6 +177,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.canEquipItemToSlot: item must be non-null");
         }
+        enforceItemReferencesCorrectSlotInvariant("canEquipItemToSlot",
+                equipmentSlotType);
         return item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType);
     }
 
@@ -172,6 +186,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     public Item equipItemToSlot(String equipmentSlotType, Item item)
             throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
         enforceDeletionInvariants("equipItemToSlot");
+        enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
+                equipmentSlotType);
         if (!EQUIPMENT_SLOTS.get(equipmentSlotType).getItem2()) {
             throw new UnsupportedOperationException(
                     "CharacterEquipmentSlots.equipItemToSlot: item in equipmentSlotType is set to prohibit alteration");
@@ -181,10 +197,20 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipItemToSlot: item cannot be equiped to slot of provided type");
         }
-        // TODO: Call assignment method
         Item previousItem = EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
-        // TODO: Call assignment method
+        if (previousItem != null) {
+            previousItem.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
+                    null, null);
+        }
         EQUIPMENT_SLOTS.get(equipmentSlotType).setItem1(item);
+        if (item != null) {
+            item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(CHARACTER,
+                    equipmentSlotType);
+        }
+        enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
+                equipmentSlotType);
+        enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
+                equipmentSlotType);
         return previousItem;
     }
 
@@ -192,10 +218,14 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     public boolean getCanAlterEquipmentInSlot(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("getCanAlterEquipmentInSlot");
+        enforceItemReferencesCorrectSlotInvariant("getCanAlterEquipmentInSlot",
+                equipmentSlotType);
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.getCanAlterEquipmentInSlot: no equipment slot of specified type");
         }
+        enforceItemReferencesCorrectSlotInvariant("getCanAlterEquipmentInSlot",
+                equipmentSlotType);
         return EQUIPMENT_SLOTS.get(equipmentSlotType).getItem2();
     }
 
@@ -224,5 +254,31 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     @Override
     protected boolean containingObjectIsDeleted() {
         return CHARACTER.isDeleted();
+    }
+
+    private void enforceItemReferencesCorrectSlotInvariant(String methodName,
+                                                           String equipmentSlotType) {
+        Pair<Item,Boolean> slot = EQUIPMENT_SLOTS.get(equipmentSlotType);
+        if (slot != null) {
+            Item itemInSlot = slot.getItem1();
+            if (itemInSlot != null) {
+                Pair<Character,String> itemEquipmentSlot = itemInSlot.getCharacterEquipmentSlot();
+                if (itemEquipmentSlot == null) {
+                    throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
+                            ": Item in equipment slot (" + equipmentSlotType +
+                            ") is not assigned to that slot");
+                }
+                if (itemEquipmentSlot.getItem1() != CHARACTER)
+                {
+                    throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
+                            ": Item is assigned to wrong Character");
+                }
+                if (!itemEquipmentSlot.getItem2().equals(equipmentSlotType))
+                {
+                    throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
+                            ": Item is assigned to wrong Character");
+                }
+            }
+        }
     }
 }

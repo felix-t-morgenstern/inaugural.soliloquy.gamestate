@@ -25,6 +25,7 @@ class CharacterEquipmentSlotsImplTests {
 
     @BeforeEach
     void setUp() {
+        ((ItemStub)ITEM)._character = null;
         _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY,
                 MAP_FACTORY);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
@@ -122,6 +123,28 @@ class CharacterEquipmentSlotsImplTests {
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
         assertSame(ITEM, _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+        assertSame(CHARACTER, ITEM.getCharacterEquipmentSlot().getFirstArchetype());
+        assertEquals(EQUIPMENT_SLOT_TYPE, ITEM.getCharacterEquipmentSlot().getSecondArchetype());
+    }
+
+    @Test
+    void testEquipItemElsewhereInOtherLocationTypes() {
+        // TODO: Complete and pass this test
+    }
+
+    @Test
+    void testPreviouslyEquippedItemUnassignedFromSlot() {
+        Item previousItem = new ItemStub();
+        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, previousItem);
+        assertNotNull(previousItem.getCharacterEquipmentSlot());
+        assertSame(CHARACTER, previousItem.getCharacterEquipmentSlot().getFirstArchetype());
+        assertEquals(EQUIPMENT_SLOT_TYPE,
+                previousItem.getCharacterEquipmentSlot().getSecondArchetype());
+
+        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
+
+        assertNull(previousItem.getCharacterEquipmentSlot());
     }
 
     @Test
@@ -136,7 +159,53 @@ class CharacterEquipmentSlotsImplTests {
 
     @Test
     void testItemReferencesCorrectSlotInvariant() {
-        // TODO: Test and implement
+        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
+        ((ItemStub) ITEM)._character = null;
+
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+
+        ((ItemStub) ITEM)._character = new CharacterStub();
+
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+
+        ((ItemStub) ITEM)._character = CHARACTER;
+        ((ItemStub) ITEM)._equipmentSlotType = "NotAValidType";
+
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
     }
 
     @Test

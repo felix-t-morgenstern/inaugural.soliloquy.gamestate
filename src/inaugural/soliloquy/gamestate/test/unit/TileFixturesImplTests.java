@@ -53,6 +53,11 @@ class TileFixturesImplTests {
     }
 
     @Test
+    void testAddTileFixtureAlreadyPresnetOnAnotherTile() {
+        // TODO: Complete and pass this test
+    }
+
+    @Test
     void testAddAndContainsWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> _tileFixtures.add(null));
         assertThrows(IllegalArgumentException.class, () -> _tileFixtures.add(null, 0));

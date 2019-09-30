@@ -56,7 +56,12 @@ public class ItemStub implements Item {
     @Override
     public Pair<Character, String> getCharacterEquipmentSlot()
             throws IllegalStateException {
-        return null;
+        if (_character == null || _equipmentSlotType == null) {
+            return null;
+        }
+        else {
+            return new PairStub<>(_character, _equipmentSlotType);
+        }
     }
 
     @Override

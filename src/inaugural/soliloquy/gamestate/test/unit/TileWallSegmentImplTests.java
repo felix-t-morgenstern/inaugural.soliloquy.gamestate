@@ -1,17 +1,21 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentImpl;
-import inaugural.soliloquy.gamestate.test.stubs.GenericParamsSetFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.WallSegmentTypeStub;
+import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
+import soliloquy.specs.common.factories.PairFactory;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentImplTests {
+    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
     private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
             new GenericParamsSetFactoryStub();
     private final WallSegmentType WALL_SEGMENT_TYPE = new WallSegmentTypeStub();
@@ -20,13 +24,16 @@ class TileWallSegmentImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileWallSegment = new TileWallSegmentImpl(GENERIC_PARAMS_SET_FACTORY);
+        _tileWallSegment = new TileWallSegmentImpl(PAIR_FACTORY, GENERIC_PARAMS_SET_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new TileWallSegmentImpl(null));
+        assertThrows(IllegalArgumentException.class, () -> new TileWallSegmentImpl(PAIR_FACTORY,
+                null));
+        assertThrows(IllegalArgumentException.class, () -> new TileWallSegmentImpl(null,
+                GENERIC_PARAMS_SET_FACTORY));
     }
 
     @Test
@@ -66,6 +73,23 @@ class TileWallSegmentImplTests {
     }
 
     @Test
+    void testAssignTileWallSegmentsToTileAfterAddingToTileWallSegmentsAndGetTile() {
+        Tile tile = new TileStub();
+        ((TileWallSegmentsStub)tile.tileWallSegments()).TILE_WALL_SEGMENTS
+                .get(TileWallSegmentDirection.NORTH).add(_tileWallSegment);
+
+        assertNull(_tileWallSegment.getTile());
+
+        _tileWallSegment.assignTileWallSegmentsToTileAfterAddingToTileWallSegments(
+                TileWallSegmentDirection.NORTH, tile);
+
+        Pair<TileWallSegmentDirection, Tile> tileWallSegmentDirectionAndTilePair =
+                _tileWallSegment.getTile();
+
+        assertNotNull(tileWallSegmentDirectionAndTilePair);
+    }
+
+    @Test
     void testSetAndGetName() {
         final String name = "name";
 
@@ -94,6 +118,53 @@ class TileWallSegmentImplTests {
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.setHeight(0));
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getZIndex());
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.setZIndex(0));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getTile());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegment.assignTileWallSegmentsToTileAfterAddingToTileWallSegments(
+                        null, null));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.data());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getName());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setName(""));
+    }
+
+    @Test
+    void testAggregateAssignmentInvariant() {
+        Tile tile = new TileStub();
+        tile.tileWallSegments().add(TileWallSegmentDirection.NORTH, _tileWallSegment);
+
+        ((TileWallSegmentsStub)tile.tileWallSegments()).TILE_WALL_SEGMENTS
+                .get(TileWallSegmentDirection.NORTH).remove(_tileWallSegment);
+
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getWallSegmentType());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegment.setWallSegmentType(new WallSegmentTypeStub()));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getHeight());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setHeight(0));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getZIndex());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setZIndex(0));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getTile());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegment.assignTileWallSegmentsToTileAfterAddingToTileWallSegments(
+                        null, null));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.data());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getName());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setName(""));
+
+        ((TileWallSegmentsStub)tile.tileWallSegments()).TILE_WALL_SEGMENTS
+                .get(TileWallSegmentDirection.WEST).add(_tileWallSegment);
+
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getWallSegmentType());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegment.setWallSegmentType(new WallSegmentTypeStub()));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getHeight());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setHeight(0));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getZIndex());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setZIndex(0));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getTile());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegment.assignTileWallSegmentsToTileAfterAddingToTileWallSegments(
+                        null, null));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.data());
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getName());
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.setName(""));
     }

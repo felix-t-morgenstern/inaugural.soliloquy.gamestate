@@ -44,6 +44,11 @@ class TileCharactersImplTests {
     }
 
     @Test
+    void testAddCharacterAlreadyPresentOnAnotherTile() {
+        // TODO: Complete and pass this test
+    }
+
+    @Test
     void testAddCharacterWithZIndexAndGetZIndex() {
         assertNull(_tileCharacters.getZIndex(CHARACTER));
 
