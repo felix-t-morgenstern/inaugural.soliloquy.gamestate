@@ -10,7 +10,7 @@ import java.util.HashMap;
 abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
         extends HasDeletionInvariants {
     private final MapFactory MAP_FACTORY;
-    private final HashMap<TEntity,Integer> ENTITIES;
+    protected final HashMap<TEntity,Integer> ENTITIES;
 
     GameEntityMediatorWithZIndex(MapFactory mapFactory) {
         if (mapFactory == null) {
@@ -31,6 +31,15 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
 
     protected abstract TEntity getArchetype();
 
+    protected void enforceAssignmentInvariant(TEntity entity, String methodName) {
+    }
+
+    protected void assignEntityToAggregate(TEntity entity) {
+    }
+
+    protected void removeEntityFromAggregate(TEntity entity) {
+    }
+
     public ReadableMap<TEntity,Integer> representation() {
         enforceDeletionInvariants("getRepresentation");
         Map<TEntity, Integer> entities = MAP_FACTORY.make(getArchetype(), 0);
@@ -46,24 +55,30 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
 
     public void add(TEntity entity, int zIndex) throws IllegalArgumentException {
         enforceDeletionInvariants("add");
+        enforceAssignmentInvariant(entity, "add");
         if (entity == null) {
             throw new IllegalArgumentException(className() + ".add: entity must be non-null");
         }
         ENTITIES.put(entity, zIndex);
-        // TODO: Call assignment method
+        assignEntityToAggregate(entity);
     }
 
     public boolean remove(TEntity entity) {
         enforceDeletionInvariants("remove");
+        enforceAssignmentInvariant(entity, "remove");
         if (entity == null) {
             throw new IllegalArgumentException(className() + ".remove: entity must be non-null");
         }
-        return ENTITIES.remove(entity) != null;
-        // TODO: Call assignment method
+        boolean entityWasPresent = ENTITIES.remove(entity) != null;
+        if (entityWasPresent) {
+            removeEntityFromAggregate(entity);
+        }
+        return entityWasPresent;
     }
 
     public boolean contains(TEntity entity) throws IllegalArgumentException {
         enforceDeletionInvariants("contains");
+        enforceAssignmentInvariant(entity, "contains");
         if (entity == null) {
             throw new IllegalArgumentException(
                     "TileFixtures.contains: tileFixture must be non-null");

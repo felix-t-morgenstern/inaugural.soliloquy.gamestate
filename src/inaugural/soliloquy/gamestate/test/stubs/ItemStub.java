@@ -14,6 +14,8 @@ public class ItemStub implements Item {
 
     public Character _character;
     public String _equipmentSlotType;
+    public TileFixture _tileFixture;
+    public Tile _containingTile;
 
     @Override
     public ItemType itemType() throws IllegalStateException {
@@ -65,13 +67,13 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public TileItems getTileItems() throws IllegalStateException {
-        return null;
+    public Tile getContainingTile() throws IllegalStateException {
+        return _containingTile;
     }
 
     @Override
-    public TileFixtureItems getTileFixtureItems() throws IllegalStateException {
-        return null;
+    public TileFixture getContainingTileFixture() throws IllegalStateException {
+        return _tileFixture;
     }
 
     @Override
@@ -89,16 +91,15 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public void assignTileItemsToItemAfterAddingItemToTileItems(TileItems tileItems)
+    public void assignTileToItemAfterAddingItemToTileItems(Tile tile)
             throws IllegalStateException, IllegalArgumentException {
-
+        _containingTile = tile;
     }
 
     @Override
-    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-            TileFixtureItems tileFixtureItems)
+    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture)
             throws IllegalArgumentException, IllegalStateException {
-
+        _tileFixture = tileFixture;
     }
 
     @Override

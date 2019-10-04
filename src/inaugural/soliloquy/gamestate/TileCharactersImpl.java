@@ -39,6 +39,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     @Override
     public void add(Character character, int zIndex) throws IllegalArgumentException {
         enforceDeletionInvariants("addCharacter");
+        enforceCharacterAssignmentInvariant(character, "add");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.addCharacter: character cannot be null");
@@ -50,6 +51,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     @Override
     public boolean remove(Character character) throws IllegalArgumentException {
         enforceDeletionInvariants("removeCharacter");
+        enforceCharacterAssignmentInvariant(character, "remove");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.removeCharacter: character cannot be null");
@@ -63,6 +65,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     @Override
     public Integer getZIndex(Character character) throws IllegalArgumentException {
         enforceDeletionInvariants("getZIndex");
+        enforceCharacterAssignmentInvariant(character, "getZIndex");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.getZIndex: character cannot be null");
@@ -73,6 +76,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     @Override
     public void setZIndex(Character character, int zIndex) throws IllegalArgumentException {
         enforceDeletionInvariants("setZIndex");
+        enforceCharacterAssignmentInvariant(character, "setZIndex");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.setZIndex: character cannot be null");
@@ -86,7 +90,8 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
 
     @Override
     public boolean contains(Character character) throws IllegalArgumentException {
-        enforceDeletionInvariants("containsCharacter");
+        enforceDeletionInvariants("contains");
+        enforceCharacterAssignmentInvariant(character, "contains");
         if (character == null) {
             throw new IllegalArgumentException(
                     "TileCharacters.containsCharacter: character cannot be null");
@@ -120,5 +125,13 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     @Override
     protected boolean containingObjectIsDeleted() {
         return TILE.isDeleted();
+    }
+
+    private void enforceCharacterAssignmentInvariant(Character character, String methodName) {
+        if (character != null && CHARACTERS.containsKey(character) && character.tile() != TILE) {
+            throw new IllegalStateException("TileCharactersImpl." + methodName + ": character " +
+                    "was found in this class, but this class' Tile was not assigned to that " +
+                    "Character");
+        }
     }
 }

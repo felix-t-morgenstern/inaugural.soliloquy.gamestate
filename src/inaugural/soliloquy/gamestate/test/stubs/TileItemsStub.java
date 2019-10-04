@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileItems;
 
 import java.util.ArrayList;
@@ -9,6 +10,16 @@ import java.util.List;
 
 public class TileItemsStub implements TileItems {
     public static List<Item> ITEMS = new ArrayList<>();
+
+    private final Tile TILE;
+
+    public TileItemsStub() {
+        TILE = new TileStub();
+    }
+
+    public TileItemsStub(Tile tile) {
+        TILE = tile;
+    }
 
     @Override
     public ReadableMap<Item, Integer> representation() throws IllegalStateException {
@@ -18,7 +29,7 @@ public class TileItemsStub implements TileItems {
     @Override
     public void add(Item item) throws IllegalArgumentException {
         ITEMS.add(item);
-        item.assignTileItemsToItemAfterAddingItemToTileItems(this);
+        item.assignTileToItemAfterAddingItemToTileItems(TILE);
     }
 
     @Override
@@ -30,7 +41,7 @@ public class TileItemsStub implements TileItems {
     public boolean remove(Item item) throws IllegalArgumentException {
         boolean itemPresent = ITEMS.remove(item);
         if (itemPresent) {
-            item.assignTileItemsToItemAfterAddingItemToTileItems(null);
+            item.assignTileToItemAfterAddingItemToTileItems(TILE);
         }
         return itemPresent;
     }

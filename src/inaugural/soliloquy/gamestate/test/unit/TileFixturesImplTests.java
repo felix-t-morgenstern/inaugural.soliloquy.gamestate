@@ -53,7 +53,7 @@ class TileFixturesImplTests {
     }
 
     @Test
-    void testAddTileFixtureAlreadyPresnetOnAnotherTile() {
+    void testAddTileFixtureAlreadyPresentOnAnotherTile() {
         // TODO: Complete and pass this test
     }
 
@@ -130,6 +130,17 @@ class TileFixturesImplTests {
 
         assertThrows(IllegalStateException.class, () -> _tileFixtures.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileFixtures.representation());
+        assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE));
+        assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE,0));
+        assertThrows(IllegalStateException.class, () -> _tileFixtures.contains(TILE_FIXTURE));
+        assertThrows(IllegalStateException.class, () -> _tileFixtures.remove(TILE_FIXTURE));
+    }
+
+    @Test
+    void testTileFixtureAssignmentInvariant() {
+        _tileFixtures.add(TILE_FIXTURE);
+        ((TileFixtureStub)TILE_FIXTURE)._tile = null;
+
         assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () -> _tileFixtures.add(TILE_FIXTURE,0));
         assertThrows(IllegalStateException.class, () -> _tileFixtures.contains(TILE_FIXTURE));

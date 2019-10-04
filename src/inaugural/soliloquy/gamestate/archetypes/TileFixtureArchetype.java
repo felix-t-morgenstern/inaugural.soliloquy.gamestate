@@ -26,7 +26,7 @@ public class TileFixtureArchetype implements TileFixture {
     }
 
     @Override
-    public TileFixtureItems containedItems() throws IllegalStateException {
+    public TileFixtureItems items() throws IllegalStateException {
         return null;
     }
 

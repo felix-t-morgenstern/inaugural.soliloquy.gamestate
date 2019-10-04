@@ -12,9 +12,17 @@ import soliloquy.specs.ruleset.entities.FixtureType;
 public class TileFixtureStub implements TileFixture {
     private boolean _isDeleted;
 
+    private final TileFixtureItems TILE_FIXTURE_ITEMS;
+
+    public Tile _tile;
+
+    public TileFixtureStub() {
+        TILE_FIXTURE_ITEMS = new TileFixtureItemsStub(this);
+    }
+
     @Override
     public Tile tile() throws IllegalStateException {
-        return null;
+        return _tile;
     }
 
     @Override
@@ -28,14 +36,14 @@ public class TileFixtureStub implements TileFixture {
     }
 
     @Override
-    public TileFixtureItems containedItems() throws IllegalStateException {
-        return null;
+    public TileFixtureItems items() throws IllegalStateException {
+        return TILE_FIXTURE_ITEMS;
     }
 
     @Override
     public void assignTileFixtureToTileAfterAddingToTileFixtures(Tile tile) throws
             IllegalArgumentException, IllegalStateException {
-
+        _tile = tile;
     }
 
     @Override

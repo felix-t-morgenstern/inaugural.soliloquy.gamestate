@@ -139,4 +139,15 @@ class TileItemsImplTests {
         assertThrows(IllegalStateException.class, () -> _tileItems.contains(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileItems.remove(ITEM));
     }
+
+    @Test
+    void testItemAssignmentInvariant() {
+        _tileItems.add(ITEM);
+        ((ItemStub)ITEM)._containingTile = null;
+
+        assertThrows(IllegalStateException.class, () -> _tileItems.add(ITEM));
+        assertThrows(IllegalStateException.class, () -> _tileItems.add(ITEM,0));
+        assertThrows(IllegalStateException.class, () -> _tileItems.contains(ITEM));
+        assertThrows(IllegalStateException.class, () -> _tileItems.remove(ITEM));
+    }
 }

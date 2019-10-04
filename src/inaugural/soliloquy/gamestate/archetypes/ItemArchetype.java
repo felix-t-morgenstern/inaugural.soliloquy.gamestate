@@ -53,12 +53,12 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public TileItems getTileItems() throws IllegalStateException {
+    public Tile getContainingTile() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public TileFixtureItems getTileFixtureItems() throws IllegalStateException {
+    public TileFixture getContainingTileFixture() throws IllegalStateException {
         return null;
     }
 
@@ -69,22 +69,19 @@ public class ItemArchetype implements Item {
     }
 
     @Override
+    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture) throws IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
+    public void assignTileToItemAfterAddingItemToTileItems(Tile tile) throws IllegalStateException, IllegalArgumentException {
+
+    }
+
+    @Override
     public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
             Character character, String s)
             throws IllegalStateException, IllegalArgumentException {
-
-    }
-
-    @Override
-    public void assignTileItemsToItemAfterAddingItemToTileItems(TileItems tileItems)
-            throws IllegalStateException, IllegalArgumentException {
-
-    }
-
-    @Override
-    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-            TileFixtureItems tileFixtureItems)
-            throws IllegalArgumentException, IllegalStateException {
 
     }
 

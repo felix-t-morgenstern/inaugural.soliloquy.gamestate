@@ -60,26 +60,32 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("add");
+        enforceItemAssignmentInvariant(item, "add");
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.add: item must be non-null");
         }
         CONTAINED_ITEMS.add(item);
-        // TODO: Call assignment method
+        item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE);
     }
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("remove");
+        enforceItemAssignmentInvariant(item, "remove");
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.remove: item must be non-null");
         }
-        return CONTAINED_ITEMS.remove(item);
-        // TODO: Call assignment method
+        boolean itemWasInAggregate = CONTAINED_ITEMS.remove(item);
+        if (itemWasInAggregate) {
+            item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(null);
+        }
+        return itemWasInAggregate;
     }
 
     @Override
     public boolean contains(Item item) throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("contains");
+        enforceItemAssignmentInvariant(item, "contains");
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.contains: item must be non-null");
         }
@@ -99,5 +105,13 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
     @Override
     protected boolean containingObjectIsDeleted() {
         return TILE_FIXTURE.isDeleted();
+    }
+
+    private void enforceItemAssignmentInvariant(Item item, String methodName) {
+        if (item != null && CONTAINED_ITEMS.contains(item) &&
+                item.getContainingTileFixture() != TILE_FIXTURE) {
+            throw new IllegalStateException("TileFixtureItemsImpl." + methodName +
+                    ": item is present in this class, but has not been assigned to this class");
+        }
     }
 }

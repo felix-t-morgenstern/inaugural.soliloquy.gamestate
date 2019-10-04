@@ -21,8 +21,8 @@ public class ItemImpl implements Item {
     private Character _characterInventoryCharacter;
     private Character _characterEquipmentSlotsCharacter;
     private String _characterEquipmentSlotType;
-    private TileItems _tileItems;
-    private TileFixtureItems _tileFixtureItems;
+    private Tile _containingTile;
+    private TileFixture _containingTileFixture;
     private boolean _isDeleted;
     private String _name;
     private String _pluralName;
@@ -38,14 +38,14 @@ public class ItemImpl implements Item {
 
     @Override
     public ItemType itemType() throws IllegalStateException {
-        enforceDeletionInvariant("itemType", true);
+        enforceDeletionInvariant("itemType");
         enforceAssignmentInvariant("itemType");
         return ITEM_TYPE;
     }
 
     @Override
     public Integer getCharges() throws IllegalStateException {
-        enforceDeletionInvariant("getCharges", true);
+        enforceDeletionInvariant("getCharges");
         enforceAssignmentInvariant("getCharges");
         if (!ITEM_TYPE.hasCharges()) {
             return null;
@@ -57,7 +57,7 @@ public class ItemImpl implements Item {
     @Override
     public void setCharges(int charges)
             throws UnsupportedOperationException, IllegalStateException {
-        enforceDeletionInvariant("setCharges", true);
+        enforceDeletionInvariant("setCharges");
         enforceAssignmentInvariant("setCharges");
         if (!ITEM_TYPE.hasCharges()) {
             throw new UnsupportedOperationException(
@@ -72,7 +72,7 @@ public class ItemImpl implements Item {
 
     @Override
     public Integer getNumberInStack() throws IllegalStateException {
-        enforceDeletionInvariant("getNumberInStack", true);
+        enforceDeletionInvariant("getNumberInStack");
         enforceAssignmentInvariant("getNumberInStack");
         if (!ITEM_TYPE.isStackable()) {
             return null;
@@ -84,7 +84,7 @@ public class ItemImpl implements Item {
     @Override
     public void setNumberInStack(int numberInStack)
             throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariant("setNumberInStack", true);
+        enforceDeletionInvariant("setNumberInStack");
         enforceAssignmentInvariant("setNumberInStack");
         if (!ITEM_TYPE.isStackable()) {
             throw new UnsupportedOperationException(
@@ -96,7 +96,7 @@ public class ItemImpl implements Item {
     @Override
     public Item takeFromStack(int numberToTake)
             throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariant("takeFromStack", true);
+        enforceDeletionInvariant("takeFromStack");
         enforceAssignmentInvariant("takeFromStack");
         if (!ITEM_TYPE.isStackable()) {
             throw new UnsupportedOperationException(
@@ -120,7 +120,7 @@ public class ItemImpl implements Item {
     @Override
     public Pair<Character, String> getCharacterEquipmentSlot()
             throws IllegalStateException {
-        enforceDeletionInvariant("getCharacterEquipmentSlot", true);
+        enforceDeletionInvariant("getCharacterEquipmentSlot");
         enforceAssignmentInvariant("getCharacterEquipmentSlot");
         return _characterEquipmentSlotsCharacter == null ?
                 null :
@@ -129,23 +129,23 @@ public class ItemImpl implements Item {
 
     @Override
     public Character getInventoryCharacter() throws IllegalStateException {
-        enforceDeletionInvariant("getCharacterInventory", true);
-        enforceAssignmentInvariant("getCharacterInventory");
+        enforceDeletionInvariant("getInventoryCharacter");
+        enforceAssignmentInvariant("getInventoryCharacter");
         return _characterInventoryCharacter;
     }
 
     @Override
-    public TileFixtureItems getTileFixtureItems() throws IllegalStateException {
-        enforceDeletionInvariant("getTileFixtureItems", true);
-        enforceAssignmentInvariant("getTileFixtureItems");
-        return _tileFixtureItems;
+    public Tile getContainingTile() throws IllegalStateException {
+        enforceDeletionInvariant("getContainingTile");
+        enforceAssignmentInvariant("getContainingTile");
+        return _containingTile;
     }
 
     @Override
-    public TileItems getTileItems() throws IllegalStateException {
-        enforceDeletionInvariant("getTileItems", true);
-        enforceAssignmentInvariant("getTileItems");
-        return _tileItems;
+    public TileFixture getContainingTileFixture() throws IllegalStateException {
+        enforceDeletionInvariant("getContainingTileFixture");
+        enforceAssignmentInvariant("getContainingTileFixture");
+        return _containingTileFixture;
     }
 
     @Override
@@ -153,7 +153,7 @@ public class ItemImpl implements Item {
             Character character, String slotType)
             throws IllegalStateException, IllegalArgumentException {
         enforceDeletionInvariant(
-                "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot", true);
+                "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot");
         enforceAssignmentInvariant(
                 "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot");
         if (character == null || slotType == null || slotType.equals("")) {
@@ -164,8 +164,8 @@ public class ItemImpl implements Item {
             _characterEquipmentSlotType = slotType;
         }
         _characterInventoryCharacter = null;
-        _tileFixtureItems = null;
-        _tileItems = null;
+        _containingTileFixture = null;
+        _containingTile = null;
         enforceAssignmentInvariant(
                 "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot");
     }
@@ -173,62 +173,61 @@ public class ItemImpl implements Item {
     @Override
     public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariant("assignCharacterInventoryToItemAfterAddingToCharacterInventory",
-                true);
+        enforceDeletionInvariant("assignCharacterInventoryToItemAfterAddingToCharacterInventory"
+        );
         enforceAssignmentInvariant(
                 "assignCharacterInventoryToItemAfterAddingToCharacterInventory");
         _characterInventoryCharacter = character;
         _characterEquipmentSlotsCharacter = null;
         _characterEquipmentSlotType = null;
-        _tileFixtureItems = null;
-        _tileItems = null;
+        _containingTileFixture = null;
+        _containingTile = null;
         enforceAssignmentInvariant(
                 "assignCharacterInventoryToItemAfterAddingToCharacterInventory");
     }
 
     @Override
-    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-            TileFixtureItems tileFixtureItems)
+    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems", true);
+        enforceDeletionInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
         enforceAssignmentInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
-        _tileFixtureItems = tileFixtureItems;
+        _containingTileFixture = tileFixture;
         _characterEquipmentSlotsCharacter = null;
         _characterEquipmentSlotType = null;
         _characterInventoryCharacter = null;
-        _tileItems = null;
+        _containingTile = null;
         enforceAssignmentInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
     }
 
     @Override
-    public void assignTileItemsToItemAfterAddingItemToTileItems(TileItems tileItems)
+    public void assignTileToItemAfterAddingItemToTileItems(Tile tile)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariant("assignTileItemsToItemAfterAddingItemToTileItems", true);
+        enforceDeletionInvariant("assignTileItemsToItemAfterAddingItemToTileItems");
         enforceAssignmentInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
-        _tileItems = tileItems;
+        _containingTile = tile;
         _characterEquipmentSlotsCharacter = null;
         _characterEquipmentSlotType = null;
         _characterInventoryCharacter = null;
-        _tileFixtureItems = null;
+        _containingTileFixture = null;
         enforceAssignmentInvariant("assignTileItemsToItemAfterAddingItemToTileItems");
     }
 
     @Override
     public EntityUuid id() {
-        enforceDeletionInvariant("id", true);
+        enforceDeletionInvariant("id");
         return ID;
     }
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        enforceDeletionInvariant("data", true);
+        enforceDeletionInvariant("data");
         enforceAssignmentInvariant("data");
         return DATA;
     }
 
     @Override
     public void delete() throws IllegalStateException {
-        enforceDeletionInvariant("delete", true);
+        enforceDeletionInvariant("delete");
         if (_characterEquipmentSlotsCharacter != null) {
             _characterEquipmentSlotsCharacter.equipmentSlots()
                     .equipItemToSlot(_characterEquipmentSlotType, null);
@@ -246,7 +245,7 @@ public class ItemImpl implements Item {
 
     @Override
     public String getName() {
-        enforceDeletionInvariant("getName", true);
+        enforceDeletionInvariant("getName");
         enforceAssignmentInvariant("getName");
         if (_name == null || _name.equals("")) {
             return ITEM_TYPE.getName();
@@ -257,14 +256,14 @@ public class ItemImpl implements Item {
 
     @Override
     public void setName(String name) {
-        enforceDeletionInvariant("setName", true);
+        enforceDeletionInvariant("setName");
         enforceAssignmentInvariant("setName");
         _name = name;
     }
 
     @Override
     public String getPluralName() {
-        enforceDeletionInvariant("getPluralName", true);
+        enforceDeletionInvariant("getPluralName");
         enforceAssignmentInvariant("getPluralName");
         if (_pluralName == null || _pluralName.equals("")) {
             return ITEM_TYPE.getPluralName();
@@ -275,14 +274,14 @@ public class ItemImpl implements Item {
 
     @Override
     public void setPluralName(String pluralName) throws IllegalArgumentException {
-        enforceDeletionInvariant("setPluralName", true);
+        enforceDeletionInvariant("setPluralName");
         enforceAssignmentInvariant("setPluralName");
         _pluralName = pluralName;
     }
 
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariant("getInterfaceName", true);
+        enforceDeletionInvariant("getInterfaceName");
         enforceAssignmentInvariant("getInterfaceName");
         return Item.class.getCanonicalName();
     }
@@ -303,8 +302,8 @@ public class ItemImpl implements Item {
         return item.id().equals(ID);
     }
 
-    private void enforceDeletionInvariant(String methodName, boolean cannotBeDeleted) {
-        if (cannotBeDeleted && _isDeleted) {
+    private void enforceDeletionInvariant(String methodName) {
+        if (_isDeleted) {
             throw new IllegalStateException("ItemImpl." + methodName + ": Item is deleted");
         }
     }
@@ -321,7 +320,12 @@ public class ItemImpl implements Item {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned CharacterInventory does not contain this Item");
         }
-        if (_tileItems != null && !_tileItems.contains(this))
+        if (_containingTile != null && !_containingTile.items().contains(this))
+        {
+            throw new IllegalStateException("ItemImpl." + methodName +
+                    ": assigned TileItems does not contain this Item");
+        }
+        if (_containingTileFixture != null && !_containingTileFixture.items().contains(this))
         {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned TileItems does not contain this Item");

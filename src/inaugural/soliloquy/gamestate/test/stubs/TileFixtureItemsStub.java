@@ -41,7 +41,7 @@ public class TileFixtureItemsStub implements TileFixtureItems {
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
         ITEMS.add(item);
-        item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(this);
+        item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE);
     }
 
     @Override

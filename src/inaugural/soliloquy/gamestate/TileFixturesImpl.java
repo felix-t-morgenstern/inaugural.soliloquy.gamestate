@@ -47,4 +47,23 @@ public class TileFixturesImpl extends GameEntityMediatorWithZIndex<TileFixture> 
     protected boolean containingObjectIsDeleted() {
         return TILE.isDeleted();
     }
+
+    @Override
+    protected void enforceAssignmentInvariant(TileFixture tileFixture, String methodName) {
+        if (tileFixture != null && ENTITIES.containsKey(tileFixture) &&
+                tileFixture.tile() != TILE) {
+            throw new IllegalStateException("TileFixturesImpl." + methodName + ": tileFixture " +
+                    "is present in this class, but this class is not assigned to tileFixture");
+        }
+    }
+
+    @Override
+    protected void assignEntityToAggregate(TileFixture tileFixture) {
+        tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(TILE);
+    }
+
+    @Override
+    protected void removeEntityFromAggregate(TileFixture tileFixture) {
+        tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null);
+    }
 }

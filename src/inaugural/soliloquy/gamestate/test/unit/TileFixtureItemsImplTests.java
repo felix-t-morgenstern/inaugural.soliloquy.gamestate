@@ -52,6 +52,23 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
+    void testAddCallsItemAssignmentFunction() {
+        _tileFixtureItems.add(ITEM);
+
+        assertSame(TILE_FIXTURE, ((ItemStub)ITEM)._tileFixture);
+    }
+
+    @Test
+    void testRemoveCallsItemAssignmentFunction() {
+        _tileFixtureItems.add(ITEM);
+        assertSame(TILE_FIXTURE, ((ItemStub)ITEM)._tileFixture);
+
+        _tileFixtureItems.remove(ITEM);
+
+        assertNull(((ItemStub)ITEM)._tileFixture);
+    }
+
+    @Test
     void testAddItemAlreadyPresentInOtherLocationTypes() {
         // TODO: Complete and pass this test
     }
@@ -123,6 +140,16 @@ class TileFixtureItemsImplTests {
 
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.representation());
+        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
+        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));
+        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.contains(ITEM));
+    }
+
+    @Test
+    void testItemAssignmentInvariant() {
+        _tileFixtureItems.add(ITEM);
+        ((ItemStub) ITEM)._tileFixture = null;
+
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.contains(ITEM));

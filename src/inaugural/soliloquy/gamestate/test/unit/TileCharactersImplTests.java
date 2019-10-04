@@ -37,8 +37,6 @@ class TileCharactersImplTests {
 
         _tileCharacters.add(CHARACTER);
 
-        assertSame(TILE, CHARACTER.tile());
-
         _tileCharacters.remove(CHARACTER);
         assertSame(null, CHARACTER.tile());
     }
@@ -46,6 +44,13 @@ class TileCharactersImplTests {
     @Test
     void testAddCharacterAlreadyPresentOnAnotherTile() {
         // TODO: Complete and pass this test
+    }
+
+    @Test
+    void testAddCharacterCallsCharacterAssignmentFunction() {
+        _tileCharacters.add(CHARACTER);
+
+        assertSame(TILE, CHARACTER.tile());
     }
 
     @Test
@@ -142,5 +147,18 @@ class TileCharactersImplTests {
         assertThrows(IllegalStateException.class, () -> _tileCharacters.contains(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileCharacters.delete());
+    }
+
+    @Test
+    void testCharacterAssignmentInvariant() {
+        _tileCharacters.add(CHARACTER);
+        ((CharacterStub)CHARACTER)._tile = null;
+
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.remove(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.getZIndex(CHARACTER));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.setZIndex(CHARACTER, 0));
+        assertThrows(IllegalStateException.class, () -> _tileCharacters.contains(CHARACTER));
     }
 }

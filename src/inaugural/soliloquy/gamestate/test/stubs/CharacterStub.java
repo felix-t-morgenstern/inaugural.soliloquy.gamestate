@@ -17,7 +17,8 @@ import soliloquy.specs.sprites.entities.SpriteSet;
 public class CharacterStub implements Character {
     private boolean _isDeleted;
     private boolean _isDead;
-    private Tile _tile;
+
+    public Tile _tile;
 
     public final CharacterEquipmentSlotsStub EQUIPMENT = new CharacterEquipmentSlotsStub(this);
     public final CharacterInventoryStub INVENTORY = new CharacterInventoryStub(this);

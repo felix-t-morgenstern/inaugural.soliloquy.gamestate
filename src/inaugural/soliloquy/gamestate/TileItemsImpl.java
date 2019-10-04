@@ -44,4 +44,23 @@ public class TileItemsImpl extends GameEntityMediatorWithZIndex<Item> implements
     protected Item getArchetype() {
         return ITEM_ARCHETYPE;
     }
+
+    @Override
+    protected void enforceAssignmentInvariant(Item item, String methodName) {
+        if (item != null && ENTITIES.containsKey(item) &&
+                item.getContainingTile() != TILE) {
+            throw new IllegalStateException("TileItemsImpl." + methodName + ": item is present " +
+                    "in this class, but this class is not assigned to item");
+        }
+    }
+
+    @Override
+    protected void assignEntityToAggregate(Item item) {
+        item.assignTileToItemAfterAddingItemToTileItems(TILE);
+    }
+
+    @Override
+    protected void removeEntityFromAggregate(Item item) {
+        item.assignTileToItemAfterAddingItemToTileItems(null);
+    }
 }

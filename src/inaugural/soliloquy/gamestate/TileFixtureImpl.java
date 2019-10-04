@@ -54,7 +54,7 @@ public class TileFixtureImpl implements TileFixture {
     }
 
     @Override
-    public TileFixtureItems containedItems() throws IllegalStateException {
+    public TileFixtureItems items() throws IllegalStateException {
         enforceInvariant("containedItems", true);
         return TILE_FIXTURE_ITEMS;
     }
