@@ -57,9 +57,12 @@ class CharacterVitalAttributeImplTests {
         assertSame(CHARACTER, VitalAttributeCalculationStub._character);
         assertSame(VITAL_ATTRIBUTE_TYPE, VitalAttributeCalculationStub._vitalAttributeType);
         assertEquals(VitalAttributeCalculationStub.VALUE, _characterVitalAttribute.totalValue());
-        // TODO: Ensure that this test is rigorous enough, perhaps by guaranteeing map contents
         assertEquals(VitalAttributeCalculationStub.MODIFIERS,
                 _characterVitalAttribute.modifiersRepresentation());
+        assertEquals(VitalAttributeCalculationStub.MODIFIERS.size(),
+                _characterVitalAttribute.modifiersRepresentation().size());
+        VitalAttributeCalculationStub.MODIFIERS.forEach(
+                _characterVitalAttribute.modifiersRepresentation()::contains);
     }
 
     @Test

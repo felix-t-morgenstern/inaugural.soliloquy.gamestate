@@ -10,7 +10,7 @@ import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class TileStub implements Tile {
-    private static final GameZone GAME_ZONE = new GameZoneStub();
+    private final GameZone GAME_ZONE;
 
     private final TileCharacters CHARACTERS = new TileCharactersStub(this);
     private final TileFixtures FIXTURES = new TileFixturesStub(this);
@@ -21,10 +21,18 @@ public class TileStub implements Tile {
     private Coordinate _tileLocation;
 
     public TileStub() {
+        GAME_ZONE = new GameZoneStub();
     }
 
     public TileStub(Coordinate tileLocation) {
         _tileLocation = tileLocation;
+        GAME_ZONE = new GameZoneStub();
+    }
+
+    public TileStub(Coordinate tileLocation, GameZone gameZone)
+    {
+        _tileLocation = tileLocation;
+        GAME_ZONE = gameZone;
     }
 
     @Override

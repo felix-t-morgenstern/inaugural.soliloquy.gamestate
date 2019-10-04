@@ -2,11 +2,8 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.game.Game;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.logger.Logger;
@@ -15,7 +12,15 @@ public class GameZoneStub implements GameZone {
     public static int _maxX = 999;
     public static int _maxY = 999;
 
-    public Map<EntityUuid, Character> _characters = new MapStub<>();
+    private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
+
+    public GameZoneStub() {
+        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
+    }
+
+    public GameZoneStub(boolean throwExceptionOnGetMaxCoordinates) {
+        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = throwExceptionOnGetMaxCoordinates;
+    }
 
     @Override
     public String zoneType() {
@@ -24,6 +29,9 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public Coordinate getMaxCoordinates() {
+        if (THROW_EXCEPTION_ON_GET_MAX_COORDINATES) {
+            throw new GameZoneStubException(this);
+        }
         return new CoordinateStub(_maxX,_maxY);
     }
 
@@ -34,7 +42,7 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public Tile tile(Coordinate tileLocation) throws IllegalArgumentException {
-        return new TileStub(tileLocation);
+        return new TileStub(tileLocation, this);
     }
 
     @Override
@@ -75,5 +83,13 @@ public class GameZoneStub implements GameZone {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    public class GameZoneStubException extends RuntimeException {
+        public final GameZone GAME_ZONE;
+
+        public GameZoneStubException(GameZone gameZone) {
+            GAME_ZONE = gameZone;
+        }
     }
 }

@@ -20,14 +20,17 @@ class CameraImplTests {
 
     private Game _game;
     private Logger _logger;
+    private TileVisibility _tileVisibility;
 
     @BeforeEach
     void setUp() {
         _game = new GameStub();
         _logger = new LoggerStub();
+        _tileVisibility = new TileVisibilityStub();
 
         _camera = new CameraImpl(_game, _logger, new CoordinateFactoryStub(),
-                new CollectionFactoryStub(), new MapFactoryStub(), new GameStateStub());
+                new CollectionFactoryStub(), new MapFactoryStub(), _tileVisibility,
+                GameZoneStub::new);
     }
 
     @Test
@@ -136,21 +139,7 @@ class CameraImplTests {
     }
 
     @Test
-    void testSetAndGetTileVisibility() {
-        TileVisibility tileVisibility = new TileVisibilityStub();
-        _camera.setTileVisibility(tileVisibility);
-        assertSame(tileVisibility, _camera.getTileVisibility());
-    }
-
-    @Test
-    void testCalculateVisibleTilesWithoutTileVisibility() {
-        _camera.setTileVisibility(null);
-        assertThrows(IllegalStateException.class, () -> _camera.calculateVisibileTiles());
-    }
-
-    @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMinimumCoordinateBoundaries() {
-        _camera.setTileVisibility(new TileVisibilityStub());
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);
@@ -162,7 +151,6 @@ class CameraImplTests {
     void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
         GameZoneStub._maxX = 4;
         GameZoneStub._maxY = 4;
-        _camera.setTileVisibility(new TileVisibilityStub());
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);
@@ -172,7 +160,6 @@ class CameraImplTests {
 
     @Test
     void testCalculateVisibleTilesWithZeroVisibilityRadius() {
-        _camera.setTileVisibility(new TileVisibilityStub());
         _camera.setTileRenderingRadius(0);
         _camera.calculateVisibileTiles();
 
@@ -181,8 +168,6 @@ class CameraImplTests {
 
     @Test
     void testCalculateVisibleTiles() {
-        TileVisibilityStub tileVisibility = new TileVisibilityStub();
-        _camera.setTileVisibility(tileVisibility);
         _camera.setAllTilesVisible(false);
         _camera.setTileLocation(10,10);
         _camera.setTileRenderingRadius(8);
@@ -197,6 +182,6 @@ class CameraImplTests {
 
         _camera.calculateVisibileTiles();
         assertEquals(22, _camera.visibileTiles().size());
-        assertEquals(22, tileVisibility._tilesChecked.size());
+        assertEquals(22, ((TileVisibilityStub)_tileVisibility)._tilesChecked.size());
     }
 }

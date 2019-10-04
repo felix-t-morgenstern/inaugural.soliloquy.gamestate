@@ -12,12 +12,13 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.valueobjects.GameState;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class CameraImpl implements Camera {
     private final Game GAME;
@@ -25,9 +26,10 @@ public class CameraImpl implements Camera {
     private final CoordinateFactory COORDINATE_FACTORY;
     private final Map<Character,Integer> CHARACTERS_PROVIDING_VISIBILITY;
     private final Map<Coordinate,Integer> COORDINATES_PROVIDING_VISIBILITY;
+    private TileVisibility TILE_VISIBILITY;
     private final Collection<Coordinate> VISIBLE_TILES;
     // TODO: Find a way to obtain the current GameZone via Consumer
-    private final GameState GAME_STATE;
+    private final Supplier<GameZone> GET_GAME_ZONE;
 
     private int _tileLocationX;
     private int _tileLocationY;
@@ -35,18 +37,18 @@ public class CameraImpl implements Camera {
     private int _pixelOffsetY;
     private int _tileRenderingRadius;
     private boolean _allTilesVisible;
-    private TileVisibility _tileVisibility;
 
     public CameraImpl(Game game, Logger logger, CoordinateFactory coordinateFactory,
                       CollectionFactory collectionFactory, MapFactory mapFactory,
-                      GameState gameState) {
+                      TileVisibility tileVisibility, Supplier<GameZone> getGameZone) {
         GAME = game;
         LOGGER = logger;
         COORDINATE_FACTORY = coordinateFactory;
         CHARACTERS_PROVIDING_VISIBILITY = mapFactory.make(new CharacterArchetype(), 0);
         COORDINATES_PROVIDING_VISIBILITY = mapFactory.make(new CoordinateArchetype(), 0);
+        TILE_VISIBILITY = tileVisibility;
         VISIBLE_TILES = collectionFactory.make(new CoordinateArchetype());
-        GAME_STATE = gameState;
+        GET_GAME_ZONE = getGameZone;
     }
 
     @Override
@@ -123,37 +125,26 @@ public class CameraImpl implements Camera {
     }
 
     @Override
-    public TileVisibility getTileVisibility() {
-        return _tileVisibility;
-    }
-
-    @Override
-    public void setTileVisibility(TileVisibility tileVisibility) {
-        _tileVisibility = tileVisibility;
-    }
-
-    @Override
     public void calculateVisibileTiles() throws IllegalStateException {
         // TODO: Revisit whether this method truly needs to be this long
-        if (_tileVisibility == null) {
-            throw new IllegalStateException("Camera.calculateVisibleTiles: tileVisibility is null");
-        }
-        visibileTiles().clear();
+        VISIBLE_TILES.clear();
         if (_tileRenderingRadius == 0) {
             return;
         }
 
+        GameZone gameZone = GET_GAME_ZONE.get();
+
         int minRenderingX = Math.max(0, _tileLocationX - (_tileRenderingRadius - 1));
-        int maxRenderingX = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates().getX(),
+        int maxRenderingX = Math.min(gameZone.getMaxCoordinates().getX(),
                 _tileLocationX + (_tileRenderingRadius - 1));
         int minRenderingY = Math.max(0, _tileLocationY - (_tileRenderingRadius - 1));
-        int maxRenderingY = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates().getY(),
+        int maxRenderingY = Math.min(gameZone.getMaxCoordinates().getY(),
                 _tileLocationY + (_tileRenderingRadius - 1));
 
         if (_allTilesVisible) {
             for(int x = minRenderingX; x <= maxRenderingX; x++) {
                 for (int y = minRenderingY; y <= maxRenderingY; y++) {
-                    visibileTiles().add(COORDINATE_FACTORY.make(x,y));
+                    VISIBLE_TILES.add(COORDINATE_FACTORY.make(x,y));
                 }
             }
         } else {
@@ -172,14 +163,14 @@ public class CameraImpl implements Camera {
                     : coordinatesProvidingVisibility.entrySet()) {
                 Coordinate coordinate = coordinateProvidingVisibility.getKey();
                 Integer coordinateVisibilityRadius = coordinateProvidingVisibility.getValue();
-                Tile originTile = GAME_STATE.getCurrentGameZone().tile(coordinate);
+                Tile originTile = gameZone.tile(coordinate);
                 int minVisibleX = Math.max(0,
                         coordinate.getX() - (coordinateVisibilityRadius - 1));
-                int maxVisibleX = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates()
+                int maxVisibleX = Math.min(gameZone.getMaxCoordinates()
                         .getX(), coordinate.getX() + (coordinateVisibilityRadius - 1));
                 int minVisibleY = Math.max(0,
                         coordinate.getY() - (coordinateVisibilityRadius - 1));
-                int maxVisibleY = Math.min(GAME_STATE.getCurrentGameZone().getMaxCoordinates()
+                int maxVisibleY = Math.min(gameZone.getMaxCoordinates()
                         .getY(), coordinate.getY() + (coordinateVisibilityRadius - 1));
 
                 int minXToAdd = Math.max(minVisibleX, minRenderingX);
@@ -191,10 +182,9 @@ public class CameraImpl implements Camera {
                     for (int y = minYToAdd; y <= maxYToAdd; y++) {
                         Coordinate targetCoordinate = COORDINATE_FACTORY.make(x,y);
                         if (!visibleTilesContainsCoordinate(x, y)) {
-                            Tile targetTile =
-                                    GAME_STATE.getCurrentGameZone().tile(targetCoordinate);
-                            if(_tileVisibility.canSeeTile(originTile, targetTile)) {
-                                visibileTiles().add(targetCoordinate);
+                            Tile targetTile = gameZone.tile(targetCoordinate);
+                            if(TILE_VISIBILITY.canSeeTile(originTile, targetTile)) {
+                                VISIBLE_TILES.add(targetCoordinate);
                             }
                         }
                     }
@@ -204,7 +194,7 @@ public class CameraImpl implements Camera {
     }
 
     private boolean visibleTilesContainsCoordinate(int x, int y) {
-        for(Coordinate coordinate : visibileTiles()) {
+        for(Coordinate coordinate : VISIBLE_TILES) {
             if (coordinate.getX() == x && coordinate.getY() == y) {
                 return true;
             }
