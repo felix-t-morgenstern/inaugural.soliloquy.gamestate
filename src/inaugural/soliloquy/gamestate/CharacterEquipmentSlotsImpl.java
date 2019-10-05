@@ -177,9 +177,11 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.canEquipItemToSlot: item must be non-null");
         }
+
         enforceItemReferencesCorrectSlotInvariant("canEquipItemToSlot",
                 equipmentSlotType);
-        return item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType);
+        return !itemIsPresentElsewhere(item) &&
+                item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType);
     }
 
     @Override
@@ -202,6 +204,10 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
             previousItem.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
                     null, null);
         }
+        if (item != null && itemIsPresentElsewhere(item)) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots.equipItemToSlot: item is already present elsewhere");
+        }
         EQUIPMENT_SLOTS.get(equipmentSlotType).setItem1(item);
         if (item != null) {
             item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(CHARACTER,
@@ -209,9 +215,14 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
         }
         enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
                 equipmentSlotType);
-        enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
-                equipmentSlotType);
         return previousItem;
+    }
+
+    private boolean itemIsPresentElsewhere(Item item) {
+        return item.getCharacterEquipmentSlot() != null ||
+                item.getInventoryCharacter() != null ||
+                item.getContainingTile() != null ||
+                item.getContainingTileFixture() != null;
     }
 
     @Override

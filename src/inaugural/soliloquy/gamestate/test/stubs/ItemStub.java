@@ -12,8 +12,9 @@ public class ItemStub implements Item {
 
     private boolean _deleted;
 
-    public Character _character;
+    public Character _equipmentCharacter;
     public String _equipmentSlotType;
+    public Character _inventoryCharacter;
     public TileFixture _tileFixture;
     public Tile _containingTile;
 
@@ -52,17 +53,17 @@ public class ItemStub implements Item {
 
     @Override
     public Character getInventoryCharacter() throws IllegalStateException {
-        return null;
+        return _inventoryCharacter;
     }
 
     @Override
     public Pair<Character, String> getCharacterEquipmentSlot()
             throws IllegalStateException {
-        if (_character == null || _equipmentSlotType == null) {
+        if (_equipmentCharacter == null || _equipmentSlotType == null) {
             return null;
         }
         else {
-            return new PairStub<>(_character, _equipmentSlotType);
+            return new PairStub<>(_equipmentCharacter, _equipmentSlotType);
         }
     }
 
@@ -86,7 +87,7 @@ public class ItemStub implements Item {
     public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
             Character character, String equipmentSlotType)
             throws IllegalStateException, IllegalArgumentException {
-        _character = character;
+        _equipmentCharacter = character;
         _equipmentSlotType = equipmentSlotType;
     }
 
