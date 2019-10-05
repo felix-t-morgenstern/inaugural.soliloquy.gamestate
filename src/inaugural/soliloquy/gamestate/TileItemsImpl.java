@@ -6,6 +6,8 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileItems;
 
+import static inaugural.soliloquy.gamestate.ItemPresence.itemIsPresentElsewhere;
+
 public class TileItemsImpl extends GameEntityMediatorWithZIndex<Item> implements TileItems {
     private final Tile TILE;
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
@@ -62,5 +64,10 @@ public class TileItemsImpl extends GameEntityMediatorWithZIndex<Item> implements
     @Override
     protected void removeEntityFromAggregate(Item item) {
         item.assignTileToItemAfterAddingItemToTileItems(null);
+    }
+
+    @Override
+    boolean entityIsPresentElsewhere(Item item) {
+        return itemIsPresentElsewhere(item);
     }
 }

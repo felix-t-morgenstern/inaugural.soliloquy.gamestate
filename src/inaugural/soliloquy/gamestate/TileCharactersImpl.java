@@ -41,8 +41,10 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
         enforceDeletionInvariants("addCharacter");
         enforceCharacterAssignmentInvariant(character, "add");
         if (character == null) {
-            throw new IllegalArgumentException(
-                    "TileCharacters.addCharacter: character cannot be null");
+            throw new IllegalArgumentException("TileCharacters.add: character cannot be null");
+        }
+        if (character.tile() != null) {
+            throw new IllegalArgumentException("TileCharacters.add: character is on another Tile");
         }
         CHARACTERS.put(character, zIndex);
         character.assignToTileAfterAddingToTileCharacters(TILE);

@@ -43,7 +43,10 @@ class TileCharactersImplTests {
 
     @Test
     void testAddCharacterAlreadyPresentOnAnotherTile() {
-        // TODO: Complete and pass this test
+        ((CharacterStub)CHARACTER)._tile = new TileStub();
+
+        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.add(CHARACTER));
+        assertThrows(IllegalArgumentException.class, () -> _tileCharacters.add(CHARACTER, 0));
     }
 
     @Test

@@ -12,6 +12,8 @@ import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.HashMap;
 
+import static inaugural.soliloquy.gamestate.ItemPresence.itemIsPresentElsewhere;
+
 public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
         implements CharacterEquipmentSlots {
     private final Character CHARACTER;
@@ -216,13 +218,6 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
         enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
                 equipmentSlotType);
         return previousItem;
-    }
-
-    private boolean itemIsPresentElsewhere(Item item) {
-        return item.getCharacterEquipmentSlot() != null ||
-                item.getInventoryCharacter() != null ||
-                item.getContainingTile() != null ||
-                item.getContainingTileFixture() != null;
     }
 
     @Override

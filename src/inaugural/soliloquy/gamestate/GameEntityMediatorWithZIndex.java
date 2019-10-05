@@ -59,9 +59,15 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
         if (entity == null) {
             throw new IllegalArgumentException(className() + ".add: entity must be non-null");
         }
+        if (entityIsPresentElsewhere(entity))
+        {
+            throw new IllegalArgumentException(className() + ".add: entity is present elsewhere");
+        }
         ENTITIES.put(entity, zIndex);
         assignEntityToAggregate(entity);
     }
+
+    abstract boolean entityIsPresentElsewhere(TEntity entity);
 
     public boolean remove(TEntity entity) {
         enforceDeletionInvariants("remove");

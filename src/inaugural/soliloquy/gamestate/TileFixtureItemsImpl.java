@@ -10,6 +10,8 @@ import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
 import java.util.ArrayList;
 
+import static inaugural.soliloquy.gamestate.ItemPresence.itemIsPresentElsewhere;
+
 public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileFixtureItems {
     private final TileFixture TILE_FIXTURE;
     private final CollectionFactory COLLECTION_FACTORY;
@@ -63,6 +65,9 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
         enforceItemAssignmentInvariant(item, "add");
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.add: item must be non-null");
+        }
+        if (itemIsPresentElsewhere(item)) {
+            throw new IllegalArgumentException("TileFixtureItems.add: item present elsewhere");
         }
         CONTAINED_ITEMS.add(item);
         item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE);

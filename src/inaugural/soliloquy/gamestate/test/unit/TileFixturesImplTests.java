@@ -54,7 +54,10 @@ class TileFixturesImplTests {
 
     @Test
     void testAddTileFixtureAlreadyPresentOnAnotherTile() {
-        // TODO: Complete and pass this test
+        ((TileFixtureStub)TILE_FIXTURE)._tile = new TileStub();
+
+        assertThrows(IllegalArgumentException.class, () -> _tileFixtures.add(TILE_FIXTURE));
+        assertThrows(IllegalArgumentException.class, () -> _tileFixtures.add(TILE_FIXTURE,0));
     }
 
     @Test

@@ -66,4 +66,9 @@ public class TileFixturesImpl extends GameEntityMediatorWithZIndex<TileFixture> 
     protected void removeEntityFromAggregate(TileFixture tileFixture) {
         tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null);
     }
+
+    @Override
+    boolean entityIsPresentElsewhere(TileFixture tileFixture) {
+        return tileFixture.tile() != null;
+    }
 }

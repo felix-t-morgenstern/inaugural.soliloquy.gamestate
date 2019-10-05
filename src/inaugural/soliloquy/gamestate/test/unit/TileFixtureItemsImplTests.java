@@ -1,9 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileFixtureItemsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.ItemStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileFixtureStub;
+import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -70,7 +68,26 @@ class TileFixtureItemsImplTests {
 
     @Test
     void testAddItemAlreadyPresentInOtherLocationTypes() {
-        // TODO: Complete and pass this test
+        ((ItemStub) ITEM)._equipmentCharacter = new CharacterStub();
+        ((ItemStub) ITEM)._equipmentSlotType = "EquipmentSlotType";
+
+        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
+
+        ((ItemStub) ITEM)._equipmentCharacter = null;
+        ((ItemStub) ITEM)._equipmentSlotType = null;
+        ((ItemStub) ITEM)._inventoryCharacter = new CharacterStub();
+
+        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
+
+        ((ItemStub) ITEM)._inventoryCharacter = null;
+        ((ItemStub) ITEM)._containingTile = new TileStub();
+
+        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
+
+        ((ItemStub) ITEM)._containingTile = null;
+        ((ItemStub) ITEM)._tileFixture = new TileFixtureStub();
+
+        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
     }
 
     @Test
