@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 
 public class CoordinateArchetype implements Coordinate {
     @Override
@@ -24,8 +25,8 @@ public class CoordinateArchetype implements Coordinate {
     }
 
     @Override
-    public int compareTo(Coordinate o) {
-        return 0;
+    public ReadableCoordinate readOnlyRepresentation() {
+        return null;
     }
 
     @Override
@@ -36,5 +37,10 @@ public class CoordinateArchetype implements Coordinate {
     @Override
     public String getInterfaceName() {
         return "soliloquy.common.specs.ICoordinate";
+    }
+
+    @Override
+    public int compareTo(ReadableCoordinate o) {
+        return 0;
     }
 }

@@ -30,7 +30,7 @@ class ItemImplTests {
     private final String CHARACTER_EQUIPMENT_SLOT_TYPE = "slotType";
     private final CharacterInventory CHARACTER_INVENTORY = ((CharacterStub) CHARACTER).INVENTORY;
     private final Tile TILE = new TileStub();
-    private final TileFixtureItems TILE_FIXTURE_ITEMS = new TileFixtureItemsStub(null);
+    private final TileFixture TILE_FIXTURE = new TileFixtureStub();
 
     @BeforeEach
     void setUp() {
@@ -183,7 +183,7 @@ class ItemImplTests {
 
         assertNull(_item.getInventoryCharacter());
 
-        TILE_FIXTURE_ITEMS.add(_item);
+        TILE_FIXTURE.items().add(_item);
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
 
         assertNull(_item.getContainingTileFixture());
@@ -201,7 +201,7 @@ class ItemImplTests {
 
         assertNull(_item.getCharacterEquipmentSlot());
 
-        TILE_FIXTURE_ITEMS.add(_item);
+        TILE_FIXTURE.items().add(_item);
         CHARACTER_INVENTORY.add(_item);
 
         assertNull(_item.getCharacterEquipmentSlot());
@@ -215,15 +215,15 @@ class ItemImplTests {
     @Test
     void testAssignTileFixtureToItemAfterAddingItemToTileFixtureItemsNullifiesOtherAssignments() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
-        TILE_FIXTURE_ITEMS.add(_item);
+        TILE_FIXTURE.items().add(_item);
         assertNull(_item.getCharacterEquipmentSlot());
 
         CHARACTER_INVENTORY.add(_item);
-        TILE_FIXTURE_ITEMS.add(_item);
+        TILE_FIXTURE.items().add(_item);
         assertNull(_item.getInventoryCharacter());
 
         TILE.items().add(_item);
-        TILE_FIXTURE_ITEMS.add(_item);
+        TILE_FIXTURE.items().add(_item);
         assertNull(_item.getContainingTile());
     }
 
@@ -237,7 +237,7 @@ class ItemImplTests {
         TILE.items().add(_item);
         assertNull(_item.getInventoryCharacter());
 
-        TILE_FIXTURE_ITEMS.add(_item);
+        TILE_FIXTURE.items().add(_item);
         TILE.items().add(_item);
         assertNull(_item.getContainingTileFixture());
     }
@@ -360,17 +360,34 @@ class ItemImplTests {
 
         assertFalse(CHARACTER_INVENTORY.contains(_item));
         assertFalse(CharacterInventoryStub.ITEMS.contains(_item));
-        assertEquals(originalCharacterInventorySize - 1, CharacterInventoryStub.ITEMS.size());
+        assertEquals(originalCharacterInventorySize - 1,
+                CharacterInventoryStub.ITEMS.size());
     }
 
     @Test
     void testDeleteRemovesItemFromTileFixtureItems() {
-        // TODO: Test and implement
+        TILE_FIXTURE.items().add(_item);
+        assertTrue(TILE_FIXTURE.items().contains(_item));
+        int originalTileFixtureSize = TileFixtureItemsStub.ITEMS.size();
+
+        _item.delete();
+
+        assertFalse(TILE_FIXTURE.items().contains(_item));
+        assertFalse(TileFixtureItemsStub.ITEMS.contains(_item));
+        assertEquals(originalTileFixtureSize - 1, TileFixtureItemsStub.ITEMS.size());
     }
 
     @Test
     void testDeleteRemovesItemFromTileItems() {
-        // TODO: Test and implement
+        TILE.items().add(_item);
+        assertTrue(TILE.items().contains(_item));
+        int originalTileFixtureSize = TileItemsStub.ITEMS.size();
+
+        _item.delete();
+
+        assertFalse(TILE.items().contains(_item));
+        assertFalse(TileItemsStub.ITEMS.contains(_item));
+        assertEquals(originalTileFixtureSize - 1, TileItemsStub.ITEMS.size());
     }
 
     @Test
@@ -393,8 +410,7 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () ->
                 _item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-                        ((TileFixtureItemsStub)TILE_FIXTURE_ITEMS).TILE_FIXTURE));
+                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileToItemAfterAddingItemToTileItems(TILE));
         assertThrows(IllegalStateException.class, () -> _item.getName());
@@ -425,8 +441,7 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () ->
                 _item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-                        ((TileFixtureItemsStub)TILE_FIXTURE_ITEMS).TILE_FIXTURE));
+                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileToItemAfterAddingItemToTileItems(TILE));
         assertThrows(IllegalStateException.class, () -> _item.getName());
@@ -456,8 +471,7 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () ->
                 _item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-                        ((TileFixtureItemsStub)TILE_FIXTURE_ITEMS).TILE_FIXTURE));
+                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileToItemAfterAddingItemToTileItems(TILE));
         assertThrows(IllegalStateException.class, () -> _item.getName());
@@ -487,8 +501,7 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () ->
                 _item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-                        ((TileFixtureItemsStub)TILE_FIXTURE_ITEMS).TILE_FIXTURE));
+                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileToItemAfterAddingItemToTileItems(TILE));
         assertThrows(IllegalStateException.class, () -> _item.getName());
@@ -518,8 +531,7 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () ->
                 _item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(
-                        ((TileFixtureItemsStub)TILE_FIXTURE_ITEMS).TILE_FIXTURE));
+                _item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileToItemAfterAddingItemToTileItems(TILE));
         assertThrows(IllegalStateException.class, () -> _item.getName());

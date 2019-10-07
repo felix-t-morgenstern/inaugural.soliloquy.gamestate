@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class TileCharactersStub implements TileCharacters {
     public final HashMap<Character,Integer> CHARACTERS = new HashMap<>();
-    private final Tile TILE;
+    public final Tile TILE;
     public final Collection<Character> REMOVED_CHARACTERS = new CollectionStub<>();
 
     TileCharactersStub(Tile tile) {

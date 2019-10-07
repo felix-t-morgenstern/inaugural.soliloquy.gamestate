@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TileFixturesStub implements TileFixtures {
-    private final Tile TILE;
+    public final Tile TILE;
 
-    public final List<TileFixture> FIXTURES = new ArrayList<>();
+    public final static List<TileFixture> FIXTURES = new ArrayList<>();
 
     TileFixturesStub(Tile tile) {
         TILE = tile;
@@ -33,8 +33,8 @@ public class TileFixturesStub implements TileFixtures {
     }
 
     @Override
-    public boolean remove(TileFixture iTileFixture) {
-        return false;
+    public boolean remove(TileFixture tileFixture) {
+        return FIXTURES.remove(tileFixture);
     }
 
     @Override

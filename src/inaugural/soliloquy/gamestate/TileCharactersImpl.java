@@ -116,7 +116,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
 
     @Override
     protected String className() {
-        return "TileCharacters";
+        return "TileCharactersImpl";
     }
 
     @Override

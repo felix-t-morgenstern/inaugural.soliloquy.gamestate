@@ -229,11 +229,25 @@ public class ItemImpl implements Item {
     public void delete() throws IllegalStateException {
         enforceDeletionInvariant("delete");
         if (_characterEquipmentSlotsCharacter != null) {
+            // TODO: Attempt to test whether unassign-then-remove pattern is followed here
             _characterEquipmentSlotsCharacter.equipmentSlots()
                     .equipItemToSlot(_characterEquipmentSlotType, null);
         }
         if (_characterInventoryCharacter != null) {
-            _characterInventoryCharacter.inventory().remove(this);
+            // TODO: Attempt to test whether unassign-then-remove pattern is followed here
+            CharacterInventory characterInventory = _characterInventoryCharacter.inventory();
+            _characterInventoryCharacter = null;
+            characterInventory.remove(this);
+        }
+        if (_containingTileFixture != null) {
+            TileFixtureItems tileFixtureItems = _containingTileFixture.items();
+            _containingTileFixture = null;
+            tileFixtureItems.remove(this);
+        }
+        if (_containingTile != null) {
+            TileItems tileItems = _containingTile.items();
+            _containingTile = null;
+            tileItems.remove(this);
         }
         _isDeleted = true;
     }

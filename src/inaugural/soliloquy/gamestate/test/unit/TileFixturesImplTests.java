@@ -129,7 +129,7 @@ class TileFixturesImplTests {
 
     @Test
     void testTileDeletedInvariant() {
-        TILE.delete();
+        TILE.deleteAfterDeletingContainingGameZone();
 
         assertThrows(IllegalStateException.class, () -> _tileFixtures.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileFixtures.representation());

@@ -139,7 +139,7 @@ class TileCharactersImplTests {
 
     @Test
     void testTileDeletedInvariant() {
-        TILE.delete();
+        TILE.deleteAfterDeletingContainingGameZone();
 
         assertThrows(IllegalStateException.class, () -> _tileCharacters.charactersRepresentation());
         assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER));

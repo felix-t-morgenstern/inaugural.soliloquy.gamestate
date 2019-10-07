@@ -3,14 +3,11 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 
-public class CoordinateStub implements Coordinate {
+public class ReadableCoordinateStub implements ReadableCoordinate {
     private int _x;
     private int _y;
 
-    public CoordinateStub() {
-    }
-
-    public CoordinateStub(int x, int y) {
+    public ReadableCoordinateStub(int x, int y) {
         _x = x;
         _y = y;
     }
@@ -21,23 +18,13 @@ public class CoordinateStub implements Coordinate {
     }
 
     @Override
-    public void setX(int x) {
-        _x = x;
-    }
-
-    @Override
     public int getY() {
         return _y;
     }
 
     @Override
-    public void setY(int y) {
-        _y = y;
-    }
-
-    @Override
-    public ReadableCoordinate readOnlyRepresentation() {
-        return new ReadableCoordinateStub(_x, _y);
+    public int compareTo(ReadableCoordinate o) {
+        return 0;
     }
 
     @Override
@@ -48,10 +35,5 @@ public class CoordinateStub implements Coordinate {
     @Override
     public String getInterfaceName() {
         return null;
-    }
-
-    @Override
-    public int compareTo(ReadableCoordinate o) {
-        return 0;
     }
 }

@@ -78,13 +78,21 @@ class TileFixtureImplTests {
 
     @Test
     void testDelete() {
+        Tile tile = new TileStub();
+        tile.fixtures().add(_tileFixture);
         TileFixtureItems containedItems = _tileFixture.items();
+        int originalNumberOfContainedItems = TileFixturesStub.FIXTURES.size();
 
         _tileFixture.delete();
 
         // The test is simply asking the TileFixtureItems to handle deletion of its Items
         assertTrue(_tileFixture.isDeleted());
         assertTrue(containedItems.isDeleted());
+
+        assertFalse(tile.fixtures().contains(_tileFixture));
+        assertFalse(TileFixturesStub.FIXTURES.contains(_tileFixture));
+        assertEquals(originalNumberOfContainedItems - 1,
+                TileFixturesStub.FIXTURES.size());
     }
 
     @Test
@@ -115,7 +123,7 @@ class TileFixtureImplTests {
     void testContainingTileInvariant() {
         Tile tile = new TileStub();
         tile.fixtures().add(_tileFixture);
-        ((TileFixturesStub) tile.fixtures()).FIXTURES.remove(_tileFixture);
+        TileFixturesStub.FIXTURES.remove(_tileFixture);
 
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.fixtureType());

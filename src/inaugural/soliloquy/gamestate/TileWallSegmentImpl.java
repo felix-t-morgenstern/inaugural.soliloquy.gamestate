@@ -154,7 +154,7 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     private void enforceAggregateAssignmentInvariant(String methodName) {
         if (_tile != null) {
             TileWallSegmentDirection tileWallSegmentDirection =
-                    _tile.tileWallSegments().getDirection(this);
+                    _tile.wallSegments().getDirection(this);
             if (tileWallSegmentDirection == TileWallSegmentDirection.NOT_FOUND) {
                 throw new IllegalStateException("TileWallSegmentImpl." + methodName +
                         ": This TileWallSegment not found in Tile to which it was assigned");

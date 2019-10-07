@@ -8,6 +8,7 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.TileFixtures;
 import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
@@ -83,6 +84,11 @@ public class TileFixtureImpl implements TileFixture {
     public void delete() throws IllegalStateException {
         enforceInvariant("delete", true);
         TILE_FIXTURE_ITEMS.delete();
+        if (_tile != null) {
+            TileFixtures tileFixtures = _tile.fixtures();
+            _tile = null;
+            tileFixtures.remove(this);
+        }
         _deleted = true;
     }
 

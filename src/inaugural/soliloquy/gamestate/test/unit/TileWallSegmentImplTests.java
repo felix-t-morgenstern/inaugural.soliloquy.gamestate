@@ -75,7 +75,7 @@ class TileWallSegmentImplTests {
     @Test
     void testAssignTileWallSegmentsToTileAfterAddingToTileWallSegmentsAndGetTile() {
         Tile tile = new TileStub();
-        ((TileWallSegmentsStub)tile.tileWallSegments()).TILE_WALL_SEGMENTS
+        ((TileWallSegmentsStub)tile.wallSegments()).TILE_WALL_SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).add(_tileWallSegment);
 
         assertNull(_tileWallSegment.getTile());
@@ -100,10 +100,12 @@ class TileWallSegmentImplTests {
 
     @Test
     void testDelete() {
+        // TODO: Add a TileWallSegment here
         assertFalse(_tileWallSegment.isDeleted());
 
         _tileWallSegment.delete();
 
+        // TODO: Test whether added TileWallSegment was deleted
         assertTrue(_tileWallSegment.isDeleted());
     }
 
@@ -130,9 +132,9 @@ class TileWallSegmentImplTests {
     @Test
     void testAggregateAssignmentInvariant() {
         Tile tile = new TileStub();
-        tile.tileWallSegments().add(TileWallSegmentDirection.NORTH, _tileWallSegment);
+        tile.wallSegments().add(TileWallSegmentDirection.NORTH, _tileWallSegment);
 
-        ((TileWallSegmentsStub)tile.tileWallSegments()).TILE_WALL_SEGMENTS
+        ((TileWallSegmentsStub)tile.wallSegments()).TILE_WALL_SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).remove(_tileWallSegment);
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getWallSegmentType());
@@ -150,7 +152,7 @@ class TileWallSegmentImplTests {
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getName());
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.setName(""));
 
-        ((TileWallSegmentsStub)tile.tileWallSegments()).TILE_WALL_SEGMENTS
+        ((TileWallSegmentsStub)tile.wallSegments()).TILE_WALL_SEGMENTS
                 .get(TileWallSegmentDirection.WEST).add(_tileWallSegment);
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getWallSegmentType());

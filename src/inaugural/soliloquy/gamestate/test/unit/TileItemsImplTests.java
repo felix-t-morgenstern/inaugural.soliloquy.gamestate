@@ -151,7 +151,7 @@ class TileItemsImplTests {
 
     @Test
     void testTileDeletedInvariant() {
-        TILE.delete();
+        TILE.deleteAfterDeletingContainingGameZone();
 
         assertThrows(IllegalStateException.class, () -> _tileItems.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileItems.representation());

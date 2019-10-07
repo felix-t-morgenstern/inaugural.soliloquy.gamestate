@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
 import soliloquy.specs.ruleset.entities.GroundType;
@@ -19,18 +19,18 @@ public class TileStub implements Tile {
 
     private boolean _isDeleted;
 
-    private Coordinate _tileLocation;
+    private ReadableCoordinate _tileLocation;
 
     public TileStub() {
         GAME_ZONE = new GameZoneStub();
     }
 
-    public TileStub(Coordinate tileLocation) {
+    public TileStub(ReadableCoordinate tileLocation) {
         _tileLocation = tileLocation;
         GAME_ZONE = new GameZoneStub();
     }
 
-    public TileStub(Coordinate tileLocation, GameZone gameZone)
+    public TileStub(ReadableCoordinate tileLocation, GameZone gameZone)
     {
         _tileLocation = tileLocation;
         GAME_ZONE = gameZone;
@@ -42,7 +42,7 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public void delete() throws IllegalStateException {
+    public void deleteAfterDeletingContainingGameZone() throws IllegalStateException {
         _isDeleted = true;
     }
 
@@ -57,13 +57,8 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public Coordinate getLocation() throws IllegalStateException {
+    public ReadableCoordinate location() throws IllegalStateException {
         return _tileLocation;
-    }
-
-    @Override
-    public void setLocation(Coordinate coordinate) throws IllegalArgumentException, IllegalStateException {
-
     }
 
     @Override
@@ -102,23 +97,13 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public TileWallSegments tileWallSegments() throws IllegalStateException {
+    public TileWallSegments wallSegments() throws IllegalStateException {
         return TILE_WALL_SEGMENTS;
     }
 
     @Override
     public Map<Integer, Collection<Sprite>> sprites() throws IllegalStateException {
         return null;
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public void setName(String s) {
-
     }
 
     @Override

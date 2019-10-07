@@ -11,13 +11,9 @@ import java.util.List;
 public class TileItemsStub implements TileItems {
     public static List<Item> ITEMS = new ArrayList<>();
 
-    private final Tile TILE;
+    public final Tile TILE;
 
-    public TileItemsStub() {
-        TILE = new TileStub();
-    }
-
-    public TileItemsStub(Tile tile) {
+    TileItemsStub(Tile tile) {
         TILE = tile;
     }
 
@@ -41,7 +37,7 @@ public class TileItemsStub implements TileItems {
     public boolean remove(Item item) throws IllegalArgumentException {
         boolean itemPresent = ITEMS.remove(item);
         if (itemPresent) {
-            item.assignTileToItemAfterAddingItemToTileItems(TILE);
+            item.assignTileToItemAfterAddingItemToTileItems(null);
         }
         return itemPresent;
     }

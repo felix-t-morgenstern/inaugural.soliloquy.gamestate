@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -41,7 +42,7 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public Tile tile(Coordinate tileLocation) throws IllegalArgumentException {
+    public Tile tile(ReadableCoordinate tileLocation) throws IllegalArgumentException {
         return new TileStub(tileLocation, this);
     }
 
@@ -83,6 +84,16 @@ public class GameZoneStub implements GameZone {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public void delete() throws IllegalStateException {
+
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return false;
     }
 
     public class GameZoneStubException extends RuntimeException {

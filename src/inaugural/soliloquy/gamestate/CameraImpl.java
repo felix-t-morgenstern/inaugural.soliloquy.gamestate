@@ -9,6 +9,7 @@ import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
@@ -148,20 +149,20 @@ public class CameraImpl implements Camera {
                 }
             }
         } else {
-            HashMap<Coordinate,Integer> coordinatesProvidingVisibility = new HashMap<>();
+            HashMap<ReadableCoordinate,Integer> coordinatesProvidingVisibility = new HashMap<>();
             for(Pair<Character,Integer> characterProvidingVisibility
                     : CHARACTERS_PROVIDING_VISIBILITY) {
                 coordinatesProvidingVisibility.put(characterProvidingVisibility.getItem1().tile()
-                        .getLocation(), characterProvidingVisibility.getItem2());
+                        .location(), characterProvidingVisibility.getItem2());
             }
             for(Pair<Coordinate,Integer> coordinateProvidingVisibility
                     : COORDINATES_PROVIDING_VISIBILITY) {
                 coordinatesProvidingVisibility.put(coordinateProvidingVisibility.getItem1(),
                         coordinateProvidingVisibility.getItem2());
             }
-            for(java.util.Map.Entry<Coordinate,Integer> coordinateProvidingVisibility
+            for(java.util.Map.Entry<ReadableCoordinate,Integer> coordinateProvidingVisibility
                     : coordinatesProvidingVisibility.entrySet()) {
-                Coordinate coordinate = coordinateProvidingVisibility.getKey();
+                ReadableCoordinate coordinate = coordinateProvidingVisibility.getKey();
                 Integer coordinateVisibilityRadius = coordinateProvidingVisibility.getValue();
                 Tile originTile = gameZone.tile(coordinate);
                 int minVisibleX = Math.max(0,
