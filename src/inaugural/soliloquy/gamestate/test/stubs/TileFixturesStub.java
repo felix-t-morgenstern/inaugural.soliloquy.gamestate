@@ -13,6 +13,8 @@ public class TileFixturesStub implements TileFixtures {
 
     public final static List<TileFixture> FIXTURES = new ArrayList<>();
 
+    private boolean _isDeleted;
+
     TileFixturesStub(Tile tile) {
         TILE = tile;
     }
@@ -49,11 +51,11 @@ public class TileFixturesStub implements TileFixtures {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 }

@@ -16,7 +16,7 @@ import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.sprites.entities.Sprite;
 
-public class TileImpl extends HasDeletionInvariants implements Tile {
+public class TileImpl implements Tile {
     private final GameZone GAME_ZONE;
     private final ReadableCoordinate LOCATION;
     private final TileCharacters TILE_CHARACTERS;
@@ -25,16 +25,20 @@ public class TileImpl extends HasDeletionInvariants implements Tile {
     private final TileWallSegments TILE_WALL_SEGMENTS;
     private final Map<Integer, Collection<Sprite>> SPRITES;
     private final GenericParamsSet DATA;
+    private final Collection<GameEvent> EVENTS;
 
     private int _height;
     private GroundType _groundType;
+    private boolean _isDeleted;
 
+    @SuppressWarnings("ConstantConditions")
     public TileImpl(GameZone gameZone, ReadableCoordinate location,
                     TileCharactersFactory tileCharactersFactory, TileItemsFactory tileItemsFactory,
                     TileFixturesFactory tileFixturesFactory,
                     TileWallSegmentsFactory tileWallSegmentsFactory, MapFactory mapFactory,
                     CollectionFactory collectionFactory, Sprite spriteArchetype,
-                    GenericParamsSetFactory genericParamsSetFactory) {
+                    GenericParamsSetFactory genericParamsSetFactory,
+                    GameEvent gameEventArchetype) {
         if (gameZone == null) {
             throw new IllegalArgumentException("TileImpl: gameZone cannot be null");
         }
@@ -73,105 +77,137 @@ public class TileImpl extends HasDeletionInvariants implements Tile {
             throw new IllegalArgumentException("TileImpl: genericParamsSetFactory cannot be null");
         }
         DATA = genericParamsSetFactory.make();
+        if (gameEventArchetype == null) {
+            throw new IllegalArgumentException("TileImpl: gameEventArchetype cannot be null");
+        }
+        EVENTS = collectionFactory.make(gameEventArchetype);
     }
 
     @Override
     public GameZone gameZone() throws IllegalStateException {
+        enforceDeletionInvariant("gameZone");
+        enforceLocationCorrespondenceInvariant("gameZone");
         return GAME_ZONE;
     }
 
     @Override
     public ReadableCoordinate location() throws IllegalStateException {
+        enforceDeletionInvariant("location");
+        enforceLocationCorrespondenceInvariant("location");
         return LOCATION;
     }
 
     @Override
     public int getHeight() throws IllegalStateException {
+        enforceDeletionInvariant("getHeight");
+        enforceLocationCorrespondenceInvariant("getHeight");
         return _height;
     }
 
     @Override
     public void setHeight(int height) throws IllegalStateException {
+        enforceDeletionInvariant("setHeight");
+        enforceLocationCorrespondenceInvariant("setHeight");
         _height = height;
     }
 
     @Override
     public GroundType getGroundType() throws IllegalStateException {
+        enforceDeletionInvariant("getGroundType");
+        enforceLocationCorrespondenceInvariant("getGroundType");
         return _groundType;
     }
 
     @Override
     public void setGroundType(GroundType groundType) throws IllegalStateException {
+        enforceDeletionInvariant("setGroundType");
+        enforceLocationCorrespondenceInvariant("setGroundType");
         _groundType = groundType;
     }
 
     @Override
     public TileCharacters characters() {
+        enforceDeletionInvariant("characters");
+        enforceLocationCorrespondenceInvariant("characters");
         return TILE_CHARACTERS;
     }
 
     @Override
     public TileItems items() {
+        enforceDeletionInvariant("items");
+        enforceLocationCorrespondenceInvariant("items");
         return TILE_ITEMS;
     }
 
     @Override
     public TileFixtures fixtures() throws IllegalStateException {
+        enforceDeletionInvariant("fixtures");
+        enforceLocationCorrespondenceInvariant("fixtures");
         return TILE_FIXTURES;
     }
 
     @Override
     public TileWallSegments wallSegments() throws IllegalStateException {
+        enforceDeletionInvariant("wallSegments");
+        enforceLocationCorrespondenceInvariant("wallSegments");
         return TILE_WALL_SEGMENTS;
     }
 
     @Override
     public Map<Integer, Collection<Sprite>> sprites() throws IllegalStateException {
+        enforceDeletionInvariant("sprites");
+        enforceLocationCorrespondenceInvariant("sprites");
         return SPRITES;
     }
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
+        enforceDeletionInvariant("data");
+        enforceLocationCorrespondenceInvariant("data");
         return DATA;
     }
 
     @Override
-    protected String className() {
-        return "TileImpl";
-    }
-
-    @Override
-    protected String containingClassName() {
-        return "GameZone";
-    }
-
-    @Override
-    protected boolean containingObjectIsDeleted() {
-        return false;
-    }
-
-    @Override
-    public void delete() throws IllegalStateException {
-
-    }
-
-    @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     @Override
     public void deleteAfterDeletingContainingGameZone() throws IllegalStateException {
+        if (!GAME_ZONE.isDeleted()) {
+            throw new IllegalStateException("TileImpl.deleteAfterDeletingContainingGameZone: " +
+                    "containing GameZone has not been deleted");
+        }
+        _isDeleted = true;
+        TILE_CHARACTERS.delete();
+        TILE_FIXTURES.delete();
+        TILE_ITEMS.delete();
+        TILE_WALL_SEGMENTS.delete();
+    }
 
+    private void enforceDeletionInvariant(String methodName) {
+        if (_isDeleted) {
+            throw new IllegalStateException("TileImpl." + methodName + ": Tile is deleted");
+        }
     }
 
     @Override
     public Collection<GameEvent> events() throws IllegalStateException {
-        return null;
+        enforceDeletionInvariant("events");
+        enforceLocationCorrespondenceInvariant("events");
+        return EVENTS;
     }
 
     @Override
     public String getInterfaceName() {
-        return null;
+        return Tile.class.getCanonicalName();
+    }
+
+    private void enforceLocationCorrespondenceInvariant(String methodName) {
+        if (GAME_ZONE.tile(LOCATION) != this) {
+            throw new IllegalStateException("TileImpl." + methodName + ": This Tile is not " +
+                    "present at its stated location (" + LOCATION.getX() + "," + LOCATION.getY() +
+                    ") in its containing GameZone");
+        }
     }
 }

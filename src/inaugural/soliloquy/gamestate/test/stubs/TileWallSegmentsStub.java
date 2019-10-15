@@ -15,7 +15,9 @@ public class TileWallSegmentsStub implements TileWallSegments {
             new HashMap<>();
     public final Tile TILE;
 
-    public TileWallSegmentsStub(Tile tile) {
+    private boolean _isDeleted;
+
+    TileWallSegmentsStub(Tile tile) {
         TILE = tile;
         TILE_WALL_SEGMENTS.put(TileWallSegmentDirection.NORTH, new HashSet<>());
         TILE_WALL_SEGMENTS.put(TileWallSegmentDirection.NORTHWEST, new HashSet<>());
@@ -63,12 +65,12 @@ public class TileWallSegmentsStub implements TileWallSegments {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     @Override

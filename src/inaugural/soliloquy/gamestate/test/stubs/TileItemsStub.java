@@ -13,6 +13,8 @@ public class TileItemsStub implements TileItems {
 
     public final Tile TILE;
 
+    private boolean _isDeleted;
+
     TileItemsStub(Tile tile) {
         TILE = tile;
     }
@@ -49,12 +51,12 @@ public class TileItemsStub implements TileItems {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     @Override

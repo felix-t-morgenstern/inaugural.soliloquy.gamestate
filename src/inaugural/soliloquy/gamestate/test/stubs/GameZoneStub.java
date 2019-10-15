@@ -13,7 +13,12 @@ public class GameZoneStub implements GameZone {
     public static int _maxX = 999;
     public static int _maxY = 999;
 
+    public Tile[][] TILES = new Tile[200][200];
+    public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
+
     private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
+
+    private boolean _isDeleted;
 
     public GameZoneStub() {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
@@ -43,7 +48,11 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public Tile tile(ReadableCoordinate tileLocation) throws IllegalArgumentException {
-        return new TileStub(tileLocation, this);
+        if (RETURN_ACTUAL_TILE_AT_LOCATION) {
+            return TILES[tileLocation.getX()][tileLocation.getY()];
+        } else {
+            return new TileStub(tileLocation, this);
+        }
     }
 
     @Override
@@ -88,18 +97,25 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
+        for (Tile[] col : TILES) {
+            for (Tile tile : col) {
+                if (tile != null) {
+                    tile.deleteAfterDeletingContainingGameZone();
+                }
+            }
+        }
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 
     public class GameZoneStubException extends RuntimeException {
         public final GameZone GAME_ZONE;
 
-        public GameZoneStubException(GameZone gameZone) {
+        GameZoneStubException(GameZone gameZone) {
             GAME_ZONE = gameZone;
         }
     }

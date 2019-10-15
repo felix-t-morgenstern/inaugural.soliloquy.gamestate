@@ -13,6 +13,8 @@ public class TileCharactersStub implements TileCharacters {
     public final Tile TILE;
     public final Collection<Character> REMOVED_CHARACTERS = new CollectionStub<>();
 
+    private boolean _isDeleted;
+
     TileCharactersStub(Tile tile) {
         TILE = tile;
     }
@@ -61,11 +63,11 @@ public class TileCharactersStub implements TileCharacters {
 
     @Override
     public void delete() throws IllegalStateException {
-
+        _isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return false;
+        return _isDeleted;
     }
 }
