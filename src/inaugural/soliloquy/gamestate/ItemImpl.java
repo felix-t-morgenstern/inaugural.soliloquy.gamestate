@@ -345,4 +345,11 @@ public class ItemImpl implements Item {
                     ": assigned TileItems does not contain this Item");
         }
     }
+
+    public static boolean itemIsPresentElsewhere(Item item) {
+        return item.getCharacterEquipmentSlot() != null ||
+                item.getInventoryCharacter() != null ||
+                item.getContainingTile() != null ||
+                item.getContainingTileFixture() != null;
+    }
 }

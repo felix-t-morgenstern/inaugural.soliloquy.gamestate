@@ -12,6 +12,8 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
 
+import java.util.function.Predicate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEquipmentSlotsImplTests {
@@ -20,6 +22,7 @@ class CharacterEquipmentSlotsImplTests {
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final Item ITEM = new ItemStub();
     private final String EQUIPMENT_SLOT_TYPE = "armor";
+    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE = ItemStub::itemIsPresentElsewhere;
 
     private CharacterEquipmentSlots _characterEquipmentSlots;
 
@@ -27,7 +30,7 @@ class CharacterEquipmentSlotsImplTests {
     void setUp() {
         ((ItemStub)ITEM)._equipmentCharacter = null;
         _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY,
-                MAP_FACTORY);
+                MAP_FACTORY, ITEM_IS_PRESENT_ELSEWHERE);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
     }
 
@@ -35,11 +38,16 @@ class CharacterEquipmentSlotsImplTests {
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(null, PAIR_FACTORY, MAP_FACTORY));
+                () -> new CharacterEquipmentSlotsImpl(null, PAIR_FACTORY, MAP_FACTORY,
+                        ITEM_IS_PRESENT_ELSEWHERE));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(CHARACTER, null, MAP_FACTORY));
+                () -> new CharacterEquipmentSlotsImpl(CHARACTER, null, MAP_FACTORY,
+                        ITEM_IS_PRESENT_ELSEWHERE));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY, null));
+                () -> new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY, null,
+                        ITEM_IS_PRESENT_ELSEWHERE));
+        assertThrows(IllegalArgumentException.class,
+            () -> new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY, MAP_FACTORY, null));
     }
 
     @Test

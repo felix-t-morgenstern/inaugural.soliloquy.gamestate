@@ -147,4 +147,11 @@ public class ItemStub implements Item {
     public void setPluralName(String s) throws IllegalArgumentException {
 
     }
+
+    public static boolean itemIsPresentElsewhere(Item item) {
+        return item.getCharacterEquipmentSlot() != null ||
+                item.getInventoryCharacter() != null ||
+                item.getContainingTile() != null ||
+                item.getContainingTileFixture() != null;
+    }
 }

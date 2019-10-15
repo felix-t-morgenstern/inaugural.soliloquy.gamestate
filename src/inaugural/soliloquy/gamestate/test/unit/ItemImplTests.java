@@ -539,4 +539,41 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
         assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
     }
+
+    @Test
+    void testItemIsPresentElsewhere() {
+        assertFalse(ItemImpl.itemIsPresentElsewhere(_item));
+
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
+
+        assertTrue(ItemImpl.itemIsPresentElsewhere(_item));
+
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, null);
+
+        assertFalse(ItemImpl.itemIsPresentElsewhere(_item));
+
+        CHARACTER_INVENTORY.add(_item);
+
+        assertTrue(ItemImpl.itemIsPresentElsewhere(_item));
+
+        CHARACTER_INVENTORY.remove(_item);
+
+        assertFalse(ItemImpl.itemIsPresentElsewhere(_item));
+
+        TILE_FIXTURE.items().add(_item);
+
+        assertTrue(ItemImpl.itemIsPresentElsewhere(_item));
+
+        TILE_FIXTURE.items().remove(_item);
+
+        assertFalse(ItemImpl.itemIsPresentElsewhere(_item));
+
+        TILE.items().add(_item);
+
+        assertTrue(ItemImpl.itemIsPresentElsewhere(_item));
+
+        TILE.items().remove(_item);
+
+        assertFalse(ItemImpl.itemIsPresentElsewhere(_item));
+    }
 }

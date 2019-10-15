@@ -46,11 +46,10 @@ public class TileFixtureItemsStub implements TileFixtureItems {
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
-        boolean isPresent = ITEMS.remove(item);
-        if(isPresent) {
+        if(ITEMS.contains(item)) {
             item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(null);
         }
-        return isPresent;
+        return ITEMS.remove(item);
     }
 
     @Override

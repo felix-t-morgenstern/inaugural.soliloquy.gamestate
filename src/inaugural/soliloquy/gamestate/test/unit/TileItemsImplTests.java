@@ -10,6 +10,8 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileItems;
 
+import java.util.function.Predicate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileItemsImplTests {
@@ -18,18 +20,23 @@ class TileItemsImplTests {
     private final Item ITEM_2 = new ItemStub();
     private final Item ITEM_3 = new ItemStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE = ItemStub::itemIsPresentElsewhere;
 
     private TileItems _tileItems;
 
     @BeforeEach
     void setUp() {
-        _tileItems = new TileItemsImpl(TILE, MAP_FACTORY);
+        _tileItems = new TileItemsImpl(TILE, MAP_FACTORY, ITEM_IS_PRESENT_ELSEWHERE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new TileItemsImpl(null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new TileItemsImpl(TILE, null));
+        assertThrows(IllegalArgumentException.class, () -> new TileItemsImpl(null, MAP_FACTORY,
+                ITEM_IS_PRESENT_ELSEWHERE));
+        assertThrows(IllegalArgumentException.class, () -> new TileItemsImpl(TILE, null,
+                ITEM_IS_PRESENT_ELSEWHERE));
+        assertThrows(IllegalArgumentException.class, () -> new TileItemsImpl(TILE, MAP_FACTORY,
+                null));
     }
 
     @Test

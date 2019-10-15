@@ -11,8 +11,7 @@ import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.HashMap;
-
-import static inaugural.soliloquy.gamestate.ItemPresence.itemIsPresentElsewhere;
+import java.util.function.Predicate;
 
 public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
         implements CharacterEquipmentSlots {
@@ -20,29 +19,35 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     private final PairFactory PAIR_FACTORY;
     private final MapFactory MAP_FACTORY;
     private final HashMap<String, Pair<Item, Boolean>> EQUIPMENT_SLOTS;
+    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE;
 
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
     @SuppressWarnings("ConstantConditions")
     public CharacterEquipmentSlotsImpl(Character character, PairFactory pairFactory,
-                                       MapFactory mapFactory) {
+                                       MapFactory mapFactory,
+                                       Predicate<Item> itemIsPresentElsewhere) {
         if (character == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots: character must be non-null");
         }
+        CHARACTER = character;
         if (pairFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots: pairFactory must be non-null");
         }
+        PAIR_FACTORY = pairFactory;
         if (mapFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots: mapFactory must be non-null");
         }
-
-        CHARACTER = character;
-        PAIR_FACTORY = pairFactory;
         MAP_FACTORY = mapFactory;
         EQUIPMENT_SLOTS = new HashMap<>();
+        if (itemIsPresentElsewhere == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlots: itemIsPresentElsewhere must be non-null");
+        }
+        ITEM_IS_PRESENT_ELSEWHERE = itemIsPresentElsewhere;
     }
 
     @Override
@@ -182,7 +187,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
 
         enforceItemReferencesCorrectSlotInvariant("canEquipItemToSlot",
                 equipmentSlotType);
-        return !itemIsPresentElsewhere(item) &&
+        return !ITEM_IS_PRESENT_ELSEWHERE.test(item) &&
                 item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType);
     }
 
@@ -206,7 +211,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
             previousItem.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
                     null, null);
         }
-        if (item != null && itemIsPresentElsewhere(item)) {
+        if (item != null && ITEM_IS_PRESENT_ELSEWHERE.test(item)) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipItemToSlot: item is already present elsewhere");
         }

@@ -9,27 +9,33 @@ import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
 import java.util.ArrayList;
-
-import static inaugural.soliloquy.gamestate.ItemPresence.itemIsPresentElsewhere;
+import java.util.function.Predicate;
 
 public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileFixtureItems {
     private final TileFixture TILE_FIXTURE;
     private final CollectionFactory COLLECTION_FACTORY;
     private final ArrayList<Item> CONTAINED_ITEMS;
+    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE;
 
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public TileFixtureItemsImpl(TileFixture tileFixture, CollectionFactory collectionFactory) {
+    public TileFixtureItemsImpl(TileFixture tileFixture, CollectionFactory collectionFactory,
+                                Predicate<Item> itemIsPresentElsewhere) {
         if (tileFixture == null) {
             throw new IllegalArgumentException("TileFixtureItems: tileFixture must be non-null");
         }
+        TILE_FIXTURE = tileFixture;
         if (collectionFactory == null) {
             throw new IllegalArgumentException(
                     "TileFixtureItems: collectionFactory must be non-null");
         }
-        TILE_FIXTURE = tileFixture;
         COLLECTION_FACTORY = collectionFactory;
+        if (itemIsPresentElsewhere == null) {
+            throw new IllegalArgumentException(
+                    "TileFixtureItems: itemIsPresentElsewhere must be non-null");
+        }
+        ITEM_IS_PRESENT_ELSEWHERE = itemIsPresentElsewhere;
         CONTAINED_ITEMS = new ArrayList<>();
     }
 
@@ -66,7 +72,7 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.add: item must be non-null");
         }
-        if (itemIsPresentElsewhere(item)) {
+        if (ITEM_IS_PRESENT_ELSEWHERE.test(item)) {
             throw new IllegalArgumentException("TileFixtureItems.add: item present elsewhere");
         }
         CONTAINED_ITEMS.add(item);

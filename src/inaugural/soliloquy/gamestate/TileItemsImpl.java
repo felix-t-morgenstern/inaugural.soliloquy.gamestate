@@ -6,19 +6,26 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileItems;
 
-import static inaugural.soliloquy.gamestate.ItemPresence.itemIsPresentElsewhere;
+import java.util.function.Predicate;
 
 public class TileItemsImpl extends GameEntityMediatorWithZIndex<Item> implements TileItems {
     private final Tile TILE;
+    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE;
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public TileItemsImpl(Tile tile, MapFactory mapFactory) {
+    public TileItemsImpl(Tile tile, MapFactory mapFactory,
+                         Predicate<Item> itemIsPresentElsewhere) {
         super(mapFactory);
         if (tile == null) {
             throw new IllegalArgumentException("TileItems: tile must be non-null");
         }
         TILE = tile;
+        if (itemIsPresentElsewhere == null) {
+            throw new IllegalArgumentException("TileItems: itemIsPresentElsewhere must be " +
+                    "non-null");
+        }
+        ITEM_IS_PRESENT_ELSEWHERE = itemIsPresentElsewhere;
     }
 
     @Override
@@ -68,6 +75,6 @@ public class TileItemsImpl extends GameEntityMediatorWithZIndex<Item> implements
 
     @Override
     boolean entityIsPresentElsewhere(Item item) {
-        return itemIsPresentElsewhere(item);
+        return ITEM_IS_PRESENT_ELSEWHERE.test(item);
     }
 }

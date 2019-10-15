@@ -4,23 +4,34 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
+import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
+
+import java.util.function.Predicate;
 
 public class CharacterEquipmentSlotsFactoryImpl implements CharacterEquipmentSlotsFactory {
     private final PairFactory PAIR_FACTORY;
     private final MapFactory MAP_FACTORY;
+    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE;
 
-    public CharacterEquipmentSlotsFactoryImpl(PairFactory pairFactory, MapFactory mapFactory) {
+    @SuppressWarnings("ConstantConditions")
+    public CharacterEquipmentSlotsFactoryImpl(PairFactory pairFactory, MapFactory mapFactory,
+                                              Predicate<Item> itemIsPresentElsewhere) {
         if (pairFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlotsFactory: pairFactory must not be null");
         }
+        PAIR_FACTORY = pairFactory;
         if (mapFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlotsFactory: mapFactory must not be null");
         }
-        PAIR_FACTORY = pairFactory;
         MAP_FACTORY = mapFactory;
+        if (itemIsPresentElsewhere == null) {
+            throw new IllegalArgumentException(
+                    "CharacterEquipmentSlotsFactory: itemIsPresentElsewhere must not be null");
+        }
+        ITEM_IS_PRESENT_ELSEWHERE = itemIsPresentElsewhere;
     }
 
     @Override
@@ -29,7 +40,8 @@ public class CharacterEquipmentSlotsFactoryImpl implements CharacterEquipmentSlo
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlotsFactory.make: character must not be null");
         }
-        return new CharacterEquipmentSlotsImpl(character, PAIR_FACTORY, MAP_FACTORY);
+        return new CharacterEquipmentSlotsImpl(character, PAIR_FACTORY, MAP_FACTORY,
+                ITEM_IS_PRESENT_ELSEWHERE);
     }
 
     @Override

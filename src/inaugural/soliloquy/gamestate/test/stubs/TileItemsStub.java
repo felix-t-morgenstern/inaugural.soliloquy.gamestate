@@ -37,11 +37,10 @@ public class TileItemsStub implements TileItems {
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException {
-        boolean itemPresent = ITEMS.remove(item);
-        if (itemPresent) {
+        if (ITEMS.contains(item)) {
             item.assignTileToItemAfterAddingItemToTileItems(null);
         }
-        return itemPresent;
+        return ITEMS.remove(item);
     }
 
     @Override

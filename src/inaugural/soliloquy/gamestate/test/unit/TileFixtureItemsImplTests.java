@@ -10,11 +10,14 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
+import java.util.function.Predicate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureItemsImplTests {
     private final TileFixture TILE_FIXTURE = new TileFixtureStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE = ItemStub::itemIsPresentElsewhere;
     private final Item ITEM = new ItemStub();
     private final Item ITEM_2 = new ItemStub();
     private final Item ITEM_3 = new ItemStub();
@@ -23,16 +26,20 @@ class TileFixtureItemsImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileFixtureItems = new TileFixtureItemsImpl(TILE_FIXTURE, COLLECTION_FACTORY);
+        _tileFixtureItems = new TileFixtureItemsImpl(TILE_FIXTURE, COLLECTION_FACTORY,
+                ITEM_IS_PRESENT_ELSEWHERE);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureItemsImpl(null, COLLECTION_FACTORY));
+                () -> new TileFixtureItemsImpl(null, COLLECTION_FACTORY,
+                        ITEM_IS_PRESENT_ELSEWHERE));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureItemsImpl(TILE_FIXTURE, null));
+                () -> new TileFixtureItemsImpl(TILE_FIXTURE, null, ITEM_IS_PRESENT_ELSEWHERE));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileFixtureItemsImpl(TILE_FIXTURE, COLLECTION_FACTORY, null));
     }
 
     @Test
