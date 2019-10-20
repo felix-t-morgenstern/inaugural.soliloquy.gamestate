@@ -18,7 +18,7 @@ public class CharacterArchetype implements Character {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.specs.gamestate.ICharacter";
+        return Character.class.getCanonicalName();
     }
 
     @Override

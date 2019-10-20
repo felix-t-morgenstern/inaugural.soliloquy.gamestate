@@ -135,12 +135,7 @@ public class KeyBindingContextArchetype implements KeyBindingContext {
     }
 
     @Override
-    public String getUnparameterizedInterfaceName() {
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
-        return null;
+        return KeyBindingContext.class.getCanonicalName();
     }
 }

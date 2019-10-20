@@ -35,6 +35,6 @@ public class CharacterAITypeArchetype implements CharacterAIType {
 
     @Override
     public String getInterfaceName() {
-        return null;
+        return CharacterAIType.class.getCanonicalName();
     }
 }

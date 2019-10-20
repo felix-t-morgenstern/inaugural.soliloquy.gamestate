@@ -11,11 +11,6 @@ public class ActionStub<T> implements Action<T> {
     }
 
     @Override
-    public String getUnparameterizedInterfaceName() {
-        return null;
-    }
-
-    @Override
     public Game game() {
         return null;
     }

@@ -36,7 +36,7 @@ public class CoordinateArchetype implements Coordinate {
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.common.specs.ICoordinate";
+        return Coordinate.class.getCanonicalName();
     }
 
     @Override

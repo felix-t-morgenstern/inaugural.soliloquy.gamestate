@@ -25,7 +25,7 @@ public class CharacterClassificationArchetype implements CharacterClassification
 
     @Override
     public String getInterfaceName() {
-        return "soliloquy.ruleset.gameentities.specs.ICharacterClassification";
+        return CharacterClassification.class.getCanonicalName();
     }
 
     @Override

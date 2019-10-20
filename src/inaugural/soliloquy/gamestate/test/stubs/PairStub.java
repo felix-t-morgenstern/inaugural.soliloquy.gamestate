@@ -58,10 +58,4 @@ public class PairStub<K,V> implements Pair<K,V> {
     public void setItem2(V item) throws IllegalArgumentException {
         _item2 = item;
     }
-
-    @Override
-    public String getUnparameterizedInterfaceName() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
 }
