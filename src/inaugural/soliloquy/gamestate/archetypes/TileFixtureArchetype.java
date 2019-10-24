@@ -6,7 +6,7 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class TileFixtureArchetype implements TileFixture {
@@ -67,7 +67,7 @@ public class TileFixtureArchetype implements TileFixture {
     }
 
     @Override
-    public Collection<GameEvent> events() throws IllegalStateException {
+    public Collection<GameMovementEvent> events() throws IllegalStateException {
         return null;
     }
 }

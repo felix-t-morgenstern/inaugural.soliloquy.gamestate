@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
@@ -72,8 +72,8 @@ class ArchetypesTests {
 
     @Test
     void testGameEventArchetype() {
-        assertEquals(GameEvent.class.getCanonicalName(),
-                new GameEventArchetype().getInterfaceName());
+        assertEquals(GameMovementEvent.class.getCanonicalName(),
+                new GameMovementEventArchetype().getInterfaceName());
     }
 
     @Test

@@ -10,7 +10,7 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
@@ -22,7 +22,8 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class CharacterImpl implements Character {
-    private final static GameEvent CHARACTER_EVENT_ARCHETYPE = new GameEventArchetype();
+    private final static GameMovementEvent GAME_MOVEMENT_EVENT_ARCHETYPE =
+            new GameMovementEventArchetype();
     private final static CharacterVitalAttribute CHARACTER_VITAL_ATTRIBUTE_ARCHETYPE =
             new CharacterVitalAttributeArchetype();
     private final static CharacterAttribute CHARACTER_ATTRIBUTE_ARCHETYPE =
@@ -38,7 +39,7 @@ public class CharacterImpl implements Character {
     private final CharacterType CHARACTER_TYPE;
     private final Collection<CharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final Map<String,String> PRONOUNS;
-    private final Map<String, Collection<GameEvent>> EVENTS;
+    private final Map<String, Collection<GameMovementEvent>> EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
     private final Map<String, CharacterVitalAttribute> VITAL_ATTRIBUTES;
@@ -85,7 +86,7 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException("Character: mapFactory must be non-null");
         }
         PRONOUNS = mapFactory.make("","");
-        EVENTS = mapFactory.make("", collectionFactory.make(CHARACTER_EVENT_ARCHETYPE));
+        EVENTS = mapFactory.make("", collectionFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE));
         if (equipmentSlotsFactory == null) {
             throw new IllegalArgumentException(
                     "Character: equipmentSlotsFactory must be non-null");
@@ -191,7 +192,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<String, Collection<GameEvent>> events() {
+    public Map<String, Collection<GameMovementEvent>> events() {
         enforceInvariant("characterEvents", true);
         return EVENTS;
     }

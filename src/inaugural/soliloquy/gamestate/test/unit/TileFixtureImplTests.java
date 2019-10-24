@@ -9,7 +9,7 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
@@ -48,7 +48,7 @@ class TileFixtureImplTests {
     @Test
     void testEvents() {
         assertNotNull(_tileFixture.events());
-        assertEquals(GameEvent.class.getCanonicalName(),
+        assertEquals(GameMovementEvent.class.getCanonicalName(),
                 _tileFixture.events().getArchetype().getInterfaceName());
     }
 

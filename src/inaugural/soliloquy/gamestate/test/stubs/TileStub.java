@@ -5,7 +5,7 @@ import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.sprites.entities.Sprite;
 
@@ -112,7 +112,7 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public Collection<GameEvent> events() throws IllegalStateException {
+    public Collection<GameMovementEvent> events() throws IllegalStateException {
         return null;
     }
 }

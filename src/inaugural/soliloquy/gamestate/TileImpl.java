@@ -8,7 +8,8 @@ import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileCharactersFactory;
 import soliloquy.specs.gamestate.factories.TileFixturesFactory;
 import soliloquy.specs.gamestate.factories.TileItemsFactory;
@@ -25,7 +26,7 @@ public class TileImpl implements Tile {
     private final TileWallSegments TILE_WALL_SEGMENTS;
     private final Map<Integer, Collection<Sprite>> SPRITES;
     private final GenericParamsSet DATA;
-    private final Collection<GameEvent> EVENTS;
+    private final Collection<GameMovementEvent> EVENTS;
 
     private int _height;
     private GroundType _groundType;
@@ -38,7 +39,7 @@ public class TileImpl implements Tile {
                     TileWallSegmentsFactory tileWallSegmentsFactory, MapFactory mapFactory,
                     CollectionFactory collectionFactory, Sprite spriteArchetype,
                     GenericParamsSetFactory genericParamsSetFactory,
-                    GameEvent gameEventArchetype) {
+                    GameMovementEvent gameEventArchetype) {
         if (gameZone == null) {
             throw new IllegalArgumentException("TileImpl: gameZone cannot be null");
         }
@@ -192,7 +193,7 @@ public class TileImpl implements Tile {
     }
 
     @Override
-    public Collection<GameEvent> events() throws IllegalStateException {
+    public Collection<GameMovementEvent> events() throws IllegalStateException {
         enforceDeletionInvariant("events");
         enforceLocationCorrespondenceInvariant("events");
         return EVENTS;

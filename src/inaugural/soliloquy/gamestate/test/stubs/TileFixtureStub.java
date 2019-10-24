@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class TileFixtureStub implements TileFixture {
@@ -77,7 +77,7 @@ public class TileFixtureStub implements TileFixture {
     }
 
     @Override
-    public Collection<GameEvent> events() throws IllegalStateException {
+    public Collection<GameMovementEvent> events() throws IllegalStateException {
         return null;
     }
 }

@@ -4,7 +4,8 @@ import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.SettingsRepo;
 import soliloquy.specs.common.shared.EntityGroup;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.Ruleset;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
@@ -69,7 +70,12 @@ public class RulesetStub implements Ruleset {
     }
 
     @Override
-    public Registry<GameEvent> gameEvents() {
+    public Registry<GameMovementEvent> gameMovementEvents() {
+        return null;
+    }
+
+    @Override
+    public Registry<GameAbilityEvent> gameAbilityEvents() {
         return null;
     }
 

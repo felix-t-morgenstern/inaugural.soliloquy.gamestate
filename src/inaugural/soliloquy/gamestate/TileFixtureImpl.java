@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
-import inaugural.soliloquy.gamestate.archetypes.GameEventArchetype;
+import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
@@ -9,14 +9,14 @@ import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import soliloquy.specs.gamestate.entities.TileFixtures;
-import soliloquy.specs.gamestate.entities.gameevents.GameEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class TileFixtureImpl implements TileFixture {
     private final FixtureType FIXTURE_TYPE;
     private final Coordinate PIXEL_OFFSET;
-    private final Collection<GameEvent> EVENTS;
+    private final Collection<GameMovementEvent> EVENTS;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final GenericParamsSet DATA;
 
@@ -31,7 +31,7 @@ public class TileFixtureImpl implements TileFixture {
                            GenericParamsSet data) {
         FIXTURE_TYPE = fixtureType;
         PIXEL_OFFSET = pixelOffset;
-        EVENTS = collectionFactory.make(new GameEventArchetype());
+        EVENTS = collectionFactory.make(new GameMovementEventArchetype());
         TILE_FIXTURE_ITEMS = tileFixtureItemsFactory.make(this);
         DATA = data;
     }
@@ -75,7 +75,7 @@ public class TileFixtureImpl implements TileFixture {
     }
 
     @Override
-    public Collection<GameEvent> events() throws IllegalStateException {
+    public Collection<GameMovementEvent> events() throws IllegalStateException {
         enforceInvariant("events", true);
         return EVENTS;
     }
