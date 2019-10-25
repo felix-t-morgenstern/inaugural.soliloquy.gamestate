@@ -6,20 +6,21 @@ import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
 import soliloquy.specs.ruleset.entities.VitalAttributeType;
-import soliloquy.specs.ruleset.gameconcepts.VitalAttributeCalculation;
+import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 public class CharacterVitalAttributeImpl extends HasDeletionInvariants
         implements CharacterVitalAttribute {
     private final Character CHARACTER;
     private final VitalAttributeType VITAL_ATTRIBUTE_TYPE;
-    private final VitalAttributeCalculation VITAL_ATTRIBUTE_CALCULATION;
+    private final CharacterStatisticCalculation<VitalAttributeType> VITAL_ATTRIBUTE_CALCULATION;
 
     private int _currentValue;
     private int _totalValue;
     private Map<String,Integer> _modifiers;
 
     public CharacterVitalAttributeImpl(Character character, VitalAttributeType vitalAttributeType,
-                                       VitalAttributeCalculation vitalAttributeCalculation) {
+                                       CharacterStatisticCalculation<VitalAttributeType>
+                                               vitalAttributeCalculation) {
         CHARACTER = character;
         VITAL_ATTRIBUTE_TYPE = vitalAttributeType;
         VITAL_ATTRIBUTE_CALCULATION = vitalAttributeCalculation;
@@ -67,8 +68,7 @@ public class CharacterVitalAttributeImpl extends HasDeletionInvariants
     public void calculateValue() throws IllegalStateException {
         enforceDeletionInvariants("calculateValue");
         Pair<Integer,Map<String,Integer>> calculatedValueAndModifiers =
-                VITAL_ATTRIBUTE_CALCULATION.calculateVitalAttributeMaxValue(
-                        CHARACTER, VITAL_ATTRIBUTE_TYPE);
+                VITAL_ATTRIBUTE_CALCULATION.calculateStatistic(CHARACTER, VITAL_ATTRIBUTE_TYPE);
         _totalValue = calculatedValueAndModifiers.getItem1();
         _modifiers = calculatedValueAndModifiers.getItem2();
     }

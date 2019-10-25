@@ -6,9 +6,7 @@ import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.logger.Logger;
-import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
-import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class StatusEffectTypeStub implements StatusEffectType {
@@ -65,10 +63,5 @@ public class StatusEffectTypeStub implements StatusEffectType {
     @Override
     public Pair<Sprite, Integer> getIcon(String s, EntityUuid entityUuid) {
         return null;
-    }
-
-    @Override
-    public void alterCurrentValue(Character character, int i, boolean b, Element element, AbilitySource abilitySource) throws IllegalArgumentException {
-
     }
 }

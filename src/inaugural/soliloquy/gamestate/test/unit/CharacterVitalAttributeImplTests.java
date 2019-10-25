@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
 import soliloquy.specs.ruleset.entities.VitalAttributeType;
-import soliloquy.specs.ruleset.gameconcepts.VitalAttributeCalculation;
+import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +18,7 @@ class CharacterVitalAttributeImplTests {
 
     private final Character CHARACTER = new CharacterStub();
     private final VitalAttributeType VITAL_ATTRIBUTE_TYPE = new VitalAttributeTypeStub();
-    private final VitalAttributeCalculation VITAL_ATTRIBUTE_CALCULATION =
+    private final CharacterStatisticCalculation<VitalAttributeType> VITAL_ATTRIBUTE_CALCULATION =
             new VitalAttributeCalculationStub();
 
     @BeforeEach
