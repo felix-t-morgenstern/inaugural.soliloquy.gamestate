@@ -11,6 +11,7 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileCharactersFactory;
 import soliloquy.specs.gamestate.factories.TileFixturesFactory;
@@ -45,7 +46,7 @@ class TileImplTests {
     void setUp() {
         _tile = new TileImpl(GAME_ZONE, LOCATION, TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY,
                 TILE_FIXTURES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
-                SPRITE_ARCHETYPE, GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT);
+                SPRITE_ARCHETYPE, GENERIC_PARAMS_SET_FACTORY);
         ((GameZoneStub) GAME_ZONE).TILES[LOCATION.getX()][LOCATION.getY()] = _tile;
         ((GameZoneStub) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
     }
@@ -56,47 +57,43 @@ class TileImplTests {
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(null, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, null,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 null, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, null, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, null,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 null, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, null, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, null, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, null,
-                GENERIC_PARAMS_SET_FACTORY, GAME_MOVEMENT_EVENT));
+                GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                null, GAME_MOVEMENT_EVENT));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
-                TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
-                GENERIC_PARAMS_SET_FACTORY, null));
+                null));
     }
 
     @Test
@@ -168,8 +165,23 @@ class TileImplTests {
     }
 
     @Test
-    void testEvents() {
-        assertNotNull(_tile.events());
+    void testMovementEvents() {
+        assertNotNull(_tile.movementEvents());
+    }
+
+    @Test
+    void testAbilityEvents() {
+        assertNotNull(_tile.abilityEvents());
+    }
+
+    @Test
+    void testMakeGameEventTarget() {
+        GameEventTarget gameEventTarget = _tile.makeGameEventTarget();
+
+        assertNotNull(gameEventTarget);
+        assertNotNull(gameEventTarget.tile());
+        assertNull(gameEventTarget.tileFixture());
+        assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }
 
     @Test
@@ -214,7 +226,7 @@ class TileImplTests {
         assertThrows(IllegalStateException.class, () -> _tile.wallSegments());
         assertThrows(IllegalStateException.class, () -> _tile.sprites());
         assertThrows(IllegalStateException.class, () -> _tile.data());
-        assertThrows(IllegalStateException.class, () -> _tile.events());
+        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
     }
 
     @Test
@@ -234,6 +246,6 @@ class TileImplTests {
         assertThrows(IllegalStateException.class, () -> _tile.wallSegments());
         assertThrows(IllegalStateException.class, () -> _tile.sprites());
         assertThrows(IllegalStateException.class, () -> _tile.data());
-        assertThrows(IllegalStateException.class, () -> _tile.events());
+        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
     }
 }

@@ -6,6 +6,8 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
@@ -77,7 +79,17 @@ public class TileFixtureStub implements TileFixture {
     }
 
     @Override
-    public Collection<GameMovementEvent> events() throws IllegalStateException {
+    public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public GameEventTarget makeGameEventTarget() throws IllegalStateException {
         return null;
     }
 }

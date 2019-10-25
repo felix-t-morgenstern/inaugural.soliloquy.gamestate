@@ -8,8 +8,7 @@ import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileCharactersFactory;
 import soliloquy.specs.gamestate.factories.TileFixturesFactory;
 import soliloquy.specs.gamestate.factories.TileItemsFactory;
@@ -17,7 +16,7 @@ import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.sprites.entities.Sprite;
 
-public class TileImpl implements Tile {
+public class TileImpl extends GameEventTargetEntityImpl implements Tile {
     private final GameZone GAME_ZONE;
     private final ReadableCoordinate LOCATION;
     private final TileCharacters TILE_CHARACTERS;
@@ -26,7 +25,6 @@ public class TileImpl implements Tile {
     private final TileWallSegments TILE_WALL_SEGMENTS;
     private final Map<Integer, Collection<Sprite>> SPRITES;
     private final GenericParamsSet DATA;
-    private final Collection<GameMovementEvent> EVENTS;
 
     private int _height;
     private GroundType _groundType;
@@ -38,8 +36,8 @@ public class TileImpl implements Tile {
                     TileFixturesFactory tileFixturesFactory,
                     TileWallSegmentsFactory tileWallSegmentsFactory, MapFactory mapFactory,
                     CollectionFactory collectionFactory, Sprite spriteArchetype,
-                    GenericParamsSetFactory genericParamsSetFactory,
-                    GameMovementEvent gameEventArchetype) {
+                    GenericParamsSetFactory genericParamsSetFactory) {
+        super(collectionFactory);
         if (gameZone == null) {
             throw new IllegalArgumentException("TileImpl: gameZone cannot be null");
         }
@@ -78,10 +76,6 @@ public class TileImpl implements Tile {
             throw new IllegalArgumentException("TileImpl: genericParamsSetFactory cannot be null");
         }
         DATA = genericParamsSetFactory.make();
-        if (gameEventArchetype == null) {
-            throw new IllegalArgumentException("TileImpl: gameEventArchetype cannot be null");
-        }
-        EVENTS = collectionFactory.make(gameEventArchetype);
     }
 
     @Override
@@ -193,10 +187,24 @@ public class TileImpl implements Tile {
     }
 
     @Override
-    public Collection<GameMovementEvent> events() throws IllegalStateException {
-        enforceDeletionInvariant("events");
-        enforceLocationCorrespondenceInvariant("events");
-        return EVENTS;
+    public GameEventTarget makeGameEventTarget() throws IllegalStateException {
+        Tile tile = this;
+        return new GameEventTarget() {
+            @Override
+            public Tile tile() {
+                return tile;
+            }
+
+            @Override
+            public TileFixture tileFixture() {
+                return null;
+            }
+
+            @Override
+            public String getInterfaceName() {
+                return GameEventTarget.class.getCanonicalName();
+            }
+        };
     }
 
     @Override
@@ -210,5 +218,11 @@ public class TileImpl implements Tile {
                     "present at its stated location (" + LOCATION.getX() + "," + LOCATION.getY() +
                     ") in its containing GameZone");
         }
+    }
+
+    @Override
+    void enforceInvariants(String methodName) {
+        enforceDeletionInvariant(methodName);
+        enforceLocationCorrespondenceInvariant(methodName);
     }
 }

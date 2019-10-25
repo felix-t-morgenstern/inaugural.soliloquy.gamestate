@@ -1,22 +1,19 @@
 package inaugural.soliloquy.gamestate;
 
-import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import soliloquy.specs.gamestate.entities.TileFixtures;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
-public class TileFixtureImpl implements TileFixture {
+public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFixture {
     private final FixtureType FIXTURE_TYPE;
     private final Coordinate PIXEL_OFFSET;
-    private final Collection<GameMovementEvent> EVENTS;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final GenericParamsSet DATA;
 
@@ -29,9 +26,9 @@ public class TileFixtureImpl implements TileFixture {
                            CollectionFactory collectionFactory,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
                            GenericParamsSet data) {
+        super(collectionFactory);
         FIXTURE_TYPE = fixtureType;
         PIXEL_OFFSET = pixelOffset;
-        EVENTS = collectionFactory.make(new GameMovementEventArchetype());
         TILE_FIXTURE_ITEMS = tileFixtureItemsFactory.make(this);
         DATA = data;
     }
@@ -75,9 +72,29 @@ public class TileFixtureImpl implements TileFixture {
     }
 
     @Override
-    public Collection<GameMovementEvent> events() throws IllegalStateException {
-        enforceInvariant("events", true);
-        return EVENTS;
+    void enforceInvariants(String methodName) {
+        enforceInvariant(methodName, true);
+    }
+
+    @Override
+    public GameEventTarget makeGameEventTarget() throws IllegalStateException {
+        TileFixture tileFixture = this;
+        return new GameEventTarget() {
+            @Override
+            public Tile tile() {
+                return null;
+            }
+
+            @Override
+            public TileFixture tileFixture() {
+                return tileFixture;
+            }
+
+            @Override
+            public String getInterfaceName() {
+                return GameEventTarget.class.getCanonicalName();
+            }
+        };
     }
 
     @Override

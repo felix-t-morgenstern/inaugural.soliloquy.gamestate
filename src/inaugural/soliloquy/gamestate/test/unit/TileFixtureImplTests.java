@@ -9,7 +9,7 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
@@ -31,6 +31,11 @@ class TileFixtureImplTests {
     }
 
     @Test
+    void testConstructorWithInvalidParams() {
+        // TODO: Test and implement this
+    }
+
+    @Test
     void testGetInterfaceName() {
         assertEquals(TileFixture.class.getCanonicalName(), _tileFixture.getInterfaceName());
     }
@@ -46,10 +51,23 @@ class TileFixtureImplTests {
     }
 
     @Test
-    void testEvents() {
-        assertNotNull(_tileFixture.events());
-        assertEquals(GameMovementEvent.class.getCanonicalName(),
-                _tileFixture.events().getArchetype().getInterfaceName());
+    void testMovementEvents() {
+        assertNotNull(_tileFixture.movementEvents());
+    }
+
+    @Test
+    void testAbilityEvents() {
+        assertNotNull(_tileFixture.abilityEvents());
+    }
+
+    @Test
+    void testMakeGameEventTarget() {
+        GameEventTarget gameEventTarget = _tileFixture.makeGameEventTarget();
+
+        assertNotNull(gameEventTarget);
+        assertNull(gameEventTarget.tile());
+        assertNotNull(gameEventTarget.tileFixture());
+        assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }
 
     @Test
@@ -109,7 +127,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.fixtureType());
         assertThrows(IllegalStateException.class, () -> _tileFixture.pixelOffset());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.events());
+        assertThrows(IllegalStateException.class, () -> _tileFixture.movementEvents());
         assertThrows(IllegalStateException.class, () -> _tileFixture.items());
         assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
@@ -128,7 +146,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.fixtureType());
         assertThrows(IllegalStateException.class, () -> _tileFixture.pixelOffset());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.events());
+        assertThrows(IllegalStateException.class, () -> _tileFixture.movementEvents());
         assertThrows(IllegalStateException.class, () -> _tileFixture.items());
         assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
