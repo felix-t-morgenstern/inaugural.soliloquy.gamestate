@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
 import soliloquy.specs.ruleset.entities.VitalAttributeType;
 
@@ -19,11 +18,6 @@ public class CharacterVitalAttributeArchetype implements CharacterVitalAttribute
     @Override
     public void setCurrentValue(int i) throws IllegalStateException, IllegalArgumentException {
 
-    }
-
-    @Override
-    public Character character() throws IllegalStateException {
-        return null;
     }
 
     @Override

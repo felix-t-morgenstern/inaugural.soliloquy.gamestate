@@ -3,17 +3,13 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterAptitude;
+import soliloquy.specs.ruleset.entities.AptitudeType;
 
 public class CharacterAptitudeStub implements CharacterAptitude {
     public boolean _isDeleted;
 
     @Override
-    public String aptitudeId() {
-        return null;
-    }
-
-    @Override
-    public Character character() throws IllegalStateException {
+    public AptitudeType aptitudeType() {
         return null;
     }
 

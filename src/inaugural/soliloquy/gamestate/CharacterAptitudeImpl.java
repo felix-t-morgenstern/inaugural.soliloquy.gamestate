@@ -4,45 +4,42 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
-import soliloquy.specs.ruleset.entities.VitalAttributeType;
+import soliloquy.specs.gamestate.entities.CharacterAptitude;
+import soliloquy.specs.ruleset.entities.AptitudeType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-public class CharacterVitalAttributeImpl extends HasDeletionInvariants
-        implements CharacterVitalAttribute {
+public class CharacterAptitudeImpl extends HasDeletionInvariants implements CharacterAptitude {
     private final Character CHARACTER;
-    private final VitalAttributeType VITAL_ATTRIBUTE_TYPE;
-    private final CharacterStatisticCalculation<VitalAttributeType> VITAL_ATTRIBUTE_CALCULATION;
+    private final AptitudeType APTITUDE_TYPE;
+    private final CharacterStatisticCalculation<AptitudeType> CHARACTER_APTITUDE_CALCULATION;
 
-    private int _currentValue;
     private int _totalValue;
     private Map<String,Integer> _modifiers;
 
-    public CharacterVitalAttributeImpl(Character character, VitalAttributeType vitalAttributeType,
-                                       CharacterStatisticCalculation<VitalAttributeType>
-                                               vitalAttributeCalculation) {
+    @SuppressWarnings("ConstantConditions")
+    public CharacterAptitudeImpl(Character character, AptitudeType aptitudeType,
+                                 CharacterStatisticCalculation<AptitudeType>
+                                         characterAptitudeCalculation) {
+        if (character == null) {
+            throw new IllegalArgumentException("CharacterAptitudeImpl: character cannot be null");
+        }
         CHARACTER = character;
-        VITAL_ATTRIBUTE_TYPE = vitalAttributeType;
-        VITAL_ATTRIBUTE_CALCULATION = vitalAttributeCalculation;
+        if (aptitudeType == null) {
+            throw new IllegalArgumentException(
+                    "CharacterAptitudeImpl: aptitudeType cannot be null");
+        }
+        APTITUDE_TYPE = aptitudeType;
+        if (characterAptitudeCalculation == null) {
+            throw new IllegalArgumentException(
+                    "CharacterAptitudeImpl: characterAptitudeCalculation cannot be null");
+        }
+        CHARACTER_APTITUDE_CALCULATION = characterAptitudeCalculation;
     }
 
     @Override
-    public VitalAttributeType vitalAttributeType() throws IllegalStateException {
-        enforceDeletionInvariants("vitalAttributeType");
-        return VITAL_ATTRIBUTE_TYPE;
-    }
-
-    @Override
-    public int getCurrentValue() throws IllegalStateException {
-        enforceDeletionInvariants("getCurrentValue");
-        return _currentValue;
-    }
-
-    @Override
-    public void setCurrentValue(int currentValue)
-            throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariants("setCurrentValue");
-        _currentValue = currentValue;
+    public AptitudeType aptitudeType() {
+        enforceDeletionInvariants("aptitudeType");
+        return APTITUDE_TYPE;
     }
 
     @Override
@@ -53,8 +50,8 @@ public class CharacterVitalAttributeImpl extends HasDeletionInvariants
 
     @Override
     public ReadableMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+        enforceDeletionInvariants("modifiersRepresentation");
         // TODO: Test and implement whether truly read-only
-        enforceDeletionInvariants("modifiers");
         return _modifiers.readOnlyRepresentation();
     }
 
@@ -62,20 +59,21 @@ public class CharacterVitalAttributeImpl extends HasDeletionInvariants
     public void calculateValue() throws IllegalStateException {
         enforceDeletionInvariants("calculateValue");
         Pair<Integer,Map<String,Integer>> calculatedValueAndModifiers =
-                VITAL_ATTRIBUTE_CALCULATION.calculateStatistic(CHARACTER, VITAL_ATTRIBUTE_TYPE);
+                CHARACTER_APTITUDE_CALCULATION
+                        .calculateStatistic(CHARACTER, APTITUDE_TYPE);
         _totalValue = calculatedValueAndModifiers.getItem1();
         _modifiers = calculatedValueAndModifiers.getItem2();
     }
 
     @Override
-    public String getInterfaceName() throws IllegalStateException {
+    public String getInterfaceName() {
         enforceDeletionInvariants("getInterfaceName");
-        return CharacterVitalAttribute.class.getCanonicalName();
+        return CharacterAptitude.class.getCanonicalName();
     }
 
     @Override
     protected String className() {
-        return "CharacterVitalAttribute";
+        return "CharacterAptitudeImpl";
     }
 
     @Override

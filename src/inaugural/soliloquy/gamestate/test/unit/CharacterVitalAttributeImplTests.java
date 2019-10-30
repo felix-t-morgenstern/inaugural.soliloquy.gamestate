@@ -27,6 +27,8 @@ class CharacterVitalAttributeImplTests {
                 VITAL_ATTRIBUTE_CALCULATION);
     }
 
+    // TODO: Test constructor with invalid params
+
     @Test
     void testGetInterfaceName() {
         assertEquals(CharacterVitalAttribute.class.getCanonicalName(),
@@ -36,11 +38,6 @@ class CharacterVitalAttributeImplTests {
     @Test
     void testVitalAttributeType() {
         assertSame(VITAL_ATTRIBUTE_TYPE, _characterVitalAttribute.vitalAttributeType());
-    }
-
-    @Test
-    void testCharacter() {
-        assertSame(CHARACTER, _characterVitalAttribute.character());
     }
 
     @Test
@@ -69,7 +66,6 @@ class CharacterVitalAttributeImplTests {
     void testThrowsIllegalStateExceptionForDeadCharacter() {
         CHARACTER.delete();
 
-        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.character());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.getCurrentValue());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.setCurrentValue(0));
@@ -85,7 +81,6 @@ class CharacterVitalAttributeImplTests {
     void testEnforceDeletionInvariant() {
         _characterVitalAttribute.delete();
 
-        assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.character());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.getCurrentValue());
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterVitalAttribute.setCurrentValue(0));

@@ -12,11 +12,6 @@ public class CharacterAttributeArchetype implements CharacterAttribute {
     }
 
     @Override
-    public Character character() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
     public int totalValue() throws IllegalStateException {
         return 0;
     }
