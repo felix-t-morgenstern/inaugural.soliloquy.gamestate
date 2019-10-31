@@ -9,7 +9,7 @@ public class CharacterAttributeStub implements CharacterAttribute {
     public boolean _isDeleted;
 
     @Override
-    public AttributeType attribute() {
+    public AttributeType attributeType() {
         return null;
     }
 

@@ -1,35 +1,24 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
 import soliloquy.specs.ruleset.entities.VitalAttributeType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-public class CharacterVitalAttributeImpl extends HasDeletionInvariants
+public class CharacterVitalAttributeImpl extends CharacterStatistic<VitalAttributeType>
         implements CharacterVitalAttribute {
-    private final Character CHARACTER;
-    private final VitalAttributeType VITAL_ATTRIBUTE_TYPE;
-    private final CharacterStatisticCalculation<VitalAttributeType> VITAL_ATTRIBUTE_CALCULATION;
-
     private int _currentValue;
-    private int _totalValue;
-    private Map<String,Integer> _modifiers;
 
     public CharacterVitalAttributeImpl(Character character, VitalAttributeType vitalAttributeType,
                                        CharacterStatisticCalculation<VitalAttributeType>
                                                vitalAttributeCalculation) {
-        CHARACTER = character;
-        VITAL_ATTRIBUTE_TYPE = vitalAttributeType;
-        VITAL_ATTRIBUTE_CALCULATION = vitalAttributeCalculation;
+        super(character, vitalAttributeType, vitalAttributeCalculation);
     }
 
     @Override
     public VitalAttributeType vitalAttributeType() throws IllegalStateException {
         enforceDeletionInvariants("vitalAttributeType");
-        return VITAL_ATTRIBUTE_TYPE;
+        return ENTITY_TYPE;
     }
 
     @Override
@@ -46,28 +35,6 @@ public class CharacterVitalAttributeImpl extends HasDeletionInvariants
     }
 
     @Override
-    public int totalValue() throws IllegalStateException {
-        enforceDeletionInvariants("totalValue");
-        return _totalValue;
-    }
-
-    @Override
-    public ReadableMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
-        // TODO: Test and implement whether truly read-only
-        enforceDeletionInvariants("modifiers");
-        return _modifiers.readOnlyRepresentation();
-    }
-
-    @Override
-    public void calculateValue() throws IllegalStateException {
-        enforceDeletionInvariants("calculateValue");
-        Pair<Integer,Map<String,Integer>> calculatedValueAndModifiers =
-                VITAL_ATTRIBUTE_CALCULATION.calculateStatistic(CHARACTER, VITAL_ATTRIBUTE_TYPE);
-        _totalValue = calculatedValueAndModifiers.getItem1();
-        _modifiers = calculatedValueAndModifiers.getItem2();
-    }
-
-    @Override
     public String getInterfaceName() throws IllegalStateException {
         enforceDeletionInvariants("getInterfaceName");
         return CharacterVitalAttribute.class.getCanonicalName();
@@ -76,21 +43,5 @@ public class CharacterVitalAttributeImpl extends HasDeletionInvariants
     @Override
     protected String className() {
         return "CharacterVitalAttribute";
-    }
-
-    @Override
-    protected String containingClassName() {
-        return "Character";
-    }
-
-    @Override
-    protected boolean containingObjectIsDeleted() {
-        return CHARACTER.isDeleted();
-    }
-
-    @Override
-    public void delete() throws IllegalStateException {
-        enforceDeletionInvariants("delete");
-        _isDeleted = true;
     }
 }
