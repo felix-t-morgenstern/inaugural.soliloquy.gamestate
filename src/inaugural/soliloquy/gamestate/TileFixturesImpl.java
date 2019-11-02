@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtures;
@@ -44,8 +45,8 @@ public class TileFixturesImpl extends GameEntityMediatorWithZIndex<TileFixture> 
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return TILE.isDeleted();
+    protected Deletable getContainingObject() {
+        return TILE;
     }
 
     @Override

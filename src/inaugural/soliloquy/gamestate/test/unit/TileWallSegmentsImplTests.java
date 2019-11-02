@@ -172,7 +172,8 @@ class TileWallSegmentsImplTests {
 
     @Test
     void testTileDeletedInvariant() {
-        TILE.deleteAfterDeletingContainingGameZone();
+        TILE.gameZone().delete();
+        TILE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.representation());

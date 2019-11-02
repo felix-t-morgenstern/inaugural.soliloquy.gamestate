@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.archetypes;
 
 import inaugural.soliloquy.gamestate.archetypes.*;
 import org.junit.jupiter.api.Test;
+import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -11,6 +12,7 @@ import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
+import soliloquy.specs.sprites.entities.Sprite;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -95,6 +97,11 @@ class ArchetypesTests {
     }
 
     @Test
+    void testSpriteArchetype() {
+        assertEquals(Sprite.class.getCanonicalName(), new SpriteArchetype().getInterfaceName());
+    }
+
+    @Test
     void testTileFixtureArchetype() {
         assertEquals(TileFixture.class.getCanonicalName(),
                 new TileFixtureArchetype().getInterfaceName());
@@ -104,5 +111,11 @@ class ArchetypesTests {
     void testTileWallSegmentArchetype() {
         assertEquals(TileWallSegment.class.getCanonicalName(),
                 new TileWallSegmentArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testVoidActionArchetype() {
+        assertEquals(Action.class.getCanonicalName() + "<" + Void.class.getCanonicalName() + ">",
+                new VoidActionArchetype().getInterfaceName());
     }
 }

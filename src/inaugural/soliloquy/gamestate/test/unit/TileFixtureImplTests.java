@@ -131,10 +131,8 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.items());
         assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.delete());
         assertThrows(IllegalStateException.class, () -> _tileFixture.getName());
         assertThrows(IllegalStateException.class, () -> _tileFixture.setName(""));
-        assertThrows(IllegalStateException.class, () -> _tileFixture.getInterfaceName());
     }
 
     @Test
@@ -151,9 +149,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
         assertThrows(IllegalStateException.class, () -> _tileFixture.delete());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.isDeleted());
         assertThrows(IllegalStateException.class, () -> _tileFixture.getName());
         assertThrows(IllegalStateException.class, () -> _tileFixture.setName(""));
-        assertThrows(IllegalStateException.class, () -> _tileFixture.getInterfaceName());
     }
 }

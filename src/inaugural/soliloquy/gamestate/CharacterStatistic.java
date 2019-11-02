@@ -5,6 +5,7 @@ import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterValueFromModifiers;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 abstract class CharacterStatistic<TEntityType> extends HasDeletionInvariants
@@ -57,18 +58,12 @@ abstract class CharacterStatistic<TEntityType> extends HasDeletionInvariants
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return CHARACTER.isDeleted();
+    protected Deletable getContainingObject() {
+        return CHARACTER;
     }
 
     @Override
     protected String containingClassName() {
         return "Character";
-    }
-
-    @Override
-    public void delete() throws IllegalStateException {
-        enforceDeletionInvariants("delete");
-        _isDeleted = true;
     }
 }

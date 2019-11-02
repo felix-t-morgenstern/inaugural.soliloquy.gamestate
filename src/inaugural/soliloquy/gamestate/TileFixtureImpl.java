@@ -3,10 +3,7 @@ package inaugural.soliloquy.gamestate;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileFixture;
-import soliloquy.specs.gamestate.entities.TileFixtureItems;
-import soliloquy.specs.gamestate.entities.TileFixtures;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
@@ -19,7 +16,6 @@ public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFi
 
     private Tile _tile;
     private String _name;
-    private boolean _deleted;
 
     public TileFixtureImpl(FixtureType fixtureType,
                            Coordinate pixelOffset,
@@ -35,49 +31,51 @@ public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFi
 
     @Override
     public Tile tile() throws IllegalStateException {
-        enforceInvariant("tile", true);
+        enforceDeletionInvariants("tile");
+        enforceCorrectTileInvariant("tile");
         return _tile;
     }
 
     @Override
     public FixtureType fixtureType() throws IllegalStateException {
-        enforceInvariant("fixtureType", true);
+        enforceDeletionInvariants("fixtureType");
+        enforceCorrectTileInvariant("fixtureType");
         return FIXTURE_TYPE;
     }
 
     @Override
     public Coordinate pixelOffset() throws IllegalStateException {
-        enforceInvariant("pixelOffset", true);
+        enforceDeletionInvariants("pixelOffset");
+        enforceCorrectTileInvariant("pixelOffset");
         return PIXEL_OFFSET;
     }
 
     @Override
     public TileFixtureItems items() throws IllegalStateException {
-        enforceInvariant("containedItems", true);
+        enforceDeletionInvariants("containedItems");
+        enforceCorrectTileInvariant("containedItems");
         return TILE_FIXTURE_ITEMS;
     }
 
     @Override
     public void assignTileFixtureToTileAfterAddingToTileFixtures(Tile tile)
             throws IllegalArgumentException, IllegalStateException {
-        enforceInvariant("assignTileFixtureToTileAfterAddingToTileFixtures", true);
+        enforceDeletionInvariants("assignTileFixtureToTileAfterAddingToTileFixtures");
+        enforceCorrectTileInvariant("assignTileFixtureToTileAfterAddingToTileFixtures");
         _tile = tile;
-        enforceInvariant("assignTileFixtureToTileAfterAddingToTileFixtures", true);
+        enforceCorrectTileInvariant("assignTileFixtureToTileAfterAddingToTileFixtures");
     }
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        enforceInvariant("data", true);
+        enforceDeletionInvariants("data");
+        enforceCorrectTileInvariant("data");
         return DATA;
     }
 
     @Override
-    void enforceInvariants(String methodName) {
-        enforceInvariant(methodName, true);
-    }
-
-    @Override
     public GameEventTarget makeGameEventTarget() throws IllegalStateException {
+        enforceDeletionInvariants("makeGameEventTarget");
         TileFixture tileFixture = this;
         return new GameEventTarget() {
             @Override
@@ -98,49 +96,60 @@ public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFi
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        enforceInvariant("delete", true);
+    public void afterDeleted() throws IllegalStateException {
+        enforceCorrectTileInvariant("delete");
         TILE_FIXTURE_ITEMS.delete();
         if (_tile != null) {
             TileFixtures tileFixtures = _tile.fixtures();
             _tile = null;
             tileFixtures.remove(this);
         }
-        _deleted = true;
-    }
-
-    @Override
-    public boolean isDeleted() {
-        enforceInvariant("isDeleted", false);
-        return _deleted;
     }
 
     @Override
     public String getName() {
-        enforceInvariant("getName", true);
+        enforceDeletionInvariants("getName");
+        enforceCorrectTileInvariant("getName");
         return _name;
     }
 
     @Override
     public void setName(String name) {
-        enforceInvariant("setName", true);
+        enforceDeletionInvariants("setName");
+        enforceCorrectTileInvariant("setName");
         _name = name;
     }
 
     @Override
     public String getInterfaceName() {
-        enforceInvariant("getInterfaceName", true);
         return TileFixture.class.getCanonicalName();
     }
 
-    private void enforceInvariant(String methodName, boolean cannotBeDeleted) {
-        if (cannotBeDeleted && _deleted) {
-            throw new IllegalStateException(
-                    "TileFixture." + methodName + ": TileFixture is deleted");
-        }
+    private void enforceCorrectTileInvariant(String methodName) {
         if (_tile != null && !_tile.fixtures().contains(this)) {
             throw new IllegalStateException("TileFixture." + methodName +
                     ": TileFixture is not present on its specified Tile");
         }
+    }
+
+    @Override
+    protected String className() {
+        return "TileFixtureImpl";
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "Tile";
+    }
+
+    @Override
+    protected Deletable getContainingObject() {
+        return _tile;
+    }
+
+    @Override
+    void enforceInvariantsForEventsCollections(String methodName) {
+        enforceCorrectTileInvariant(methodName);
+        enforceDeletionInvariants(methodName);
     }
 }

@@ -4,6 +4,7 @@ import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -40,8 +41,7 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        _isDeleted = true;
+    public void afterDeleted() throws IllegalStateException {
         for(Item item : CONTAINED_ITEMS) {
             if (!item.isDeleted()) {
                 item.delete();
@@ -114,8 +114,8 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return TILE_FIXTURE.isDeleted();
+    protected Deletable getContainingObject() {
+        return TILE_FIXTURE;
     }
 
     private void enforceItemAssignmentInvariant(Item item, String methodName) {

@@ -134,12 +134,11 @@ class TileCharactersImplTests {
         assertThrows(IllegalStateException.class, () -> _tileCharacters.setZIndex(CHARACTER, 0));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.contains(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.delete());
     }
 
     @Test
     void testTileDeletedInvariant() {
-        TILE.deleteAfterDeletingContainingGameZone();
+        TILE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileCharacters.charactersRepresentation());
         assertThrows(IllegalStateException.class, () -> _tileCharacters.add(CHARACTER));
@@ -149,7 +148,6 @@ class TileCharactersImplTests {
         assertThrows(IllegalStateException.class, () -> _tileCharacters.setZIndex(CHARACTER, 0));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.contains(CHARACTER));
         assertThrows(IllegalStateException.class, () -> _tileCharacters.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileCharacters.delete());
     }
 
     @Test

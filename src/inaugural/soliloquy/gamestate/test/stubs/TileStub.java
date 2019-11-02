@@ -32,10 +32,9 @@ public class TileStub implements Tile {
         GAME_ZONE = new GameZoneStub();
     }
 
-    public TileStub(ReadableCoordinate tileLocation, GameZone gameZone)
-    {
-        _tileLocation = tileLocation;
+    public TileStub(GameZone gameZone, ReadableCoordinate location) {
         GAME_ZONE = gameZone;
+        _tileLocation = location;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public void deleteAfterDeletingContainingGameZone() throws IllegalStateException {
+    public void delete() throws IllegalStateException {
         _isDeleted = true;
     }
 

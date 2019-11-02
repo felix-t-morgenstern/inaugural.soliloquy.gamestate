@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Timer;
 
 public abstract class AbstractTimer extends HasDeletionInvariants implements Timer {
@@ -41,12 +42,7 @@ public abstract class AbstractTimer extends HasDeletionInvariants implements Tim
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return false;
-    }
-
-    @Override
-    public void delete() throws IllegalStateException {
-        _isDeleted = true;
+    protected Deletable getContainingObject() {
+        return null;
     }
 }

@@ -327,7 +327,6 @@ class CharacterEquipmentSlotsImplTests {
     void testIsDeletedInvariant() {
         _characterEquipmentSlots.delete();
 
-        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.delete());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.representation());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
@@ -344,7 +343,6 @@ class CharacterEquipmentSlotsImplTests {
     void testCharacterDeletedInvariant() {
         CHARACTER.delete();
 
-        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.delete());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.representation());
         assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));

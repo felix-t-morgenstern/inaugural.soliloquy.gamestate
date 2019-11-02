@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterAbility;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 
 public class CharacterAbilityImpl extends HasDeletionInvariants implements CharacterAbility {
@@ -56,12 +57,6 @@ public class CharacterAbilityImpl extends HasDeletionInvariants implements Chara
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        enforceDeletionInvariants("delete");
-        _isDeleted = true;
-    }
-
-    @Override
     protected String className() {
         return "CharacterAbility";
     }
@@ -72,7 +67,7 @@ public class CharacterAbilityImpl extends HasDeletionInvariants implements Chara
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return CHARACTER.isDeleted();
+    protected Deletable getContainingObject() {
+        return CHARACTER;
     }
 }

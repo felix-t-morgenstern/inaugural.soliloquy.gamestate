@@ -2,12 +2,11 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
-import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.logger.Logger;
 
 public class GameZoneStub implements GameZone {
     public static int _maxX = 999;
@@ -42,16 +41,11 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public void setDimensions(Coordinate iCoordinate) throws IllegalArgumentException {
-
-    }
-
-    @Override
     public Tile tile(ReadableCoordinate tileLocation) throws IllegalArgumentException {
         if (RETURN_ACTUAL_TILE_AT_LOCATION) {
             return TILES[tileLocation.getX()][tileLocation.getY()];
         } else {
-            return new TileStub(tileLocation, this);
+            return new TileStub(this, tileLocation);
         }
     }
 
@@ -62,16 +56,6 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public Collection<Action<Void>> onExit() {
-        return null;
-    }
-
-    @Override
-    public Game game() {
-        return null;
-    }
-
-    @Override
-    public Logger logger() {
         return null;
     }
 
@@ -101,7 +85,7 @@ public class GameZoneStub implements GameZone {
         for (Tile[] col : TILES) {
             for (Tile tile : col) {
                 if (tile != null) {
-                    tile.deleteAfterDeletingContainingGameZone();
+                    tile.delete();
                 }
             }
         }
@@ -110,6 +94,11 @@ public class GameZoneStub implements GameZone {
     @Override
     public boolean isDeleted() {
         return _isDeleted;
+    }
+
+    @Override
+    public GenericParamsSet data() throws IllegalStateException {
+        return null;
     }
 
     public class GameZoneStubException extends RuntimeException {

@@ -73,7 +73,6 @@ class CharacterAttributeImplTests {
         assertThrows(IllegalStateException.class, () -> _characterAttribute.calculateValue());
         assertThrows(IllegalStateException.class, () -> _characterAttribute.modifiersRepresentation());
         assertThrows(IllegalStateException.class, () -> _characterAttribute.totalValue());
-        assertThrows(IllegalStateException.class, () -> _characterAttribute.delete());
     }
 
     @Test
@@ -85,6 +84,5 @@ class CharacterAttributeImplTests {
         assertThrows(IllegalStateException.class, () -> _characterAttribute.calculateValue());
         assertThrows(IllegalStateException.class, () -> _characterAttribute.modifiersRepresentation());
         assertThrows(IllegalStateException.class, () -> _characterAttribute.totalValue());
-        assertThrows(IllegalStateException.class, () -> _characterAttribute.delete());
     }
 }

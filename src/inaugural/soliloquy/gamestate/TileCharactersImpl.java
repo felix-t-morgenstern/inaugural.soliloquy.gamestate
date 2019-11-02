@@ -5,6 +5,7 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileCharacters;
 
@@ -108,9 +109,7 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        enforceDeletionInvariants("delete");
-        _isDeleted = true;
+    public void afterDeleted() throws IllegalStateException {
         CHARACTERS.forEach((c,i) -> c.delete());
     }
 
@@ -125,8 +124,8 @@ public class TileCharactersImpl extends HasDeletionInvariants implements TileCha
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return TILE.isDeleted();
+    protected Deletable getContainingObject() {
+        return TILE;
     }
 
     private void enforceCharacterAssignmentInvariant(Character character, String methodName) {

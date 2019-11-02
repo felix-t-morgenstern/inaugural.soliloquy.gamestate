@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileItems;
@@ -45,8 +46,8 @@ public class TileItemsImpl extends GameEntityMediatorWithZIndex<Item> implements
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return TILE.isDeleted();
+    protected Deletable getContainingObject() {
+        return TILE;
     }
 
     @Override

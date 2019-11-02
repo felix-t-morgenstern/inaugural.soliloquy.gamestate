@@ -6,6 +6,7 @@ import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.HashSet;
@@ -51,8 +52,8 @@ public class CharacterInventoryImpl extends HasDeletionInvariants implements Cha
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return CHARACTER.isDeleted();
+    protected Deletable getContainingObject() {
+        return CHARACTER;
     }
 
     @Override
@@ -100,9 +101,8 @@ public class CharacterInventoryImpl extends HasDeletionInvariants implements Cha
     }
 
     @Override
-    public void delete() throws IllegalStateException {
+    public void afterDeleted() throws IllegalStateException {
         INVENTORY.forEach(Item::delete);
-        _isDeleted = true;
     }
 
     @Override

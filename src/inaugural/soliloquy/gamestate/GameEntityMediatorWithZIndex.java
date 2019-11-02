@@ -10,7 +10,7 @@ import java.util.HashMap;
 abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
         extends HasDeletionInvariants {
     private final MapFactory MAP_FACTORY;
-    protected final HashMap<TEntity,Integer> ENTITIES;
+    final HashMap<TEntity,Integer> ENTITIES;
 
     GameEntityMediatorWithZIndex(MapFactory mapFactory) {
         if (mapFactory == null) {
@@ -21,9 +21,7 @@ abstract class GameEntityMediatorWithZIndex<TEntity extends Deletable>
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        _isDeleted = true;
-
+    public void afterDeleted() throws IllegalStateException {
         for(java.util.Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
             entry.getKey().delete();
         }

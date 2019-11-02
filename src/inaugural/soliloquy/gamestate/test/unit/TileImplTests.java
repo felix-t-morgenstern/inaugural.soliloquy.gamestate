@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileImpl;
-import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,9 @@ import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
-import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.GameZone;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileCharactersFactory;
@@ -18,7 +19,6 @@ import soliloquy.specs.gamestate.factories.TileFixturesFactory;
 import soliloquy.specs.gamestate.factories.TileItemsFactory;
 import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import soliloquy.specs.ruleset.entities.GroundType;
-import soliloquy.specs.sprites.entities.Sprite;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,10 +35,8 @@ class TileImplTests {
             new TileWallSegmentsFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final Sprite SPRITE_ARCHETYPE = new SpriteStub();
     private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
             new GenericParamsSetFactoryStub();
-    private final GameMovementEvent GAME_MOVEMENT_EVENT = new GameMovementEventArchetype();
 
     private Tile _tile;
 
@@ -46,53 +44,48 @@ class TileImplTests {
     void setUp() {
         _tile = new TileImpl(GAME_ZONE, LOCATION, TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY,
                 TILE_FIXTURES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
-                SPRITE_ARCHETYPE, GENERIC_PARAMS_SET_FACTORY);
+                GENERIC_PARAMS_SET_FACTORY);
         ((GameZoneStub) GAME_ZONE).TILES[LOCATION.getX()][LOCATION.getY()] = _tile;
         ((GameZoneStub) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(null, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, null,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 null, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, null, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, null,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                null, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                null, MAP_FACTORY, COLLECTION_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, null, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, null, COLLECTION_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, null, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, null,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
                 TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, null,
-                GENERIC_PARAMS_SET_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, LOCATION,
-                TILE_CHARACTERS_FACTORY, TILE_ITEMS_FACTORY, TILE_FIXTURES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY, SPRITE_ARCHETYPE,
+                TILE_WALL_SEGMENTS_FACTORY, MAP_FACTORY, COLLECTION_FACTORY,
                 null));
     }
 
@@ -152,6 +145,20 @@ class TileImplTests {
     }
 
     @Test
+    void testMovementEvents() {
+        assertNotNull(_tile.movementEvents());
+        assertEquals(GameMovementEvent.class.getCanonicalName(),
+                _tile.movementEvents().getArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testAbilityEvents() {
+        assertNotNull(_tile.abilityEvents());
+        assertEquals(GameAbilityEvent.class.getCanonicalName(),
+                _tile.abilityEvents().getArchetype().getInterfaceName());
+    }
+
+    @Test
     void testSprites() {
         assertNotNull(_tile.sprites());
         assertNotNull(_tile.sprites().getFirstArchetype());
@@ -162,16 +169,6 @@ class TileImplTests {
     @Test
     void testData() {
         assertNotNull(_tile.data());
-    }
-
-    @Test
-    void testMovementEvents() {
-        assertNotNull(_tile.movementEvents());
-    }
-
-    @Test
-    void testAbilityEvents() {
-        assertNotNull(_tile.abilityEvents());
     }
 
     @Test
@@ -188,26 +185,10 @@ class TileImplTests {
     void testGetInterfaceName() {
         assertEquals(Tile.class.getCanonicalName(), _tile.getInterfaceName());
     }
-    
-    @Test
-    void testDeleteAfterDeletingContainingGameZone() {
-        TileCharacters tileCharacters = _tile.characters();
-        TileFixtures tileFixtures = _tile.fixtures();
-        TileItems tileItems = _tile.items();
-        TileWallSegments tileWallSegments = _tile.wallSegments();
-
-        GAME_ZONE.delete();
-
-        assertTrue(_tile.isDeleted());
-        assertTrue(tileCharacters.isDeleted());
-        assertTrue(tileFixtures.isDeleted());
-        assertTrue(tileItems.isDeleted());
-        assertTrue(tileWallSegments.isDeleted());
-    }
 
     @Test
-    void testThrowsOnDeleteAfterDeletingContainingGameZoneWhenGameZoneIsNotDeleted() {
-        assertThrows(IllegalStateException.class, _tile::deleteAfterDeletingContainingGameZone);
+    void testThrowsOnDeleteWhenGameZoneIsNotDeleted() {
+        assertThrows(IllegalStateException.class, _tile::delete);
     }
 
     @Test
@@ -224,9 +205,10 @@ class TileImplTests {
         assertThrows(IllegalStateException.class, () -> _tile.fixtures());
         assertThrows(IllegalStateException.class, () -> _tile.items());
         assertThrows(IllegalStateException.class, () -> _tile.wallSegments());
+        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
+        assertThrows(IllegalStateException.class, () -> _tile.abilityEvents());
         assertThrows(IllegalStateException.class, () -> _tile.sprites());
         assertThrows(IllegalStateException.class, () -> _tile.data());
-        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
     }
 
     @Test
@@ -244,8 +226,9 @@ class TileImplTests {
         assertThrows(IllegalStateException.class, () -> _tile.fixtures());
         assertThrows(IllegalStateException.class, () -> _tile.items());
         assertThrows(IllegalStateException.class, () -> _tile.wallSegments());
+        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
+        assertThrows(IllegalStateException.class, () -> _tile.abilityEvents());
         assertThrows(IllegalStateException.class, () -> _tile.sprites());
         assertThrows(IllegalStateException.class, () -> _tile.data());
-        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
     }
 }

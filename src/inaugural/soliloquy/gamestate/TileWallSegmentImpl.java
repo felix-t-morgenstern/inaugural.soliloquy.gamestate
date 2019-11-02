@@ -4,6 +4,7 @@ import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
@@ -126,11 +127,6 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        _isDeleted = true;
-    }
-
-    @Override
     protected String className() {
         return "TileWallSegment";
     }
@@ -141,8 +137,8 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return false;
+    protected Deletable getContainingObject() {
+        return null;
     }
 
     @Override

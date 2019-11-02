@@ -5,6 +5,7 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
@@ -121,12 +122,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        enforceInvariants("delete");
-        _isDeleted = true;
-    }
-
-    @Override
     protected String className() {
         return "CharacterStatusEffects";
     }
@@ -137,8 +132,8 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return CHARACTER.isDeleted();
+    protected Deletable getContainingObject() {
+        return CHARACTER;
     }
 
     private void enforceInvariants(String methodName) {

@@ -8,6 +8,7 @@ import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
+import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.HashMap;
@@ -51,9 +52,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public void delete() throws IllegalStateException {
-        enforceDeletionInvariants("delete");
-        _isDeleted = true;
+    public void afterDeleted() throws IllegalStateException {
         for (java.util.Map.Entry<String, Pair<Item, Boolean>> entry : EQUIPMENT_SLOTS.entrySet()) {
             Item item = entry.getValue().getItem1();
             if (item != null && !item.isDeleted()) {
@@ -263,8 +262,8 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
     }
 
     @Override
-    protected boolean containingObjectIsDeleted() {
-        return CHARACTER.isDeleted();
+    protected Deletable getContainingObject() {
+        return CHARACTER;
     }
 
     private void enforceItemReferencesCorrectSlotInvariant(String methodName,

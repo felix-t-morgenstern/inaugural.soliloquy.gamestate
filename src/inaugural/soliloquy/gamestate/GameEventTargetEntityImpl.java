@@ -8,7 +8,7 @@ import soliloquy.specs.gamestate.entities.GameEventTargetEntity;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 
-abstract class GameEventTargetEntityImpl implements GameEventTargetEntity {
+abstract class GameEventTargetEntityImpl extends HasDeletionInvariants implements GameEventTargetEntity {
     private final Collection<GameMovementEvent> MOVEMENT_EVENTS;
     private final Collection<GameAbilityEvent> ABILITY_EVENTS;
 
@@ -27,15 +27,15 @@ abstract class GameEventTargetEntityImpl implements GameEventTargetEntity {
 
     @Override
     public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
-        enforceInvariants("movementEvents");
+        enforceInvariantsForEventsCollections("movementEvents");
         return MOVEMENT_EVENTS;
     }
 
     @Override
     public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
-        enforceInvariants("abilityEvents");
+        enforceInvariantsForEventsCollections("abilityEvents");
         return ABILITY_EVENTS;
     }
 
-    abstract void enforceInvariants(String methodName);
+    abstract void enforceInvariantsForEventsCollections(String methodName);
 }
