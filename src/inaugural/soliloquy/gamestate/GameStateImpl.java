@@ -1,14 +1,20 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterAITypeArchetype;
+import inaugural.soliloquy.gamestate.archetypes.GameAbilityEventArchetype;
+import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.valueobjects.GameState;
 import soliloquy.specs.gamestate.valueobjects.GameZonesRepo;
 import soliloquy.specs.ruleset.Ruleset;
@@ -19,9 +25,20 @@ public class GameStateImpl implements GameState {
     private final VariableCache VARIABLE_CACHE;
     private final Map<String, CharacterAIType> CHARACTER_AI_TYPES;
     private final GameZonesRepo GAME_ZONES_REPO;
+    private final Registry<GameMovementEvent> MOVEMENT_EVENTS;
+    private final Registry<GameAbilityEvent> ABILITY_EVENTS;
     private final RoundManager ROUND_MANAGER;
     private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final Ruleset RULESET;
+
+    private final static KeyBindingContext KEY_BINDING_CONTEXT_ARCHETYPE =
+            new KeyBindingContextArchetype();
+    private final static CharacterAIType CHARACTER_AI_TYPE_ARCHETYPE =
+            new CharacterAITypeArchetype();
+    private final static GameMovementEvent GAME_MOVEMENT_EVENT_ARCHETYPE =
+            new GameMovementEventArchetype();
+    private final static GameAbilityEvent GAME_ABILITY_EVENT_ARCHETYPE =
+            new GameAbilityEventArchetype();
 
     private GameZone _currentGameZone;
 
@@ -29,6 +46,7 @@ public class GameStateImpl implements GameState {
     public GameStateImpl(Party party,
                          VariableCache persistentVariableCache,
                          MapFactory mapFactory,
+                         RegistryFactory registryFactory,
                          GameZonesRepo gameZonesRepo,
                          RoundManager roundManager,
                          Ruleset ruleset) {
@@ -44,16 +62,21 @@ public class GameStateImpl implements GameState {
         if (mapFactory == null) {
             throw new IllegalArgumentException("GameState: mapFactory must be non-null");
         }
-        CHARACTER_AI_TYPES = mapFactory.make("", new CharacterAITypeArchetype());
+        CHARACTER_AI_TYPES = mapFactory.make("", CHARACTER_AI_TYPE_ARCHETYPE);
         if (gameZonesRepo == null) {
             throw new IllegalArgumentException("GameState: gameZonesRepo must be non-null");
         }
         GAME_ZONES_REPO = gameZonesRepo;
+        if (registryFactory == null) {
+            throw new IllegalArgumentException("GameState: registryFactory must be non-null");
+        }
+        MOVEMENT_EVENTS = registryFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
+        ABILITY_EVENTS = registryFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
         if (roundManager == null) {
             throw new IllegalArgumentException("GameState: roundManager must be non-null");
         }
         ROUND_MANAGER = roundManager;
-        KEY_BINDING_CONTEXTS = mapFactory.make(0, new KeyBindingContextArchetype());
+        KEY_BINDING_CONTEXTS = mapFactory.make(0, KEY_BINDING_CONTEXT_ARCHETYPE);
         if (ruleset == null) {
             throw new IllegalArgumentException("GameState: ruleset must be non-null");
         }
@@ -88,6 +111,16 @@ public class GameStateImpl implements GameState {
     @Override
     public void setCurrentGameZone(GameZone gameZone) {
         _currentGameZone = gameZone;
+    }
+
+    @Override
+    public Registry<GameMovementEvent> movementEvents() {
+        return MOVEMENT_EVENTS;
+    }
+
+    @Override
+    public Registry<GameAbilityEvent> abilityEvents() {
+        return ABILITY_EVENTS;
     }
 
     @Override

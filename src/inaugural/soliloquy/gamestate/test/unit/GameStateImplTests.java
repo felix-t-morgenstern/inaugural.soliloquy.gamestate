@@ -5,6 +5,7 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Party;
@@ -20,6 +21,7 @@ class GameStateImplTests {
     private final VariableCache PERSISTENT_VARIABLE_CACHE =
             new VariableCacheStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final RegistryFactory REGISTRY_FACTORY = new RegistryFactoryStub();
     private final GameZonesRepo GAME_ZONES_REPO = new GameZonesRepoStub();
     private final RoundManager ROUND_MANAGER = new RoundManagerStub();
     private final Ruleset RULESET = new RulesetStub();
@@ -31,6 +33,7 @@ class GameStateImplTests {
         _gameState = new GameStateImpl(PARTY,
                 PERSISTENT_VARIABLE_CACHE,
                 MAP_FACTORY,
+                REGISTRY_FACTORY,
                 GAME_ZONES_REPO,
                 ROUND_MANAGER,
                 RULESET);
@@ -43,6 +46,7 @@ class GameStateImplTests {
                 () -> _gameState = new GameStateImpl(null,
                         PERSISTENT_VARIABLE_CACHE,
                         MAP_FACTORY,
+                        REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         ROUND_MANAGER,
                         RULESET));
@@ -50,6 +54,7 @@ class GameStateImplTests {
                 () -> _gameState = new GameStateImpl(PARTY,
                         null,
                         MAP_FACTORY,
+                        REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         ROUND_MANAGER,
                         RULESET));
@@ -57,6 +62,7 @@ class GameStateImplTests {
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         null,
+                        REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         ROUND_MANAGER,
                         RULESET));
@@ -65,12 +71,22 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         MAP_FACTORY,
                         null,
+                        GAME_ZONES_REPO,
                         ROUND_MANAGER,
                         RULESET));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        null,
+                        ROUND_MANAGER,
+                        RULESET));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         null,
                         RULESET));
@@ -78,6 +94,7 @@ class GameStateImplTests {
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         MAP_FACTORY,
+                        REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         ROUND_MANAGER,
                         null));
@@ -106,6 +123,16 @@ class GameStateImplTests {
     @Test
     void testGameZonesRepo() {
         assertSame(GAME_ZONES_REPO, _gameState.gameZonesRepo());
+    }
+
+    @Test
+    void testMovementEvents() {
+        assertNotNull(_gameState.movementEvents());
+    }
+
+    @Test
+    void testAbilityEvents() {
+        assertNotNull(_gameState.abilityEvents());
     }
 
     @Test
