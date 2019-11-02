@@ -1,13 +1,12 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterAttribute;
 import soliloquy.specs.ruleset.entities.AttributeType;
 
 public class CharacterAttributeArchetype implements CharacterAttribute {
     @Override
-    public AttributeType attribute() {
+    public AttributeType attributeType() {
         return null;
     }
 
