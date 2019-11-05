@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.logger.Logger;
@@ -61,7 +60,17 @@ public class StatusEffectTypeStub implements StatusEffectType {
     }
 
     @Override
-    public Pair<Sprite, Integer> getIcon(String s, EntityUuid entityUuid) {
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setName(String s) {
+
+    }
+
+    @Override
+    public Pair<Sprite, Integer> getIcon(Object o, String s, Character character) {
         return null;
     }
 }

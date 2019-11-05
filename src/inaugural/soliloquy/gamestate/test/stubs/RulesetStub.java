@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.SettingsRepo;
 import soliloquy.specs.common.shared.EntityGroup;
@@ -30,12 +29,7 @@ public class RulesetStub implements Ruleset {
     }
 
     @Override
-    public Collection<String> aptitudes() {
-        return null;
-    }
-
-    @Override
-    public EntityGroup<AttributeType> attributes() {
+    public EntityGroup<CharacterStatisticType> characterStatisticTypes() {
         return null;
     }
 
@@ -95,7 +89,7 @@ public class RulesetStub implements Ruleset {
     }
 
     @Override
-    public Registry<VitalAttributeType> vitalAttributes() {
+    public Registry<CharacterDepletableStatisticType> depletableStatisticTypes() {
         return null;
     }
 

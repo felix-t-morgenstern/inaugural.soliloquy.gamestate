@@ -3,28 +3,29 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
+import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 
 public class CharacterStatusEffectsStub implements CharacterStatusEffects {
     public boolean _isDeleted;
 
     @Override
-    public Integer getStatusEffectLevel(String s) throws IllegalStateException, IllegalArgumentException {
+    public Integer getStatusEffectLevel(StatusEffectType statusEffectType) throws IllegalStateException, IllegalArgumentException {
         return null;
     }
 
     @Override
-    public ReadableMap<String, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
+    public ReadableMap<StatusEffectType, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void alterStatusEffect(String s, int i, boolean b, Element element, AbilitySource abilitySource) throws IllegalStateException, IllegalArgumentException {
+    public void alterStatusEffect(StatusEffectType statusEffectType, int i, boolean b, Element element, AbilitySource abilitySource) throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void setStatusEffectLevel(String s, int i) throws IllegalStateException, IllegalArgumentException {
+    public void setStatusEffectLevel(StatusEffectType statusEffectType, int i) throws IllegalStateException, IllegalArgumentException {
 
     }
 

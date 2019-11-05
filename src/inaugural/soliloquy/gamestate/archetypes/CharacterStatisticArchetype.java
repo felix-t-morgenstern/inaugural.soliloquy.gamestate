@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.gamestate.entities.CharacterAttribute;
-import soliloquy.specs.ruleset.entities.AttributeType;
+import soliloquy.specs.gamestate.entities.CharacterStatistic;
+import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 
-public class CharacterAttributeArchetype implements CharacterAttribute {
+public class CharacterStatisticArchetype implements CharacterStatistic {
     @Override
-    public AttributeType attributeType() {
+    public CharacterStatisticType type() {
         return null;
     }
 
@@ -37,6 +37,6 @@ public class CharacterAttributeArchetype implements CharacterAttribute {
 
     @Override
     public String getInterfaceName() {
-        return CharacterAttribute.class.getCanonicalName();
+        return CharacterStatistic.class.getCanonicalName();
     }
 }

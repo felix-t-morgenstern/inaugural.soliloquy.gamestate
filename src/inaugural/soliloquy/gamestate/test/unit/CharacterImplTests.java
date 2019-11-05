@@ -211,13 +211,13 @@ class CharacterImplTests {
     }
 
     @Test
-    void testVitalAttributes() {
-        assertNotNull(_character.vitalAttributes());
+    void testDepletableStatistics() {
+        assertNotNull(_character.depletableStatistics());
     }
 
     @Test
-    void testAttributes() {
-        assertNotNull(_character.attributes());
+    void testStatistics() {
+        assertNotNull(_character.statistics());
     }
 
     @Test
@@ -233,11 +233,6 @@ class CharacterImplTests {
     @Test
     void testReactiveAbilities() {
         assertNotNull(_character.reactiveAbilities());
-    }
-
-    @Test
-    void testAptitudes() {
-        assertNotNull(_character.aptitudes());
     }
 
     @Test
@@ -306,10 +301,11 @@ class CharacterImplTests {
         CharacterEquipmentSlotsStub equipmentSlots =
                 (CharacterEquipmentSlotsStub) _character.equipmentSlots();
         CharacterInventoryStub inventory = (CharacterInventoryStub) _character.inventory();
-        CharacterVitalAttributeStub vitalAttribute = new CharacterVitalAttributeStub();
-        _character.vitalAttributes().put("vitalAttribute", vitalAttribute);
-        CharacterAttributeStub attribute = new CharacterAttributeStub();
-        _character.attributes().put("attribute", attribute);
+        CharacterDepletableStatisticStub depletableStatistic =
+                new CharacterDepletableStatisticStub();
+        _character.depletableStatistics().put("depletableStatistic", depletableStatistic);
+        CharacterStatisticStub statistic = new CharacterStatisticStub();
+        _character.statistics().put("statistic", statistic);
         CharacterStatusEffectsStub statusEffects =
                 (CharacterStatusEffectsStub) _character.statusEffects();
         CharacterAbilityStub<ActiveAbilityType> characterActiveAbility =
@@ -318,8 +314,6 @@ class CharacterImplTests {
         CharacterAbilityStub<ReactiveAbilityType> characterReactiveAbility =
                 new CharacterAbilityStub<>();
         _character.reactiveAbilities().put("characterReactiveAbility", characterReactiveAbility);
-        CharacterAptitudeStub aptitude = new CharacterAptitudeStub();
-        _character.aptitudes().put("aptitude", aptitude);
         assertFalse(_character.isDeleted());
         assertFalse(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS
                 .contains(_character));
@@ -332,12 +326,11 @@ class CharacterImplTests {
         assertSame(_character, removedCharacter);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
-        assertTrue(vitalAttribute._isDeleted);
-        assertTrue(attribute._isDeleted);
+        assertTrue(depletableStatistic._isDeleted);
+        assertTrue(statistic._isDeleted);
         assertTrue(statusEffects._isDeleted);
         assertTrue(characterActiveAbility._isDeleted);
         assertTrue(characterReactiveAbility._isDeleted);
-        assertTrue(aptitude._isDeleted);
     }
 
     @Test
@@ -359,12 +352,11 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
-        assertThrows(IllegalStateException.class, () -> _character.vitalAttributes());
-        assertThrows(IllegalStateException.class, () -> _character.attributes());
+        assertThrows(IllegalStateException.class, () -> _character.depletableStatistics());
+        assertThrows(IllegalStateException.class, () -> _character.statistics());
         assertThrows(IllegalStateException.class, () -> _character.statusEffects());
         assertThrows(IllegalStateException.class, () -> _character.activeAbilities());
         assertThrows(IllegalStateException.class, () -> _character.reactiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _character.aptitudes());
         assertThrows(IllegalStateException.class, () -> _character.getPlayerControlled());
         assertThrows(IllegalStateException.class, () -> _character.setPlayerControlled(true));
         assertThrows(IllegalStateException.class, () -> _character.getHidden());
@@ -400,12 +392,11 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
-        assertThrows(IllegalStateException.class, () -> _character.vitalAttributes());
-        assertThrows(IllegalStateException.class, () -> _character.attributes());
+        assertThrows(IllegalStateException.class, () -> _character.depletableStatistics());
+        assertThrows(IllegalStateException.class, () -> _character.statistics());
         assertThrows(IllegalStateException.class, () -> _character.statusEffects());
         assertThrows(IllegalStateException.class, () -> _character.activeAbilities());
         assertThrows(IllegalStateException.class, () -> _character.reactiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _character.aptitudes());
         assertThrows(IllegalStateException.class, () -> _character.getPlayerControlled());
         assertThrows(IllegalStateException.class, () -> _character.setPlayerControlled(true));
         assertThrows(IllegalStateException.class, () -> _character.getHidden());

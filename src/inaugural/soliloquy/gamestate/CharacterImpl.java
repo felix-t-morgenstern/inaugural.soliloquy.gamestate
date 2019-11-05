@@ -10,7 +10,7 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
@@ -22,32 +22,29 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class CharacterImpl implements Character {
-    private final static GameMovementEvent GAME_MOVEMENT_EVENT_ARCHETYPE =
-            new GameMovementEventArchetype();
-    private final static CharacterVitalAttribute CHARACTER_VITAL_ATTRIBUTE_ARCHETYPE =
-            new CharacterVitalAttributeArchetype();
-    private final static CharacterAttribute CHARACTER_ATTRIBUTE_ARCHETYPE =
-            new CharacterAttributeArchetype();
+    private final static GameCharacterEvent EVENT_ARCHETYPE =
+            new GameCharacterEventArchetype();
+    private final static CharacterDepletableStatistic CHARACTER_DEPLETABLE_STATISTIC =
+            new CharacterDepletableStatisticArchetype();
+    private final static CharacterStatistic CHARACTER_STATISTIC_ARCHETYPE =
+            new CharacterStatisticArchetype();
     private final static CharacterAbility<ActiveAbilityType> CHARACTER_ACTIVE_ABILITY_ARCHETYPE =
             new CharacterActiveAbilityArchetype();
     private final static CharacterAbility<ReactiveAbilityType> CHARACTER_REACTIVE_ABILITY_ARCHETYPE =
             new CharacterReactiveAbilityArchetype();
-    private final static CharacterAptitude CHARACTER_APTITUDE_ARCHETYPE =
-            new CharacterAptitudeArchetype();
 
     private final EntityUuid ID;
     private final CharacterType CHARACTER_TYPE;
     private final Collection<CharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final Map<String,String> PRONOUNS;
-    private final Map<String, Collection<GameMovementEvent>> EVENTS;
+    private final Map<String, Collection<GameCharacterEvent>> EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
-    private final Map<String, CharacterVitalAttribute> VITAL_ATTRIBUTES;
-    private final Map<String, CharacterAttribute> ATTRIBUTES;
+    private final Map<String, CharacterDepletableStatistic> DEPLETABLE_STATISTICS;
+    private final Map<String, CharacterStatistic> STATISTICS;
     private final CharacterStatusEffects STATUS_EFFECTS;
     private final Map<String, CharacterAbility<ActiveAbilityType>> ACTIVE_ABILITIES;
     private final Map<String, CharacterAbility<ReactiveAbilityType>> REACTIVE_ABILITIES;
-    private final Map<String, CharacterAptitude> APTITUDES;
     private final GenericParamsSet DATA;
 
     private Tile _tile;
@@ -86,7 +83,7 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException("Character: mapFactory must be non-null");
         }
         PRONOUNS = mapFactory.make("","");
-        EVENTS = mapFactory.make("", collectionFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE));
+        EVENTS = mapFactory.make("", collectionFactory.make(EVENT_ARCHETYPE));
         if (equipmentSlotsFactory == null) {
             throw new IllegalArgumentException(
                     "Character: equipmentSlotsFactory must be non-null");
@@ -96,15 +93,14 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException("Character: inventoryFactory must be non-null");
         }
         INVENTORY = inventoryFactory.make(this);
-        VITAL_ATTRIBUTES = mapFactory.make("", CHARACTER_VITAL_ATTRIBUTE_ARCHETYPE);
-        ATTRIBUTES = mapFactory.make("", CHARACTER_ATTRIBUTE_ARCHETYPE);
+        DEPLETABLE_STATISTICS = mapFactory.make("", CHARACTER_DEPLETABLE_STATISTIC);
+        STATISTICS = mapFactory.make("", CHARACTER_STATISTIC_ARCHETYPE);
         if (statusEffectsFactory == null) {
             throw new IllegalArgumentException("Character: statusEffectsFactory must be non-null");
         }
         STATUS_EFFECTS = statusEffectsFactory.make(this);
         ACTIVE_ABILITIES = mapFactory.make("", CHARACTER_ACTIVE_ABILITY_ARCHETYPE);
         REACTIVE_ABILITIES = mapFactory.make("", CHARACTER_REACTIVE_ABILITY_ARCHETYPE);
-        APTITUDES = mapFactory.make("", CHARACTER_APTITUDE_ARCHETYPE);
         if (genericParamsSetFactory == null) {
             throw new IllegalArgumentException(
                     "Character: genericParamsSetFactory must be non-null");
@@ -192,7 +188,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<String, Collection<GameMovementEvent>> events() {
+    public Map<String, Collection<GameCharacterEvent>> events() {
         enforceInvariant("characterEvents", true);
         return EVENTS;
     }
@@ -210,15 +206,15 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<String, CharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
+    public Map<String, CharacterDepletableStatistic> depletableStatistics() throws IllegalStateException {
         enforceInvariant("vitalAttributes", true);
-        return VITAL_ATTRIBUTES;
+        return DEPLETABLE_STATISTICS;
     }
 
     @Override
-    public Map<String, CharacterAttribute> attributes() throws IllegalStateException {
+    public Map<String, CharacterStatistic> statistics() throws IllegalStateException {
         enforceInvariant("attributes", true);
-        return ATTRIBUTES;
+        return STATISTICS;
     }
 
     @Override
@@ -239,12 +235,6 @@ public class CharacterImpl implements Character {
             throws IllegalStateException {
         enforceInvariant("reactiveAbilities", true);
         return REACTIVE_ABILITIES;
-    }
-
-    @Override
-    public Map<String, CharacterAptitude> aptitudes() throws IllegalStateException {
-        enforceInvariant("aptitudes", true);
-        return APTITUDES;
     }
 
     @Override
@@ -301,12 +291,11 @@ public class CharacterImpl implements Character {
         _tile = null;
         EQUIPMENT_SLOTS.delete();
         INVENTORY.delete();
-        deleteAll(VITAL_ATTRIBUTES);
-        deleteAll(ATTRIBUTES);
+        deleteAll(DEPLETABLE_STATISTICS);
+        deleteAll(STATISTICS);
         STATUS_EFFECTS.delete();
         deleteAll(ACTIVE_ABILITIES);
         deleteAll(REACTIVE_ABILITIES);
-        deleteAll(APTITUDES);
     }
 
     private <V extends Deletable> void deleteAll(Map<?,V> deletables) {

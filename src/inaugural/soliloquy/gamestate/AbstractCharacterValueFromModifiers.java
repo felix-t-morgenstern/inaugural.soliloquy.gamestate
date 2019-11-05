@@ -6,19 +6,21 @@ import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterValueFromModifiers;
 import soliloquy.specs.gamestate.entities.Deletable;
+import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-abstract class CharacterStatistic<TEntityType> extends HasDeletionInvariants
+abstract class AbstractCharacterValueFromModifiers<TEntityType extends CharacterStatisticType>
+        extends HasDeletionInvariants
         implements CharacterValueFromModifiers {
     final TEntityType ENTITY_TYPE;
     private final Character CHARACTER;
-    private final CharacterStatisticCalculation<TEntityType> CHARACTER_STATISTIC_CALCULATION;
+    private final CharacterStatisticCalculation CHARACTER_STATISTIC_CALCULATION;
 
     private int _totalValue;
     private Map<String,Integer> _modifiers;
 
-    CharacterStatistic(Character character, TEntityType entityType,
-                       CharacterStatisticCalculation<TEntityType> characterStatisticCalculation) {
+    AbstractCharacterValueFromModifiers(Character character, TEntityType entityType,
+                                        CharacterStatisticCalculation characterStatisticCalculation) {
         if (character == null) {
             throw new IllegalArgumentException(className() + ": character cannot be null");
         }
@@ -52,7 +54,7 @@ abstract class CharacterStatistic<TEntityType> extends HasDeletionInvariants
         enforceDeletionInvariants("calculateValue");
         Pair<Integer,Map<String,Integer>> calculatedValueAndModifiers =
                 CHARACTER_STATISTIC_CALCULATION
-                        .calculateStatistic(CHARACTER, ENTITY_TYPE);
+                        .calculate(CHARACTER, ENTITY_TYPE);
         _totalValue = calculatedValueAndModifiers.getItem1();
         _modifiers = calculatedValueAndModifiers.getItem2();
     }

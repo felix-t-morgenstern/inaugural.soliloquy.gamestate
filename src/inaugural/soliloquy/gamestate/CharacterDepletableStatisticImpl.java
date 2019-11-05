@@ -1,23 +1,25 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterVitalAttribute;
-import soliloquy.specs.ruleset.entities.VitalAttributeType;
+import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
+import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-public class CharacterVitalAttributeImpl extends CharacterStatistic<VitalAttributeType>
-        implements CharacterVitalAttribute {
+public class CharacterDepletableStatisticImpl
+        extends AbstractCharacterValueFromModifiers<CharacterDepletableStatisticType>
+        implements CharacterDepletableStatistic {
     private int _currentValue;
 
-    public CharacterVitalAttributeImpl(Character character, VitalAttributeType vitalAttributeType,
-                                       CharacterStatisticCalculation<VitalAttributeType>
-                                               vitalAttributeCalculation) {
-        super(character, vitalAttributeType, vitalAttributeCalculation);
+    public CharacterDepletableStatisticImpl(Character character,
+                                            CharacterDepletableStatisticType type,
+                                            CharacterStatisticCalculation
+                                                    vitalAttributeCalculation) {
+        super(character, type, vitalAttributeCalculation);
     }
 
     @Override
-    public VitalAttributeType vitalAttributeType() throws IllegalStateException {
-        enforceDeletionInvariants("vitalAttributeType");
+    public CharacterDepletableStatisticType type() throws IllegalStateException {
+        enforceDeletionInvariants("type");
         return ENTITY_TYPE;
     }
 
@@ -37,7 +39,7 @@ public class CharacterVitalAttributeImpl extends CharacterStatistic<VitalAttribu
     @Override
     public String getInterfaceName() throws IllegalStateException {
         enforceDeletionInvariants("getInterfaceName");
-        return CharacterVitalAttribute.class.getCanonicalName();
+        return CharacterDepletableStatistic.class.getCanonicalName();
     }
 
     @Override

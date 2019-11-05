@@ -1,16 +1,25 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterAptitude;
-import soliloquy.specs.ruleset.entities.AptitudeType;
+import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
+import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 
-public class CharacterAptitudeStub implements CharacterAptitude {
+public class CharacterDepletableStatisticStub implements CharacterDepletableStatistic {
     public boolean _isDeleted;
 
     @Override
-    public AptitudeType aptitudeType() {
+    public CharacterDepletableStatisticType type() throws IllegalStateException {
         return null;
+    }
+
+    @Override
+    public int getCurrentValue() throws IllegalStateException {
+        return 0;
+    }
+
+    @Override
+    public void setCurrentValue(int i) throws IllegalStateException, IllegalArgumentException {
+
     }
 
     @Override

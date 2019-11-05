@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.ruleset.entities.AptitudeType;
+import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
-public class AptitudeTypeStub implements AptitudeType {
+public class CharacterStatisticTypeStub implements CharacterStatisticType {
     @Override
     public String id() throws IllegalStateException {
         return null;

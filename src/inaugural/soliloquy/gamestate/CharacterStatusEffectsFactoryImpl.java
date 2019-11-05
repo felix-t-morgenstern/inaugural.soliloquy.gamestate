@@ -9,7 +9,6 @@ import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 public class CharacterStatusEffectsFactoryImpl implements CharacterStatusEffectsFactory {
-    private final Map<String, StatusEffectType> STATUS_EFFECT_TYPES;
     private final MapFactory MAP_FACTORY;
     private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION;
 
@@ -29,7 +28,6 @@ public class CharacterStatusEffectsFactoryImpl implements CharacterStatusEffects
             throw new IllegalArgumentException(
                     "CharacterStatusEffectsFactory: resistanceCalculation must be non-null");
         }
-        STATUS_EFFECT_TYPES = statusEffectTypes;
         MAP_FACTORY = mapFactory;
         RESISTANCE_CALCULATION = resistanceCalculation;
     }
@@ -42,7 +40,6 @@ public class CharacterStatusEffectsFactoryImpl implements CharacterStatusEffects
         }
         return new CharacterStatusEffectsImpl(
                 character,
-                STATUS_EFFECT_TYPES,
                 MAP_FACTORY,
                 RESISTANCE_CALCULATION);
     }

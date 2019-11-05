@@ -4,9 +4,9 @@ import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.EntityUuid;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
@@ -84,7 +84,7 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public Map<String, Collection<GameMovementEvent>> events() {
+    public Map<String, Collection<GameCharacterEvent>> events() {
         return null;
     }
 
@@ -99,12 +99,12 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public Map<String, CharacterVitalAttribute> vitalAttributes() throws IllegalStateException {
+    public Map<String, CharacterDepletableStatistic> depletableStatistics() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public Map<String, CharacterAttribute> attributes() throws IllegalStateException {
+    public Map<String, CharacterStatistic> statistics() throws IllegalStateException {
         return null;
     }
 
@@ -122,11 +122,6 @@ public class CharacterStub implements Character {
     @Override
     public Map<String, CharacterAbility<ReactiveAbilityType>> reactiveAbilities()
             throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public Map<String, CharacterAptitude> aptitudes() throws IllegalStateException {
         return null;
     }
 

@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.gamestate.archetypes.StatusEffectTypeArchetype;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.ReadableMap;
@@ -15,17 +16,17 @@ import java.util.HashMap;
 
 public class CharacterStatusEffectsImpl extends HasDeletionInvariants
         implements CharacterStatusEffects {
-    private final Map<String, StatusEffectType> STATUS_EFFECT_TYPES;
     private final Character CHARACTER;
     private final MapFactory MAP_FACTORY;
     private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION;
-    private final HashMap<String,Integer> STATUS_EFFECT_LEVELS;
+    private final HashMap<StatusEffectType,Integer> STATUS_EFFECT_LEVELS;
+
+    private final static StatusEffectType STATUS_EFFECT_TYPE_ARCHETYPE =
+            new StatusEffectTypeArchetype();
 
     public CharacterStatusEffectsImpl(Character character,
-                                      Map<String, StatusEffectType> statusEffectTypes,
                                       MapFactory mapFactory,
                                       StatusEffectResistanceCalculation resistanceCalculation){
-        STATUS_EFFECT_TYPES = statusEffectTypes;
         CHARACTER = character;
         MAP_FACTORY = mapFactory;
         RESISTANCE_CALCULATION = resistanceCalculation;
@@ -33,31 +34,33 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public Integer getStatusEffectLevel(String statusEffectTypeId) throws IllegalStateException,
+    public Integer getStatusEffectLevel(StatusEffectType type) throws IllegalStateException,
             IllegalArgumentException {
-        if (!STATUS_EFFECT_TYPES.containsKey(statusEffectTypeId)) {
+        if (type == null) {
             throw new IllegalArgumentException(
-                    "CharacterStatusEffects.getStatusEffectLevel: statusEffectTypeId is not a valid value");
+                    "CharacterStatusEffects.getStatusEffectLevel: type cannot be null");
         }
         enforceInvariants("getStatusEffectLevel");
         if (CHARACTER.getDead()) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
         }
-        return STATUS_EFFECT_LEVELS.getOrDefault(statusEffectTypeId, 0);
+        return STATUS_EFFECT_LEVELS.getOrDefault(type, 0);
     }
 
     @Override
-    public ReadableMap<String, Integer> allStatusEffectsRepresentation() {
+    public ReadableMap<StatusEffectType, Integer> allStatusEffectsRepresentation() {
         enforceInvariants("getAllStatusEffects");
-        Map<String, Integer> statusEffectLevels = MAP_FACTORY.make("", 0);
-        for (java.util.Map.Entry<String, Integer> statusEffectLevel : STATUS_EFFECT_LEVELS.entrySet()) {
+        Map<StatusEffectType, Integer> statusEffectLevels =
+                MAP_FACTORY.make(STATUS_EFFECT_TYPE_ARCHETYPE, 0);
+        for (java.util.Map.Entry<StatusEffectType, Integer> statusEffectLevel :
+                STATUS_EFFECT_LEVELS.entrySet()) {
             statusEffectLevels.put(statusEffectLevel.getKey(), statusEffectLevel.getValue());
         }
         return statusEffectLevels.readOnlyRepresentation();
     }
 
     @Override
-    public void alterStatusEffect(String statusEffectTypeId, int baseAmount, boolean stopAtZero,
+    public void alterStatusEffect(StatusEffectType type, int baseAmount, boolean stopAtZero,
                                   Element element, AbilitySource abilitySource)
             throws IllegalStateException, IllegalArgumentException {
         enforceInvariants("alterStatusEffect");
@@ -65,44 +68,31 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
             throw new IllegalStateException(
                     "CharacterStatusEffects.alterStatusEffect: character is dead");
         }
-        if (statusEffectTypeId == null) {
+        if (type == null) {
             throw new IllegalArgumentException(
-                    "CharacterStatusEffects.alterStatusEffect: statusEffectTypeId cannot be null");
-        }
-        if (statusEffectTypeId.equals("")) {
-            throw new IllegalArgumentException(
-                    "CharacterStatusEffects.alterStatusEffect: statusEffectTypeId cannot be empty");
+                    "CharacterStatusEffects.alterStatusEffect: type cannot be null");
         }
         if (element == null) {
             throw new IllegalArgumentException(
                     "CharacterStatusEffects.alterStatusEffect: element cannot be null");
         }
-        StatusEffectType statusEffectType = STATUS_EFFECT_TYPES.get(statusEffectTypeId);
-        if (statusEffectType == null) {
-            throw new IllegalArgumentException(
-                    "CharacterStatusEffects.alterStatusEffect: statusEffectTypeId does not correspond to a valid StatusEffectType");
-        }
         int effectiveChange = RESISTANCE_CALCULATION.calculateEffectiveChange(CHARACTER,
-                statusEffectType, baseAmount, stopAtZero, element, abilitySource);
-        STATUS_EFFECT_LEVELS.put(statusEffectTypeId,
-                getStatusEffectLevel(statusEffectTypeId) + effectiveChange);
+                type, baseAmount, stopAtZero, element, abilitySource);
+        // TODO: Test and implement removal from STATUS_EFFECT_LEVELS when new value is zero!!!
+        STATUS_EFFECT_LEVELS.put(type, getStatusEffectLevel(type) + effectiveChange);
     }
 
     @Override
-    public void setStatusEffectLevel(String statusEffectTypeId, int level)
+    public void setStatusEffectLevel(StatusEffectType type, int level)
             throws IllegalStateException {
-        if (!STATUS_EFFECT_TYPES.containsKey(statusEffectTypeId)) {
-            throw new IllegalArgumentException(
-                    "CharacterStatusEffects.setStatusEffectLevel: statusEffectTypeId is not a valid value");
-        }
         enforceInvariants("alterStatusEffect");
         if (CHARACTER.getDead()) {
             throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
         }
         if (level == 0) {
-            STATUS_EFFECT_LEVELS.remove(statusEffectTypeId);
+            STATUS_EFFECT_LEVELS.remove(type);
         } else {
-            STATUS_EFFECT_LEVELS.put(statusEffectTypeId, level);
+            STATUS_EFFECT_LEVELS.put(type, level);
         }
     }
 

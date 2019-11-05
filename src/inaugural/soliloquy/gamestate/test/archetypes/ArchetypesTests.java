@@ -7,8 +7,10 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
+import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
@@ -31,21 +33,15 @@ class ArchetypesTests {
     }
 
     @Test
-    void testCharacterAptitudeArchetype() {
-        assertEquals(CharacterAptitude.class.getCanonicalName(),
-                new CharacterAptitudeArchetype().getInterfaceName());
-    }
-
-    @Test
     void testCharacterArchetype() {
         assertEquals(Character.class.getCanonicalName(),
                 new CharacterArchetype().getInterfaceName());
     }
 
     @Test
-    void testCharacterAttributeArchetype() {
-        assertEquals(CharacterAttribute.class.getCanonicalName(),
-                new CharacterAttributeArchetype().getInterfaceName());
+    void testCharacterStatisticArchetype() {
+        assertEquals(CharacterStatistic.class.getCanonicalName(),
+                new CharacterStatisticArchetype().getInterfaceName());
     }
 
     @Test
@@ -62,9 +58,9 @@ class ArchetypesTests {
     }
 
     @Test
-    void testCharacterVitalAttributeArchetype() {
-        assertEquals(CharacterVitalAttribute.class.getCanonicalName(),
-                new CharacterVitalAttributeArchetype().getInterfaceName());
+    void testCharacterDepletableStatisticArchetype() {
+        assertEquals(CharacterDepletableStatistic.class.getCanonicalName(),
+                new CharacterDepletableStatisticArchetype().getInterfaceName());
     }
 
     @Test
@@ -74,15 +70,21 @@ class ArchetypesTests {
     }
 
     @Test
-    void testGameMovementEventArchetype() {
-        assertEquals(GameMovementEvent.class.getCanonicalName(),
-                new GameMovementEventArchetype().getInterfaceName());
-    }
-
-    @Test
     void testGameAbilityEventArchetype() {
         assertEquals(GameAbilityEvent.class.getCanonicalName(),
                 new GameAbilityEventArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testGameCharacterEventArchetype() {
+        assertEquals(GameCharacterEvent.class.getCanonicalName(),
+                new GameCharacterEventArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testGameMovementEventArchetype() {
+        assertEquals(GameMovementEvent.class.getCanonicalName(),
+                new GameMovementEventArchetype().getInterfaceName());
     }
 
     @Test
@@ -99,6 +101,12 @@ class ArchetypesTests {
     @Test
     void testSpriteArchetype() {
         assertEquals(Sprite.class.getCanonicalName(), new SpriteArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testStatusEffectTypeArchetype() {
+        assertEquals(StatusEffectType.class.getCanonicalName(),
+                new StatusEffectTypeArchetype().getInterfaceName());
     }
 
     @Test
