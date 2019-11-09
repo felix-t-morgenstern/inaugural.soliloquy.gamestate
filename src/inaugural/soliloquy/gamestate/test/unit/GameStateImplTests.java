@@ -7,11 +7,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.gamestate.entities.GameZone;
-import soliloquy.specs.gamestate.entities.Party;
-import soliloquy.specs.gamestate.entities.RoundManager;
-import soliloquy.specs.gamestate.valueobjects.GameState;
-import soliloquy.specs.gamestate.valueobjects.GameZonesRepo;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.ruleset.Ruleset;
 
 import static org.junit.jupiter.api.Assertions.*;

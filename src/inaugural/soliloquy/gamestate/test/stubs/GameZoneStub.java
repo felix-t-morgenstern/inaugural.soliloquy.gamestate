@@ -12,12 +12,14 @@ public class GameZoneStub implements GameZone {
     public static int _maxX = 999;
     public static int _maxY = 999;
 
+    public static String ID = "GameZoneStubId";
     public Tile[][] TILES = new Tile[200][200];
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 
     private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
 
     private boolean _isDeleted;
+    private String _customId;
 
     public GameZoneStub() {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
@@ -25,6 +27,11 @@ public class GameZoneStub implements GameZone {
 
     public GameZoneStub(boolean throwExceptionOnGetMaxCoordinates) {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = throwExceptionOnGetMaxCoordinates;
+    }
+
+    public GameZoneStub(String customId) {
+        this();
+        _customId = customId;
     }
 
     @Override
@@ -61,7 +68,7 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return _customId == null ? ID : _customId;
     }
 
     @Override

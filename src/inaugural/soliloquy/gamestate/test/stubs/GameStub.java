@@ -4,8 +4,8 @@ import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.entities.Function;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.GameState;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
-import soliloquy.specs.gamestate.valueobjects.GameState;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.Ruleset;
 
