@@ -93,6 +93,12 @@ class ArchetypesTests {
     }
 
     @Test
+    void testKeyBindingArchetype() {
+        assertEquals(KeyBinding.class.getCanonicalName(),
+                new KeyBindingArchetype().getInterfaceName());
+    }
+
+    @Test
     void testKeyBindingContextArchetype() {
         assertEquals(KeyBindingContext.class.getCanonicalName(),
                 new KeyBindingContextArchetype().getInterfaceName());

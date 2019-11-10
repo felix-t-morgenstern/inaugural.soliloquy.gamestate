@@ -165,6 +165,18 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
+    public KeyBindingFactory keyBindingFactory() {
+        // TODO: Test and implement
+        return null;
+    }
+
+    @Override
+    public KeyBindingContextFactory keyBindingContextFactory() {
+        // TODO: Test and implement
+        return null;
+    }
+
+    @Override
     public String getInterfaceName() {
         return GameState.class.getCanonicalName();
     }
