@@ -35,7 +35,7 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public String zoneType() {
+    public String type() {
         return null;
     }
 

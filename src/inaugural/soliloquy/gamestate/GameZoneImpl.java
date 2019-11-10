@@ -4,7 +4,6 @@ import inaugural.soliloquy.gamestate.archetypes.VoidActionArchetype;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
@@ -15,7 +14,7 @@ import soliloquy.specs.gamestate.factories.TileFactory;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
-    private final String ZONE_TYPE;
+    private final String TYPE;
     private final ReadableCoordinate MAX_COORDINATES;
     private final Tile[][] TILES;
     private final Collection<Action<Void>> ENTRY_ACTIONS;
@@ -27,10 +26,10 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private String _name;
 
     @SuppressWarnings("ConstantConditions")
-    public GameZoneImpl(String id, String name, String zoneType, ReadableCoordinate maxCoordinates,
+    public GameZoneImpl(String id, String name, String type, ReadableCoordinate maxCoordinates,
                         TileFactory tileFactory, CoordinateFactory coordinateFactory,
                         CollectionFactory collectionFactory,
-                        GenericParamsSetFactory genericParamsSetFactory) {
+                        GenericParamsSet data) {
         if (id == null) {
             throw new IllegalArgumentException("GameZoneImpl: id cannot be null");
         }
@@ -45,7 +44,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
             throw new IllegalArgumentException("GameZoneImpl: name cannot be empty");
         }
         _name = name;
-        ZONE_TYPE = zoneType;
+        TYPE = type;
         if (maxCoordinates == null) {
             throw new IllegalArgumentException("GameZoneImpl: maxCoordinates cannot be null");
         }
@@ -59,9 +58,6 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         if (collectionFactory == null) {
             throw new IllegalArgumentException("GameZoneImpl: tileFactory cannot be null");
         }
-        if (genericParamsSetFactory == null) {
-            throw new IllegalArgumentException("GameZoneImpl: tileFactory cannot be null");
-        }
         TILES = new Tile[maxCoordinates.getX()+1][maxCoordinates.getY()+1];
         for (int x = 0; x <= maxCoordinates.getX(); x++) {
             for (int y = 0; y <= maxCoordinates.getY(); y++) {
@@ -70,12 +66,15 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         }
         ENTRY_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
         EXIT_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
-        DATA = genericParamsSetFactory.make();
+        if (data == null) {
+            throw new IllegalArgumentException("GameZoneImpl: data cannot be null");
+        }
+        DATA = data;
     }
 
     @Override
-    public String zoneType() {
-        return ZONE_TYPE;
+    public String type() {
+        return TYPE;
     }
 
     @Override
@@ -85,6 +84,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @Override
     public Tile tile(ReadableCoordinate readableCoordinate) throws IllegalArgumentException {
+        // TODO: Throw on invalid params
         return TILES[readableCoordinate.getX()][readableCoordinate.getY()];
     }
 

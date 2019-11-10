@@ -8,6 +8,7 @@ import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -27,43 +28,43 @@ class GameZoneImplTests {
     private final TileFactory TILE_FACTORY = new TileFactoryStub();
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
-            new GenericParamsSetFactoryStub();
+    private final GenericParamsSet DATA = new GenericParamsSetStub();
 
     private GameZone _gameZone;
 
     @BeforeEach
     void setUp() {
         _gameZone = new GameZoneImpl(ID, NAME, ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
-                COORDINATE_FACTORY, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY);
+                COORDINATE_FACTORY, COLLECTION_FACTORY, DATA);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(null, NAME, ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
-                        COORDINATE_FACTORY, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY));
+                        COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl("", NAME, ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
-                        COORDINATE_FACTORY, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY));
+                        COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, null, ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
-                        COORDINATE_FACTORY, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY));
+                        COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, "", ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
-                        COORDINATE_FACTORY, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY));
+                        COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, NAME, ZONE_TYPE, null, TILE_FACTORY,
-                        COORDINATE_FACTORY, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY));
+                        COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, NAME, ZONE_TYPE, MAX_COORDINATES, null,
-                        COORDINATE_FACTORY, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY));
+                        COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, NAME, ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
-                        null, COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY));
+                        null, COLLECTION_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, NAME, ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
-                        COORDINATE_FACTORY, null, GENERIC_PARAMS_SET_FACTORY));
+                        COORDINATE_FACTORY, null, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, NAME, ZONE_TYPE, MAX_COORDINATES, TILE_FACTORY,
                         COORDINATE_FACTORY, COLLECTION_FACTORY, null));
@@ -76,7 +77,7 @@ class GameZoneImplTests {
 
     @Test
     void testZoneType() {
-        assertEquals(ZONE_TYPE, _gameZone.zoneType());
+        assertEquals(ZONE_TYPE, _gameZone.type());
     }
 
     @Test
@@ -141,7 +142,7 @@ class GameZoneImplTests {
 
     @Test
     void testData() {
-        assertNotNull(_gameZone.data());
+        assertSame(DATA, _gameZone.data());
     }
 
     @Test
