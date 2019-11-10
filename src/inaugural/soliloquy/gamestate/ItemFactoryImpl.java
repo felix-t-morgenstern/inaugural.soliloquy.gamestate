@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate;
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.PairFactory;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
@@ -35,14 +36,16 @@ public class ItemFactoryImpl implements ItemFactory {
     }
 
     @Override
-    public Item make(ItemType itemType) throws IllegalArgumentException {
-        return make(itemType, ENTITY_UUID_FACTORY.createRandomEntityUuid());
+    public Item make(ItemType itemType, GenericParamsSet data)
+            throws IllegalArgumentException {
+        return make(itemType, data, ENTITY_UUID_FACTORY.createRandomEntityUuid());
     }
 
     @Override
-    public Item make(ItemType itemType, EntityUuid id) throws IllegalArgumentException {
-        return new ItemImpl(id, itemType, GENERIC_PARAMS_SET_FACTORY.make(), PAIR_FACTORY,
-                ENTITY_UUID_FACTORY);
+    public Item make(ItemType itemType, GenericParamsSet data, EntityUuid id)
+            throws IllegalArgumentException {
+        return new ItemImpl(id, itemType, data == null ? GENERIC_PARAMS_SET_FACTORY.make() : data,
+                PAIR_FACTORY, ENTITY_UUID_FACTORY);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.PairFactory;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
@@ -23,6 +24,7 @@ class ItemFactoryImplTests {
     private final PairFactory PAIR_FACTORY = new PairFactoryStub();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final EntityUuid ID = new EntityUuidStub();
+    private final GenericParamsSet GENERIC_PARAMS_SET = new GenericParamsSetStub();
 
     private ItemFactory _itemFactory;
 
@@ -52,7 +54,7 @@ class ItemFactoryImplTests {
     void testMake() {
         Character character = new CharacterStub();
         String equipmentSlotType = "equipmentSlotType";
-        Item item = _itemFactory.make(ITEM_TYPE);
+        Item item = _itemFactory.make(ITEM_TYPE, null);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
         Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
@@ -70,10 +72,31 @@ class ItemFactoryImplTests {
     }
 
     @Test
+    void testMakeWithData() {
+        Character character = new CharacterStub();
+        String equipmentSlotType = "equipmentSlotType";
+        Item item = _itemFactory.make(ITEM_TYPE, GENERIC_PARAMS_SET);
+        character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
+        character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
+        Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
+        item.setNumberInStack(10);
+        Item takenFromStack = item.takeFromStack(5);
+
+        assertNotNull(item);
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, item.id());
+        assertSame(ITEM_TYPE, item.type());
+        assertSame(GENERIC_PARAMS_SET, item.data());
+        assertNotNull(characterEquipmentSlot);
+        assertSame(character, characterEquipmentSlot.getItem1());
+        assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+    }
+
+    @Test
     void testMakeWithId() {
         Character character = new CharacterStub();
         String equipmentSlotType = "equipmentSlotType";
-        Item item = _itemFactory.make(ITEM_TYPE, ID);
+        Item item = _itemFactory.make(ITEM_TYPE, null, ID);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
         Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
@@ -91,9 +114,34 @@ class ItemFactoryImplTests {
     }
 
     @Test
+    void testMakeWithIdAndData() {
+        Character character = new CharacterStub();
+        String equipmentSlotType = "equipmentSlotType";
+        Item item = _itemFactory.make(ITEM_TYPE, GENERIC_PARAMS_SET, ID);
+        character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
+        character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
+        Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
+        item.setNumberInStack(10);
+        Item takenFromStack = item.takeFromStack(5);
+
+        assertNotNull(item);
+        assertSame(ID, item.id());
+        assertSame(ITEM_TYPE, item.type());
+        assertSame(GENERIC_PARAMS_SET, item.data());
+        assertNotNull(characterEquipmentSlot);
+        assertSame(character, characterEquipmentSlot.getItem1());
+        assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+    }
+
+    @Test
     void testMakeWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> _itemFactory.make(null));
-        assertThrows(IllegalArgumentException.class, () -> _itemFactory.make(null, ID));
-        assertThrows(IllegalArgumentException.class, () -> _itemFactory.make(ITEM_TYPE, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> _itemFactory.make(null, GENERIC_PARAMS_SET));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> _itemFactory.make(null, GENERIC_PARAMS_SET, ID));
+        assertThrows(IllegalArgumentException.class,
+                () -> _itemFactory.make(ITEM_TYPE, GENERIC_PARAMS_SET, null));
     }
 }

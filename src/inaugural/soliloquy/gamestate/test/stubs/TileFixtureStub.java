@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -28,7 +29,7 @@ public class TileFixtureStub implements TileFixture {
     }
 
     @Override
-    public FixtureType fixtureType() throws IllegalStateException {
+    public FixtureType type() throws IllegalStateException {
         return null;
     }
 
@@ -90,6 +91,11 @@ public class TileFixtureStub implements TileFixture {
 
     @Override
     public GameEventTarget makeGameEventTarget() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public EntityUuid id() {
         return null;
     }
 }
