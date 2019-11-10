@@ -1,12 +1,29 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
 public class KeyBindingImpl implements KeyBinding {
+    private final Collection<Character> BOUND_CHARACTERS;
+
     private Action<Void> _onPress;
     private Action<Void> _onRelease;
     private boolean _blocksLowerBindings;
+
+    @SuppressWarnings("ConstantConditions")
+    public KeyBindingImpl(CollectionFactory collectionFactory) {
+        if (collectionFactory == null) {
+            throw new IllegalArgumentException("KeyBindingImpl: collectionFactory cannot be null");
+        }
+        BOUND_CHARACTERS = collectionFactory.make(' ');
+    }
+
+    @Override
+    public Collection<Character> boundCharacters() {
+        return BOUND_CHARACTERS;
+    }
 
     @Override
     public Action<Void> getOnPress() {
