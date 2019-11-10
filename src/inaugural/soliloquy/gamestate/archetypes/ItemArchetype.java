@@ -9,7 +9,7 @@ import soliloquy.specs.ruleset.entities.ItemType;
 
 public class ItemArchetype implements Item {
     @Override
-    public ItemType itemType() throws IllegalStateException {
+    public ItemType type() throws IllegalStateException {
         return null;
     }
 

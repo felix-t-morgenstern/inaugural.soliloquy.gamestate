@@ -19,7 +19,7 @@ public class ItemStub implements Item {
     public Tile _containingTile;
 
     @Override
-    public ItemType itemType() throws IllegalStateException {
+    public ItemType type() throws IllegalStateException {
         return ITEM_TYPE;
     }
 

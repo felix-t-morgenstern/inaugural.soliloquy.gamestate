@@ -12,6 +12,10 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.factories.CharacterFactory;
+import soliloquy.specs.gamestate.factories.ItemFactory;
+import soliloquy.specs.gamestate.factories.TileFactory;
+import soliloquy.specs.gamestate.factories.TimerFactory;
 import soliloquy.specs.ruleset.Ruleset;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
@@ -131,6 +135,30 @@ public class GameStateImpl implements GameState {
     @Override
     public Ruleset ruleset() {
         return RULESET;
+    }
+
+    @Override
+    public TileFactory tileFactory() {
+        // TODO: Test and implement
+        return null;
+    }
+
+    @Override
+    public ItemFactory itemFactory() {
+        // TODO: Test and implement
+        return null;
+    }
+
+    @Override
+    public CharacterFactory characterFactory() {
+        // TODO: Test and implement
+        return null;
+    }
+
+    @Override
+    public TimerFactory timerFactory() {
+        // TODO: Test and implement
+        return null;
     }
 
     @Override

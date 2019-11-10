@@ -39,6 +39,21 @@ class ItemImplTests {
         _item = new ItemImpl(ID, ITEM_TYPE, DATA, PAIR_FACTORY, ENTITY_UUID_FACTORY);
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testConstructorWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, ITEM_TYPE, DATA,
+                PAIR_FACTORY, ENTITY_UUID_FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(ID, null, DATA,
+                PAIR_FACTORY, ENTITY_UUID_FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(ID, ITEM_TYPE, null,
+                PAIR_FACTORY, ENTITY_UUID_FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(ID, ITEM_TYPE, DATA,
+                null, ENTITY_UUID_FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(ID, ITEM_TYPE, DATA,
+                PAIR_FACTORY, null));
+    }
+
     @Test
     void testGetInterfaceName() {
         assertEquals(Item.class.getCanonicalName(), _item.getInterfaceName());
@@ -52,8 +67,8 @@ class ItemImplTests {
     }
 
     @Test
-    void testItemType() {
-        assertSame(ITEM_TYPE, _item.itemType());
+    void testType() {
+        assertSame(ITEM_TYPE, _item.type());
     }
 
     @Test
@@ -394,7 +409,7 @@ class ItemImplTests {
     void testDeletionInvariant() {
         _item.delete();
 
-        assertThrows(IllegalStateException.class, () -> _item.itemType());
+        assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
         assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
         assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
@@ -425,7 +440,7 @@ class ItemImplTests {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
         CharacterEquipmentSlotsStub.EQUIPMENT_SLOTS.removeByKey(CHARACTER_EQUIPMENT_SLOT_TYPE);
 
-        assertThrows(IllegalStateException.class, () -> _item.itemType());
+        assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
         assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
         assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
@@ -455,7 +470,7 @@ class ItemImplTests {
         CHARACTER_INVENTORY.add(_item);
         CharacterInventoryStub.ITEMS.remove(_item);
 
-        assertThrows(IllegalStateException.class, () -> _item.itemType());
+        assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
         assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
         assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
@@ -485,7 +500,7 @@ class ItemImplTests {
         TILE.items().add(_item);
         TileItemsStub.ITEMS.remove(_item);
 
-        assertThrows(IllegalStateException.class, () -> _item.itemType());
+        assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
         assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
         assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
@@ -515,7 +530,7 @@ class ItemImplTests {
         new TileFixtureStub().items().add(_item);
         TileFixtureItemsStub.ITEMS.remove(_item);
 
-        assertThrows(IllegalStateException.class, () -> _item.itemType());
+        assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
         assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
         assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());

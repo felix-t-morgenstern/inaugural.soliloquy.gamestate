@@ -187,7 +187,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
         enforceItemReferencesCorrectSlotInvariant("canEquipItemToSlot",
                 equipmentSlotType);
         return !ITEM_IS_PRESENT_ELSEWHERE.test(item) &&
-                item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType);
+                item.type().equipmentType().canEquipToSlotType(equipmentSlotType);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class CharacterEquipmentSlotsImpl extends HasDeletionInvariants
                     "CharacterEquipmentSlots.equipItemToSlot: item in equipmentSlotType is set to prohibit alteration");
         }
         if (item != null &&
-                !item.itemType().equipmentType().canEquipToSlotType(equipmentSlotType)) {
+                !item.type().equipmentType().canEquipToSlotType(equipmentSlotType)) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipItemToSlot: item cannot be equiped to slot of provided type");
         }

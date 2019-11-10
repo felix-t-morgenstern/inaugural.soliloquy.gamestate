@@ -23,11 +23,6 @@ public class ItemTypeStub implements ItemType {
     public static String ITEM_TYPE_PLURAL_NAME = "ItemTypePluralName";
 
     @Override
-    public Item generate(GenericParamsSet genericParamsSet) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
     public EquipmentType equipmentType() {
         return EQUIPMENT_TYPE;
     }

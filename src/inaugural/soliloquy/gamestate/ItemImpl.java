@@ -27,17 +27,33 @@ public class ItemImpl implements Item {
     private String _name;
     private String _pluralName;
 
+    @SuppressWarnings("ConstantConditions")
     public ItemImpl(EntityUuid id, ItemType itemType, GenericParamsSet data,
                     PairFactory pairFactory, EntityUuidFactory entityUuidFactory) {
+        if (id == null) {
+            throw new IllegalArgumentException("ItemImpl: id cannot be null");
+        }
         ID = id;
+        if (itemType == null) {
+            throw new IllegalArgumentException("ItemImpl: itemType cannot be null");
+        }
         ITEM_TYPE = itemType;
+        if (data == null) {
+            throw new IllegalArgumentException("ItemImpl: data cannot be null");
+        }
         DATA = data;
+        if (pairFactory == null) {
+            throw new IllegalArgumentException("ItemImpl: pairFactory cannot be null");
+        }
         PAIR_FACTORY = pairFactory;
+        if (entityUuidFactory == null) {
+            throw new IllegalArgumentException("ItemImpl: entityUuidFactory cannot be null");
+        }
         ENTITY_UUID_FACTORY = entityUuidFactory;
     }
 
     @Override
-    public ItemType itemType() throws IllegalStateException {
+    public ItemType type() throws IllegalStateException {
         enforceDeletionInvariant("itemType");
         enforceAssignmentInvariant("itemType");
         return ITEM_TYPE;
