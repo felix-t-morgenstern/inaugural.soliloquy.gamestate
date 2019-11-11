@@ -18,31 +18,47 @@ public class ItemStub implements Item {
     public TileFixture _tileFixture;
     public Tile _containingTile;
 
+    private Integer _charges;
+    private Integer _numberInStack;
+    private EntityUuid _id;
+    private ItemType _itemType;
+    private GenericParamsSet _data;
+
+    public ItemStub() {
+
+    }
+
+    public ItemStub(ItemType itemType, GenericParamsSet data, EntityUuid id) {
+        _id = id;
+        _itemType = itemType;
+        _data = data;
+    }
+
     @Override
     public ItemType type() throws IllegalStateException {
-        return ITEM_TYPE;
+        return _itemType != null ? _itemType : ITEM_TYPE;
     }
 
     @Override
     public Integer getCharges() throws IllegalStateException {
-        return null;
+        return _charges;
     }
 
     @Override
-    public void setCharges(int integer)
+    public void setCharges(int charges)
             throws UnsupportedOperationException, IllegalStateException {
-
+        _charges = charges;
     }
 
     @Override
     public Integer getNumberInStack() throws IllegalStateException {
-        return null;
+        return _numberInStack;
     }
 
     @Override
-    public void setNumberInStack(int i)
+    public void setNumberInStack(int numberInStack)
             throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-
+        _numberInStack = numberInStack;
     }
 
     @Override
@@ -105,12 +121,12 @@ public class ItemStub implements Item {
 
     @Override
     public EntityUuid id() {
-        return null;
+        return _id;
     }
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        return null;
+        return _data;
     }
 
     @Override

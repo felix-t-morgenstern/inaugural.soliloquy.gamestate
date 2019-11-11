@@ -19,8 +19,9 @@ public class ItemTypeStub implements ItemType {
 
     private static EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
 
-    public static String ITEM_TYPE_NAME = "ItemTypeName";
-    public static String ITEM_TYPE_PLURAL_NAME = "ItemTypePluralName";
+    public static String ITEM_TYPE_ID = "ItemTypeStubId";
+    public static String ITEM_TYPE_NAME = "ItemTypeStubName";
+    public static String ITEM_TYPE_PLURAL_NAME = "ItemTypeStubPluralName";
 
     @Override
     public EquipmentType equipmentType() {
@@ -89,7 +90,7 @@ public class ItemTypeStub implements ItemType {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return ITEM_TYPE_ID;
     }
 
     @Override
