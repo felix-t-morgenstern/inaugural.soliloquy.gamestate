@@ -47,7 +47,7 @@ class KeyPressListenerImplTests {
     }
 
     @Test
-    void testKeyTyped() throws InterruptedException {
+    void testKeyPressed() throws InterruptedException {
         KeyBindingStub keyBinding = new KeyBindingStub();
         keyBinding.boundCharacters().add('a');
 
@@ -57,7 +57,8 @@ class KeyPressListenerImplTests {
         _keyPressListener.contexts().put(0,keyBindingContext);
 
         KeyEvent key = new KeyEvent(SOURCE, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0,
-                KeyEvent.VK_A, 'a');
+                KeyEvent.VK_UNDEFINED, 'a');
+
         _keyPressListener.keyPressed(key);
 
         Thread.sleep(10);
@@ -76,11 +77,132 @@ class KeyPressListenerImplTests {
         _keyPressListener.contexts().put(0,keyBindingContext);
 
         KeyEvent key = new KeyEvent(SOURCE, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0,
-                KeyEvent.VK_A, 'a');
+                KeyEvent.VK_UNDEFINED, 'a');
+
         _keyPressListener.keyReleased(key);
 
         Thread.sleep(10);
 
         assertTrue(keyBinding._released);
+    }
+
+    @Test
+    void testKeyTyped() throws InterruptedException {
+        KeyBindingStub keyBinding = new KeyBindingStub();
+        keyBinding.boundCharacters().add('a');
+
+        KeyBindingContext keyBindingContext = new KeyBindingContextStub();
+        keyBindingContext.bindings().add(keyBinding);
+
+        _keyPressListener.contexts().put(0,keyBindingContext);
+
+        KeyEvent key = new KeyEvent(SOURCE, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
+                KeyEvent.VK_UNDEFINED, 'a');
+
+        _keyPressListener.keyTyped(key);
+
+        Thread.sleep(10);
+
+        assertTrue(keyBinding._typed);
+    }
+
+    @Test
+    void testContextBlocksLowerContextEvents() throws InterruptedException {
+        KeyBindingStub lowerKeyBinding = new KeyBindingStub();
+        lowerKeyBinding.boundCharacters().add('a');
+
+        KeyBindingContext lowerKeyBindingContext = new KeyBindingContextStub();
+        lowerKeyBindingContext.bindings().add(lowerKeyBinding);
+
+        KeyBindingStub upperKeyBinding = new KeyBindingStub();
+        upperKeyBinding.boundCharacters().add('a');
+
+        KeyBindingContext upperKeyBindingContext = new KeyBindingContextStub();
+        upperKeyBindingContext.bindings().add(upperKeyBinding);
+
+        upperKeyBindingContext.setBlocksAllLowerBindings(true);
+
+        _keyPressListener.contexts().put(0,upperKeyBindingContext);
+        _keyPressListener.contexts().put(1,lowerKeyBindingContext);
+
+        KeyEvent keyPress = new KeyEvent(SOURCE, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0,
+                KeyEvent.VK_UNDEFINED, 'a');
+
+        _keyPressListener.keyPressed(keyPress);
+
+        Thread.sleep(10);
+
+        assertTrue(upperKeyBinding._pressed);
+        assertFalse(lowerKeyBinding._pressed);
+
+        KeyEvent keyRelease = new KeyEvent(SOURCE, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0,
+                KeyEvent.VK_UNDEFINED, 'a');
+
+        _keyPressListener.keyReleased(keyRelease);
+
+        Thread.sleep(10);
+
+        assertTrue(upperKeyBinding._released);
+        assertFalse(lowerKeyBinding._released);
+
+        KeyEvent keyType= new KeyEvent(SOURCE, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
+                KeyEvent.VK_UNDEFINED, 'a');
+
+        _keyPressListener.keyTyped(keyRelease);
+
+        Thread.sleep(10);
+
+        assertTrue(upperKeyBinding._typed);
+        assertFalse(lowerKeyBinding._typed);
+    }
+
+    @Test
+    void testBindingBlocksLowerBindingEvents() throws InterruptedException {
+        KeyBindingStub lowerKeyBinding = new KeyBindingStub();
+        lowerKeyBinding.boundCharacters().add('a');
+
+        KeyBindingContext lowerKeyBindingContext = new KeyBindingContextStub();
+        lowerKeyBindingContext.bindings().add(lowerKeyBinding);
+
+        KeyBindingStub upperKeyBinding = new KeyBindingStub();
+        upperKeyBinding.boundCharacters().add('a');
+
+        KeyBindingContext upperKeyBindingContext = new KeyBindingContextStub();
+        upperKeyBindingContext.bindings().add(upperKeyBinding);
+
+        upperKeyBinding.setBlocksLowerBindings(true);
+
+        _keyPressListener.contexts().put(0,upperKeyBindingContext);
+        _keyPressListener.contexts().put(1,lowerKeyBindingContext);
+
+        KeyEvent keyPress = new KeyEvent(SOURCE, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0,
+                KeyEvent.VK_UNDEFINED, 'a');
+
+        _keyPressListener.keyPressed(keyPress);
+
+        Thread.sleep(10);
+
+        assertTrue(upperKeyBinding._pressed);
+        assertFalse(lowerKeyBinding._pressed);
+
+        KeyEvent keyRelease = new KeyEvent(SOURCE, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0,
+                KeyEvent.VK_UNDEFINED, 'a');
+
+        _keyPressListener.keyReleased(keyRelease);
+
+        Thread.sleep(10);
+
+        assertTrue(upperKeyBinding._released);
+        assertFalse(lowerKeyBinding._released);
+
+        KeyEvent keyType= new KeyEvent(SOURCE, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
+                KeyEvent.VK_UNDEFINED, 'a');
+
+        _keyPressListener.keyTyped(keyRelease);
+
+        Thread.sleep(10);
+
+        assertTrue(upperKeyBinding._typed);
+        assertFalse(lowerKeyBinding._typed);
     }
 }

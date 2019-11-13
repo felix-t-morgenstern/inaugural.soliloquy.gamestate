@@ -10,9 +10,11 @@ public class KeyBindingStub implements KeyBinding {
     private final Collection<Character> BOUND_CHARACTERS = new CollectionStub<>();
     private final Action<Void> PRESS_ACTION = new PressAction();
     private final Action<Void> RELEASE_ACTION = new ReleaseAction();
+    private final Action<Void> TYPE_ACTION = new TypeAction();
 
     public boolean _pressed;
     public boolean _released;
+    public boolean _typed;
 
     private boolean _blocksLowerBindings;
 
@@ -38,6 +40,16 @@ public class KeyBindingStub implements KeyBinding {
 
     @Override
     public void setOnRelease(Action<Void> action) {
+
+    }
+
+    @Override
+    public Action<Void> getOnType() {
+        return TYPE_ACTION;
+    }
+
+    @Override
+    public void setOnType(Action<Void> action) {
 
     }
 
@@ -94,6 +106,39 @@ public class KeyBindingStub implements KeyBinding {
         @Override
         public void run(Void aVoid) throws IllegalArgumentException {
             _released = true;
+        }
+
+        @Override
+        public Game game() {
+            return null;
+        }
+
+        @Override
+        public Logger logger() {
+            return null;
+        }
+
+        @Override
+        public String id() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public Void getArchetype() {
+            return null;
+        }
+
+        @Override
+        public String getInterfaceName() {
+            return null;
+        }
+    }
+
+    private class TypeAction implements Action<Void> {
+
+        @Override
+        public void run(Void aVoid) throws IllegalArgumentException {
+            _typed = true;
         }
 
         @Override

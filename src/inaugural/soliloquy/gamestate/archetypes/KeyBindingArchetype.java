@@ -31,6 +31,16 @@ public class KeyBindingArchetype implements KeyBinding {
     }
 
     @Override
+    public Action<Void> getOnType() {
+        return null;
+    }
+
+    @Override
+    public void setOnType(Action<Void> action) {
+
+    }
+
+    @Override
     public boolean getBlocksLowerBindings() {
         return false;
     }

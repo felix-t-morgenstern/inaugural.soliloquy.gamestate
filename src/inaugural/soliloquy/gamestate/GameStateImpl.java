@@ -177,6 +177,12 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
+    public KeyPressListenerFactory keyPressListenerFactory() {
+        // TODO: Test and implement
+        return null;
+    }
+
+    @Override
     public String getInterfaceName() {
         return GameState.class.getCanonicalName();
     }

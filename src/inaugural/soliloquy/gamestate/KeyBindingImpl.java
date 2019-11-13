@@ -10,6 +10,7 @@ public class KeyBindingImpl implements KeyBinding {
 
     private Action<Void> _onPress;
     private Action<Void> _onRelease;
+    private Action<Void> _onType;
     private boolean _blocksLowerBindings;
 
     @SuppressWarnings("ConstantConditions")
@@ -43,6 +44,16 @@ public class KeyBindingImpl implements KeyBinding {
     @Override
     public void setOnRelease(Action<Void> onRelease) {
         _onRelease = onRelease;
+    }
+
+    @Override
+    public Action<Void> getOnType() {
+        return _onType;
+    }
+
+    @Override
+    public void setOnType(Action<Void> onType) {
+        _onType = onType;
     }
 
     @Override

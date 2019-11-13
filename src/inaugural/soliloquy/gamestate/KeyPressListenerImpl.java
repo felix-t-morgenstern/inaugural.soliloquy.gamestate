@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
@@ -10,7 +9,6 @@ import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.KeyPressListener;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Consumer;
@@ -40,6 +38,7 @@ public class KeyPressListenerImpl implements KeyPressListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+        handleKeyEvent(e, binding -> binding.getOnType().run(null));
     }
 
     @Override

@@ -15,6 +15,7 @@ class KeyBindingImplTests {
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final Action<Void> KEY_PRESS_ACTION = new ActionStub<>();
     private final Action<Void> KEY_RELEASE_ACTION = new ActionStub<>();
+    private final Action<Void> KEY_TYPE_ACTION = new ActionStub<>();
 
     private KeyBinding _keyBinding;
 
@@ -51,6 +52,13 @@ class KeyBindingImplTests {
         _keyBinding.setOnRelease(KEY_RELEASE_ACTION);
 
         assertSame(KEY_RELEASE_ACTION, _keyBinding.getOnRelease());
+    }
+
+    @Test
+    void testSetAndGetOnType() {
+        _keyBinding.setOnType(KEY_TYPE_ACTION);
+
+        assertSame(KEY_TYPE_ACTION, _keyBinding.getOnType());
     }
 
     @Test
