@@ -245,24 +245,6 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetAndGetHidden() {
-        _character.setHidden(true);
-        assertTrue(_character.getHidden());
-
-        _character.setHidden(false);
-        assertFalse(_character.getHidden());
-    }
-
-    @Test
-    void testSetAndGetDead() {
-        _character.setDead(true);
-        assertTrue(_character.getDead());
-
-        _character.setDead(false);
-        assertFalse(_character.getDead());
-    }
-
-    @Test
     void testData() {
         assertSame(GenericParamsSetFactoryStub.GENERIC_PARAMS_SET, _character.data());
     }
@@ -359,10 +341,6 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _character.getPlayerControlled());
         assertThrows(IllegalStateException.class, () -> _character.setPlayerControlled(true));
-        assertThrows(IllegalStateException.class, () -> _character.getHidden());
-        assertThrows(IllegalStateException.class, () -> _character.setHidden(true));
-        assertThrows(IllegalStateException.class, () -> _character.getDead());
-        assertThrows(IllegalStateException.class, () -> _character.setDead(true));
         assertThrows(IllegalStateException.class, () -> _character.data());
         assertThrows(IllegalStateException.class, () -> _character.assignToTileAfterAddingToTileCharacters(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
@@ -399,10 +377,6 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _character.getPlayerControlled());
         assertThrows(IllegalStateException.class, () -> _character.setPlayerControlled(true));
-        assertThrows(IllegalStateException.class, () -> _character.getHidden());
-        assertThrows(IllegalStateException.class, () -> _character.setHidden(true));
-        assertThrows(IllegalStateException.class, () -> _character.getDead());
-        assertThrows(IllegalStateException.class, () -> _character.setDead(true));
         assertThrows(IllegalStateException.class, () -> _character.data());
         assertThrows(IllegalStateException.class, () -> _character.delete());
         assertThrows(IllegalStateException.class, () -> _character.isDeleted());

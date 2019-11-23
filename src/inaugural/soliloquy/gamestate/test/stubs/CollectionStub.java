@@ -16,7 +16,7 @@ public class CollectionStub<V> extends ReadableCollectionStub<V> implements Coll
     @Override
     public void add(V item) throws UnsupportedOperationException {
         _collection.add(item);
-    }
+}
 
     @Override
     public void addAll(Collection<? extends V> items) throws UnsupportedOperationException {

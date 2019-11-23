@@ -30,6 +30,12 @@ public class OneTimeTimerImpl extends AbstractTimer implements OneTimeTimer {
     }
 
     @Override
+    public void fire() {
+        super.fire();
+        delete();
+    }
+
+    @Override
     public String getInterfaceName() {
         return OneTimeTimer.class.getCanonicalName();
     }

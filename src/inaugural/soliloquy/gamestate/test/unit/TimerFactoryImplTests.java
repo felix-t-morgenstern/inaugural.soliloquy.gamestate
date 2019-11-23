@@ -10,8 +10,7 @@ import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.factories.TimerFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TimerFactoryImplTests {
     private final RoundManagerStub ROUND_MANAGER = new RoundManagerStub();
@@ -41,7 +40,6 @@ class TimerFactoryImplTests {
                 _timerFactory.makeOneTimeTimer(timerId, action, roundWhenGoesOff);
 
         assertEquals(timerId, oneTimeTimer.id());
-        assertSame(action, oneTimeTimer.action());
         assertEquals(roundWhenGoesOff, oneTimeTimer.getRoundWhenGoesOff());
     }
 
@@ -56,7 +54,6 @@ class TimerFactoryImplTests {
                 _timerFactory.makeRecurringTimer(timerId, action, roundModulo, roundOffset);
 
         assertEquals(timerId, recurringTimer.id());
-        assertSame(action, recurringTimer.action());
         assertEquals(roundModulo, recurringTimer.getRoundModulo());
         assertEquals(roundOffset, recurringTimer.getRoundOffset());
     }

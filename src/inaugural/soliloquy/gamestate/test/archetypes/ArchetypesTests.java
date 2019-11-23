@@ -3,6 +3,8 @@ package inaugural.soliloquy.gamestate.test.archetypes;
 import inaugural.soliloquy.gamestate.archetypes.*;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -39,15 +41,16 @@ class ArchetypesTests {
     }
 
     @Test
-    void testCharacterStatisticArchetype() {
-        assertEquals(CharacterStatistic.class.getCanonicalName(),
-                new CharacterStatisticArchetype().getInterfaceName());
-    }
-
-    @Test
     void testCharacterClassificationArchetype() {
         assertEquals(CharacterClassification.class.getCanonicalName(),
                 new CharacterClassificationArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testCharacterQueueEntryArchetype() {
+        assertEquals(Pair.class.getCanonicalName() + "<" + Character.class.getCanonicalName() +
+                "," + VariableCache.class.getCanonicalName() + ">",
+                    new CharacterQueueEntryArchetype().getInterfaceName());
     }
 
     @Test
@@ -61,6 +64,12 @@ class ArchetypesTests {
     void testCharacterDepletableStatisticArchetype() {
         assertEquals(CharacterDepletableStatistic.class.getCanonicalName(),
                 new CharacterDepletableStatisticArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testCharacterStatisticArchetype() {
+        assertEquals(CharacterStatistic.class.getCanonicalName(),
+                new CharacterStatisticArchetype().getInterfaceName());
     }
 
     @Test
@@ -102,6 +111,18 @@ class ArchetypesTests {
     void testKeyBindingContextArchetype() {
         assertEquals(KeyBindingContext.class.getCanonicalName(),
                 new KeyBindingContextArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testOneTimeTimerArchetype() {
+        assertEquals(OneTimeTimer.class.getCanonicalName(),
+                new OneTimeTimerArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testRecurringTimerArchetype() {
+        assertEquals(RecurringTimer.class.getCanonicalName(),
+                new RecurringTimerArchetype().getInterfaceName());
     }
 
     @Test

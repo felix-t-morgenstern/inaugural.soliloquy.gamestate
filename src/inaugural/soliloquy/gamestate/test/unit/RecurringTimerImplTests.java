@@ -52,12 +52,18 @@ class RecurringTimerImplTests {
     }
 
     @Test
-    void testTimerAction() {
-        assertEquals(TIMER_ACTION, _recurringTimer.action());
+    void testActionTypeId() {
+        assertEquals(TIMER_ACTION.id(), _recurringTimer.actionTypeId());
     }
 
     @Test
-    void testSetAndGetPrioirity() {
+    void testFire() {
+        _recurringTimer.fire();
+        assertTrue(((ActionStub)TIMER_ACTION)._actionRun);
+    }
+
+    @Test
+    void testSetAndGetPriority() {
         _recurringTimer.setPriority(123);
 
         assertEquals(123, _recurringTimer.getPriority());

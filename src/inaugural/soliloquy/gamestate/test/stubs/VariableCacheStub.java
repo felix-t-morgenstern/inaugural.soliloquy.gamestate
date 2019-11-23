@@ -42,6 +42,6 @@ public class VariableCacheStub implements VariableCache {
 
     @Override
     public String getInterfaceName() {
-        return null;
+        return VariableCache.class.getCanonicalName();
     }
 }

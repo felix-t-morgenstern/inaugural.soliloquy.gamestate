@@ -83,15 +83,7 @@ class CharacterStatusEffectsImplTests {
     }
 
     @Test
-    void testClearGetAndSetNullDeadOrDeletedCharacter() {
-        _character.setDead(true);
-        assertThrows(IllegalStateException.class,
-                () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
-        assertThrows(IllegalStateException.class,
-                () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
-        assertThrows(IllegalStateException.class, _characterStatusEffects::clearStatusEffects);
-
-        _character = new CharacterStub();
+    void testClearGetAndSetNullOrDeletedCharacter() {
         _character.delete();
         assertThrows(IllegalStateException.class, () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
         assertThrows(IllegalStateException.class, () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
@@ -131,12 +123,6 @@ class CharacterStatusEffectsImplTests {
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true,
                         null, _abilitySource));
 
-        _character.setDead(true);
-        assertThrows(IllegalStateException.class,
-                () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true,
-                        _element, _abilitySource));
-
-        _character = new CharacterStub();
         _character.delete();
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true,

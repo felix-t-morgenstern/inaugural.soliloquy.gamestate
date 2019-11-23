@@ -52,8 +52,6 @@ public class CharacterImpl implements Character {
     private String _direction;
     private SpriteSet _spriteSet;
     private boolean _playerControlled;
-    private boolean _hidden;
-    private boolean _dead;
     private boolean _deleted;
     private String _name;
     private CharacterAIType _aiType;
@@ -247,30 +245,6 @@ public class CharacterImpl implements Character {
     public void setPlayerControlled(boolean playerControlled) throws IllegalStateException {
         enforceInvariant("setPlayerControlled", true);
         _playerControlled = playerControlled;
-    }
-
-    @Override
-    public boolean getHidden() throws IllegalStateException {
-        enforceInvariant("getHidden", true);
-        return _hidden;
-    }
-
-    @Override
-    public void setHidden(boolean hidden) throws IllegalStateException {
-        enforceInvariant("setHidden", true);
-        _hidden = hidden;
-    }
-
-    @Override
-    public boolean getDead() throws IllegalStateException {
-        enforceInvariant("getDead", true);
-        return _dead;
-    }
-
-    @Override
-    public void setDead(boolean dead) throws IllegalStateException {
-        enforceInvariant("setDead", true);
-        _dead = dead;
     }
 
     @Override

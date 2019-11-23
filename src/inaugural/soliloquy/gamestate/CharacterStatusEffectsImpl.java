@@ -41,9 +41,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
                     "CharacterStatusEffects.getStatusEffectLevel: type cannot be null");
         }
         enforceInvariants("getStatusEffectLevel");
-        if (CHARACTER.getDead()) {
-            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
-        }
         return STATUS_EFFECT_LEVELS.getOrDefault(type, 0);
     }
 
@@ -64,10 +61,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
                                   Element element, AbilitySource abilitySource)
             throws IllegalStateException, IllegalArgumentException {
         enforceInvariants("alterStatusEffect");
-        if (CHARACTER.getDead()) {
-            throw new IllegalStateException(
-                    "CharacterStatusEffects.alterStatusEffect: character is dead");
-        }
         if (type == null) {
             throw new IllegalArgumentException(
                     "CharacterStatusEffects.alterStatusEffect: type cannot be null");
@@ -86,9 +79,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     public void setStatusEffectLevel(StatusEffectType type, int level)
             throws IllegalStateException {
         enforceInvariants("alterStatusEffect");
-        if (CHARACTER.getDead()) {
-            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
-        }
         if (level == 0) {
             STATUS_EFFECT_LEVELS.remove(type);
         } else {
@@ -99,9 +89,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     @Override
     public void clearStatusEffects() throws IllegalStateException {
         enforceInvariants("alterStatusEffect");
-        if (CHARACTER.getDead()) {
-            throw new IllegalStateException("CharacterStatusEffects.setStatusEffectLevel: character is dead");
-        }
         STATUS_EFFECT_LEVELS.clear();
     }
 

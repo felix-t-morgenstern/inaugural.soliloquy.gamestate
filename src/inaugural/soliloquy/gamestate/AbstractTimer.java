@@ -17,8 +17,13 @@ public abstract class AbstractTimer extends HasDeletionInvariants implements Tim
     }
 
     @Override
-    public Action<Void> action() {
-        return ACTION;
+    public String actionTypeId() {
+        return ACTION.id();
+    }
+
+    @Override
+    public void fire() {
+        ACTION.run(null);
     }
 
     @Override

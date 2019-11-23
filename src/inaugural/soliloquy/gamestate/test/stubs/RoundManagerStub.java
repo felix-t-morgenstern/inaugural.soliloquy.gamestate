@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
@@ -14,17 +14,52 @@ public class RoundManagerStub implements RoundManager {
     public final Collection<RecurringTimer> RECURRING_TIMERS = new CollectionStub<>();
 
     @Override
-    public Map<Integer, Pair<Character, Integer>> characterOrder() {
+    public ReadableCollection<Pair<Character, VariableCache>> characterQueueRepresentation() {
         return null;
     }
 
     @Override
-    public Pair<Character, Integer> endActiveCharacterTurn() {
+    public boolean characterIsInQueue(Character character) throws IllegalArgumentException {
+        return false;
+    }
+
+    @Override
+    public Integer getCharacterPositionInQueue(Character character) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public String activeCharacterId() {
+    public int queueSize() {
+        return 0;
+    }
+
+    @Override
+    public VariableCache characterRoundData(Character character) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public void setCharacterPositionInQueue(Character character, int i) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public boolean removeCharacterFromQueue(Character character) throws IllegalArgumentException {
+        return false;
+    }
+
+    @Override
+    public void clearQueue() {
+
+    }
+
+    @Override
+    public void endActiveCharacterTurn() {
+
+    }
+
+    @Override
+    public Character activeCharacter() {
         return null;
     }
 

@@ -44,8 +44,14 @@ class OneTimeTimerImplTests {
     }
 
     @Test
-    void testTimerTypeId() {
-        assertEquals(ACTION, _oneTimeTimer.action());
+    void testActionTypeId() {
+        assertEquals(ACTION.id(), _oneTimeTimer.actionTypeId());
+    }
+
+    @Test
+    void testFire() {
+        _oneTimeTimer.fire();
+        assertTrue(((ActionStub)ACTION)._actionRun);
     }
 
     @Test

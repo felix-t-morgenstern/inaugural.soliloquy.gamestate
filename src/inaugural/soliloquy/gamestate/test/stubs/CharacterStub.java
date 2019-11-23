@@ -16,7 +16,6 @@ import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class CharacterStub implements Character {
     private boolean _isDeleted;
-    private boolean _isDead;
 
     public Tile _tile;
 
@@ -133,26 +132,6 @@ public class CharacterStub implements Character {
     @Override
     public void setPlayerControlled(boolean b) throws IllegalStateException {
 
-    }
-
-    @Override
-    public boolean getHidden() throws IllegalStateException {
-        return false;
-    }
-
-    @Override
-    public void setHidden(boolean b) throws IllegalStateException {
-
-    }
-
-    @Override
-    public boolean getDead() throws IllegalStateException {
-        return _isDead;
-    }
-
-    @Override
-    public void setDead(boolean b) throws IllegalStateException {
-        _isDead = b;
     }
 
     @Override

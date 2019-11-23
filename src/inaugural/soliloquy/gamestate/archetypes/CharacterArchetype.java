@@ -137,26 +137,6 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public boolean getHidden() throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setHidden(boolean b) throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean getDead() throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setDead(boolean b) throws IllegalStateException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void delete() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
