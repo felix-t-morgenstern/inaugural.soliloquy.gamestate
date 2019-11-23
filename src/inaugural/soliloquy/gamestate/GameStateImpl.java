@@ -110,6 +110,11 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
+    public Camera camera() {
+        return null;
+    }
+
+    @Override
     public Registry<GameMovementEvent> movementEvents() {
         return MOVEMENT_EVENTS;
     }

@@ -9,8 +9,8 @@ import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Camera;
-import soliloquy.specs.gamestate.entities.CameraFactory;
 import soliloquy.specs.gamestate.entities.GameZone;
+import soliloquy.specs.gamestate.factories.CameraFactory;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 
