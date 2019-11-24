@@ -383,13 +383,14 @@ class ItemImplTests {
     void testDeleteRemovesItemFromTileFixtureItems() {
         TILE_FIXTURE.items().add(_item);
         assertTrue(TILE_FIXTURE.items().contains(_item));
-        int originalTileFixtureSize = TileFixtureItemsStub.ITEMS.size();
+        int originalTileFixtureSize = ((TileFixtureItemsStub)TILE_FIXTURE.items())._items.size();
 
         _item.delete();
 
         assertFalse(TILE_FIXTURE.items().contains(_item));
-        assertFalse(TileFixtureItemsStub.ITEMS.contains(_item));
-        assertEquals(originalTileFixtureSize - 1, TileFixtureItemsStub.ITEMS.size());
+        assertFalse(((TileFixtureItemsStub)TILE_FIXTURE.items())._items.contains(_item));
+        assertEquals(originalTileFixtureSize - 1,
+                ((TileFixtureItemsStub)TILE_FIXTURE.items())._items.size());
     }
 
     @Test
@@ -527,8 +528,9 @@ class ItemImplTests {
 
     @Test
     void testItemNotFoundInTileFixtureItemsInvariant() {
-        new TileFixtureStub().items().add(_item);
-        TileFixtureItemsStub.ITEMS.remove(_item);
+        TileFixtureStub tileFixture = new TileFixtureStub();
+        tileFixture.items().add(_item);
+        ((TileFixtureItemsStub)tileFixture.items())._items.remove(_item);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());

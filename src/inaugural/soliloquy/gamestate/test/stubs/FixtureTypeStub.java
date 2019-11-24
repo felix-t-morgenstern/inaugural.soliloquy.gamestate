@@ -11,6 +11,16 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class FixtureTypeStub implements FixtureType {
+    public String _id;
+
+    public FixtureTypeStub() {
+
+    }
+
+    public FixtureTypeStub(String id) {
+        _id = id;
+    }
+
     @Override
     public boolean isContainer() throws IllegalStateException {
         return false;
@@ -23,7 +33,7 @@ public class FixtureTypeStub implements FixtureType {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return _id;
     }
 
     @Override

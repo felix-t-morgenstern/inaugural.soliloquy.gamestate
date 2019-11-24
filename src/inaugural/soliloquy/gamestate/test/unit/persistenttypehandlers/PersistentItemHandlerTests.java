@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
-import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentEntityUuidHandler;
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentItemHandler;
 import inaugural.soliloquy.gamestate.test.stubs.ItemFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.ItemStub;
@@ -32,8 +31,8 @@ class PersistentItemHandlerTests {
     private final int NUM_CHARGES = 123;
     private final int NUM_IN_STACK = 456;
 
-    private final String DATA_WITH_CHARGES = "{\"id\":\"PersistentEntityUuidHandlerStub write result\",\"typeId\":\"ItemTypeStubId\",\"charges\":123,\"data\":\"PersistentGenericParamsSetHandlerStub write result\"}";
-    private final String DATA_STACKABLE = "{\"id\":\"PersistentEntityUuidHandlerStub write result\",\"typeId\":\"ItemTypeStubId\",\"numberInStack\":456,\"data\":\"PersistentGenericParamsSetHandlerStub write result\"}";
+    private final String DATA_WITH_CHARGES = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"charges\":123,\"data\":\"GenericParamsSet0\"}";
+    private final String DATA_STACKABLE = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"numberInStack\":456,\"data\":\"GenericParamsSet0\"}";
 
     private PersistentValueTypeHandler<Item> _persistentItemHandler;
 
@@ -101,9 +100,12 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_WITH_CHARGES);
 
         assertNotNull(readItem);
-        assertSame(PersistentEntityUuidHandlerStub.READ_RESULT, readItem.id());
+        assertSame(((PersistentEntityUuidHandlerStub)ENTITY_UUID_HANDLER).READ_OUTPUTS.get(0),
+                readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
-        assertSame(PersistentGenericParamsSetHandlerStub.READ_RESULT, readItem.data());
+        assertSame(((PersistentGenericParamsSetHandlerStub)GENERIC_PARAMS_SET_HANDLER)
+                .READ_OUTPUTS.get(0),
+                    readItem.data());
         assertEquals(NUM_CHARGES, readItem.getCharges());
     }
 
@@ -113,9 +115,12 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_STACKABLE);
 
         assertNotNull(readItem);
-        assertSame(PersistentEntityUuidHandlerStub.READ_RESULT, readItem.id());
+        assertSame(((PersistentEntityUuidHandlerStub)ENTITY_UUID_HANDLER).READ_OUTPUTS.get(0),
+                readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
-        assertSame(PersistentGenericParamsSetHandlerStub.READ_RESULT, readItem.data());
+        assertSame(((PersistentGenericParamsSetHandlerStub)GENERIC_PARAMS_SET_HANDLER)
+                .READ_OUTPUTS.get(0),
+                    readItem.data());
         assertEquals(NUM_IN_STACK, readItem.getNumberInStack());
     }
 

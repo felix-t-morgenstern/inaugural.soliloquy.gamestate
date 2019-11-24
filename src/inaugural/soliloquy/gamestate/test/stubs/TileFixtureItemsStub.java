@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -10,7 +11,8 @@ import java.util.List;
 
 public class TileFixtureItemsStub implements TileFixtureItems {
     public final TileFixture TILE_FIXTURE;
-    public static List<Item> ITEMS = new ArrayList<>();
+
+    public final List<Item> _items = new ArrayList<>();
 
     private boolean _deleted;
 
@@ -35,25 +37,27 @@ public class TileFixtureItemsStub implements TileFixtureItems {
 
     @Override
     public ReadableCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
-        return null;
+        Collection<Item> items = new CollectionStub<>();
+        _items.forEach(items::add);
+        return items.readOnlyRepresentation();
     }
 
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
-        ITEMS.add(item);
+        _items.add(item);
         item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE);
     }
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
-        if(ITEMS.contains(item)) {
+        if(_items.contains(item)) {
             item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(null);
         }
-        return ITEMS.remove(item);
+        return _items.remove(item);
     }
 
     @Override
     public boolean contains(Item item) throws IllegalArgumentException, IllegalStateException {
-        return ITEMS.contains(item);
+        return _items.contains(item);
     }
 }

@@ -14,6 +14,11 @@ import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class TileFixtureStub implements TileFixture {
     private boolean _isDeleted;
+    private Coordinate _pixelOffset;
+    private EntityUuid _id;
+    private FixtureType _fixtureType;
+    private GenericParamsSet _data;
+    private String _name;
 
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
 
@@ -23,6 +28,14 @@ public class TileFixtureStub implements TileFixture {
         TILE_FIXTURE_ITEMS = new TileFixtureItemsStub(this);
     }
 
+    public TileFixtureStub(EntityUuid id, FixtureType fixtureType, GenericParamsSet data) {
+        TILE_FIXTURE_ITEMS = new TileFixtureItemsStub(this);
+        _id = id;
+        _fixtureType = fixtureType;
+        _data = data;
+        _pixelOffset = new CoordinateStub();
+    }
+
     @Override
     public Tile tile() throws IllegalStateException {
         return _tile;
@@ -30,12 +43,12 @@ public class TileFixtureStub implements TileFixture {
 
     @Override
     public FixtureType type() throws IllegalStateException {
-        return null;
+        return _fixtureType;
     }
 
     @Override
     public Coordinate pixelOffset() throws IllegalStateException {
-        return null;
+        return _pixelOffset;
     }
 
     @Override
@@ -51,17 +64,17 @@ public class TileFixtureStub implements TileFixture {
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        return null;
+        return _data;
     }
 
     @Override
     public String getName() {
-        return null;
+        return _name;
     }
 
     @Override
-    public void setName(String s) {
-
+    public void setName(String name) {
+        _name = name;
     }
 
     @Override
@@ -96,6 +109,6 @@ public class TileFixtureStub implements TileFixture {
 
     @Override
     public EntityUuid id() {
-        return null;
+        return _id;
     }
 }
