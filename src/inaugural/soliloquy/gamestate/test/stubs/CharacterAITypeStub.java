@@ -5,6 +5,16 @@ import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
 public class CharacterAITypeStub implements CharacterAIType {
+    private final String ID;
+
+    public CharacterAITypeStub() {
+        ID = null;
+    }
+
+    public CharacterAITypeStub(String id) {
+        ID = id;
+    }
+
     @Override
     public void act() {
 
@@ -27,6 +37,6 @@ public class CharacterAITypeStub implements CharacterAIType {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return ID;
     }
 }

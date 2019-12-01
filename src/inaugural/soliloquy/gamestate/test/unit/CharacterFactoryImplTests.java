@@ -10,10 +10,7 @@ import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
-import soliloquy.specs.gamestate.factories.CharacterFactory;
-import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
-import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
+import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +19,8 @@ class CharacterFactoryImplTests {
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY =
+            new CharacterEventsFactoryStub();
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOT_FACTORY =
             new CharacterEquipmentSlotsFactoryStub();
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY =
@@ -40,6 +39,7 @@ class CharacterFactoryImplTests {
         _characterFactory = new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                 COLLECTION_FACTORY,
                 MAP_FACTORY,
+                CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOT_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
@@ -53,6 +53,7 @@ class CharacterFactoryImplTests {
                 () -> new CharacterFactoryImpl(null,
                         COLLECTION_FACTORY,
                         MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
@@ -61,6 +62,7 @@ class CharacterFactoryImplTests {
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         null,
                         MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
@@ -69,6 +71,7 @@ class CharacterFactoryImplTests {
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
                         null,
+                        CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
@@ -78,6 +81,7 @@ class CharacterFactoryImplTests {
                         COLLECTION_FACTORY,
                         MAP_FACTORY,
                         null,
+                        CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
@@ -85,6 +89,16 @@ class CharacterFactoryImplTests {
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
                         MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
+                        null,
+                        CHARACTER_INVENTORY_FACTORY,
+                        CHARACTER_STATUS_EFFECTS_FACTORY,
+                        GENERIC_PARAMS_SET_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                        COLLECTION_FACTORY,
+                        MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         null,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
@@ -93,6 +107,7 @@ class CharacterFactoryImplTests {
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
                         MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         null,
@@ -101,6 +116,7 @@ class CharacterFactoryImplTests {
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
                         MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,

@@ -4,9 +4,19 @@ import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class CharacterStatisticTypeStub implements CharacterStatisticType {
+    private final String ID;
+
+    public CharacterStatisticTypeStub() {
+        ID = null;
+    }
+
+    public CharacterStatisticTypeStub(String id) {
+        ID = id;
+    }
+
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return ID;
     }
 
     @Override

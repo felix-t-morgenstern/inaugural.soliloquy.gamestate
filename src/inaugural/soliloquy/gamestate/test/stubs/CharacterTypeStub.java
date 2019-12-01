@@ -9,6 +9,16 @@ import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.ruleset.entities.CharacterType;
 
 public class CharacterTypeStub implements CharacterType {
+    private final String ID;
+
+    public CharacterTypeStub() {
+        ID = null;
+    }
+
+    public CharacterTypeStub(String id) {
+        ID = id;
+    }
+
     @Override
     public Character generate(Tile tile, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
         return null;
@@ -21,7 +31,7 @@ public class CharacterTypeStub implements CharacterType {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return ID;
     }
 
     @Override

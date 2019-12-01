@@ -5,9 +5,19 @@ import soliloquy.specs.sprites.entities.Sprite;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class SpriteSetStub implements SpriteSet {
+    private final String ID;
+
+    public SpriteSetStub() {
+        ID = null;
+    }
+
+    public SpriteSetStub(String id) {
+        ID = id;
+    }
+
     @Override
-    public String spriteSetTypeId() {
-        return null;
+    public String id() {
+        return ID;
     }
 
     @Override

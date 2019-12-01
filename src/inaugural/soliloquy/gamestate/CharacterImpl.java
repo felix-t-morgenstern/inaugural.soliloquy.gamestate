@@ -12,6 +12,7 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
@@ -37,7 +38,7 @@ public class CharacterImpl implements Character {
     private final CharacterType CHARACTER_TYPE;
     private final Collection<CharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final Map<String,String> PRONOUNS;
-    private final Map<String, Collection<GameCharacterEvent>> EVENTS;
+    private final CharacterEvents EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
     private final Map<String, CharacterDepletableStatistic> DEPLETABLE_STATISTICS;
@@ -61,6 +62,7 @@ public class CharacterImpl implements Character {
                          CharacterType characterType,
                          CollectionFactory collectionFactory,
                          MapFactory mapFactory,
+                         CharacterEventsFactory characterEventsFactory,
                          CharacterEquipmentSlotsFactory equipmentSlotsFactory,
                          CharacterInventoryFactory inventoryFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
@@ -81,7 +83,7 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException("Character: mapFactory must be non-null");
         }
         PRONOUNS = mapFactory.make("","");
-        EVENTS = mapFactory.make("", collectionFactory.make(EVENT_ARCHETYPE));
+        EVENTS = characterEventsFactory.make(this);
         if (equipmentSlotsFactory == null) {
             throw new IllegalArgumentException(
                     "Character: equipmentSlotsFactory must be non-null");
@@ -186,7 +188,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<String, Collection<GameCharacterEvent>> events() {
+    public CharacterEvents events() {
         enforceInvariant("characterEvents", true);
         return EVENTS;
     }
@@ -205,13 +207,13 @@ public class CharacterImpl implements Character {
 
     @Override
     public Map<String, CharacterDepletableStatistic> depletableStatistics() throws IllegalStateException {
-        enforceInvariant("vitalAttributes", true);
+        enforceInvariant("depletableStatistics", true);
         return DEPLETABLE_STATISTICS;
     }
 
     @Override
     public Map<String, CharacterStatistic> statistics() throws IllegalStateException {
-        enforceInvariant("attributes", true);
+        enforceInvariant("statistics", true);
         return STATISTICS;
     }
 

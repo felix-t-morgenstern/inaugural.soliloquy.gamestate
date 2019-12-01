@@ -16,25 +16,50 @@ import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class CharacterStub implements Character {
     private boolean _isDeleted;
+    private String _stance;
+    private String _direction;
+    private SpriteSet _spriteSet;
+    private CharacterAIType _aiType;
+
+    private final EntityUuid ID;
+    private final CharacterType TYPE;
+    private final Collection<CharacterClassification> CLASSIFICATIONS = new CollectionStub<>();
+    private final Map<String,String> PRONOUNS = new MapStub<>();
+    // TODO: Implement a stub class for CharacterEvents!!!
+    // TODO: Implement a stub class for CharacterEvents!!!
+    // TODO: Implement a stub class for CharacterEvents!!!
+    // TODO: Implement a stub class for CharacterEvents!!!
+    // TODO: Implement a stub class for CharacterEvents!!!
+    private final CharacterEvents EVENTS = null;
 
     public Tile _tile;
 
     public final CharacterEquipmentSlotsStub EQUIPMENT = new CharacterEquipmentSlotsStub(this);
     public final CharacterInventoryStub INVENTORY = new CharacterInventoryStub(this);
 
+    public CharacterStub() {
+        ID = null;
+        TYPE = null;
+    }
+
+    public CharacterStub(EntityUuid id, CharacterType type) {
+        ID = id;
+        TYPE = type;
+    }
+
     @Override
     public CharacterType characterType() throws IllegalStateException {
-        return null;
+        return TYPE;
     }
 
     @Override
     public Collection<CharacterClassification> classifications() throws IllegalStateException {
-        return null;
+        return CLASSIFICATIONS;
     }
 
     @Override
     public Map<String, String> pronouns() throws IllegalStateException {
-        return null;
+        return PRONOUNS;
     }
 
     @Override
@@ -44,47 +69,47 @@ public class CharacterStub implements Character {
 
     @Override
     public String getStance() throws IllegalStateException {
-        return null;
+        return _stance;
     }
 
     @Override
-    public void setStance(String s) throws IllegalStateException {
-
+    public void setStance(String stance) throws IllegalStateException {
+        _stance = stance;
     }
 
     @Override
     public String getDirection() throws IllegalStateException {
-        return null;
+        return _direction;
     }
 
     @Override
-    public void setDirection(String s) throws IllegalArgumentException, IllegalStateException {
-
+    public void setDirection(String direction) throws IllegalArgumentException, IllegalStateException {
+        _direction = direction;
     }
 
     @Override
     public SpriteSet getSpriteSet() throws IllegalStateException {
-        return null;
+        return _spriteSet;
     }
 
     @Override
     public void setSpriteSet(SpriteSet spriteSet) throws IllegalArgumentException, IllegalStateException {
-
+        _spriteSet = spriteSet;
     }
 
     @Override
     public CharacterAIType getAIType() throws IllegalStateException {
-        return null;
+        return _aiType;
     }
 
     @Override
-    public void setAIType(CharacterAIType characterAIType) throws IllegalArgumentException, IllegalStateException {
-
+    public void setAIType(CharacterAIType aiType) throws IllegalArgumentException, IllegalStateException {
+        _aiType = aiType;
     }
 
     @Override
-    public Map<String, Collection<GameCharacterEvent>> events() {
-        return null;
+    public CharacterEvents events() {
+        return EVENTS;
     }
 
     @Override
@@ -156,7 +181,7 @@ public class CharacterStub implements Character {
 
     @Override
     public EntityUuid id() {
-        return null;
+        return ID;
     }
 
     @Override

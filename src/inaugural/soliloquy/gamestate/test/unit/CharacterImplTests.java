@@ -9,6 +9,7 @@ import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
@@ -25,6 +26,7 @@ class CharacterImplTests {
     private final EntityUuid ID = new EntityUuidStub();
     private final CharacterType CHARACTER_TYPE = new CharacterTypeStub();
     private final CharacterAIType AI_TYPE = new CharacterAITypeStub();
+    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new CharacterEventsFactoryStub();
     private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new CharacterEquipmentSlotsFactoryStub();
     private final CharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryFactoryStub();
     private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new CharacterStatusEffectsFactoryStub();
@@ -38,6 +40,7 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,
@@ -52,6 +55,7 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,
@@ -61,6 +65,7 @@ class CharacterImplTests {
                 null,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,
@@ -70,6 +75,7 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 null,
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,
@@ -79,6 +85,7 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 null,
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,
@@ -89,6 +96,7 @@ class CharacterImplTests {
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
                 null,
+                EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
@@ -97,6 +105,17 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
+                null,
+                INVENTORY_FACTORY,
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
+                ID,
+                CHARACTER_TYPE,
+                new CollectionFactoryStub(),
+                new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 null,
                 STATUS_EFFECTS_FACTORY,
@@ -106,6 +125,7 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 null,
@@ -115,6 +135,7 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,
@@ -134,6 +155,7 @@ class CharacterImplTests {
                 CHARACTER_TYPE,
                 new CollectionFactoryStub(),
                 new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 STATUS_EFFECTS_FACTORY,

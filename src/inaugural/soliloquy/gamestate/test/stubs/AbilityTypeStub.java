@@ -38,4 +38,9 @@ public class AbilityTypeStub implements AbilityType {
     public String getInterfaceName() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public String id() throws IllegalStateException {
+        return null;
+    }
 }

@@ -6,16 +6,14 @@ import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
-import soliloquy.specs.gamestate.factories.CharacterFactory;
-import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
-import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
+import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterType;
 
 public class CharacterFactoryImpl implements CharacterFactory {
     private final EntityUuidFactory ENTITY_UUID_FACTORY;
     private final CollectionFactory COLLECTION_FACTORY;
     private final MapFactory MAP_FACTORY;
+    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY;
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOTS_FACTORY;
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY;
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY;
@@ -25,6 +23,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
     public CharacterFactoryImpl(EntityUuidFactory entityUuidFactory,
                                 CollectionFactory collectionFactory,
                                 MapFactory mapFactory,
+                                CharacterEventsFactory characterEventsFactory,
                                 CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory,
                                 CharacterInventoryFactory characterInventoryFactory,
                                 CharacterStatusEffectsFactory characterStatusEffectsFactory,
@@ -48,6 +47,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
             throw new IllegalArgumentException(
                     "CharacterFactory: characterEquipmentSlotsFactory must be non-null");
         }
+        CHARACTER_EVENTS_FACTORY = characterEventsFactory;
         CHARACTER_EQUIPMENT_SLOTS_FACTORY = characterEquipmentSlotsFactory;
         if (characterInventoryFactory == null) {
             throw new IllegalArgumentException(
@@ -86,6 +86,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
                 characterType,
                 COLLECTION_FACTORY,
                 MAP_FACTORY,
+                CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOTS_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,

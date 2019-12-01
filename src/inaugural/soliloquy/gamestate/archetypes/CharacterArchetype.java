@@ -4,9 +4,8 @@ import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.EntityUuid;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
@@ -87,7 +86,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public Map<String, Collection<GameCharacterEvent>> events() {
+    public CharacterEvents events() {
         throw new UnsupportedOperationException();
     }
 
