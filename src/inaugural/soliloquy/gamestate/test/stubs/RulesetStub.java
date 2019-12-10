@@ -29,7 +29,12 @@ public class RulesetStub implements Ruleset {
     }
 
     @Override
-    public EntityGroup<CharacterStatisticType> characterStatisticTypes() {
+    public EntityGroup<CharacterDepletableStatisticType> characterDepletableStatisticTypes() {
+        return null;
+    }
+
+    @Override
+    public EntityGroup<CharacterStaticStatisticType> characterStaticStatisticTypes() {
         return null;
     }
 

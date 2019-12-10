@@ -15,8 +15,7 @@ public class MapStub<K,V> extends ReadableMapStub<K,V> implements Map<K,V> {
 
     @Override
     public void clear() {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
+        _map.clear();
     }
 
     @Override

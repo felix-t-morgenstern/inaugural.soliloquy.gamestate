@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
@@ -9,6 +10,17 @@ import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 public class CharacterStatusEffectsStub implements CharacterStatusEffects {
     public boolean _isDeleted;
 
+    public final StatusEffectType _type1 = new StatusEffectTypeStub("statusEffectType1");
+    public final StatusEffectType _type2 = new StatusEffectTypeStub("statusEffectType2");
+    public final StatusEffectType _type3 = new StatusEffectTypeStub("statusEffectType3");
+    public Map<StatusEffectType, Integer> _representation = new MapStub<>();
+
+    public CharacterStatusEffectsStub() {
+        _representation.put(_type1, 123);
+        _representation.put(_type2, 456);
+        _representation.put(_type3, 789);
+    }
+
     @Override
     public Integer getStatusEffectLevel(StatusEffectType statusEffectType) throws IllegalStateException, IllegalArgumentException {
         return null;
@@ -16,7 +28,7 @@ public class CharacterStatusEffectsStub implements CharacterStatusEffects {
 
     @Override
     public ReadableMap<StatusEffectType, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
-        return null;
+        return _representation.readOnlyRepresentation();
     }
 
     @Override

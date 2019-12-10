@@ -10,6 +10,7 @@ import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class CharacterInventoryImpl extends HasDeletionInvariants implements CharacterInventory {
@@ -58,7 +59,7 @@ public class CharacterInventoryImpl extends HasDeletionInvariants implements Cha
 
     @Override
     public ReadableCollection<Item> representation() throws IllegalStateException {
-        enforceDeletionInvariants("representation");
+        enforceDeletionInvariants("_representation");
         Collection<Item> representation = COLLECTION_FACTORY.make(ITEM_ARCHETYPE);
         INVENTORY.forEach(representation::add);
         return representation.readOnlyRepresentation();
@@ -108,5 +109,10 @@ public class CharacterInventoryImpl extends HasDeletionInvariants implements Cha
     @Override
     public String getInterfaceName() {
         return CharacterInventory.class.getCanonicalName();
+    }
+
+    @Override
+    public Iterator<Item> iterator() {
+        return INVENTORY.iterator();
     }
 }

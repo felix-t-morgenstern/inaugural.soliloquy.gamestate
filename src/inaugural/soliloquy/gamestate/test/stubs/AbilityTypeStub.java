@@ -36,7 +36,7 @@ public class AbilityTypeStub implements AbilityType {
 
     @Override
     public String getInterfaceName() {
-        throw new UnsupportedOperationException();
+        return AbilityType.class.getCanonicalName();
     }
 
     @Override

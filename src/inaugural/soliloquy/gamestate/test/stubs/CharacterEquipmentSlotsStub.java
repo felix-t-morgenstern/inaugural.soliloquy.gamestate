@@ -16,7 +16,14 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
 
     public CharacterEquipmentSlotsStub(Character character) {
         CHARACTER = character;
-        EQUIPMENT_SLOTS.put("slot", ITEM);
+    }
+
+    public CharacterEquipmentSlotsStub(Character character, boolean addItem)
+    {
+        this(character);
+        if (addItem) {
+            EQUIPMENT_SLOTS.put("slot", ITEM);
+        }
     }
 
     @Override

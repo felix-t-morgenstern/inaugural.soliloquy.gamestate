@@ -25,7 +25,7 @@ public class CharacterActiveAbilityArchetype implements CharacterAbility<ActiveA
     }
 
     @Override
-    public ActiveAbilityType abilityType() {
+    public ActiveAbilityType type() {
         return null;
     }
 

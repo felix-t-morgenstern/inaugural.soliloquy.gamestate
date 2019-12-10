@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterStatisticImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticTypeStub;
+import inaugural.soliloquy.gamestate.test.stubs.CharacterStaticStatisticTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterStatisticImplTests {
     private final Character CHARACTER = new CharacterStub();
-    private final CharacterStatisticType ATTRIBUTE_TYPE = new CharacterStatisticTypeStub();
+    private final CharacterStatisticType ATTRIBUTE_TYPE = new CharacterStaticStatisticTypeStub();
     private final CharacterStatisticCalculation CHARACTER_ATTRIBUTE_CALCULATION =
             new CharacterStatisticCalculationStub();
 

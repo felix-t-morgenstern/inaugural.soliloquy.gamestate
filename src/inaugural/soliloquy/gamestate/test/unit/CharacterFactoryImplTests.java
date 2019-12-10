@@ -25,6 +25,10 @@ class CharacterFactoryImplTests {
             new CharacterEquipmentSlotsFactoryStub();
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY =
             new CharacterInventoryFactoryStub();
+    private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY =
+            new CharacterDepletableStatisticsFactoryStub();
+    private final CharacterEntitiesOfTypeFactory ENTITIES_FACTORY =
+            new CharacterEntitiesOfTypeFactoryStub();
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY =
             new CharacterStatusEffectsFactoryStub();
     private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
@@ -42,6 +46,8 @@ class CharacterFactoryImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOT_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY);
     }
@@ -56,6 +62,8 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class,
@@ -65,6 +73,8 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class,
@@ -74,6 +84,8 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class,
@@ -83,6 +95,8 @@ class CharacterFactoryImplTests {
                         null,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class,
@@ -92,6 +106,8 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         null,
                         CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class,
@@ -101,6 +117,8 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         null,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class,
@@ -111,6 +129,8 @@ class CharacterFactoryImplTests {
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         null,
+                        ENTITIES_FACTORY,
+                        CHARACTER_STATUS_EFFECTS_FACTORY,
                         GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
@@ -119,6 +139,30 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        null,
+                        CHARACTER_STATUS_EFFECTS_FACTORY,
+                        GENERIC_PARAMS_SET_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                        COLLECTION_FACTORY,
+                        MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
+                        CHARACTER_EQUIPMENT_SLOT_FACTORY,
+                        CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
+                        null,
+                        GENERIC_PARAMS_SET_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                        COLLECTION_FACTORY,
+                        MAP_FACTORY,
+                        CHARACTER_EVENTS_FACTORY,
+                        CHARACTER_EQUIPMENT_SLOT_FACTORY,
+                        CHARACTER_INVENTORY_FACTORY,
+                        DEPLETABLE_STATS_FACTORY,
+                        ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         null));
     }

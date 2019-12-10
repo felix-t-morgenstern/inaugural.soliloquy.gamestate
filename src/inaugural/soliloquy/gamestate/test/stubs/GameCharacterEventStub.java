@@ -8,12 +8,15 @@ import soliloquy.specs.logger.Logger;
 public class GameCharacterEventStub implements GameCharacterEvent {
     private final String ID;
 
+    public Character _characterFired;
+
     public GameCharacterEventStub(String id) {
         ID = id;
     }
 
     @Override
     public Boolean fire(Character character) throws IllegalArgumentException {
+        _characterFired = character;
         return null;
     }
 

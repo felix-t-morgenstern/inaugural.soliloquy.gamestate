@@ -16,6 +16,8 @@ public class CharacterFactoryImpl implements CharacterFactory {
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY;
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOTS_FACTORY;
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY;
+    private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY;
+    private final CharacterEntitiesOfTypeFactory ENTITIES_FACTORY;
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY;
     private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY;
 
@@ -26,6 +28,8 @@ public class CharacterFactoryImpl implements CharacterFactory {
                                 CharacterEventsFactory characterEventsFactory,
                                 CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory,
                                 CharacterInventoryFactory characterInventoryFactory,
+                                CharacterDepletableStatisticsFactory depletableStatsFactory,
+                                CharacterEntitiesOfTypeFactory entitiesFactory,
                                 CharacterStatusEffectsFactory characterStatusEffectsFactory,
                                 GenericParamsSetFactory genericParamsSetFactory) {
         if (entityUuidFactory == null) {
@@ -43,17 +47,31 @@ public class CharacterFactoryImpl implements CharacterFactory {
                     "CharacterFactory: mapFactory must be non-null");
         }
         MAP_FACTORY = mapFactory;
+        if (characterEventsFactory == null) {
+            throw new IllegalArgumentException(
+                    "CharacterFactory: characterEventsFactory must be non-null");
+        }
+        CHARACTER_EVENTS_FACTORY = characterEventsFactory;
         if (characterEquipmentSlotsFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterFactory: characterEquipmentSlotsFactory must be non-null");
         }
-        CHARACTER_EVENTS_FACTORY = characterEventsFactory;
         CHARACTER_EQUIPMENT_SLOTS_FACTORY = characterEquipmentSlotsFactory;
         if (characterInventoryFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterFactory: characterInventoryFactory must be non-null");
         }
         CHARACTER_INVENTORY_FACTORY = characterInventoryFactory;
+        if (depletableStatsFactory == null) {
+            throw new IllegalArgumentException(
+                    "CharacterFactory: depletableStatsFactory must be non-null");
+        }
+        DEPLETABLE_STATS_FACTORY = depletableStatsFactory;
+        if (entitiesFactory == null) {
+            throw new IllegalArgumentException(
+                    "CharacterFactory: entitiesFactory must be non-null");
+        }
+        ENTITIES_FACTORY = entitiesFactory;
         if (characterStatusEffectsFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterFactory: characterStatusEffectsFactory must be non-null");
@@ -89,6 +107,8 @@ public class CharacterFactoryImpl implements CharacterFactory {
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOTS_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY);
     }

@@ -4,10 +4,10 @@ import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.EntityUuid;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
+import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
@@ -20,17 +20,28 @@ public class CharacterStub implements Character {
     private String _direction;
     private SpriteSet _spriteSet;
     private CharacterAIType _aiType;
+    private boolean _playerControlled;
 
     private final EntityUuid ID;
     private final CharacterType TYPE;
     private final Collection<CharacterClassification> CLASSIFICATIONS = new CollectionStub<>();
     private final Map<String,String> PRONOUNS = new MapStub<>();
-    // TODO: Implement a stub class for CharacterEvents!!!
-    // TODO: Implement a stub class for CharacterEvents!!!
-    // TODO: Implement a stub class for CharacterEvents!!!
-    // TODO: Implement a stub class for CharacterEvents!!!
-    // TODO: Implement a stub class for CharacterEvents!!!
-    private final CharacterEvents EVENTS = null;
+    private final CharacterEvents EVENTS = new CharacterEventsStub(this);
+    private final CharacterDepletableStatistics DEPLETABLE_STATS =
+            new CharacterDepletableStatisticsStub(this);
+    private final CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
+            STATS = new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
+                new CharacterStaticStatisticStub(c, t)));
+    private final CharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
+    @SuppressWarnings("unchecked")
+    private final CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
+            ACTIVE_ABILITIES = new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
+            new CharacterAbilityStub<ActiveAbilityType>(c, t)));
+    @SuppressWarnings("unchecked")
+    private final CharacterEntitiesOfType<ReactiveAbilityType,
+            CharacterAbility<ReactiveAbilityType>> REACTIVE_ABILITIES =
+            new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
+                new CharacterAbilityStub<ReactiveAbilityType>(c, t)));
 
     public Tile _tile;
 
@@ -48,7 +59,7 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public CharacterType characterType() throws IllegalStateException {
+    public CharacterType type() throws IllegalStateException {
         return TYPE;
     }
 
@@ -123,40 +134,41 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public Map<String, CharacterDepletableStatistic> depletableStatistics() throws IllegalStateException {
-        return null;
+    public CharacterDepletableStatistics depletableStatistics() throws IllegalStateException {
+        return DEPLETABLE_STATS;
     }
 
     @Override
-    public Map<String, CharacterStatistic> statistics() throws IllegalStateException {
-        return null;
+    public CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
+        staticStatistics() throws IllegalStateException {
+        return STATS;
     }
 
     @Override
     public CharacterStatusEffects statusEffects() throws IllegalStateException {
-        return null;
+        return STATUS_EFFECTS;
     }
 
     @Override
-    public Map<String, CharacterAbility<ActiveAbilityType>> activeAbilities()
-            throws IllegalStateException {
-        return null;
+    public CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
+            activeAbilities() throws IllegalStateException {
+        return ACTIVE_ABILITIES;
     }
 
     @Override
-    public Map<String, CharacterAbility<ReactiveAbilityType>> reactiveAbilities()
-            throws IllegalStateException {
-        return null;
+    public CharacterEntitiesOfType<ReactiveAbilityType, CharacterAbility<ReactiveAbilityType>>
+            reactiveAbilities() throws IllegalStateException {
+        return REACTIVE_ABILITIES;
     }
 
     @Override
     public boolean getPlayerControlled() throws IllegalStateException {
-        return false;
+        return _playerControlled;
     }
 
     @Override
     public void setPlayerControlled(boolean b) throws IllegalStateException {
-
+        _playerControlled = b;
     }
 
     @Override

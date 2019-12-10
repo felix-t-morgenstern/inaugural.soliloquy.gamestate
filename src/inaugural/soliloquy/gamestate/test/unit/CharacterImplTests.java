@@ -6,14 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.valueobjects.EntityUuid;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
-import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
-import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
-import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
-import soliloquy.specs.ruleset.entities.CharacterAIType;
-import soliloquy.specs.ruleset.entities.CharacterType;
+import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.sprites.entities.SpriteSet;
@@ -29,6 +25,8 @@ class CharacterImplTests {
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new CharacterEventsFactoryStub();
     private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new CharacterEquipmentSlotsFactoryStub();
     private final CharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryFactoryStub();
+    private final CharacterEntitiesOfTypeFactory ENTITIES_OF_TYPE_FACTORY = new CharacterEntitiesOfTypeFactoryStub();
+    private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY = new CharacterDepletableStatisticsFactoryStub();
     private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new CharacterStatusEffectsFactoryStub();
     private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY = new GenericParamsSetFactoryStub();
 
@@ -43,6 +41,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY);
     }
@@ -58,6 +58,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -68,6 +70,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -78,6 +82,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -88,6 +94,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -98,6 +106,8 @@ class CharacterImplTests {
                 null,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -108,6 +118,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 null,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -118,6 +130,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 null,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -129,6 +143,8 @@ class CharacterImplTests {
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
                 null,
+                ENTITIES_OF_TYPE_FACTORY,
+                STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
@@ -138,6 +154,32 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                null,
+                STATUS_EFFECTS_FACTORY,
+                GENERIC_PARAMS_SET_FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
+                ID,
+                CHARACTER_TYPE,
+                new CollectionFactoryStub(),
+                new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
+                EQUIPMENT_SLOTS_FACTORY,
+                INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
+                null,
+                GENERIC_PARAMS_SET_FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
+                ID,
+                CHARACTER_TYPE,
+                new CollectionFactoryStub(),
+                new MapFactoryStub(),
+                CHARACTER_EVENTS_FACTORY,
+                EQUIPMENT_SLOTS_FACTORY,
+                INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 null));
     }
@@ -158,6 +200,8 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
+                DEPLETABLE_STATS_FACTORY,
+                ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 GENERIC_PARAMS_SET_FACTORY);
         assertEquals(_character, character2);
@@ -165,7 +209,7 @@ class CharacterImplTests {
 
     @Test
     void testCharacterType() {
-        assertSame(CHARACTER_TYPE, _character.characterType());
+        assertSame(CHARACTER_TYPE, _character.type());
     }
 
     @Test
@@ -238,8 +282,8 @@ class CharacterImplTests {
     }
 
     @Test
-    void testStatistics() {
-        assertNotNull(_character.statistics());
+    void testStaticStatistics() {
+        assertNotNull(_character.staticStatistics());
     }
 
     @Test
@@ -297,27 +341,30 @@ class CharacterImplTests {
         assertSame(tile, _character.tile());
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testDelete() {
         Tile tile = new TileStub();
+
         tile.characters().add(_character);
+
         CharacterEquipmentSlotsStub equipmentSlots =
                 (CharacterEquipmentSlotsStub) _character.equipmentSlots();
+
         CharacterInventoryStub inventory = (CharacterInventoryStub) _character.inventory();
-        CharacterDepletableStatisticStub depletableStatistic =
-                new CharacterDepletableStatisticStub();
-        _character.depletableStatistics().put("depletableStatistic", depletableStatistic);
-        CharacterStatisticStub statistic = new CharacterStatisticStub();
-        _character.statistics().put("statistic", statistic);
-        CharacterStatusEffectsStub statusEffects =
-                (CharacterStatusEffectsStub) _character.statusEffects();
-        CharacterAbilityStub<ActiveAbilityType> characterActiveAbility =
-                new CharacterAbilityStub<>();
-        _character.activeAbilities().put("characterActiveAbility", characterActiveAbility);
-        CharacterAbilityStub<ReactiveAbilityType> characterReactiveAbility =
-                new CharacterAbilityStub<>();
-        _character.reactiveAbilities().put("characterReactiveAbility", characterReactiveAbility);
+
+        CharacterDepletableStatistics depletableStats = _character.depletableStatistics();
+
+        CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
+                staticStats = _character.staticStatistics();
+
+        CharacterStatusEffects statusEffects = _character.statusEffects();
+
+        CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
+                activeAbilities = _character.activeAbilities();
+
+        CharacterEntitiesOfType<ReactiveAbilityType, CharacterAbility<ReactiveAbilityType>>
+                reactiveAbilities = _character.reactiveAbilities();
+
         assertFalse(_character.isDeleted());
         assertFalse(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS
                 .contains(_character));
@@ -330,18 +377,18 @@ class CharacterImplTests {
         assertSame(_character, removedCharacter);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
-        assertTrue(depletableStatistic._isDeleted);
-        assertTrue(statistic._isDeleted);
-        assertTrue(statusEffects._isDeleted);
-        assertTrue(characterActiveAbility._isDeleted);
-        assertTrue(characterReactiveAbility._isDeleted);
+        assertTrue(depletableStats.isDeleted());
+        assertTrue(staticStats.isDeleted());
+        assertTrue(statusEffects.isDeleted());
+        assertTrue(activeAbilities.isDeleted());
+        assertTrue(reactiveAbilities.isDeleted());
     }
 
     @Test
     void testThrowsIllegalStateExceptionWhenDeleted() {
         _character.delete();
 
-        assertThrows(IllegalStateException.class, () -> _character.characterType());
+        assertThrows(IllegalStateException.class, () -> _character.type());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
         assertThrows(IllegalStateException.class, () -> _character.pronouns());
         assertThrows(IllegalStateException.class, () -> _character.tile());
@@ -357,7 +404,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
         assertThrows(IllegalStateException.class, () -> _character.depletableStatistics());
-        assertThrows(IllegalStateException.class, () -> _character.statistics());
+        assertThrows(IllegalStateException.class, () -> _character.staticStatistics());
         assertThrows(IllegalStateException.class, () -> _character.statusEffects());
         assertThrows(IllegalStateException.class, () -> _character.activeAbilities());
         assertThrows(IllegalStateException.class, () -> _character.reactiveAbilities());
@@ -377,7 +424,7 @@ class CharacterImplTests {
         tile.characters().add(_character);
         ((TileCharactersStub)tile.characters()).CHARACTERS.remove(_character);
 
-        assertThrows(IllegalStateException.class, () -> _character.characterType());
+        assertThrows(IllegalStateException.class, () -> _character.type());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
         assertThrows(IllegalStateException.class, () -> _character.pronouns());
         assertThrows(IllegalStateException.class, () -> _character.tile());
@@ -393,7 +440,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
         assertThrows(IllegalStateException.class, () -> _character.depletableStatistics());
-        assertThrows(IllegalStateException.class, () -> _character.statistics());
+        assertThrows(IllegalStateException.class, () -> _character.staticStatistics());
         assertThrows(IllegalStateException.class, () -> _character.statusEffects());
         assertThrows(IllegalStateException.class, () -> _character.activeAbilities());
         assertThrows(IllegalStateException.class, () -> _character.reactiveAbilities());

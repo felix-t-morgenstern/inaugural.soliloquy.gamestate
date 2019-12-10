@@ -3,15 +3,19 @@ package inaugural.soliloquy.gamestate.test.unit;
 import inaugural.soliloquy.gamestate.CharacterEventsImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.GameCharacterEventStub;
 import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
+import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEventsImplTests {
     private final Character CHARACTER = new CharacterStub();
@@ -25,6 +29,7 @@ class CharacterEventsImplTests {
         _characterEvents = new CharacterEventsImpl(CHARACTER, COLLECTION_FACTORY, MAP_FACTORY);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
@@ -33,5 +38,273 @@ class CharacterEventsImplTests {
                 new CharacterEventsImpl(CHARACTER, null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterEventsImpl(CHARACTER, COLLECTION_FACTORY, null));
+    }
+
+    @Test
+    void testGetInterfaceName() {
+        assertEquals(CharacterEvents.class.getCanonicalName(),
+                _characterEvents.getInterfaceName());
+    }
+
+    @Test
+    void testAddEventAndRepresentation() {
+        String event1Id = "event1Id";
+        String event2Id = "event2Id";
+        String event3Id = "event3Id";
+        String event4Id = "event4Id";
+
+        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
+        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+        GameCharacterEvent event4 = new GameCharacterEventStub(event4Id);
+
+        String trigger1 = "trigger1";
+        String trigger2 = "trigger2";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger1, event2);
+        _characterEvents.addEvent(trigger1, event3);
+        _characterEvents.addEvent(trigger2, event4);
+
+        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
+                _characterEvents.representation();
+
+        assertNotNull(representation);
+        assertEquals(2, representation.size());
+        assertEquals(3, representation.get(trigger1).size());
+        assertEquals(event1Id, representation.get(trigger1).get(0).id());
+        assertEquals(event2Id, representation.get(trigger1).get(1).id());
+        assertEquals(event3Id, representation.get(trigger1).get(2).id());
+        assertEquals(1, representation.get(trigger2).size());
+        assertEquals(event4Id, representation.get(trigger2).get(0).id());
+    }
+
+    @Test
+    void testAddEventTwice() {
+        String event1Id = "event1Id";
+
+        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+
+        String trigger1 = "trigger1";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger1, event1);
+
+        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
+                _characterEvents.representation();
+
+        assertNotNull(representation);
+        assertEquals(1, representation.size());
+        assertEquals(1, representation.get(trigger1).size());
+        assertEquals(event1Id, representation.get(trigger1).get(0).id());
+    }
+
+    @Test
+    void testRemoveEvent() {
+        String event1Id = "event1Id";
+        String event2Id = "event2Id";
+        String event3Id = "event3Id";
+
+        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
+        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+
+        String trigger1 = "trigger1";
+        String trigger2 = "trigger2";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger2, event2);
+        _characterEvents.addEvent(trigger1, event3);
+
+        assertFalse(_characterEvents.removeEvent(trigger1, event2));
+        assertFalse(_characterEvents.removeEvent(trigger2, event1));
+        assertTrue(_characterEvents.removeEvent(trigger2, event2));
+        assertFalse(_characterEvents.removeEvent(trigger2, event2));
+        assertTrue(_characterEvents.removeEvent(trigger1, event3));
+        assertFalse(_characterEvents.removeEvent(trigger1, event3));
+
+        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
+                _characterEvents.representation();
+
+        assertNotNull(representation);
+        assertEquals(1, representation.size());
+        assertEquals(1, representation.get(trigger1).size());
+        assertEquals(event1Id, representation.get(trigger1).get(0).id());
+    }
+
+    @Test
+    void testContainsEvent() {
+        String event1Id = "event1Id";
+        String event2Id = "event2Id";
+        String event3Id = "event3Id";
+
+        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
+        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+
+        String trigger1 = "trigger1";
+        String trigger2 = "trigger2";
+        String trigger3 = "trigger3";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger2, event2);
+
+        assertTrue(_characterEvents.containsEvent(trigger1, event1));
+        assertFalse(_characterEvents.containsEvent(trigger1, event2));
+        assertFalse(_characterEvents.containsEvent(trigger2, event1));
+        assertTrue(_characterEvents.containsEvent(trigger2, event2));
+        assertFalse(_characterEvents.containsEvent(trigger1, event3));
+        assertFalse(_characterEvents.containsEvent(trigger3, event1));
+    }
+
+    @Test
+    void testClearTrigger() {
+        String event1Id = "event1Id";
+        String event2Id = "event2Id";
+        String event3Id = "event3Id";
+
+        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
+        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+
+        String trigger1 = "trigger1";
+        String trigger2 = "trigger2";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger2, event2);
+        _characterEvents.addEvent(trigger1, event3);
+
+        _characterEvents.clearTrigger(trigger1);
+
+        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
+                _characterEvents.representation();
+
+        assertNotNull(representation);
+        assertEquals(1, representation.size());
+        assertEquals(1, representation.get(trigger2).size());
+        assertEquals(event2Id, representation.get(trigger2).get(0).id());
+    }
+
+    @Test
+    void testClearAllTriggers() {
+        String event1Id = "event1Id";
+        String event2Id = "event2Id";
+        String event3Id = "event3Id";
+
+        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
+        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+
+        String trigger1 = "trigger1";
+        String trigger2 = "trigger2";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger2, event2);
+        _characterEvents.addEvent(trigger1, event3);
+
+        _characterEvents.clearAllTriggers();
+
+        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
+                _characterEvents.representation();
+
+        assertNotNull(representation);
+        assertEquals(0, representation.size());
+    }
+
+    @Test
+    void testGetTriggersForEvent() {
+        String event1Id = "event1Id";
+        String event2Id = "event2Id";
+        String event3Id = "event3Id";
+
+        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
+        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+
+        String trigger1 = "trigger1";
+        String trigger2 = "trigger2";
+        String trigger3 = "trigger3";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger2, event2);
+        _characterEvents.addEvent(trigger3, event1);
+
+        ReadableCollection<String> event1Triggers = _characterEvents.getTriggersForEvent(event1);
+        ReadableCollection<String> event2Triggers = _characterEvents.getTriggersForEvent(event2);
+        ReadableCollection<String> event3Triggers = _characterEvents.getTriggersForEvent(event3);
+
+        assertEquals(2, event1Triggers.size());
+        assertTrue(event1Triggers.contains(trigger1));
+        assertTrue(event1Triggers.contains(trigger3));
+
+        assertEquals(1, event2Triggers.size());
+        assertTrue(event2Triggers.contains(trigger2));
+
+        assertEquals(0, event3Triggers.size());
+    }
+
+    @Test
+    void testFire() {
+        String event1Id = "event1Id";
+        String event2Id = "event2Id";
+        String event3Id = "event3Id";
+
+        GameCharacterEventStub event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEventStub event2 = new GameCharacterEventStub(event2Id);
+        GameCharacterEventStub event3 = new GameCharacterEventStub(event3Id);
+
+        String trigger1 = "trigger1";
+        String trigger2 = "trigger2";
+
+        _characterEvents.addEvent(trigger1, event1);
+        _characterEvents.addEvent(trigger2, event2);
+        _characterEvents.addEvent(trigger1, event3);
+
+        _characterEvents.fire(trigger1);
+
+        assertEquals(CHARACTER, event1._characterFired);
+        assertNull(event2._characterFired);
+        assertEquals(CHARACTER, event3._characterFired);
+    }
+
+    @Test
+    void testDelete() {
+        _characterEvents.delete();
+
+        assertTrue(_characterEvents.isDeleted());
+    }
+
+    @Test
+    void testDeletedInvariant() {
+        String event1Id = "event1Id";
+
+        GameCharacterEventStub event1 = new GameCharacterEventStub(event1Id);
+
+        String trigger1 = "trigger1";
+
+        _characterEvents.delete();
+
+        assertThrows(IllegalStateException.class,
+                () -> _characterEvents.addEvent(trigger1, event1));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEvents.clearTrigger(trigger1));
+        assertThrows(IllegalStateException.class, () -> _characterEvents.clearAllTriggers());
+    }
+
+    @Test
+    void testCharacterDeletedInvariant() {
+        String event1Id = "event1Id";
+
+        GameCharacterEventStub event1 = new GameCharacterEventStub(event1Id);
+
+        String trigger1 = "trigger1";
+
+        CHARACTER.delete();
+
+        assertThrows(IllegalStateException.class,
+                () -> _characterEvents.addEvent(trigger1, event1));
+        assertThrows(IllegalStateException.class,
+                () -> _characterEvents.clearTrigger(trigger1));
+        assertThrows(IllegalStateException.class, () -> _characterEvents.clearAllTriggers());
     }
 }

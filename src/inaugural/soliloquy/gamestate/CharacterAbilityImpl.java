@@ -5,15 +5,16 @@ import soliloquy.specs.gamestate.entities.CharacterAbility;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 
-public class CharacterAbilityImpl extends HasDeletionInvariants implements CharacterAbility {
+public class CharacterAbilityImpl<TType extends AbilityType> extends HasDeletionInvariants
+        implements CharacterAbility<TType> {
     private boolean _isHidden;
     private boolean _isDisabled;
 
     private final Character CHARACTER;
-    private final AbilityType ABILITY_TYPE;
+    private final TType ABILITY_TYPE;
 
     public CharacterAbilityImpl(boolean isHidden, boolean isDisabled, Character character,
-                                AbilityType abilityType){
+                                TType abilityType){
         _isHidden = isHidden;
         _isDisabled = isDisabled;
         CHARACTER = character;
@@ -45,7 +46,7 @@ public class CharacterAbilityImpl extends HasDeletionInvariants implements Chara
     }
 
     @Override
-    public AbilityType abilityType() {
+    public TType type() {
         enforceDeletionInvariants("abilityType");
         return ABILITY_TYPE;
     }
@@ -53,7 +54,8 @@ public class CharacterAbilityImpl extends HasDeletionInvariants implements Chara
     @Override
     public String getInterfaceName() {
         enforceDeletionInvariants("getInterfaceName");
-        return CharacterAbility.class.getCanonicalName();
+        return CharacterAbility.class.getCanonicalName() + "<" + ABILITY_TYPE.getInterfaceName() +
+                ">";
     }
 
     @Override

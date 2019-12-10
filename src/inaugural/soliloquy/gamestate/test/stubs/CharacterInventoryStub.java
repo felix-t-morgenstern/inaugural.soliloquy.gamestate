@@ -1,17 +1,19 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CharacterInventoryStub implements CharacterInventory {
     public static Boolean OVERRIDE_CONTAINS;
     public final Character CHARACTER;
-    public static List<Item> ITEMS = new ArrayList<>();
+    public final List<Item> ITEMS = new ArrayList<>();
 
     public boolean _isDeleted;
 
@@ -36,7 +38,9 @@ public class CharacterInventoryStub implements CharacterInventory {
 
     @Override
     public ReadableCollection<Item> representation() throws IllegalStateException {
-        return null;
+        Collection<Item> items = new CollectionStub<>();
+        ITEMS.forEach(items::add);
+        return items.readOnlyRepresentation();
     }
 
     @Override
@@ -60,5 +64,10 @@ public class CharacterInventoryStub implements CharacterInventory {
             return OVERRIDE_CONTAINS;
         }
         return ITEMS.contains(item);
+    }
+
+    @Override
+    public Iterator<Item> iterator() {
+        return ITEMS.iterator();
     }
 }

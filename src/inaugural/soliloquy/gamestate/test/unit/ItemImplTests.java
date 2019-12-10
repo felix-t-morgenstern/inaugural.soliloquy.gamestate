@@ -369,14 +369,15 @@ class ItemImplTests {
     void testDeleteRemovesItemFromCharacterInventory() {
         CHARACTER_INVENTORY.add(_item);
         assertTrue(CHARACTER_INVENTORY.contains(_item));
-        int originalCharacterInventorySize = CharacterInventoryStub.ITEMS.size();
+        int originalCharacterInventorySize =
+                ((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.size();
 
         _item.delete();
 
         assertFalse(CHARACTER_INVENTORY.contains(_item));
-        assertFalse(CharacterInventoryStub.ITEMS.contains(_item));
+        assertFalse(((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.contains(_item));
         assertEquals(originalCharacterInventorySize - 1,
-                CharacterInventoryStub.ITEMS.size());
+                ((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.size());
     }
 
     @Test
@@ -469,7 +470,7 @@ class ItemImplTests {
     @Test
     void testItemNotFoundInCharacterInventoryInvariant() {
         CHARACTER_INVENTORY.add(_item);
-        CharacterInventoryStub.ITEMS.remove(_item);
+        ((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.remove(_item);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());

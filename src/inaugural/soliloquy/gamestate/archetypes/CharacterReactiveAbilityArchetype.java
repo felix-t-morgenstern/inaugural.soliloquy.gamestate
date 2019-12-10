@@ -25,7 +25,7 @@ public class CharacterReactiveAbilityArchetype implements CharacterAbility<React
     }
 
     @Override
-    public ReactiveAbilityType abilityType() {
+    public ReactiveAbilityType type() {
         return null;
     }
 

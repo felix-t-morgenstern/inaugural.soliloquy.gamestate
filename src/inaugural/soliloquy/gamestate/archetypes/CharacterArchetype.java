@@ -7,6 +7,7 @@ import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
+import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
@@ -21,7 +22,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public CharacterType characterType() throws IllegalStateException {
+    public CharacterType type() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
@@ -101,12 +102,12 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public Map<String, CharacterDepletableStatistic> depletableStatistics() throws IllegalStateException {
+    public CharacterDepletableStatistics depletableStatistics() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Map<String, CharacterStatistic> statistics() throws IllegalStateException {
+    public CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic> staticStatistics() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
@@ -116,12 +117,12 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public Map<String, CharacterAbility<ActiveAbilityType>> activeAbilities() throws IllegalStateException {
+    public CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>> activeAbilities() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Map<String, CharacterAbility<ReactiveAbilityType>> reactiveAbilities() throws IllegalStateException {
+    public CharacterEntitiesOfType<ReactiveAbilityType, CharacterAbility<ReactiveAbilityType>> reactiveAbilities() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

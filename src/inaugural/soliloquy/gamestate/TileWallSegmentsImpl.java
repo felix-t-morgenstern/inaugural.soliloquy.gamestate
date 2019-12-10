@@ -42,14 +42,14 @@ public class TileWallSegmentsImpl implements TileWallSegments {
 
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariants("representation");
+        enforceDeletionInvariants("_representation");
         return TileWallSegments.class.getCanonicalName();
     }
 
     @Override
     public ReadableMap<TileWallSegmentDirection, ReadableCollection<TileWallSegment>> representation()
             throws IllegalStateException {
-        enforceDeletionInvariants("representation");
+        enforceDeletionInvariants("_representation");
         Map<TileWallSegmentDirection, ReadableCollection<TileWallSegment>> map =
                 MAP_FACTORY.make(TileWallSegmentDirection.UNKNOWN,
                         COLLECTION_FACTORY.make(ARCHETYPE));

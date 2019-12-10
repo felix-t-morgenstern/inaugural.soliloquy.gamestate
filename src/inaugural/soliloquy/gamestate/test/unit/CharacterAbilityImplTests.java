@@ -41,12 +41,14 @@ class CharacterAbilityImplTests {
 
     @Test
     void testAbilityType() {
-        assertSame(_characterAbility.abilityType(), _abilityType);
+        assertSame(_characterAbility.type(), _abilityType);
     }
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(CharacterAbility.class.getCanonicalName(), _characterAbility.getInterfaceName());
+        assertEquals(CharacterAbility.class.getCanonicalName() + "<" +
+                AbilityType.class.getCanonicalName() + ">",
+                    _characterAbility.getInterfaceName());
     }
 
     @Test
@@ -57,7 +59,7 @@ class CharacterAbilityImplTests {
         assertThrows(IllegalStateException.class, () -> _characterAbility.setIsHidden(false));
         assertThrows(IllegalStateException.class, () -> _characterAbility.getIsDisabled());
         assertThrows(IllegalStateException.class, () -> _characterAbility.setIsDisabled(false));
-        assertThrows(IllegalStateException.class, () -> _characterAbility.abilityType());
+        assertThrows(IllegalStateException.class, () -> _characterAbility.type());
         assertThrows(IllegalStateException.class, () -> _characterAbility.getInterfaceName());
     }
 }

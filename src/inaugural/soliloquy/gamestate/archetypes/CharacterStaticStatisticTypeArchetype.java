@@ -1,22 +1,12 @@
-package inaugural.soliloquy.gamestate.test.stubs;
+package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.ruleset.entities.CharacterStatisticType;
+import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
-public class CharacterStatisticTypeStub implements CharacterStatisticType {
-    private final String ID;
-
-    public CharacterStatisticTypeStub() {
-        ID = null;
-    }
-
-    public CharacterStatisticTypeStub(String id) {
-        ID = id;
-    }
-
+public class CharacterStaticStatisticTypeArchetype implements CharacterStaticStatisticType {
     @Override
     public String id() throws IllegalStateException {
-        return ID;
+        return null;
     }
 
     @Override
@@ -41,6 +31,6 @@ public class CharacterStatisticTypeStub implements CharacterStatisticType {
 
     @Override
     public String getInterfaceName() {
-        return null;
+        return CharacterStaticStatisticType.class.getCanonicalName();
     }
 }

@@ -4,6 +4,7 @@ import inaugural.soliloquy.gamestate.archetypes.*;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
@@ -12,6 +13,7 @@ import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
+import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
@@ -21,6 +23,12 @@ import soliloquy.specs.sprites.entities.Sprite;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArchetypesTests {
+    @Test
+    void testActiveAbilityTypeArchetype() {
+        assertEquals(ActiveAbilityType.class.getCanonicalName(),
+                new ActiveAbilityTypeArchetype().getInterfaceName());
+    }
+
     @Test
     void testCharacterActiveAbilityArchetype() {
         assertEquals(CharacterAbility.class.getCanonicalName() + "<" +
@@ -61,6 +69,12 @@ class ArchetypesTests {
     }
 
     @Test
+    void testCharacterStaticStatisticTypeArchetype() {
+        assertEquals(CharacterStaticStatisticType.class.getCanonicalName(),
+                new CharacterStaticStatisticTypeArchetype().getInterfaceName());
+    }
+
+    @Test
     void testCharacterDepletableStatisticArchetype() {
         assertEquals(CharacterDepletableStatistic.class.getCanonicalName(),
                 new CharacterDepletableStatisticArchetype().getInterfaceName());
@@ -91,6 +105,13 @@ class ArchetypesTests {
     }
 
     @Test
+    void testGameCharacterEventReadableCollectionArchetype() {
+        assertEquals(ReadableCollection.class.getCanonicalName() + "<" +
+                GameCharacterEvent.class.getCanonicalName() + ">",
+                new GameCharacterEventReadableCollectionArchetype().getInterfaceName());
+    }
+
+    @Test
     void testGameMovementEventArchetype() {
         assertEquals(GameMovementEvent.class.getCanonicalName(),
                 new GameMovementEventArchetype().getInterfaceName());
@@ -117,6 +138,12 @@ class ArchetypesTests {
     void testOneTimeTimerArchetype() {
         assertEquals(OneTimeTimer.class.getCanonicalName(),
                 new OneTimeTimerArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testReactiveAbilityTypeArchetype() {
+        assertEquals(ReactiveAbilityType.class.getCanonicalName(),
+                new ReactiveAbilityTypeArchetype().getInterfaceName());
     }
 
     @Test

@@ -10,6 +10,7 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
 
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,6 +115,26 @@ class CharacterInventoryImplTests {
         ((ItemStub)ITEM)._equipmentCharacter = new CharacterStub();
         ((ItemStub)ITEM)._equipmentSlotType = "slotType";
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
+    }
+
+    @Test
+    void testIterator() {
+        Item item1 = new ItemStub();
+        Item item2 = new ItemStub();
+        Item item3 = new ItemStub();
+
+        _characterInventory.add(item1);
+        _characterInventory.add(item2);
+        _characterInventory.add(item3);
+
+        ArrayList<Item> itemsFromIterator = new ArrayList<>();
+
+        _characterInventory.forEach(itemsFromIterator::add);
+
+        assertEquals(3, itemsFromIterator.size());
+        assertTrue(itemsFromIterator.contains(item1));
+        assertTrue(itemsFromIterator.contains(item2));
+        assertTrue(itemsFromIterator.contains(item3));
     }
 
     @Test
