@@ -55,7 +55,7 @@ class CharacterStatusEffectsImplTests {
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2, 456);
 
         ReadableMap<StatusEffectType,Integer> statusEffectLevels =
-                _characterStatusEffects.allStatusEffectsRepresentation();
+                _characterStatusEffects.representation();
 
         assertEquals(2, statusEffectLevels.size());
         assertEquals(123, (int) statusEffectLevels.get(STATUS_EFFECT_TYPE_1));
@@ -67,11 +67,11 @@ class CharacterStatusEffectsImplTests {
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 123);
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2, 456);
         ReadableMap<StatusEffectType,Integer> statusEffectLevels =
-                _characterStatusEffects.allStatusEffectsRepresentation();
+                _characterStatusEffects.representation();
         assertEquals(2, statusEffectLevels.size());
 
         _characterStatusEffects.clearStatusEffects();
-        statusEffectLevels = _characterStatusEffects.allStatusEffectsRepresentation();
+        statusEffectLevels = _characterStatusEffects.representation();
 
         assertEquals(0, statusEffectLevels.size());
     }
@@ -136,7 +136,7 @@ class CharacterStatusEffectsImplTests {
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
         assertThrows(IllegalStateException.class,
-                () -> _characterStatusEffects.allStatusEffectsRepresentation());
+                () -> _characterStatusEffects.representation());
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, false,
                         _element, _abilitySource));

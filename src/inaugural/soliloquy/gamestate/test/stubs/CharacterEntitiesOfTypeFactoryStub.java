@@ -18,7 +18,7 @@ public class CharacterEntitiesOfTypeFactoryStub extends CanGetInterfaceName
     @Override
     public <TEntityType extends HasId, TCharacterEntityOfType extends
             CharacterEntityOfType<TEntityType>> CharacterEntitiesOfType<TEntityType,
-                TCharacterEntityOfType> make(Character character, TEntityType archetype)
+                TCharacterEntityOfType> make(Character character, TCharacterEntityOfType archetype)
             throws IllegalArgumentException {
         return new CharacterEntitiesOfTypeStub<>(character,
                 ((Function<TEntityType, Function<Character, TCharacterEntityOfType>>) FACTORIES
@@ -27,7 +27,7 @@ public class CharacterEntitiesOfTypeFactoryStub extends CanGetInterfaceName
 
     @Override
     public <TEntityType extends HasId, TCharacterEntityOfType extends
-            CharacterEntityOfType<TEntityType>> void registerFactory(TEntityType archetype,
+            CharacterEntityOfType<TEntityType>> void registerFactory(TCharacterEntityOfType archetype,
                  Function<TEntityType, Function<Character, TCharacterEntityOfType>> factory)
             throws IllegalArgumentException {
         FACTORIES.put(getProperTypeName(archetype), factory);

@@ -7,8 +7,10 @@ import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 
 public class CharacterDepletableStatisticStub implements CharacterDepletableStatistic {
     public boolean _isDeleted;
+    public boolean _isCalculated;
     public Character _character;
     public CharacterDepletableStatisticType _type;
+    public int _maxValue;
     public int _currentValue;
 
     public CharacterDepletableStatisticStub() {
@@ -38,7 +40,7 @@ public class CharacterDepletableStatisticStub implements CharacterDepletableStat
 
     @Override
     public int totalValue() throws IllegalStateException {
-        return 0;
+        return _maxValue;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class CharacterDepletableStatisticStub implements CharacterDepletableStat
 
     @Override
     public void calculateValue() throws IllegalStateException {
-
+        _isCalculated = true;
     }
 
     @Override

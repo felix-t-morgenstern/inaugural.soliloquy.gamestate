@@ -67,9 +67,9 @@ class PersistentCharacterHandlerTests {
     private final String EQUIPMENT_SLOT_1 = "equipmentSlot1";
     private final String EQUIPMENT_SLOT_2 = "equipmentSlot2";
 
-    private final Map<String, CharacterStatisticType> STAT_TYPES = new HashMap<>();
-    private final String STAT_TYPE_ID = "statTypeId";
-    private final CharacterStaticStatisticType STATIC_STAT_TYPE = new CharacterStaticStatisticTypeStub(STAT_TYPE_ID);
+    private final Map<String, CharacterStaticStatisticType> STATIC_STAT_TYPES = new HashMap<>();
+    private final String STATIC_STAT_TYPE_ID = "staticStatTypeId";
+    private final CharacterStaticStatisticType STATIC_STAT_TYPE = new CharacterStaticStatisticTypeStub(STATIC_STAT_TYPE_ID);
 
     private final Map<String, CharacterDepletableStatisticType> DEPLETABLE_STAT_TYPES = new HashMap<>();
     private final String DEPLETABLE_STAT_TYPE_ID = "depletableStatTypeId";
@@ -87,10 +87,14 @@ class PersistentCharacterHandlerTests {
     private final String REACTIVE_ABILITY_TYPE_ID = "reactiveAbilityTypeId";
     private final ReactiveAbilityType REACTIVE_ABILITY_TYPE = new ReactiveAbilityTypeStub(REACTIVE_ABILITY_TYPE_ID);
 
+    private final GenericParamsSet DATA = new GenericParamsSetStub();
+
+    private final String NAME = "charName";
+
     private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER = new PersistentGenericParamsSetHandlerStub();
     private final PersistentValueTypeHandler<Item> ITEM_HANDLER = new PersistentItemHandlerStub();
 
-    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"characterTypeId\":\"characterTypeId\",\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"spriteSetId\":\"spriteSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"depletableStats\":[{\"typeId\":\"depletableStatTypeId\",\"value\":135}],\"stats\":[\"statTypeId\"],\"statusEffects\":[{\"typeId\":\"statEffectTypeId\",\"value\":246}],\"activeAbilities\":[{\"typeId\":\"activeAbilityTypeId\",\"isHidden\":false}],\"reactiveAbilities\":[{\"typeId\":\"reactiveAbilityTypeId\",\"isHidden\":false}],\"isPlayerControlled\":true,\"data\":\"GenericParamsSet0\"}";
+    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"characterTypeId\":\"characterTypeId\",\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"spriteSetId\":\"spriteSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"depletableStats\":[{\"typeId\":\"depletableStatTypeId\",\"value\":135}],\"staticStats\":[\"staticStatTypeId\"],\"statusEffects\":[{\"typeId\":\"statEffectTypeId\",\"value\":246}],\"activeAbilities\":[{\"typeId\":\"activeAbilityTypeId\",\"isHidden\":true}],\"reactiveAbilities\":[{\"typeId\":\"reactiveAbilityTypeId\",\"isHidden\":false}],\"isPlayerControlled\":true,\"data\":\"GenericParamsSet0\",\"name\":\"charName\"}";
 
     private PersistentValueTypeHandler<Character> _characterHandler;
 
@@ -101,7 +105,7 @@ class PersistentCharacterHandlerTests {
         SPRITE_SETS.put(SPRITE_SET.id(), SPRITE_SET);
         AI_TYPES.put(AI_TYPE.id(), AI_TYPE);
         EVENTS.put(EVENT_ID, EVENT);
-        STAT_TYPES.put(STATIC_STAT_TYPE.id(), STATIC_STAT_TYPE);
+        STATIC_STAT_TYPES.put(STATIC_STAT_TYPE.id(), STATIC_STAT_TYPE);
         DEPLETABLE_STAT_TYPES.put(DEPLETABLE_STAT_TYPE.id(), DEPLETABLE_STAT_TYPE);
         STAT_EFFECT_TYPES.put(STAT_EFFECT_TYPE.id(), STAT_EFFECT_TYPE);
         ACTIVE_ABILITY_TYPES.put(ACTIVE_ABILITY_TYPE.id(), ACTIVE_ABILITY_TYPE);
@@ -109,7 +113,7 @@ class PersistentCharacterHandlerTests {
 
         _characterHandler = new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER,
                 CHARACTER_TYPES::get, CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get,
-                EVENTS::get, STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                EVENTS::get, STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                 ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                 ITEM_HANDLER);
     }
@@ -120,49 +124,49 @@ class PersistentCharacterHandlerTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(null, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, null, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, null,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         null, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, null, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, null, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, null,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, null, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, null, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
@@ -174,40 +178,39 @@ class PersistentCharacterHandlerTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, null,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, null,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         null, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, null, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, null,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentCharacterHandler(CHARACTER_FACTORY, ID_HANDLER, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, SPRITE_SETS::get, AI_TYPES::get, EVENTS::get,
-                        STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
+                        STATIC_STAT_TYPES::get, DEPLETABLE_STAT_TYPES::get, STAT_EFFECT_TYPES::get,
                         ACTIVE_ABILITY_TYPES::get, REACTIVE_ABILITY_TYPES::get, DATA_HANDLER,
                         null));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testWrite() {
         EntityUuid id = new EntityUuidStub();
-        Character character = new CharacterStub(id, CHARACTER_TYPE);
+        Character character = new CharacterStub(id, CHARACTER_TYPE, DATA);
         character.classifications().add(CLASSIFICATION);
         character.pronouns().put(CASE1, ARTICLE1);
         character.pronouns().put(CASE2, ARTICLE2);
@@ -233,8 +236,10 @@ class PersistentCharacterHandlerTests {
         ((CharacterStatusEffectsStub)character.statusEffects())._representation
                 .put(STAT_EFFECT_TYPE, 246);
         character.activeAbilities().add(ACTIVE_ABILITY_TYPE);
+        character.activeAbilities().get(ACTIVE_ABILITY_TYPE).setIsHidden(true);
         character.reactiveAbilities().add(REACTIVE_ABILITY_TYPE);
         character.setPlayerControlled(true);
+        character.setName(NAME);
 
         String writtenValue = _characterHandler.write(character);
 
@@ -278,5 +283,24 @@ class PersistentCharacterHandlerTests {
         assertEquals(1, readCharacter.inventory().representation().size());
         assertTrue(((PersistentItemHandlerStub)ITEM_HANDLER).READ_OUTPUTS.contains(
                 readCharacter.inventory().representation().get(0)));
+        assertEquals(1, readCharacter.depletableStatistics().representation().size());
+        assertEquals(135,
+                readCharacter.depletableStatistics().get(DEPLETABLE_STAT_TYPE).getCurrentValue());
+        assertEquals(1, readCharacter.staticStatistics().representation().size());
+        assertSame(STATIC_STAT_TYPE,
+                readCharacter.staticStatistics().representation().get(0).type());
+        assertEquals(1, readCharacter.statusEffects().representation().size());
+        assertEquals(246,
+                readCharacter.statusEffects().getStatusEffectLevel(STAT_EFFECT_TYPE));
+        assertEquals(1, readCharacter.activeAbilities().size());
+        assertTrue(readCharacter.activeAbilities().get(ACTIVE_ABILITY_TYPE).getIsHidden());
+        assertEquals(1, readCharacter.reactiveAbilities().size());
+        assertFalse(readCharacter.reactiveAbilities().get(REACTIVE_ABILITY_TYPE).getIsHidden());
+        assertTrue(readCharacter.getPlayerControlled());
+        assertEquals("GenericParamsSet0",
+                ((PersistentGenericParamsSetHandlerStub)DATA_HANDLER).READ_INPUTS.get(0));
+        assertSame(((PersistentGenericParamsSetHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
+                readCharacter.data());
+        assertEquals(NAME, readCharacter.getName());
     }
 }

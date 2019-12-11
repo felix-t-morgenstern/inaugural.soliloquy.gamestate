@@ -8,6 +8,7 @@ import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.*;
@@ -33,6 +34,7 @@ class CharacterFactoryImplTests {
             new CharacterStatusEffectsFactoryStub();
     private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
             new GenericParamsSetFactoryStub();
+    private final GenericParamsSet DATA = new GenericParamsSetStub();
     private final CharacterType CHARACTER_TYPE = new CharacterTypeStub();
     private final EntityUuid ENTITY_UUID = new EntityUuidStub();
 
@@ -183,18 +185,21 @@ class CharacterFactoryImplTests {
 
     @Test
     void testMakeWithEntityUuid() {
-        Character character = _characterFactory.make(CHARACTER_TYPE, ENTITY_UUID);
+        Character character = _characterFactory.make(CHARACTER_TYPE, ENTITY_UUID, DATA);
 
         assertNotNull(character);
         assertSame(ENTITY_UUID, character.id());
+        assertSame(DATA, character.data());
     }
 
     @Test
     void testMakeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> _characterFactory.make(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterFactory.make(null, ENTITY_UUID));
+                () -> _characterFactory.make(null, ENTITY_UUID, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterFactory.make(CHARACTER_TYPE, null));
+                () -> _characterFactory.make(CHARACTER_TYPE, null, DATA));
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterFactory.make(CHARACTER_TYPE, ENTITY_UUID, null));
     }
 }

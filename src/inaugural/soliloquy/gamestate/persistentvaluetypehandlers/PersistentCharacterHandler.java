@@ -23,7 +23,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
     private final Function<String, SpriteSet> GET_SPRITE_SET;
     private final Function<String, CharacterAIType> GET_AI_TYPE;
     private final Function<String, GameCharacterEvent> GET_EVENT;
-    private final Function<String, CharacterStatisticType> GET_STAT_TYPE;
+    private final Function<String, CharacterStaticStatisticType> GET_STATIC_STAT_TYPE;
     private final Function<String, CharacterDepletableStatisticType> GET_DEPLETABLE_STAT_TYPE;
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
     private final Function<String, ActiveAbilityType> GET_ACTIVE_ABILITY_TYPE;
@@ -40,7 +40,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
                                       Function<String, SpriteSet> getSpriteSet,
                                       Function<String, CharacterAIType> getAIType,
                                       Function<String, GameCharacterEvent> getEvent,
-                                      Function<String, CharacterStatisticType> getStatType,
+                                      Function<String, CharacterStaticStatisticType> getStaticStatType,
                                       Function<String, CharacterDepletableStatisticType>
                                               getDepletableStatType,
                                       Function<String, StatusEffectType> getStatusType,
@@ -83,11 +83,11 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
                     "PersistentCharacterHandler: getEvent cannot be null");
         }
         GET_EVENT = getEvent;
-        if (getStatType == null) {
+        if (getStaticStatType == null) {
             throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getStatType cannot be null");
+                    "PersistentCharacterHandler: getStaticStatType cannot be null");
         }
-        GET_STAT_TYPE = getStatType;
+        GET_STATIC_STAT_TYPE = getStaticStatType;
         if (getDepletableStatType == null) {
             throw new IllegalArgumentException(
                     "PersistentCharacterHandler: getDepletableStatType cannot be null");
@@ -125,7 +125,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
         CharacterDTO dto = new Gson().fromJson(data, CharacterDTO.class);
         Character readCharacter =
                 CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
-                        ID_HANDLER.read(dto.id));
+                        ID_HANDLER.read(dto.id), DATA_HANDLER.read(dto.data));
         for(CharacterPairedDataDTO pronounDTO : dto.pronouns) {
             readCharacter.pronouns().put(pronounDTO.key, pronounDTO.val);
         }
@@ -153,8 +153,41 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
         }
 
         for(CharacterEntityWithTypeAndValueDTO depletableStat : dto.depletableStats) {
-
+            CharacterDepletableStatisticType type =
+                    GET_DEPLETABLE_STAT_TYPE.apply(depletableStat.typeId);
+            readCharacter.depletableStatistics().add(type);
+            readCharacter.depletableStatistics().get(type).setCurrentValue(depletableStat.value);
         }
+
+        for(String staticStat : dto.staticStats)
+        {
+            readCharacter.staticStatistics().add(GET_STATIC_STAT_TYPE.apply(staticStat));
+        }
+
+        for(CharacterEntityWithTypeAndValueDTO statusEffect : dto.statusEffects) {
+            readCharacter.statusEffects().setStatusEffectLevel(
+                    GET_STATUS_TYPE.apply(statusEffect.typeId), statusEffect.value);
+        }
+
+        for(CharacterAbilityDTO activeAbility : dto.activeAbilities) {
+            ActiveAbilityType type = GET_ACTIVE_ABILITY_TYPE.apply(activeAbility.typeId);
+            readCharacter.activeAbilities().add(type);
+            if (activeAbility.isHidden) {
+                readCharacter.activeAbilities().get(type).setIsHidden(true);
+            }
+        }
+
+        for(CharacterAbilityDTO reactiveAbility : dto.reactiveAbilities) {
+            ReactiveAbilityType type = GET_REACTIVE_ABILITY_TYPE.apply(reactiveAbility.typeId);
+            readCharacter.reactiveAbilities().add(type);
+            if (reactiveAbility.isHidden) {
+                readCharacter.reactiveAbilities().get(type).setIsHidden(true);
+            }
+        }
+
+        readCharacter.setPlayerControlled(dto.isPlayerControlled);
+
+        readCharacter.setName(dto.name);
 
         return readCharacter;
     }
@@ -231,16 +264,16 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
         }
 
         index = 0;
-        dto.stats = new String[character.staticStatistics().size()];
+        dto.staticStats = new String[character.staticStatistics().size()];
         for(CharacterStaticStatistic stat : character.staticStatistics()) {
-            dto.stats[index++] = stat.type().id();
+            dto.staticStats[index++] = stat.type().id();
         }
 
         index = 0;
         dto.statusEffects = new CharacterEntityWithTypeAndValueDTO[
-                character.statusEffects().allStatusEffectsRepresentation().size()];
+                character.statusEffects().representation().size()];
         for(Pair<StatusEffectType, Integer> statEffect :
-                character.statusEffects().allStatusEffectsRepresentation()) {
+                character.statusEffects().representation()) {
             CharacterEntityWithTypeAndValueDTO statEffectDTO =
                     new CharacterEntityWithTypeAndValueDTO();
             statEffectDTO.typeId = statEffect.getItem1().id();
@@ -253,6 +286,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
         for(CharacterAbility<ActiveAbilityType> charAbility : character.activeAbilities()) {
             CharacterAbilityDTO abilityDTO = new CharacterAbilityDTO();
             abilityDTO.typeId = charAbility.type().id();
+            abilityDTO.isHidden = charAbility.getIsHidden();
             dto.activeAbilities[index++] = abilityDTO;
         }
 
@@ -293,7 +327,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
         CharacterPairedDataDTO[] equipmentSlots;
         String[] inventoryItems;
         CharacterEntityWithTypeAndValueDTO[] depletableStats;
-        String[] stats;
+        String[] staticStats;
         CharacterEntityWithTypeAndValueDTO[] statusEffects;
         CharacterAbilityDTO[] activeAbilities;
         CharacterAbilityDTO[] reactiveAbilities;

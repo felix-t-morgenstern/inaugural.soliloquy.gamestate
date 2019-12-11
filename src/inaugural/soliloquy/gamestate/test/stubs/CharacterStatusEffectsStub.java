@@ -16,6 +16,9 @@ public class CharacterStatusEffectsStub implements CharacterStatusEffects {
     public Map<StatusEffectType, Integer> _representation = new MapStub<>();
 
     public CharacterStatusEffectsStub() {
+    }
+
+    public CharacterStatusEffectsStub(boolean addStuff) {
         _representation.put(_type1, 123);
         _representation.put(_type2, 456);
         _representation.put(_type3, 789);
@@ -23,11 +26,11 @@ public class CharacterStatusEffectsStub implements CharacterStatusEffects {
 
     @Override
     public Integer getStatusEffectLevel(StatusEffectType statusEffectType) throws IllegalStateException, IllegalArgumentException {
-        return null;
+        return _representation.get(statusEffectType);
     }
 
     @Override
-    public ReadableMap<StatusEffectType, Integer> allStatusEffectsRepresentation() throws IllegalStateException {
+    public ReadableMap<StatusEffectType, Integer> representation() throws IllegalStateException {
         return _representation.readOnlyRepresentation();
     }
 
@@ -38,7 +41,7 @@ public class CharacterStatusEffectsStub implements CharacterStatusEffects {
 
     @Override
     public void setStatusEffectLevel(StatusEffectType statusEffectType, int i) throws IllegalStateException, IllegalArgumentException {
-
+        _representation.put(statusEffectType, i);
     }
 
     @Override

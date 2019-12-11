@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
@@ -61,7 +62,9 @@ public class CharacterEntitiesOfTypeStub<TEntityType extends HasId,
 
     @Override
     public ReadableCollection<TCharacterEntity> representation() {
-        return null;
+        Collection<TCharacterEntity> representation = new CollectionStub<>();
+        ENTITIES.values().forEach(representation::add);
+        return representation.readOnlyRepresentation();
     }
 
     @Override

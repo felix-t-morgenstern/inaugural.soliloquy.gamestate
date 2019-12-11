@@ -4,6 +4,7 @@ import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.*;
@@ -86,11 +87,13 @@ public class CharacterFactoryImpl implements CharacterFactory {
 
     @Override
     public Character make(CharacterType characterType) throws IllegalArgumentException {
-        return make(characterType, ENTITY_UUID_FACTORY.createRandomEntityUuid());
+        return make(characterType, ENTITY_UUID_FACTORY.createRandomEntityUuid(),
+                GENERIC_PARAMS_SET_FACTORY.make());
     }
 
     @Override
-    public Character make(CharacterType characterType, EntityUuid entityUuid)
+    public Character make(CharacterType characterType, EntityUuid entityUuid,
+                          GenericParamsSet data)
             throws IllegalArgumentException {
         if (characterType == null) {
             throw new IllegalArgumentException(
@@ -110,7 +113,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET_FACTORY);
+                data);
     }
 
     @Override

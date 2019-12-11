@@ -1,8 +1,10 @@
 package inaugural.soliloquy.gamestate;
 
-import inaugural.soliloquy.gamestate.archetypes.*;
+import inaugural.soliloquy.gamestate.archetypes.CharacterActiveAbilityArchetype;
+import inaugural.soliloquy.gamestate.archetypes.CharacterClassificationArchetype;
+import inaugural.soliloquy.gamestate.archetypes.CharacterReactiveAbilityArchetype;
+import inaugural.soliloquy.gamestate.archetypes.CharacterStaticStatisticArchetype;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
@@ -37,12 +39,12 @@ public class CharacterImpl implements Character {
             CharacterAbility<ReactiveAbilityType>> REACTIVE_ABILITIES;
     private final GenericParamsSet DATA;
 
-    private final static CharacterStaticStatisticType STATIC_STAT_TYPE_ARCHETYPE =
-            new CharacterStaticStatisticTypeArchetype();
-    private final static ActiveAbilityType ACTIVE_ABILITY_TYPE_ARCHETYPE =
-            new ActiveAbilityTypeArchetype();
-    private final static ReactiveAbilityType REACTIVE_ABILITY_TYPE_ARCHETYPE =
-            new ReactiveAbilityTypeArchetype();
+    private final static CharacterStaticStatistic STATIC_STAT_ARCHETYPE =
+            new CharacterStaticStatisticArchetype();
+    private final static CharacterAbility<ActiveAbilityType> ACTIVE_ABILITY_ARCHETYPE =
+            new CharacterActiveAbilityArchetype();
+    private final static CharacterAbility<ReactiveAbilityType> REACTIVE_ABILITY_ARCHETYPE =
+            new CharacterReactiveAbilityArchetype();
 
     private Tile _tile;
     private String _stance;
@@ -64,7 +66,7 @@ public class CharacterImpl implements Character {
                          CharacterDepletableStatisticsFactory depletableStatsFactory,
                          CharacterEntitiesOfTypeFactory entitiesOfTypeFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
-                         GenericParamsSetFactory genericParamsSetFactory) {
+                         GenericParamsSet data) {
         if (id == null) {
             throw new IllegalArgumentException("Character: id must be non-null");
         }
@@ -104,18 +106,17 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException(
                     "Character: entitiesOfTypeFactory must be non-null");
         }
-        STATIC_STATISTICS = entitiesOfTypeFactory.make(this, STATIC_STAT_TYPE_ARCHETYPE);
+        STATIC_STATISTICS = entitiesOfTypeFactory.make(this, STATIC_STAT_ARCHETYPE);
         if (statusEffectsFactory == null) {
             throw new IllegalArgumentException("Character: statusEffectsFactory must be non-null");
         }
         STATUS_EFFECTS = statusEffectsFactory.make(this);
-        ACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, ACTIVE_ABILITY_TYPE_ARCHETYPE);
-        REACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, REACTIVE_ABILITY_TYPE_ARCHETYPE);
-        if (genericParamsSetFactory == null) {
-            throw new IllegalArgumentException(
-                    "Character: genericParamsSetFactory must be non-null");
+        ACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, ACTIVE_ABILITY_ARCHETYPE);
+        REACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, REACTIVE_ABILITY_ARCHETYPE);
+        if (data == null) {
+            throw new IllegalArgumentException("Character: data must be non-null");
         }
-        DATA = genericParamsSetFactory.make();
+        DATA = data;
     }
 
     @Override

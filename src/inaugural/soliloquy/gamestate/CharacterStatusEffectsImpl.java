@@ -45,7 +45,7 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public ReadableMap<StatusEffectType, Integer> allStatusEffectsRepresentation() {
+    public ReadableMap<StatusEffectType, Integer> representation() {
         enforceInvariants("getAllStatusEffects");
         Map<StatusEffectType, Integer> statusEffectLevels =
                 MAP_FACTORY.make(STATUS_EFFECT_TYPE_ARCHETYPE, 0);

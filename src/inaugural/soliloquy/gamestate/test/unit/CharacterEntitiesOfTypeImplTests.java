@@ -27,6 +27,7 @@ class CharacterEntitiesOfTypeImplTests {
     private final ArrayList<HasId> TYPES_ADDED = new ArrayList<>();
     private final ArrayList<CharacterEntityStub> ENTITIES_ADDED = new ArrayList<>();
     private final Function<HasId, Function<Character, CharacterEntityStub>> FACTORY = t -> c -> {
+        _characterPassedIntoFactory = c;
         TYPES_ADDED.add(t);
         CharacterEntityStub entity = new CharacterEntityStub(c,t);
         ENTITIES_ADDED.add(entity);
@@ -36,10 +37,12 @@ class CharacterEntitiesOfTypeImplTests {
     private final CharacterEntityStub ARCHETYPE = new CharacterEntityStub(null,
             new HasIdAndNameStub("id", "name"));
 
+    private Character _characterPassedIntoFactory;
     private CharacterEntitiesOfType<HasId, CharacterEntityStub> _entitiesOfType;
 
     @BeforeEach
     void setUp() {
+        _characterPassedIntoFactory = null;
         _entitiesOfType = new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY,
                 COLLECTION_FACTORY, ARCHETYPE);
     }
@@ -86,6 +89,7 @@ class CharacterEntitiesOfTypeImplTests {
         assertEquals(1, TYPES_ADDED.size());
         assertTrue(TYPES_ADDED.contains(type));
         assertNotNull(_entitiesOfType.get(type));
+        assertSame(CHARACTER, _characterPassedIntoFactory);
     }
 
     @Test
@@ -215,6 +219,22 @@ class CharacterEntitiesOfTypeImplTests {
         HasId type = new HasIdAndNameStub("id", "name");
 
         _entitiesOfType.delete();
+
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.add(type));
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.get(type));
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.contains(type));
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.remove(type));
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.size());
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.clear());
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.representation());
+        assertThrows(IllegalStateException.class, () -> _entitiesOfType.iterator());
+    }
+
+    @Test
+    void testCharacterDeletionInvariant() {
+        HasId type = new HasIdAndNameStub("id", "name");
+
+        CHARACTER.delete();
 
         assertThrows(IllegalStateException.class, () -> _entitiesOfType.add(type));
         assertThrows(IllegalStateException.class, () -> _entitiesOfType.get(type));

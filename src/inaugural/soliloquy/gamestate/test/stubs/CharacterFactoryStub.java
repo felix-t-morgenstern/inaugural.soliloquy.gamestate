@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
@@ -12,8 +13,8 @@ public class CharacterFactoryStub implements CharacterFactory {
     }
 
     @Override
-    public Character make(CharacterType characterType, EntityUuid entityUuid) throws IllegalArgumentException {
-        return new CharacterStub(entityUuid, characterType);
+    public Character make(CharacterType characterType, EntityUuid entityUuid, GenericParamsSet data) throws IllegalArgumentException {
+        return new CharacterStub(entityUuid, characterType, data);
     }
 
     @Override

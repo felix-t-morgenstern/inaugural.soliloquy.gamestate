@@ -38,16 +38,6 @@ public class CharacterDepletableStatisticsStub implements CharacterDepletableSta
     }
 
     @Override
-    public int getCurrentValue(CharacterDepletableStatisticType type) throws IllegalArgumentException {
-        return STATS.get(type).getCurrentValue();
-    }
-
-    @Override
-    public int getMaxValue(CharacterDepletableStatisticType type) throws IllegalArgumentException {
-        return STATS.get(type).totalValue();
-    }
-
-    @Override
     public void add(CharacterDepletableStatisticType type) throws IllegalArgumentException {
         if (!STATS.containsKey(type)) {
             STATS.put(type, new CharacterDepletableStatisticStub(_character, type));

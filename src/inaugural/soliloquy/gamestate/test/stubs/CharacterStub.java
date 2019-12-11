@@ -21,6 +21,8 @@ public class CharacterStub implements Character {
     private SpriteSet _spriteSet;
     private CharacterAIType _aiType;
     private boolean _playerControlled;
+    private String _name;
+    private GenericParamsSet _data;
 
     private final EntityUuid ID;
     private final CharacterType TYPE;
@@ -53,9 +55,10 @@ public class CharacterStub implements Character {
         TYPE = null;
     }
 
-    public CharacterStub(EntityUuid id, CharacterType type) {
+    public CharacterStub(EntityUuid id, CharacterType type, GenericParamsSet data) {
         ID = id;
         TYPE = type;
+        _data = data;
     }
 
     @Override
@@ -173,7 +176,7 @@ public class CharacterStub implements Character {
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        return null;
+        return _data;
     }
 
     @Override
@@ -198,12 +201,12 @@ public class CharacterStub implements Character {
 
     @Override
     public String getName() {
-        return null;
+        return _name;
     }
 
     @Override
-    public void setName(String s) {
-
+    public void setName(String name) {
+        _name = name;
     }
 
     @Override

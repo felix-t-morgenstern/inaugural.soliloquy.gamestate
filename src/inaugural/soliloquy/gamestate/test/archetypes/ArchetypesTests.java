@@ -13,6 +13,7 @@ import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
+import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
@@ -69,21 +70,21 @@ class ArchetypesTests {
     }
 
     @Test
-    void testCharacterStaticStatisticTypeArchetype() {
-        assertEquals(CharacterStaticStatisticType.class.getCanonicalName(),
-                new CharacterStaticStatisticTypeArchetype().getInterfaceName());
-    }
-
-    @Test
     void testCharacterDepletableStatisticArchetype() {
         assertEquals(CharacterDepletableStatistic.class.getCanonicalName(),
                 new CharacterDepletableStatisticArchetype().getInterfaceName());
     }
 
     @Test
-    void testCharacterStatisticArchetype() {
-        assertEquals(CharacterStatistic.class.getCanonicalName(),
-                new CharacterStatisticArchetype().getInterfaceName());
+    void testCharacterDepletableStatisticTypeArchetype() {
+        assertEquals(CharacterDepletableStatisticType.class.getCanonicalName(),
+                new CharacterDepletableStatisticTypeArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testCharacterStaticStatisticArchetype() {
+        assertEquals(CharacterStaticStatistic.class.getCanonicalName(),
+                new CharacterStaticStatisticArchetype().getInterfaceName());
     }
 
     @Test

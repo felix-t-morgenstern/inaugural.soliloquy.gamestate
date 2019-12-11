@@ -22,7 +22,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     private final TEntity ARCHETYPE;
     private final CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
 
-    private final HashMap<TType, TEntity> ENTITIES = new HashMap<>();
+    protected final HashMap<TType, TEntity> ENTITIES = new HashMap<>();
 
     @SuppressWarnings("ConstantConditions")
     public CharacterEntitiesOfTypeImpl(Character character,
