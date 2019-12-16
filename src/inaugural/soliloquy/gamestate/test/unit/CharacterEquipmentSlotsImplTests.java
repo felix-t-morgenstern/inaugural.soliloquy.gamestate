@@ -12,8 +12,6 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
 
-import java.util.function.Predicate;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEquipmentSlotsImplTests {
@@ -22,7 +20,6 @@ class CharacterEquipmentSlotsImplTests {
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final Item ITEM = new ItemStub();
     private final String EQUIPMENT_SLOT_TYPE = "armor";
-    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE = ItemStub::itemIsPresentElsewhere;
 
     private CharacterEquipmentSlots _characterEquipmentSlots;
 
@@ -30,7 +27,7 @@ class CharacterEquipmentSlotsImplTests {
     void setUp() {
         ((ItemStub)ITEM)._equipmentCharacter = null;
         _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY,
-                MAP_FACTORY, ITEM_IS_PRESENT_ELSEWHERE);
+                MAP_FACTORY);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
     }
 
@@ -38,16 +35,11 @@ class CharacterEquipmentSlotsImplTests {
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(null, PAIR_FACTORY, MAP_FACTORY,
-                        ITEM_IS_PRESENT_ELSEWHERE));
+                () -> new CharacterEquipmentSlotsImpl(null, PAIR_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(CHARACTER, null, MAP_FACTORY,
-                        ITEM_IS_PRESENT_ELSEWHERE));
+                () -> new CharacterEquipmentSlotsImpl(CHARACTER, null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY, null,
-                        ITEM_IS_PRESENT_ELSEWHERE));
-        assertThrows(IllegalArgumentException.class,
-            () -> new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY, MAP_FACTORY, null));
+                () -> new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY, null));
     }
 
     @Test
@@ -131,8 +123,8 @@ class CharacterEquipmentSlotsImplTests {
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
         assertSame(ITEM, _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
-        assertSame(CHARACTER, ITEM.getCharacterEquipmentSlot().getFirstArchetype());
-        assertEquals(EQUIPMENT_SLOT_TYPE, ITEM.getCharacterEquipmentSlot().getSecondArchetype());
+        assertSame(CHARACTER, ITEM.equipmentSlot().getFirstArchetype());
+        assertEquals(EQUIPMENT_SLOT_TYPE, ITEM.equipmentSlot().getSecondArchetype());
     }
 
     @Test
@@ -155,13 +147,13 @@ class CharacterEquipmentSlotsImplTests {
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
         ((ItemStub) ITEM)._inventoryCharacter = null;
-        ((ItemStub) ITEM)._containingTile = new TileStub();
+        ((ItemStub) ITEM)._tile = new TileStub();
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
-        ((ItemStub) ITEM)._containingTile = null;
+        ((ItemStub) ITEM)._tile = null;
         ((ItemStub) ITEM)._tileFixture = new TileFixtureStub();
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
@@ -174,14 +166,14 @@ class CharacterEquipmentSlotsImplTests {
         Item previousItem = new ItemStub();
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, previousItem);
-        assertNotNull(previousItem.getCharacterEquipmentSlot());
-        assertSame(CHARACTER, previousItem.getCharacterEquipmentSlot().getFirstArchetype());
+        assertNotNull(previousItem.equipmentSlot());
+        assertSame(CHARACTER, previousItem.equipmentSlot().getFirstArchetype());
         assertEquals(EQUIPMENT_SLOT_TYPE,
-                previousItem.getCharacterEquipmentSlot().getSecondArchetype());
+                previousItem.equipmentSlot().getSecondArchetype());
 
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
-        assertNull(previousItem.getCharacterEquipmentSlot());
+        assertNull(previousItem.equipmentSlot());
     }
 
     @Test

@@ -14,6 +14,8 @@ import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureImplTests {
@@ -106,7 +108,9 @@ class TileFixtureImplTests {
         Tile tile = new TileStub();
         tile.fixtures().add(_tileFixture);
         TileFixtureItems containedItems = _tileFixture.items();
-        int originalNumberOfContainedItems = TileFixturesStub.FIXTURES.size();
+        HashMap<TileFixture,Integer> entities =
+                ((TileEntitiesStub<TileFixture>)tile.fixtures()).ENTITIES;
+        int originalNumberOfContainedItems = entities.size();
 
         _tileFixture.delete();
 
@@ -115,9 +119,8 @@ class TileFixtureImplTests {
         assertTrue(containedItems.isDeleted());
 
         assertFalse(tile.fixtures().contains(_tileFixture));
-        assertFalse(TileFixturesStub.FIXTURES.contains(_tileFixture));
-        assertEquals(originalNumberOfContainedItems - 1,
-                TileFixturesStub.FIXTURES.size());
+        assertFalse(entities.containsKey(_tileFixture));
+        assertEquals(originalNumberOfContainedItems - 1, entities.size());
     }
 
     @Test
@@ -136,7 +139,7 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.pixelOffset());
         assertThrows(IllegalStateException.class, () -> _tileFixture.movementEvents());
         assertThrows(IllegalStateException.class, () -> _tileFixture.items());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
+        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
         assertThrows(IllegalStateException.class, () -> _tileFixture.getName());
         assertThrows(IllegalStateException.class, () -> _tileFixture.setName(""));
@@ -146,14 +149,14 @@ class TileFixtureImplTests {
     void testContainingTileInvariant() {
         Tile tile = new TileStub();
         tile.fixtures().add(_tileFixture);
-        TileFixturesStub.FIXTURES.remove(_tileFixture);
+        ((TileEntitiesStub<TileFixture>)tile.fixtures()).ENTITIES.remove(_tileFixture);
 
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.type());
         assertThrows(IllegalStateException.class, () -> _tileFixture.pixelOffset());
         assertThrows(IllegalStateException.class, () -> _tileFixture.movementEvents());
         assertThrows(IllegalStateException.class, () -> _tileFixture.items());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileFixtureToTileAfterAddingToTileFixtures(null));
+        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
         assertThrows(IllegalStateException.class, () -> _tileFixture.delete());
         assertThrows(IllegalStateException.class, () -> _tileFixture.getName());

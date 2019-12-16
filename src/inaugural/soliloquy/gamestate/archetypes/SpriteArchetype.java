@@ -7,4 +7,9 @@ public class SpriteArchetype implements Sprite {
     public String getInterfaceName() {
         return Sprite.class.getCanonicalName();
     }
+
+    @Override
+    public int getHeight() {
+        return 0;
+    }
 }

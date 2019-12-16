@@ -18,23 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterInventoryFactoryImplTests {
     private final Character CHARACTER = new CharacterStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE = ItemStub::itemIsPresentElsewhere;
 
     private CharacterInventoryFactory _characterInventoryFactory;
 
     @BeforeEach
     void setUp() {
-        _characterInventoryFactory = new CharacterInventoryFactoryImpl(COLLECTION_FACTORY,
-                ITEM_IS_PRESENT_ELSEWHERE);
+        _characterInventoryFactory = new CharacterInventoryFactoryImpl(COLLECTION_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithNullInput() {
-        assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryFactoryImpl(null,
-                ITEM_IS_PRESENT_ELSEWHERE));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterInventoryFactoryImpl(COLLECTION_FACTORY, null));
+                () -> new CharacterInventoryFactoryImpl(null));
     }
 
     @Test

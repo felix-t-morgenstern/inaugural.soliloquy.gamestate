@@ -10,9 +10,19 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class GroundTypeStub implements GroundType {
+    private String _id;
+
+    public GroundTypeStub() {
+
+    }
+
+    public GroundTypeStub(String id) {
+        _id = id;
+    }
+
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return _id;
     }
 
     @Override

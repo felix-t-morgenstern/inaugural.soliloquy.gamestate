@@ -19,6 +19,11 @@ public class TileFixtureArchetype implements TileFixture {
     }
 
     @Override
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
     public FixtureType type() throws IllegalStateException {
         return null;
     }
@@ -31,12 +36,6 @@ public class TileFixtureArchetype implements TileFixture {
     @Override
     public TileFixtureItems items() throws IllegalStateException {
         return null;
-    }
-
-    @Override
-    public void assignTileFixtureToTileAfterAddingToTileFixtures(Tile tile)
-            throws IllegalArgumentException, IllegalStateException {
-
     }
 
     @Override

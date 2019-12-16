@@ -7,23 +7,14 @@ import soliloquy.specs.gamestate.entities.Item;
 
 public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
     public final Character CHARACTER;
-    public final Item ITEM = new ItemStub();
 
     public static MapStub<String, Item> EQUIPMENT_SLOTS = new MapStub<>();
     public static Item ITEM_IN_SLOT_RESULT_OVERRIDE = null;
 
     public boolean _isDeleted;
 
-    public CharacterEquipmentSlotsStub(Character character) {
+    CharacterEquipmentSlotsStub(Character character) {
         CHARACTER = character;
-    }
-
-    public CharacterEquipmentSlotsStub(Character character, boolean addItem)
-    {
-        this(character);
-        if (addItem) {
-            EQUIPMENT_SLOTS.put("slot", ITEM);
-        }
     }
 
     @Override
@@ -47,20 +38,23 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
     }
 
     @Override
-    public void addCharacterEquipmentSlot(String s) throws IllegalArgumentException, IllegalStateException {
+    public void addCharacterEquipmentSlot(String s)
+            throws IllegalArgumentException, IllegalStateException {
         EQUIPMENT_SLOTS.put(s, null);
     }
 
     @Override
-    public boolean equipmentSlotExists(String s) throws IllegalArgumentException, IllegalStateException {
+    public boolean equipmentSlotExists(String s)
+            throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public Item removeCharacterEquipmentSlot(String s) throws IllegalArgumentException, IllegalStateException {
+    public Item removeCharacterEquipmentSlot(String s)
+            throws IllegalArgumentException, IllegalStateException {
         Item item = EQUIPMENT_SLOTS.removeByKey(s);
         if (item != null) {
-            item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(null, null);
+            item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
         }
         return item;
     }
@@ -74,31 +68,34 @@ public class CharacterEquipmentSlotsStub implements CharacterEquipmentSlots {
     }
 
     @Override
-    public boolean canEquipItemToSlot(String s, Item item) throws IllegalArgumentException, IllegalStateException {
+    public boolean canEquipItemToSlot(String s, Item item)
+            throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public Item equipItemToSlot(String s, Item item) throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
+    public Item equipItemToSlot(String s, Item item)
+            throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
         Item originalItem = EQUIPMENT_SLOTS.get(s);
         if (originalItem != null) {
-            originalItem.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
-                    null, null);
+            originalItem.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
         }
         EQUIPMENT_SLOTS.put(s, item);
         if (item != null) {
-            item.assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(CHARACTER, s);
+            item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(CHARACTER, s);
         }
         return originalItem;
     }
 
     @Override
-    public boolean getCanAlterEquipmentInSlot(String s) throws IllegalArgumentException, IllegalStateException {
+    public boolean getCanAlterEquipmentInSlot(String s)
+            throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public void setCanAlterEquipmentInSlot(String s, boolean b) throws IllegalArgumentException, IllegalStateException {
+    public void setCanAlterEquipmentInSlot(String s, boolean b)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 }

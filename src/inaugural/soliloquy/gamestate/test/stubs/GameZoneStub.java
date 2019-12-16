@@ -52,7 +52,7 @@ public class GameZoneStub implements GameZone {
         if (RETURN_ACTUAL_TILE_AT_LOCATION) {
             return TILES[tileLocation.getX()][tileLocation.getY()];
         } else {
-            return new TileStub(this, tileLocation);
+            return new TileStub(this, tileLocation, null);
         }
     }
 

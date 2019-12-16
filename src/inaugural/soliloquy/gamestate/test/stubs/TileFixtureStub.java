@@ -57,7 +57,7 @@ public class TileFixtureStub implements TileFixture {
     }
 
     @Override
-    public void assignTileFixtureToTileAfterAddingToTileFixtures(Tile tile) throws
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws
             IllegalArgumentException, IllegalStateException {
         _tile = tile;
     }

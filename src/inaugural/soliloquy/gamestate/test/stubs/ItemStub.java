@@ -16,7 +16,7 @@ public class ItemStub implements Item {
     public String _equipmentSlotType;
     public Character _inventoryCharacter;
     public TileFixture _tileFixture;
-    public Tile _containingTile;
+    public Tile _tile;
 
     private Integer _charges;
     private Integer _numberInStack;
@@ -68,12 +68,12 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public Character getInventoryCharacter() throws IllegalStateException {
+    public Character inventoryCharacter() throws IllegalStateException {
         return _inventoryCharacter;
     }
 
     @Override
-    public Pair<Character, String> getCharacterEquipmentSlot()
+    public Pair<Character, String> equipmentSlot()
             throws IllegalStateException {
         if (_equipmentCharacter == null || _equipmentSlotType == null) {
             return null;
@@ -84,23 +84,23 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public Tile getContainingTile() throws IllegalStateException {
-        return _containingTile;
+    public Tile tile() throws IllegalStateException {
+        return _tile;
     }
 
     @Override
-    public TileFixture getContainingTileFixture() throws IllegalStateException {
+    public TileFixture tileFixture() throws IllegalStateException {
         return _tileFixture;
     }
 
     @Override
-    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
+    public void assignInventoryCharacterAfterAddedToCharacterInventory(Character character)
             throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
+    public void assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
             Character character, String equipmentSlotType)
             throws IllegalStateException, IllegalArgumentException {
         _equipmentCharacter = character;
@@ -108,13 +108,13 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public void assignTileToItemAfterAddingItemToTileItems(Tile tile)
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
             throws IllegalStateException, IllegalArgumentException {
-        _containingTile = tile;
+        _tile = tile;
     }
 
     @Override
-    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture)
+    public void assignTileFixtureAfterAddedItemToTileFixtureItems(TileFixture tileFixture)
             throws IllegalArgumentException, IllegalStateException {
         _tileFixture = tileFixture;
     }
@@ -162,12 +162,5 @@ public class ItemStub implements Item {
     @Override
     public void setPluralName(String s) throws IllegalArgumentException {
 
-    }
-
-    public static boolean itemIsPresentElsewhere(Item item) {
-        return item.getCharacterEquipmentSlot() != null ||
-                item.getInventoryCharacter() != null ||
-                item.getContainingTile() != null ||
-                item.getContainingTileFixture() != null;
     }
 }

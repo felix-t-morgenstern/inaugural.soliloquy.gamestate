@@ -1,24 +1,26 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileWallSegmentStub;
+import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
 import soliloquy.specs.gamestate.entities.TileWallSegments;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentsImplTests {
+    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final Tile TILE = new TileStub();
@@ -30,18 +32,22 @@ class TileWallSegmentsImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileWallSegments = new TileWallSegmentsImpl(TILE, COLLECTION_FACTORY, MAP_FACTORY);
+        _tileWallSegments = new TileWallSegmentsImpl(TILE, PAIR_FACTORY, COLLECTION_FACTORY,
+                MAP_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(null, COLLECTION_FACTORY, MAP_FACTORY));
+                () -> new TileWallSegmentsImpl(null, PAIR_FACTORY, COLLECTION_FACTORY,
+                        MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(TILE, null, MAP_FACTORY));
+                () -> new TileWallSegmentsImpl(TILE, null, COLLECTION_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(TILE, COLLECTION_FACTORY, null));
+                () -> new TileWallSegmentsImpl(TILE, PAIR_FACTORY, null, MAP_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileWallSegmentsImpl(TILE, PAIR_FACTORY, COLLECTION_FACTORY, null));
     }
 
     @Test
@@ -83,7 +89,7 @@ class TileWallSegmentsImplTests {
     @Test
     void testAddTileWallSegmentInAnotherTileWallSegments() {
         TileWallSegments previousTileWallSegments = new TileWallSegmentsImpl(new TileStub(),
-                COLLECTION_FACTORY, MAP_FACTORY);
+                PAIR_FACTORY, COLLECTION_FACTORY, MAP_FACTORY);
         TileWallSegment tileWallSegment = new TileWallSegmentStub();
         previousTileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment);
 
@@ -115,6 +121,66 @@ class TileWallSegmentsImplTests {
                 () -> _tileWallSegments.contains(null));
         assertThrows(IllegalArgumentException.class,
                 () -> _tileWallSegments.remove(null));
+    }
+
+    @Test
+    void testSize() {
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+
+        assertEquals(3, _tileWallSegments.size());
+    }
+
+    @Test
+    void testSizeWithinDirection() {
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+
+        assertEquals(2, _tileWallSegments.size(TileWallSegmentDirection.NORTH));
+        assertEquals(0, _tileWallSegments.size(TileWallSegmentDirection.NORTHWEST));
+        assertEquals(1, _tileWallSegments.size(TileWallSegmentDirection.WEST));
+    }
+
+    @Test
+    void testSizeWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> _tileWallSegments.size(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.size(TileWallSegmentDirection.UNKNOWN));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.size(TileWallSegmentDirection.NOT_FOUND));
+    }
+
+    @Test
+    void testIterator() {
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+
+        ArrayList<ReadablePair<TileWallSegment, TileWallSegmentDirection>> fromIterator =
+                new ArrayList<>();
+
+        _tileWallSegments.forEach(fromIterator::add);
+
+        boolean[] segmentFound = new boolean[3];
+        fromIterator.forEach(pair -> {
+            if (pair.getItem1() == TILE_WALL_SEGMENT) {
+                assertFalse(segmentFound[0]);
+                assertEquals(TileWallSegmentDirection.NORTH, pair.getItem2());
+                segmentFound[0] = true;
+            }
+            if (pair.getItem1() == TILE_WALL_SEGMENT_2) {
+                assertFalse(segmentFound[1]);
+                assertEquals(TileWallSegmentDirection.NORTH, pair.getItem2());
+                segmentFound[1] = true;
+            }
+            if (pair.getItem1() == TILE_WALL_SEGMENT_3) {
+                assertFalse(segmentFound[2]);
+                assertEquals(TileWallSegmentDirection.WEST, pair.getItem2());
+                segmentFound[2] = true;
+            }
+        });
     }
 
     @Test
@@ -168,6 +234,9 @@ class TileWallSegmentsImplTests {
                 () -> _tileWallSegments.contains(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegments.remove(TILE_WALL_SEGMENT));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegments.size());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.size(TileWallSegmentDirection.NORTH));
     }
 
     @Test
@@ -183,6 +252,9 @@ class TileWallSegmentsImplTests {
                 () -> _tileWallSegments.contains(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegments.remove(TILE_WALL_SEGMENT));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegments.size());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.size(TileWallSegmentDirection.NORTH));
     }
 
     @Test
@@ -195,19 +267,10 @@ class TileWallSegmentsImplTests {
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.remove(tileWallSegment));
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegments.contains(tileWallSegment));
-        assertThrows(IllegalStateException.class, () ->
-                _tileWallSegments.getDirection(tileWallSegment));
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.getDirection(tileWallSegment));
 
         tileWallSegment._tile = new TileStub();
-
-        assertThrows(IllegalStateException.class, () -> _tileWallSegments.remove(tileWallSegment));
-        assertThrows(IllegalStateException.class,
-                () -> _tileWallSegments.contains(tileWallSegment));
-        assertThrows(IllegalStateException.class, () ->
-                _tileWallSegments.getDirection(tileWallSegment));
-
-        tileWallSegment._tile = TILE;
-        tileWallSegment._tileWallSegmentDirection = TileWallSegmentDirection.WEST;
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.remove(tileWallSegment));
         assertThrows(IllegalStateException.class,

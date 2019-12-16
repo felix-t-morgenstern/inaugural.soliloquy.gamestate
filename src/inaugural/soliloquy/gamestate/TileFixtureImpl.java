@@ -10,14 +10,13 @@ import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
-public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFixture {
+public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements TileFixture {
     private final EntityUuid ID;
     private final FixtureType TYPE;
     private final Coordinate PIXEL_OFFSET;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final GenericParamsSet DATA;
 
-    private Tile _tile;
     private String _name;
 
     public TileFixtureImpl(EntityUuid id,
@@ -68,24 +67,23 @@ public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFi
     }
 
     @Override
-    public void assignTileFixtureToTileAfterAddingToTileFixtures(Tile tile)
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("assignTileFixtureToTileAfterAddingToTileFixtures");
-        enforceCorrectTileInvariant("assignTileFixtureToTileAfterAddingToTileFixtures");
+        enforceDeletionInvariants("assignTileAfterAddedToTileEntitiesOfType");
+        enforceCorrectTileInvariant("assignTileAfterAddedToTileEntitiesOfType");
         _tile = tile;
-        enforceCorrectTileInvariant("assignTileFixtureToTileAfterAddingToTileFixtures");
+        enforceCorrectTileInvariant("assignTileAfterAddedToTileEntitiesOfType");
     }
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        enforceDeletionInvariants("data");
-        enforceCorrectTileInvariant("data");
+        enforceInvariants("data");
         return DATA;
     }
 
     @Override
     public GameEventTarget makeGameEventTarget() throws IllegalStateException {
-        enforceDeletionInvariants("makeGameEventTarget");
+        enforceInvariants("makeGameEventTarget");
         TileFixture tileFixture = this;
         return new GameEventTarget() {
             @Override
@@ -110,7 +108,7 @@ public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFi
         enforceCorrectTileInvariant("delete");
         TILE_FIXTURE_ITEMS.delete();
         if (_tile != null) {
-            TileFixtures tileFixtures = _tile.fixtures();
+            TileEntities<TileFixture> tileFixtures = _tile.fixtures();
             _tile = null;
             tileFixtures.remove(this);
         }
@@ -118,15 +116,13 @@ public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFi
 
     @Override
     public String getName() {
-        enforceDeletionInvariants("getName");
-        enforceCorrectTileInvariant("getName");
+        enforceInvariants("getName");
         return _name;
     }
 
     @Override
     public void setName(String name) {
-        enforceDeletionInvariants("setName");
-        enforceCorrectTileInvariant("setName");
+        enforceInvariants("setName");
         _name = name;
     }
 
@@ -135,31 +131,13 @@ public class TileFixtureImpl extends GameEventTargetEntityImpl implements TileFi
         return TileFixture.class.getCanonicalName();
     }
 
-    private void enforceCorrectTileInvariant(String methodName) {
-        if (_tile != null && !_tile.fixtures().contains(this)) {
-            throw new IllegalStateException("TileFixture." + methodName +
-                    ": TileFixture is not present on its specified Tile");
-        }
-    }
-
     @Override
     protected String className() {
         return "TileFixtureImpl";
     }
 
     @Override
-    protected String containingClassName() {
-        return "Tile";
-    }
-
-    @Override
-    protected Deletable getContainingObject() {
-        return _tile;
-    }
-
-    @Override
-    void enforceInvariantsForEventsCollections(String methodName) {
-        enforceCorrectTileInvariant(methodName);
-        enforceDeletionInvariants(methodName);
+    protected TileEntities<TileFixture> getTileAggregation() {
+        return _tile.fixtures();
     }
 }

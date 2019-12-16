@@ -11,7 +11,6 @@ import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,25 +18,21 @@ class CharacterInventoryImplTests {
     private final Character CHARACTER = new CharacterStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final Item ITEM = new ItemStub();
-    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE = ItemStub::itemIsPresentElsewhere;
 
     private CharacterInventory _characterInventory;
 
     @BeforeEach
     void setUp() {
-        _characterInventory = new CharacterInventoryImpl(CHARACTER, COLLECTION_FACTORY,
-                ITEM_IS_PRESENT_ELSEWHERE);
+        _characterInventory = new CharacterInventoryImpl(CHARACTER, COLLECTION_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(null,
-                COLLECTION_FACTORY, ITEM_IS_PRESENT_ELSEWHERE));
+                COLLECTION_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(CHARACTER,
-                COLLECTION_FACTORY, null));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(CHARACTER,
-                COLLECTION_FACTORY, null));
+                null));
     }
 
     @Test
@@ -108,10 +103,10 @@ class CharacterInventoryImplTests {
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
         ((ItemStub)ITEM)._tileFixture = null;
-        ((ItemStub)ITEM)._containingTile = new TileStub();
+        ((ItemStub)ITEM)._tile = new TileStub();
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
-        ((ItemStub)ITEM)._containingTile = null;
+        ((ItemStub)ITEM)._tile = null;
         ((ItemStub)ITEM)._equipmentCharacter = new CharacterStub();
         ((ItemStub)ITEM)._equipmentSlotType = "slotType";
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));

@@ -11,7 +11,6 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 public class TileWallSegmentStub implements TileWallSegment {
     private boolean _isDeleted;
 
-    public TileWallSegmentDirection _tileWallSegmentDirection;
     public Tile _tile;
 
     @Override
@@ -45,16 +44,15 @@ public class TileWallSegmentStub implements TileWallSegment {
     }
 
     @Override
-    public Pair<TileWallSegmentDirection, Tile> getTile() {
+    public Tile tile() {
         if (_tile == null) {
             return null;
         }
-        return new PairStub<>(_tileWallSegmentDirection, _tile);
+        return _tile;
     }
 
     @Override
-    public void assignTileWallSegmentsToTileAfterAddingToTileWallSegments(TileWallSegmentDirection tileWallSegmentDirection, Tile tile) throws IllegalArgumentException, IllegalStateException {
-        _tileWallSegmentDirection = tileWallSegmentDirection;
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
         _tile = tile;
     }
 

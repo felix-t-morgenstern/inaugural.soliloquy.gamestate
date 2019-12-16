@@ -134,44 +134,42 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public Pair<Character, String> getCharacterEquipmentSlot()
+    public Pair<Character, String> equipmentSlot()
             throws IllegalStateException {
-        enforceDeletionInvariant("getCharacterEquipmentSlot");
-        enforceAssignmentInvariant("getCharacterEquipmentSlot");
+        enforceDeletionInvariant("equipmentSlot");
+        enforceAssignmentInvariant("equipmentSlot");
         return _characterEquipmentSlotsCharacter == null ?
                 null :
                 PAIR_FACTORY.make(_characterEquipmentSlotsCharacter, _characterEquipmentSlotType);
     }
 
     @Override
-    public Character getInventoryCharacter() throws IllegalStateException {
-        enforceDeletionInvariant("getInventoryCharacter");
-        enforceAssignmentInvariant("getInventoryCharacter");
+    public Character inventoryCharacter() throws IllegalStateException {
+        enforceDeletionInvariant("inventoryCharacter");
+        enforceAssignmentInvariant("inventoryCharacter");
         return _characterInventoryCharacter;
     }
 
     @Override
-    public Tile getContainingTile() throws IllegalStateException {
-        enforceDeletionInvariant("getContainingTile");
-        enforceAssignmentInvariant("getContainingTile");
+    public Tile tile() throws IllegalStateException {
+        enforceDeletionInvariant("tile");
+        enforceAssignmentInvariant("tile");
         return _containingTile;
     }
 
     @Override
-    public TileFixture getContainingTileFixture() throws IllegalStateException {
-        enforceDeletionInvariant("getContainingTileFixture");
-        enforceAssignmentInvariant("getContainingTileFixture");
+    public TileFixture tileFixture() throws IllegalStateException {
+        enforceDeletionInvariant("tileFixture");
+        enforceAssignmentInvariant("tileFixture");
         return _containingTileFixture;
     }
 
     @Override
-    public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
+    public void assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
             Character character, String slotType)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariant(
-                "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot");
-        enforceAssignmentInvariant(
-                "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot");
+        enforceDeletionInvariant("assignEquipmentSlotAfterAddedToCharacterEquipmentSlot");
+        enforceAssignmentInvariant("assignEquipmentSlotAfterAddedToCharacterEquipmentSlot");
         if (character == null || slotType == null || slotType.equals("")) {
             _characterEquipmentSlotsCharacter = null;
             _characterEquipmentSlotType = null;
@@ -182,50 +180,46 @@ public class ItemImpl implements Item {
         _characterInventoryCharacter = null;
         _containingTileFixture = null;
         _containingTile = null;
-        enforceAssignmentInvariant(
-                "assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot");
+        enforceAssignmentInvariant("assignEquipmentSlotAfterAddedToCharacterEquipmentSlot");
     }
 
     @Override
-    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
+    public void assignInventoryCharacterAfterAddedToCharacterInventory(Character character)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariant("assignCharacterInventoryToItemAfterAddingToCharacterInventory"
-        );
-        enforceAssignmentInvariant(
-                "assignCharacterInventoryToItemAfterAddingToCharacterInventory");
+        enforceDeletionInvariant("assignInventoryCharacterAfterAddedToCharacterInventory");
+        enforceAssignmentInvariant("assignInventoryCharacterAfterAddedToCharacterInventory");
         _characterInventoryCharacter = character;
         _characterEquipmentSlotsCharacter = null;
         _characterEquipmentSlotType = null;
         _containingTileFixture = null;
         _containingTile = null;
-        enforceAssignmentInvariant(
-                "assignCharacterInventoryToItemAfterAddingToCharacterInventory");
+        enforceAssignmentInvariant("assignInventoryCharacterAfterAddedToCharacterInventory");
     }
 
     @Override
-    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture)
+    public void assignTileFixtureAfterAddedItemToTileFixtureItems(TileFixture tileFixture)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
-        enforceAssignmentInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
+        enforceDeletionInvariant("assignTileFixtureAfterAddedItemToTileFixtureItems");
+        enforceAssignmentInvariant("assignTileFixtureAfterAddedItemToTileFixtureItems");
         _containingTileFixture = tileFixture;
         _characterEquipmentSlotsCharacter = null;
         _characterEquipmentSlotType = null;
         _characterInventoryCharacter = null;
         _containingTile = null;
-        enforceAssignmentInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
+        enforceAssignmentInvariant("assignTileFixtureAfterAddedItemToTileFixtureItems");
     }
 
     @Override
-    public void assignTileToItemAfterAddingItemToTileItems(Tile tile)
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariant("assignTileItemsToItemAfterAddingItemToTileItems");
-        enforceAssignmentInvariant("assignTileFixtureToItemAfterAddingItemToTileFixtureItems");
+        enforceDeletionInvariant("assignTileAfterAddedToTileEntitiesOfType");
+        enforceAssignmentInvariant("assignTileAfterAddedToTileEntitiesOfType");
         _containingTile = tile;
         _characterEquipmentSlotsCharacter = null;
         _characterEquipmentSlotType = null;
         _characterInventoryCharacter = null;
         _containingTileFixture = null;
-        enforceAssignmentInvariant("assignTileItemsToItemAfterAddingItemToTileItems");
+        enforceAssignmentInvariant("assignTileAfterAddedToTileEntitiesOfType");
     }
 
     @Override
@@ -244,6 +238,7 @@ public class ItemImpl implements Item {
     @Override
     public void delete() throws IllegalStateException {
         enforceDeletionInvariant("delete");
+        enforceAssignmentInvariant("delete");
         if (_characterEquipmentSlotsCharacter != null) {
             // TODO: Attempt to test whether unassign-then-remove pattern is followed here
             _characterEquipmentSlotsCharacter.equipmentSlots()
@@ -261,7 +256,7 @@ public class ItemImpl implements Item {
             tileFixtureItems.remove(this);
         }
         if (_containingTile != null) {
-            TileItems tileItems = _containingTile.items();
+            TileEntities<Item> tileItems = _containingTile.items();
             _containingTile = null;
             tileItems.remove(this);
         }
@@ -360,12 +355,5 @@ public class ItemImpl implements Item {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned TileItems does not contain this Item");
         }
-    }
-
-    public static boolean itemIsPresentElsewhere(Item item) {
-        return item.getCharacterEquipmentSlot() != null ||
-                item.getInventoryCharacter() != null ||
-                item.getContainingTile() != null ||
-                item.getContainingTileFixture() != null;
     }
 }

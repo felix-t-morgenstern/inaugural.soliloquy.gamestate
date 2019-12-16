@@ -8,82 +8,6 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 public class ItemArchetype implements Item {
-    @Override
-    public ItemType type() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public Integer getCharges() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void setCharges(int i)
-            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public Integer getNumberInStack() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void setNumberInStack(int i)
-            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public Item takeFromStack(int i)
-            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public Character getInventoryCharacter() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public Pair<Character, String> getCharacterEquipmentSlot()
-            throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public Tile getContainingTile() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public TileFixture getContainingTileFixture() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void assignCharacterInventoryToItemAfterAddingToCharacterInventory(Character character)
-            throws IllegalStateException, IllegalArgumentException {
-
-    }
-
-    @Override
-    public void assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TileFixture tileFixture) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public void assignTileToItemAfterAddingItemToTileItems(Tile tile) throws IllegalStateException, IllegalArgumentException {
-
-    }
-
-    @Override
-    public void assignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot(
-            Character character, String s)
-            throws IllegalStateException, IllegalArgumentException {
-
-    }
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
@@ -128,5 +52,75 @@ public class ItemArchetype implements Item {
     @Override
     public String getInterfaceName() {
         return Item.class.getCanonicalName();
+    }
+
+    @Override
+    public ItemType type() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public Integer getCharges() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void setCharges(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
+    public Integer getNumberInStack() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void setNumberInStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
+    public Item takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public Character inventoryCharacter() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public Pair<Character, String> equipmentSlot() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public TileFixture tileFixture() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(Character character, String s) throws IllegalStateException, IllegalArgumentException {
+
+    }
+
+    @Override
+    public void assignInventoryCharacterAfterAddedToCharacterInventory(Character character) throws IllegalStateException, IllegalArgumentException {
+
+    }
+
+    @Override
+    public void assignTileFixtureAfterAddedItemToTileFixtureItems(TileFixture tileFixture) throws IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
+    public Tile tile() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
+
     }
 }

@@ -7,4 +7,9 @@ public class SpriteStub implements Sprite {
     public String getInterfaceName() {
         return null;
     }
+
+    @Override
+    public int getHeight() {
+        return 0;
+    }
 }

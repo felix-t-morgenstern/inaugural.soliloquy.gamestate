@@ -10,19 +10,17 @@ import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
-public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileFixtureItems {
+public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
+        implements TileFixtureItems {
     private final TileFixture TILE_FIXTURE;
     private final CollectionFactory COLLECTION_FACTORY;
     private final ArrayList<Item> CONTAINED_ITEMS;
-    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE;
 
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public TileFixtureItemsImpl(TileFixture tileFixture, CollectionFactory collectionFactory,
-                                Predicate<Item> itemIsPresentElsewhere) {
+    public TileFixtureItemsImpl(TileFixture tileFixture, CollectionFactory collectionFactory) {
         if (tileFixture == null) {
             throw new IllegalArgumentException("TileFixtureItems: tileFixture must be non-null");
         }
@@ -32,11 +30,6 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
                     "TileFixtureItems: collectionFactory must be non-null");
         }
         COLLECTION_FACTORY = collectionFactory;
-        if (itemIsPresentElsewhere == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureItems: itemIsPresentElsewhere must be non-null");
-        }
-        ITEM_IS_PRESENT_ELSEWHERE = itemIsPresentElsewhere;
         CONTAINED_ITEMS = new ArrayList<>();
     }
 
@@ -72,11 +65,11 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.add: item must be non-null");
         }
-        if (ITEM_IS_PRESENT_ELSEWHERE.test(item)) {
+        if (itemIsPresentElsewhere(item)) {
             throw new IllegalArgumentException("TileFixtureItems.add: item present elsewhere");
         }
         CONTAINED_ITEMS.add(item);
-        item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE);
+        item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE);
     }
 
     @Override
@@ -88,7 +81,7 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
         }
         boolean itemWasInAggregate = CONTAINED_ITEMS.remove(item);
         if (itemWasInAggregate) {
-            item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(null);
+            item.assignTileFixtureAfterAddedItemToTileFixtureItems(null);
         }
         return itemWasInAggregate;
     }
@@ -120,7 +113,7 @@ public class TileFixtureItemsImpl extends HasDeletionInvariants implements TileF
 
     private void enforceItemAssignmentInvariant(Item item, String methodName) {
         if (item != null && CONTAINED_ITEMS.contains(item) &&
-                item.getContainingTileFixture() != TILE_FIXTURE) {
+                item.tileFixture() != TILE_FIXTURE) {
             throw new IllegalStateException("TileFixtureItemsImpl." + methodName +
                     ": item is present in this class, but has not been assigned to this class");
         }

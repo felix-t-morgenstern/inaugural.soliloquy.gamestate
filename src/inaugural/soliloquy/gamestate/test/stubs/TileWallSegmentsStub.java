@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
@@ -9,6 +10,7 @@ import soliloquy.specs.gamestate.entities.TileWallSegments;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class TileWallSegmentsStub implements TileWallSegments {
     public final HashMap<TileWallSegmentDirection, HashSet<TileWallSegment>> TILE_WALL_SEGMENTS =
@@ -34,8 +36,7 @@ public class TileWallSegmentsStub implements TileWallSegments {
                     TileWallSegment tileWallSegment)
             throws IllegalArgumentException, IllegalStateException {
         TILE_WALL_SEGMENTS.get(tileWallSegmentDirection).add(tileWallSegment);
-        tileWallSegment.assignTileWallSegmentsToTileAfterAddingToTileWallSegments(
-                tileWallSegmentDirection, TILE);
+        tileWallSegment.assignTileAfterAddedToTileEntitiesOfType(TILE);
     }
 
     @Override
@@ -46,6 +47,16 @@ public class TileWallSegmentsStub implements TileWallSegments {
     @Override
     public boolean contains(TileWallSegment tileWallSegment) throws IllegalArgumentException, IllegalStateException {
         return false;
+    }
+
+    @Override
+    public int size() throws IllegalStateException {
+        return 0;
+    }
+
+    @Override
+    public int size(TileWallSegmentDirection tileWallSegmentDirection) throws IllegalStateException {
+        return 0;
     }
 
     @Override
@@ -75,6 +86,11 @@ public class TileWallSegmentsStub implements TileWallSegments {
 
     @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public Iterator<ReadablePair<TileWallSegment, TileWallSegmentDirection>> iterator() {
         return null;
     }
 }

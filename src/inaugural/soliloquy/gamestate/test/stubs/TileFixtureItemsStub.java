@@ -36,7 +36,8 @@ public class TileFixtureItemsStub implements TileFixtureItems {
     }
 
     @Override
-    public ReadableCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
+    public ReadableCollection<Item> representation()
+            throws UnsupportedOperationException, IllegalStateException {
         Collection<Item> items = new CollectionStub<>();
         _items.forEach(items::add);
         return items.readOnlyRepresentation();
@@ -45,13 +46,13 @@ public class TileFixtureItemsStub implements TileFixtureItems {
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
         _items.add(item);
-        item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(TILE_FIXTURE);
+        item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE);
     }
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
         if(_items.contains(item)) {
-            item.assignTileFixtureToItemAfterAddingItemToTileFixtureItems(null);
+            item.assignTileFixtureAfterAddedItemToTileFixtureItems(null);
         }
         return _items.remove(item);
     }

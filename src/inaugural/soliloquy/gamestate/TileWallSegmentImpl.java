@@ -1,9 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
-import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
@@ -11,7 +9,6 @@ import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWallSegment {
-    private final PairFactory PAIR_FACTORY;
     private final GenericParamsSet DATA;
 
     private WallSegmentType _wallSegmentType;
@@ -19,16 +16,9 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     private int _zIndex;
     private String _name;
     private Tile _tile;
-    private TileWallSegmentDirection _tileWallSegmentDirection;
 
     @SuppressWarnings("ConstantConditions")
-    public TileWallSegmentImpl(PairFactory pairFactory,
-                               GenericParamsSetFactory genericParamsSetFactory) {
-        if (pairFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileWallSegment: pairFactory must be non-null");
-        }
-        PAIR_FACTORY = pairFactory;
+    public TileWallSegmentImpl(GenericParamsSetFactory genericParamsSetFactory) {
         if (genericParamsSetFactory == null) {
             throw new IllegalArgumentException(
                     "TileWallSegment: genericParamsSetFactory must be non-null");
@@ -79,30 +69,20 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     }
 
     @Override
-    public Pair<TileWallSegmentDirection, Tile> getTile() {
-        enforceDeletionInvariants("getTile");
-        enforceAggregateAssignmentInvariant("getTile");
-        if (_tile != null) {
-            return PAIR_FACTORY.make(_tileWallSegmentDirection, _tile);
-        } else {
-            return null;
-        }
+    public Tile tile() {
+        enforceDeletionInvariants("tile");
+        enforceAggregateAssignmentInvariant("tile");
+        return _tile;
     }
 
     @Override
-    public void assignTileWallSegmentsToTileAfterAddingToTileWallSegments(
-            TileWallSegmentDirection tileWallSegmentDirection, Tile tile)
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("assignTileWallSegmentsToTileAfterAddingToTileWallSegments");
+        enforceDeletionInvariants("assignTileAfterAddedToTileEntitiesOfType");
         enforceAggregateAssignmentInvariant(
-                "assignTileWallSegmentsToTileAfterAddingToTileWallSegments");
+                "assignTileAfterAddedToTileEntitiesOfType");
         _tile = tile;
-        if (tile != null) {
-            _tileWallSegmentDirection = tileWallSegmentDirection;
-        } else {
-            _tileWallSegmentDirection = null;
-        }
-        enforceAggregateAssignmentInvariant("setName");
+        enforceAggregateAssignmentInvariant("assignTileAfterAddedToTileEntitiesOfType");
     }
 
     @Override
@@ -143,7 +123,6 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
 
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariants("getInterfaceName");
         return TileWallSegment.class.getCanonicalName();
     }
 
@@ -154,10 +133,6 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
             if (tileWallSegmentDirection == TileWallSegmentDirection.NOT_FOUND) {
                 throw new IllegalStateException("TileWallSegmentImpl." + methodName +
                         ": This TileWallSegment not found in Tile to which it was assigned");
-            }
-            if (tileWallSegmentDirection != _tileWallSegmentDirection) {
-                throw new IllegalStateException("TileWallSegmentImpl." + methodName +
-                        ": This TileWallSegment was found, but in the wrong direction");
             }
         }
     }

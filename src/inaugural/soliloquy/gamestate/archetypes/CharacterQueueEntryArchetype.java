@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 
@@ -23,6 +24,11 @@ public class CharacterQueueEntryArchetype implements Pair<Character, VariableCac
     @Override
     public void setItem2(VariableCache variableCache) throws IllegalArgumentException {
 
+    }
+
+    @Override
+    public ReadablePair<Character, VariableCache> representation() {
+        return null;
     }
 
     @Override

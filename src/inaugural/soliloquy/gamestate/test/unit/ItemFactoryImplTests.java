@@ -57,7 +57,7 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, null);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
+        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 
@@ -78,7 +78,7 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, GENERIC_PARAMS_SET);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
+        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 
@@ -99,7 +99,7 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, null, ID);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
+        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 
@@ -120,7 +120,7 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, GENERIC_PARAMS_SET, ID);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.getCharacterEquipmentSlot();
+        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 

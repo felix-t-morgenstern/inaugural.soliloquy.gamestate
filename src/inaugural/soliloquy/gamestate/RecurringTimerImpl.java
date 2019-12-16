@@ -5,7 +5,7 @@ import soliloquy.specs.gamestate.entities.RecurringTimer;
 
 import java.util.function.Consumer;
 
-public class RecurringTimerImpl extends AbstractTimer implements RecurringTimer {
+public class RecurringTimerImpl extends TimerAbstract implements RecurringTimer {
     private int _roundModulo;
     private int _roundOffset;
 

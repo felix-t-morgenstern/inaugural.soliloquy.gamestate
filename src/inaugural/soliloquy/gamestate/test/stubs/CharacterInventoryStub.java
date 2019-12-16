@@ -17,7 +17,7 @@ public class CharacterInventoryStub implements CharacterInventory {
 
     public boolean _isDeleted;
 
-    public CharacterInventoryStub(Character character) {
+    CharacterInventoryStub(Character character) {
         CHARACTER = character;
     }
 
@@ -46,14 +46,14 @@ public class CharacterInventoryStub implements CharacterInventory {
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
         ITEMS.add(item);
-        item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(CHARACTER);
+        item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER);
     }
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
         boolean itemPresent = ITEMS.contains(item);
         if (itemPresent) {
-            item.assignCharacterInventoryToItemAfterAddingToCharacterInventory(null);
+            item.assignInventoryCharacterAfterAddedToCharacterInventory(null);
         }
         return ITEMS.remove(item);
     }

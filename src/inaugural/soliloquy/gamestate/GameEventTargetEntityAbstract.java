@@ -8,7 +8,7 @@ import soliloquy.specs.gamestate.entities.GameEventTargetEntity;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 
-abstract class GameEventTargetEntityImpl extends HasDeletionInvariants implements GameEventTargetEntity {
+abstract class GameEventTargetEntityAbstract extends HasDeletionInvariants implements GameEventTargetEntity {
     private final Collection<GameMovementEvent> MOVEMENT_EVENTS;
     private final Collection<GameAbilityEvent> ABILITY_EVENTS;
 
@@ -17,7 +17,13 @@ abstract class GameEventTargetEntityImpl extends HasDeletionInvariants implement
     private final static GameAbilityEvent GAME_ABILITY_EVENT_ARCHETYPE =
             new GameAbilityEventArchetype();
 
-    GameEventTargetEntityImpl(CollectionFactory collectionFactory) {
+    // NB: This constructor is to ONLY be used by TileEntityAbstract
+    GameEventTargetEntityAbstract() {
+        MOVEMENT_EVENTS = null;
+        ABILITY_EVENTS = null;
+    }
+
+    GameEventTargetEntityAbstract(CollectionFactory collectionFactory) {
         if (collectionFactory == null) {
             throw new IllegalArgumentException("TileImpl: collectionFactory cannot be null");
         }
@@ -27,15 +33,15 @@ abstract class GameEventTargetEntityImpl extends HasDeletionInvariants implement
 
     @Override
     public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
-        enforceInvariantsForEventsCollections("movementEvents");
+        enforceInvariants("movementEvents");
         return MOVEMENT_EVENTS;
     }
 
     @Override
     public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
-        enforceInvariantsForEventsCollections("abilityEvents");
+        enforceInvariants("abilityEvents");
         return ABILITY_EVENTS;
     }
 
-    abstract void enforceInvariantsForEventsCollections(String methodName);
+    abstract void enforceInvariants(String methodName);
 }

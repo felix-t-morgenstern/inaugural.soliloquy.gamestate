@@ -2,9 +2,9 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
@@ -14,14 +14,21 @@ import soliloquy.specs.sprites.entities.Sprite;
 public class TileStub implements Tile {
     private final GameZone GAME_ZONE;
 
-    private final TileCharacters CHARACTERS = new TileCharactersStub(this);
-    private final TileFixtures FIXTURES = new TileFixturesStub(this);
-    private final TileItems TILE_ITEMS = new TileItemsStub(this);
+    private final TileEntities<Character> CHARACTERS = new TileEntitiesStub<>(this);
+    private final TileEntities<TileFixture> FIXTURES = new TileEntitiesStub<>(this);
+    private final TileEntities<Item> TILE_ITEMS = new TileEntitiesStub<>(this);
     private final TileWallSegments TILE_WALL_SEGMENTS = new TileWallSegmentsStub(this);
+    private final Collection<GameMovementEvent> MOVEMENT_EVENTS = new CollectionStub<>();
+    private final Collection<GameAbilityEvent> ABILITY_EVENTS = new CollectionStub<>();
 
+    private final Collection<Sprite> SPRITES = new CollectionStub<>();
+
+    private int _height;
+    private GroundType _groundType;
     private boolean _isDeleted;
 
     private ReadableCoordinate _tileLocation;
+    private GenericParamsSet _data;
 
     public TileStub() {
         GAME_ZONE = new GameZoneStub();
@@ -32,14 +39,15 @@ public class TileStub implements Tile {
         GAME_ZONE = new GameZoneStub();
     }
 
-    public TileStub(GameZone gameZone, ReadableCoordinate location) {
+    public TileStub(GameZone gameZone, ReadableCoordinate location, GenericParamsSet data) {
         GAME_ZONE = gameZone;
         _tileLocation = location;
+        _data = data;
     }
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        return null;
+        return _data;
     }
 
     @Override
@@ -64,36 +72,36 @@ public class TileStub implements Tile {
 
     @Override
     public int getHeight() throws IllegalStateException {
-        return 0;
+        return _height;
     }
 
     @Override
-    public void setHeight(int i) throws IllegalStateException {
-
+    public void setHeight(int height) throws IllegalStateException {
+        _height = height;
     }
 
     @Override
     public GroundType getGroundType() throws IllegalStateException {
-        return null;
+        return _groundType;
     }
 
     @Override
-    public void setGroundType(GroundType iGroundType) throws IllegalStateException {
-
+    public void setGroundType(GroundType groundType) throws IllegalStateException {
+        _groundType = groundType;
     }
 
     @Override
-    public TileCharacters characters() {
+    public TileEntities<Character> characters() {
         return CHARACTERS;
     }
 
     @Override
-    public TileItems items() {
+    public TileEntities<Item> items() {
         return TILE_ITEMS;
     }
 
     @Override
-    public TileFixtures fixtures() throws IllegalStateException {
+    public TileEntities<TileFixture> fixtures() throws IllegalStateException {
         return FIXTURES;
     }
 
@@ -103,8 +111,8 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public Map<Integer, Collection<Sprite>> sprites() throws IllegalStateException {
-        return null;
+    public Collection<Sprite> sprites() throws IllegalStateException {
+        return SPRITES;
     }
 
     @Override
@@ -114,12 +122,12 @@ public class TileStub implements Tile {
 
     @Override
     public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
-        return null;
+        return MOVEMENT_EVENTS;
     }
 
     @Override
     public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
-        return null;
+        return ABILITY_EVENTS;
     }
 
     @Override

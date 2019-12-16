@@ -25,6 +25,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     private String _name;
 
+    // TODO: Have this use the PersistentTileHandler!
     @SuppressWarnings("ConstantConditions")
     public GameZoneImpl(String id, String name, String type, ReadableCoordinate maxCoordinates,
                         TileFactory tileFactory, CoordinateFactory coordinateFactory,
@@ -61,7 +62,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         TILES = new Tile[maxCoordinates.getX()+1][maxCoordinates.getY()+1];
         for (int x = 0; x <= maxCoordinates.getX(); x++) {
             for (int y = 0; y <= maxCoordinates.getY(); y++) {
-                TILES[x][y] = tileFactory.make(this, coordinateFactory.make(x,y));
+                // TODO: Have this use the PersistentTileHandler!
+                TILES[x][y] = tileFactory.make(this, coordinateFactory.make(x,y), null);
             }
         }
         ENTRY_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);

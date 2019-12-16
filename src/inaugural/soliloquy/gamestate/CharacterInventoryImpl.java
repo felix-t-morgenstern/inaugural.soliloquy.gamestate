@@ -11,19 +11,17 @@ import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.function.Predicate;
 
-public class CharacterInventoryImpl extends HasDeletionInvariants implements CharacterInventory {
+public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
+        implements CharacterInventory {
     private final Character CHARACTER;
     private final CollectionFactory COLLECTION_FACTORY;
-    private final Predicate<Item> ITEM_IS_PRESENT_ELSEWHERE;
     private final HashSet<Item> INVENTORY;
 
     private final static Item ITEM_ARCHETYPE = new ItemArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public CharacterInventoryImpl(Character character, CollectionFactory collectionFactory,
-                                  Predicate<Item> itemIsPresentElsewhere) {
+    public CharacterInventoryImpl(Character character, CollectionFactory collectionFactory) {
         if (character == null) {
             throw new IllegalArgumentException(
                     "CharacterInventoryImpl: character must be non-null");
@@ -34,11 +32,6 @@ public class CharacterInventoryImpl extends HasDeletionInvariants implements Cha
                     "CharacterInventoryImpl: collectionFactory must be non-null");
         }
         COLLECTION_FACTORY = collectionFactory;
-        if (itemIsPresentElsewhere == null) {
-            throw new IllegalArgumentException(
-                    "CharacterInventoryImpl: itemIsPresentElsewhere must be non-null");
-        }
-        ITEM_IS_PRESENT_ELSEWHERE = itemIsPresentElsewhere;
         INVENTORY = new HashSet<>();
     }
 
@@ -69,7 +62,7 @@ public class CharacterInventoryImpl extends HasDeletionInvariants implements Cha
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("add");
         throwOnNullOrDeletedItem("add", item);
-        if (ITEM_IS_PRESENT_ELSEWHERE.test(item)) {
+        if (itemIsPresentElsewhere(item)) {
             throw new IllegalArgumentException(
                     "CharacterInventoryImpl.add: item is present elsewhere");
         }

@@ -1,10 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
-import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
-import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class TileWallSegmentArchetype implements TileWallSegment {
@@ -39,16 +37,6 @@ public class TileWallSegmentArchetype implements TileWallSegment {
     }
 
     @Override
-    public Pair<TileWallSegmentDirection, Tile> getTile() {
-        return null;
-    }
-
-    @Override
-    public void assignTileWallSegmentsToTileAfterAddingToTileWallSegments(TileWallSegmentDirection tileWallSegmentDirection, Tile tile) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
     public GenericParamsSet data() throws IllegalStateException {
         return null;
     }
@@ -76,5 +64,15 @@ public class TileWallSegmentArchetype implements TileWallSegment {
     @Override
     public String getInterfaceName() {
         return TileWallSegment.class.getCanonicalName();
+    }
+
+    @Override
+    public Tile tile() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
+
     }
 }

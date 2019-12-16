@@ -5,7 +5,7 @@ import soliloquy.specs.gamestate.entities.OneTimeTimer;
 
 import java.util.function.Consumer;
 
-public class OneTimeTimerImpl extends AbstractTimer implements OneTimeTimer {
+public class OneTimeTimerImpl extends TimerAbstract implements OneTimeTimer {
     private long _roundWhenGoesOff;
 
     private final Consumer<OneTimeTimer> REMOVE_ONE_TIME_TIMER_FROM_ROUND_MANAGER;

@@ -336,13 +336,14 @@ class CharacterImplTests {
         assertNull(_character.tile());
 
         // NB: Character.TILE should NOT be exposed, and calling Character.assignCharacterToTile
-        // violates the invariant condition; therefore, TileCharactersStub calls
+        // violates the invariant condition; therefore, TileEntitiesStub calls
         // Character.assignCharacterToTile indirectly, as it should be in production code
         tile.characters().add(_character);
 
         assertSame(tile, _character.tile());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     void testDelete() {
         Tile tile = new TileStub();
@@ -368,14 +369,14 @@ class CharacterImplTests {
                 reactiveAbilities = _character.reactiveAbilities();
 
         assertFalse(_character.isDeleted());
-        assertFalse(((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS
+        assertFalse(((TileEntitiesStub)tile.characters()).REMOVED_ENTITIES
                 .contains(_character));
 
         _character.delete();
 
         assertTrue(_character.isDeleted());
         Character removedCharacter =
-                ((TileCharactersStub)tile.characters()).REMOVED_CHARACTERS.get(0);
+                (Character) ((TileEntitiesStub)tile.characters()).REMOVED_ENTITIES.get(0);
         assertSame(_character, removedCharacter);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
@@ -413,7 +414,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.getPlayerControlled());
         assertThrows(IllegalStateException.class, () -> _character.setPlayerControlled(true));
         assertThrows(IllegalStateException.class, () -> _character.data());
-        assertThrows(IllegalStateException.class, () -> _character.assignToTileAfterAddingToTileCharacters(null));
+        assertThrows(IllegalStateException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());
@@ -424,7 +425,7 @@ class CharacterImplTests {
     void testEnforceTileInvariant() {
         TileStub tile = new TileStub();
         tile.characters().add(_character);
-        ((TileCharactersStub)tile.characters()).CHARACTERS.remove(_character);
+        ((TileEntitiesStub)tile.characters()).ENTITIES.remove(_character);
 
         assertThrows(IllegalStateException.class, () -> _character.type());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
@@ -451,7 +452,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.data());
         assertThrows(IllegalStateException.class, () -> _character.delete());
         assertThrows(IllegalStateException.class, () -> _character.isDeleted());
-        assertThrows(IllegalStateException.class, () -> _character.assignToTileAfterAddingToTileCharacters(null));
+        assertThrows(IllegalStateException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.id());

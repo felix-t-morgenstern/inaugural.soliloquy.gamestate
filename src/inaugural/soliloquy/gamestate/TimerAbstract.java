@@ -4,14 +4,14 @@ import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Timer;
 
-public abstract class AbstractTimer extends HasDeletionInvariants implements Timer {
+public abstract class TimerAbstract extends HasDeletionInvariants implements Timer {
     private final Action<Void> ACTION;
 
     final String ID;
 
     private int _priority;
 
-    AbstractTimer(String timerId, Action<Void> action) {
+    TimerAbstract(String timerId, Action<Void> action) {
         ID = timerId;
         ACTION = action;
     }
