@@ -1,46 +1,33 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
-import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
-import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
-import soliloquy.specs.gamestate.entities.TileWallSegments;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class TileWallSegmentStub implements TileWallSegment {
+    private WallSegmentType _type;
     private boolean _isDeleted;
+    private GenericParamsSet _data;
 
     public Tile _tile;
 
-    @Override
-    public WallSegmentType getWallSegmentType() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public void setWallSegmentType(WallSegmentType wallSegmentType) throws IllegalStateException {
+    public TileWallSegmentStub() {
 
     }
 
-    @Override
-    public int getHeight() throws IllegalStateException {
-        return 0;
+    TileWallSegmentStub(GenericParamsSet data) {
+        _data = data;
     }
 
     @Override
-    public void setHeight(int i) throws IllegalArgumentException, IllegalStateException {
-
+    public WallSegmentType getType() throws IllegalStateException {
+        return _type;
     }
 
     @Override
-    public int getZIndex() throws IllegalStateException {
-        return 0;
-    }
-
-    @Override
-    public void setZIndex(int i) throws IllegalStateException {
-
+    public void setType(WallSegmentType type) throws IllegalStateException {
+        _type = type;
     }
 
     @Override
@@ -58,7 +45,7 @@ public class TileWallSegmentStub implements TileWallSegment {
 
     @Override
     public GenericParamsSet data() throws IllegalStateException {
-        return null;
+        return _data;
     }
 
     @Override

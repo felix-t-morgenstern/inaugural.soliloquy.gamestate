@@ -1,21 +1,32 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
+import soliloquy.specs.gamestate.factories.TileFactory;
+import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 
 public class TileFactoryImpl implements TileFactory {
+    private final CoordinateFactory COORDINATE_FACTORY;
     private final TileEntitiesFactory TILE_ENTITIES_FACTORY;
     private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY;
     private final CollectionFactory COLLECTION_FACTORY;
+    private final MapFactory MAP_FACTORY;
 
     @SuppressWarnings("ConstantConditions")
-    public TileFactoryImpl(TileEntitiesFactory tileEntitiesFactory,
+    public TileFactoryImpl(CoordinateFactory coordinateFactory,
+                           TileEntitiesFactory tileEntitiesFactory,
                            TileWallSegmentsFactory tileWallSegmentsFactory,
-                           CollectionFactory collectionFactory) {
+                           CollectionFactory collectionFactory, MapFactory mapFactory) {
+        if (coordinateFactory == null) {
+            throw new IllegalArgumentException(
+                    "TileFactoryImpl: coordinateFactory cannot be null");
+        }
+        COORDINATE_FACTORY = coordinateFactory;
         if (tileEntitiesFactory == null) {
             throw new IllegalArgumentException(
                     "TileFactoryImpl: tileEntitiesFactory cannot be null");
@@ -31,19 +42,21 @@ public class TileFactoryImpl implements TileFactory {
                     "TileFactoryImpl: collectionFactory cannot be null");
         }
         COLLECTION_FACTORY = collectionFactory;
+        if (mapFactory == null) {
+            throw new IllegalArgumentException(
+                    "TileFactoryImpl: mapFactory cannot be null");
+        }
+        MAP_FACTORY = mapFactory;
     }
 
     @Override
-    public Tile make(GameZone gameZone, ReadableCoordinate location, GenericParamsSet data)
+    public Tile make(GameZone gameZone, int x, int y, GenericParamsSet data)
             throws IllegalArgumentException {
         if (gameZone == null) {
             throw new IllegalArgumentException("TileFactoryImpl.make: gameZone cannot be null");
         }
-        if (location == null) {
-            throw new IllegalArgumentException("TileFactoryImpl.make: location cannot be null");
-        }
-        return new TileImpl(gameZone, location, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                COLLECTION_FACTORY, data);
+        return new TileImpl(gameZone, x, y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
+                TILE_WALL_SEGMENTS_FACTORY, COLLECTION_FACTORY, MAP_FACTORY, data);
     }
 
     @Override

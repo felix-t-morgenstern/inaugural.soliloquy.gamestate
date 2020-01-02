@@ -6,6 +6,16 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class WallSegmentTypeStub implements WallSegmentType {
+    String _id;
+
+    public WallSegmentTypeStub() {
+
+    }
+
+    public WallSegmentTypeStub(String id) {
+        _id = id;
+    }
+
     @Override
     public TileWallSegment generate(Tile tile) {
         return null;
@@ -33,7 +43,7 @@ public class WallSegmentTypeStub implements WallSegmentType {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return _id;
     }
 
     @Override

@@ -2,8 +2,11 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.*;
 import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -24,7 +27,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     private final TileWallSegments TILE_WALL_SEGMENTS;
     private final Collection<GameMovementEvent> MOVEMENT_EVENTS;
     private final Collection<GameAbilityEvent> ABILITY_EVENTS;
-    private final Collection<Sprite> SPRITES;
+    private final Map<Sprite, Integer> SPRITES;
     private final GenericParamsSet DATA;
 
     private int _height;
@@ -40,20 +43,22 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     private final static Sprite SPRITE_ARCHETYPE = new SpriteArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public TileImpl(GameZone gameZone, ReadableCoordinate location,
+    public TileImpl(GameZone gameZone, int x, int y,
+                    CoordinateFactory coordinateFactory,
                     TileEntitiesFactory tileEntitiesFactory,
                     TileWallSegmentsFactory tileWallSegmentsFactory,
                     CollectionFactory collectionFactory,
+                    MapFactory mapFactory,
                     GenericParamsSet data) {
         super(collectionFactory);
         if (gameZone == null) {
             throw new IllegalArgumentException("TileImpl: gameZone cannot be null");
         }
         GAME_ZONE = gameZone;
-        if (location == null) {
-            throw new IllegalArgumentException("TileImpl: location cannot be null");
+        if (coordinateFactory == null) {
+            throw new IllegalArgumentException("TileImpl: coordinateFactory cannot be null");
         }
-        LOCATION = location.makeClone().readOnlyRepresentation();
+        LOCATION = coordinateFactory.make(x, y).readOnlyRepresentation();
         if (tileEntitiesFactory == null) {
             throw new IllegalArgumentException("TileImpl: tileEntitiesFactory cannot be null");
         }
@@ -69,7 +74,10 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
         }
         MOVEMENT_EVENTS = collectionFactory.make(MOVEMENT_EVENT_ARCHETYPE);
         ABILITY_EVENTS = collectionFactory.make(ABILITY_EVENT_ARCHETYPE);
-        SPRITES = collectionFactory.make(SPRITE_ARCHETYPE);
+        if (mapFactory == null) {
+            throw new IllegalArgumentException("TileImpl: mapFactory cannot be null");
+        }
+        SPRITES = mapFactory.make(SPRITE_ARCHETYPE, 0);
         if (data == null) {
             throw new IllegalArgumentException("TileImpl: data cannot be null");
         }
@@ -161,7 +169,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     }
 
     @Override
-    public Collection<Sprite> sprites() throws IllegalStateException {
+    public Map<Sprite, Integer> sprites() throws IllegalStateException {
         enforceDeletionInvariants("sprites");
         enforceLocationCorrespondenceInvariant("sprites");
         return SPRITES;

@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -21,7 +22,7 @@ public class TileStub implements Tile {
     private final Collection<GameMovementEvent> MOVEMENT_EVENTS = new CollectionStub<>();
     private final Collection<GameAbilityEvent> ABILITY_EVENTS = new CollectionStub<>();
 
-    private final Collection<Sprite> SPRITES = new CollectionStub<>();
+    private final Map<Sprite, Integer> SPRITES = new MapStub<>();
 
     private int _height;
     private GroundType _groundType;
@@ -39,9 +40,9 @@ public class TileStub implements Tile {
         GAME_ZONE = new GameZoneStub();
     }
 
-    public TileStub(GameZone gameZone, ReadableCoordinate location, GenericParamsSet data) {
+    public TileStub(GameZone gameZone, int x, int y, GenericParamsSet data) {
         GAME_ZONE = gameZone;
-        _tileLocation = location;
+        _tileLocation = new CoordinateStub(x, y);
         _data = data;
     }
 
@@ -111,7 +112,7 @@ public class TileStub implements Tile {
     }
 
     @Override
-    public Collection<Sprite> sprites() throws IllegalStateException {
+    public Map<Sprite, Integer> sprites() throws IllegalStateException {
         return SPRITES;
     }
 

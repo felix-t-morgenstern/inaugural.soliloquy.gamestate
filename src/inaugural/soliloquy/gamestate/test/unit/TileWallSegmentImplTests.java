@@ -1,30 +1,27 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentImpl;
-import inaugural.soliloquy.gamestate.test.stubs.GenericParamsSetFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileWallSegmentsStub;
-import inaugural.soliloquy.gamestate.test.stubs.WallSegmentTypeStub;
+import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.gamestate.entities.TileWallSegmentDimensions;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentImplTests {
-    private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
-            new GenericParamsSetFactoryStub();
+    private final GenericParamsSet DATA = new GenericParamsSetStub();
     private final WallSegmentType WALL_SEGMENT_TYPE = new WallSegmentTypeStub();
 
     private TileWallSegment _tileWallSegment;
 
     @BeforeEach
     void setUp() {
-        _tileWallSegment = new TileWallSegmentImpl(GENERIC_PARAMS_SET_FACTORY);
+        _tileWallSegment = new TileWallSegmentImpl(DATA);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -41,39 +38,37 @@ class TileWallSegmentImplTests {
 
     @Test
     void testData() {
-        assertSame(GenericParamsSetFactoryStub.GENERIC_PARAMS_SET, _tileWallSegment.data());
+        assertSame(DATA, _tileWallSegment.data());
     }
 
     @Test
-    void testSetAndGetWallSegmentType() {
-        _tileWallSegment.setWallSegmentType(WALL_SEGMENT_TYPE);
+    void testSetAndGetType() {
+        _tileWallSegment.setType(WALL_SEGMENT_TYPE);
 
-        assertSame(WALL_SEGMENT_TYPE, _tileWallSegment.getWallSegmentType());
-    }
-
-    @Test
-    void testSetAndGetHeight() {
-        final int height = 123123;
-
-        _tileWallSegment.setHeight(height);
-
-        assertEquals(height, _tileWallSegment.getHeight());
-    }
-
-    @Test
-    void testSetAndGetZIndex() {
-        final int zIndex = 123123123;
-
-        _tileWallSegment.setZIndex(zIndex);
-
-        assertEquals(zIndex, _tileWallSegment.getZIndex());
+        assertSame(WALL_SEGMENT_TYPE, _tileWallSegment.getType());
     }
 
     @Test
     void testAssignTileWallSegmentsToTileAfterAddingToTileWallSegmentsAndGetTile() {
         Tile tile = new TileStub();
-        ((TileWallSegmentsStub)tile.wallSegments()).TILE_WALL_SEGMENTS
-                .get(TileWallSegmentDirection.NORTH).add(_tileWallSegment);
+        ((TileWallSegmentsStub)tile.wallSegments()).SEGMENTS
+                .get(TileWallSegmentDirection.NORTH).put(_tileWallSegment,
+                new TileWallSegmentDimensions() {
+                    @Override
+                    public String getInterfaceName() {
+                        return null;
+                    }
+
+                    @Override
+                    public int getZIndex() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int getHeight() {
+                        return 0;
+                    }
+                });
 
         assertNull(_tileWallSegment.tile());
 
@@ -106,12 +101,9 @@ class TileWallSegmentImplTests {
     void testDeletionInvariant() {
         _tileWallSegment.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getWallSegmentType());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setWallSegmentType(null));
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getHeight());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setHeight(0));
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getZIndex());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setZIndex(0));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getType());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegment.setType(new WallSegmentTypeStub()));
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.tile());
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegment.assignTileAfterAddedToTileEntitiesOfType(null));
@@ -123,17 +115,14 @@ class TileWallSegmentImplTests {
     @Test
     void testAggregateAssignmentInvariant() {
         Tile tile = new TileStub();
-        tile.wallSegments().add(TileWallSegmentDirection.NORTH, _tileWallSegment);
+        tile.wallSegments().add(TileWallSegmentDirection.NORTH, _tileWallSegment, 0);
 
-        ((TileWallSegmentsStub)tile.wallSegments()).TILE_WALL_SEGMENTS
+        ((TileWallSegmentsStub)tile.wallSegments()).SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).remove(_tileWallSegment);
 
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getWallSegmentType());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setWallSegmentType(null));
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getHeight());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setHeight(0));
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getZIndex());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setZIndex(0));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getType());
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegment.setType(new WallSegmentTypeStub()));
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.tile());
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegment.assignTileAfterAddedToTileEntitiesOfType(null));

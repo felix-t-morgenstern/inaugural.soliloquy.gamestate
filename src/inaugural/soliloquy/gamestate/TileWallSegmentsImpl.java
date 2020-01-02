@@ -1,29 +1,31 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.TileWallSegmentArchetype;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
-import soliloquy.specs.common.infrastructure.*;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.gamestate.entities.*;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 
 public class TileWallSegmentsImpl implements TileWallSegments {
     private final Tile TILE;
     private final PairFactory PAIR_FACTORY;
-    private final CollectionFactory COLLECTION_FACTORY;
     private final MapFactory MAP_FACTORY;
-    private final HashMap<TileWallSegmentDirection, HashSet<TileWallSegment>> TILE_WALL_SEGMENTS;
-    private final TileWallSegment ARCHETYPE = new TileWallSegmentArchetype();
+    private final HashMap<TileWallSegmentDirection,
+            HashMap<TileWallSegment, TileWallSegmentDimensions>> SEGMENTS;
+    private static final TileWallSegment SEGMENT_ARCHETYPE = new TileWallSegmentArchetype();
+    private static final TileWallSegmentDimensions DIMENSIONS_ARCHETYPE = makeDimensions(0, 0);
+    @SuppressWarnings("FieldCanBeLocal")
+    private final int DEFAULT_Z = 0;
 
     private boolean _isDeleted;
 
     @SuppressWarnings("ConstantConditions")
-    public TileWallSegmentsImpl(Tile tile, PairFactory pairFactory,
-                                CollectionFactory collectionFactory, MapFactory mapFactory) {
+    public TileWallSegmentsImpl(Tile tile, PairFactory pairFactory, MapFactory mapFactory) {
         if (tile == null) {
             throw new IllegalArgumentException("TileWallSegments: tile must be non-null");
         }
@@ -32,19 +34,15 @@ public class TileWallSegmentsImpl implements TileWallSegments {
             throw new IllegalArgumentException("TileWallSegments: pairFactory must be non-null");
         }
         PAIR_FACTORY = pairFactory;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException("TileWallSegments: collectionFactory must be non-null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
         if (mapFactory == null) {
             throw new IllegalArgumentException("TileWallSegments: mapFactory must be non-null");
         }
         MAP_FACTORY = mapFactory;
 
-        TILE_WALL_SEGMENTS = new HashMap<>();
-        TILE_WALL_SEGMENTS.put(TileWallSegmentDirection.NORTH, new HashSet<>());
-        TILE_WALL_SEGMENTS.put(TileWallSegmentDirection.NORTHWEST, new HashSet<>());
-        TILE_WALL_SEGMENTS.put(TileWallSegmentDirection.WEST, new HashSet<>());
+        SEGMENTS = new HashMap<>();
+        SEGMENTS.put(TileWallSegmentDirection.NORTH, new HashMap<>());
+        SEGMENTS.put(TileWallSegmentDirection.NORTHWEST, new HashMap<>());
+        SEGMENTS.put(TileWallSegmentDirection.WEST, new HashMap<>());
     }
 
     @Override
@@ -54,20 +52,24 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     }
 
     @Override
-    public ReadableMap<TileWallSegmentDirection, ReadableCollection<TileWallSegment>> representation()
+    public ReadableMap<TileWallSegmentDirection,
+            ReadableMap<TileWallSegment,TileWallSegmentDimensions>> representation()
             throws IllegalStateException {
-        enforceDeletionInvariants("_representation");
-        Map<TileWallSegmentDirection, ReadableCollection<TileWallSegment>> map =
-                MAP_FACTORY.make(TileWallSegmentDirection.UNKNOWN,
-                        COLLECTION_FACTORY.make(ARCHETYPE));
+        enforceDeletionInvariants("representation");
+        Map<TileWallSegmentDirection, ReadableMap<TileWallSegment, TileWallSegmentDimensions>>
+                map = MAP_FACTORY.make(TileWallSegmentDirection.UNKNOWN,
+                        MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE));
 
-        Collection<TileWallSegment> north = COLLECTION_FACTORY.make(ARCHETYPE);
-        Collection<TileWallSegment> northwest = COLLECTION_FACTORY.make(ARCHETYPE);
-        Collection<TileWallSegment> west = COLLECTION_FACTORY.make(ARCHETYPE);
+        Map<TileWallSegment, TileWallSegmentDimensions> north =
+                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE);
+        Map<TileWallSegment, TileWallSegmentDimensions> northwest =
+                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE);
+        Map<TileWallSegment, TileWallSegmentDimensions> west =
+                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE);
 
-        TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTH).forEach(north::add);
-        TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).forEach(northwest::add);
-        TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.WEST).forEach(west::add);
+        SEGMENTS.get(TileWallSegmentDirection.NORTH).forEach(north::put);
+        SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).forEach(northwest::put);
+        SEGMENTS.get(TileWallSegmentDirection.WEST).forEach(west::put);
 
         map.put(TileWallSegmentDirection.NORTH, north.readOnlyRepresentation());
         map.put(TileWallSegmentDirection.NORTHWEST, northwest.readOnlyRepresentation());
@@ -77,32 +79,94 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     }
 
     @Override
-    public void add(TileWallSegmentDirection tileWallSegmentDirection,
-                    TileWallSegment tileWallSegment)
+    public void add(TileWallSegmentDirection direction, TileWallSegment segment, int height)
+            throws IllegalArgumentException, IllegalStateException {
+        add(direction, segment, height, DEFAULT_Z);
+    }
+
+    @Override
+    public void add(TileWallSegmentDirection direction, TileWallSegment segment, int height, int z)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("add");
-        if (tileWallSegmentDirection == null) {
+        if (direction == null) {
             throw new IllegalArgumentException(
-                    "TileWallSegmentsImpl.add: tileWallSegmentDirection must be non-null");
+                    "TileWallSegmentsImpl.add: direction must be non-null");
         }
-        if (tileWallSegmentDirection == TileWallSegmentDirection.UNKNOWN) {
+        if (direction == TileWallSegmentDirection.UNKNOWN) {
             throw new IllegalArgumentException(
-                    "TileWallSegmentsImpl.add: tileWallSegmentDirection cannot be UNKNOWN");
+                    "TileWallSegmentsImpl.add: direction cannot be UNKNOWN");
         }
-        if (tileWallSegmentDirection == TileWallSegmentDirection.NOT_FOUND) {
+        if (direction == TileWallSegmentDirection.NOT_FOUND) {
             throw new IllegalArgumentException(
-                    "TileWallSegmentsImpl.add: tileWallSegmentDirection cannot be NOT_FOUND");
+                    "TileWallSegmentsImpl.add: direction cannot be NOT_FOUND");
         }
-        if (tileWallSegment == null) {
+        if (segment == null) {
             throw new IllegalArgumentException(
-                    "TileWallSegmentsImpl.add: tileWallSegment must be non-null");
+                    "TileWallSegmentsImpl.add: segment must be non-null");
         }
-        if (tileWallSegment.tile() != null) {
+        if (segment.tile() != null) {
             throw new IllegalArgumentException(
-                    "TileWallSegmentsImpl.add: tileWallSegment is already present on a Tile");
+                    "TileWallSegmentsImpl.add: segment is already present on a Tile");
         }
-        TILE_WALL_SEGMENTS.get(tileWallSegmentDirection).add(tileWallSegment);
-        tileWallSegment.assignTileAfterAddedToTileEntitiesOfType(TILE);
+        SEGMENTS.get(direction).put(segment, makeDimensions(height, z));
+        segment.assignTileAfterAddedToTileEntitiesOfType(TILE);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public Integer getZIndex(TileWallSegment segment)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("getZIndex");
+        if (segment == null) {
+            throw new IllegalArgumentException(
+                    "TileWallSegmentsImpl.add: segment must be non-null");
+        }
+        return SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(segment) ?
+                SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment).getZIndex()
+                : SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(segment) ?
+                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).get(segment).getZIndex()
+                : SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(segment) ?
+                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment).getZIndex()
+                : null;
+    }
+
+    @Override
+    public void setZIndex(TileWallSegment segment, int z)
+            throws IllegalArgumentException, IllegalStateException {
+        enforceDeletionInvariants("getZIndex");
+        if (segment == null) {
+            throw new IllegalArgumentException(
+                    "TileWallSegmentsImpl.add: segment must be non-null");
+        }
+        TileWallSegmentDimensions dimens;
+        if ((dimens = SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
+                != null) {
+            SEGMENTS.get(TileWallSegmentDirection.NORTH).put(segment,
+                    makeDimensions(dimens.getHeight(), z));
+        } else if ((dimens = SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
+                != null) {
+            SEGMENTS.get(TileWallSegmentDirection.NORTH).put(segment,
+                    makeDimensions(dimens.getHeight(), z));
+        } else if ((dimens = SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
+                != null) {
+            SEGMENTS.get(TileWallSegmentDirection.NORTH).put(segment,
+                    makeDimensions(dimens.getHeight(), z));
+        } else {
+            throw new IllegalArgumentException(
+                    "TileWallSegmentsImpl.setZIndex: segment is not present in this class");
+        }
+    }
+
+    @Override
+    public Integer getHeight(TileWallSegment segment)
+            throws IllegalArgumentException, IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void setHeight(TileWallSegment segment, int height)
+            throws IllegalArgumentException, IllegalStateException {
+
     }
 
     @Override
@@ -114,9 +178,12 @@ public class TileWallSegmentsImpl implements TileWallSegments {
             throw new IllegalArgumentException(
                     "TileWallSegmentsImpl.add: tileWallSegment must be non-null");
         }
-        return TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTH).remove(tileWallSegment) ||
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).remove(tileWallSegment) ||
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.WEST).remove(tileWallSegment);
+        return SEGMENTS.get(TileWallSegmentDirection.NORTH).remove(tileWallSegment)
+                    != null ||
+                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).remove(tileWallSegment)
+                    != null ||
+                SEGMENTS.get(TileWallSegmentDirection.WEST).remove(tileWallSegment)
+                    != null;
     }
 
     @Override
@@ -128,17 +195,19 @@ public class TileWallSegmentsImpl implements TileWallSegments {
             throw new IllegalArgumentException(
                     "TileWallSegmentsImpl.add: tileWallSegment must be non-null");
         }
-        return TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTH).contains(tileWallSegment) ||
-            TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).contains(tileWallSegment) ||
-            TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.WEST).contains(tileWallSegment);
+        return SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(tileWallSegment)
+                ||
+            SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(tileWallSegment)
+                ||
+            SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(tileWallSegment);
     }
 
     @Override
     public int size() throws IllegalStateException {
         enforceDeletionInvariants("size");
-        return TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTH).size() +
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).size() +
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.WEST).size();
+        return SEGMENTS.get(TileWallSegmentDirection.NORTH).size() +
+                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).size() +
+                SEGMENTS.get(TileWallSegmentDirection.WEST).size();
     }
 
     @Override
@@ -156,7 +225,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
             throw new IllegalArgumentException(
                     "TileWallSegmentsImpl.size: direction cannot be NOT_FOUND");
         }
-        return TILE_WALL_SEGMENTS.get(direction).size();
+        return SEGMENTS.get(direction).size();
     }
 
     @Override
@@ -164,13 +233,13 @@ public class TileWallSegmentsImpl implements TileWallSegments {
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("getDirection");
         enforceAssignmentInvariant("getDirection", tileWallSegment);
-        if (TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTH).contains(tileWallSegment)) {
+        if (SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(tileWallSegment)) {
             return TileWallSegmentDirection.NORTH;
         }
-        if (TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).contains(tileWallSegment)) {
+        if (SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(tileWallSegment)) {
             return TileWallSegmentDirection.NORTHWEST;
         }
-        if (TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.WEST).contains(tileWallSegment)) {
+        if (SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(tileWallSegment)) {
             return TileWallSegmentDirection.WEST;
         }
         return TileWallSegmentDirection.NOT_FOUND;
@@ -179,7 +248,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     @Override
     public void delete() throws IllegalStateException {
         enforceDeletionInvariants("delete");
-        TILE_WALL_SEGMENTS.keySet().forEach(dir -> TILE_WALL_SEGMENTS.get(dir)
+        SEGMENTS.keySet().forEach(dir -> SEGMENTS.get(dir).keySet()
                 .forEach(Deletable::delete));
         _isDeleted = true;
     }
@@ -201,42 +270,74 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     }
 
     private void enforceAssignmentInvariant(String methodName, TileWallSegment tileWallSegment) {
-        if ((TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTH).contains(tileWallSegment) ||
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
-                        .contains(tileWallSegment) ||
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.WEST).contains(tileWallSegment)) &&
-                        tileWallSegment.tile() != TILE) {
+        if ((SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(tileWallSegment) ||
+                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
+                        .containsKey(tileWallSegment) ||
+                SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(tileWallSegment))
+                    && tileWallSegment.tile() != TILE) {
             throw new IllegalStateException("TileWallSegmentsImpl." + methodName +
                     ": tileWallSegment was expected in this object's Tile, but instead has no " +
                     "Tile");
         }
     }
 
+    private static TileWallSegmentDimensions makeDimensions(int height, int z) {
+        return new TileWallSegmentDimensions() {
+            @Override
+            public int getZIndex() {
+                return z;
+            }
+
+            @Override
+            public int getHeight() {
+                return height;
+            }
+
+            @Override
+            public String getInterfaceName() {
+                return TileWallSegmentDimensions.class.getCanonicalName();
+            }
+        };
+    }
+
     @Override
-    public Iterator<ReadablePair<TileWallSegment, TileWallSegmentDirection>> iterator() {
-        Iterator<TileWallSegment> north =
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTH).iterator();
-        Iterator<TileWallSegment> northwest =
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).iterator();
-        Iterator<TileWallSegment> west =
-                TILE_WALL_SEGMENTS.get(TileWallSegmentDirection.WEST).iterator();
+    public Iterator<ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
+            TileWallSegmentDimensions>>>
+        iterator() {
+        Iterator<TileWallSegment> northSegments =
+                SEGMENTS.get(TileWallSegmentDirection.NORTH).keySet().iterator();
+        Iterator<TileWallSegment> northwestSegments =
+                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).keySet().iterator();
+        Iterator<TileWallSegment> westSegments =
+                SEGMENTS.get(TileWallSegmentDirection.WEST).keySet().iterator();
 
         return new Iterator<>() {
             @Override
             public boolean hasNext() {
-                return north.hasNext() || northwest.hasNext() || west.hasNext();
+                return northSegments.hasNext() || northwestSegments.hasNext() ||
+                        westSegments.hasNext();
             }
 
             @Override
-            public ReadablePair<TileWallSegment, TileWallSegmentDirection> next() {
-                return north.hasNext() ?
-                        PAIR_FACTORY.make(north.next(), TileWallSegmentDirection.NORTH)
-                                .representation() :
-                        northwest.hasNext() ?
-                                PAIR_FACTORY.make(northwest.next(),
-                                        TileWallSegmentDirection.NORTHWEST).representation() :
-                                PAIR_FACTORY.make(west.next(), TileWallSegmentDirection.WEST)
-                                        .representation();
+            public ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
+                    TileWallSegmentDimensions>>
+                next() {
+                TileWallSegment segment;
+                return northSegments.hasNext() ?
+                        PAIR_FACTORY.make(TileWallSegmentDirection.NORTH,
+                                PAIR_FACTORY.make(segment = northSegments.next(),
+                                        SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
+                                            .representation()).representation()
+                        : northwestSegments.hasNext() ?
+                        PAIR_FACTORY.make(TileWallSegmentDirection.NORTHWEST,
+                                PAIR_FACTORY.make(segment = northwestSegments.next(),
+                                        SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
+                                                .get(segment))
+                                            .representation()).representation()
+                        : PAIR_FACTORY.make(TileWallSegmentDirection.WEST,
+                                PAIR_FACTORY.make(segment = westSegments.next(),
+                                        SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment))
+                                        .representation()).representation();
             }
         };
     }

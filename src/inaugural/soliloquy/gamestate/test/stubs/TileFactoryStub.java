@@ -8,9 +8,9 @@ import soliloquy.specs.gamestate.factories.TileFactory;
 
 public class TileFactoryStub implements TileFactory {
     @Override
-    public Tile make(GameZone gameZone, ReadableCoordinate location, GenericParamsSet data)
+    public Tile make(GameZone gameZone, int x, int y, GenericParamsSet data)
             throws IllegalArgumentException {
-        return new TileStub(gameZone, location, data);
+        return new TileStub(gameZone, x, y, data);
     }
 
     @Override

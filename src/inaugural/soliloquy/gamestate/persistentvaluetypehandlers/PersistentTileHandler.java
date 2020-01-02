@@ -1,79 +1,64 @@
 package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.MapFactory;
+import com.google.gson.Gson;
+import inaugural.soliloquy.common.HasOneGenericParam;
+import inaugural.soliloquy.gamestate.archetypes.TileArchetype;
+import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
-import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
-import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
-import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
+import soliloquy.specs.gamestate.factories.TileFactory;
+import soliloquy.specs.gamestate.factories.TileWallSegmentFactory;
 import soliloquy.specs.ruleset.entities.GroundType;
+import soliloquy.specs.ruleset.entities.WallSegmentType;
 import soliloquy.specs.sprites.entities.Sprite;
 
 import java.util.function.Function;
 
-public class PersistentTileHandler implements PersistentValueTypeHandler<Tile> {
-    private final CoordinateFactory COORDINATE_FACTORY;
-    private final TileEntitiesFactory TILE_ENTITIES_FACTORY;
-    private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY;
-    private final MapFactory MAP_FACTORY;
-    private final CollectionFactory COLLECTION_FACTORY;
+public class PersistentTileHandler extends HasOneGenericParam<Tile> implements PersistentValueTypeHandler<Tile> {
+    private final TileFactory TILE_FACTORY;
+    private final TileWallSegmentFactory TILE_WALL_SEGMENT_FACTORY;
 
     private final PersistentValueTypeHandler<Character> CHARACTERS_HANDLER;
     private final PersistentValueTypeHandler<Item> ITEMS_HANDLER;
     private final PersistentValueTypeHandler<TileFixture> FIXTURES_HANDLER;
-    private final PersistentValueTypeHandler<TileWallSegment> WALL_SEGMENTS_HANDLER;
     private final PersistentValueTypeHandler<Sprite> SPRITE_HANDLER;
+    private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER;
 
     private final Function<String, GameZone> GET_GAME_ZONE;
+    private final Function<String, WallSegmentType> GET_SEGMENT_TYPE;
     private final Function<String, GameMovementEvent> GET_MOVEMENT_EVENT;
     private final Function<String, GameAbilityEvent> GET_ABILITY_EVENT;
     private final Function<String, GroundType> GET_GROUND_TYPE;
 
+    private static final Tile ARCHETYPE = new TileArchetype();
+
     @SuppressWarnings("ConstantConditions")
-    public PersistentTileHandler(CoordinateFactory coordinateFactory,
-                                 TileEntitiesFactory tileEntitiesFactory,
-                                 TileWallSegmentsFactory tileWallSegmentsFactory,
-                                 MapFactory mapFactory,
-                                 CollectionFactory collectionFactory,
+    public PersistentTileHandler(TileFactory tileFactory,
+                                 TileWallSegmentFactory tileWallSegmentFactory,
                                  PersistentValueTypeHandler<Character> charactersHandler,
                                  PersistentValueTypeHandler<Item> itemsHandler,
                                  PersistentValueTypeHandler<TileFixture> fixturesHandler,
-                                 PersistentValueTypeHandler<TileWallSegment>
-                                         wallSegmentsHandler,
                                  PersistentValueTypeHandler<Sprite> spriteHandler,
+                                 PersistentValueTypeHandler<GenericParamsSet> dataHandler,
                                  Function<String, GameZone> getGameZone,
+                                 Function<String, WallSegmentType> getSegmentType,
                                  Function<String, GameMovementEvent> getMovementEvent,
                                  Function<String, GameAbilityEvent> getAbilityEvent,
                                  Function<String, GroundType> getGroundType) {
-        if (coordinateFactory == null) {
+        if (tileFactory == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: coordinateFactory cannot be null");
+                    "PersistentTileHandler: tileFactory cannot be null");
         }
-        COORDINATE_FACTORY = coordinateFactory;
-        if (tileEntitiesFactory == null) {
+        TILE_FACTORY = tileFactory;
+        if (tileWallSegmentFactory == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: tileEntitiesFactory cannot be null");
+                    "PersistentTileHandler: tileWallSegmentFactory cannot be null");
         }
-        TILE_ENTITIES_FACTORY = tileEntitiesFactory;
-        if (tileWallSegmentsFactory == null) {
-            throw new IllegalArgumentException(
-                    "PersistentTileHandler: tileWallSegmentsFactory cannot be null");
-        }
-        TILE_WALL_SEGMENTS_FACTORY = tileWallSegmentsFactory;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException(
-                    "PersistentTileHandler: mapFactory cannot be null");
-        }
-        MAP_FACTORY = mapFactory;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "PersistentTileHandler: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
+        TILE_WALL_SEGMENT_FACTORY = tileWallSegmentFactory;
         if (charactersHandler == null) {
             throw new IllegalArgumentException(
                     "PersistentTileHandler: charactersHandler cannot be null");
@@ -89,21 +74,26 @@ public class PersistentTileHandler implements PersistentValueTypeHandler<Tile> {
                     "PersistentTileHandler: fixturesHandler cannot be null");
         }
         FIXTURES_HANDLER = fixturesHandler;
-        if (wallSegmentsHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentTileHandler: wallSegmentsHandler cannot be null");
-        }
-        WALL_SEGMENTS_HANDLER = wallSegmentsHandler;
         if (spriteHandler == null) {
             throw new IllegalArgumentException(
                     "PersistentTileHandler: spriteHandler cannot be null");
         }
         SPRITE_HANDLER = spriteHandler;
+        if (dataHandler == null) {
+            throw new IllegalArgumentException(
+                    "PersistentTileHandler: dataHandler cannot be null");
+        }
+        DATA_HANDLER = dataHandler;
         if (getGameZone == null) {
             throw new IllegalArgumentException(
                     "PersistentTileHandler: getGameZone cannot be null");
         }
         GET_GAME_ZONE = getGameZone;
+        if (getSegmentType == null) {
+            throw new IllegalArgumentException(
+                    "PersistentTileHandler: getSegmentType cannot be null");
+        }
+        GET_SEGMENT_TYPE = getSegmentType;
         if (getMovementEvent == null) {
             throw new IllegalArgumentException(
                     "PersistentTileHandler: getMovementEvent cannot be null");
@@ -122,12 +112,67 @@ public class PersistentTileHandler implements PersistentValueTypeHandler<Tile> {
     }
 
     @Override
-    public Tile read(String s) throws IllegalArgumentException {
-        return null;
+    public Tile read(String data) throws IllegalArgumentException {
+        if (data == null) {
+            throw new IllegalArgumentException("PersistentTileHandler.read: data cannot be null");
+        }
+        if (data.equals("")) {
+            throw new IllegalArgumentException("PersistentTileHandler.read: data cannot be empty");
+        }
+
+        TileDTO dto = new Gson().fromJson(data, TileDTO.class);
+
+        Tile tile = TILE_FACTORY.make(GET_GAME_ZONE.apply(dto.gameZoneId), dto.x, dto.y,
+                DATA_HANDLER.read(dto.data));
+        tile.setHeight(dto.height);
+        tile.setGroundType(GET_GROUND_TYPE.apply(dto.groundTypeId));
+
+        for(int i = 0; i < dto.characters.length; i++) {
+            tile.characters().add(CHARACTERS_HANDLER.read(dto.characters[i].entity),
+                    dto.characters[i].z);
+        }
+
+        for(int i = 0; i < dto.items.length; i++) {
+            tile.items().add(ITEMS_HANDLER.read(dto.items[i].entity),
+                    dto.items[i].z);
+        }
+
+        for(int i = 0; i < dto.fixtures.length; i++) {
+            tile.fixtures().add(FIXTURES_HANDLER.read(dto.fixtures[i].entity),
+                    dto.fixtures[i].z);
+        }
+
+        for(int i = 0; i < dto.wallSegments.length; i++) {
+            TileWallSegment segment =
+                    TILE_WALL_SEGMENT_FACTORY.make(DATA_HANDLER.read(dto.wallSegments[i].data));
+            segment.setType(GET_SEGMENT_TYPE.apply(dto.wallSegments[i].type));
+            tile.wallSegments().add(
+                    TileWallSegmentDirection.fromValue(dto.wallSegments[i].direction), segment,
+                    dto.wallSegments[i].height, dto.wallSegments[i].z);
+        }
+
+        for(int i = 0; i < dto.movementEvents.length; i++) {
+            tile.movementEvents().add(GET_MOVEMENT_EVENT.apply(dto.movementEvents[i]));
+        }
+
+        for(int i = 0; i < dto.abilityEvents.length; i++) {
+            tile.abilityEvents().add(GET_ABILITY_EVENT.apply(dto.abilityEvents[i]));
+        }
+
+        for(int i = 0; i < dto.sprites.length; i++) {
+            tile.sprites().put(SPRITE_HANDLER.read(dto.sprites[i].entity),
+                    dto.sprites[i].z);
+        }
+
+        return tile;
     }
 
     @Override
     public String write(Tile tile) {
+        if (tile == null) {
+            throw new IllegalArgumentException("PersistentTileHandler.write: tile cannot be null");
+        }
+
         TileDTO dto = new TileDTO();
         dto.gameZoneId = tile.gameZone().id();
         dto.x = tile.location().getX();
@@ -135,19 +180,72 @@ public class PersistentTileHandler implements PersistentValueTypeHandler<Tile> {
         dto.height = tile.getHeight();
         dto.groundTypeId = tile.getGroundType().id();
 
-        dto.characters = new String[tile.characters().size()];
+        int index;
 
-        return null;
+        dto.characters = new TileEntityDTO[tile.characters().size()];
+        index = 0;
+        for (ReadablePair<Character, Integer> pair : tile.characters()) {
+            dto.characters[index++] = new TileEntityDTO(pair.getItem2(),
+                    CHARACTERS_HANDLER.write(pair.getItem1()));
+        }
+
+        dto.items = new TileEntityDTO[tile.items().size()];
+        index = 0;
+        for (ReadablePair<Item, Integer> pair : tile.items()) {
+            dto.items[index++] = new TileEntityDTO(pair.getItem2(),
+                    ITEMS_HANDLER.write(pair.getItem1()));
+        }
+
+        dto.fixtures = new TileEntityDTO[tile.fixtures().size()];
+        index = 0;
+        for (ReadablePair<TileFixture, Integer> pair : tile.fixtures()) {
+            dto.fixtures[index++] = new TileEntityDTO(pair.getItem2(),
+                    FIXTURES_HANDLER.write(pair.getItem1()));
+        }
+
+        dto.wallSegments = new TileWallSegmentDTO[tile.wallSegments().size()];
+        index = 0;
+        for (ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
+                TileWallSegmentDimensions>> pair : tile.wallSegments()) {
+            TileWallSegmentDimensions dimens = pair.getItem2().getItem2();
+            dto.wallSegments[index++] =
+                    new TileWallSegmentDTO(pair.getItem2().getItem1().getType().id(),
+                            pair.getItem1().getValue(), dimens.getHeight(), dimens.getZIndex(),
+                            DATA_HANDLER.write(tile.data()));
+        }
+
+        dto.movementEvents = new String[tile.movementEvents().size()];
+        index = 0;
+        for(GameMovementEvent movementEvent : tile.movementEvents()) {
+            dto.movementEvents[index++] = movementEvent.id();
+        }
+
+        dto.abilityEvents = new String[tile.abilityEvents().size()];
+        index = 0;
+        for(GameAbilityEvent abilityEvent : tile.abilityEvents()) {
+            dto.abilityEvents[index++] = abilityEvent.id();
+        }
+
+        dto.sprites = new TileEntityDTO[tile.sprites().size()];
+        index = 0;
+        for(ReadablePair<Sprite, Integer> pair : tile.sprites()) {
+            dto.sprites[index++] = new TileEntityDTO(pair.getItem2(),
+                    SPRITE_HANDLER.write(pair.getItem1()));
+        }
+
+        dto.data = DATA_HANDLER.write(tile.data());
+
+        return new Gson().toJson(dto, TileDTO.class);
+    }
+
+    @Override
+    public String getUnparameterizedInterfaceName() {
+        return PersistentValueTypeHandler.class.getCanonicalName();
     }
 
     @Override
     public Tile getArchetype() {
-        return null;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
+        return ARCHETYPE;
     }
 
     private class TileDTO {
@@ -156,13 +254,40 @@ public class PersistentTileHandler implements PersistentValueTypeHandler<Tile> {
         int y;
         int height;
         String groundTypeId;
-        String[] characters;
-        String[] items;
-        String[] fixtures;
-        String[] wallSegments;
+        TileEntityDTO[] characters;
+        TileEntityDTO[] items;
+        TileEntityDTO[] fixtures;
+        TileWallSegmentDTO[] wallSegments;
         String[] movementEvents;
         String[] abilityEvents;
-        String[] sprites;
+        TileEntityDTO[] sprites;
+        String data;
+    }
+
+    private class TileEntityDTO {
+        TileEntityDTO(int z, String entity) {
+            this.z = z;
+            this.entity = entity;
+        }
+
+        int z;
+        String entity;
+    }
+
+    private class TileWallSegmentDTO {
+        TileWallSegmentDTO(String type, int direction, int height, int z,
+                           String data) {
+            this.type = type;
+            this.direction = direction;
+            this.height = height;
+            this.z = z;
+            this.data = data;
+        }
+
+        String type;
+        int direction;
+        int height;
+        int z;
         String data;
     }
 }

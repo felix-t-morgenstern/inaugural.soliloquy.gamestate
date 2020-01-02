@@ -1,19 +1,17 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.PairFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.TileStub;
+import inaugural.soliloquy.gamestate.test.stubs.TileWallSegmentStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.ReadablePair;
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileWallSegment;
-import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
-import soliloquy.specs.gamestate.entities.TileWallSegments;
+import soliloquy.specs.gamestate.entities.*;
 
 import java.util.ArrayList;
 
@@ -21,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentsImplTests {
     private final PairFactory PAIR_FACTORY = new PairFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final Tile TILE = new TileStub();
     private final TileWallSegment TILE_WALL_SEGMENT = new TileWallSegmentStub();
@@ -32,22 +29,18 @@ class TileWallSegmentsImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileWallSegments = new TileWallSegmentsImpl(TILE, PAIR_FACTORY, COLLECTION_FACTORY,
-                MAP_FACTORY);
+        _tileWallSegments = new TileWallSegmentsImpl(TILE, PAIR_FACTORY, MAP_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(null, PAIR_FACTORY, COLLECTION_FACTORY,
-                        MAP_FACTORY));
+                () -> new TileWallSegmentsImpl(null, PAIR_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(TILE, null, COLLECTION_FACTORY, MAP_FACTORY));
+                () -> new TileWallSegmentsImpl(TILE, null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(TILE, PAIR_FACTORY, null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(TILE, PAIR_FACTORY, COLLECTION_FACTORY, null));
+                () -> new TileWallSegmentsImpl(TILE, PAIR_FACTORY, null));
     }
 
     @Test
@@ -59,9 +52,36 @@ class TileWallSegmentsImplTests {
     @Test
     void testAddAndContains() {
         assertFalse(_tileWallSegments.contains(TILE_WALL_SEGMENT));
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0);
 
         assertTrue(_tileWallSegments.contains(TILE_WALL_SEGMENT));
+    }
+
+    @Test
+    void testAddAndGetZIndex() {
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0);
+
+        assertEquals(0, _tileWallSegments.getZIndex(TILE_WALL_SEGMENT));
+    }
+
+    @Test
+    void testAddWithZIndexAndGetZIndex() {
+        final int z = 123;
+
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0, z);
+
+        assertEquals(z, _tileWallSegments.getZIndex(TILE_WALL_SEGMENT));
+    }
+
+    @Test
+    void testSetZIndex() {
+        final int z1 = 123;
+        final int z2 = 456;
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, z1);
+
+        _tileWallSegments.setZIndex(TILE_WALL_SEGMENT, z2);
+
+        assertEquals(z2, _tileWallSegments.getZIndex(TILE_WALL_SEGMENT));
     }
 
     @Test
@@ -74,9 +94,9 @@ class TileWallSegmentsImplTests {
         TileWallSegment westTileWallSegment = new TileWallSegmentStub();
 
 
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, northTileWallSegment);
-        _tileWallSegments.add(TileWallSegmentDirection.NORTHWEST, northwestTileWallSegment);
-        _tileWallSegments.add(TileWallSegmentDirection.WEST, westTileWallSegment);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, northTileWallSegment, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTHWEST, northwestTileWallSegment, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, westTileWallSegment, 0);
 
         assertEquals(TileWallSegmentDirection.NORTH,
                 _tileWallSegments.getDirection(northTileWallSegment));
@@ -89,18 +109,18 @@ class TileWallSegmentsImplTests {
     @Test
     void testAddTileWallSegmentInAnotherTileWallSegments() {
         TileWallSegments previousTileWallSegments = new TileWallSegmentsImpl(new TileStub(),
-                PAIR_FACTORY, COLLECTION_FACTORY, MAP_FACTORY);
+                PAIR_FACTORY, MAP_FACTORY);
         TileWallSegment tileWallSegment = new TileWallSegmentStub();
-        previousTileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment);
+        previousTileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment, 0);
 
         assertThrows(IllegalArgumentException.class,
-                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment));
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment, 0));
     }
 
     @Test
     void testRemove() {
         assertFalse(_tileWallSegments.remove(TILE_WALL_SEGMENT));
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0);
 
         assertTrue(_tileWallSegments.remove(TILE_WALL_SEGMENT));
         assertFalse(_tileWallSegments.remove(TILE_WALL_SEGMENT));
@@ -109,34 +129,51 @@ class TileWallSegmentsImplTests {
     @Test
     void testAddContainsAndRemoveWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _tileWallSegments.add(null, TILE_WALL_SEGMENT));
+                () -> _tileWallSegments.add(null, TILE_WALL_SEGMENT, 0));
         assertThrows(IllegalArgumentException.class,
-                () -> _tileWallSegments.add(TileWallSegmentDirection.UNKNOWN, TILE_WALL_SEGMENT));
+                () -> _tileWallSegments.add(TileWallSegmentDirection.UNKNOWN, TILE_WALL_SEGMENT,
+                        0));
         assertThrows(IllegalArgumentException.class,
                 () -> _tileWallSegments.add(TileWallSegmentDirection.NOT_FOUND,
-                        TILE_WALL_SEGMENT));
+                        TILE_WALL_SEGMENT, 0));
         assertThrows(IllegalArgumentException.class,
-                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, null));
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, null, 0));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.add(null, TILE_WALL_SEGMENT, 0));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.add(TileWallSegmentDirection.UNKNOWN, TILE_WALL_SEGMENT,
+                        0));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NOT_FOUND,
+                        TILE_WALL_SEGMENT, 0));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, null, 0));
         assertThrows(IllegalArgumentException.class,
                 () -> _tileWallSegments.contains(null));
         assertThrows(IllegalArgumentException.class,
                 () -> _tileWallSegments.remove(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.getZIndex(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.setZIndex(null, 0));
+        assertThrows(IllegalArgumentException.class,
+                () -> _tileWallSegments.setZIndex(TILE_WALL_SEGMENT, 0));
     }
 
     @Test
     void testSize() {
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2);
-        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 0);
 
         assertEquals(3, _tileWallSegments.size());
     }
 
     @Test
     void testSizeWithinDirection() {
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2);
-        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 0);
 
         assertEquals(2, _tileWallSegments.size(TileWallSegmentDirection.NORTH));
         assertEquals(0, _tileWallSegments.size(TileWallSegmentDirection.NORTHWEST));
@@ -154,30 +191,37 @@ class TileWallSegmentsImplTests {
 
     @Test
     void testIterator() {
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2);
-        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 12, 34);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2, 56, 78);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 90, 123456);
 
-        ArrayList<ReadablePair<TileWallSegment, TileWallSegmentDirection>> fromIterator =
-                new ArrayList<>();
+        ArrayList<ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
+                TileWallSegmentDimensions>>> fromIterator = new ArrayList<>();
 
         _tileWallSegments.forEach(fromIterator::add);
 
         boolean[] segmentFound = new boolean[3];
         fromIterator.forEach(pair -> {
-            if (pair.getItem1() == TILE_WALL_SEGMENT) {
+            TileWallSegmentDirection direction = pair.getItem1();
+            if (pair.getItem2().getItem1() == TILE_WALL_SEGMENT) {
                 assertFalse(segmentFound[0]);
-                assertEquals(TileWallSegmentDirection.NORTH, pair.getItem2());
+                assertEquals(TileWallSegmentDirection.NORTH, direction);
+                assertEquals(12, pair.getItem2().getItem2().getHeight());
+                assertEquals(34, pair.getItem2().getItem2().getZIndex());
                 segmentFound[0] = true;
             }
-            if (pair.getItem1() == TILE_WALL_SEGMENT_2) {
+            if (pair.getItem2().getItem1() == TILE_WALL_SEGMENT_2) {
                 assertFalse(segmentFound[1]);
-                assertEquals(TileWallSegmentDirection.NORTH, pair.getItem2());
+                assertEquals(TileWallSegmentDirection.NORTH, direction);
+                assertEquals(56, pair.getItem2().getItem2().getHeight());
+                assertEquals(78, pair.getItem2().getItem2().getZIndex());
                 segmentFound[1] = true;
             }
-            if (pair.getItem1() == TILE_WALL_SEGMENT_3) {
+            if (pair.getItem2().getItem1() == TILE_WALL_SEGMENT_3) {
                 assertFalse(segmentFound[2]);
-                assertEquals(TileWallSegmentDirection.WEST, pair.getItem2());
+                assertEquals(TileWallSegmentDirection.WEST, direction);
+                assertEquals(90, pair.getItem2().getItem2().getHeight());
+                assertEquals(123456, pair.getItem2().getItem2().getZIndex());
                 segmentFound[2] = true;
             }
         });
@@ -185,33 +229,49 @@ class TileWallSegmentsImplTests {
 
     @Test
     void testGetRepresentation() {
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
-        _tileWallSegments.add(TileWallSegmentDirection.NORTHWEST, TILE_WALL_SEGMENT_2);
-        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 12, 34);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2, 56, 78);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 90, 123456);
 
-        ReadableMap<TileWallSegmentDirection,ReadableCollection<TileWallSegment>> representation =
-                _tileWallSegments.representation();
+        ReadableMap<TileWallSegmentDirection,ReadableMap<TileWallSegment,
+                TileWallSegmentDimensions>> representation = _tileWallSegments.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());
-        assertEquals(TileWallSegment.class.getCanonicalName(),
-                representation.getSecondArchetype().getArchetype().getInterfaceName());
         assertEquals(3, representation.size());
         assertTrue(representation.get(TileWallSegmentDirection.NORTH)
-                .contains(TILE_WALL_SEGMENT));
-        assertTrue(representation.get(TileWallSegmentDirection.NORTHWEST)
-                .contains(TILE_WALL_SEGMENT_2));
+                .containsKey(TILE_WALL_SEGMENT));
+        assertTrue(representation.get(TileWallSegmentDirection.NORTH)
+                .containsKey(TILE_WALL_SEGMENT_2));
         assertTrue(representation.get(TileWallSegmentDirection.WEST)
-                .contains(TILE_WALL_SEGMENT_3));
+                .containsKey(TILE_WALL_SEGMENT_3));
+        assertEquals(12,
+                representation.get(TileWallSegmentDirection.NORTH).get(TILE_WALL_SEGMENT)
+                        .getHeight());
+        assertEquals(34,
+                representation.get(TileWallSegmentDirection.NORTH).get(TILE_WALL_SEGMENT)
+                        .getZIndex());
+        assertEquals(56,
+                representation.get(TileWallSegmentDirection.NORTH).get(TILE_WALL_SEGMENT_2)
+                        .getHeight());
+        assertEquals(78,
+                representation.get(TileWallSegmentDirection.NORTH).get(TILE_WALL_SEGMENT_2)
+                        .getZIndex());
+        assertEquals(90,
+                representation.get(TileWallSegmentDirection.WEST).get(TILE_WALL_SEGMENT_3)
+                        .getHeight());
+        assertEquals(123456,
+                representation.get(TileWallSegmentDirection.WEST).get(TILE_WALL_SEGMENT_3)
+                        .getZIndex());
     }
 
     @Test
     void testDelete() {
         assertFalse(_tileWallSegments.isDeleted());
 
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT);
-        _tileWallSegments.add(TileWallSegmentDirection.NORTHWEST, TILE_WALL_SEGMENT_2);
-        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTHWEST, TILE_WALL_SEGMENT_2, 0);
+        _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 0);
 
         _tileWallSegments.delete();
 
@@ -229,7 +289,14 @@ class TileWallSegmentsImplTests {
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.representation());
         assertThrows(IllegalStateException.class,
-                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT));
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0));
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0,
+                        0));
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.getZIndex(TILE_WALL_SEGMENT));
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.setZIndex(TILE_WALL_SEGMENT, 0));
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegments.contains(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class,
@@ -247,7 +314,14 @@ class TileWallSegmentsImplTests {
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.representation());
         assertThrows(IllegalStateException.class,
-                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT));
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0));
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0,
+                        0));
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.getZIndex(TILE_WALL_SEGMENT));
+        assertThrows(IllegalStateException.class,
+                () -> _tileWallSegments.setZIndex(TILE_WALL_SEGMENT, 0));
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegments.contains(TILE_WALL_SEGMENT));
         assertThrows(IllegalStateException.class,
@@ -260,7 +334,7 @@ class TileWallSegmentsImplTests {
     @Test
     void testTileWallSegmentInCorrectTileWallSegmentsInvariant() {
         TileWallSegmentStub tileWallSegment = new TileWallSegmentStub();
-        _tileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment);
+        _tileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment, 0);
 
         tileWallSegment._tile = null;
 

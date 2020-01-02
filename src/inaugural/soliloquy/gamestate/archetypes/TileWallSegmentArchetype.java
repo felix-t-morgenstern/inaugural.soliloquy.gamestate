@@ -7,32 +7,12 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class TileWallSegmentArchetype implements TileWallSegment {
     @Override
-    public WallSegmentType getWallSegmentType() throws IllegalStateException {
+    public WallSegmentType getType() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void setWallSegmentType(WallSegmentType iWallSegmentType) throws IllegalStateException {
-
-    }
-
-    @Override
-    public int getHeight() throws IllegalStateException {
-        return 0;
-    }
-
-    @Override
-    public void setHeight(int i) throws IllegalArgumentException, IllegalStateException {
-
-    }
-
-    @Override
-    public int getZIndex() throws IllegalStateException {
-        return 0;
-    }
-
-    @Override
-    public void setZIndex(int i) throws IllegalStateException {
+    public void setType(WallSegmentType iWallSegmentType) throws IllegalStateException {
 
     }
 

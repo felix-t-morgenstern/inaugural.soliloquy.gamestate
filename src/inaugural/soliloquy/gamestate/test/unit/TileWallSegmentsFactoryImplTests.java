@@ -1,13 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentsFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.PairFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.TileStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -18,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class TileWallSegmentsFactoryImplTests {
     private final Tile TILE = new TileStub();
     private final PairFactory PAIR_FACTORY = new PairFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
 
     private TileWallSegmentsFactory _tileWallSegmentsFactory;
@@ -26,18 +23,16 @@ class TileWallSegmentsFactoryImplTests {
     @BeforeEach
     void setUp() {
         _tileWallSegmentsFactory = new TileWallSegmentsFactoryImpl(PAIR_FACTORY,
-                COLLECTION_FACTORY, MAP_FACTORY);
+                MAP_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithNullInput() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsFactoryImpl(null, COLLECTION_FACTORY, MAP_FACTORY));
+                () -> new TileWallSegmentsFactoryImpl(null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsFactoryImpl(PAIR_FACTORY, null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsFactoryImpl(PAIR_FACTORY, COLLECTION_FACTORY, null));
+                () -> new TileWallSegmentsFactoryImpl(PAIR_FACTORY, null));
     }
 
     @Test

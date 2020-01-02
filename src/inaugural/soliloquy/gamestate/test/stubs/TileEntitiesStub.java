@@ -50,7 +50,7 @@ public class TileEntitiesStub<TEntity extends TileEntity> implements TileEntitie
 
     @Override
     public Integer getZIndex(TEntity entity) throws IllegalArgumentException {
-        return null;
+        return ENTITIES.get(entity);
     }
 
     @Override
@@ -80,7 +80,19 @@ public class TileEntitiesStub<TEntity extends TileEntity> implements TileEntitie
 
     @Override
     public Iterator<ReadablePair<TEntity, Integer>> iterator() {
-        return null;
+        Iterator<TEntity> entities = ENTITIES.keySet().iterator();
+        return new Iterator<>() {
+            @Override
+            public boolean hasNext() {
+                return entities.hasNext();
+            }
+
+            @Override
+            public ReadablePair<TEntity, Integer> next() {
+                TEntity entity = entities.next();
+                return new PairStub<>(entity, ENTITIES.get(entity));
+            }
+        };
     }
 
     @Override

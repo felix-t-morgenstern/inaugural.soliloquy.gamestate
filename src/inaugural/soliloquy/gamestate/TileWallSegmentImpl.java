@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -11,61 +10,31 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWallSegment {
     private final GenericParamsSet DATA;
 
-    private WallSegmentType _wallSegmentType;
-    private int _height;
-    private int _zIndex;
+    private WallSegmentType _type;
     private String _name;
     private Tile _tile;
 
     @SuppressWarnings("ConstantConditions")
-    public TileWallSegmentImpl(GenericParamsSetFactory genericParamsSetFactory) {
-        if (genericParamsSetFactory == null) {
+    public TileWallSegmentImpl(GenericParamsSet data) {
+        if (data == null) {
             throw new IllegalArgumentException(
-                    "TileWallSegment: genericParamsSetFactory must be non-null");
+                    "TileWallSegment: data must be non-null");
         }
-        DATA = genericParamsSetFactory.make();
+        DATA = data;
     }
 
     @Override
-    public WallSegmentType getWallSegmentType() throws IllegalStateException {
-        enforceDeletionInvariants("getWallSegmentType");
-        enforceAggregateAssignmentInvariant("getWallSegmentType");
-        return _wallSegmentType;
+    public WallSegmentType getType() throws IllegalStateException {
+        enforceDeletionInvariants("getType");
+        enforceAggregateAssignmentInvariant("getType");
+        return _type;
     }
 
     @Override
-    public void setWallSegmentType(WallSegmentType wallSegmentType) throws IllegalStateException {
-        enforceDeletionInvariants("setWallSegmentType");
-        enforceAggregateAssignmentInvariant("setWallSegmentType");
-        _wallSegmentType = wallSegmentType;
-    }
-
-    @Override
-    public int getHeight() throws IllegalStateException {
-        enforceDeletionInvariants("getHeight");
-        enforceAggregateAssignmentInvariant("getHeight");
-        return _height;
-    }
-
-    @Override
-    public void setHeight(int height) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("setHeight");
-        enforceAggregateAssignmentInvariant("setHeight");
-        _height = height;
-    }
-
-    @Override
-    public int getZIndex() throws IllegalStateException {
-        enforceDeletionInvariants("getZIndex");
-        enforceAggregateAssignmentInvariant("getZIndex");
-        return _zIndex;
-    }
-
-    @Override
-    public void setZIndex(int zIndex) throws IllegalStateException {
-        enforceDeletionInvariants("setZIndex");
-        enforceAggregateAssignmentInvariant("setZIndex");
-        _zIndex = zIndex;
+    public void setType(WallSegmentType wallSegmentType) throws IllegalStateException {
+        enforceDeletionInvariants("setType");
+        enforceAggregateAssignmentInvariant("setType");
+        _type = wallSegmentType;
     }
 
     @Override

@@ -13,7 +13,7 @@ public class GameZoneStub implements GameZone {
     public static int _maxY = 999;
 
     public static String ID = "GameZoneStubId";
-    public Tile[][] TILES = new Tile[200][200];
+    public Tile[][] TILES = new Tile[_maxX][_maxY];
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 
     private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
@@ -52,7 +52,7 @@ public class GameZoneStub implements GameZone {
         if (RETURN_ACTUAL_TILE_AT_LOCATION) {
             return TILES[tileLocation.getX()][tileLocation.getY()];
         } else {
-            return new TileStub(this, tileLocation, null);
+            return new TileStub(this, tileLocation.getX(), tileLocation.getY(), null);
         }
     }
 

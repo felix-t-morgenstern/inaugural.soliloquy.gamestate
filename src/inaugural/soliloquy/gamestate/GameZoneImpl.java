@@ -63,7 +63,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         for (int x = 0; x <= maxCoordinates.getX(); x++) {
             for (int y = 0; y <= maxCoordinates.getY(); y++) {
                 // TODO: Have this use the PersistentTileHandler!
-                TILES[x][y] = tileFactory.make(this, coordinateFactory.make(x,y), null);
+                TILES[x][y] = tileFactory.make(this, x, y, null);
             }
         }
         ENTRY_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
