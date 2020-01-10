@@ -314,7 +314,6 @@ public class CharacterImpl implements Character {
 
     @Override
     public EntityUuid id() {
-        enforceInvariant("id", true);
         return ID;
     }
 

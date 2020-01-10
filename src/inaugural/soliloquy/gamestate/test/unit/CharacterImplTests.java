@@ -417,7 +417,6 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
-        assertThrows(IllegalStateException.class, () -> _character.id());
         assertThrows(IllegalStateException.class, () -> _character.getInterfaceName());
     }
 
@@ -455,7 +454,6 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
-        assertThrows(IllegalStateException.class, () -> _character.id());
         assertThrows(IllegalStateException.class, () -> _character.getInterfaceName());
     }
 }

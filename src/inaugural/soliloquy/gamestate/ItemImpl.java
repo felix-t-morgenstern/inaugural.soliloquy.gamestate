@@ -224,7 +224,6 @@ public class ItemImpl implements Item {
 
     @Override
     public EntityUuid id() {
-        enforceDeletionInvariant("id");
         return ID;
     }
 
