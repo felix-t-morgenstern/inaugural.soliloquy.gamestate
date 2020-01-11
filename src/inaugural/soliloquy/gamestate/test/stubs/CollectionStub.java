@@ -18,7 +18,7 @@ public class CollectionStub<V> extends ReadableCollectionStub<V> implements Coll
     }
 
     @Override
-    public void addAll(Collection<? extends V> items) throws UnsupportedOperationException {
+    public void addAll(ReadableCollection<? extends V> items) throws UnsupportedOperationException {
         // Stub method; unimplemented
         throw new UnsupportedOperationException();
     }
