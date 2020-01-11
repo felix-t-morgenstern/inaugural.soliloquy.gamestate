@@ -40,7 +40,7 @@ public class TileFixtureItemsStub implements TileFixtureItems {
             throws UnsupportedOperationException, IllegalStateException {
         Collection<Item> items = new CollectionStub<>();
         _items.forEach(items::add);
-        return items.readOnlyRepresentation();
+        return items.representation();
     }
 
     @Override

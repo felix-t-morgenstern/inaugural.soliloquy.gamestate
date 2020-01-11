@@ -80,7 +80,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
                 triggersForEvent.add(trigger);
             }
         });
-        return triggersForEvent.readOnlyRepresentation();
+        return triggersForEvent.representation();
     }
 
     @Override
@@ -123,7 +123,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
         EVENTS.forEach((t,e) -> {
             Collection<GameCharacterEvent> events = COLLECTION_FACTORY.make(EVENT_ARCHETYPE);
             e.forEach(events::add);
-            representation.put(t, events.readOnlyRepresentation());
+            representation.put(t, events.representation());
         });
         return representation;
     }

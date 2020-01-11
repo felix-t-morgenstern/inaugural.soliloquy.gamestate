@@ -30,10 +30,10 @@ public class CharacterStub implements Character {
     private final Map<String,String> PRONOUNS = new MapStub<>();
     private final CharacterEvents EVENTS = new CharacterEventsStub(this);
     private final CharacterDepletableStatistics DEPLETABLE_STATS =
-            new CharacterDepletableStatisticsStub(this);
+            new CharacterDepletableStatisticsStub();
     private final CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
             STATS = new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
-                new CharacterStaticStatisticStub(c, t)));
+                new CharacterStaticStatisticStub(t)));
     private final CharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
     @SuppressWarnings("unchecked")
     private final CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>

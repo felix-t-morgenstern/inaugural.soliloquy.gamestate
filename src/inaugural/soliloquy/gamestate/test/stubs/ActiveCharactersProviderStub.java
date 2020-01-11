@@ -9,12 +9,12 @@ import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
 public class ActiveCharactersProviderStub implements ActiveCharactersProvider {
     public static ReadableCollection<Pair<Character,VariableCache>> ACTIVE_CHARACTERS;
-    public static final Character CHARACTER_1 = new CharacterStub();
-    public static final VariableCache DATA_1 = new VariableCacheStub();
-    public static final Character CHARACTER_2 = new CharacterStub();
-    public static final VariableCache DATA_2 = new VariableCacheStub();
-    public static final Character CHARACTER_3 = new CharacterStub();
-    public static final VariableCache DATA_3 = new VariableCacheStub();
+    private static final Character CHARACTER_1 = new CharacterStub();
+    private static final VariableCache DATA_1 = new VariableCacheStub();
+    private static final Character CHARACTER_2 = new CharacterStub();
+    private static final VariableCache DATA_2 = new VariableCacheStub();
+    private static final Character CHARACTER_3 = new CharacterStub();
+    private static final VariableCache DATA_3 = new VariableCacheStub();
 
     public int _numberOfTimesToProvideEmptyCollection;
 
@@ -25,7 +25,7 @@ public class ActiveCharactersProviderStub implements ActiveCharactersProvider {
         activeCharacters.add(new PairStub<>(CHARACTER_2, DATA_2));
         activeCharacters.add(new PairStub<>(CHARACTER_3, DATA_3));
 
-        ACTIVE_CHARACTERS = activeCharacters.readOnlyRepresentation();
+        ACTIVE_CHARACTERS = activeCharacters.representation();
     }
 
     @Override

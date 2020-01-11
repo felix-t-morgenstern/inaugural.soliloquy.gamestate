@@ -64,7 +64,7 @@ public class CharacterEntitiesOfTypeStub<TEntityType extends HasId,
     public ReadableCollection<TCharacterEntity> representation() {
         Collection<TCharacterEntity> representation = new CollectionStub<>();
         ENTITIES.values().forEach(representation::add);
-        return representation.readOnlyRepresentation();
+        return representation.representation();
     }
 
     @Override

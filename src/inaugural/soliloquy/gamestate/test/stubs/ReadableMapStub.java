@@ -40,13 +40,7 @@ public class ReadableMapStub<K,V> implements ReadableMap<K,V> {
     }
 
     @Override
-    public boolean contains(Pair<K, V> item) throws IllegalArgumentException {
-        // Stub method; unimplemented
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean equals(ReadableCollection<V> items) throws IllegalArgumentException {
+    public boolean contains(Pair<K, V> pair) throws IllegalArgumentException {
         // Stub method; unimplemented
         throw new UnsupportedOperationException();
     }

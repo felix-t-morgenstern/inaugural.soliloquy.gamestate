@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.Function;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 
@@ -16,7 +15,7 @@ public class CollectionStub<V> extends ReadableCollectionStub<V> implements Coll
     @Override
     public void add(V item) throws UnsupportedOperationException {
         _collection.add(item);
-}
+    }
 
     @Override
     public void addAll(Collection<? extends V> items) throws UnsupportedOperationException {
@@ -36,17 +35,12 @@ public class CollectionStub<V> extends ReadableCollectionStub<V> implements Coll
     }
 
     @Override
-    public boolean removeItem(V item) throws UnsupportedOperationException {
+    public boolean remove(V item) throws UnsupportedOperationException {
         return _collection.remove(item);
     }
 
     @Override
-    public Collection<Function<V, String>> validators() {
-        return null;
-    }
-
-    @Override
-    public ReadableCollection<V> readOnlyRepresentation() {
+    public ReadableCollection<V> representation() {
         return new ReadableCollectionStub<>(_archetype, _collection);
     }
 }

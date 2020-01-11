@@ -22,7 +22,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     private final TEntity ARCHETYPE;
     private final CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
 
-    protected final HashMap<TType, TEntity> ENTITIES = new HashMap<>();
+    final HashMap<TType, TEntity> ENTITIES = new HashMap<>();
 
     @SuppressWarnings("ConstantConditions")
     public CharacterEntitiesOfTypeImpl(Character character,
@@ -110,7 +110,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
         enforceDeletionInvariants("representation");
         Collection<TEntity> entities = COLLECTION_FACTORY.make(ARCHETYPE);
         ENTITIES.values().forEach(entities::add);
-        return entities.readOnlyRepresentation();
+        return entities.representation();
     }
 
     @Override

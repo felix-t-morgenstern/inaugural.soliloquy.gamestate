@@ -40,7 +40,7 @@ public class CharacterInventoryStub implements CharacterInventory {
     public ReadableCollection<Item> representation() throws IllegalStateException {
         Collection<Item> items = new CollectionStub<>();
         ITEMS.forEach(items::add);
-        return items.readOnlyRepresentation();
+        return items.representation();
     }
 
     @Override

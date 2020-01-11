@@ -52,10 +52,12 @@ public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public ReadableCollection<Item> representation() throws IllegalStateException {
+        // TODO: Consider using a Collection under the hood, to avoid duplicate Collection creation
+        //       (and refactor similar implementations)
         enforceDeletionInvariants("_representation");
         Collection<Item> representation = COLLECTION_FACTORY.make(ITEM_ARCHETYPE);
         INVENTORY.forEach(representation::add);
-        return representation.readOnlyRepresentation();
+        return representation.representation();
     }
 
     @Override

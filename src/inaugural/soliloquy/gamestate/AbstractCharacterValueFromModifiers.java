@@ -43,15 +43,15 @@ abstract class AbstractCharacterValueFromModifiers<TEntityType extends Character
     }
 
     @Override
-    public ReadableMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
-        enforceDeletionInvariants("modifiersRepresentation");
+    public ReadableMap<String, Integer> representation() throws IllegalStateException {
+        enforceDeletionInvariants("representation");
         // TODO: Test and implement whether truly read-only
         return _modifiers.readOnlyRepresentation();
     }
 
     @Override
-    public void calculateValue() throws IllegalStateException {
-        enforceDeletionInvariants("calculateValue");
+    public void calculate() throws IllegalStateException {
+        enforceDeletionInvariants("calculate");
         Pair<Integer,Map<String,Integer>> calculatedValueAndModifiers =
                 CHARACTER_STATISTIC_CALCULATION
                         .calculate(CHARACTER, ENTITY_TYPE);

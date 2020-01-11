@@ -4,7 +4,9 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-public class CharacterStatisticImpl extends AbstractCharacterValueFromModifiers<CharacterStatisticType> implements soliloquy.specs.gamestate.entities.CharacterStatistic {
+public class CharacterStatisticImpl
+        extends AbstractCharacterValueFromModifiers<CharacterStatisticType>
+        implements soliloquy.specs.gamestate.entities.CharacterStatistic {
     @SuppressWarnings("ConstantConditions")
     public CharacterStatisticImpl(Character character, CharacterStatisticType attributeType,
                                   CharacterStatisticCalculation characterStatisticCalculation) {

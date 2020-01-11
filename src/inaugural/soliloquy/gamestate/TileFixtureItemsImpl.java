@@ -55,7 +55,7 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
         for(Item item : CONTAINED_ITEMS) {
             items.add(item);
         }
-        return items.readOnlyRepresentation();
+        return items.representation();
     }
 
     @Override

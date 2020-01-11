@@ -40,7 +40,7 @@ class PersistentItemHandlerTests {
     void setUp() {
         ItemTypeStub._hasCharges = false;
         ItemTypeStub._isStackable = false;
-        ITEM_TYPES_REGISTRY.register(ITEM_TYPE);
+        ITEM_TYPES_REGISTRY.add(ITEM_TYPE);
         _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY,
                 ENTITY_UUID_HANDLER, GENERIC_PARAMS_SET_HANDLER, ITEM_FACTORY);
     }

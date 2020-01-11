@@ -6,6 +6,7 @@ import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.VitalAttributeTypeStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
 import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
@@ -50,19 +51,20 @@ class CharacterDepletableStatisticImplTests {
 
     @Test
     void testCalculateValue() {
-        _characterDepletableStatistic.calculateValue();
+        _characterDepletableStatistic.calculate();
 
         assertSame(CHARACTER, CharacterStatisticCalculationStub._character);
         assertSame(CHARACTER_DEPLETABLE_STATISTIC_TYPE,
                 CharacterStatisticCalculationStub._statisticType);
         assertEquals(CharacterStatisticCalculationStub.VALUE,
                 _characterDepletableStatistic.totalValue());
-        assertEquals(CharacterStatisticCalculationStub.MODIFIERS,
-                _characterDepletableStatistic.modifiersRepresentation());
-        assertEquals(CharacterStatisticCalculationStub.MODIFIERS.size(),
-                _characterDepletableStatistic.modifiersRepresentation().size());
-        CharacterStatisticCalculationStub.MODIFIERS.forEach(
-                _characterDepletableStatistic.modifiersRepresentation()::contains);
+        ReadableMap<String,Integer> representation =
+                _characterDepletableStatistic.representation();
+        assertEquals(CharacterStatisticCalculationStub.MODIFIERS.size(), representation.size());
+        CharacterStatisticCalculationStub.MODIFIERS.forEach(p -> {
+            assertTrue(representation.containsKey(p.getItem1()));
+            assertTrue(representation.containsValue(p.getItem2()));
+        });
     }
 
     @Test
@@ -74,8 +76,8 @@ class CharacterDepletableStatisticImplTests {
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.type());
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.calculateValue());
-        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.modifiersRepresentation());
+        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.calculate());
+        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.representation());
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.totalValue());
     }
 
@@ -88,8 +90,8 @@ class CharacterDepletableStatisticImplTests {
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.type());
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.calculateValue());
-        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.modifiersRepresentation());
+        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.calculate());
+        assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.representation());
         assertThrows(IllegalStateException.class, () -> _characterDepletableStatistic.totalValue());
     }
 }

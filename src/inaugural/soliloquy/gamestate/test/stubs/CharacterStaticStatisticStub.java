@@ -1,21 +1,14 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStaticStatistic;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
 public class CharacterStaticStatisticStub implements CharacterStaticStatistic {
     public boolean _isDeleted;
-    public Character _character;
-    public CharacterStaticStatisticType _type;
+    private CharacterStaticStatisticType _type;
 
-    public CharacterStaticStatisticStub() {
-
-    }
-
-    public CharacterStaticStatisticStub(Character character, CharacterStaticStatisticType type) {
-        _character = character;
+    CharacterStaticStatisticStub(CharacterStaticStatisticType type) {
         _type = type;
     }
 
@@ -40,12 +33,12 @@ public class CharacterStaticStatisticStub implements CharacterStaticStatistic {
     }
 
     @Override
-    public ReadableMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadableMap<String, Integer> representation() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void calculateValue() throws IllegalStateException {
+    public void calculate() throws IllegalStateException {
 
     }
 

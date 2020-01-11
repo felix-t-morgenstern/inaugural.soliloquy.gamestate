@@ -55,7 +55,7 @@ public class CharacterDepletableStatisticsImpl
         Map<CharacterDepletableStatisticType, Integer> maxValues =
                 MAP_FACTORY.make(TYPE_ARCHETYPE, 0);
         ENTITIES.forEach((t,s) -> {
-            s.calculateValue();
+            s.calculate();
             maxValues.put(t, s.totalValue());
         });
         return maxValues.readOnlyRepresentation();

@@ -20,7 +20,7 @@ class RecurringTimerImplTests {
     @BeforeEach
     void setUp() {
         _recurringTimer = new RecurringTimerImpl(TIMER_ID, TIMER_ACTION, 0, 0,
-                ROUND_MANAGER.RECURRING_TIMERS::add, ROUND_MANAGER.RECURRING_TIMERS::removeItem);
+                ROUND_MANAGER.RECURRING_TIMERS::add, ROUND_MANAGER.RECURRING_TIMERS::remove);
     }
 
     @Test
@@ -33,7 +33,7 @@ class RecurringTimerImplTests {
         RecurringTimer recurringTimer =
                 new RecurringTimerImpl(TIMER_ID, TIMER_ACTION, 0, 0,
                         ROUND_MANAGER.RECURRING_TIMERS::add,
-                        ROUND_MANAGER.RECURRING_TIMERS::removeItem);
+                        ROUND_MANAGER.RECURRING_TIMERS::remove);
         assertEquals(_recurringTimer, recurringTimer);
     }
 

@@ -1,5 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.shared.HasId;
 
@@ -20,13 +22,63 @@ public class RegistryStub<T extends HasId> implements Registry<T> {
     }
 
     @Override
-    public void register(T t) throws IllegalArgumentException {
+    public void add(T t) throws IllegalArgumentException {
         REGISTRY.put(t.id(), t);
+    }
+
+    @Override
+    public void addAll(Collection<? extends T> collection) throws UnsupportedOperationException {
+
+    }
+
+    @Override
+    public void addAll(T[] ts) throws UnsupportedOperationException {
+
+    }
+
+    @Override
+    public void clear() throws UnsupportedOperationException {
+
+    }
+
+    @Override
+    public boolean remove(T t) throws UnsupportedOperationException {
+        return false;
+    }
+
+    @Override
+    public ReadableCollection<T> representation() {
+        return null;
     }
 
     @Override
     public boolean remove(String s) {
         return REGISTRY.remove(s) != null;
+    }
+
+    @Override
+    public boolean contains(T t) {
+        return false;
+    }
+
+    @Override
+    public boolean equals(ReadableCollection<T> readableCollection) {
+        return false;
+    }
+
+    @Override
+    public T get(int i) {
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public Object[] toArray() {
+        return new Object[0];
     }
 
     @Override
@@ -46,6 +98,11 @@ public class RegistryStub<T extends HasId> implements Registry<T> {
 
     @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public Collection<T> makeClone() {
         return null;
     }
 }

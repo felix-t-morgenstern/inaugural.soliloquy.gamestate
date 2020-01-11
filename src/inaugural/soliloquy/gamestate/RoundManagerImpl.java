@@ -163,7 +163,7 @@ public class RoundManagerImpl implements RoundManager {
         for (Character character : QUEUE) {
             data.add(PAIR_FACTORY.make(character, CHARACTERS_DATA.get(character)));
         }
-        return data.readOnlyRepresentation();
+        return data.representation();
     }
 
     @Override
@@ -239,12 +239,12 @@ public class RoundManagerImpl implements RoundManager {
 
     @Override
     public ReadableCollection<OneTimeTimer> oneTimeTimersRepresentation() {
-        return ONE_TIME_TIMERS.readOnlyRepresentation();
+        return ONE_TIME_TIMERS.representation();
     }
 
     @Override
     public ReadableCollection<RecurringTimer> recurringTimersRepresentation() {
-        return RECURRING_TIMERS.readOnlyRepresentation();
+        return RECURRING_TIMERS.representation();
     }
 
     @Override
@@ -259,7 +259,7 @@ public class RoundManagerImpl implements RoundManager {
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
     public void removeOneTimeTimer(OneTimeTimer oneTimeTimer) {
-        ONE_TIME_TIMERS.removeItem(oneTimeTimer);
+        ONE_TIME_TIMERS.remove(oneTimeTimer);
     }
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
@@ -269,6 +269,6 @@ public class RoundManagerImpl implements RoundManager {
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
     public void removeRecurringTimer(RecurringTimer recurringTimer) {
-        RECURRING_TIMERS.removeItem(recurringTimer);
+        RECURRING_TIMERS.remove(recurringTimer);
     }
 }

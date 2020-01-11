@@ -8,7 +8,7 @@ public class CharacterDepletableStatisticsFactoryStub
         implements CharacterDepletableStatisticsFactory {
     @Override
     public CharacterDepletableStatistics make(Character character) {
-        return new CharacterDepletableStatisticsStub(character);
+        return new CharacterDepletableStatisticsStub();
     }
 
     @Override

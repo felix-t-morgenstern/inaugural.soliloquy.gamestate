@@ -26,12 +26,12 @@ public class CharacterDepletableStatisticArchetype implements CharacterDepletabl
     }
 
     @Override
-    public ReadableMap<String, Integer> modifiersRepresentation() throws IllegalStateException {
+    public ReadableMap<String, Integer> representation() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public void calculateValue() throws IllegalStateException {
+    public void calculate() throws IllegalStateException {
 
     }
 
