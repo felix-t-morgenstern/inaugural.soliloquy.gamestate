@@ -23,6 +23,7 @@ public class GameStateImpl implements GameState {
     private final GameZonesRepo GAME_ZONES_REPO;
     private final Registry<GameMovementEvent> MOVEMENT_EVENTS;
     private final Registry<GameAbilityEvent> ABILITY_EVENTS;
+    private final Camera CAMERA;
     private final RoundManager ROUND_MANAGER;
     private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final Ruleset RULESET;
@@ -44,6 +45,7 @@ public class GameStateImpl implements GameState {
                          MapFactory mapFactory,
                          RegistryFactory registryFactory,
                          GameZonesRepo gameZonesRepo,
+                         Camera camera,
                          RoundManager roundManager,
                          Ruleset ruleset) {
         if (party == null) {
@@ -63,6 +65,10 @@ public class GameStateImpl implements GameState {
             throw new IllegalArgumentException("GameState: gameZonesRepo must be non-null");
         }
         GAME_ZONES_REPO = gameZonesRepo;
+        if (camera == null) {
+            throw new IllegalArgumentException("GameState: camera must be non-null");
+        }
+        CAMERA = camera;
         if (registryFactory == null) {
             throw new IllegalArgumentException("GameState: registryFactory must be non-null");
         }
@@ -111,7 +117,7 @@ public class GameStateImpl implements GameState {
 
     @Override
     public Camera camera() {
-        return null;
+        return CAMERA;
     }
 
     @Override

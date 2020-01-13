@@ -19,6 +19,7 @@ class GameStateImplTests {
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final RegistryFactory REGISTRY_FACTORY = new RegistryFactoryStub();
     private final GameZonesRepo GAME_ZONES_REPO = new GameZonesRepoStub();
+    private final Camera CAMERA = new CameraStub();
     private final RoundManager ROUND_MANAGER = new RoundManagerStub();
     private final Ruleset RULESET = new RulesetStub();
 
@@ -31,6 +32,7 @@ class GameStateImplTests {
                 MAP_FACTORY,
                 REGISTRY_FACTORY,
                 GAME_ZONES_REPO,
+                CAMERA,
                 ROUND_MANAGER,
                 RULESET);
     }
@@ -44,6 +46,7 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
+                        CAMERA,
                         ROUND_MANAGER,
                         RULESET));
         assertThrows(IllegalArgumentException.class,
@@ -52,6 +55,7 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
+                        CAMERA,
                         ROUND_MANAGER,
                         RULESET));
         assertThrows(IllegalArgumentException.class,
@@ -60,6 +64,7 @@ class GameStateImplTests {
                         null,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
+                        CAMERA,
                         ROUND_MANAGER,
                         RULESET));
         assertThrows(IllegalArgumentException.class,
@@ -68,6 +73,7 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         null,
                         GAME_ZONES_REPO,
+                        CAMERA,
                         ROUND_MANAGER,
                         RULESET));
         assertThrows(IllegalArgumentException.class,
@@ -75,6 +81,25 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
+                        null,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        null,
+                        RULESET));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
                         null,
                         ROUND_MANAGER,
                         RULESET));
@@ -84,14 +109,7 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        null,
-                        RULESET));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
-                        PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
-                        REGISTRY_FACTORY,
-                        GAME_ZONES_REPO,
+                        CAMERA,
                         ROUND_MANAGER,
                         null));
     }
@@ -140,6 +158,11 @@ class GameStateImplTests {
         _gameState.setCurrentGameZone(gameZone);
 
         assertSame(gameZone, _gameState.getCurrentGameZone());
+    }
+
+    @Test
+    void testCamera() {
+        assertSame(CAMERA, _gameState.camera());
     }
 
     @Test
