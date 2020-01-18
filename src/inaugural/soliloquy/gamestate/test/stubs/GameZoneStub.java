@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -104,7 +104,7 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return null;
     }
 

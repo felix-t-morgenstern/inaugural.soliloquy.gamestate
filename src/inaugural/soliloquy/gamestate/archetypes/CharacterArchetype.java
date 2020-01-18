@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -37,7 +37,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

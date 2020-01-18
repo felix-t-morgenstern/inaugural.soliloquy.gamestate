@@ -4,7 +4,7 @@ import inaugural.soliloquy.gamestate.CharacterImpl;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -30,7 +30,7 @@ class CharacterImplTests {
     private final CharacterEntitiesOfTypeFactory ENTITIES_OF_TYPE_FACTORY = new CharacterEntitiesOfTypeFactoryStub();
     private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY = new CharacterDepletableStatisticsFactoryStub();
     private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new CharacterStatusEffectsFactoryStub();
-    private final GenericParamsSet GENERIC_PARAMS_SET = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
 
     @BeforeEach
     void setUp() {
@@ -46,7 +46,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET);
+                DATA);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -63,7 +63,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 null,
@@ -75,7 +75,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -87,7 +87,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -99,7 +99,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -111,7 +111,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -123,7 +123,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -135,7 +135,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -147,7 +147,7 @@ class CharacterImplTests {
                 null,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -159,7 +159,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 null,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -171,7 +171,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 null,
-                GENERIC_PARAMS_SET));
+                DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
@@ -205,7 +205,7 @@ class CharacterImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET);
+                DATA);
         assertEquals(_character, character2);
     }
 
@@ -314,7 +314,7 @@ class CharacterImplTests {
 
     @Test
     void testData() {
-        assertSame(GENERIC_PARAMS_SET, _character.data());
+        assertSame(DATA, _character.data());
     }
 
     @Test

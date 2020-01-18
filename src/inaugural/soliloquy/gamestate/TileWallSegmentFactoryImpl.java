@@ -1,15 +1,15 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.factories.TileWallSegmentFactory;
 
 public class TileWallSegmentFactoryImpl implements TileWallSegmentFactory {
-    private final GenericParamsSetFactory DATA_FACTORY;
+    private final VariableCacheFactory DATA_FACTORY;
 
     @SuppressWarnings("ConstantConditions")
-    public TileWallSegmentFactoryImpl(GenericParamsSetFactory dataFactory) {
+    public TileWallSegmentFactoryImpl(VariableCacheFactory dataFactory) {
         if (dataFactory == null) {
             throw new IllegalArgumentException(
                     "TileWallSegmentFactoryImpl: dataFactory cannot be null");
@@ -23,7 +23,7 @@ public class TileWallSegmentFactoryImpl implements TileWallSegmentFactory {
     }
 
     @Override
-    public TileWallSegment make(GenericParamsSet data) {
+    public TileWallSegment make(VariableCache data) {
         if (data == null) {
             throw new IllegalArgumentException(
                     "TileWallSegmentFactoryImpl.make: data cannot be null");

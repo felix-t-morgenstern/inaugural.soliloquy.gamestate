@@ -7,8 +7,8 @@ import inaugural.soliloquy.gamestate.archetypes.CharacterStaticStatisticArchetyp
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -37,7 +37,7 @@ public class CharacterImpl implements Character {
             ACTIVE_ABILITIES;
     private final CharacterEntitiesOfType<ReactiveAbilityType,
             CharacterAbility<ReactiveAbilityType>> REACTIVE_ABILITIES;
-    private final GenericParamsSet DATA;
+    private final VariableCache DATA;
 
     private final static CharacterStaticStatistic STATIC_STAT_ARCHETYPE =
             new CharacterStaticStatisticArchetype();
@@ -66,7 +66,7 @@ public class CharacterImpl implements Character {
                          CharacterDepletableStatisticsFactory depletableStatsFactory,
                          CharacterEntitiesOfTypeFactory entitiesOfTypeFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
-                         GenericParamsSet data) {
+                         VariableCache data) {
         if (id == null) {
             throw new IllegalArgumentException("Character: id must be non-null");
         }
@@ -262,7 +262,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         enforceInvariant("data", true);
         return DATA;
     }

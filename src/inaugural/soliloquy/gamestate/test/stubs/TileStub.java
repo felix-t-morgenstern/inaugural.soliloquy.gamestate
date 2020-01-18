@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -29,7 +29,7 @@ public class TileStub implements Tile {
     private boolean _isDeleted;
 
     private ReadableCoordinate _tileLocation;
-    private GenericParamsSet _data;
+    private VariableCache _data;
 
     public TileStub() {
         GAME_ZONE = new GameZoneStub();
@@ -40,14 +40,14 @@ public class TileStub implements Tile {
         GAME_ZONE = new GameZoneStub();
     }
 
-    public TileStub(GameZone gameZone, int x, int y, GenericParamsSet data) {
+    public TileStub(GameZone gameZone, int x, int y, VariableCache data) {
         GAME_ZONE = gameZone;
         _tileLocation = new CoordinateStub(x, y);
         _data = data;
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return _data;
     }
 

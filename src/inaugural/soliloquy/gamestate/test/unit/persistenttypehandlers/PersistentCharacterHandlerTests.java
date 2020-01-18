@@ -3,12 +3,12 @@ package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentCharacterHandler;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentEntityUuidHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentGenericParamsSetHandlerStub;
 import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentItemHandlerStub;
+import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentVariableCacheHandlerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
@@ -35,13 +35,15 @@ class PersistentCharacterHandlerTests {
     private final String CHARACTER_TYPE_ID = "characterTypeId";
     private final CharacterType CHARACTER_TYPE = new CharacterTypeStub(CHARACTER_TYPE_ID);
 
-    private final String CASE1 = "nominative";
-    private final String CASE2 = "oblique";
-    private final String CASE3 = "genitive";
+    private final String CASE_1 = "nominative";
+    private final String CASE_2 = "oblique";
+    private final String CASE_3 = "genitive";
+    private final String CASE_4 = "reflexive";
 
-    private final String ARTICLE1 = "they";
-    private final String ARTICLE2 = "them";
-    private final String ARTICLE3 = "theirs";
+    private final String ARTICLE_1 = "they";
+    private final String ARTICLE_2 = "them";
+    private final String ARTICLE_3 = "theirs";
+    private final String ARTICLE_4 = "themselves";
 
     private final String STANCE = "stance";
 
@@ -87,14 +89,15 @@ class PersistentCharacterHandlerTests {
     private final String REACTIVE_ABILITY_TYPE_ID = "reactiveAbilityTypeId";
     private final ReactiveAbilityType REACTIVE_ABILITY_TYPE = new ReactiveAbilityTypeStub(REACTIVE_ABILITY_TYPE_ID);
 
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
 
     private final String NAME = "charName";
 
-    private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER = new PersistentGenericParamsSetHandlerStub();
+    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
+            new PersistentVariableCacheHandlerStub();
     private final PersistentValueTypeHandler<Item> ITEM_HANDLER = new PersistentItemHandlerStub();
 
-    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"characterTypeId\":\"characterTypeId\",\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"spriteSetId\":\"spriteSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"depletableStats\":[{\"typeId\":\"depletableStatTypeId\",\"value\":135}],\"staticStats\":[\"staticStatTypeId\"],\"statusEffects\":[{\"typeId\":\"statEffectTypeId\",\"value\":246}],\"activeAbilities\":[{\"typeId\":\"activeAbilityTypeId\",\"isHidden\":true}],\"reactiveAbilities\":[{\"typeId\":\"reactiveAbilityTypeId\",\"isHidden\":false}],\"isPlayerControlled\":true,\"data\":\"GenericParamsSet0\",\"name\":\"charName\"}";
+    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"characterTypeId\":\"characterTypeId\",\"classifications\":[\"classificationId\"],\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"reflexive\",\"val\":\"themselves\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"spriteSetId\":\"spriteSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"depletableStats\":[{\"typeId\":\"depletableStatTypeId\",\"value\":135}],\"staticStats\":[\"staticStatTypeId\"],\"statusEffects\":[{\"typeId\":\"statEffectTypeId\",\"value\":246}],\"activeAbilities\":[{\"typeId\":\"activeAbilityTypeId\",\"isHidden\":true}],\"reactiveAbilities\":[{\"typeId\":\"reactiveAbilityTypeId\",\"isHidden\":false}],\"isPlayerControlled\":true,\"data\":\"VariableCache0\",\"name\":\"charName\"}";
 
     private PersistentValueTypeHandler<Character> _characterHandler;
 
@@ -212,9 +215,10 @@ class PersistentCharacterHandlerTests {
         EntityUuid id = new EntityUuidStub();
         Character character = new CharacterStub(id, CHARACTER_TYPE, DATA);
         character.classifications().add(CLASSIFICATION);
-        character.pronouns().put(CASE1, ARTICLE1);
-        character.pronouns().put(CASE2, ARTICLE2);
-        character.pronouns().put(CASE3, ARTICLE3);
+        character.pronouns().put(CASE_1, ARTICLE_1);
+        character.pronouns().put(CASE_2, ARTICLE_2);
+        character.pronouns().put(CASE_3, ARTICLE_3);
+        character.pronouns().put(CASE_4, ARTICLE_4);
         character.setStance(STANCE);
         character.setDirection(DIRECTION);
         character.setSpriteSet(SPRITE_SET);
@@ -246,7 +250,7 @@ class PersistentCharacterHandlerTests {
         assertEquals(WRITTEN_VALUE, writtenValue);
         assertSame(id, ((PersistentEntityUuidHandlerStub)ID_HANDLER).WRITE_INPUTS.get(0));
         assertSame(character.data(),
-                ((PersistentGenericParamsSetHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(0));
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(0));
     }
 
     @Test
@@ -265,10 +269,13 @@ class PersistentCharacterHandlerTests {
         assertSame(((PersistentEntityUuidHandlerStub)ID_HANDLER).READ_OUTPUTS.get(0),
                 readCharacter.id());
         assertSame(CHARACTER_TYPE, readCharacter.type());
-        assertEquals(3, readCharacter.pronouns().size());
-        assertEquals(ARTICLE1, readCharacter.pronouns().get(CASE1));
-        assertEquals(ARTICLE2, readCharacter.pronouns().get(CASE2));
-        assertEquals(ARTICLE3, readCharacter.pronouns().get(CASE3));
+        assertEquals(1, readCharacter.classifications().size());
+        assertTrue(readCharacter.classifications().contains(CLASSIFICATION));
+        assertEquals(4, readCharacter.pronouns().size());
+        assertEquals(ARTICLE_1, readCharacter.pronouns().get(CASE_1));
+        assertEquals(ARTICLE_2, readCharacter.pronouns().get(CASE_2));
+        assertEquals(ARTICLE_3, readCharacter.pronouns().get(CASE_3));
+        assertEquals(ARTICLE_4, readCharacter.pronouns().get(CASE_4));
         assertEquals(STANCE, readCharacter.getStance());
         assertEquals(DIRECTION, readCharacter.getDirection());
         assertSame(SPRITE_SET, readCharacter.getSpriteSet());
@@ -297,9 +304,9 @@ class PersistentCharacterHandlerTests {
         assertEquals(1, readCharacter.reactiveAbilities().size());
         assertFalse(readCharacter.reactiveAbilities().get(REACTIVE_ABILITY_TYPE).getIsHidden());
         assertTrue(readCharacter.getPlayerControlled());
-        assertEquals("GenericParamsSet0",
-                ((PersistentGenericParamsSetHandlerStub)DATA_HANDLER).READ_INPUTS.get(0));
-        assertSame(((PersistentGenericParamsSetHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
+        assertEquals("VariableCache0",
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(0));
+        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
                 readCharacter.data());
         assertEquals(NAME, readCharacter.getName());
     }

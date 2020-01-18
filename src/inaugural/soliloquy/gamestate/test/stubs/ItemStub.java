@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -22,13 +22,13 @@ public class ItemStub implements Item {
     private Integer _numberInStack;
     private EntityUuid _id;
     private ItemType _itemType;
-    private GenericParamsSet _data;
+    private VariableCache _data;
 
     public ItemStub() {
 
     }
 
-    public ItemStub(ItemType itemType, GenericParamsSet data, EntityUuid id) {
+    public ItemStub(ItemType itemType, VariableCache data, EntityUuid id) {
         _id = id;
         _itemType = itemType;
         _data = data;
@@ -125,7 +125,7 @@ public class ItemStub implements Item {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return _data;
     }
 

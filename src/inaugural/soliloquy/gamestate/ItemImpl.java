@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.PairFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -12,7 +12,7 @@ import soliloquy.specs.ruleset.entities.ItemType;
 public class ItemImpl implements Item {
     private final EntityUuid ID;
     private final ItemType ITEM_TYPE;
-    private final GenericParamsSet DATA;
+    private final VariableCache DATA;
     private final PairFactory PAIR_FACTORY;
     private final EntityUuidFactory ENTITY_UUID_FACTORY;
 
@@ -28,8 +28,8 @@ public class ItemImpl implements Item {
     private String _pluralName;
 
     @SuppressWarnings("ConstantConditions")
-    public ItemImpl(EntityUuid id, ItemType itemType, GenericParamsSet data,
-                    PairFactory pairFactory, EntityUuidFactory entityUuidFactory) {
+    public ItemImpl(EntityUuid id, ItemType itemType, VariableCache data, PairFactory pairFactory,
+                    EntityUuidFactory entityUuidFactory) {
         if (id == null) {
             throw new IllegalArgumentException("ItemImpl: id cannot be null");
         }
@@ -228,7 +228,7 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         enforceDeletionInvariant("data");
         enforceAssignmentInvariant("data");
         return DATA;

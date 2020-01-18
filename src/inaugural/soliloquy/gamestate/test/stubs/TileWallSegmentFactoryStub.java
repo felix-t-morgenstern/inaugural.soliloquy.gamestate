@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.factories.TileWallSegmentFactory;
 
@@ -18,7 +18,7 @@ public class TileWallSegmentFactoryStub implements TileWallSegmentFactory {
     }
 
     @Override
-    public TileWallSegment make(GenericParamsSet data) {
+    public TileWallSegment make(VariableCache data) {
         TileWallSegment result = new TileWallSegmentStub(data);
         FROM_FACTORY.add(result);
         return result;

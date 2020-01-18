@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
@@ -8,7 +8,7 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 public class TileWallSegmentStub implements TileWallSegment {
     private WallSegmentType _type;
     private boolean _isDeleted;
-    private GenericParamsSet _data;
+    private VariableCache _data;
 
     public Tile _tile;
 
@@ -16,7 +16,7 @@ public class TileWallSegmentStub implements TileWallSegment {
 
     }
 
-    TileWallSegmentStub(GenericParamsSet data) {
+    TileWallSegmentStub(VariableCache data) {
         _data = data;
     }
 
@@ -44,7 +44,7 @@ public class TileWallSegmentStub implements TileWallSegment {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return _data;
     }
 

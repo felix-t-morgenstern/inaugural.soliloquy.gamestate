@@ -5,7 +5,7 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -26,7 +26,7 @@ class TileFixtureImplTests {
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new TileFixtureItemsFactoryStub();
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
 
     @BeforeEach
     void setUp() {

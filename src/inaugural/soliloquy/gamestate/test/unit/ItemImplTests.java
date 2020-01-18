@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.PairFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -20,7 +20,7 @@ class ItemImplTests {
 
     private final EntityUuid ID = new EntityUuidStub();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
     private final PairFactory PAIR_FACTORY = new PairFactoryStub();
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
 
@@ -142,7 +142,7 @@ class ItemImplTests {
 
         assertNotNull(takenFromStack);
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
-        assertEquals(DATA, takenFromStack.data());
+        assertSame(((VariableCacheStub)DATA)._cloneResult, takenFromStack.data());
         assertEquals((Integer) 7, takenFromStack.getNumberInStack());
         assertEquals((Integer) 3, _item.getNumberInStack());
     }

@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
@@ -15,7 +15,7 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
     private final FixtureType TYPE;
     private final Coordinate PIXEL_OFFSET;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
-    private final GenericParamsSet DATA;
+    private final VariableCache DATA;
 
     private String _name;
 
@@ -24,7 +24,7 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
                            CoordinateFactory coordinateFactory,
                            CollectionFactory collectionFactory,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
-                           GenericParamsSet data) {
+                           VariableCache data) {
         super(collectionFactory);
         ID = id;
         TYPE = fixtureType;
@@ -76,7 +76,7 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         enforceInvariants("data");
         return DATA;
     }

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
@@ -16,12 +16,12 @@ public class ActiveAbilityTypeStub implements ActiveAbilityType {
     }
 
     @Override
-    public void use(AbilitySource abilitySource, Collection<Pair<Character, Tile>> collection, GenericParamsSet genericParamsSet) {
+    public void use(AbilitySource abilitySource, Collection<Pair<Character, Tile>> collection, VariableCache variableCache) {
 
     }
 
     @Override
-    public String description(GenericParamsSet genericParamsSet) throws IllegalStateException {
+    public String description(VariableCache variableCache) throws IllegalStateException {
         return null;
     }
 
@@ -46,7 +46,7 @@ public class ActiveAbilityTypeStub implements ActiveAbilityType {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return null;
     }
 

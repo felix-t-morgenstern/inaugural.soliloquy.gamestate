@@ -2,9 +2,9 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.EntityUuidFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.*;
@@ -20,7 +20,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
     private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY;
     private final CharacterEntitiesOfTypeFactory ENTITIES_FACTORY;
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY;
-    private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY;
+    private final VariableCacheFactory DATA_FACTORY;
 
     @SuppressWarnings("ConstantConditions")
     public CharacterFactoryImpl(EntityUuidFactory entityUuidFactory,
@@ -32,7 +32,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
                                 CharacterDepletableStatisticsFactory depletableStatsFactory,
                                 CharacterEntitiesOfTypeFactory entitiesFactory,
                                 CharacterStatusEffectsFactory characterStatusEffectsFactory,
-                                GenericParamsSetFactory genericParamsSetFactory) {
+                                VariableCacheFactory dataFactory) {
         if (entityUuidFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterFactory: entityUuidFactory must be non-null");
@@ -78,22 +78,21 @@ public class CharacterFactoryImpl implements CharacterFactory {
                     "CharacterFactory: characterStatusEffectsFactory must be non-null");
         }
         CHARACTER_STATUS_EFFECTS_FACTORY = characterStatusEffectsFactory;
-        if (genericParamsSetFactory == null) {
+        if (dataFactory == null) {
             throw new IllegalArgumentException(
-                    "CharacterFactory: genericParamsSetFactory must be non-null");
+                    "CharacterFactory: dataFactory must be non-null");
         }
-        GENERIC_PARAMS_SET_FACTORY = genericParamsSetFactory;
+        DATA_FACTORY = dataFactory;
     }
 
     @Override
     public Character make(CharacterType characterType) throws IllegalArgumentException {
         return make(characterType, ENTITY_UUID_FACTORY.createRandomEntityUuid(),
-                GENERIC_PARAMS_SET_FACTORY.make());
+                DATA_FACTORY.make());
     }
 
     @Override
-    public Character make(CharacterType characterType, EntityUuid entityUuid,
-                          GenericParamsSet data)
+    public Character make(CharacterType characterType, EntityUuid entityUuid, VariableCache data)
             throws IllegalArgumentException {
         if (characterType == null) {
             throw new IllegalArgumentException(

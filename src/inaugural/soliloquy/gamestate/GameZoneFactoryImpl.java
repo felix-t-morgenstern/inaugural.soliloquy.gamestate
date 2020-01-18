@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
@@ -13,13 +13,13 @@ public class GameZoneFactoryImpl implements GameZoneFactory {
     private final TileFactory TILE_FACTORY;
     private final CoordinateFactory COORDINATE_FACTORY;
     private final CollectionFactory COLLECTION_FACTORY;
-    private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY;
+    private final VariableCacheFactory DATA_FACTORY;
 
     @SuppressWarnings("ConstantConditions")
     public GameZoneFactoryImpl(TileFactory tileFactory,
                                CoordinateFactory coordinateFactory,
                                CollectionFactory collectionFactory,
-                               GenericParamsSetFactory genericParamsSetFactory) {
+                               VariableCacheFactory dataFactory) {
         if (tileFactory == null) {
             throw new IllegalArgumentException("GameZoneFactoryImpl: tileFactory cannot be null");
         }
@@ -34,16 +34,15 @@ public class GameZoneFactoryImpl implements GameZoneFactory {
                     "GameZoneFactoryImpl: collectionFactory cannot be null");
         }
         COLLECTION_FACTORY = collectionFactory;
-        if (genericParamsSetFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameZoneFactoryImpl: genericParamsSetFactory cannot be null");
+        if (dataFactory == null) {
+            throw new IllegalArgumentException("GameZoneFactoryImpl: dataFactory cannot be null");
         }
-        GENERIC_PARAMS_SET_FACTORY = genericParamsSetFactory;
+        DATA_FACTORY = dataFactory;
     }
 
     @Override
     public GameZone make(String id, String name, String zoneType,
-                         ReadableCoordinate maxCoordinates, GenericParamsSet data)
+                         ReadableCoordinate maxCoordinates, VariableCache data)
             throws IllegalArgumentException {
         if (id == null) {
             throw new IllegalArgumentException("GameZoneFactoryImpl.make: id cannot be null");
@@ -73,7 +72,7 @@ public class GameZoneFactoryImpl implements GameZoneFactory {
         }
         return new GameZoneImpl(id, name, zoneType, maxCoordinates, TILE_FACTORY,
                 COORDINATE_FACTORY, COLLECTION_FACTORY,
-                data == null ? GENERIC_PARAMS_SET_FACTORY.make() : data);
+                data == null ? DATA_FACTORY.make() : data);
     }
 
     @Override

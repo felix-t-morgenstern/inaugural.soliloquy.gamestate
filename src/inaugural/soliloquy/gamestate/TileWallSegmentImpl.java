@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
@@ -8,14 +8,14 @@ import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWallSegment {
-    private final GenericParamsSet DATA;
+    private final VariableCache DATA;
 
     private WallSegmentType _type;
     private String _name;
     private Tile _tile;
 
     @SuppressWarnings("ConstantConditions")
-    public TileWallSegmentImpl(GenericParamsSet data) {
+    public TileWallSegmentImpl(VariableCache data) {
         if (data == null) {
             throw new IllegalArgumentException(
                     "TileWallSegment: data must be non-null");
@@ -55,7 +55,7 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         enforceDeletionInvariants("data");
         enforceAggregateAssignmentInvariant("data");
         return DATA;

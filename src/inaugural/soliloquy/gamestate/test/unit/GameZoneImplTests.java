@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -28,7 +27,7 @@ class GameZoneImplTests {
     private final TileFactory TILE_FACTORY = new TileFactoryStub();
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
 
     private GameZone _gameZone;
 

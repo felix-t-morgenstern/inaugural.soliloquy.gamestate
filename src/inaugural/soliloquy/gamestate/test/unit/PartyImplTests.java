@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.PartyImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.GenericParamsSetFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.Party;
@@ -10,11 +10,13 @@ import soliloquy.specs.gamestate.entities.Party;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyImplTests {
+    private final static VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
+
     private Party _party;
 
     @BeforeEach
     void setUp() {
-        _party = new PartyImpl(new CollectionFactoryStub(), new GenericParamsSetFactoryStub());
+        _party = new PartyImpl(new CollectionFactoryStub(), DATA_FACTORY);
     }
 
     @Test
@@ -29,6 +31,6 @@ class PartyImplTests {
 
     @Test
     void testPartyAttributes() {
-        assertNotNull(_party.partyAttributes());
+        assertSame(DATA_FACTORY._mostRecentlyCreated, _party.partyAttributes());
     }
 }

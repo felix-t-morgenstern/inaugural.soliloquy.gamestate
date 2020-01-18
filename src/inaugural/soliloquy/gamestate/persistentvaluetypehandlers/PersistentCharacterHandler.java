@@ -28,7 +28,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
     private final Function<String, ActiveAbilityType> GET_ACTIVE_ABILITY_TYPE;
     private final Function<String, ReactiveAbilityType> GET_REACTIVE_ABILITY_TYPE;
-    private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER;
+    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
     private final PersistentValueTypeHandler<Item> ITEM_HANDLER;
 
     @SuppressWarnings("ConstantConditions")
@@ -46,7 +46,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
                                       Function<String, StatusEffectType> getStatusType,
                                       Function<String, ActiveAbilityType> getActiveAbilityType,
                                       Function<String, ReactiveAbilityType> getReactiveAbilityType,
-                                      PersistentValueTypeHandler<GenericParamsSet> dataHandler,
+                                      PersistentValueTypeHandler<VariableCache> dataHandler,
                                       PersistentValueTypeHandler<Item> itemHandler) {
         if (characterFactory == null) {
             throw new IllegalArgumentException(
@@ -126,6 +126,12 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
         Character readCharacter =
                 CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
                         ID_HANDLER.read(dto.id), DATA_HANDLER.read(dto.data));
+
+        for(String classificationId : dto.classifications) {
+            readCharacter.classifications().add(
+                    GET_CHARACTER_CLASSIFICATION.apply(classificationId));
+        }
+
         for(CharacterPairedDataDTO pronounDTO : dto.pronouns) {
             readCharacter.pronouns().put(pronounDTO.key, pronounDTO.val);
         }
@@ -201,9 +207,17 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
         CharacterDTO dto = new CharacterDTO();
         dto.id = ID_HANDLER.write(character.id());
         dto.characterTypeId = character.type().id();
-        dto.pronouns = new CharacterPairedDataDTO[character.pronouns().size()];
+
+        dto.classifications = new String[character.classifications().size()];
 
         int index = 0;
+        for(CharacterClassification classification : character.classifications()) {
+            dto.classifications[index++] = classification.id();
+        }
+
+        dto.pronouns = new CharacterPairedDataDTO[character.pronouns().size()];
+
+        index = 0;
         for(Pair<String,String> pronoun : character.pronouns()) {
             CharacterPairedDataDTO pronounDTO = new CharacterPairedDataDTO();
             pronounDTO.key = pronoun.getItem1();
@@ -318,6 +332,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
     private class CharacterDTO {
         String id;
         String characterTypeId;
+        String[] classifications;
         CharacterPairedDataDTO[] pronouns;
         String stance;
         String direction;

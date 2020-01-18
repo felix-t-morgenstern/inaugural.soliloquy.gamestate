@@ -3,9 +3,9 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
 import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -19,7 +19,7 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
     private final Function<String, FixtureType> GET_FIXTURE_TYPE;
     private final TileFixtureFactory TILE_FIXTURE_FACTORY;
     private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER;
-    private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER;
+    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
     private final PersistentValueTypeHandler<Item> ITEMS_HANDLER;
 
     private final TileFixture ARCHETYPE = new TileFixtureArchetype();
@@ -28,7 +28,7 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
     public PersistentTileFixtureHandler(Function<String, FixtureType> getFixtureType,
                                         TileFixtureFactory tileFixtureFactory,
                                         PersistentValueTypeHandler<EntityUuid> idHandler,
-                                        PersistentValueTypeHandler<GenericParamsSet> dataHandler,
+                                        PersistentValueTypeHandler<VariableCache> dataHandler,
                                         PersistentValueTypeHandler<Item> itemsHandler) {
         if (getFixtureType == null) {
             throw new IllegalArgumentException(

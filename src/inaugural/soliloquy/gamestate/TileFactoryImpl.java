@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
@@ -50,7 +50,7 @@ public class TileFactoryImpl implements TileFactory {
     }
 
     @Override
-    public Tile make(GameZone gameZone, int x, int y, GenericParamsSet data)
+    public Tile make(GameZone gameZone, int x, int y, VariableCache data)
             throws IllegalArgumentException {
         if (gameZone == null) {
             throw new IllegalArgumentException("TileFactoryImpl.make: gameZone cannot be null");

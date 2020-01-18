@@ -1,20 +1,20 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.GenericParamsSetFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.GenericParamsSetStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.factories.TileWallSegmentFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentFactoryImplTests {
-    private GenericParamsSetFactory DATA_FACTORY = new GenericParamsSetFactoryStub();
-    private GenericParamsSet DATA = new GenericParamsSetStub();
+    private VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+    private VariableCache DATA = new VariableCacheStub();
 
     private TileWallSegmentFactory _tileWallSegmentFactory;
 
@@ -34,7 +34,7 @@ class TileWallSegmentFactoryImplTests {
         TileWallSegment segment = _tileWallSegmentFactory.make();
 
         assertNotNull(segment);
-        assertSame(GenericParamsSetFactoryStub.GENERIC_PARAMS_SET, segment.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated, segment.data());
     }
 
     @Test

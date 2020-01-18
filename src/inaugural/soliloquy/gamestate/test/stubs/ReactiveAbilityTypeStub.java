@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 import soliloquy.specs.ruleset.entities.abilities.IncomingAbilityDescription;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
@@ -33,7 +33,7 @@ public class ReactiveAbilityTypeStub implements ReactiveAbilityType {
     }
 
     @Override
-    public String description(GenericParamsSet genericParamsSet) throws IllegalStateException {
+    public String description(VariableCache variableCache) throws IllegalStateException {
         return null;
     }
 
@@ -63,7 +63,7 @@ public class ReactiveAbilityTypeStub implements ReactiveAbilityType {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return null;
     }
 

@@ -6,9 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.EntityUuidFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.*;
@@ -32,9 +32,8 @@ class CharacterFactoryImplTests {
             new CharacterEntitiesOfTypeFactoryStub();
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY =
             new CharacterStatusEffectsFactoryStub();
-    private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
-            new GenericParamsSetFactoryStub();
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+    private final VariableCache DATA = new VariableCacheStub();
     private final CharacterType CHARACTER_TYPE = new CharacterTypeStub();
     private final EntityUuid ENTITY_UUID = new EntityUuidStub();
 
@@ -51,7 +50,7 @@ class CharacterFactoryImplTests {
                 DEPLETABLE_STATS_FACTORY,
                 ENTITIES_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
-                GENERIC_PARAMS_SET_FACTORY);
+                DATA_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -67,7 +66,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         null,
@@ -78,7 +77,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
@@ -89,7 +88,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
@@ -100,7 +99,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
@@ -111,7 +110,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
@@ -122,7 +121,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
@@ -133,7 +132,7 @@ class CharacterFactoryImplTests {
                         null,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
@@ -144,7 +143,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         null,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,
@@ -155,7 +154,7 @@ class CharacterFactoryImplTests {
                         DEPLETABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         null,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         COLLECTION_FACTORY,

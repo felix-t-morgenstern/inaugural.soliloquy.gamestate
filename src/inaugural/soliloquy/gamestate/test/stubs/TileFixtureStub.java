@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -17,7 +17,7 @@ public class TileFixtureStub implements TileFixture {
     private Coordinate _pixelOffset;
     private EntityUuid _id;
     private FixtureType _fixtureType;
-    private GenericParamsSet _data;
+    private VariableCache _data;
     private String _name;
 
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
@@ -28,7 +28,7 @@ public class TileFixtureStub implements TileFixture {
         TILE_FIXTURE_ITEMS = new TileFixtureItemsStub(this);
     }
 
-    public TileFixtureStub(EntityUuid id, FixtureType fixtureType, GenericParamsSet data) {
+    public TileFixtureStub(EntityUuid id, FixtureType fixtureType, VariableCache data) {
         TILE_FIXTURE_ITEMS = new TileFixtureItemsStub(this);
         _id = id;
         _fixtureType = fixtureType;
@@ -63,7 +63,7 @@ public class TileFixtureStub implements TileFixture {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return _data;
     }
 

@@ -3,9 +3,9 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.common.HasOneGenericParam;
 import inaugural.soliloquy.gamestate.archetypes.TileArchetype;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -26,7 +26,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
     private final PersistentValueTypeHandler<Item> ITEMS_HANDLER;
     private final PersistentValueTypeHandler<TileFixture> FIXTURES_HANDLER;
     private final PersistentValueTypeHandler<Sprite> SPRITE_HANDLER;
-    private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER;
+    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
 
     private final Function<String, GameZone> GET_GAME_ZONE;
     private final Function<String, WallSegmentType> GET_SEGMENT_TYPE;
@@ -43,7 +43,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
                                  PersistentValueTypeHandler<Item> itemsHandler,
                                  PersistentValueTypeHandler<TileFixture> fixturesHandler,
                                  PersistentValueTypeHandler<Sprite> spriteHandler,
-                                 PersistentValueTypeHandler<GenericParamsSet> dataHandler,
+                                 PersistentValueTypeHandler<VariableCache> dataHandler,
                                  Function<String, GameZone> getGameZone,
                                  Function<String, WallSegmentType> getSegmentType,
                                  Function<String, GameMovementEvent> getMovementEvent,

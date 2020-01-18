@@ -2,10 +2,9 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Function;
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.ruleset.entities.EquipmentType;
 import soliloquy.specs.ruleset.entities.ItemType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -39,7 +38,7 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public GenericParamsSet traits() {
+    public VariableCache traits() {
         return null;
     }
 

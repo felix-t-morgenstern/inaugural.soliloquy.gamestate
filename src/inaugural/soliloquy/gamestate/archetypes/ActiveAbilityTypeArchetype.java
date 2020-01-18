@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
@@ -10,12 +10,12 @@ import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 
 public class ActiveAbilityTypeArchetype implements ActiveAbilityType {
     @Override
-    public void use(AbilitySource abilitySource, Collection<Pair<Character, Tile>> collection, GenericParamsSet genericParamsSet) {
+    public void use(AbilitySource abilitySource, Collection<Pair<Character, Tile>> collection, VariableCache genericParamsSet) {
 
     }
 
     @Override
-    public String description(GenericParamsSet genericParamsSet) throws IllegalStateException {
+    public String description(VariableCache genericParamsSet) throws IllegalStateException {
         return null;
     }
 
@@ -45,7 +45,7 @@ public class ActiveAbilityTypeArchetype implements ActiveAbilityType {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return null;
     }
 

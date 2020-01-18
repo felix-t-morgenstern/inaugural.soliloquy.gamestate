@@ -5,7 +5,7 @@ import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -19,7 +19,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final Tile[][] TILES;
     private final Collection<Action<Void>> ENTRY_ACTIONS;
     private final Collection<Action<Void>> EXIT_ACTIONS;
-    private final GenericParamsSet DATA;
+    private final VariableCache DATA;
 
     private final static Action<Void> ACTION_ARCHETYPE = new VoidActionArchetype();
 
@@ -29,8 +29,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     @SuppressWarnings("ConstantConditions")
     public GameZoneImpl(String id, String name, String type, ReadableCoordinate maxCoordinates,
                         TileFactory tileFactory, CoordinateFactory coordinateFactory,
-                        CollectionFactory collectionFactory,
-                        GenericParamsSet data) {
+                        CollectionFactory collectionFactory, VariableCache data) {
         if (id == null) {
             throw new IllegalArgumentException("GameZoneImpl: id cannot be null");
         }
@@ -122,7 +121,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return DATA;
     }
 

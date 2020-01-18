@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -22,7 +22,7 @@ public class CharacterStub implements Character {
     private CharacterAIType _aiType;
     private boolean _playerControlled;
     private String _name;
-    private GenericParamsSet _data;
+    private VariableCache _data;
 
     private final EntityUuid ID;
     private final CharacterType TYPE;
@@ -55,7 +55,7 @@ public class CharacterStub implements Character {
         TYPE = null;
     }
 
-    public CharacterStub(EntityUuid id, CharacterType type, GenericParamsSet data) {
+    public CharacterStub(EntityUuid id, CharacterType type, VariableCache data) {
         ID = id;
         TYPE = type;
         _data = data;
@@ -175,7 +175,7 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public GenericParamsSet data() throws IllegalStateException {
+    public VariableCache data() throws IllegalStateException {
         return _data;
     }
 

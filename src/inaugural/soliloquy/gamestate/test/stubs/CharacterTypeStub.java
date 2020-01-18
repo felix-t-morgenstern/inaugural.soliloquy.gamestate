@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
@@ -20,7 +20,7 @@ public class CharacterTypeStub implements CharacterType {
     }
 
     @Override
-    public Character generate(Tile tile, GenericParamsSet genericParamsSet) throws IllegalArgumentException {
+    public Character generate(Tile tile, VariableCache variableCache) throws IllegalArgumentException {
         return null;
     }
 

@@ -3,13 +3,13 @@ package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentTileFixtureHandler;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentEntityUuidHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentGenericParamsSetHandlerStub;
 import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentItemHandlerStub;
 import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentValueTypeHandlerStub;
+import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentVariableCacheHandlerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -28,15 +28,15 @@ class PersistentTileFixtureHandlerTests {
     private final TileFixtureFactory TILE_FIXTURE_FACTORY = new TileFixtureFactoryStub();
     private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER =
             new PersistentEntityUuidHandlerStub();
-    private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER =
-            new PersistentGenericParamsSetHandlerStub();
+    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
+            new PersistentVariableCacheHandlerStub();
     private final PersistentValueTypeHandlerStub<Item> ITEM_HANDLER =
             new PersistentItemHandlerStub();
     private final int PIXEL_OFFSET_X = 123;
     private final int PIXEL_OFFSET_Y = 456;
     private final String NAME = "fixtureName";
 
-    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"fixtureTypeId\":\"fixtureTypeId\",\"pixelOffsetX\":123,\"pixelOffsetY\":456,\"items\":[\"Item0\",\"Item1\",\"Item2\"],\"data\":\"GenericParamsSet0\",\"name\":\"fixtureName\"}";
+    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"fixtureTypeId\":\"fixtureTypeId\",\"pixelOffsetX\":123,\"pixelOffsetY\":456,\"items\":[\"Item0\",\"Item1\",\"Item2\"],\"data\":\"VariableCache0\",\"name\":\"fixtureName\"}";
 
     private PersistentValueTypeHandler<TileFixture> _persistentTileFixtureHandler;
 
@@ -85,7 +85,7 @@ class PersistentTileFixtureHandlerTests {
     @Test
     void testWrite() {
         EntityUuid id = new EntityUuidStub();
-        GenericParamsSet data = new GenericParamsSetStub();
+        VariableCache data = new VariableCacheStub();
         Item item1 = new ItemStub();
         Item item2 = new ItemStub();
         Item item3 = new ItemStub();
@@ -116,7 +116,7 @@ class PersistentTileFixtureHandlerTests {
         assertSame(((PersistentEntityUuidHandlerStub)ID_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((PersistentGenericParamsSetHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.data());
         assertEquals(PIXEL_OFFSET_X, tileFixture.pixelOffset().getX());
         assertEquals(PIXEL_OFFSET_Y, tileFixture.pixelOffset().getY());

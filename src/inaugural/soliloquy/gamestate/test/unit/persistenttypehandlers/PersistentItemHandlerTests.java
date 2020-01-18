@@ -6,12 +6,12 @@ import inaugural.soliloquy.gamestate.test.stubs.ItemStub;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.RegistryStub;
 import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentEntityUuidHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentGenericParamsSetHandlerStub;
+import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentVariableCacheHandlerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.Registry;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
@@ -23,16 +23,16 @@ class PersistentItemHandlerTests {
     private final Registry<ItemType> ITEM_TYPES_REGISTRY = new RegistryStub<>();
     private final PersistentValueTypeHandler<EntityUuid> ENTITY_UUID_HANDLER =
             new PersistentEntityUuidHandlerStub();
-    private final PersistentValueTypeHandler<GenericParamsSet> GENERIC_PARAMS_SET_HANDLER =
-            new PersistentGenericParamsSetHandlerStub();
+    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
+            new PersistentVariableCacheHandlerStub();
     private final ItemFactory ITEM_FACTORY = new ItemFactoryStub();
     private final Item ITEM = new ItemStub();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final int NUM_CHARGES = 123;
     private final int NUM_IN_STACK = 456;
 
-    private final String DATA_WITH_CHARGES = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"charges\":123,\"data\":\"GenericParamsSet0\"}";
-    private final String DATA_STACKABLE = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"numberInStack\":456,\"data\":\"GenericParamsSet0\"}";
+    private final String DATA_WITH_CHARGES = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"charges\":123,\"data\":\"VariableCache0\"}";
+    private final String DATA_STACKABLE = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"numberInStack\":456,\"data\":\"VariableCache0\"}";
 
     private PersistentValueTypeHandler<Item> _persistentItemHandler;
 
@@ -42,7 +42,7 @@ class PersistentItemHandlerTests {
         ItemTypeStub._isStackable = false;
         ITEM_TYPES_REGISTRY.add(ITEM_TYPE);
         _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY,
-                ENTITY_UUID_HANDLER, GENERIC_PARAMS_SET_HANDLER, ITEM_FACTORY);
+                ENTITY_UUID_HANDLER, DATA_HANDLER, ITEM_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -50,16 +50,16 @@ class PersistentItemHandlerTests {
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentItemHandler(null, ENTITY_UUID_HANDLER,
-                        GENERIC_PARAMS_SET_HANDLER, ITEM_FACTORY));
+                        DATA_HANDLER, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY, null,
-                        GENERIC_PARAMS_SET_HANDLER, ITEM_FACTORY));
+                        DATA_HANDLER, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY, ENTITY_UUID_HANDLER,
                         null, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY, ENTITY_UUID_HANDLER,
-                        GENERIC_PARAMS_SET_HANDLER, null));
+                        DATA_HANDLER, null));
     }
 
     @Test
@@ -103,7 +103,7 @@ class PersistentItemHandlerTests {
         assertSame(((PersistentEntityUuidHandlerStub)ENTITY_UUID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
-        assertSame(((PersistentGenericParamsSetHandlerStub)GENERIC_PARAMS_SET_HANDLER)
+        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
         assertEquals(NUM_CHARGES, readItem.getCharges());
@@ -118,7 +118,7 @@ class PersistentItemHandlerTests {
         assertSame(((PersistentEntityUuidHandlerStub)ENTITY_UUID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
-        assertSame(((PersistentGenericParamsSetHandlerStub)GENERIC_PARAMS_SET_HANDLER)
+        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
         assertEquals(NUM_IN_STACK, readItem.getNumberInStack());

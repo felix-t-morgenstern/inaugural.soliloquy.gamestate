@@ -5,6 +5,8 @@ import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 
 public class VariableCacheStub implements VariableCache {
+    public VariableCacheStub _cloneResult;
+
     @Override
     public <T> void setVariable(String s, T t) throws IllegalArgumentException {
 
@@ -43,5 +45,10 @@ public class VariableCacheStub implements VariableCache {
     @Override
     public String getInterfaceName() {
         return VariableCache.class.getCanonicalName();
+    }
+
+    @Override
+    public VariableCache makeClone() {
+        return _cloneResult = new VariableCacheStub();
     }
 }

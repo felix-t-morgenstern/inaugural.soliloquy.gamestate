@@ -5,8 +5,8 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -34,8 +34,8 @@ class PersistentTileHandlerTests {
             new PersistentTileFixtureHandlerStub();
     private final PersistentValueTypeHandlerStub<Sprite> SPRITE_HANDLER =
             new PersistentSpriteHandlerStub();
-    private final PersistentValueTypeHandler<GenericParamsSet> DATA_HANDLER =
-            new PersistentGenericParamsSetHandlerStub();
+    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
+            new PersistentVariableCacheHandlerStub();
 
     private final GameZone GAME_ZONE = new GameZoneStub();
     private final HashMap<String, GameZone> GAME_ZONES = new HashMap<>();
@@ -48,7 +48,7 @@ class PersistentTileHandlerTests {
     private final TileFixture TILE_FIXTURE = new TileFixtureStub();
     private final TileWallSegment TILE_WALL_SEGMENT = new TileWallSegmentStub();
     private final Sprite SPRITE = new SpriteStub();
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
 
     private final String SEGMENT_TYPE_ID = "segmentTypeId";
     private final WallSegmentType SEGMENT_TYPE = new WallSegmentTypeStub(SEGMENT_TYPE_ID);
@@ -68,7 +68,7 @@ class PersistentTileHandlerTests {
     private final GroundType GROUND_TYPE = new GroundTypeStub(GROUND_TYPE_ID);
     private final HashMap<String, GroundType> GROUND_TYPES = new HashMap<>();
 
-    private final String WRITTEN_DATA = "{\"gameZoneId\":\"GameZoneStubId\",\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\",\"characters\":[{\"z\":111,\"entity\":\"Character0\"}],\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333,\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\",\"direction\":1,\"height\":444,\"z\":555,\"data\":\"GenericParamsSet0\"}],\"movementEvents\":[\"movementEventId\"],\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666,\"entity\":\"Sprite0\"}],\"data\":\"GenericParamsSet1\"}";
+    private final String WRITTEN_DATA = "{\"gameZoneId\":\"GameZoneStubId\",\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\",\"characters\":[{\"z\":111,\"entity\":\"Character0\"}],\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333,\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\",\"direction\":1,\"height\":444,\"z\":555,\"data\":\"VariableCache0\"}],\"movementEvents\":[\"movementEventId\"],\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666,\"entity\":\"Sprite0\"}],\"data\":\"VariableCache1\"}";
 
     private PersistentValueTypeHandler<Tile> _tileHandler;
 
@@ -182,7 +182,7 @@ class PersistentTileHandlerTests {
         assertSame(GAME_ZONE, readTile.gameZone());
         assertEquals(X, readTile.location().getX());
         assertEquals(Y, readTile.location().getY());
-        assertSame(((PersistentGenericParamsSetHandlerStub) DATA_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER).READ_OUTPUTS.get(0),
                 readTile.data());
         assertEquals(HEIGHT, readTile.getHeight());
         assertSame(GROUND_TYPE, readTile.getGroundType());
@@ -220,7 +220,7 @@ class PersistentTileHandlerTests {
                 readTile.wallSegments().getDirection(segmentFromFactory));
         assertEquals(444, readTile.wallSegments().getHeight(segmentFromFactory));
         assertEquals(555, readTile.wallSegments().getZIndex(segmentFromFactory));
-        assertSame(((PersistentGenericParamsSetHandlerStub) DATA_HANDLER).READ_OUTPUTS.get(1),
+        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER).READ_OUTPUTS.get(1),
                 segmentFromFactory.data());
 
         assertEquals(1, readTile.movementEvents().size());

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -20,22 +20,21 @@ class GameZoneFactoryImplTests {
     private final TileFactory TILE_FACTORY = new TileFactoryStub();
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
-            new GenericParamsSetFactoryStub();
+    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
     private final String ID = "GameZoneId";
     private final String NAME = "GameZoneName";
     private final String TYPE = "GameZoneType";
     private final int MAX_COORDINATE_VALUE = 5;
     private final ReadableCoordinate MAX_COORDINATES =
             new ReadableCoordinateStub(MAX_COORDINATE_VALUE, MAX_COORDINATE_VALUE);
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
 
     private GameZoneFactory _gameZoneFactory;
 
     @BeforeEach
     void setUp() {
         _gameZoneFactory = new GameZoneFactoryImpl(TILE_FACTORY, COORDINATE_FACTORY,
-                COLLECTION_FACTORY, GENERIC_PARAMS_SET_FACTORY);
+                COLLECTION_FACTORY, DATA_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -43,13 +42,13 @@ class GameZoneFactoryImplTests {
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(null, COORDINATE_FACTORY, COLLECTION_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(TILE_FACTORY, null, COLLECTION_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(TILE_FACTORY, COORDINATE_FACTORY, null,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(TILE_FACTORY, COORDINATE_FACTORY, COLLECTION_FACTORY,
                         null));
@@ -81,7 +80,7 @@ class GameZoneFactoryImplTests {
         }
         assertNotNull(gameZone.onEntry());
         assertNotNull(gameZone.onExit());
-        assertSame(GenericParamsSetFactoryStub.GENERIC_PARAMS_SET, gameZone.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated, gameZone.data());
     }
 
     @Test

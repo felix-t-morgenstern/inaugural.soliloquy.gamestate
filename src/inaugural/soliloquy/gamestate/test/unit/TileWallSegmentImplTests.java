@@ -4,7 +4,7 @@ import inaugural.soliloquy.gamestate.TileWallSegmentImpl;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDimensions;
@@ -14,7 +14,7 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentImplTests {
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
     private final WallSegmentType WALL_SEGMENT_TYPE = new WallSegmentTypeStub();
 
     private TileWallSegment _tileWallSegment;

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.factories.EntityUuidFactory;
-import soliloquy.specs.common.factories.GenericParamsSetFactory;
-import soliloquy.specs.common.infrastructure.GenericParamsSet;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.factories.TileFixtureFactory;
@@ -23,10 +23,9 @@ class TileFixtureFactoryImplTests {
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new TileFixtureItemsFactoryStub();
-    private final GenericParamsSetFactory GENERIC_PARAMS_SET_FACTORY =
-            new GenericParamsSetFactoryStub();
+    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
     private final FixtureType FIXTURE_TYPE = new FixtureTypeStub();
-    private final GenericParamsSet DATA = new GenericParamsSetStub();
+    private final VariableCache DATA = new VariableCacheStub();
     private final EntityUuid ID = new EntityUuidStub();
 
     private TileFixtureFactory _tileFixtureFactory;
@@ -34,7 +33,7 @@ class TileFixtureFactoryImplTests {
     @BeforeEach
     void setUp() {
         _tileFixtureFactory = new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, COORDINATE_FACTORY,
-                COLLECTION_FACTORY, TILE_FIXTURE_ITEMS_FACTORY, GENERIC_PARAMS_SET_FACTORY);
+                COLLECTION_FACTORY, TILE_FIXTURE_ITEMS_FACTORY, DATA_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -43,19 +42,19 @@ class TileFixtureFactoryImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureFactoryImpl(null, COORDINATE_FACTORY,
                         COLLECTION_FACTORY, TILE_FIXTURE_ITEMS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, null,
                         COLLECTION_FACTORY, TILE_FIXTURE_ITEMS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, COORDINATE_FACTORY,
                         null, TILE_FIXTURE_ITEMS_FACTORY,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, COORDINATE_FACTORY,
                         COLLECTION_FACTORY, null,
-                        GENERIC_PARAMS_SET_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, COORDINATE_FACTORY,
                         COLLECTION_FACTORY, TILE_FIXTURE_ITEMS_FACTORY,
@@ -75,7 +74,8 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(GenericParamsSetFactoryStub.GENERIC_PARAMS_SET, tileFixture.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated,
+                tileFixture.data());
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
@@ -103,7 +103,8 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(ID, tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(GenericParamsSetFactoryStub.GENERIC_PARAMS_SET, tileFixture.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated,
+                tileFixture.data());
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
