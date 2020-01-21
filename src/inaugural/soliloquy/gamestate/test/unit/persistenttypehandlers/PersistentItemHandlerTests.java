@@ -63,6 +63,13 @@ class PersistentItemHandlerTests {
     }
 
     @Test
+    void testArchetype() {
+        assertNotNull(_persistentItemHandler.getArchetype());
+        assertEquals(Item.class.getCanonicalName(),
+                _persistentItemHandler.getArchetype().getInterfaceName());
+    }
+
+    @Test
     void testGetInterfaceName() {
         assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
                 Item.class.getCanonicalName() + ">",

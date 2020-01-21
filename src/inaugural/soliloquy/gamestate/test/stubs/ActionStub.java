@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActionStub<T> implements Action<T> {
+    private final String _id;
     public boolean _actionRun;
     public T _mostRecentInput;
     public int _roundNumberRan;
@@ -17,6 +18,14 @@ public class ActionStub<T> implements Action<T> {
     public RoundManager _roundManager;
 
     public static final List<ActionStub> ACTIONS_FIRED = new ArrayList<>();
+
+    public ActionStub() {
+        _id = null;
+    }
+
+    public ActionStub(String id) {
+        _id = id;
+    }
 
     @Override
     public void run(T t) throws IllegalArgumentException {
@@ -41,7 +50,7 @@ public class ActionStub<T> implements Action<T> {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return _id;
     }
 
     @Override

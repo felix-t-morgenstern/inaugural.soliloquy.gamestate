@@ -223,7 +223,7 @@ class PersistentCharacterHandlerTests {
         character.setDirection(DIRECTION);
         character.setSpriteSet(SPRITE_SET);
         character.setAIType(AI_TYPE);
-        character.events().addEvent("trigger", EVENT);
+        character.events().addEvent(TRIGGER, EVENT);
         CharacterEquipmentSlotsStub.EQUIPMENT_SLOTS.clear();
         Item equipmentSlotItem = new ItemStub();
         character.equipmentSlots().addCharacterEquipmentSlot(EQUIPMENT_SLOT_1);
@@ -309,5 +309,19 @@ class PersistentCharacterHandlerTests {
         assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
                 readCharacter.data());
         assertEquals(NAME, readCharacter.getName());
+    }
+
+    @Test
+    void testArchetype() {
+        assertNotNull(_characterHandler.getArchetype());
+        assertEquals(Character.class.getCanonicalName(),
+                _characterHandler.getArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testGetInterfaceName() {
+        assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
+                        Character.class.getCanonicalName() + ">",
+                _characterHandler.getInterfaceName());
     }
 }

@@ -1,6 +1,8 @@
 package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
+import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
+import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import soliloquy.specs.common.infrastructure.*;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
@@ -15,7 +17,7 @@ import soliloquy.specs.sprites.entities.SpriteSet;
 
 import java.util.function.Function;
 
-public class PersistentCharacterHandler implements PersistentValueTypeHandler<Character> {
+public class PersistentCharacterHandler extends PersistentTypeHandler<Character> {
     private final CharacterFactory CHARACTER_FACTORY;
     private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER;
     private final Function<String, CharacterType> GET_CHARACTER_TYPE;
@@ -30,6 +32,8 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
     private final Function<String, ReactiveAbilityType> GET_REACTIVE_ABILITY_TYPE;
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
     private final PersistentValueTypeHandler<Item> ITEM_HANDLER;
+
+    private static final Character ARCHETYPE = new CharacterArchetype();
 
     @SuppressWarnings("ConstantConditions")
     public PersistentCharacterHandler(CharacterFactory characterFactory,
@@ -321,12 +325,7 @@ public class PersistentCharacterHandler implements PersistentValueTypeHandler<Ch
 
     @Override
     public Character getArchetype() {
-        return null;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
+        return ARCHETYPE;
     }
 
     private class CharacterDTO {

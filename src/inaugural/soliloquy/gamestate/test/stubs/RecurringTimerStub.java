@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 
 public class RecurringTimerStub extends TimerStub implements RecurringTimer {
@@ -27,7 +28,7 @@ public class RecurringTimerStub extends TimerStub implements RecurringTimer {
     }
 
     @Override
-    public String actionTypeId() {
+    public Action action() {
         return null;
     }
 }

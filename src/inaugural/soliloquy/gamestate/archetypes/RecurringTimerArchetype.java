@@ -25,7 +25,7 @@ public class RecurringTimerArchetype implements RecurringTimer {
     }
 
     @Override
-    public String actionTypeId() {
+    public Action action() {
         return null;
     }
 

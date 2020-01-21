@@ -52,8 +52,8 @@ class RecurringTimerImplTests {
     }
 
     @Test
-    void testActionTypeId() {
-        assertEquals(TIMER_ACTION.id(), _recurringTimer.actionTypeId());
+    void testAction() {
+        assertSame(TIMER_ACTION, _recurringTimer.action());
     }
 
     @Test

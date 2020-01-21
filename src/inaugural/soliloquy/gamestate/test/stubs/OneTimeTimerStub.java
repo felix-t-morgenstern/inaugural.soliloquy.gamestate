@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 
 import java.util.function.Consumer;
@@ -10,7 +11,12 @@ public class OneTimeTimerStub extends TimerStub implements OneTimeTimer {
     private long _roundWhenGoesOff;
 
     public OneTimeTimerStub() {
-        this(null);
+        ON_DELETE = null;
+    }
+
+    public OneTimeTimerStub(String id, Action action) {
+        super(id, action);
+        ON_DELETE = null;
     }
 
     public OneTimeTimerStub(Consumer<OneTimeTimer> onDelete) {
@@ -25,11 +31,6 @@ public class OneTimeTimerStub extends TimerStub implements OneTimeTimer {
     @Override
     public void setRoundWhenGoesOff(long l) throws IllegalArgumentException {
         _roundWhenGoesOff = l;
-    }
-
-    @Override
-    public String actionTypeId() {
-        return null;
     }
 
     @Override

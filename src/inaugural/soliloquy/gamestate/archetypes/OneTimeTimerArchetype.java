@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
+import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 
 public class OneTimeTimerArchetype implements OneTimeTimer {
@@ -14,7 +15,7 @@ public class OneTimeTimerArchetype implements OneTimeTimer {
     }
 
     @Override
-    public String actionTypeId() {
+    public Action action() {
         return null;
     }
 

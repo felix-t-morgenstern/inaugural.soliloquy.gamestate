@@ -5,22 +5,23 @@ import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Timer;
 
 public abstract class TimerAbstract extends HasDeletionInvariants implements Timer {
-    private final Action<Void> ACTION;
+    private final Action ACTION;
 
     final String ID;
 
     private int _priority;
 
-    TimerAbstract(String timerId, Action<Void> action) {
+    TimerAbstract(String timerId, Action action) {
         ID = timerId;
         ACTION = action;
     }
 
     @Override
-    public String actionTypeId() {
-        return ACTION.id();
+    public Action action() {
+        return ACTION;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void fire() {
         ACTION.run(null);

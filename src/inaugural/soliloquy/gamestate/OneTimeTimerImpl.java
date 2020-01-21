@@ -10,10 +10,10 @@ public class OneTimeTimerImpl extends TimerAbstract implements OneTimeTimer {
 
     private final Consumer<OneTimeTimer> REMOVE_ONE_TIME_TIMER_FROM_ROUND_MANAGER;
 
-    public OneTimeTimerImpl(String timerId, Action<Void> timerActionId, long roundWhenGoesOff,
+    public OneTimeTimerImpl(String timerId, Action action, long roundWhenGoesOff,
                             Consumer<OneTimeTimer> addRecurringTimerToRoundManager,
                             Consumer<OneTimeTimer> removeOneTimeTimerFromRoundManager) {
-        super(timerId, timerActionId);
+        super(timerId, action);
         _roundWhenGoesOff = roundWhenGoesOff;
         REMOVE_ONE_TIME_TIMER_FROM_ROUND_MANAGER = removeOneTimeTimerFromRoundManager;
         addRecurringTimerToRoundManager.accept(this);

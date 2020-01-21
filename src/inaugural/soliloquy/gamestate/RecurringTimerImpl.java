@@ -11,7 +11,7 @@ public class RecurringTimerImpl extends TimerAbstract implements RecurringTimer 
 
     private final Consumer<RecurringTimer> REMOVE_RECURRING_TIMER_FROM_ROUND_MANAGER;
 
-    public RecurringTimerImpl(String timerId, Action<Void> action, int roundModulo, int roundOffset,
+    public RecurringTimerImpl(String timerId, Action action, int roundModulo, int roundOffset,
                               Consumer<RecurringTimer> addRecurringTimerToRoundManager,
                               Consumer<RecurringTimer> removeRecurringTimerFromRoundManager) {
         super(timerId, action);

@@ -28,8 +28,7 @@ public class TimerFactoryImpl implements TimerFactory {
     }
 
     @Override
-    public OneTimeTimer makeOneTimeTimer(String timerId, Action<Void> action,
-                                          long roundWhenGoesOff)
+    public OneTimeTimer makeOneTimeTimer(String timerId, Action action, long roundWhenGoesOff)
             throws IllegalArgumentException {
         // TODO: Pass unit tests to ensure that the consumers are in place
         return new OneTimeTimerImpl(timerId, action, roundWhenGoesOff,
@@ -38,7 +37,7 @@ public class TimerFactoryImpl implements TimerFactory {
     }
 
     @Override
-    public RecurringTimer makeRecurringTimer(String timerId, Action<Void> action, int roundModulo,
+    public RecurringTimer makeRecurringTimer(String timerId, Action action, int roundModulo,
                                               int roundOffset)
             throws IllegalArgumentException {
         // TODO: Pass unit tests to ensure that the consumers are in place

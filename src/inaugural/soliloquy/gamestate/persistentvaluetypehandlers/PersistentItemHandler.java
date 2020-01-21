@@ -11,7 +11,7 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
 import soliloquy.specs.ruleset.entities.ItemType;
 
-public class PersistentItemHandler extends PersistentTypeHandler<Item> implements PersistentValueTypeHandler<Item> {
+public class PersistentItemHandler extends PersistentTypeHandler<Item> {
     // TODO: Shift from Registry to ReadableRegistry; generate "Registry.readOnlyAccess", also refactor into other infrastructure classes
     private final Registry<ItemType> ITEM_TYPES_REGISTRY;
     private final PersistentValueTypeHandler<EntityUuid> ENTITY_UUID_HANDLER;
