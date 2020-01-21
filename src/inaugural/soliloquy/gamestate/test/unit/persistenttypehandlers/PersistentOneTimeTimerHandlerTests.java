@@ -24,7 +24,7 @@ class PersistentOneTimeTimerHandlerTests {
     private final Action ACTION = new ActionStub(ACTION_ID);
     private final Registry<Action> ACTIONS = new RegistryStub<>();
 
-    private final int ROUND_WHEN_GOES_OFF = 123123123;
+    private final long ROUND_WHEN_GOES_OFF = 123123123;
 
     private final String WRITTEN_VALUE = "{\"id\":\"oneTimeTimerId\",\"actionId\":\"actionId\",\"round\":123123123}";
 

@@ -7,6 +7,14 @@ public class RecurringTimerStub extends TimerStub implements RecurringTimer {
     private int _roundModulo;
     private int _roundOffset;
 
+    public RecurringTimerStub(String id, Action action) {
+        super(id, action);
+    }
+
+    public RecurringTimerStub() {
+
+    }
+
     @Override
     public int getRoundModulo() {
         return _roundModulo;
@@ -25,10 +33,5 @@ public class RecurringTimerStub extends TimerStub implements RecurringTimer {
     @Override
     public void setRoundOffset(int i) throws IllegalArgumentException {
         _roundOffset = i;
-    }
-
-    @Override
-    public Action action() {
-        return null;
     }
 }

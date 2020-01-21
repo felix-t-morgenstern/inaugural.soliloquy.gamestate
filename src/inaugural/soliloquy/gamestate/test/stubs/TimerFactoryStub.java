@@ -17,7 +17,10 @@ public class TimerFactoryStub implements TimerFactory {
     @Override
     public RecurringTimer makeRecurringTimer(String id, Action action, int roundModulo,
                                              int roundOffset) throws IllegalArgumentException {
-        return null;
+        RecurringTimer result = new RecurringTimerStub(id, action);
+        result.setRoundModulo(roundModulo);
+        result.setRoundOffset(roundOffset);
+        return result;
     }
 
     @Override
