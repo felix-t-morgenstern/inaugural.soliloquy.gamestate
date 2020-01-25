@@ -2,28 +2,18 @@ package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
+import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
-import soliloquy.specs.gamestate.factories.TileFactory;
 
 public class GameZoneFactoryImpl implements GameZoneFactory {
-    private final TileFactory TILE_FACTORY;
     private final CoordinateFactory COORDINATE_FACTORY;
     private final CollectionFactory COLLECTION_FACTORY;
-    private final VariableCacheFactory DATA_FACTORY;
 
     @SuppressWarnings("ConstantConditions")
-    public GameZoneFactoryImpl(TileFactory tileFactory,
-                               CoordinateFactory coordinateFactory,
-                               CollectionFactory collectionFactory,
-                               VariableCacheFactory dataFactory) {
-        if (tileFactory == null) {
-            throw new IllegalArgumentException("GameZoneFactoryImpl: tileFactory cannot be null");
-        }
-        TILE_FACTORY = tileFactory;
+    public GameZoneFactoryImpl(CoordinateFactory coordinateFactory,
+                               CollectionFactory collectionFactory) {
         if (coordinateFactory == null) {
             throw new IllegalArgumentException(
                     "GameZoneFactoryImpl: coordinateFactory cannot be null");
@@ -34,15 +24,10 @@ public class GameZoneFactoryImpl implements GameZoneFactory {
                     "GameZoneFactoryImpl: collectionFactory cannot be null");
         }
         COLLECTION_FACTORY = collectionFactory;
-        if (dataFactory == null) {
-            throw new IllegalArgumentException("GameZoneFactoryImpl: dataFactory cannot be null");
-        }
-        DATA_FACTORY = dataFactory;
     }
 
     @Override
-    public GameZone make(String id, String name, String zoneType,
-                         ReadableCoordinate maxCoordinates, VariableCache data)
+    public GameZone make(String id, String zoneType, Tile[][] tiles, VariableCache data)
             throws IllegalArgumentException {
         if (id == null) {
             throw new IllegalArgumentException("GameZoneFactoryImpl.make: id cannot be null");
@@ -50,29 +35,7 @@ public class GameZoneFactoryImpl implements GameZoneFactory {
         if (id.equals("")) {
             throw new IllegalArgumentException("GameZoneFactoryImpl.make: id cannot be empty");
         }
-        if (name == null) {
-            throw new IllegalArgumentException("GameZoneFactoryImpl.make: name cannot be null");
-        }
-        if (name.equals("")) {
-            throw new IllegalArgumentException("GameZoneFactoryImpl.make: name cannot be empty");
-        }
-        if (maxCoordinates == null) {
-            throw new IllegalArgumentException(
-                    "GameZoneFactoryImpl.make: maxCoordinates cannot be null");
-        }
-        if (maxCoordinates.getX() < 0) {
-            throw new IllegalArgumentException(
-                    "GameZoneFactoryImpl.make: maxCoordinates has negative x value (" +
-                            maxCoordinates.getX() + ")");
-        }
-        if (maxCoordinates.getY() < 0) {
-            throw new IllegalArgumentException(
-                    "GameZoneFactoryImpl.make: maxCoordinates has negative y value (" +
-                            maxCoordinates.getY() + ")");
-        }
-        return new GameZoneImpl(id, name, zoneType, maxCoordinates, TILE_FACTORY,
-                COORDINATE_FACTORY, COLLECTION_FACTORY,
-                data == null ? DATA_FACTORY.make() : data);
+        return new GameZoneImpl(id, zoneType, tiles, COORDINATE_FACTORY, COLLECTION_FACTORY, data);
     }
 
     @Override

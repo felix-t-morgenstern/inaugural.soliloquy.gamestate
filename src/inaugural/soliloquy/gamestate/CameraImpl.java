@@ -29,7 +29,6 @@ public class CameraImpl implements Camera {
     private final Map<Coordinate,Integer> COORDINATES_PROVIDING_VISIBILITY;
     private TileVisibility TILE_VISIBILITY;
     private final Collection<Coordinate> VISIBLE_TILES;
-    // TODO: Find a way to obtain the current GameZone via Consumer
     private final Supplier<GameZone> GET_GAME_ZONE;
 
     private int _tileLocationX;
@@ -136,10 +135,10 @@ public class CameraImpl implements Camera {
         GameZone gameZone = GET_GAME_ZONE.get();
 
         int minRenderingX = Math.max(0, _tileLocationX - (_tileRenderingRadius - 1));
-        int maxRenderingX = Math.min(gameZone.getMaxCoordinates().getX(),
+        int maxRenderingX = Math.min(gameZone.maxCoordinates().getX(),
                 _tileLocationX + (_tileRenderingRadius - 1));
         int minRenderingY = Math.max(0, _tileLocationY - (_tileRenderingRadius - 1));
-        int maxRenderingY = Math.min(gameZone.getMaxCoordinates().getY(),
+        int maxRenderingY = Math.min(gameZone.maxCoordinates().getY(),
                 _tileLocationY + (_tileRenderingRadius - 1));
 
         if (_allTilesVisible) {
@@ -164,15 +163,15 @@ public class CameraImpl implements Camera {
                     : coordinatesProvidingVisibility.entrySet()) {
                 ReadableCoordinate coordinate = coordinateProvidingVisibility.getKey();
                 Integer coordinateVisibilityRadius = coordinateProvidingVisibility.getValue();
-                Tile originTile = gameZone.tile(coordinate);
+                Tile originTile = gameZone.tile(coordinate.getX(), coordinate.getY());
                 int minVisibleX = Math.max(0,
                         coordinate.getX() - (coordinateVisibilityRadius - 1));
-                int maxVisibleX = Math.min(gameZone.getMaxCoordinates()
-                        .getX(), coordinate.getX() + (coordinateVisibilityRadius - 1));
+                int maxVisibleX = Math.min(gameZone.maxCoordinates().getX(),
+                        coordinate.getX() + (coordinateVisibilityRadius - 1));
                 int minVisibleY = Math.max(0,
                         coordinate.getY() - (coordinateVisibilityRadius - 1));
-                int maxVisibleY = Math.min(gameZone.getMaxCoordinates()
-                        .getY(), coordinate.getY() + (coordinateVisibilityRadius - 1));
+                int maxVisibleY = Math.min(gameZone.maxCoordinates().getY(),
+                        coordinate.getY() + (coordinateVisibilityRadius - 1));
 
                 int minXToAdd = Math.max(minVisibleX, minRenderingX);
                 int maxXToAdd = Math.min(maxVisibleX, maxRenderingX);
@@ -181,11 +180,10 @@ public class CameraImpl implements Camera {
 
                 for (int x = minXToAdd; x <= maxXToAdd; x++) {
                     for (int y = minYToAdd; y <= maxYToAdd; y++) {
-                        Coordinate targetCoordinate = COORDINATE_FACTORY.make(x,y);
                         if (!visibleTilesContainsCoordinate(x, y)) {
-                            Tile targetTile = gameZone.tile(targetCoordinate);
+                            Tile targetTile = gameZone.tile(x, y);
                             if(TILE_VISIBILITY.canSeeTile(originTile, targetTile)) {
-                                VISIBLE_TILES.add(targetCoordinate);
+                                VISIBLE_TILES.add(COORDINATE_FACTORY.make(x,y));
                             }
                         }
                     }

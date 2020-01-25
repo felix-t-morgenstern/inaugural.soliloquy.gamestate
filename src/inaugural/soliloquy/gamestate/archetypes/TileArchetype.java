@@ -84,6 +84,11 @@ public class TileArchetype implements Tile {
     }
 
     @Override
+    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone) throws IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
     public void delete() throws IllegalStateException {
 
     }

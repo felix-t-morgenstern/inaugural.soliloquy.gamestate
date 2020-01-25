@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TileImplTests {
     private final int X = 123;
-    private final int Y = 123;
+    private final int Y = 456;
 
     private final GameZone GAME_ZONE = new GameZoneStub();
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
@@ -40,41 +40,32 @@ class TileImplTests {
 
     @BeforeEach
     void setUp() {
-        _tile = new TileImpl(GAME_ZONE, X, Y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
+        _tile = new TileImpl(X, Y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, COLLECTION_FACTORY, MAP_FACTORY, DATA);
         ((GameZoneStub) GAME_ZONE).TILES = new Tile[999][999];
-        ((GameZoneStub) GAME_ZONE).TILES[X][Y] = _tile;
         ((GameZoneStub) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(null, X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                COLLECTION_FACTORY, MAP_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, X, Y,
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 null, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
                 COLLECTION_FACTORY, MAP_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, X, Y,
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, null, TILE_WALL_SEGMENTS_FACTORY,
                 COLLECTION_FACTORY, MAP_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, X, Y,
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, null,
                 COLLECTION_FACTORY, MAP_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, X, Y,
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
                 null, MAP_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, X, Y,
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
                 COLLECTION_FACTORY, null, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(GAME_ZONE, X, Y,
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
                 COLLECTION_FACTORY, MAP_FACTORY, null));
-    }
-
-    @Test
-    void testGameZone() {
-        assertSame(GAME_ZONE, _tile.gameZone());
     }
 
     @Test
@@ -166,17 +157,43 @@ class TileImplTests {
     }
 
     @Test
+    void testAssignGameZoneAfterAddedToGameZone() {
+        ((GameZoneStub)GAME_ZONE).TILES[X][Y] = _tile;
+        _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+
+        assertSame(GAME_ZONE, _tile.gameZone());
+    }
+
+    @Test
+    void testAssignGameZoneAfterAddedToGameZoneWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class,
+                () -> _tile.assignGameZoneAfterAddedToGameZone(null));
+    }
+
+    @Test
+    void testAssignGameZoneAfterAddedToGameZoneWhenAlreadyAssigned() {
+        _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE));
+    }
+
+    @Test
     void testGetInterfaceName() {
         assertEquals(Tile.class.getCanonicalName(), _tile.getInterfaceName());
     }
 
     @Test
     void testThrowsOnDeleteWhenGameZoneIsNotDeleted() {
+        _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+
         assertThrows(IllegalStateException.class, _tile::delete);
     }
 
     @Test
     void testDeletedInvariant() {
+        _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+
         GAME_ZONE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tile.gameZone());
@@ -197,8 +214,30 @@ class TileImplTests {
 
     @Test
     void testGameZoneLocationCorrespondenceInvariant() {
+        _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+
         ((GameZoneStub)GAME_ZONE).TILES[X][Y] = null;
         ((GameZoneStub)GAME_ZONE).TILES[X][Y+1] = _tile;
+
+        assertThrows(IllegalStateException.class, () -> _tile.gameZone());
+        assertThrows(IllegalStateException.class, () -> _tile.location());
+        assertThrows(IllegalStateException.class, () -> _tile.getHeight());
+        assertThrows(IllegalStateException.class, () -> _tile.setHeight(0));
+        assertThrows(IllegalStateException.class, () -> _tile.getGroundType());
+        assertThrows(IllegalStateException.class, () -> _tile.setGroundType(new GroundTypeStub()));
+        assertThrows(IllegalStateException.class, () -> _tile.characters());
+        assertThrows(IllegalStateException.class, () -> _tile.fixtures());
+        assertThrows(IllegalStateException.class, () -> _tile.items());
+        assertThrows(IllegalStateException.class, () -> _tile.wallSegments());
+        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
+        assertThrows(IllegalStateException.class, () -> _tile.abilityEvents());
+        assertThrows(IllegalStateException.class, () -> _tile.sprites());
+        assertThrows(IllegalStateException.class, () -> _tile.data());
+    }
+
+    @Test
+    void testGameZoneMismatchInvariant() {
+        _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
 
         assertThrows(IllegalStateException.class, () -> _tile.gameZone());
         assertThrows(IllegalStateException.class, () -> _tile.location());

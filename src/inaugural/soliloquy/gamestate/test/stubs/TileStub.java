@@ -13,7 +13,7 @@ import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class TileStub implements Tile {
-    private final GameZone GAME_ZONE;
+    private GameZone _gameZone;
 
     private final TileEntities<Character> CHARACTERS = new TileEntitiesStub<>(this);
     private final TileEntities<TileFixture> FIXTURES = new TileEntitiesStub<>(this);
@@ -32,16 +32,15 @@ public class TileStub implements Tile {
     private VariableCache _data;
 
     public TileStub() {
-        GAME_ZONE = new GameZoneStub();
+        _gameZone = new GameZoneStub();
     }
 
     public TileStub(ReadableCoordinate tileLocation) {
         _tileLocation = tileLocation;
-        GAME_ZONE = new GameZoneStub();
+        _gameZone = new GameZoneStub();
     }
 
-    public TileStub(GameZone gameZone, int x, int y, VariableCache data) {
-        GAME_ZONE = gameZone;
+    public TileStub(int x, int y, VariableCache data) {
         _tileLocation = new CoordinateStub(x, y);
         _data = data;
     }
@@ -63,7 +62,7 @@ public class TileStub implements Tile {
 
     @Override
     public GameZone gameZone() throws IllegalStateException {
-        return GAME_ZONE;
+        return _gameZone;
     }
 
     @Override
@@ -114,6 +113,11 @@ public class TileStub implements Tile {
     @Override
     public Map<Sprite, Integer> sprites() throws IllegalStateException {
         return SPRITES;
+    }
+
+    @Override
+    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone) throws IllegalArgumentException, IllegalStateException {
+        _gameZone = gameZone;
     }
 
     @Override

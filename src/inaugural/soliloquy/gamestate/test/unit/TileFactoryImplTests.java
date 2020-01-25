@@ -64,21 +64,17 @@ class TileFactoryImplTests {
 
     @Test
     void testMake() {
-        Tile tile = _tileFactory.make(GAME_ZONE, X, Y, DATA);
-        ((GameZoneStub) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
-        ((GameZoneStub) GAME_ZONE).TILES[X][Y] = tile;
+        Tile tile = _tileFactory.make(X, Y, DATA);
 
         assertNotNull(tile);
-        assertSame(GAME_ZONE, tile.gameZone());
         assertEquals(X, tile.location().getX());
         assertEquals(Y, tile.location().getY());
     }
 
     @Test
     void testMakeWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _tileFactory.make(null, X, Y, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> _tileFactory.make(GAME_ZONE, X, Y, null));
+        assertThrows(IllegalArgumentException.class, () -> _tileFactory.make(-1, Y, DATA));
+        assertThrows(IllegalArgumentException.class, () -> _tileFactory.make(X, -1, DATA));
+        assertThrows(IllegalArgumentException.class, () -> _tileFactory.make(X, Y, null));
     }
 }

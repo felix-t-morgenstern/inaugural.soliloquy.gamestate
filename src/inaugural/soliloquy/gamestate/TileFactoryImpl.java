@@ -50,12 +50,14 @@ public class TileFactoryImpl implements TileFactory {
     }
 
     @Override
-    public Tile make(GameZone gameZone, int x, int y, VariableCache data)
-            throws IllegalArgumentException {
-        if (gameZone == null) {
-            throw new IllegalArgumentException("TileFactoryImpl.make: gameZone cannot be null");
+    public Tile make(int x, int y, VariableCache data) throws IllegalArgumentException {
+        if (x < 0) {
+            throw new IllegalArgumentException("TileFactoryImpl.make: x cannot be negative");
         }
-        return new TileImpl(gameZone, x, y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
+        if (y < 0) {
+            throw new IllegalArgumentException("TileFactoryImpl.make: y cannot be negative");
+        }
+        return new TileImpl(x, y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, COLLECTION_FACTORY, MAP_FACTORY, data);
     }
 

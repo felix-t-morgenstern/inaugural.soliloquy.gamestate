@@ -6,52 +6,35 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
-import soliloquy.specs.gamestate.factories.TileFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameZoneFactoryImplTests {
-    private final TileFactory TILE_FACTORY = new TileFactoryStub();
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
     private final String ID = "GameZoneId";
-    private final String NAME = "GameZoneName";
     private final String TYPE = "GameZoneType";
-    private final int MAX_COORDINATE_VALUE = 5;
-    private final ReadableCoordinate MAX_COORDINATES =
-            new ReadableCoordinateStub(MAX_COORDINATE_VALUE, MAX_COORDINATE_VALUE);
+    private final Tile[][] TILES = new Tile[1][2];
     private final VariableCache DATA = new VariableCacheStub();
 
     private GameZoneFactory _gameZoneFactory;
 
     @BeforeEach
     void setUp() {
-        _gameZoneFactory = new GameZoneFactoryImpl(TILE_FACTORY, COORDINATE_FACTORY,
-                COLLECTION_FACTORY, DATA_FACTORY);
+        _gameZoneFactory = new GameZoneFactoryImpl(COORDINATE_FACTORY, COLLECTION_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(null, COORDINATE_FACTORY, COLLECTION_FACTORY,
-                        DATA_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(TILE_FACTORY, null, COLLECTION_FACTORY,
-                        DATA_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(TILE_FACTORY, COORDINATE_FACTORY, null,
-                        DATA_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(TILE_FACTORY, COORDINATE_FACTORY, COLLECTION_FACTORY,
-                        null));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneFactoryImpl(null,
+                COLLECTION_FACTORY));
+        assertThrows(IllegalArgumentException.class, () ->
+                new GameZoneFactoryImpl(COORDINATE_FACTORY, null));
     }
 
     @Test
@@ -62,67 +45,53 @@ class GameZoneFactoryImplTests {
 
     @Test
     void testMake() {
-        GameZone gameZone = _gameZoneFactory.make(ID, NAME, TYPE, MAX_COORDINATES, null);
+        TILES[0][0] = new TileStub(0, 0, new VariableCacheStub());
+        TILES[0][1] = new TileStub(0, 1, new VariableCacheStub());
 
-        assertNotNull(gameZone);
+        GameZone gameZone = _gameZoneFactory.make(ID, TYPE, TILES, DATA);
+
         assertEquals(ID, gameZone.id());
-        assertEquals(NAME, gameZone.getName());
         assertEquals(TYPE, gameZone.type());
-        assertEquals(MAX_COORDINATE_VALUE, gameZone.getMaxCoordinates().getX());
-        assertEquals(MAX_COORDINATE_VALUE, gameZone.getMaxCoordinates().getY());
-        for (int x = 0; x <= MAX_COORDINATE_VALUE; x++) {
-            for (int y = 0; y <= MAX_COORDINATE_VALUE; y++) {
-                Tile tile = gameZone.tile(new ReadableCoordinateStub(x,y));
-                assertNotNull(tile);
-                assertEquals(x, tile.location().getX());
-                assertEquals(y, tile.location().getY());
-            }
-        }
-        assertNotNull(gameZone.onEntry());
-        assertNotNull(gameZone.onExit());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated, gameZone.data());
-    }
-
-    @Test
-    void testMakeWithData() {
-        GameZone gameZone = _gameZoneFactory.make(ID, NAME, TYPE, MAX_COORDINATES, DATA);
-
-        assertNotNull(gameZone);
-        assertEquals(ID, gameZone.id());
-        assertEquals(NAME, gameZone.getName());
-        assertEquals(TYPE, gameZone.type());
-        assertEquals(MAX_COORDINATE_VALUE, gameZone.getMaxCoordinates().getX());
-        assertEquals(MAX_COORDINATE_VALUE, gameZone.getMaxCoordinates().getY());
-        for (int x = 0; x <= MAX_COORDINATE_VALUE; x++) {
-            for (int y = 0; y <= MAX_COORDINATE_VALUE; y++) {
-                Tile tile = gameZone.tile(new ReadableCoordinateStub(x,y));
-                assertNotNull(tile);
-                assertEquals(x, tile.location().getX());
-                assertEquals(y, tile.location().getY());
-            }
-        }
-        assertNotNull(gameZone.onEntry());
-        assertNotNull(gameZone.onExit());
+        assertEquals(0, gameZone.maxCoordinates().getX());
+        assertEquals(1, gameZone.maxCoordinates().getY());
+        assertSame(TILES[0][0], gameZone.tile(0, 0));
+        assertSame(TILES[0][1], gameZone.tile(0, 1));
         assertSame(DATA, gameZone.data());
     }
 
     @Test
     void testMakeWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameZoneFactory.make(null, NAME, TYPE, MAX_COORDINATES, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameZoneFactory.make("", NAME, TYPE, MAX_COORDINATES, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameZoneFactory.make(ID, null, TYPE, MAX_COORDINATES, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameZoneFactory.make(ID, "", TYPE, MAX_COORDINATES, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameZoneFactory.make(ID, NAME, TYPE, null, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameZoneFactory.make(ID, NAME, TYPE, new ReadableCoordinateStub(-1,0),
-                        DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameZoneFactory.make(ID, NAME, TYPE, new ReadableCoordinateStub(0,-1),
-                        DATA));
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(null, TYPE, TILES,
+                DATA));
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make("", TYPE, TILES,
+                DATA));
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, null, TILES,
+                DATA));
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, "", TILES,
+                DATA));
+        Tile[][] tilesWithZeroXIndex = new Tile[0][1];
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+                tilesWithZeroXIndex, DATA));
+        Tile[][] tilesWithZeroYIndex = new Tile[1][0];
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+                tilesWithZeroYIndex, DATA));
+        Tile[][] tilesWithNullEntry = new Tile[1][1];
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+                tilesWithNullEntry, DATA));
+        Tile[][] tilesWithAssignedTile = new Tile[1][1];
+        tilesWithAssignedTile[0][0] = new TileStub(0, 0, new VariableCacheStub());
+        tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new GameZoneStub());
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+                tilesWithAssignedTile, DATA));
+        Tile[][] tilesWithMismatchedXCoordinate = new Tile[1][1];
+        tilesWithMismatchedXCoordinate[0][0] = new TileStub(1, 0, new VariableCacheStub());
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+                tilesWithMismatchedXCoordinate, DATA));
+        Tile[][] tilesWithMismatchedYCoordinate = new Tile[1][1];
+        tilesWithMismatchedYCoordinate[0][0] = new TileStub(0, 1, new VariableCacheStub());
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+                tilesWithMismatchedYCoordinate, DATA));
+        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE, TILES,
+                null));
     }
 }

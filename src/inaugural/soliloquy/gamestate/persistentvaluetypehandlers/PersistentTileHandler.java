@@ -28,7 +28,6 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
     private final PersistentValueTypeHandler<Sprite> SPRITE_HANDLER;
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
 
-    private final Function<String, GameZone> GET_GAME_ZONE;
     private final Function<String, WallSegmentType> GET_SEGMENT_TYPE;
     private final Function<String, GameMovementEvent> GET_MOVEMENT_EVENT;
     private final Function<String, GameAbilityEvent> GET_ABILITY_EVENT;
@@ -44,7 +43,6 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
                                  PersistentValueTypeHandler<TileFixture> fixturesHandler,
                                  PersistentValueTypeHandler<Sprite> spriteHandler,
                                  PersistentValueTypeHandler<VariableCache> dataHandler,
-                                 Function<String, GameZone> getGameZone,
                                  Function<String, WallSegmentType> getSegmentType,
                                  Function<String, GameMovementEvent> getMovementEvent,
                                  Function<String, GameAbilityEvent> getAbilityEvent,
@@ -84,11 +82,6 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
                     "PersistentTileHandler: dataHandler cannot be null");
         }
         DATA_HANDLER = dataHandler;
-        if (getGameZone == null) {
-            throw new IllegalArgumentException(
-                    "PersistentTileHandler: getGameZone cannot be null");
-        }
-        GET_GAME_ZONE = getGameZone;
         if (getSegmentType == null) {
             throw new IllegalArgumentException(
                     "PersistentTileHandler: getSegmentType cannot be null");
@@ -122,8 +115,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
 
         TileDTO dto = new Gson().fromJson(data, TileDTO.class);
 
-        Tile tile = TILE_FACTORY.make(GET_GAME_ZONE.apply(dto.gameZoneId), dto.x, dto.y,
-                DATA_HANDLER.read(dto.data));
+        Tile tile = TILE_FACTORY.make(dto.x, dto.y, DATA_HANDLER.read(dto.data));
         tile.setHeight(dto.height);
         tile.setGroundType(GET_GROUND_TYPE.apply(dto.groundTypeId));
 
@@ -174,7 +166,6 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
         }
 
         TileDTO dto = new TileDTO();
-        dto.gameZoneId = tile.gameZone().id();
         dto.x = tile.location().getX();
         dto.y = tile.location().getY();
         dto.height = tile.getHeight();
@@ -249,7 +240,6 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
     }
 
     private class TileDTO {
-        String gameZoneId;
         int x;
         int y;
         int height;

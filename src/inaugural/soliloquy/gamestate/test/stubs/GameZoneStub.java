@@ -40,7 +40,7 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public Coordinate getMaxCoordinates() {
+    public Coordinate maxCoordinates() {
         if (THROW_EXCEPTION_ON_GET_MAX_COORDINATES) {
             throw new GameZoneStubException(this);
         }
@@ -48,11 +48,11 @@ public class GameZoneStub implements GameZone {
     }
 
     @Override
-    public Tile tile(ReadableCoordinate tileLocation) throws IllegalArgumentException {
+    public Tile tile(int x, int y) throws IllegalArgumentException {
         if (RETURN_ACTUAL_TILE_AT_LOCATION) {
-            return TILES[tileLocation.getX()][tileLocation.getY()];
+            return TILES[x][y];
         } else {
-            return new TileStub(this, tileLocation.getX(), tileLocation.getY(), null);
+            return new TileStub(x, y, null);
         }
     }
 
@@ -109,7 +109,7 @@ public class GameZoneStub implements GameZone {
     }
 
     public class GameZoneStubException extends RuntimeException {
-        public final GameZone GAME_ZONE;
+        final GameZone GAME_ZONE;
 
         GameZoneStubException(GameZone gameZone) {
             GAME_ZONE = gameZone;

@@ -19,7 +19,6 @@ import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.sprites.entities.Sprite;
 
 public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
-    private final GameZone GAME_ZONE;
     private final ReadableCoordinate LOCATION;
     private final TileEntities<Character> TILE_CHARACTERS;
     private final TileEntities<Item> TILE_ITEMS;
@@ -30,6 +29,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     private final Map<Sprite, Integer> SPRITES;
     private final VariableCache DATA;
 
+    private GameZone _gameZone;
     private int _height;
     private GroundType _groundType;
 
@@ -43,7 +43,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     private final static Sprite SPRITE_ARCHETYPE = new SpriteArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public TileImpl(GameZone gameZone, int x, int y,
+    public TileImpl(int x, int y,
                     CoordinateFactory coordinateFactory,
                     TileEntitiesFactory tileEntitiesFactory,
                     TileWallSegmentsFactory tileWallSegmentsFactory,
@@ -51,10 +51,6 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
                     MapFactory mapFactory,
                     VariableCache data) {
         super(collectionFactory);
-        if (gameZone == null) {
-            throw new IllegalArgumentException("TileImpl: gameZone cannot be null");
-        }
-        GAME_ZONE = gameZone;
         if (coordinateFactory == null) {
             throw new IllegalArgumentException("TileImpl: coordinateFactory cannot be null");
         }
@@ -88,7 +84,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     public GameZone gameZone() throws IllegalStateException {
         enforceDeletionInvariants("gameZone");
         enforceLocationCorrespondenceInvariant("gameZone");
-        return GAME_ZONE;
+        return _gameZone;
     }
 
     @Override
@@ -176,6 +172,20 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     }
 
     @Override
+    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone)
+            throws IllegalArgumentException, IllegalStateException {
+        if (gameZone == null) {
+            throw new IllegalArgumentException(
+                    "TileImpl.assignGameZoneAfterAddedToGameZone: gameZone cannot be null");
+        }
+        if (_gameZone != null) {
+            throw new IllegalArgumentException(
+                    "TileImpl.assignGameZoneAfterAddedToGameZone: gameZone is already assigned");
+        }
+        _gameZone = gameZone;
+    }
+
+    @Override
     public VariableCache data() throws IllegalStateException {
         enforceDeletionInvariants("data");
         enforceLocationCorrespondenceInvariant("data");
@@ -194,12 +204,12 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
 
     @Override
     protected Deletable getContainingObject() {
-        return GAME_ZONE;
+        return _gameZone;
     }
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        if (!GAME_ZONE.isDeleted()) {
+        if (!_gameZone.isDeleted()) {
             throw new IllegalStateException("TileImpl.deleteAfterDeletingContainingGameZone: " +
                     "containing GameZone has not been deleted");
         }
@@ -211,7 +221,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
 
     @Override
     public void delete() {
-        if (!GAME_ZONE.isDeleted()) {
+        if (!_gameZone.isDeleted()) {
             throw new IllegalStateException(
                     "TileImpl.delete: cannot delete before deleting containing GameZone");
         }
@@ -245,7 +255,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     }
 
     private void enforceLocationCorrespondenceInvariant(String methodName) {
-        if (GAME_ZONE.tile(LOCATION) != this) {
+        if (_gameZone != null && _gameZone.tile(LOCATION.getX(), LOCATION.getY()) != this) {
             throw new IllegalStateException("TileImpl." + methodName + ": This Tile is not " +
                     "present at its stated location (" + LOCATION.getX() + "," + LOCATION.getY() +
                     ") in its containing GameZone");

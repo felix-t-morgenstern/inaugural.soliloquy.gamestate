@@ -37,9 +37,6 @@ class PersistentTileHandlerTests {
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
             new PersistentVariableCacheHandlerStub();
 
-    private final GameZone GAME_ZONE = new GameZoneStub();
-    private final HashMap<String, GameZone> GAME_ZONES = new HashMap<>();
-
     private final int X = 123;
     private final int Y = 456;
     private final int HEIGHT = 789;
@@ -68,13 +65,12 @@ class PersistentTileHandlerTests {
     private final GroundType GROUND_TYPE = new GroundTypeStub(GROUND_TYPE_ID);
     private final HashMap<String, GroundType> GROUND_TYPES = new HashMap<>();
 
-    private final String WRITTEN_DATA = "{\"gameZoneId\":\"GameZoneStubId\",\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\",\"characters\":[{\"z\":111,\"entity\":\"Character0\"}],\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333,\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\",\"direction\":1,\"height\":444,\"z\":555,\"data\":\"VariableCache0\"}],\"movementEvents\":[\"movementEventId\"],\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666,\"entity\":\"Sprite0\"}],\"data\":\"VariableCache1\"}";
+    private final String WRITTEN_DATA = "{\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\",\"characters\":[{\"z\":111,\"entity\":\"Character0\"}],\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333,\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\",\"direction\":1,\"height\":444,\"z\":555,\"data\":\"VariableCache0\"}],\"movementEvents\":[\"movementEventId\"],\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666,\"entity\":\"Sprite0\"}],\"data\":\"VariableCache1\"}";
 
     private PersistentValueTypeHandler<Tile> _tileHandler;
 
     @BeforeEach
     void setUp() {
-        GAME_ZONES.put(GAME_ZONE.id(), GAME_ZONE);
         SEGMENT_TYPES.put(SEGMENT_TYPE_ID, SEGMENT_TYPE);
         MOVEMENT_EVENTS.put(MOVEMENT_EVENT_ID, MOVEMENT_EVENT);
         ABILITY_EVENTS.put(ABILITY_EVENT_ID, ABILITY_EVENT);
@@ -84,8 +80,7 @@ class PersistentTileHandlerTests {
 
         _tileHandler = new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY,
                 CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                GROUND_TYPES::get);
+                SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -94,68 +89,58 @@ class PersistentTileHandlerTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(null, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, null, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
+                        GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, null,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
+                        GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         null, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
+                        GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, null, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
+                        GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, null, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
+                        GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, null,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
+                        GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        null, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        null, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, null, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, null, ABILITY_EVENTS::get, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, null,
-                        ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, null, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        null, GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
-                        ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        GAME_ZONES::get, SEGMENT_TYPES::get, MOVEMENT_EVENTS::get,
-                        ABILITY_EVENTS::get, null));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, null));
     }
 
     @Test
     void testWrite() {
-        Tile tile = new TileStub(GAME_ZONE, X, Y, DATA);
+        Tile tile = new TileStub(X, Y, DATA);
         tile.setHeight(HEIGHT);
         tile.setGroundType(GROUND_TYPE);
         tile.characters().add(CHARACTER, 111);
@@ -179,7 +164,6 @@ class PersistentTileHandlerTests {
         Tile readTile = _tileHandler.read(WRITTEN_DATA);
 
         assertNotNull(readTile);
-        assertSame(GAME_ZONE, readTile.gameZone());
         assertEquals(X, readTile.location().getX());
         assertEquals(Y, readTile.location().getY());
         assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER).READ_OUTPUTS.get(0),

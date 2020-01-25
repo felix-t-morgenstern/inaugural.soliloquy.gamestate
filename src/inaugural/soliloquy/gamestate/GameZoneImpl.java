@@ -10,7 +10,6 @@ import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.factories.TileFactory;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
@@ -25,11 +24,10 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     private String _name;
 
-    // TODO: Have this use the PersistentTileHandler!
     @SuppressWarnings("ConstantConditions")
-    public GameZoneImpl(String id, String name, String type, ReadableCoordinate maxCoordinates,
-                        TileFactory tileFactory, CoordinateFactory coordinateFactory,
-                        CollectionFactory collectionFactory, VariableCache data) {
+    public GameZoneImpl(String id, String type, Tile[][] tiles,
+                        CoordinateFactory coordinateFactory, CollectionFactory collectionFactory,
+                        VariableCache data) {
         if (id == null) {
             throw new IllegalArgumentException("GameZoneImpl: id cannot be null");
         }
@@ -37,33 +35,48 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
             throw new IllegalArgumentException("GameZoneImpl: id cannot be empty");
         }
         ID = id;
-        if (name == null) {
-            throw new IllegalArgumentException("GameZoneImpl: name cannot be null");
+        if (type == null) {
+            throw new IllegalArgumentException("GameZoneImpl: type cannot be null");
         }
-        if (name.equals("")) {
-            throw new IllegalArgumentException("GameZoneImpl: name cannot be empty");
+        if (type.equals("")) {
+            throw new IllegalArgumentException("GameZoneImpl: type cannot be empty");
         }
-        _name = name;
         TYPE = type;
-        if (maxCoordinates == null) {
-            throw new IllegalArgumentException("GameZoneImpl: maxCoordinates cannot be null");
+        if (tiles == null) {
+            throw new IllegalArgumentException("GameZoneImpl: tiles is null");
         }
-        MAX_COORDINATES = maxCoordinates;
-        if (tileFactory == null) {
-            throw new IllegalArgumentException("GameZoneImpl: tileFactory cannot be null");
+        if (tiles.length == 0) {
+            throw new IllegalArgumentException("GameZoneImpl: tiles has x length of 0");
+        }
+        if (tiles[0].length == 0) {
+            throw new IllegalArgumentException("GameZoneImpl: tiles has y length of 0");
+        }
+        TILES = new Tile[tiles.length][tiles[0].length];
+        for(int x = 0; x < tiles.length; x++) {
+            for(int y = 0; y < tiles[0].length; y++) {
+                if (tiles[x][y] == null) {
+                    throw new IllegalArgumentException("GameZoneImpl: tiles has null tile at (" +
+                            x + "," + y + ")");
+                }
+                if (tiles[x][y].gameZone() != null) {
+                    throw new IllegalArgumentException("GameZoneImpl: tiles has assigned " +
+                            "GameZone at (" + x + "," + y + ")");
+                }
+                if (tiles[x][y].location().getX() != x || tiles[x][y].location().getY() != y) {
+                    throw new IllegalArgumentException("GameZoneImpl: tile at coordinate (" + x +
+                            "," + y + ") found at different coordinate on insertion, (" + x +
+                            "," + y + ")");
+                }
+                TILES[x][y] = tiles[x][y];
+                tiles[x][y].assignGameZoneAfterAddedToGameZone(this);
+            }
         }
         if (coordinateFactory == null) {
             throw new IllegalArgumentException("GameZoneImpl: coordinateFactory cannot be null");
         }
+        MAX_COORDINATES = coordinateFactory.make(tiles.length - 1,tiles[0].length - 1);
         if (collectionFactory == null) {
             throw new IllegalArgumentException("GameZoneImpl: tileFactory cannot be null");
-        }
-        TILES = new Tile[maxCoordinates.getX()+1][maxCoordinates.getY()+1];
-        for (int x = 0; x <= maxCoordinates.getX(); x++) {
-            for (int y = 0; y <= maxCoordinates.getY(); y++) {
-                // TODO: Have this use the PersistentTileHandler!
-                TILES[x][y] = tileFactory.make(this, x, y, null);
-            }
         }
         ENTRY_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
         EXIT_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
@@ -79,14 +92,25 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public ReadableCoordinate getMaxCoordinates() {
+    public ReadableCoordinate maxCoordinates() {
         return MAX_COORDINATES;
     }
 
     @Override
-    public Tile tile(ReadableCoordinate readableCoordinate) throws IllegalArgumentException {
-        // TODO: Throw on invalid params
-        return TILES[readableCoordinate.getX()][readableCoordinate.getY()];
+    public Tile tile(int x, int y) throws IllegalArgumentException {
+        if (x < 0) {
+            throw new IllegalArgumentException("GameZoneImpl.tile: x cannot be negative");
+        }
+        if (y < 0) {
+            throw new IllegalArgumentException("GameZoneImpl.tile: y cannot be negative");
+        }
+        if (x > MAX_COORDINATES.getX()) {
+            throw new IllegalArgumentException("GameZoneImpl.tile: x is beyond max x coordinate");
+        }
+        if (y > MAX_COORDINATES.getY()) {
+            throw new IllegalArgumentException("GameZoneImpl.tile: y is beyond max y coordinate");
+        }
+        return TILES[x][y];
     }
 
     @Override
