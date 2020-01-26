@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.GameZonesRepoImpl;
 import inaugural.soliloquy.gamestate.test.stubs.GameZoneStub;
-import inaugural.soliloquy.gamestate.test.stubs.PersistentGameZoneHandlerStub;
+import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentGameZoneHandlerStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -10,6 +10,7 @@ import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.GameZonesRepo;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +25,8 @@ class GameZonesRepoImplTests {
     private final PersistentValueTypeHandler<GameZone> GAME_ZONE_HANDLER =
             new PersistentGameZoneHandlerStub();
     private final HashMap<String, Path> FILE_LOCATIONS = new HashMap<>();
-    private final String TEMP_FILE_RELATIVE_LOCATION = "sharedTempFile.txt";
+    private final String DIRECTORY_NAME = "gameZone1";
+    private final String TEMP_FILE_RELATIVE_LOC = DIRECTORY_NAME + "\\sharedTempFile.txt";
     private final String ORIGINAL_FILE_TEXT = "This is a fake GameZone.";
 
     private GameZonesRepo _gameZonesRepo;
@@ -35,7 +37,9 @@ class GameZonesRepoImplTests {
 
     @BeforeEach
     void setUp() throws Exception {
-        Path sharedTempFilePath = sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOCATION);
+        Path sharedTempDirPath = sharedTempDir.resolve(DIRECTORY_NAME);
+        new File(sharedTempDirPath.toString()).mkdir();
+        Path sharedTempFilePath = sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOC);
         Files.write(sharedTempFilePath, new ArrayList<>());
         Files.write(sharedTempFilePath, ORIGINAL_FILE_TEXT.getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.APPEND);
@@ -63,8 +67,9 @@ class GameZonesRepoImplTests {
         GameZone gameZone = _gameZonesRepo.getGameZone(GAME_ZONE.id());
 
         assertEquals(ORIGINAL_FILE_TEXT,
-                ((PersistentGameZoneHandlerStub) GAME_ZONE_HANDLER).ReadData);
-        assertSame(PersistentGameZoneHandlerStub.GAME_ZONE, gameZone);
+                ((PersistentGameZoneHandlerStub) GAME_ZONE_HANDLER).READ_INPUTS.get(0));
+        assertSame(((PersistentGameZoneHandlerStub) GAME_ZONE_HANDLER).READ_OUTPUTS.get(0),
+                gameZone);
     }
 
     @Test
@@ -79,10 +84,10 @@ class GameZonesRepoImplTests {
         _gameZonesRepo.saveGameZone(GAME_ZONE);
 
         assertEquals(GAME_ZONE,
-                ((PersistentGameZoneHandlerStub) GAME_ZONE_HANDLER).WrittenGameZone);
+                ((PersistentGameZoneHandlerStub) GAME_ZONE_HANDLER).WRITE_INPUTS.get(0));
         try {
-            assertEquals(PersistentGameZoneHandlerStub.WRITTEN_DATA,
-                    new String(Files.readAllBytes(sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOCATION))));
+            assertEquals(((PersistentGameZoneHandlerStub) GAME_ZONE_HANDLER).WRITE_OUTPUTS.get(0),
+                new String(Files.readAllBytes(sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOC))));
         } catch (Exception e) {
             fail();
         }
