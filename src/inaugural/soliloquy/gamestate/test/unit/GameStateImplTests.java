@@ -8,6 +8,7 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.Ruleset;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +23,16 @@ class GameStateImplTests {
     private final Camera CAMERA = new CameraStub();
     private final RoundManager ROUND_MANAGER = new RoundManagerStub();
     private final Ruleset RULESET = new RulesetStub();
+    private final GameZoneFactory GAME_ZONE_FACTORY = new GameZoneFactoryStub();
+    private final TileFactory TILE_FACTORY = new TileFactoryStub();
+    private final ItemFactory ITEM_FACTORY = new ItemFactoryStub();
+    private final CharacterFactory CHARACTER_FACTORY = new CharacterFactoryStub();
+    private final TimerFactory TIMER_FACTORY = new TimerFactoryStub();
+    private final KeyBindingFactory KEY_BINDING_FACTORY = new KeyBindingFactoryStub();
+    private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY =
+            new KeyBindingContextFactoryStub();
+    private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY =
+            new KeyPressListenerFactoryStub();
 
     private GameState _gameState;
 
@@ -34,7 +45,15 @@ class GameStateImplTests {
                 GAME_ZONES_REPO,
                 CAMERA,
                 ROUND_MANAGER,
-                RULESET);
+                RULESET,
+                GAME_ZONE_FACTORY,
+                TILE_FACTORY,
+                ITEM_FACTORY,
+                CHARACTER_FACTORY,
+                TIMER_FACTORY,
+                KEY_BINDING_FACTORY,
+                KEY_BINDING_CONTEXT_FACTORY,
+                KEY_PRESS_LISTENER_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -48,7 +67,15 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         CAMERA,
                         ROUND_MANAGER,
-                        RULESET));
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         null,
@@ -57,7 +84,15 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         CAMERA,
                         ROUND_MANAGER,
-                        RULESET));
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -66,7 +101,15 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         CAMERA,
                         ROUND_MANAGER,
-                        RULESET));
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -75,7 +118,15 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         CAMERA,
                         ROUND_MANAGER,
-                        RULESET));
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -84,7 +135,15 @@ class GameStateImplTests {
                         null,
                         CAMERA,
                         ROUND_MANAGER,
-                        RULESET));
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -93,7 +152,15 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         CAMERA,
                         null,
-                        RULESET));
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -102,7 +169,15 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         null,
                         ROUND_MANAGER,
-                        RULESET));
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -111,6 +186,150 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         CAMERA,
                         ROUND_MANAGER,
+                        null,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        null,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        null,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        null,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        null,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        null,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        null,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        null,
+                        KEY_PRESS_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> _gameState = new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        MAP_FACTORY,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA,
+                        ROUND_MANAGER,
+                        RULESET,
+                        GAME_ZONE_FACTORY,
+                        TILE_FACTORY,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
                         null));
     }
 
@@ -178,5 +397,45 @@ class GameStateImplTests {
     @Test
     void testRuleset() {
         assertSame(RULESET, _gameState.ruleset());
+    }
+
+    @Test
+    void testGameZoneFactory() {
+        assertNotNull(_gameState.gameZoneFactory());
+    }
+
+    @Test
+    void testTileFactory() {
+        assertNotNull(_gameState.tileFactory());
+    }
+
+    @Test
+    void testItemFactory() {
+        assertNotNull(_gameState.itemFactory());
+    }
+
+    @Test
+    void testCharacterFactory() {
+        assertNotNull(_gameState.characterFactory());
+    }
+
+    @Test
+    void testTimerFactory() {
+        assertNotNull(_gameState.timerFactory());
+    }
+
+    @Test
+    void testKeyBindingFactory() {
+        assertNotNull(_gameState.keyBindingFactory());
+    }
+
+    @Test
+    void testKeyBindingContextFactory() {
+        assertNotNull(_gameState.keyBindingContextFactory());
+    }
+
+    @Test
+    void testKeyPressListenerFactory() {
+        assertNotNull(_gameState.keyPressListenerFactory());
     }
 }

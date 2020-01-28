@@ -27,6 +27,14 @@ public class GameStateImpl implements GameState {
     private final RoundManager ROUND_MANAGER;
     private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final Ruleset RULESET;
+    private final GameZoneFactory GAME_ZONE_FACTORY;
+    private final TileFactory TILE_FACTORY;
+    private final ItemFactory ITEM_FACTORY;
+    private final CharacterFactory CHARACTER_FACTORY;
+    private final TimerFactory TIMER_FACTORY;
+    private final KeyBindingFactory KEY_BINDING_FACTORY;
+    private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
+    private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY;
 
     private final static KeyBindingContext KEY_BINDING_CONTEXT_ARCHETYPE =
             new KeyBindingContextArchetype();
@@ -47,7 +55,15 @@ public class GameStateImpl implements GameState {
                          GameZonesRepo gameZonesRepo,
                          Camera camera,
                          RoundManager roundManager,
-                         Ruleset ruleset) {
+                         Ruleset ruleset,
+                         GameZoneFactory gameZoneFactory,
+                         TileFactory tileFactory,
+                         ItemFactory itemFactory,
+                         CharacterFactory characterFactory,
+                         TimerFactory timerFactory,
+                         KeyBindingFactory keyBindingFactory,
+                         KeyBindingContextFactory keyBindingContextFactory,
+                         KeyPressListenerFactory keyPressListenerFactory) {
         if (party == null) {
             throw new IllegalArgumentException("GameState: party must be non-null");
         }
@@ -83,6 +99,40 @@ public class GameStateImpl implements GameState {
             throw new IllegalArgumentException("GameState: ruleset must be non-null");
         }
         RULESET = ruleset;
+        if (gameZoneFactory == null) {
+            throw new IllegalArgumentException("GameState: gameZoneFactory must be non-null");
+        }
+        GAME_ZONE_FACTORY = gameZoneFactory;
+        if (tileFactory == null) {
+            throw new IllegalArgumentException("GameState: tileFactory must be non-null");
+        }
+        TILE_FACTORY = tileFactory;
+        if (itemFactory == null) {
+            throw new IllegalArgumentException("GameState: itemFactory must be non-null");
+        }
+        ITEM_FACTORY = itemFactory;
+        if (characterFactory == null) {
+            throw new IllegalArgumentException("GameState: characterFactory must be non-null");
+        }
+        CHARACTER_FACTORY = characterFactory;
+        if (timerFactory == null) {
+            throw new IllegalArgumentException("GameState: timerFactory must be non-null");
+        }
+        TIMER_FACTORY = timerFactory;
+        if (keyBindingFactory == null) {
+            throw new IllegalArgumentException("GameState: keyBindingFactory must be non-null");
+        }
+        KEY_BINDING_FACTORY = keyBindingFactory;
+        if (keyBindingContextFactory == null) {
+            throw new IllegalArgumentException(
+                    "GameState: keyBindingContextFactory must be non-null");
+        }
+        KEY_BINDING_CONTEXT_FACTORY = keyBindingContextFactory;
+        if (keyPressListenerFactory == null) {
+            throw new IllegalArgumentException(
+                    "GameState: keyPressListenerFactory must be non-null");
+        }
+        KEY_PRESS_LISTENER_FACTORY = keyPressListenerFactory;
     }
 
     @Override
@@ -147,50 +197,42 @@ public class GameStateImpl implements GameState {
 
     @Override
     public GameZoneFactory gameZoneFactory() {
-        // TODO: Test and implement
-        return null;
+        return  GAME_ZONE_FACTORY;
     }
 
     @Override
     public TileFactory tileFactory() {
-        // TODO: Test and implement
-        return null;
+        return TILE_FACTORY;
     }
 
     @Override
     public ItemFactory itemFactory() {
-        // TODO: Test and implement
-        return null;
+        return ITEM_FACTORY;
     }
 
     @Override
     public CharacterFactory characterFactory() {
-        // TODO: Test and implement
-        return null;
+        return CHARACTER_FACTORY;
     }
 
     @Override
     public TimerFactory timerFactory() {
-        // TODO: Test and implement
-        return null;
+        return TIMER_FACTORY;
     }
 
     @Override
     public KeyBindingFactory keyBindingFactory() {
-        // TODO: Test and implement
-        return null;
+        return KEY_BINDING_FACTORY;
     }
 
     @Override
     public KeyBindingContextFactory keyBindingContextFactory() {
-        // TODO: Test and implement
-        return null;
+        return KEY_BINDING_CONTEXT_FACTORY;
     }
 
     @Override
     public KeyPressListenerFactory keyPressListenerFactory() {
-        // TODO: Test and implement
-        return null;
+        return KEY_PRESS_LISTENER_FACTORY;
     }
 
     @Override
