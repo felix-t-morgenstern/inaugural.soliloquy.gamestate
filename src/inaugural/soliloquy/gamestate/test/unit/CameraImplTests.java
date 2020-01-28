@@ -149,8 +149,7 @@ class CameraImplTests {
 
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
-        GameZoneStub._maxX = 4;
-        GameZoneStub._maxY = 4;
+        GameZoneStub.FAKE_MAX_COORDINATES = new ReadableCoordinateStub(4,4);
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);

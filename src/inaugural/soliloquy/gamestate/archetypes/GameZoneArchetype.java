@@ -23,13 +23,15 @@ public class GameZoneArchetype implements GameZone {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action<Void>> onEntry() {
+    public Collection<Action> onEntry() {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action<Void>> onExit() {
+    public Collection<Action> onExit() {
         return null;
     }
 

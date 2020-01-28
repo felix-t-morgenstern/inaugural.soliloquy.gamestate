@@ -6,11 +6,12 @@ import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.logger.Logger;
 
+@SuppressWarnings("rawtypes")
 public class KeyBindingStub implements KeyBinding {
     private final Collection<Character> BOUND_CHARACTERS = new CollectionStub<>();
-    private final Action<Void> PRESS_ACTION = new PressAction();
-    private final Action<Void> RELEASE_ACTION = new ReleaseAction();
-    private final Action<Void> TYPE_ACTION = new TypeAction();
+    private final Action PRESS_ACTION = new PressAction();
+    private final Action RELEASE_ACTION = new ReleaseAction();
+    private final Action TYPE_ACTION = new TypeAction();
 
     public boolean _pressed;
     public boolean _released;
@@ -24,32 +25,32 @@ public class KeyBindingStub implements KeyBinding {
     }
 
     @Override
-    public Action<Void> getOnPress() {
+    public Action getOnPress() {
         return PRESS_ACTION;
     }
 
     @Override
-    public void setOnPress(Action<Void> action) {
+    public void setOnPress(Action action) {
 
     }
 
     @Override
-    public Action<Void> getOnRelease() {
+    public Action getOnRelease() {
         return RELEASE_ACTION;
     }
 
     @Override
-    public void setOnRelease(Action<Void> action) {
+    public void setOnRelease(Action action) {
 
     }
 
     @Override
-    public Action<Void> getOnType() {
+    public Action getOnType() {
         return TYPE_ACTION;
     }
 
     @Override
-    public void setOnType(Action<Void> action) {
+    public void setOnType(Action action) {
 
     }
 

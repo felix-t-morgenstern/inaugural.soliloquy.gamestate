@@ -8,9 +8,9 @@ import soliloquy.specs.gamestate.entities.KeyBinding;
 public class KeyBindingImpl implements KeyBinding {
     private final Collection<Character> BOUND_CHARACTERS;
 
-    private Action<Void> _onPress;
-    private Action<Void> _onRelease;
-    private Action<Void> _onType;
+    private Action _onPress;
+    private Action _onRelease;
+    private Action _onType;
     private boolean _blocksLowerBindings;
 
     @SuppressWarnings("ConstantConditions")
@@ -26,33 +26,36 @@ public class KeyBindingImpl implements KeyBinding {
         return BOUND_CHARACTERS;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Action<Void> getOnPress() {
+    public Action getOnPress() {
         return _onPress;
     }
 
     @Override
-    public void setOnPress(Action<Void> onPress) {
+    public void setOnPress(Action onPress) {
         _onPress = onPress;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Action<Void> getOnRelease() {
+    public Action getOnRelease() {
         return _onRelease;
     }
 
     @Override
-    public void setOnRelease(Action<Void> onRelease) {
+    public void setOnRelease(Action onRelease) {
         _onRelease = onRelease;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Action<Void> getOnType() {
+    public Action getOnType() {
         return _onType;
     }
 
     @Override
-    public void setOnType(Action<Void> onType) {
+    public void setOnType(Action onType) {
         _onType = onType;
     }
 

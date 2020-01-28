@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -12,14 +11,24 @@ public class GameZoneStub implements GameZone {
     public static int _maxX = 999;
     public static int _maxY = 999;
 
+    public static ReadableCoordinate FAKE_MAX_COORDINATES = null;
+
     public static String ID = "GameZoneStubId";
     public Tile[][] TILES = new Tile[_maxX][_maxY];
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
+
+    @SuppressWarnings("rawtypes")
+    private final Collection<Action> ON_ENTRY = new CollectionStub<>();
+    @SuppressWarnings("rawtypes")
+    private final Collection<Action> ON_EXIT = new CollectionStub<>();
 
     private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
 
     private boolean _isDeleted;
     private String _customId;
+    private String _type;
+    private VariableCache _data;
+    private String _name;
 
     public GameZoneStub() {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
@@ -30,21 +39,34 @@ public class GameZoneStub implements GameZone {
     }
 
     public GameZoneStub(String customId) {
-        this();
+        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
         _customId = customId;
+    }
+
+    public GameZoneStub(String id, String type, Tile[][] tiles, VariableCache data) {
+        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
+        RETURN_ACTUAL_TILE_AT_LOCATION = true;
+        _customId = id;
+        _type = type;
+        TILES = tiles;
+        _data = data;
     }
 
     @Override
     public String type() {
-        return null;
+        return _type;
     }
 
+    @SuppressWarnings("ReplaceNullCheck")
     @Override
-    public Coordinate maxCoordinates() {
+    public ReadableCoordinate maxCoordinates() {
         if (THROW_EXCEPTION_ON_GET_MAX_COORDINATES) {
             throw new GameZoneStubException(this);
         }
-        return new CoordinateStub(_maxX,_maxY);
+        if (FAKE_MAX_COORDINATES != null) {
+            return FAKE_MAX_COORDINATES;
+        }
+        return new CoordinateStub(TILES.length-1,TILES[0].length-1);
     }
 
     @Override
@@ -56,14 +78,16 @@ public class GameZoneStub implements GameZone {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action<Void>> onEntry() {
-        return null;
+    public Collection<Action> onEntry() {
+        return ON_ENTRY;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action<Void>> onExit() {
-        return null;
+    public Collection<Action> onExit() {
+        return ON_EXIT;
     }
 
     @Override
@@ -73,12 +97,12 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public String getName() {
-        return null;
+        return _name;
     }
 
     @Override
-    public void setName(String s) {
-
+    public void setName(String name) {
+        _name = name;
     }
 
     @Override
@@ -105,7 +129,7 @@ public class GameZoneStub implements GameZone {
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        return null;
+        return _data;
     }
 
     public class GameZoneStubException extends RuntimeException {

@@ -16,11 +16,11 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String TYPE;
     private final ReadableCoordinate MAX_COORDINATES;
     private final Tile[][] TILES;
-    private final Collection<Action<Void>> ENTRY_ACTIONS;
-    private final Collection<Action<Void>> EXIT_ACTIONS;
+    private final Collection<Action> ENTRY_ACTIONS;
+    private final Collection<Action> EXIT_ACTIONS;
     private final VariableCache DATA;
 
-    private final static Action<Void> ACTION_ARCHETYPE = new VoidActionArchetype();
+    private final static Action ACTION_ARCHETYPE = new VoidActionArchetype();
 
     private String _name;
 
@@ -113,13 +113,15 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         return TILES[x][y];
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action<Void>> onEntry() {
+    public Collection<Action> onEntry() {
         return ENTRY_ACTIONS;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action<Void>> onExit() {
+    public Collection<Action> onExit() {
         return EXIT_ACTIONS;
     }
 

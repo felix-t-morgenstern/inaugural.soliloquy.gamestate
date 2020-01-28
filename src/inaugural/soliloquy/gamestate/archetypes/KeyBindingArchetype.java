@@ -10,33 +10,36 @@ public class KeyBindingArchetype implements KeyBinding {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Action<Void> getOnPress() {
+    public Action getOnPress() {
         return null;
     }
 
     @Override
-    public void setOnPress(Action<Void> action) {
+    public void setOnPress(Action action) {
 
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Action<Void> getOnRelease() {
+    public Action getOnRelease() {
         return null;
     }
 
     @Override
-    public void setOnRelease(Action<Void> action) {
+    public void setOnRelease(Action action) {
 
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Action<Void> getOnType() {
+    public Action getOnType() {
         return null;
     }
 
     @Override
-    public void setOnType(Action<Void> action) {
+    public void setOnType(Action action) {
 
     }
 
