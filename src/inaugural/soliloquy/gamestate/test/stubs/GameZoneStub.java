@@ -8,12 +8,12 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
 public class GameZoneStub implements GameZone {
-    public static int _maxX = 999;
-    public static int _maxY = 999;
+    public int _maxX = 999;
+    public int _maxY = 999;
 
-    public static ReadableCoordinate FAKE_MAX_COORDINATES = null;
+    public ReadableCoordinate FAKE_MAX_COORDINATES = null;
 
-    public static String ID = "GameZoneStubId";
+    public String ID = "GameZoneStubId";
     public Tile[][] TILES = new Tile[_maxX][_maxY];
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 

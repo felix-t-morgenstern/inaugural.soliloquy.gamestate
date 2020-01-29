@@ -12,7 +12,7 @@ public class PartyStub implements Party {
     }
 
     @Override
-    public VariableCache partyAttributes() {
+    public VariableCache attributes() {
         return null;
     }
 

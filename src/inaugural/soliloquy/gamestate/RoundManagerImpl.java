@@ -23,6 +23,7 @@ public class RoundManagerImpl implements RoundManager {
     private final PairFactory PAIR_FACTORY;
     private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
     private final ActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER;
+    // TODO: Don't accept Consumers for this; actually implement the logic to run through Character depletable stats, status effects, possible actions in their round data, etc.
     private final Consumer<Character> ON_CHARACTER_TURN_START;
     private final Consumer<Character> ON_CHARACTER_TURN_END;
     private final Consumer<Void> ON_ROUND_START;

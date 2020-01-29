@@ -3,10 +3,9 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.game.Game;
+import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.logger.Logger;
 
 public class CameraStub implements Camera {
     @Override
@@ -20,7 +19,7 @@ public class CameraStub implements Camera {
     }
 
     @Override
-    public Coordinate getPixelOffset() {
+    public ReadableCoordinate getPixelOffset() {
         return null;
     }
 
@@ -60,22 +59,12 @@ public class CameraStub implements Camera {
     }
 
     @Override
-    public void calculateVisibileTiles() throws IllegalStateException {
+    public void calculateVisibleTiles() throws IllegalStateException {
 
     }
 
     @Override
-    public Collection<Coordinate> visibileTiles() {
-        return null;
-    }
-
-    @Override
-    public Game game() {
-        return null;
-    }
-
-    @Override
-    public Logger logger() {
+    public Collection<ReadableCoordinate> visibleTiles() {
         return null;
     }
 

@@ -9,7 +9,6 @@ import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.factories.*;
-import soliloquy.specs.ruleset.Ruleset;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,11 +19,8 @@ class GameStateImplTests {
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
     private final RegistryFactory REGISTRY_FACTORY = new RegistryFactoryStub();
     private final GameZonesRepo GAME_ZONES_REPO = new GameZonesRepoStub();
-    private final Camera CAMERA = new CameraStub();
+    private final CameraFactoryStub CAMERA_FACTORY = new CameraFactoryStub();
     private final RoundManager ROUND_MANAGER = new RoundManagerStub();
-    private final Ruleset RULESET = new RulesetStub();
-    private final GameZoneFactory GAME_ZONE_FACTORY = new GameZoneFactoryStub();
-    private final TileFactory TILE_FACTORY = new TileFactoryStub();
     private final ItemFactory ITEM_FACTORY = new ItemFactoryStub();
     private final CharacterFactory CHARACTER_FACTORY = new CharacterFactoryStub();
     private final TimerFactory TIMER_FACTORY = new TimerFactoryStub();
@@ -43,11 +39,8 @@ class GameStateImplTests {
                 MAP_FACTORY,
                 REGISTRY_FACTORY,
                 GAME_ZONES_REPO,
-                CAMERA,
+                CAMERA_FACTORY,
                 ROUND_MANAGER,
-                RULESET,
-                GAME_ZONE_FACTORY,
-                TILE_FACTORY,
                 ITEM_FACTORY,
                 CHARACTER_FACTORY,
                 TIMER_FACTORY,
@@ -65,11 +58,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -82,11 +72,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -99,11 +86,8 @@ class GameStateImplTests {
                         null,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -116,11 +100,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         null,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -133,28 +114,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         null,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
-                        ITEM_FACTORY,
-                        CHARACTER_FACTORY,
-                        TIMER_FACTORY,
-                        KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
-                        PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
-                        REGISTRY_FACTORY,
-                        GAME_ZONES_REPO,
-                        CAMERA,
-                        null,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -169,9 +130,6 @@ class GameStateImplTests {
                         GAME_ZONES_REPO,
                         null,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -184,44 +142,7 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
-                        ROUND_MANAGER,
-                        null,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
-                        ITEM_FACTORY,
-                        CHARACTER_FACTORY,
-                        TIMER_FACTORY,
-                        KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
-                        PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
-                        REGISTRY_FACTORY,
-                        GAME_ZONES_REPO,
-                        CAMERA,
-                        ROUND_MANAGER,
-                        RULESET,
-                        null,
-                        TILE_FACTORY,
-                        ITEM_FACTORY,
-                        CHARACTER_FACTORY,
-                        TIMER_FACTORY,
-                        KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
-                        PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
-                        REGISTRY_FACTORY,
-                        GAME_ZONES_REPO,
-                        CAMERA,
-                        ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
+                        CAMERA_FACTORY,
                         null,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
@@ -235,11 +156,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         null,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -252,11 +170,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         null,
                         TIMER_FACTORY,
@@ -269,11 +184,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         null,
@@ -286,11 +198,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -303,11 +212,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -320,11 +226,8 @@ class GameStateImplTests {
                         MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA,
+                        CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        RULESET,
-                        GAME_ZONE_FACTORY,
-                        TILE_FACTORY,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         TIMER_FACTORY,
@@ -381,7 +284,10 @@ class GameStateImplTests {
 
     @Test
     void testCamera() {
-        assertSame(CAMERA, _gameState.camera());
+        _gameState.setCurrentGameZone(new GameZoneStub());
+
+        assertSame(CameraFactoryStub.CAMERA, _gameState.camera());
+        assertSame(CAMERA_FACTORY.GET_CURRENT_GAME_ZONE.get(), _gameState.getCurrentGameZone());
     }
 
     @Test
@@ -392,21 +298,6 @@ class GameStateImplTests {
     @Test
     void testKeyBindingContexts() {
         assertNotNull(_gameState.keyBindingContexts());
-    }
-
-    @Test
-    void testRuleset() {
-        assertSame(RULESET, _gameState.ruleset());
-    }
-
-    @Test
-    void testGameZoneFactory() {
-        assertNotNull(_gameState.gameZoneFactory());
-    }
-
-    @Test
-    void testTileFactory() {
-        assertNotNull(_gameState.tileFactory());
     }
 
     @Test

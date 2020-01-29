@@ -2,21 +2,22 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.PartyImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Party;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyImplTests {
-    private final static VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
+    private final static VariableCache DATA = new VariableCacheStub();
 
     private Party _party;
 
     @BeforeEach
     void setUp() {
-        _party = new PartyImpl(new CollectionFactoryStub(), DATA_FACTORY);
+        _party = new PartyImpl(new CollectionFactoryStub(), DATA);
     }
 
     @Test
@@ -30,7 +31,7 @@ class PartyImplTests {
     }
 
     @Test
-    void testPartyAttributes() {
-        assertSame(DATA_FACTORY._mostRecentlyCreated, _party.partyAttributes());
+    void testAttributes() {
+        assertSame(DATA, _party.attributes());
     }
 }

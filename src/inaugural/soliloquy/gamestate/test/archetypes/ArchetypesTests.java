@@ -7,6 +7,7 @@ import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -119,6 +120,12 @@ class ArchetypesTests {
     }
 
     @Test
+    void testGameStateArchetype() {
+        assertEquals(GameState.class.getCanonicalName(),
+                new GameStateArchetype().getInterfaceName());
+    }
+
+    @Test
     void testGameZoneArchetype() {
         assertEquals(GameZone.class.getCanonicalName(),
                 new GameZoneArchetype().getInterfaceName());
@@ -151,6 +158,12 @@ class ArchetypesTests {
     void testReactiveAbilityTypeArchetype() {
         assertEquals(ReactiveAbilityType.class.getCanonicalName(),
                 new ReactiveAbilityTypeArchetype().getInterfaceName());
+    }
+
+    @Test
+    void testReadableCoordinateArchetype() {
+        assertEquals(ReadableCoordinate.class.getCanonicalName(),
+                new ReadableCoordinateArchetype().getInterfaceName());
     }
 
     @Test

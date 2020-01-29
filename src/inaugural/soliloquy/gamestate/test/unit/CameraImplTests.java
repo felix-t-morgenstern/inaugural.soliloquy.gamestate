@@ -6,46 +6,50 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.game.Game;
+import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
+
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CameraImplTests {
     private Camera _camera;
 
-    private Game _game;
-    private Logger _logger;
-    private TileVisibility _tileVisibility;
+    private final CoordinateFactoryStub COORDINATE_FACTORY = new CoordinateFactoryStub();
+    private final CollectionFactoryStub COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final MapFactoryStub MAP_FACTORY = new MapFactoryStub();
+    private final TileVisibility TILE_VISIBILITY = new TileVisibilityStub();
+    private final GameZoneStub GAME_ZONE = new GameZoneStub();
 
     @BeforeEach
     void setUp() {
-        _game = new GameStub();
-        _logger = new LoggerStub();
-        _tileVisibility = new TileVisibilityStub();
+        _camera = new CameraImpl(COORDINATE_FACTORY, COLLECTION_FACTORY, MAP_FACTORY,
+                TILE_VISIBILITY, () -> GAME_ZONE);
+    }
 
-        _camera = new CameraImpl(_game, _logger, new CoordinateFactoryStub(),
-                new CollectionFactoryStub(), new MapFactoryStub(), _tileVisibility,
-                GameZoneStub::new);
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testConstructorWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(null,
+                COLLECTION_FACTORY, MAP_FACTORY, TILE_VISIBILITY, () -> GAME_ZONE));
+        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
+                null, MAP_FACTORY, TILE_VISIBILITY, () -> GAME_ZONE));
+        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
+                COLLECTION_FACTORY, null, TILE_VISIBILITY, () -> GAME_ZONE));
+        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
+                COLLECTION_FACTORY, MAP_FACTORY, null, () -> GAME_ZONE));
+        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
+                COLLECTION_FACTORY, MAP_FACTORY, TILE_VISIBILITY, null));
     }
 
     @Test
     void testGetInterfaceName() {
         assertEquals(Camera.class.getCanonicalName(), _camera.getInterfaceName());
-    }
-
-    @Test
-    void testGame() {
-        assertSame(_game, _camera.game());
-    }
-
-    @Test
-    void testLogger() {
-        assertSame(_logger, _camera.logger());
     }
 
     @Test
@@ -82,12 +86,12 @@ class CameraImplTests {
         assertThrows(IllegalArgumentException.class, () -> _camera.setPixelOffset(0,-1));
     }
 
+    @SuppressWarnings("unused")
     @Test
     void testGetPixelOffsetProducesClone() {
         _camera.setPixelOffset(123,456);
-        Coordinate pixelOffset = _camera.getPixelOffset();
-        pixelOffset.setX(789);
-        assertSame(123, _camera.getPixelOffset().getX());
+        ReadableCoordinate pixelOffset = _camera.getPixelOffset();
+        assertThrows(ClassCastException.class, () -> {Coordinate x = (Coordinate)pixelOffset;});
     }
 
     @Test
@@ -130,12 +134,12 @@ class CameraImplTests {
 
     @Test
     void testVisibleTiles() {
-        assertNotNull(_camera.visibileTiles());
+        assertNotNull(_camera.visibleTiles());
 
         Coordinate coordinate = new CoordinateStub(123,456);
-        _camera.visibileTiles().add(coordinate);
-        assertEquals(123, _camera.visibileTiles().get(0).getX());
-        assertEquals(456, _camera.visibileTiles().get(0).getY());
+        _camera.visibleTiles().add(coordinate);
+        assertEquals(123, _camera.visibleTiles().get(0).getX());
+        assertEquals(456, _camera.visibleTiles().get(0).getY());
     }
 
     @Test
@@ -143,26 +147,26 @@ class CameraImplTests {
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);
-        _camera.calculateVisibileTiles();
-        assertSame(49, _camera.visibileTiles().size());
+        _camera.calculateVisibleTiles();
+        assertSame(49, _camera.visibleTiles().size());
     }
 
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
-        GameZoneStub.FAKE_MAX_COORDINATES = new ReadableCoordinateStub(4,4);
+        GAME_ZONE.FAKE_MAX_COORDINATES = new ReadableCoordinateStub(4,4);
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);
-        _camera.calculateVisibileTiles();
-        assertSame(25, _camera.visibileTiles().size());
+        _camera.calculateVisibleTiles();
+        assertSame(25, _camera.visibleTiles().size());
     }
 
     @Test
     void testCalculateVisibleTilesWithZeroVisibilityRadius() {
         _camera.setTileRenderingRadius(0);
-        _camera.calculateVisibileTiles();
+        _camera.calculateVisibleTiles();
 
-        assertSame(0, _camera.visibileTiles().size());
+        assertSame(0, _camera.visibleTiles().size());
     }
 
     @Test
@@ -179,8 +183,8 @@ class CameraImplTests {
         _camera.charactersProvidingVisibility().put(character1,3);
         _camera.coordinatesProvidingVisibility().put(new CoordinateStub(17,13),2);
 
-        _camera.calculateVisibileTiles();
-        assertEquals(22, _camera.visibileTiles().size());
-        assertEquals(22, ((TileVisibilityStub)_tileVisibility)._tilesChecked.size());
+        _camera.calculateVisibleTiles();
+        assertEquals(22, _camera.visibleTiles().size());
+        assertEquals(22, ((TileVisibilityStub) TILE_VISIBILITY)._tilesChecked.size());
     }
 }

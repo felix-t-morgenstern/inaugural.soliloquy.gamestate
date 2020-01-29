@@ -13,12 +13,11 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.*;
-import soliloquy.specs.ruleset.Ruleset;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
 public class GameStateImpl implements GameState {
     private final Party PARTY;
-    private final VariableCache VARIABLE_CACHE;
+    private final VariableCache DATA;
     private final Map<String, CharacterAIType> CHARACTER_AI_TYPES;
     private final GameZonesRepo GAME_ZONES_REPO;
     private final Registry<GameMovementEvent> MOVEMENT_EVENTS;
@@ -26,9 +25,6 @@ public class GameStateImpl implements GameState {
     private final Camera CAMERA;
     private final RoundManager ROUND_MANAGER;
     private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
-    private final Ruleset RULESET;
-    private final GameZoneFactory GAME_ZONE_FACTORY;
-    private final TileFactory TILE_FACTORY;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
     private final TimerFactory TIMER_FACTORY;
@@ -49,15 +45,12 @@ public class GameStateImpl implements GameState {
 
     @SuppressWarnings("ConstantConditions")
     public GameStateImpl(Party party,
-                         VariableCache persistentVariableCache,
+                         VariableCache data,
                          MapFactory mapFactory,
                          RegistryFactory registryFactory,
                          GameZonesRepo gameZonesRepo,
-                         Camera camera,
+                         CameraFactory cameraFactory,
                          RoundManager roundManager,
-                         Ruleset ruleset,
-                         GameZoneFactory gameZoneFactory,
-                         TileFactory tileFactory,
                          ItemFactory itemFactory,
                          CharacterFactory characterFactory,
                          TimerFactory timerFactory,
@@ -68,11 +61,11 @@ public class GameStateImpl implements GameState {
             throw new IllegalArgumentException("GameState: party must be non-null");
         }
         PARTY = party;
-        if (persistentVariableCache == null) {
+        if (data == null) {
             throw new IllegalArgumentException(
-                    "GameState: persistentVariableCache must be non-null");
+                    "GameState: data must be non-null");
         }
-        VARIABLE_CACHE = persistentVariableCache;
+        DATA = data;
         if (mapFactory == null) {
             throw new IllegalArgumentException("GameState: mapFactory must be non-null");
         }
@@ -81,10 +74,10 @@ public class GameStateImpl implements GameState {
             throw new IllegalArgumentException("GameState: gameZonesRepo must be non-null");
         }
         GAME_ZONES_REPO = gameZonesRepo;
-        if (camera == null) {
-            throw new IllegalArgumentException("GameState: camera must be non-null");
+        if (cameraFactory == null) {
+            throw new IllegalArgumentException("GameState: cameraFactory must be non-null");
         }
-        CAMERA = camera;
+        CAMERA = cameraFactory.make(this::getCurrentGameZone);
         if (registryFactory == null) {
             throw new IllegalArgumentException("GameState: registryFactory must be non-null");
         }
@@ -95,18 +88,6 @@ public class GameStateImpl implements GameState {
         }
         ROUND_MANAGER = roundManager;
         KEY_BINDING_CONTEXTS = mapFactory.make(0, KEY_BINDING_CONTEXT_ARCHETYPE);
-        if (ruleset == null) {
-            throw new IllegalArgumentException("GameState: ruleset must be non-null");
-        }
-        RULESET = ruleset;
-        if (gameZoneFactory == null) {
-            throw new IllegalArgumentException("GameState: gameZoneFactory must be non-null");
-        }
-        GAME_ZONE_FACTORY = gameZoneFactory;
-        if (tileFactory == null) {
-            throw new IllegalArgumentException("GameState: tileFactory must be non-null");
-        }
-        TILE_FACTORY = tileFactory;
         if (itemFactory == null) {
             throw new IllegalArgumentException("GameState: itemFactory must be non-null");
         }
@@ -142,7 +123,7 @@ public class GameStateImpl implements GameState {
 
     @Override
     public VariableCache variableCache() {
-        return VARIABLE_CACHE;
+        return DATA;
     }
 
     @Override
@@ -188,21 +169,6 @@ public class GameStateImpl implements GameState {
     @Override
     public Map<Integer, KeyBindingContext> keyBindingContexts() throws IllegalStateException {
         return KEY_BINDING_CONTEXTS;
-    }
-
-    @Override
-    public Ruleset ruleset() {
-        return RULESET;
-    }
-
-    @Override
-    public GameZoneFactory gameZoneFactory() {
-        return  GAME_ZONE_FACTORY;
-    }
-
-    @Override
-    public TileFactory tileFactory() {
-        return TILE_FACTORY;
     }
 
     @Override
