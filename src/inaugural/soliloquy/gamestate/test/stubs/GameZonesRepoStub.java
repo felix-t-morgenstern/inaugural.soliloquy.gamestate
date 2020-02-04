@@ -3,10 +3,14 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.GameZonesRepo;
 
+import java.util.HashMap;
+
 public class GameZonesRepoStub implements GameZonesRepo {
+    public HashMap<String, GameZone> REPO = new HashMap<>();
+
     @Override
     public GameZone getGameZone(String s) throws IllegalArgumentException {
-        return null;
+        return REPO.get(s);
     }
 
     @Override

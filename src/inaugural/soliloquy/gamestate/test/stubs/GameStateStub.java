@@ -47,7 +47,7 @@ public class GameStateStub implements GameState {
 
     @Override
     public void setCurrentGameZone(GameZone gameZone) {
-
+        GameZone = gameZone;
     }
 
     @Override

@@ -26,8 +26,8 @@ class PartyImplTests {
     }
 
     @Test
-    void testPlayerCharacters() {
-        assertNotNull(_party.playerCharacters());
+    void testCharacters() {
+        assertNotNull(_party.characters());
     }
 
     @Test

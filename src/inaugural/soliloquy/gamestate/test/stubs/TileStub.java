@@ -35,6 +35,11 @@ public class TileStub implements Tile {
         _gameZone = new GameZoneStub();
     }
 
+    public TileStub(GameZone gameZone, int x, int y) {
+        _gameZone = gameZone;
+        _tileLocation = new ReadableCoordinateStub(x, y);
+    }
+
     public TileStub(ReadableCoordinate tileLocation) {
         _tileLocation = tileLocation;
         _gameZone = new GameZoneStub();

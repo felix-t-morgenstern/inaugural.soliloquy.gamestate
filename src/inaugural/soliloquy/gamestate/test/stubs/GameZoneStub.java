@@ -8,13 +8,13 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
 public class GameZoneStub implements GameZone {
-    public int _maxX = 999;
-    public int _maxY = 999;
+    public int _maxX = 99;
+    public int _maxY = 99;
 
     public ReadableCoordinate FAKE_MAX_COORDINATES = null;
 
     public String ID = "GameZoneStubId";
-    public Tile[][] TILES = new Tile[_maxX][_maxY];
+    public Tile[][] TILES = new Tile[_maxX+1][_maxY+1];
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 
     @SuppressWarnings("rawtypes")
@@ -25,13 +25,18 @@ public class GameZoneStub implements GameZone {
     private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
 
     private boolean _isDeleted;
-    private String _customId;
+    public String _customId;
     private String _type;
     private VariableCache _data;
     private String _name;
 
     public GameZoneStub() {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
+        for(int x = 0; x <= _maxX; x++) {
+            for(int y = 0; y <= _maxY; y++) {
+                TILES[x][y] = new TileStub(this, x, y);
+            }
+        }
     }
 
     public GameZoneStub(boolean throwExceptionOnGetMaxCoordinates) {

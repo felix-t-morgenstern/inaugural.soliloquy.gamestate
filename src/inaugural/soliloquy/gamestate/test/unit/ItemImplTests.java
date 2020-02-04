@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemImplTests {
     private Item _item;
 
-    private final EntityUuid ID = new EntityUuidStub();
+    private final EntityUuid ID = new EntityUuidStub("64fd6bf1-4e57-492a-a8fb-5f1494f7ddf0");
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final VariableCache DATA = new VariableCacheStub();
     private final PairFactory PAIR_FACTORY = new PairFactoryStub();

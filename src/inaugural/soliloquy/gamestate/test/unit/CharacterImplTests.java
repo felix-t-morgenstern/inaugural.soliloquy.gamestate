@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterImplTests {
     private Character _character;
 
-    private final EntityUuid ID = new EntityUuidStub();
+    private final EntityUuid ID = new EntityUuidStub("a94fad3f-483c-4bdb-b29a-72d36a489721");
     private final CharacterType CHARACTER_TYPE = new CharacterTypeStub();
     private final CharacterAIType AI_TYPE = new CharacterAITypeStub();
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new CharacterEventsFactoryStub();
@@ -327,7 +327,7 @@ class CharacterImplTests {
 
     @Test
     void testId() {
-        assertEquals(ID, _character.id());
+        assertSame(ID, _character.id());
     }
 
     @Test
