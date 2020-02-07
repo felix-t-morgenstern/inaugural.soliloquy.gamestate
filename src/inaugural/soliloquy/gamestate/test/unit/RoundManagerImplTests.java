@@ -10,6 +10,7 @@ import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
@@ -17,6 +18,7 @@ import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class RoundManagerImplTests {
 
     private RoundManager _roundManager;
 
+    @SuppressWarnings("rawtypes")
     @BeforeEach
     void setUp() {
         _roundManager = new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
@@ -119,6 +122,29 @@ public class RoundManagerImplTests {
         assertEquals(0, _roundManager.getCharacterPositionInQueue(character1));
         assertEquals(1, _roundManager.getCharacterPositionInQueue(character2));
         assertEquals(2, _roundManager.getCharacterPositionInQueue(character3));
+    }
+
+    @Test
+    void testSetCharacterPositionWithRoundData() {
+        Character character1 = new CharacterStub();
+        Character character2 = new CharacterStub();
+        Character character3 = new CharacterStub();
+
+        VariableCache roundData1 = new VariableCacheStub();
+        VariableCache roundData2 = new VariableCacheStub();
+        VariableCache roundData3 = new VariableCacheStub();
+
+        _roundManager.setCharacterPositionInQueue(character1, 0, roundData1);
+        _roundManager.setCharacterPositionInQueue(character2, 1, roundData2);
+        _roundManager.setCharacterPositionInQueue(character3, 2, roundData3);
+
+        assertEquals(0, _roundManager.getCharacterPositionInQueue(character1));
+        assertEquals(1, _roundManager.getCharacterPositionInQueue(character2));
+        assertEquals(2, _roundManager.getCharacterPositionInQueue(character3));
+
+        assertSame(roundData1, _roundManager.characterRoundData(character1));
+        assertSame(roundData2, _roundManager.characterRoundData(character2));
+        assertSame(roundData3, _roundManager.characterRoundData(character3));
     }
 
     @Test
@@ -226,12 +252,21 @@ public class RoundManagerImplTests {
 
     @Test
     void testSetAndGetCharacterPositionWithInvalidParameters() {
+        VariableCache roundData = new VariableCacheStub();
+
         assertThrows(IllegalArgumentException.class,
                 () -> _roundManager.setCharacterPositionInQueue(null, 0));
         assertThrows(IllegalArgumentException.class,
                 () -> _roundManager.setCharacterPositionInQueue(new CharacterStub(), -1));
         assertThrows(IllegalArgumentException.class,
                 () -> _roundManager.getCharacterPositionInQueue(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> _roundManager.setCharacterPositionInQueue(null, 0, roundData));
+        assertThrows(IllegalArgumentException.class,
+                () -> _roundManager.setCharacterPositionInQueue(new CharacterStub(), -1,
+                        roundData));
+        assertThrows(IllegalArgumentException.class,
+                () -> _roundManager.setCharacterPositionInQueue(new CharacterStub(), 0, null));
     }
 
     @Test
@@ -310,7 +345,7 @@ public class RoundManagerImplTests {
         _roundManager.setCharacterPositionInQueue(character3, Integer.MAX_VALUE);
         VariableCache initialData3 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
 
-        ReadableCollection<Pair<Character,VariableCache>> representation =
+        ReadableCollection<ReadablePair<Character,VariableCache>> representation =
                 _roundManager.characterQueueRepresentation();
 
         assertNotNull(representation);
@@ -327,6 +362,7 @@ public class RoundManagerImplTests {
         assertSame(initialData3, representation.get(2).getItem2());
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void testEndActiveCharacterTurnAndActiveCharacter() {
         Character character1 = new CharacterStub();
@@ -354,6 +390,7 @@ public class RoundManagerImplTests {
         assertSame(character2, _roundManager.activeCharacter());
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void testEndActiveCharacterTurnWhenNoCharactersAreInQueue() {
         ((ActiveCharactersProviderStub)ACTIVE_CHARACTERS_PROVIDER)
@@ -435,6 +472,7 @@ public class RoundManagerImplTests {
         assertFalse(representation.contains(recurringTimer1));
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void testEndActiveCharacterTurnAdvancesRound() {
         final int roundNumber = 123;
@@ -502,6 +540,7 @@ public class RoundManagerImplTests {
         assertSame(ON_CHARACTER_TURN_START, ROUND_END_ACTIONS_FIRED.get(6));
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void testAdvanceRounds() {
         final int roundNumber = 123;
@@ -553,7 +592,6 @@ public class RoundManagerImplTests {
         assertTrue(oneTimeTimer1._fired);
         assertTrue(oneTimeTimer2._fired);
 
-        //assertSame(10, );
         assertSame(ON_ROUND_END, ROUND_END_ACTIONS_FIRED.get(0));
         assertSame(recurringTimer1, ROUND_END_ACTIONS_FIRED.get(1));
         assertSame(oneTimeTimer1, ROUND_END_ACTIONS_FIRED.get(2));
@@ -564,5 +602,32 @@ public class RoundManagerImplTests {
         assertSame(oneTimeTimer2, ROUND_END_ACTIONS_FIRED.get(7));
         assertSame(recurringTimer4, ROUND_END_ACTIONS_FIRED.get(8));
         assertSame(ON_ROUND_START, ROUND_END_ACTIONS_FIRED.get(9));
+    }
+
+    @Test
+    void testIterator() {
+        Character character1 = new CharacterStub();
+        Character character2 = new CharacterStub();
+        Character character3 = new CharacterStub();
+
+        VariableCache roundData1 = new VariableCacheStub();
+        VariableCache roundData2 = new VariableCacheStub();
+        VariableCache roundData3 = new VariableCacheStub();
+
+        _roundManager.setCharacterPositionInQueue(character1, 0, roundData1);
+        _roundManager.setCharacterPositionInQueue(character2, 1, roundData2);
+        _roundManager.setCharacterPositionInQueue(character3, 2, roundData3);
+
+        ArrayList<ReadablePair<Character, VariableCache>> fromIterator = new ArrayList<>();
+
+        _roundManager.forEach(fromIterator::add);
+
+        assertEquals(3, fromIterator.size());
+        assertSame(character1, fromIterator.get(0).getItem1());
+        assertSame(roundData1, fromIterator.get(0).getItem2());
+        assertSame(character2, fromIterator.get(1).getItem1());
+        assertSame(roundData2, fromIterator.get(1).getItem2());
+        assertSame(character3, fromIterator.get(2).getItem1());
+        assertSame(roundData3, fromIterator.get(2).getItem2());
     }
 }

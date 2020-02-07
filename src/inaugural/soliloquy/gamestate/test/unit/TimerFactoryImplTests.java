@@ -19,10 +19,10 @@ class TimerFactoryImplTests {
 
     @BeforeEach
     void setUp() {
-        _timerFactory = new TimerFactoryImpl(ROUND_MANAGER.ONE_TIME_TIMERS::add,
-                ROUND_MANAGER.ONE_TIME_TIMERS::remove,
-                ROUND_MANAGER.RECURRING_TIMERS::add,
-                ROUND_MANAGER.RECURRING_TIMERS::remove);
+        _timerFactory = new TimerFactoryImpl(ROUND_MANAGER.OneTimeTimers::add,
+                ROUND_MANAGER.OneTimeTimers::remove,
+                ROUND_MANAGER.RecurringTimers::add,
+                ROUND_MANAGER.RecurringTimers::remove);
     }
 
     @Test

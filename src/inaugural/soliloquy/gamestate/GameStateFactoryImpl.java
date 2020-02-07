@@ -9,6 +9,8 @@ import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.entities.RoundManager;
 import soliloquy.specs.gamestate.factories.*;
 
+import java.util.function.Function;
+
 public class GameStateFactoryImpl implements GameStateFactory {
     private final MapFactory MAP_FACTORY;
     private final RegistryFactory REGISTRY_FACTORY;
@@ -17,7 +19,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final RoundManager ROUND_MANAGER;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
-    private final TimerFactory TIMER_FACTORY;
+    private final Function<RoundManager, TimerFactory> TIMER_FACTORY_FACTORY;
     private final KeyBindingFactory KEY_BINDING_FACTORY;
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY;
@@ -26,7 +28,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
     public GameStateFactoryImpl(MapFactory mapFactory, RegistryFactory registryFactory,
                                 GameZonesRepo gameZonesRepo, CameraFactory cameraFactory,
                                 RoundManager roundManager, ItemFactory itemFactory,
-                                CharacterFactory characterFactory, TimerFactory timerFactory,
+                                CharacterFactory characterFactory,
+                                Function<RoundManager, TimerFactory> timerFactoryFactory,
                                 KeyBindingFactory keyBindingFactory,
                                 KeyBindingContextFactory keyBindingContextFactory,
                                 KeyPressListenerFactory keyPressListenerFactory) {
@@ -62,11 +65,11 @@ public class GameStateFactoryImpl implements GameStateFactory {
                     "GameStateFactoryImpl: characterFactory cannot be null");
         }
         CHARACTER_FACTORY = characterFactory;
-        if (timerFactory == null) {
+        if (timerFactoryFactory == null) {
             throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: timerFactory cannot be null");
+                    "GameStateFactoryImpl: timerFactoryFactory cannot be null");
         }
-        TIMER_FACTORY = timerFactory;
+        TIMER_FACTORY_FACTORY = timerFactoryFactory;
         if (keyBindingFactory == null) {
             throw new IllegalArgumentException(
                     "GameStateFactoryImpl: keyBindingFactory cannot be null");
@@ -88,7 +91,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
     public GameState make(Party party, VariableCache variableCache) throws IllegalArgumentException {
         return new GameStateImpl(party, variableCache, MAP_FACTORY, REGISTRY_FACTORY,
                 GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER, ITEM_FACTORY, CHARACTER_FACTORY,
-                TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                TIMER_FACTORY_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
                 KEY_PRESS_LISTENER_FACTORY);
     }
 

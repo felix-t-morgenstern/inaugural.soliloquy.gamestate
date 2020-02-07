@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
 import inaugural.soliloquy.gamestate.archetypes.GameStateArchetype;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
@@ -19,6 +20,8 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
     private final GameZonesRepo GAME_ZONES_REPO;
     private final PersistentValueTypeHandler<VariableCache> VARIABLE_CACHE_HANDLER;
     private final PersistentValueTypeHandler<Character> CHARACTER_HANDLER;
+    private final PersistentValueTypeHandler<OneTimeTimer> ONE_TIME_TIMER_HANDLER;
+    private final PersistentValueTypeHandler<RecurringTimer> RECURRING_TIMER_HANDLER;
 
     private static final GameState ARCHETYPE = new GameStateArchetype();
 
@@ -28,7 +31,10 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                                       GameZonesRepo gameZonesRepo,
                                       PersistentValueTypeHandler<VariableCache>
                                               variableCacheHandler,
-                                      PersistentValueTypeHandler<Character> characterHandler) {
+                                      PersistentValueTypeHandler<Character> characterHandler,
+                                      PersistentValueTypeHandler<OneTimeTimer> oneTimeTimerHandler,
+                                      PersistentValueTypeHandler<RecurringTimer>
+                                                  recurringTimerHandler) {
         if (gameStateFactory == null) {
             throw new IllegalArgumentException(
                     "PersistentGameStateHandler: gameStateFactory cannot be null");
@@ -54,6 +60,16 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                     "PersistentGameStateHandler: characterHandler cannot be null");
         }
         CHARACTER_HANDLER = characterHandler;
+        if (oneTimeTimerHandler == null) {
+            throw new IllegalArgumentException(
+                    "PersistentGameStateHandler: oneTimeTimerHandler cannot be null");
+        }
+        ONE_TIME_TIMER_HANDLER = oneTimeTimerHandler;
+        if (recurringTimerHandler == null) {
+            throw new IllegalArgumentException(
+                    "PersistentGameStateHandler: recurringTimerHandler cannot be null");
+        }
+        RECURRING_TIMER_HANDLER = recurringTimerHandler;
     }
 
     @Override
@@ -78,24 +94,30 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         GameZone currentGameZone = GAME_ZONES_REPO.getGameZone(dto.currentGameZoneId);
         gameState.setCurrentGameZone(currentGameZone);
         for (PcInGameZoneDTO pcDto : dto.pcsInCurrentGameZone) {
-            boolean found = false;
-            for (ReadablePair<Character, Integer> character :
-                    currentGameZone.tile(pcDto.x, pcDto.y).characters()) {
-                if (character.getItem1().id().toString().equals(pcDto.id)) {
-                    party.characters().add(character.getItem1());
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                throw new IllegalArgumentException("PersistentGameStateHandler: character " +
-                        pcDto.id + " not found at (" + pcDto.x + "," + pcDto.y + ")");
-            }
+            party.characters().add(findInTile(currentGameZone, pcDto.id, pcDto.x, pcDto.y));
         }
         for (String pc : dto.pcsNotInCurrentGameZone) {
             party.characters().add(CHARACTER_HANDLER.read(pc));
         }
+        gameState.roundManager().setRoundNumber(dto.roundNumber);
+        for (CharacterInRoundDTO charDto : dto.charsInRound) {
+            gameState.roundManager().setCharacterPositionInQueue(
+                    findInTile(currentGameZone, charDto.id, charDto.x, charDto.y),
+                    Integer.MAX_VALUE, VARIABLE_CACHE_HANDLER.read(charDto.data)
+            );
+        }
         return gameState;
+    }
+
+    private Character findInTile(GameZone currentGameZone, String id, int x, int y) {
+        for (ReadablePair<Character, Integer> character :
+                currentGameZone.tile(x, y).characters()) {
+            if (character.getItem1().id().toString().equals(id)) {
+                return character.getItem1();
+            }
+        }
+        throw new IllegalArgumentException("PersistentGameStateHandler: character " + id +
+                " not found at (" + x + "," + y + ")");
     }
 
     @Override
@@ -128,6 +150,31 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         for (int i = 0; i < pcsNotInGameZone.size(); i++) {
             dto.pcsNotInCurrentGameZone[i] = CHARACTER_HANDLER.write(pcsNotInGameZone.get(i));
         }
+        dto.roundNumber = gameState.roundManager().getRoundNumber();
+        dto.charsInRound = new CharacterInRoundDTO[gameState.roundManager().queueSize()];
+        int index = 0;
+        for(ReadablePair<Character, VariableCache> charWithData : gameState.roundManager()) {
+            dto.charsInRound[index] = new CharacterInRoundDTO();
+            dto.charsInRound[index].id = charWithData.getItem1().id().toString();
+            dto.charsInRound[index].x = charWithData.getItem1().tile().location().getX();
+            dto.charsInRound[index].y = charWithData.getItem1().tile().location().getY();
+            dto.charsInRound[index].data = VARIABLE_CACHE_HANDLER.write(charWithData.getItem2());
+            index++;
+        }
+        ReadableCollection<OneTimeTimer> oneTimeTimers =
+                gameState.roundManager().oneTimeTimersRepresentation();
+        dto.oneTimeTimers = new String[oneTimeTimers.size()];
+        index = 0;
+        for(OneTimeTimer oneTimeTimer : oneTimeTimers) {
+            dto.oneTimeTimers[index++] = ONE_TIME_TIMER_HANDLER.write(oneTimeTimer);
+        }
+        ReadableCollection<RecurringTimer> recurringTimers =
+                gameState.roundManager().recurringTimersRepresentation();
+        dto.recurringTimers = new String[recurringTimers.size()];
+        index = 0;
+        for(RecurringTimer recurringTimer : recurringTimers) {
+            dto.recurringTimers[index++] = RECURRING_TIMER_HANDLER.write(recurringTimer);
+        }
         return new Gson().toJson(dto);
     }
 
@@ -137,6 +184,10 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         String[] pcsNotInCurrentGameZone;
         String data;
         String partyAttributes;
+        int roundNumber;
+        CharacterInRoundDTO[] charsInRound;
+        String[] oneTimeTimers;
+        String[] recurringTimers;
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
@@ -144,5 +195,9 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         int x;
         int y;
         String id;
+    }
+
+    private class CharacterInRoundDTO extends PcInGameZoneDTO {
+        String data;
     }
 }

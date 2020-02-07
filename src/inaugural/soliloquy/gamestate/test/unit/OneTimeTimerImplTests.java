@@ -20,7 +20,7 @@ class OneTimeTimerImplTests {
     @BeforeEach
     void setUp() {
         _oneTimeTimer = new OneTimeTimerImpl(TIMER_ID, ACTION, 0L,
-                ROUND_MANAGER.ONE_TIME_TIMERS::add, ROUND_MANAGER.ONE_TIME_TIMERS::remove);
+                ROUND_MANAGER.OneTimeTimers::add, ROUND_MANAGER.OneTimeTimers::remove);
     }
 
     @Test
@@ -31,7 +31,7 @@ class OneTimeTimerImplTests {
     @Test
     void testEquals() {
         OneTimeTimer oneTimeTimer = new OneTimeTimerImpl(TIMER_ID, ACTION, 0L,
-                ROUND_MANAGER.ONE_TIME_TIMERS::add, ROUND_MANAGER.ONE_TIME_TIMERS::remove);
+                ROUND_MANAGER.OneTimeTimers::add, ROUND_MANAGER.OneTimeTimers::remove);
         assertEquals(_oneTimeTimer, oneTimeTimer);
     }
 
@@ -68,10 +68,10 @@ class OneTimeTimerImplTests {
 
     @Test
     void testDelete() {
-        assertTrue(ROUND_MANAGER.ONE_TIME_TIMERS.contains(_oneTimeTimer));
+        assertTrue(ROUND_MANAGER.OneTimeTimers.contains(_oneTimeTimer));
 
         _oneTimeTimer.delete();
 
-        assertFalse(ROUND_MANAGER.ONE_TIME_TIMERS.contains(_oneTimeTimer));
+        assertFalse(ROUND_MANAGER.OneTimeTimers.contains(_oneTimeTimer));
     }
 }

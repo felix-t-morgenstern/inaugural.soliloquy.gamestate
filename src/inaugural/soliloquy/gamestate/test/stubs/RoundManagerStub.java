@@ -1,21 +1,35 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 public class RoundManagerStub implements RoundManager {
-    public final Collection<OneTimeTimer> ONE_TIME_TIMERS = new CollectionStub<>();
-    public final Collection<RecurringTimer> RECURRING_TIMERS = new CollectionStub<>();
+    private final List<Character> QUEUE = new LinkedList<>();
+    private final HashMap<Character, VariableCache> CHARACTERS_DATA = new HashMap<>();
+
+    public final Collection<OneTimeTimer> OneTimeTimers = new CollectionStub<>();
+    public final Collection<RecurringTimer> RecurringTimers = new CollectionStub<>();
+
+    private int _roundNumber;
 
     @Override
-    public ReadableCollection<Pair<Character, VariableCache>> characterQueueRepresentation() {
-        return null;
+    public ReadableCollection<ReadablePair<Character, VariableCache>> characterQueueRepresentation() {
+        Collection<ReadablePair<Character, VariableCache>> collection = new CollectionStub<>();
+        QUEUE.forEach(c -> {
+            collection.add(new ReadablePairStub<>(c, CHARACTERS_DATA.get(c)));
+        });
+        return collection.representation();
     }
 
     @Override
@@ -30,7 +44,7 @@ public class RoundManagerStub implements RoundManager {
 
     @Override
     public int queueSize() {
-        return 0;
+        return QUEUE.size();
     }
 
     @Override
@@ -39,8 +53,23 @@ public class RoundManagerStub implements RoundManager {
     }
 
     @Override
-    public void setCharacterPositionInQueue(Character character, int i) throws IllegalArgumentException {
+    public void setCharacterPositionInQueue(Character character, int position) throws IllegalArgumentException {
+        QUEUE.add(Math.min(position,QUEUE.size()), character);
+        VariableCache roundData;
+        if (QUEUE.contains(character)) {
+            roundData = CHARACTERS_DATA.get(character);
+        } else {
+            roundData = new VariableCacheStub();
+        }
+        CHARACTERS_DATA.put(character, roundData);
+    }
 
+    @Override
+    public void setCharacterPositionInQueue(Character character, int position,
+                                            VariableCache roundData)
+            throws IllegalArgumentException {
+        QUEUE.add(Math.min(position,QUEUE.size()), character);
+        CHARACTERS_DATA.put(character, roundData);
     }
 
     @Override
@@ -65,12 +94,12 @@ public class RoundManagerStub implements RoundManager {
 
     @Override
     public int getRoundNumber() {
-        return 0;
+        return _roundNumber;
     }
 
     @Override
     public void setRoundNumber(int i) throws IllegalArgumentException {
-
+        _roundNumber = i;
     }
 
     @Override
@@ -80,16 +109,34 @@ public class RoundManagerStub implements RoundManager {
 
     @Override
     public ReadableCollection<OneTimeTimer> oneTimeTimersRepresentation() {
-        return ONE_TIME_TIMERS;
+        return OneTimeTimers;
     }
 
     @Override
     public ReadableCollection<RecurringTimer> recurringTimersRepresentation() {
-        return RECURRING_TIMERS;
+        return RecurringTimers;
     }
 
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public Iterator<ReadablePair<Character, VariableCache>> iterator() {
+        return new Iterator<ReadablePair<Character, VariableCache>>() {
+            private final Iterator<Character> iterator = QUEUE.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public ReadablePair<Character, VariableCache> next() {
+                Character next = iterator.next();
+                return new PairStub<>(next, CHARACTERS_DATA.get(next)).representation();
+            }
+        };
     }
 }

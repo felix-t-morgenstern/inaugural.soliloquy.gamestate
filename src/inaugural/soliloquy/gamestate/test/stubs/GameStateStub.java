@@ -12,12 +12,14 @@ import soliloquy.specs.ruleset.entities.CharacterAIType;
 public class GameStateStub implements GameState {
     public final Party Party;
     public final VariableCache Data;
+    public final RoundManagerStub RoundManager;
 
     public GameZone GameZone;
 
     public GameStateStub(Party party, VariableCache data) {
         Party = party;
         Data = data;
+        RoundManager = new RoundManagerStub();
     }
 
     @Override
@@ -67,7 +69,7 @@ public class GameStateStub implements GameState {
 
     @Override
     public RoundManager roundManager() {
-        return null;
+        return RoundManager;
     }
 
     @Override

@@ -10,6 +10,8 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.factories.*;
 
+import java.util.function.Function;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameStateImplTests {
@@ -23,17 +25,23 @@ class GameStateImplTests {
     private final RoundManager ROUND_MANAGER = new RoundManagerStub();
     private final ItemFactory ITEM_FACTORY = new ItemFactoryStub();
     private final CharacterFactory CHARACTER_FACTORY = new CharacterFactoryStub();
-    private final TimerFactory TIMER_FACTORY = new TimerFactoryStub();
+    private final TimerFactoryStub TIMER_FACTORY = new TimerFactoryStub();
+    private final Function<RoundManager, TimerFactory> TIMER_FACTORY_FACTORY = r -> {
+        _roundManagerForTimerFactoryFactory = r;
+        return TIMER_FACTORY;
+    };
     private final KeyBindingFactory KEY_BINDING_FACTORY = new KeyBindingFactoryStub();
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY =
             new KeyBindingContextFactoryStub();
     private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY =
             new KeyPressListenerFactoryStub();
 
+    private RoundManager _roundManagerForTimerFactoryFactory;
     private GameState _gameState;
 
     @BeforeEach
     void setUp() {
+        _roundManagerForTimerFactoryFactory = null;
         _gameState = new GameStateImpl(PARTY,
                 PERSISTENT_VARIABLE_CACHE,
                 MAP_FACTORY,
@@ -43,7 +51,7 @@ class GameStateImplTests {
                 ROUND_MANAGER,
                 ITEM_FACTORY,
                 CHARACTER_FACTORY,
-                TIMER_FACTORY,
+                TIMER_FACTORY_FACTORY,
                 KEY_BINDING_FACTORY,
                 KEY_BINDING_CONTEXT_FACTORY,
                 KEY_PRESS_LISTENER_FACTORY);
@@ -62,7 +70,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -76,7 +84,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -90,7 +98,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -104,7 +112,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -118,7 +126,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -132,7 +140,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -146,7 +154,7 @@ class GameStateImplTests {
                         null,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -160,7 +168,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         null,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -174,7 +182,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         null,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -202,7 +210,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         null,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -216,7 +224,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         null,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -230,7 +238,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY,
+                        TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         null));
@@ -312,7 +320,8 @@ class GameStateImplTests {
 
     @Test
     void testTimerFactory() {
-        assertNotNull(_gameState.timerFactory());
+        assertSame(TIMER_FACTORY, _gameState.timerFactory());
+        assertSame(ROUND_MANAGER, _roundManagerForTimerFactoryFactory);
     }
 
     @Test

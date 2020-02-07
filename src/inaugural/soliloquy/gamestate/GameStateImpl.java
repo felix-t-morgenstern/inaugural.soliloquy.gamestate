@@ -15,6 +15,8 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
+import java.util.function.Function;
+
 public class GameStateImpl implements GameState {
     private final Party PARTY;
     private final VariableCache DATA;
@@ -53,7 +55,7 @@ public class GameStateImpl implements GameState {
                          RoundManager roundManager,
                          ItemFactory itemFactory,
                          CharacterFactory characterFactory,
-                         TimerFactory timerFactory,
+                         Function<RoundManager,TimerFactory> timerFactoryFactory,
                          KeyBindingFactory keyBindingFactory,
                          KeyBindingContextFactory keyBindingContextFactory,
                          KeyPressListenerFactory keyPressListenerFactory) {
@@ -96,10 +98,10 @@ public class GameStateImpl implements GameState {
             throw new IllegalArgumentException("GameState: characterFactory must be non-null");
         }
         CHARACTER_FACTORY = characterFactory;
-        if (timerFactory == null) {
-            throw new IllegalArgumentException("GameState: timerFactory must be non-null");
+        if (timerFactoryFactory == null) {
+            throw new IllegalArgumentException("GameState: timerFactoryFactory must be non-null");
         }
-        TIMER_FACTORY = timerFactory;
+        TIMER_FACTORY = timerFactoryFactory.apply(roundManager);
         if (keyBindingFactory == null) {
             throw new IllegalArgumentException("GameState: keyBindingFactory must be non-null");
         }

@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterQueueEntryArchetype;
 import inaugural.soliloquy.gamestate.archetypes.OneTimeTimerArchetype;
 import inaugural.soliloquy.gamestate.archetypes.RecurringTimerArchetype;
+import inaugural.soliloquy.gamestate.test.stubs.PairStub;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
@@ -133,11 +134,34 @@ public class RoundManagerImpl implements RoundManager {
             throw new IllegalArgumentException(
                     "RoundManagerImpl.setCharacterPositionInQueue: position cannot be negative");
         }
+        VariableCache roundData;
+        if (CHARACTERS_DATA.containsKey(character)) {
+            roundData = CHARACTERS_DATA.get(character);
+        } else {
+            roundData = VARIABLE_CACHE_FACTORY.make();
+        }
+        setCharacterPositionInQueue(character, position, roundData);
+    }
+
+    @Override
+    public void setCharacterPositionInQueue(Character character, int position,
+                                            VariableCache roundData)
+            throws IllegalArgumentException {
+        if (character == null) {
+            throw new IllegalArgumentException(
+                    "RoundManagerImpl.setCharacterPositionInQueue: character cannot be null");
+        }
+        if (position < 0) {
+            throw new IllegalArgumentException(
+                    "RoundManagerImpl.setCharacterPositionInQueue: position cannot be negative");
+        }
+        if (roundData == null) {
+            throw new IllegalArgumentException(
+                    "RoundManagerImpl.setCharacterPositionInQueue: roundData cannot be null");
+        }
         QUEUE.remove(character);
         QUEUE.add(Math.min(position,QUEUE.size()), character);
-        if (!CHARACTERS_DATA.containsKey(character)) {
-            CHARACTERS_DATA.put(character, VARIABLE_CACHE_FACTORY.make());
-        }
+        CHARACTERS_DATA.put(character, roundData);
     }
 
     @Override
@@ -158,11 +182,13 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public ReadableCollection<Pair<Character, VariableCache>> characterQueueRepresentation() {
-        Collection<Pair<Character,VariableCache>> data =
+    public ReadableCollection<ReadablePair<Character, VariableCache>>
+        characterQueueRepresentation() {
+        Collection<ReadablePair<Character,VariableCache>> data =
                 COLLECTION_FACTORY.make(QUEUE_ENTRY_ARCHETYPE);
         for (Character character : QUEUE) {
-            data.add(PAIR_FACTORY.make(character, CHARACTERS_DATA.get(character)));
+            data.add(PAIR_FACTORY.make(character,
+                    CHARACTERS_DATA.get(character)).representation());
         }
         return data.representation();
     }
@@ -251,6 +277,24 @@ public class RoundManagerImpl implements RoundManager {
     @Override
     public String getInterfaceName() {
         return RoundManager.class.getCanonicalName();
+    }
+
+    @Override
+    public Iterator<ReadablePair<Character, VariableCache>> iterator() {
+        return new Iterator<ReadablePair<Character, VariableCache>>() {
+            private final Iterator<Character> iterator = QUEUE.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public ReadablePair<Character, VariableCache> next() {
+                Character next = iterator.next();
+                return PAIR_FACTORY.make(next, CHARACTERS_DATA.get(next)).representation();
+            }
+        };
     }
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
