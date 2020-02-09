@@ -1,16 +1,17 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-public class CharacterStatisticImpl
-        extends AbstractCharacterValueFromModifiers<CharacterStatisticType>
-        implements soliloquy.specs.gamestate.entities.CharacterStatistic {
+public class CharacterStatisticImpl<TCharacterStatisticType extends CharacterStatisticType>
+        extends AbstractCharacterValueFromModifiers<TCharacterStatisticType>
+        implements CharacterStatistic<TCharacterStatisticType> {
     @SuppressWarnings("ConstantConditions")
-    public CharacterStatisticImpl(Character character, CharacterStatisticType attributeType,
+    public CharacterStatisticImpl(Character character, TCharacterStatisticType type,
                                   CharacterStatisticCalculation characterStatisticCalculation) {
-        super(character, attributeType, characterStatisticCalculation);
+        super(character, type, characterStatisticCalculation);
     }
 
     @Override
@@ -19,7 +20,7 @@ public class CharacterStatisticImpl
     }
 
     @Override
-    public CharacterStatisticType type() {
+    public TCharacterStatisticType type() {
         enforceDeletionInvariants("type");
         return ENTITY_TYPE;
     }

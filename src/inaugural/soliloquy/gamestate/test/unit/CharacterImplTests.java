@@ -343,7 +343,7 @@ class CharacterImplTests {
         assertSame(tile, _character.tile());
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     void testDelete() {
         Tile tile = new TileStub();
@@ -357,7 +357,8 @@ class CharacterImplTests {
 
         CharacterDepletableStatistics depletableStats = _character.depletableStatistics();
 
-        CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
+        CharacterEntitiesOfType<CharacterStaticStatisticType,
+                CharacterStatistic<CharacterStaticStatisticType>>
                 staticStats = _character.staticStatistics();
 
         CharacterStatusEffects statusEffects = _character.statusEffects();
@@ -420,6 +421,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.getInterfaceName());
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void testEnforceTileInvariant() {
         TileStub tile = new TileStub();

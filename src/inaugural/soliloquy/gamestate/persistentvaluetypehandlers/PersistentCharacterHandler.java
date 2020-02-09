@@ -283,7 +283,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
 
         index = 0;
         dto.staticStats = new String[character.staticStatistics().size()];
-        for(CharacterStaticStatistic stat : character.staticStatistics()) {
+        for(CharacterStatistic<CharacterStaticStatisticType> stat : character.staticStatistics()) {
             dto.staticStats[index++] = stat.type().id();
         }
 

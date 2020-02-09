@@ -107,7 +107,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic> staticStatistics() throws IllegalStateException {
+    public CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStatistic<CharacterStaticStatisticType>> staticStatistics() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

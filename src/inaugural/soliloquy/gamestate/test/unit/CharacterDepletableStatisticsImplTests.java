@@ -14,31 +14,21 @@ import soliloquy.specs.gamestate.entities.CharacterDepletableStatistics;
 import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 
 import java.util.ArrayList;
-import java.util.function.Function;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterDepletableStatisticsImplTests {
     private final Character CHARACTER = new CharacterStub();
-    private final ArrayList<CharacterDepletableStatisticType> TYPES_ADDED = new ArrayList<>();
-    private final ArrayList<CharacterDepletableStatistic> ENTITIES_ADDED = new ArrayList<>();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
-    private final Function<CharacterDepletableStatisticType,Function<Character,
-            CharacterDepletableStatistic>> FACTORY = t -> c -> {
-        _characterPassedIntoFactory = c;
-        TYPES_ADDED.add(t);
-        CharacterDepletableStatistic entity = new CharacterDepletableStatisticStub();
-        ENTITIES_ADDED.add(entity);
-        return entity;
-    };
+    private final CharacterDepletableStatisticFactoryStub FACTORY =
+            new CharacterDepletableStatisticFactoryStub();
 
-    private Character _characterPassedIntoFactory;
     private CharacterDepletableStatistics _depletableStats;
 
     @BeforeEach
     void setUp() {
-        _characterPassedIntoFactory = null;
         _depletableStats = new CharacterDepletableStatisticsImpl(CHARACTER, MAP_FACTORY,
                 COLLECTION_FACTORY, FACTORY);
     }
@@ -73,10 +63,9 @@ class CharacterDepletableStatisticsImplTests {
 
         _depletableStats.add(type);
 
-        assertEquals(1, TYPES_ADDED.size());
-        assertTrue(TYPES_ADDED.contains(type));
         assertNotNull(_depletableStats.get(type));
-        assertSame(CHARACTER, _characterPassedIntoFactory);
+        assertSame(CHARACTER,
+                ((CharacterDepletableStatisticStub)_depletableStats.get(type))._character);
     }
 
     @Test
@@ -227,7 +216,15 @@ class CharacterDepletableStatisticsImplTests {
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        ENTITIES_ADDED.forEach(e -> assertTrue(representation.contains(e)));
+        Arrays.stream(new CharacterDepletableStatisticType[] { type1, type2, type3 })
+            .forEach(t -> {
+                for(CharacterDepletableStatistic depletableStat : representation) {
+                    if (depletableStat.type() == t) {
+                        return;
+                    }
+                }
+                fail();
+            });
     }
 
     @Test
@@ -243,12 +240,15 @@ class CharacterDepletableStatisticsImplTests {
         _depletableStats.add(type2);
         _depletableStats.add(type3);
 
+        ReadableCollection<CharacterDepletableStatistic> representation =
+                _depletableStats.representation();
+
         ArrayList<CharacterDepletableStatistic> fromIterator = new ArrayList<>();
 
         _depletableStats.forEach(fromIterator::add);
 
         assertEquals(3, fromIterator.size());
-        ENTITIES_ADDED.forEach(e -> assertTrue(fromIterator.contains(e)));
+        representation.forEach(e -> assertTrue(fromIterator.contains(e)));
     }
 
     @Test
@@ -264,10 +264,13 @@ class CharacterDepletableStatisticsImplTests {
         _depletableStats.add(type2);
         _depletableStats.add(type3);
 
+        ReadableCollection<CharacterDepletableStatistic> representation =
+                _depletableStats.representation();
+
         _depletableStats.delete();
 
         assertTrue(_depletableStats.isDeleted());
-        ENTITIES_ADDED.forEach(e -> assertTrue(e.isDeleted()));
+        representation.forEach(e -> assertTrue(e.isDeleted()));
     }
 
     @Test

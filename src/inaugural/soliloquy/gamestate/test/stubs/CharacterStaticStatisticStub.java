@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.gamestate.entities.CharacterStaticStatistic;
+import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
-public class CharacterStaticStatisticStub implements CharacterStaticStatistic {
+public class CharacterStaticStatisticStub implements CharacterStatistic<CharacterStaticStatisticType> {
     public boolean _isDeleted;
     private CharacterStaticStatisticType _type;
 

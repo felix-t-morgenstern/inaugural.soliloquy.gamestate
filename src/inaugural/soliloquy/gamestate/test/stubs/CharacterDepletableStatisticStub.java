@@ -1,13 +1,15 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
 import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 
 public class CharacterDepletableStatisticStub implements CharacterDepletableStatistic {
     public boolean _isDeleted;
     public boolean _isCalculated;
-    private CharacterDepletableStatisticType _type;
+    public CharacterDepletableStatisticType _type;
+    public Character _character;
     public int _maxValue;
     private int _currentValue;
 
@@ -17,6 +19,11 @@ public class CharacterDepletableStatisticStub implements CharacterDepletableStat
 
     CharacterDepletableStatisticStub(CharacterDepletableStatisticType type) {
         _type = type;
+    }
+
+    public CharacterDepletableStatisticStub(CharacterDepletableStatisticType type, Character character) {
+        _type = type;
+        _character = character;
     }
 
     @Override

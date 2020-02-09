@@ -84,7 +84,8 @@ class ArchetypesTests {
 
     @Test
     void testCharacterStaticStatisticArchetype() {
-        assertEquals(CharacterStaticStatistic.class.getCanonicalName(),
+        assertEquals(CharacterStatistic.class.getCanonicalName() + "<" +
+                        CharacterStaticStatisticType.class.getCanonicalName() + ">",
                 new CharacterStaticStatisticArchetype().getInterfaceName());
     }
 

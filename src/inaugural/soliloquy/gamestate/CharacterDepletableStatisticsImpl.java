@@ -9,9 +9,8 @@ import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterDepletableStatistics;
+import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
 import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
-
-import java.util.function.Function;
 
 public class CharacterDepletableStatisticsImpl
         extends CharacterEntitiesOfTypeImpl<CharacterDepletableStatisticType,
@@ -28,11 +27,15 @@ public class CharacterDepletableStatisticsImpl
     public CharacterDepletableStatisticsImpl(Character character,
                                              MapFactory mapFactory,
                                              CollectionFactory collectionFactory,
-                                             Function<CharacterDepletableStatisticType,
-                                                     Function<Character,
-                                                             CharacterDepletableStatistic>>
-                                                     entityFactory) {
-        super(character, entityFactory, collectionFactory, ARCHETYPE);
+                                             CharacterEntityOfTypeFactory<
+                                                     CharacterDepletableStatisticType,
+                                                     CharacterDepletableStatistic>
+                                                     factory) {
+        super(character, t -> c -> factory.make(c, t), collectionFactory, ARCHETYPE);
+        if (factory == null) {
+            throw new IllegalArgumentException(
+                    "CharacterDepletableStatisticsImpl: factory cannot be null");
+        }
         if (mapFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterDepletableStatisticsImpl: mapFactory cannot be null");

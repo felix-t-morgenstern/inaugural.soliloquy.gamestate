@@ -30,7 +30,8 @@ public class CharacterImpl implements Character {
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
     private final CharacterDepletableStatistics DEPLETABLE_STATISTICS;
-    private final CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
+    private final CharacterEntitiesOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>>
             STATIC_STATISTICS;
     private final CharacterStatusEffects STATUS_EFFECTS;
     private final CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
@@ -39,7 +40,7 @@ public class CharacterImpl implements Character {
             CharacterAbility<ReactiveAbilityType>> REACTIVE_ABILITIES;
     private final VariableCache DATA;
 
-    private final static CharacterStaticStatistic STATIC_STAT_ARCHETYPE =
+    private final static CharacterStatistic<CharacterStaticStatisticType> STATIC_STAT_ARCHETYPE =
             new CharacterStaticStatisticArchetype();
     private final static CharacterAbility<ActiveAbilityType> ACTIVE_ABILITY_ARCHETYPE =
             new CharacterActiveAbilityArchetype();
@@ -224,7 +225,8 @@ public class CharacterImpl implements Character {
 
     @Override
     public CharacterEntitiesOfType<CharacterStaticStatisticType,
-            CharacterStaticStatistic> staticStatistics() throws IllegalStateException {
+            CharacterStatistic<CharacterStaticStatisticType>> staticStatistics()
+            throws IllegalStateException {
         enforceInvariant("staticStatistics", true);
         return STATIC_STATISTICS;
     }

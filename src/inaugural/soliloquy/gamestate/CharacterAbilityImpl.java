@@ -13,10 +13,7 @@ public class CharacterAbilityImpl<TType extends AbilityType> extends HasDeletion
     private final Character CHARACTER;
     private final TType ABILITY_TYPE;
 
-    public CharacterAbilityImpl(boolean isHidden, boolean isDisabled, Character character,
-                                TType abilityType){
-        _isHidden = isHidden;
-        _isDisabled = isDisabled;
+    public CharacterAbilityImpl(Character character, TType abilityType){
         CHARACTER = character;
         ABILITY_TYPE = abilityType;
     }

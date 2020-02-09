@@ -12,15 +12,15 @@ import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterAbilityImplTests {
-    private CharacterAbility _characterAbility;
-    private AbilityType _abilityType;
+    private CharacterAbility<AbilityTypeStub> _characterAbility;
+    private AbilityTypeStub _abilityType;
 
     private final Character CHARACTER = new CharacterStub();
 
     @BeforeEach
     void setUp() {
         _abilityType = new AbilityTypeStub();
-        _characterAbility = new CharacterAbilityImpl(false, false, CHARACTER, _abilityType);
+        _characterAbility = new CharacterAbilityImpl<AbilityTypeStub>(CHARACTER, _abilityType);
     }
 
     @Test
@@ -28,7 +28,7 @@ class CharacterAbilityImplTests {
         _characterAbility.setIsHidden(true);
         assertTrue(_characterAbility.getIsHidden());
         _characterAbility.setIsHidden(false);
-        assertTrue(!_characterAbility.getIsHidden());
+        assertFalse(_characterAbility.getIsHidden());
     }
 
     @Test
@@ -36,7 +36,7 @@ class CharacterAbilityImplTests {
         _characterAbility.setIsDisabled(true);
         assertTrue(_characterAbility.getIsDisabled());
         _characterAbility.setIsDisabled(false);
-        assertTrue(!_characterAbility.getIsDisabled());
+        assertFalse(_characterAbility.getIsDisabled());
     }
 
     @Test

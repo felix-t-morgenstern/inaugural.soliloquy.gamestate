@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.gamestate.entities.CharacterStaticStatistic;
+import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
-public class CharacterStaticStatisticArchetype implements CharacterStaticStatistic {
+public class CharacterStaticStatisticArchetype implements CharacterStatistic<CharacterStaticStatisticType> {
     @Override
     public CharacterStaticStatisticType type() {
         return null;
@@ -37,6 +37,7 @@ public class CharacterStaticStatisticArchetype implements CharacterStaticStatist
 
     @Override
     public String getInterfaceName() {
-        return CharacterStaticStatistic.class.getCanonicalName();
+        return CharacterStatistic.class.getCanonicalName() + "<" +
+                CharacterStaticStatisticType.class.getCanonicalName() + ">";
     }
 }

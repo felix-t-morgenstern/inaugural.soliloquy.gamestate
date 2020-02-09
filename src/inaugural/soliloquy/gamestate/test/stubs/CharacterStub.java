@@ -31,7 +31,8 @@ public class CharacterStub implements Character {
     private final CharacterEvents EVENTS = new CharacterEventsStub(this);
     private final CharacterDepletableStatistics DEPLETABLE_STATS =
             new CharacterDepletableStatisticsStub();
-    private final CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
+    private final CharacterEntitiesOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>>
             STATS = new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
                 new CharacterStaticStatisticStub(t)));
     private final CharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
@@ -142,7 +143,8 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<CharacterStaticStatisticType, CharacterStaticStatistic>
+    public CharacterEntitiesOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>>
         staticStatistics() throws IllegalStateException {
         return STATS;
     }
