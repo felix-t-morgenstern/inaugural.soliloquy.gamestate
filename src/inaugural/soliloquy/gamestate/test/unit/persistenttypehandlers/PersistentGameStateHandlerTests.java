@@ -166,6 +166,11 @@ class PersistentGameStateHandlerTests {
                 charactersWithData.get(1).getItem2());
         assertSame(pcInGameZone, charactersWithData.get(0).getItem1());
         assertSame(npcInGameZone, charactersWithData.get(1).getItem1());
+        // NB: All that matters is that the Timers are read; the factory within the handler should
+        //     add the read Timers are added to the RoundManager, which is not under the purview of
+        //     this test.
+        assertEquals("OneTimeTimer0", ONE_TIME_TIMER_HANDLER.READ_INPUTS.get(0));
+        assertEquals("RecurringTimer0", RECURRING_TIMER_HANDLER.READ_INPUTS.get(0));
     }
 
     @Test

@@ -13,6 +13,7 @@ import soliloquy.specs.gamestate.factories.GameStateFactory;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PersistentGameStateHandler extends PersistentTypeHandler<GameState> {
     private final GameStateFactory GAME_STATE_FACTORY;
@@ -93,12 +94,10 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                 VARIABLE_CACHE_HANDLER.read(dto.data));
         GameZone currentGameZone = GAME_ZONES_REPO.getGameZone(dto.currentGameZoneId);
         gameState.setCurrentGameZone(currentGameZone);
-        for (PcInGameZoneDTO pcDto : dto.pcsInCurrentGameZone) {
-            party.characters().add(findInTile(currentGameZone, pcDto.id, pcDto.x, pcDto.y));
-        }
-        for (String pc : dto.pcsNotInCurrentGameZone) {
-            party.characters().add(CHARACTER_HANDLER.read(pc));
-        }
+        Arrays.stream(dto.pcsInCurrentGameZone).forEach(pcDto ->
+                party.characters().add(findInTile(currentGameZone, pcDto.id, pcDto.x, pcDto.y)));
+        Arrays.stream(dto.pcsNotInCurrentGameZone).forEach(pc ->
+                party.characters().add(CHARACTER_HANDLER.read(pc)));
         gameState.roundManager().setRoundNumber(dto.roundNumber);
         for (CharacterInRoundDTO charDto : dto.charsInRound) {
             gameState.roundManager().setCharacterPositionInQueue(
@@ -106,6 +105,8 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                     Integer.MAX_VALUE, VARIABLE_CACHE_HANDLER.read(charDto.data)
             );
         }
+        Arrays.stream(dto.oneTimeTimers).forEach(ONE_TIME_TIMER_HANDLER::read);
+        Arrays.stream(dto.recurringTimers).forEach(RECURRING_TIMER_HANDLER::read);
         return gameState;
     }
 
