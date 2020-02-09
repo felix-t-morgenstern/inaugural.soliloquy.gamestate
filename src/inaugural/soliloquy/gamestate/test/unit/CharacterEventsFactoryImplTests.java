@@ -1,4 +1,4 @@
-package inaugural.soliloquy.gamestate.test;
+package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterEventsFactoryImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
