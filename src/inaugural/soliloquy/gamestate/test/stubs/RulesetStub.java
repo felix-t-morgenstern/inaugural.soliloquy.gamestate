@@ -1,5 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Function;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.SettingsRepo;
 import soliloquy.specs.common.shared.EntityGroup;
@@ -14,17 +16,17 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 public class RulesetStub implements Ruleset {
     @Override
-    public EntityGroup<ActiveAbilityType> activeAbilitiyTypes() {
+    public EntityGroup<ActiveAbilityType> activeAbilityTypes() {
         return null;
     }
 
     @Override
-    public EntityGroup<ReactiveAbilityType> reactiveAbilitiyTypes() {
+    public EntityGroup<ReactiveAbilityType> reactiveAbilityTypes() {
         return null;
     }
 
     @Override
-    public EntityGroup<PassiveAbilityType> passiveAbilitiyTypes() {
+    public EntityGroup<PassiveAbilityType> passiveAbilityTypes() {
         return null;
     }
 
@@ -100,6 +102,16 @@ public class RulesetStub implements Ruleset {
 
     @Override
     public Registry<WallSegmentType> wallSegmentTypes() {
+        return null;
+    }
+
+    @Override
+    public Registry<Action> actions() {
+        return null;
+    }
+
+    @Override
+    public Registry<Function> functions() {
         return null;
     }
 

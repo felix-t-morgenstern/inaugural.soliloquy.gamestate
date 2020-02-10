@@ -4,16 +4,17 @@ import com.google.gson.Gson;
 import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
-import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
 import soliloquy.specs.ruleset.entities.ItemType;
 
+import java.util.function.Function;
+
 public class PersistentItemHandler extends PersistentTypeHandler<Item> {
     // TODO: Shift from Registry to ReadableRegistry; generate "Registry.readOnlyAccess", also refactor into other infrastructure classes
-    private final Registry<ItemType> ITEM_TYPES_REGISTRY;
+    private final Function<String, ItemType> GET_ITEM_TYPE;
     private final PersistentValueTypeHandler<EntityUuid> ENTITY_UUID_HANDLER;
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
     private final ItemFactory ITEM_FACTORY;
@@ -21,26 +22,25 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
     private static final Item ARCHETYPE = new ItemArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public PersistentItemHandler(Registry<ItemType> itemTypesRegistry,
+    public PersistentItemHandler(Function<String, ItemType> getItemType,
                                  PersistentValueTypeHandler<EntityUuid> entityUuidHandler,
-                                 PersistentValueTypeHandler<VariableCache>
-                                         genericParamsSetHandler,
+                                 PersistentValueTypeHandler<VariableCache> dataHandler,
                                  ItemFactory itemFactory) {
-        if (itemTypesRegistry == null) {
+        if (getItemType == null) {
             throw new IllegalArgumentException(
-                    "PersistentItemHandler: itemTypesRegistry cannot be null");
+                    "PersistentItemHandler: getItemType cannot be null");
         }
-        ITEM_TYPES_REGISTRY = itemTypesRegistry;
+        GET_ITEM_TYPE = getItemType;
         if (entityUuidHandler == null) {
             throw new IllegalArgumentException(
                     "PersistentItemHandler: entityUuidHandler cannot be null");
         }
         ENTITY_UUID_HANDLER = entityUuidHandler;
-        if (genericParamsSetHandler == null) {
+        if (dataHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentItemHandler: genericParamsSetHandler cannot be null");
+                    "PersistentItemHandler: dataHandler cannot be null");
         }
-        DATA_HANDLER = genericParamsSetHandler;
+        DATA_HANDLER = dataHandler;
         if (itemFactory == null) {
             throw new IllegalArgumentException(
                     "PersistentItemHandler: itemFactory cannot be null");
@@ -64,7 +64,7 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
         }
         ItemDTO itemDTO = new Gson().fromJson(input, ItemDTO.class);
         EntityUuid id = ENTITY_UUID_HANDLER.read(itemDTO.id);
-        ItemType itemType = ITEM_TYPES_REGISTRY.get(itemDTO.typeId);
+        ItemType itemType = GET_ITEM_TYPE.apply(itemDTO.typeId);
         VariableCache data = DATA_HANDLER.read(itemDTO.data);
         Item readItem = ITEM_FACTORY.make(itemType, data, id);
         if (itemType.hasCharges()) {

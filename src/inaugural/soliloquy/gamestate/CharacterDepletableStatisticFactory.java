@@ -20,6 +20,7 @@ public class CharacterDepletableStatisticFactory
         CALCULATION = calculation;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public CharacterDepletableStatistic make(Character character,
                                              CharacterDepletableStatisticType type)

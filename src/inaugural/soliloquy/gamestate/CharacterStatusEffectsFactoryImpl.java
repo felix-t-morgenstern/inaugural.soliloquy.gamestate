@@ -1,11 +1,9 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
-import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 public class CharacterStatusEffectsFactoryImpl implements CharacterStatusEffectsFactory {
@@ -13,13 +11,9 @@ public class CharacterStatusEffectsFactoryImpl implements CharacterStatusEffects
     private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION;
 
     @SuppressWarnings("ConstantConditions")
-    public CharacterStatusEffectsFactoryImpl(Map<String, StatusEffectType> statusEffectTypes,
-                                             MapFactory mapFactory,
-                                             StatusEffectResistanceCalculation resistanceCalculation) {
-        if (statusEffectTypes == null) {
-            throw new IllegalArgumentException(
-                    "CharacterStatusEffectsFactory: statusEffectTypes must be non-null");
-        }
+    public CharacterStatusEffectsFactoryImpl(MapFactory mapFactory,
+                                             StatusEffectResistanceCalculation
+                                                     resistanceCalculation) {
         if (mapFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterStatusEffectsFactory: mapFactory must be non-null");

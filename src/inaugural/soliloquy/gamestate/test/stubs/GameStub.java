@@ -26,16 +26,6 @@ public class GameStub implements Game {
     }
 
     @Override
-    public Registry<Action> actions() {
-        return null;
-    }
-
-    @Override
-    public Registry<Function> functions() {
-        return null;
-    }
-
-    @Override
     public Registry<GameMovementEvent> gameEvents() {
         return null;
     }

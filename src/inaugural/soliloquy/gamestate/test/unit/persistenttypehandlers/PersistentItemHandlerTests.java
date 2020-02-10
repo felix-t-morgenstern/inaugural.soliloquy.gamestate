@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentItemHandlerTests {
     private final Registry<ItemType> ITEM_TYPES_REGISTRY = new RegistryStub<>();
-    private final PersistentValueTypeHandler<EntityUuid> ENTITY_UUID_HANDLER =
+    private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER =
             new PersistentEntityUuidHandlerStub();
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
             new PersistentVariableCacheHandlerStub();
@@ -41,25 +41,24 @@ class PersistentItemHandlerTests {
         ItemTypeStub._hasCharges = false;
         ItemTypeStub._isStackable = false;
         ITEM_TYPES_REGISTRY.add(ITEM_TYPE);
-        _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY,
-                ENTITY_UUID_HANDLER, DATA_HANDLER, ITEM_FACTORY);
+        _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, ID_HANDLER,
+                DATA_HANDLER, ITEM_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(null, ENTITY_UUID_HANDLER,
-                        DATA_HANDLER, ITEM_FACTORY));
+                () -> new PersistentItemHandler(null, ID_HANDLER, DATA_HANDLER, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY, null,
-                        DATA_HANDLER, ITEM_FACTORY));
+                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, null, DATA_HANDLER,
+                        ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY, ENTITY_UUID_HANDLER,
-                        null, ITEM_FACTORY));
+                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, ID_HANDLER, null,
+                        ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY, ENTITY_UUID_HANDLER,
-                        DATA_HANDLER, null));
+                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, ID_HANDLER, DATA_HANDLER,
+                        null));
     }
 
     @Test
@@ -107,7 +106,7 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_WITH_CHARGES);
 
         assertNotNull(readItem);
-        assertSame(((PersistentEntityUuidHandlerStub)ENTITY_UUID_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((PersistentEntityUuidHandlerStub) ID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
         assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER)
@@ -122,7 +121,7 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_STACKABLE);
 
         assertNotNull(readItem);
-        assertSame(((PersistentEntityUuidHandlerStub)ENTITY_UUID_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((PersistentEntityUuidHandlerStub) ID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
         assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER)
