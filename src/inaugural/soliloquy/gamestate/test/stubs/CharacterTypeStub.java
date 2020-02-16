@@ -25,6 +25,11 @@ public class CharacterTypeStub implements CharacterType {
     }
 
     @Override
+    public VariableCache defaultData() {
+        return null;
+    }
+
+    @Override
     public Map<String, Collection<GameCharacterEvent>> events() {
         return null;
     }
