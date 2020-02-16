@@ -9,11 +9,13 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileEntities;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +28,7 @@ class TileEntitiesImplTests {
     private final PairFactory PAIR_FACTORY = new PairFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
 
-    private TileEntities<Item> _tileEntities;
+    private TileEntitiesImpl<Item> _tileEntities;
 
     @BeforeEach
     void setUp() {
@@ -224,5 +226,33 @@ class TileEntitiesImplTests {
         assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM,0));
         assertThrows(IllegalStateException.class, () -> _tileEntities.contains(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileEntities.remove(ITEM));
+    }
+
+    @Test
+    void testAssignAddToGameZoneActionAfterAddingToGameZone() {
+        final ArrayList<Item> addedToGameZone = new ArrayList<>();
+
+        _tileEntities.assignAddToGameZoneActionAfterAddingToGameZone(addedToGameZone::add);
+        _tileEntities.add(ITEM);
+
+        assertEquals(1, addedToGameZone.size());
+        assertTrue(addedToGameZone.contains(ITEM));
+    }
+
+    @Test
+    void testAssignRemoveFromGameZoneActionAfterAddingToGameZone() {
+        final ArrayList<Item> removedFromGameZone = new ArrayList<>();
+
+        _tileEntities.assignRemoveFromGameZoneActionAfterAddingToGameZone(
+                removedFromGameZone::add);
+        _tileEntities.remove(ITEM);
+
+        assertEquals(0, removedFromGameZone.size());
+
+        _tileEntities.add(ITEM);
+        _tileEntities.remove(ITEM);
+
+        assertEquals(1, removedFromGameZone.size());
+        assertTrue(removedFromGameZone.contains(ITEM));
     }
 }

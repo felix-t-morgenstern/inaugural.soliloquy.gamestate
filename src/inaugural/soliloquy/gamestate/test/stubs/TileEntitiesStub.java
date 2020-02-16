@@ -9,6 +9,7 @@ import soliloquy.specs.gamestate.entities.TileEntity;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class TileEntitiesStub<TEntity extends TileEntity> implements TileEntities<TEntity> {
     public final HashMap<TEntity,Integer> ENTITIES = new HashMap<>();
@@ -16,6 +17,8 @@ public class TileEntitiesStub<TEntity extends TileEntity> implements TileEntitie
     public final Collection<TEntity> REMOVED_ENTITIES = new CollectionStub<>();
 
     private boolean _isDeleted;
+    private Consumer<TEntity> _addToGameZone;
+    private Consumer<TEntity> _removeFromGameZone;
 
     TileEntitiesStub(Tile tile) {
         TILE = tile;
@@ -27,8 +30,21 @@ public class TileEntitiesStub<TEntity extends TileEntity> implements TileEntitie
     }
 
     @Override
+    public void assignAddToGameZoneActionAfterAddingToGameZone(Consumer<TEntity> addToGameZone) {
+        _addToGameZone = addToGameZone;
+    }
+
+    @Override
+    public void assignRemoveFromGameZoneActionAfterAddingToGameZone(Consumer<TEntity> removeFromGameZone) {
+        _removeFromGameZone = removeFromGameZone;
+    }
+
+    @Override
     public void add(TEntity entity) throws IllegalArgumentException {
         add(entity,0);
+        if (_addToGameZone != null) {
+            _addToGameZone.accept(entity);
+        }
     }
 
     @Override
@@ -40,6 +56,9 @@ public class TileEntitiesStub<TEntity extends TileEntity> implements TileEntitie
     @Override
     public boolean remove(TEntity entity) throws IllegalArgumentException {
         REMOVED_ENTITIES.add(entity);
+        if (_removeFromGameZone != null) {
+            _removeFromGameZone.accept(entity);
+        }
         return ENTITIES.remove(entity) != null;
     }
 

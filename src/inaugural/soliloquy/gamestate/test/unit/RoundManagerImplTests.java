@@ -16,6 +16,7 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
 import java.util.ArrayList;
@@ -545,6 +546,21 @@ public class RoundManagerImplTests {
     void testAdvanceRounds() {
         final int roundNumber = 123;
         _roundManager.setRoundNumber(roundNumber);
+
+        CharacterDepletableStatisticType depletableStatisticType =
+                new CharacterDepletableStatisticTypeStub("depletableStatisticType");
+
+        Character character1 = new CharacterStub();
+        Character character2 = new CharacterStub();
+        Character character3 = new CharacterStub();
+
+        VariableCache roundData1 = new VariableCacheStub();
+        VariableCache roundData2 = new VariableCacheStub();
+        VariableCache roundData3 = new VariableCacheStub();
+
+        _roundManager.setCharacterPositionInQueue(character1, 0, roundData1);
+        _roundManager.setCharacterPositionInQueue(character2, 1, roundData2);
+        _roundManager.setCharacterPositionInQueue(character3, 2, roundData3);
 
         RecurringTimerStub recurringTimer1 = new RecurringTimerStub();
         recurringTimer1.setRoundModulo(2);

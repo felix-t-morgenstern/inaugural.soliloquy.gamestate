@@ -1,12 +1,15 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.archetypes.VoidActionArchetype;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -16,11 +19,16 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String TYPE;
     private final ReadableCoordinate MAX_COORDINATES;
     private final Tile[][] TILES;
+    @SuppressWarnings("rawtypes")
     private final Collection<Action> ENTRY_ACTIONS;
+    @SuppressWarnings("rawtypes")
     private final Collection<Action> EXIT_ACTIONS;
     private final VariableCache DATA;
+    public final Collection<Character> CHARACTERS_IN_GAME_ZONE;
 
+    @SuppressWarnings("rawtypes")
     private final static Action ACTION_ARCHETYPE = new VoidActionArchetype();
+    private final static Character CHARACTER_ARCHETYPE = new CharacterArchetype();
 
     private String _name;
 
@@ -42,6 +50,10 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
             throw new IllegalArgumentException("GameZoneImpl: type cannot be empty");
         }
         TYPE = type;
+        if (collectionFactory == null) {
+            throw new IllegalArgumentException("GameZoneImpl: tileFactory cannot be null");
+        }
+        CHARACTERS_IN_GAME_ZONE = collectionFactory.make(CHARACTER_ARCHETYPE);
         if (tiles == null) {
             throw new IllegalArgumentException("GameZoneImpl: tiles is null");
         }
@@ -69,15 +81,17 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                 }
                 TILES[x][y] = tiles[x][y];
                 tiles[x][y].assignGameZoneAfterAddedToGameZone(this);
+                tiles[x][y].characters().assignAddToGameZoneActionAfterAddingToGameZone(
+                        CHARACTERS_IN_GAME_ZONE::add);
+                tiles[x][y].characters().assignRemoveFromGameZoneActionAfterAddingToGameZone(
+                        CHARACTERS_IN_GAME_ZONE::remove);
+                tiles[x][y].characters().forEach(c -> CHARACTERS_IN_GAME_ZONE.add(c.getItem1()));
             }
         }
         if (coordinateFactory == null) {
             throw new IllegalArgumentException("GameZoneImpl: coordinateFactory cannot be null");
         }
         MAX_COORDINATES = coordinateFactory.make(tiles.length - 1,tiles[0].length - 1);
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException("GameZoneImpl: tileFactory cannot be null");
-        }
         ENTRY_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
         EXIT_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
         if (data == null) {
@@ -123,6 +137,11 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     @Override
     public Collection<Action> onExit() {
         return EXIT_ACTIONS;
+    }
+
+    @Override
+    public ReadableCollection<Character> charactersRepresentation() {
+        return CHARACTERS_IN_GAME_ZONE.representation();
     }
 
     @Override

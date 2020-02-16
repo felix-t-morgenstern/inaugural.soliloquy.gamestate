@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.logger.Logger;
@@ -9,8 +9,21 @@ import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 import soliloquy.specs.sprites.entities.Sprite;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
+import java.util.ArrayList;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 public class CharacterDepletableStatisticTypeStub implements CharacterDepletableStatisticType {
     private final String ID;
+
+    public int _onTurnStartFirePriority;
+    public int _onTurnEndFirePriority;
+    public int _onRoundEndFirePriority;
+
+    public ArrayList<Character> _onTurnStartCharactersFired = new ArrayList<>();
+    public ArrayList<Character> _onTurnEndCharactersFired = new ArrayList<>();
+    public ArrayList<Character> _onRoundEndCharactersFired = new ArrayList<>();
+    public ArrayList<Integer> _onRoundEndRoundsElapsed = new ArrayList<>();
 
     public CharacterDepletableStatisticTypeStub(String id) {
         ID = id;
@@ -42,23 +55,21 @@ public class CharacterDepletableStatisticTypeStub implements CharacterDepletable
     }
 
     @Override
-    public Action<Character> onTurnStart() {
-        return null;
+    public ReadablePair<Consumer<Character>, Integer> onTurnStart() {
+        return new PairStub<>(c -> _onTurnStartCharactersFired.add(c), _onTurnStartFirePriority);
     }
 
     @Override
-    public Action<Character> onTurnEnd() {
-        return null;
+    public ReadablePair<Consumer<Character>, Integer> onTurnEnd() {
+        return new PairStub<>(c -> _onTurnEndCharactersFired.add(c), _onTurnEndFirePriority);
     }
 
     @Override
-    public Action<Character> onRoundStart(Integer integer) {
-        return null;
-    }
-
-    @Override
-    public Action<Character> onRoundEnd(Integer integer) {
-        return null;
+    public ReadablePair<BiConsumer<Character, Integer>, Integer> onRoundEnd() {
+            return new PairStub<>((c,n) -> {
+                _onRoundEndCharactersFired.add(c);
+                _onRoundEndRoundsElapsed.add(n);
+            }, _onRoundEndFirePriority);
     }
 
     @Override

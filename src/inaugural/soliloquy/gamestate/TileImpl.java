@@ -58,6 +58,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
         if (tileEntitiesFactory == null) {
             throw new IllegalArgumentException("TileImpl: tileEntitiesFactory cannot be null");
         }
+        // TODO: Test and implement whether add and remove from gameZone works
         TILE_CHARACTERS = tileEntitiesFactory.make(this, CHARACTER_ARCHETYPE);
         TILE_ITEMS = tileEntitiesFactory.make(this, ITEM_ARCHETYPE);
         TILE_FIXTURES = tileEntitiesFactory.make(this, TILE_FIXTURE_ARCHETYPE);

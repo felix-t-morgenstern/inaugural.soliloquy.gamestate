@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
@@ -20,6 +22,7 @@ class GameZoneImplTests {
     private final String ZONE_TYPE = "zoneType";
     private final int MAX_X_COORDINATE = 1;
     private final int MAX_Y_COORDINATE = 2;
+    private final Character CHARACTER = new CharacterStub();
     private final Tile[][] TILES = new Tile[MAX_X_COORDINATE+1][MAX_Y_COORDINATE+1];
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
@@ -34,6 +37,7 @@ class GameZoneImplTests {
                 TILES[x][y] = new TileStub(x, y, new VariableCacheStub());
             }
         }
+        TILES[1][0].characters().add(CHARACTER);
         _gameZone = new GameZoneImpl(ID, ZONE_TYPE, TILES, COORDINATE_FACTORY,
                 COLLECTION_FACTORY, DATA);
     }
@@ -175,6 +179,33 @@ class GameZoneImplTests {
     @Test
     void testData() {
         assertSame(DATA, _gameZone.data());
+    }
+
+    @Test
+    void testCharactersPresentInConstructorParamsAreAddedToGameZone() {
+        ReadableCollection<Character> charactersInGameZone = _gameZone.charactersRepresentation();
+
+        assertEquals(1, charactersInGameZone.size());
+        assertTrue(charactersInGameZone.contains(CHARACTER));
+    }
+
+    @Test
+    void testAddCharacterToGameZoneViaTileCharactersAndCharactersIterator() {
+        Character character = new CharacterStub();
+
+        _gameZone.tile(0,0).characters().add(character);
+
+        ReadableCollection<Character> charactersInGameZone = _gameZone.charactersRepresentation();
+        assertEquals(2, charactersInGameZone.size());
+        assertTrue(charactersInGameZone.contains(CHARACTER));
+        assertTrue(charactersInGameZone.contains(character));
+    }
+
+    @Test
+    void testRemoveCharacterFromGameZoneViaTileCharacters() {
+        _gameZone.tile(0,0).characters().remove(CHARACTER);
+
+        assertEquals(0, _gameZone.charactersRepresentation().size());
     }
 
     @Test

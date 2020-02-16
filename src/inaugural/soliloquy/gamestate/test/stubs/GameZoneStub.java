@@ -2,8 +2,10 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
@@ -93,6 +95,11 @@ public class GameZoneStub implements GameZone {
     @Override
     public Collection<Action> onExit() {
         return ON_EXIT;
+    }
+
+    @Override
+    public ReadableCollection<Character> charactersRepresentation() {
+        return null;
     }
 
     @Override

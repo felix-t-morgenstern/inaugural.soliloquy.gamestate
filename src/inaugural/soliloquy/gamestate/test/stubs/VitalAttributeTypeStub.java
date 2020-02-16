@@ -1,13 +1,16 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 import soliloquy.specs.sprites.entities.Sprite;
 import soliloquy.specs.sprites.entities.SpriteSet;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class VitalAttributeTypeStub implements CharacterDepletableStatisticType {
     @Override
@@ -33,26 +36,6 @@ public class VitalAttributeTypeStub implements CharacterDepletableStatisticType 
     @Override
     public void setPluralName(String s) throws IllegalArgumentException {
 
-    }
-
-    @Override
-    public Action<Character> onTurnStart() {
-        return null;
-    }
-
-    @Override
-    public Action<Character> onTurnEnd() {
-        return null;
-    }
-
-    @Override
-    public Action<Character> onRoundStart(Integer integer) {
-        return null;
-    }
-
-    @Override
-    public Action<Character> onRoundEnd(Integer integer) {
-        return null;
     }
 
     @Override
@@ -92,6 +75,21 @@ public class VitalAttributeTypeStub implements CharacterDepletableStatisticType 
 
     @Override
     public Pair<Sprite, Integer> getIcon(Object o, String s, Character character) {
+        return null;
+    }
+
+    @Override
+    public ReadablePair<Consumer<Character>, Integer> onTurnStart() {
+        return null;
+    }
+
+    @Override
+    public ReadablePair<Consumer<Character>, Integer> onTurnEnd() {
+        return null;
+    }
+
+    @Override
+    public ReadablePair<BiConsumer<Character, Integer>, Integer> onRoundEnd() {
         return null;
     }
 }

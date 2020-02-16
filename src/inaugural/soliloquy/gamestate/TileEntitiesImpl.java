@@ -9,6 +9,7 @@ import soliloquy.specs.gamestate.entities.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemIsPresentElsewhere
         implements TileEntities<TEntity> {
@@ -19,6 +20,9 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     final HashMap<TEntity,Integer> ENTITIES;
 
     private final static CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
+
+    private Consumer<TEntity> _addToGameZone;
+    private Consumer<TEntity> _removeFromGameZone;
 
     @SuppressWarnings("ConstantConditions")
     public TileEntitiesImpl(Tile tile, TEntity archetype, PairFactory pairFactory,
@@ -50,6 +54,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         add(entity, 0);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void add(TEntity entity, int zIndex) throws IllegalArgumentException {
         enforceDeletionInvariants("add");
         enforceAssignmentInvariant(entity, "add");
@@ -62,6 +67,9 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         }
         ENTITIES.put(entity, zIndex);
         entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
+        if (_addToGameZone != null) {
+            _addToGameZone.accept(entity);
+        }
     }
 
     private boolean entityIsPresentElsewhere(TEntity entity) {
@@ -103,6 +111,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         ENTITIES.put(entity, z);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public boolean remove(TEntity entity) {
         enforceDeletionInvariants("remove");
         enforceAssignmentInvariant(entity, "remove");
@@ -112,10 +121,14 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         boolean entityWasPresent = ENTITIES.remove(entity) != null;
         if (entityWasPresent) {
             entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
+            if (_removeFromGameZone != null) {
+                _removeFromGameZone.accept(entity);
+            }
         }
         return entityWasPresent;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public boolean contains(TEntity entity) throws IllegalArgumentException {
         enforceDeletionInvariants("contains");
         enforceAssignmentInvariant(entity, "contains");
@@ -137,6 +150,17 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         Map<TEntity, Integer> entities = MAP_FACTORY.make(ARCHETYPE, 0);
         ENTITIES.forEach(entities::put);
         return entities.readOnlyRepresentation();
+    }
+
+    @Override
+    public void assignAddToGameZoneActionAfterAddingToGameZone(Consumer<TEntity> addToGameZone) {
+        _addToGameZone = addToGameZone;
+    }
+
+    @Override
+    public void assignRemoveFromGameZoneActionAfterAddingToGameZone(
+            Consumer<TEntity> removeFromGameZone) {
+        _removeFromGameZone = removeFromGameZone;
     }
 
     @Override

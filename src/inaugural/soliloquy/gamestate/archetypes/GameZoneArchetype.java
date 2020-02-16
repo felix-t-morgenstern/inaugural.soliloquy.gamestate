@@ -2,10 +2,14 @@ package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
+
+import java.util.Iterator;
 
 public class GameZoneArchetype implements GameZone {
     @Override
@@ -32,6 +36,11 @@ public class GameZoneArchetype implements GameZone {
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<Action> onExit() {
+        return null;
+    }
+
+    @Override
+    public ReadableCollection<Character> charactersRepresentation() {
         return null;
     }
 
