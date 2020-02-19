@@ -9,7 +9,6 @@ import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.sprites.entities.Sprite;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class StatusEffectTypeArchetype implements StatusEffectType {
     @Override
@@ -58,12 +57,12 @@ public class StatusEffectTypeArchetype implements StatusEffectType {
     }
 
     @Override
-    public ReadablePair<Consumer<Character>, Integer> onTurnStart() {
+    public ReadablePair<BiConsumer<Character, Integer>, Integer> onTurnStart() {
         return null;
     }
 
     @Override
-    public ReadablePair<Consumer<Character>, Integer> onTurnEnd() {
+    public ReadablePair<BiConsumer<Character, Integer>, Integer> onTurnEnd() {
         return null;
     }
 

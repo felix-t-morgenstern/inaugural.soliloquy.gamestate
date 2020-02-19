@@ -386,6 +386,8 @@ class CharacterImplTests {
         assertTrue(statusEffects.isDeleted());
         assertTrue(activeAbilities.isDeleted());
         assertTrue(reactiveAbilities.isDeleted());
+
+        fail("Test and implement removal from RoundManager");
     }
 
     @Test

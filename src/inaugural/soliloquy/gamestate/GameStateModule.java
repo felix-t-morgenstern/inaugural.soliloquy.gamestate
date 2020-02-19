@@ -19,10 +19,7 @@ import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
-import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
-import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
-import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
-import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
+import soliloquy.specs.ruleset.gameconcepts.*;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 import soliloquy.specs.sprites.entities.Sprite;
 import soliloquy.specs.sprites.entities.SpriteSet;
@@ -46,6 +43,8 @@ public class GameStateModule extends AbstractModule {
                            StatusEffectResistanceCalculation resistanceCalculation,
                            TileVisibility tileVisibility,
                            ActiveCharactersProvider activeCharactersProvider,
+                           TurnHandling turnHandling,
+                           RoundEndHandling roundEndHandling,
                            Registry<CharacterType> characterTypes,
                            Registry<CharacterClassification> characterClassifications,
                            Registry<ItemType> itemTypes,
@@ -163,8 +162,7 @@ public class GameStateModule extends AbstractModule {
                 mapFactory, tileVisibility);
 
         RoundManagerImpl roundManager = new RoundManagerImpl(collectionFactory, pairFactory,
-                variableCacheFactory, activeCharactersProvider, onCharacterTurnStart,
-                onCharacterTurnEnd, onRoundStart, onRoundEnd);
+                variableCacheFactory, activeCharactersProvider, turnHandling, roundEndHandling);
 
         Function<RoundManager, TimerFactory> timerFactoryFactory = r ->
                 new TimerFactoryImpl(roundManager::addOneTimeTimer,

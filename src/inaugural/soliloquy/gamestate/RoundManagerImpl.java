@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterQueueEntryArchetype;
 import inaugural.soliloquy.gamestate.archetypes.OneTimeTimerArchetype;
 import inaugural.soliloquy.gamestate.archetypes.RecurringTimerArchetype;
-import inaugural.soliloquy.gamestate.test.stubs.PairStub;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
@@ -13,9 +12,10 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Timer;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
+import soliloquy.specs.ruleset.gameconcepts.RoundEndHandling;
+import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class RoundManagerImpl implements RoundManager {
     private final Collection<OneTimeTimer> ONE_TIME_TIMERS;
@@ -24,16 +24,14 @@ public class RoundManagerImpl implements RoundManager {
     private final PairFactory PAIR_FACTORY;
     private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
     private final ActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER;
-    // TODO: Don't accept Consumers for this; actually implement the logic to run through Character depletable stats, status effects, possible actions in their round data, etc.
-    private final Consumer<Character> ON_CHARACTER_TURN_START;
-    private final Consumer<Character> ON_CHARACTER_TURN_END;
-    private final Consumer<Void> ON_ROUND_START;
-    private final Consumer<Void> ON_ROUND_END;
+    private final TurnHandling TURN_HANDLING;
+    private final RoundEndHandling ROUND_END_HANDLING;
 
     private final List<Character> QUEUE = new LinkedList<>();
     private final HashMap<Character, VariableCache> CHARACTERS_DATA = new HashMap<>();
     private final Pair<Character, VariableCache> QUEUE_ENTRY_ARCHETYPE =
             new CharacterQueueEntryArchetype();
+    HashMap<Character, Integer> ROUND_END_EVENTS_TO_FIRE = new HashMap<>();
 
     private int _roundNumber;
     private Character _activeCharacter;
@@ -43,10 +41,8 @@ public class RoundManagerImpl implements RoundManager {
                             PairFactory pairFactory,
                             VariableCacheFactory variableCacheFactory,
                             ActiveCharactersProvider activeCharactersProvider,
-                            Consumer<Character> onCharacterTurnStart,
-                            Consumer<Character> onCharacterTurnEnd,
-                            Consumer<Void> onRoundStart,
-                            Consumer<Void> onRoundEnd) {
+                            TurnHandling turnHandling,
+                            RoundEndHandling roundEndHandling) {
         if (collectionFactory == null) {
             throw new IllegalArgumentException(
                     "RoundManagerImpl: collectionFactory cannot be null");
@@ -67,26 +63,8 @@ public class RoundManagerImpl implements RoundManager {
                     "RoundManagerImpl: activeCharactersProvider cannot be null");
         }
         ACTIVE_CHARACTERS_PROVIDER = activeCharactersProvider;
-        if (onCharacterTurnStart == null) {
-            throw new IllegalArgumentException(
-                    "RoundManagerImpl: onCharacterTurnStart cannot be null");
-        }
-        ON_CHARACTER_TURN_START = onCharacterTurnStart;
-        if (onCharacterTurnEnd == null) {
-            throw new IllegalArgumentException(
-                    "RoundManagerImpl: onCharacterTurnEnd cannot be null");
-        }
-        ON_CHARACTER_TURN_END = onCharacterTurnEnd;
-        if (onRoundStart == null) {
-            throw new IllegalArgumentException(
-                    "RoundManagerImpl: onRoundStart cannot be null");
-        }
-        ON_ROUND_START = onRoundStart;
-        if (onRoundEnd == null) {
-            throw new IllegalArgumentException(
-                    "RoundManagerImpl: onRoundEnd cannot be null");
-        }
-        ON_ROUND_END = onRoundEnd;
+        TURN_HANDLING = turnHandling;
+        ROUND_END_HANDLING = roundEndHandling;
     }
 
     @Override
@@ -195,13 +173,25 @@ public class RoundManagerImpl implements RoundManager {
 
     @Override
     public void endActiveCharacterTurn() {
-        ON_CHARACTER_TURN_END.accept(_activeCharacter);
-        if (QUEUE.isEmpty()) {
+        removeCharacterFromQueue(_activeCharacter);
+        if (!QUEUE.isEmpty()) {
+            TURN_HANDLING.onTurnEnd(_activeCharacter, 1);
+            increaseEventsFired(ROUND_END_EVENTS_TO_FIRE, _activeCharacter, 1);
+            _activeCharacter = QUEUE.get(0);
+            TURN_HANDLING.onTurnStart(_activeCharacter, 1);
+        }
+        else {
             advanceRounds(1);
         }
-        _activeCharacter = QUEUE.isEmpty() ? null : QUEUE.get(0);
-        if (_activeCharacter != null) {
-            ON_CHARACTER_TURN_START.accept(_activeCharacter);
+    }
+
+    private void increaseEventsFired(HashMap<Character, Integer> eventsFired, Character character,
+                                     int numberOfEvents) {
+        if (eventsFired.containsKey(character)) {
+            eventsFired.put(character, eventsFired.get(character) + numberOfEvents);
+        }
+        else {
+            eventsFired.put(character, numberOfEvents);
         }
     }
 
@@ -223,25 +213,59 @@ public class RoundManagerImpl implements RoundManager {
     @Override
     public void advanceRounds(int numberOfRounds) throws IllegalArgumentException {
         if (numberOfRounds < 1) {
-            return;
+            throw new IllegalArgumentException(
+                    "RoundManagerImpl.advanceRounds: numberOfRounds cannot be less than 1");
         }
 
-        ON_ROUND_END.accept(null);
-        _roundNumber++;
-        ReadableCollection<Pair<Character,VariableCache>> activeCharacters =
-                ACTIVE_CHARACTERS_PROVIDER.activeCharacters();
-        for(Pair<Character,VariableCache> characterWithData : activeCharacters) {
-            QUEUE.add(characterWithData.getItem1());
-            CHARACTERS_DATA.put(characterWithData.getItem1(), characterWithData.getItem2());
-        }
-        fireTimers();
-        ON_ROUND_START.accept(null);
+        HashMap<Character, Integer> turnStartsToFire = new HashMap<>();
+        HashMap<Character, Integer> turnEndsToFire = new HashMap<>();
 
-        advanceRounds(--numberOfRounds);
+        turnEndsToFire.put(_activeCharacter, 1);
+        ROUND_END_EVENTS_TO_FIRE.put(_activeCharacter, 1);
+
+        removeCharacterFromQueue(_activeCharacter);
+
+        if (!QUEUE.isEmpty()) {
+            QUEUE.forEach(c -> {
+                turnStartsToFire.put(c, 1);
+                turnEndsToFire.put(c, 1);
+                increaseEventsFired(ROUND_END_EVENTS_TO_FIRE, c, 1);
+            });
+        }
+
+        Character previousActiveCharacter = _activeCharacter;
+
+        QUEUE.clear();
+        CHARACTERS_DATA.clear();
+
+        boolean moreThanOneRoundElapsed = numberOfRounds > 1;
+        ACTIVE_CHARACTERS_PROVIDER.activeCharacters().forEach(c -> {
+            if (moreThanOneRoundElapsed) {
+                increaseEventsFired(turnStartsToFire, c.getItem1(), numberOfRounds - 1);
+                increaseEventsFired(turnEndsToFire, c.getItem1(), numberOfRounds - 1);
+                increaseEventsFired(ROUND_END_EVENTS_TO_FIRE, c.getItem1(), numberOfRounds - 1);
+            }
+            setCharacterPositionInQueue(c.getItem1(), Integer.MAX_VALUE, c.getItem2());
+        });
+
+        // TODO: testEndOfRoundWhenActiveCharactersProviderProvidesNoCharacters; verify whether _activeCharacter is indeed set to null
+        _activeCharacter = QUEUE.get(0);
+        increaseEventsFired(turnStartsToFire, _activeCharacter, 1);
+
+        // TODO: testTimersFiredAfterActiveCharacterReassignedAndBeforeEndOfRoundEvents; verify ordering of events at round end
+        int prevRoundNumber = _roundNumber;
+        _roundNumber += numberOfRounds;
+
+        // TODO: testTimersSentToRoundEndHandlingInOrderOfPriority
+        ROUND_END_HANDLING.runEndOfRoundEvents(turnStartsToFire, turnEndsToFire,
+                ROUND_END_EVENTS_TO_FIRE, getTimersToFire(prevRoundNumber),
+                previousActiveCharacter, _activeCharacter);
+
+        ROUND_END_EVENTS_TO_FIRE.clear();
     }
 
-    private void fireTimers() {
-        HashMap<Integer, List<Timer>> timersToFire = new HashMap<>();
+    private List<Timer> getTimersToFire(int prevRoundNumber) {
+        TreeMap<Integer, List<Timer>> timersToFire = new TreeMap<>();
         for(OneTimeTimer oneTimeTimer : ONE_TIME_TIMERS) {
             if (_roundNumber >= oneTimeTimer.getRoundWhenGoesOff()) {
                 if (!timersToFire.containsKey(oneTimeTimer.getPriority())) {
@@ -259,9 +283,9 @@ public class RoundManagerImpl implements RoundManager {
                 timersToFire.get(recurringTimers.getPriority()).add(recurringTimers);
             }
         }
-        List<Integer> priorities = new ArrayList<>(timersToFire.keySet());
-        Collections.sort(priorities);
-        priorities.forEach(i -> timersToFire.get(i).forEach(Timer::fire));
+        List<Timer> results = new ArrayList<>();
+        timersToFire.keySet().forEach(i -> results.addAll(timersToFire.get(i)));
+        return results;
     }
 
     @Override

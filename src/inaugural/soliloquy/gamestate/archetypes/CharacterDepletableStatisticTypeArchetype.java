@@ -10,7 +10,6 @@ import soliloquy.specs.sprites.entities.Sprite;
 import soliloquy.specs.sprites.entities.SpriteSet;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class CharacterDepletableStatisticTypeArchetype
         implements CharacterDepletableStatisticType {
@@ -80,12 +79,12 @@ public class CharacterDepletableStatisticTypeArchetype
     }
 
     @Override
-    public ReadablePair<Consumer<Character>, Integer> onTurnStart() {
+    public ReadablePair<BiConsumer<Character, Integer>, Integer> onTurnStart() {
         return null;
     }
 
     @Override
-    public ReadablePair<Consumer<Character>, Integer> onTurnEnd() {
+    public ReadablePair<BiConsumer<Character, Integer>, Integer> onTurnEnd() {
         return null;
     }
 

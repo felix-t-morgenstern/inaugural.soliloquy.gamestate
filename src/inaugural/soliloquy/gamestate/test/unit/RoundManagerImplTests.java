@@ -5,7 +5,6 @@ import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
@@ -16,12 +15,9 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
-import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,33 +27,22 @@ public class RoundManagerImplTests {
     private final VariableCacheFactoryStub VARIABLE_CACHE_FACTORY = new VariableCacheFactoryStub();
     private final ActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER =
             new ActiveCharactersProviderStub();
-    private final Action<Character> ON_CHARACTER_TURN_START = new ActionStub<>();
-    private final Action<Character> ON_CHARACTER_TURN_END = new ActionStub<>();
-    private final Action<Void> ON_ROUND_START = new ActionStub<>();
-    private final Action<Void> ON_ROUND_END = new ActionStub<>();
-
-    public static final List<Object> ROUND_END_ACTIONS_FIRED = new LinkedList<>();
+    private final TurnHandlingStub TURN_HANDLING = new TurnHandlingStub();
+    private final RoundEndHandlingStub ROUND_END_HANDLING = new RoundEndHandlingStub();
 
     private RoundManager _roundManager;
 
-    @SuppressWarnings("rawtypes")
     @BeforeEach
     void setUp() {
         _roundManager = new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
-                VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, ON_CHARACTER_TURN_START::run,
-                ON_CHARACTER_TURN_END::run, ON_ROUND_START::run, ON_ROUND_END::run);
-
-        ((ActionStub) ON_ROUND_START)._roundManager = _roundManager;
-        ((ActionStub) ON_ROUND_END)._roundManager = _roundManager;
+                VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
+                ROUND_END_HANDLING);
     }
 
     @AfterEach
     void tearDown() {
-        ActionStub.ACTIONS_FIRED.clear();
         ((ActiveCharactersProviderStub)ACTIVE_CHARACTERS_PROVIDER)
                 ._numberOfTimesToProvideEmptyCollection = 0;
-
-        ROUND_END_ACTIONS_FIRED.clear();
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -65,44 +50,28 @@ public class RoundManagerImplTests {
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundManagerImpl(null, PAIR_FACTORY,
-                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER,
-                        ON_CHARACTER_TURN_START::run, ON_CHARACTER_TURN_END::run,
-                        ON_ROUND_START::run, ON_ROUND_END::run));
+                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
+                        ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundManagerImpl(COLLECTION_FACTORY, null,
-                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER,
-                        ON_CHARACTER_TURN_START::run, ON_CHARACTER_TURN_END::run,
-                        ON_ROUND_START::run, ON_ROUND_END::run));
+                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
+                        ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
-                        null, ACTIVE_CHARACTERS_PROVIDER,
-                        ON_CHARACTER_TURN_START::run, ON_CHARACTER_TURN_END::run,
-                        ON_ROUND_START::run, ON_ROUND_END::run));
+                        null, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
+                        ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
-                        VARIABLE_CACHE_FACTORY, null,
-                        ON_CHARACTER_TURN_START::run, ON_CHARACTER_TURN_END::run,
-                        ON_ROUND_START::run, ON_ROUND_END::run));
+                        VARIABLE_CACHE_FACTORY, null, TURN_HANDLING,
+                        ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
-                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER,
-                        null, ON_CHARACTER_TURN_END::run,
-                        ON_ROUND_START::run, ON_ROUND_END::run));
+                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, null,
+                        ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
-                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER,
-                        ON_CHARACTER_TURN_START::run, null,
-                        ON_ROUND_START::run, ON_ROUND_END::run));
-        assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
-                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER,
-                        ON_CHARACTER_TURN_START::run, ON_CHARACTER_TURN_END::run,
-                        null, ON_ROUND_END::run));
-        assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
-                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER,
-                        ON_CHARACTER_TURN_START::run, ON_CHARACTER_TURN_END::run,
-                        ON_ROUND_START::run, null));
+                        VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
+                        null));
     }
 
     @Test
@@ -363,7 +332,6 @@ public class RoundManagerImplTests {
         assertSame(initialData3, representation.get(2).getItem2());
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     void testEndActiveCharacterTurnAndActiveCharacter() {
         Character character1 = new CharacterStub();
@@ -378,20 +346,18 @@ public class RoundManagerImplTests {
 
         _roundManager.removeCharacterFromQueue(character1);
 
-        ActionStub.ACTIONS_FIRED.clear();
-
         _roundManager.endActiveCharacterTurn();
 
-        assertEquals(2, ActionStub.ACTIONS_FIRED.size());
-        assertSame(ON_CHARACTER_TURN_END, ActionStub.ACTIONS_FIRED.get(0));
-        assertSame(ON_CHARACTER_TURN_START, ActionStub.ACTIONS_FIRED.get(1));
-        assertSame(character1, ((ActionStub)ON_CHARACTER_TURN_END)._mostRecentInput);
-        assertSame(character2, ((ActionStub)ON_CHARACTER_TURN_START)._mostRecentInput);
+        assertEquals(1, TURN_HANDLING.TurnEnds.size());
+        assertSame(character1, TURN_HANDLING.TurnEnds.get(0).getItem1());
+        assertEquals(1, TURN_HANDLING.TurnEnds.get(0).getItem2());
+        assertEquals(1, TURN_HANDLING.TurnStarts.size());
+        assertSame(character2, TURN_HANDLING.TurnStarts.get(0).getItem1());
+        assertEquals(1, TURN_HANDLING.TurnStarts.get(0).getItem2());
 
         assertSame(character2, _roundManager.activeCharacter());
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     void testEndActiveCharacterTurnWhenNoCharactersAreInQueue() {
         ((ActiveCharactersProviderStub)ACTIVE_CHARACTERS_PROVIDER)
@@ -403,8 +369,9 @@ public class RoundManagerImplTests {
 
         assertNull(_roundManager.activeCharacter());
         assertEquals(roundNumber + 1, _roundManager.getRoundNumber());
-        assertNull(((ActionStub)ON_CHARACTER_TURN_START)._mostRecentInput);
-        assertFalse(ActionStub.ACTIONS_FIRED.contains(ON_CHARACTER_TURN_START));
+
+        //TODO: Continue here!
+        fail();
     }
 
     @Test
@@ -473,7 +440,6 @@ public class RoundManagerImplTests {
         assertFalse(representation.contains(recurringTimer1));
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     void testEndActiveCharacterTurnAdvancesRound() {
         final int roundNumber = 123;
@@ -521,9 +487,6 @@ public class RoundManagerImplTests {
                     _roundManager.characterRoundData(character));
         }
 
-        assertEquals(roundNumber, ((ActionStub) ON_ROUND_END)._roundNumberRan);
-        assertEquals(roundNumber + 1, ((ActionStub) ON_ROUND_START)._roundNumberRan);
-
         assertTrue(recurringTimer1._fired);
         assertTrue(recurringTimer2._fired);
         assertFalse(recurringTimer3._fired);
@@ -531,24 +494,19 @@ public class RoundManagerImplTests {
         assertTrue(oneTimeTimer1._fired);
         assertFalse(oneTimeTimer2._fired);
 
-        assertEquals(7, ROUND_END_ACTIONS_FIRED.size());
-        assertSame(ON_CHARACTER_TURN_END, ROUND_END_ACTIONS_FIRED.get(0));
-        assertSame(ON_ROUND_END, ROUND_END_ACTIONS_FIRED.get(1));
-        assertSame(recurringTimer1, ROUND_END_ACTIONS_FIRED.get(2));
-        assertSame(oneTimeTimer1, ROUND_END_ACTIONS_FIRED.get(3));
-        assertSame(recurringTimer2, ROUND_END_ACTIONS_FIRED.get(4));
-        assertSame(ON_ROUND_START, ROUND_END_ACTIONS_FIRED.get(5));
-        assertSame(ON_CHARACTER_TURN_START, ROUND_END_ACTIONS_FIRED.get(6));
+        //TODO: Continue here!
+        fail();
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
-    void testAdvanceRounds() {
+    void testEndOfRoundWhenActiveCharactersProviderProvidesNoCharacters() {
+        fail();
+    }
+
+    @Test
+    void testAdvanceMultipleRoundsAtOnce() {
         final int roundNumber = 123;
         _roundManager.setRoundNumber(roundNumber);
-
-        CharacterDepletableStatisticType depletableStatisticType =
-                new CharacterDepletableStatisticTypeStub("depletableStatisticType");
 
         Character character1 = new CharacterStub();
         Character character2 = new CharacterStub();
@@ -594,12 +552,9 @@ public class RoundManagerImplTests {
         oneTimeTimer2.setPriority(1);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
 
-        _roundManager.advanceRounds(2);
+        _roundManager.advanceRounds(3);
 
-        assertEquals(roundNumber + 2, _roundManager.getRoundNumber());
-
-        assertEquals(roundNumber + 1, ((ActionStub) ON_ROUND_END)._roundNumberRan);
-        assertEquals(roundNumber + 2, ((ActionStub) ON_ROUND_START)._roundNumberRan);
+        assertEquals(roundNumber + 3, _roundManager.getRoundNumber());
 
         assertTrue(recurringTimer1._fired);
         assertTrue(recurringTimer2._fired);
@@ -608,16 +563,23 @@ public class RoundManagerImplTests {
         assertTrue(oneTimeTimer1._fired);
         assertTrue(oneTimeTimer2._fired);
 
-        assertSame(ON_ROUND_END, ROUND_END_ACTIONS_FIRED.get(0));
-        assertSame(recurringTimer1, ROUND_END_ACTIONS_FIRED.get(1));
-        assertSame(oneTimeTimer1, ROUND_END_ACTIONS_FIRED.get(2));
-        assertSame(recurringTimer2, ROUND_END_ACTIONS_FIRED.get(3));
-        assertSame(ON_ROUND_START, ROUND_END_ACTIONS_FIRED.get(4));
-        assertSame(ON_ROUND_END, ROUND_END_ACTIONS_FIRED.get(5));
-        assertSame(recurringTimer3, ROUND_END_ACTIONS_FIRED.get(6));
-        assertSame(oneTimeTimer2, ROUND_END_ACTIONS_FIRED.get(7));
-        assertSame(recurringTimer4, ROUND_END_ACTIONS_FIRED.get(8));
-        assertSame(ON_ROUND_START, ROUND_END_ACTIONS_FIRED.get(9));
+        //TODO: Continue here!
+        fail();
+    }
+
+    @Test
+    void testRecurringTimersFiredMultipleTimesWhenRoundsElapsedGreaterThanPeriod() {
+        fail();
+    }
+
+    @Test
+    void testTimersSentToRoundEndHandlingInOrderOfPriority() {
+        fail();
+    }
+
+    @Test
+    void testAdvanceRoundsWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> _roundManager.advanceRounds(0));
     }
 
     @Test
