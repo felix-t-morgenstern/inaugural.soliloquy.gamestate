@@ -175,10 +175,14 @@ public class RoundManagerImpl implements RoundManager {
     public void endActiveCharacterTurn() {
         removeCharacterFromQueue(_activeCharacter);
         if (!QUEUE.isEmpty()) {
-            TURN_HANDLING.onTurnEnd(_activeCharacter, 1);
+            if (_activeCharacter != null) {
+                TURN_HANDLING.onTurnEnd(_activeCharacter, 1);
+            }
             increaseEventsFired(ROUND_END_EVENTS_TO_FIRE, _activeCharacter, 1);
             _activeCharacter = QUEUE.get(0);
-            TURN_HANDLING.onTurnStart(_activeCharacter, 1);
+            if (_activeCharacter != null) {
+                TURN_HANDLING.onTurnStart(_activeCharacter, 1);
+            }
         }
         else {
             advanceRounds(1);
@@ -268,24 +272,44 @@ public class RoundManagerImpl implements RoundManager {
         TreeMap<Integer, List<Timer>> timersToFire = new TreeMap<>();
         for(OneTimeTimer oneTimeTimer : ONE_TIME_TIMERS) {
             if (_roundNumber >= oneTimeTimer.getRoundWhenGoesOff()) {
-                if (!timersToFire.containsKey(oneTimeTimer.getPriority())) {
-                    timersToFire.put(oneTimeTimer.getPriority(), new ArrayList<>());
-                }
-                timersToFire.get(oneTimeTimer.getPriority()).add(oneTimeTimer);
+                addToTimersToFire(timersToFire, oneTimeTimer, 1);
             }
         }
-        for(RecurringTimer recurringTimers : RECURRING_TIMERS) {
-            if ((_roundNumber % recurringTimers.getRoundModulo()) -
-                    recurringTimers.getRoundOffset() == 0) {
-                if (!timersToFire.containsKey(recurringTimers.getPriority())) {
-                    timersToFire.put(recurringTimers.getPriority(), new ArrayList<>());
-                }
-                timersToFire.get(recurringTimers.getPriority()).add(recurringTimers);
+        for(RecurringTimer recurringTimer : RECURRING_TIMERS) {
+            int modulo = recurringTimer.getRoundModulo();
+            int offset = recurringTimer.getRoundOffset();
+
+            // TODO: Consider breaking this into multiple functions
+            // Calculate number of whole periods
+            int numberOfTimesToAdd = 0;
+            int numberOfPeriods = (_roundNumber - prevRoundNumber) / modulo;
+            numberOfTimesToAdd += numberOfPeriods;
+            // TODO: Consider more robust testing of this logic
+            // Calculate whether any partial periods add one more
+            int roundsElapsed = _roundNumber - prevRoundNumber;
+            int prevRoundNumberLessOffset = prevRoundNumber - offset;
+            int moduloPrevRoundNumberLessOffset = prevRoundNumberLessOffset % modulo;
+            if (moduloPrevRoundNumberLessOffset + roundsElapsed >= modulo) {
+                numberOfTimesToAdd++;
+            }
+            if (numberOfTimesToAdd > 0) {
+                addToTimersToFire(timersToFire, recurringTimer, numberOfTimesToAdd);
             }
         }
         List<Timer> results = new ArrayList<>();
-        timersToFire.keySet().forEach(i -> results.addAll(timersToFire.get(i)));
+        timersToFire.keySet().forEach(i -> {
+            timersToFire.get(i).forEach(t -> results.add(0, t));
+        });
         return results;
+    }
+
+    private static void addToTimersToFire(TreeMap<Integer, List<Timer>> timersToFire,
+                                          Timer timer, int numberOfTimesToAdd) {
+        if (!timersToFire.containsKey(timer.getPriority())) {
+            timersToFire.put(timer.getPriority(), new ArrayList<>());
+        }
+        timersToFire.get(timer.getPriority()).addAll(
+                Collections.nCopies(numberOfTimesToAdd, timer));
     }
 
     @Override

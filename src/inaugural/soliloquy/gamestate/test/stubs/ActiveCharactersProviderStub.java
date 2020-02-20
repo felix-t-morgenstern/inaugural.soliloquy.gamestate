@@ -8,7 +8,8 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
 public class ActiveCharactersProviderStub implements ActiveCharactersProvider {
-    public static ReadableCollection<Pair<Character,VariableCache>> ACTIVE_CHARACTERS;
+    public final Collection<Pair<Character,VariableCache>> ActiveCharacters;
+
     private static final Character CHARACTER_1 = new CharacterStub();
     private static final VariableCache DATA_1 = new VariableCacheStub();
     private static final Character CHARACTER_2 = new CharacterStub();
@@ -19,13 +20,11 @@ public class ActiveCharactersProviderStub implements ActiveCharactersProvider {
     public int _numberOfTimesToProvideEmptyCollection;
 
     public ActiveCharactersProviderStub() {
-        Collection<Pair<Character,VariableCache>> activeCharacters = new CollectionStub<>();
+        ActiveCharacters = new CollectionStub<>();
 
-        activeCharacters.add(new PairStub<>(CHARACTER_1, DATA_1));
-        activeCharacters.add(new PairStub<>(CHARACTER_2, DATA_2));
-        activeCharacters.add(new PairStub<>(CHARACTER_3, DATA_3));
-
-        ACTIVE_CHARACTERS = activeCharacters.representation();
+        ActiveCharacters.add(new PairStub<>(CHARACTER_1, DATA_1));
+        ActiveCharacters.add(new PairStub<>(CHARACTER_2, DATA_2));
+        ActiveCharacters.add(new PairStub<>(CHARACTER_3, DATA_3));
     }
 
     @Override
@@ -34,6 +33,6 @@ public class ActiveCharactersProviderStub implements ActiveCharactersProvider {
             _numberOfTimesToProvideEmptyCollection--;
             return new ReadableCollectionStub<>();
         }
-        return ACTIVE_CHARACTERS;
+        return ActiveCharacters.representation();
     }
 }

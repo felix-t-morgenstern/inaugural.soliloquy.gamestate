@@ -170,6 +170,34 @@ class TileEntitiesImplTests {
     }
 
     @Test
+    void testAssignAddToGameZoneActionAfterAddingToGameZone() {
+        final ArrayList<Item> addedToGameZone = new ArrayList<>();
+
+        _tileEntities.assignAddToGameZoneActionAfterAddingToGameZone(addedToGameZone::add);
+        _tileEntities.add(ITEM);
+
+        assertEquals(1, addedToGameZone.size());
+        assertTrue(addedToGameZone.contains(ITEM));
+    }
+
+    @Test
+    void testAssignRemoveFromGameZoneActionAfterAddingToGameZone() {
+        final ArrayList<Item> removedFromGameZone = new ArrayList<>();
+
+        _tileEntities.assignRemoveFromGameZoneActionAfterAddingToGameZone(
+                removedFromGameZone::add);
+        _tileEntities.remove(ITEM);
+
+        assertEquals(0, removedFromGameZone.size());
+
+        _tileEntities.add(ITEM);
+        _tileEntities.remove(ITEM);
+
+        assertEquals(1, removedFromGameZone.size());
+        assertTrue(removedFromGameZone.contains(ITEM));
+    }
+
+    @Test
     void testGetArchetype() {
         assertSame(ARCHETYPE, _tileEntities.getArchetype());
     }
@@ -226,33 +254,5 @@ class TileEntitiesImplTests {
         assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM,0));
         assertThrows(IllegalStateException.class, () -> _tileEntities.contains(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileEntities.remove(ITEM));
-    }
-
-    @Test
-    void testAssignAddToGameZoneActionAfterAddingToGameZone() {
-        final ArrayList<Item> addedToGameZone = new ArrayList<>();
-
-        _tileEntities.assignAddToGameZoneActionAfterAddingToGameZone(addedToGameZone::add);
-        _tileEntities.add(ITEM);
-
-        assertEquals(1, addedToGameZone.size());
-        assertTrue(addedToGameZone.contains(ITEM));
-    }
-
-    @Test
-    void testAssignRemoveFromGameZoneActionAfterAddingToGameZone() {
-        final ArrayList<Item> removedFromGameZone = new ArrayList<>();
-
-        _tileEntities.assignRemoveFromGameZoneActionAfterAddingToGameZone(
-                removedFromGameZone::add);
-        _tileEntities.remove(ITEM);
-
-        assertEquals(0, removedFromGameZone.size());
-
-        _tileEntities.add(ITEM);
-        _tileEntities.remove(ITEM);
-
-        assertEquals(1, removedFromGameZone.size());
-        assertTrue(removedFromGameZone.contains(ITEM));
     }
 }

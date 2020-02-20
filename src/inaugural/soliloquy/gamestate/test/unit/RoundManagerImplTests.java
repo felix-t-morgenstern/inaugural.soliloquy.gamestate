@@ -15,7 +15,6 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
-import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,7 @@ public class RoundManagerImplTests {
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final PairFactory PAIR_FACTORY = new PairFactoryStub();
     private final VariableCacheFactoryStub VARIABLE_CACHE_FACTORY = new VariableCacheFactoryStub();
-    private final ActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER =
+    private final ActiveCharactersProviderStub ACTIVE_CHARACTERS_PROVIDER =
             new ActiveCharactersProviderStub();
     private final TurnHandlingStub TURN_HANDLING = new TurnHandlingStub();
     private final RoundEndHandlingStub ROUND_END_HANDLING = new RoundEndHandlingStub();
@@ -453,7 +452,7 @@ public class RoundManagerImplTests {
         RecurringTimerStub recurringTimer2 = new RecurringTimerStub();
         recurringTimer2.setRoundModulo(4);
         recurringTimer2.setRoundOffset(0);
-        recurringTimer2.setPriority(2);
+        recurringTimer2.setPriority(1);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
         RecurringTimerStub recurringTimer3 = new RecurringTimerStub();
         recurringTimer3.setRoundModulo(4);
@@ -463,38 +462,39 @@ public class RoundManagerImplTests {
         RecurringTimerStub recurringTimer4 = new RecurringTimerStub();
         recurringTimer4.setRoundModulo(5);
         recurringTimer4.setRoundOffset(0);
-        recurringTimer4.setPriority(2);
+        recurringTimer4.setPriority(3);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer4);
 
         OneTimeTimerStub oneTimeTimer1 = new OneTimeTimerStub();
         oneTimeTimer1.setRoundWhenGoesOff(roundNumber+1);
-        oneTimeTimer1.setPriority(1);
+        oneTimeTimer1.setPriority(4);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
         OneTimeTimerStub oneTimeTimer2 = new OneTimeTimerStub();
         oneTimeTimer2.setRoundWhenGoesOff(roundNumber+2);
-        oneTimeTimer2.setPriority(1);
+        oneTimeTimer2.setPriority(5);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
 
         _roundManager.endActiveCharacterTurn();
 
         assertEquals(roundNumber + 1, _roundManager.getRoundNumber());
-        assertEquals(ActiveCharactersProviderStub.ACTIVE_CHARACTERS.size(),
+        assertEquals(ACTIVE_CHARACTERS_PROVIDER.ActiveCharacters.size(),
                 _roundManager.queueSize());
-        for(int i = 0; i < ActiveCharactersProviderStub.ACTIVE_CHARACTERS.size(); i++) {
-            Character character = ActiveCharactersProviderStub.ACTIVE_CHARACTERS.get(i).getItem1();
+        for(int i = 0; i < ACTIVE_CHARACTERS_PROVIDER.ActiveCharacters.size(); i++) {
+            Character character = ACTIVE_CHARACTERS_PROVIDER.ActiveCharacters.get(i).getItem1();
             assertEquals(i, _roundManager.getCharacterPositionInQueue(character));
-            assertSame(ActiveCharactersProviderStub.ACTIVE_CHARACTERS.get(i).getItem2(),
+            assertSame(ACTIVE_CHARACTERS_PROVIDER.ActiveCharacters.get(i).getItem2(),
                     _roundManager.characterRoundData(character));
         }
 
-        assertTrue(recurringTimer1._fired);
-        assertTrue(recurringTimer2._fired);
-        assertFalse(recurringTimer3._fired);
-        assertFalse(recurringTimer4._fired);
-        assertTrue(oneTimeTimer1._fired);
-        assertFalse(oneTimeTimer2._fired);
+        assertEquals(3, ROUND_END_HANDLING.Timers.size());
+        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer1));
+        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer2));
+        assertTrue(ROUND_END_HANDLING.Timers.contains(oneTimeTimer1));
+        assertSame(oneTimeTimer1, ROUND_END_HANDLING.Timers.get(0));
+        assertSame(recurringTimer2, ROUND_END_HANDLING.Timers.get(1));
+        assertSame(recurringTimer1, ROUND_END_HANDLING.Timers.get(2));
 
-        //TODO: Continue here!
+        //TODO: Continue here! Test round and turn events for Characters
         fail();
     }
 
@@ -520,50 +520,80 @@ public class RoundManagerImplTests {
         _roundManager.setCharacterPositionInQueue(character2, 1, roundData2);
         _roundManager.setCharacterPositionInQueue(character3, 2, roundData3);
 
+        // Should fire TWICE
         RecurringTimerStub recurringTimer1 = new RecurringTimerStub();
         recurringTimer1.setRoundModulo(2);
         recurringTimer1.setRoundOffset(0);
         recurringTimer1.setPriority(0);
+        // Should fire
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
         RecurringTimerStub recurringTimer2 = new RecurringTimerStub();
         recurringTimer2.setRoundModulo(4);
         recurringTimer2.setRoundOffset(0);
-        recurringTimer2.setPriority(2);
+        recurringTimer2.setPriority(1);
+        // Should fire
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
         RecurringTimerStub recurringTimer3 = new RecurringTimerStub();
         recurringTimer3.setRoundModulo(4);
         recurringTimer3.setRoundOffset(1);
-        recurringTimer3.setPriority(0);
+        recurringTimer3.setPriority(2);
+        // Should NOT fire
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
         RecurringTimerStub recurringTimer4 = new RecurringTimerStub();
         recurringTimer4.setRoundModulo(5);
-        recurringTimer4.setRoundOffset(0);
-        recurringTimer4.setPriority(2);
+        recurringTimer4.setRoundOffset(2);
+        recurringTimer4.setPriority(3);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer4);
 
+        // Should fire
         OneTimeTimerStub oneTimeTimer1 = new OneTimeTimerStub(
                 ((RoundManagerImpl)_roundManager)::removeOneTimeTimer);
         oneTimeTimer1.setRoundWhenGoesOff(roundNumber+1);
-        oneTimeTimer1.setPriority(1);
+        oneTimeTimer1.setPriority(4);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
+        // Should NOT fire
         OneTimeTimerStub oneTimeTimer2 = new OneTimeTimerStub(
                 ((RoundManagerImpl)_roundManager)::removeOneTimeTimer);
-        oneTimeTimer2.setRoundWhenGoesOff(roundNumber+2);
-        oneTimeTimer2.setPriority(1);
+        oneTimeTimer2.setRoundWhenGoesOff(roundNumber+4);
+        oneTimeTimer2.setPriority(5);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
+
+        assertNull(_roundManager.activeCharacter());
+
+        _roundManager.endActiveCharacterTurn();
+
+        assertEquals(1, TURN_HANDLING.TurnStarts.size());
+        assertSame(character1, TURN_HANDLING.TurnStarts.get(0).getItem1());
+        assertEquals(1, TURN_HANDLING.TurnStarts.get(0).getItem2());
+
+        assertEquals(3, _roundManager.queueSize());
+
+        _roundManager.endActiveCharacterTurn();
+
+        assertEquals(2, TURN_HANDLING.TurnStarts.size());
+        assertSame(character2, TURN_HANDLING.TurnStarts.get(1).getItem1());
+        assertEquals(1, TURN_HANDLING.TurnStarts.get(1).getItem2());
+
+        assertEquals(1, TURN_HANDLING.TurnEnds.size());
+        assertSame(character1, TURN_HANDLING.TurnEnds.get(0).getItem1());
+        assertEquals(1, TURN_HANDLING.TurnEnds.get(0).getItem2());
 
         _roundManager.advanceRounds(3);
 
         assertEquals(roundNumber + 3, _roundManager.getRoundNumber());
 
-        assertTrue(recurringTimer1._fired);
-        assertTrue(recurringTimer2._fired);
-        assertTrue(recurringTimer3._fired);
-        assertTrue(recurringTimer4._fired);
-        assertTrue(oneTimeTimer1._fired);
-        assertTrue(oneTimeTimer2._fired);
+        assertEquals(5, ROUND_END_HANDLING.Timers.size());
+        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer1));
+        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer2));
+        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer3));
+        assertTrue(ROUND_END_HANDLING.Timers.contains(oneTimeTimer1));
+        assertSame(oneTimeTimer1, ROUND_END_HANDLING.Timers.get(0));
+        assertSame(recurringTimer3, ROUND_END_HANDLING.Timers.get(1));
+        assertSame(recurringTimer2, ROUND_END_HANDLING.Timers.get(2));
+        assertSame(recurringTimer1, ROUND_END_HANDLING.Timers.get(3));
+        assertSame(recurringTimer1, ROUND_END_HANDLING.Timers.get(4));
 
-        //TODO: Continue here!
+        //TODO: Continue here! Test whether turn and round events for Characters are set appropriately.
         fail();
     }
 
