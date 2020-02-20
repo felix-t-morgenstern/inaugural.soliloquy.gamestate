@@ -63,7 +63,13 @@ public class RoundManagerImpl implements RoundManager {
                     "RoundManagerImpl: activeCharactersProvider cannot be null");
         }
         ACTIVE_CHARACTERS_PROVIDER = activeCharactersProvider;
+        if (turnHandling == null) {
+            throw new IllegalArgumentException("RoundManagerImpl: turnHandling cannot be null");
+        }
         TURN_HANDLING = turnHandling;
+        if (roundEndHandling == null) {
+            throw new IllegalArgumentException("RoundManagerImpl: roundEndHandling cannot be null");
+        }
         ROUND_END_HANDLING = roundEndHandling;
     }
 
@@ -177,8 +183,8 @@ public class RoundManagerImpl implements RoundManager {
         if (!QUEUE.isEmpty()) {
             if (_activeCharacter != null) {
                 TURN_HANDLING.onTurnEnd(_activeCharacter, 1);
+                increaseEventsFired(ROUND_END_EVENTS_TO_FIRE, _activeCharacter, 1);
             }
-            increaseEventsFired(ROUND_END_EVENTS_TO_FIRE, _activeCharacter, 1);
             _activeCharacter = QUEUE.get(0);
             if (_activeCharacter != null) {
                 TURN_HANDLING.onTurnStart(_activeCharacter, 1);
@@ -224,10 +230,12 @@ public class RoundManagerImpl implements RoundManager {
         HashMap<Character, Integer> turnStartsToFire = new HashMap<>();
         HashMap<Character, Integer> turnEndsToFire = new HashMap<>();
 
-        turnEndsToFire.put(_activeCharacter, 1);
-        ROUND_END_EVENTS_TO_FIRE.put(_activeCharacter, 1);
+        if (_activeCharacter != null) {
+            turnEndsToFire.put(_activeCharacter, 1);
+            ROUND_END_EVENTS_TO_FIRE.put(_activeCharacter, 1);
 
-        removeCharacterFromQueue(_activeCharacter);
+            removeCharacterFromQueue(_activeCharacter);
+        }
 
         if (!QUEUE.isEmpty()) {
             QUEUE.forEach(c -> {
@@ -253,8 +261,13 @@ public class RoundManagerImpl implements RoundManager {
         });
 
         // TODO: testEndOfRoundWhenActiveCharactersProviderProvidesNoCharacters; verify whether _activeCharacter is indeed set to null
-        _activeCharacter = QUEUE.get(0);
-        increaseEventsFired(turnStartsToFire, _activeCharacter, 1);
+        if (!QUEUE.isEmpty()) {
+            _activeCharacter = QUEUE.get(0);
+            increaseEventsFired(turnStartsToFire, _activeCharacter, 1);
+        }
+        else {
+            _activeCharacter = null;
+        }
 
         // TODO: testTimersFiredAfterActiveCharacterReassignedAndBeforeEndOfRoundEvents; verify ordering of events at round end
         int prevRoundNumber = _roundNumber;
@@ -276,22 +289,8 @@ public class RoundManagerImpl implements RoundManager {
             }
         }
         for(RecurringTimer recurringTimer : RECURRING_TIMERS) {
-            int modulo = recurringTimer.getRoundModulo();
-            int offset = recurringTimer.getRoundOffset();
-
-            // TODO: Consider breaking this into multiple functions
-            // Calculate number of whole periods
-            int numberOfTimesToAdd = 0;
-            int numberOfPeriods = (_roundNumber - prevRoundNumber) / modulo;
-            numberOfTimesToAdd += numberOfPeriods;
-            // TODO: Consider more robust testing of this logic
-            // Calculate whether any partial periods add one more
-            int roundsElapsed = _roundNumber - prevRoundNumber;
-            int prevRoundNumberLessOffset = prevRoundNumber - offset;
-            int moduloPrevRoundNumberLessOffset = prevRoundNumberLessOffset % modulo;
-            if (moduloPrevRoundNumberLessOffset + roundsElapsed >= modulo) {
-                numberOfTimesToAdd++;
-            }
+            int numberOfTimesToAdd = numberOfTimesToFireRecurringTimer(recurringTimer,
+                    prevRoundNumber);
             if (numberOfTimesToAdd > 0) {
                 addToTimersToFire(timersToFire, recurringTimer, numberOfTimesToAdd);
             }
@@ -310,6 +309,28 @@ public class RoundManagerImpl implements RoundManager {
         }
         timersToFire.get(timer.getPriority()).addAll(
                 Collections.nCopies(numberOfTimesToAdd, timer));
+    }
+
+    private int numberOfTimesToFireRecurringTimer(RecurringTimer recurringTimer,
+                                                  int prevRoundNumber) {
+        int roundsElapsed = _roundNumber - prevRoundNumber;
+        int modulo = recurringTimer.getRoundModulo();
+        if (modulo == 1) {
+            return roundsElapsed;
+        }
+        int offset = recurringTimer.getRoundOffset();
+
+        // Calculate number of whole periods
+        int numberOfPeriods = roundsElapsed / modulo;
+        int numberOfTimesToAdd = numberOfPeriods;
+        // Calculate whether any partial periods add one more
+        int prevRoundNumberLessOffset = prevRoundNumber - offset;
+        int moduloPrevRoundNumberLessOffset = prevRoundNumberLessOffset % modulo;
+        if (moduloPrevRoundNumberLessOffset + roundsElapsed >=
+                modulo * (numberOfPeriods + 1)) {
+            numberOfTimesToAdd++;
+        }
+        return numberOfTimesToAdd;
     }
 
     @Override

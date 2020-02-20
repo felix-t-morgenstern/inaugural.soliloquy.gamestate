@@ -4,6 +4,8 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Timer;
 import soliloquy.specs.ruleset.gameconcepts.RoundEndHandling;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +25,10 @@ public class RoundEndHandlingStub implements RoundEndHandling {
                                     Character prevActiveCharacter,
                                     Character newActiveCharacter)
             throws IllegalArgumentException {
-        TurnStarts = turnStarts;
-        TurnEnds = turnEnds;
-        RoundEnds = roundEnds;
-        Timers = timers;
+        TurnStarts = new HashMap<>(turnStarts);
+        TurnEnds = new HashMap<>(turnEnds);
+        RoundEnds = new HashMap<>(roundEnds);
+        Timers = new ArrayList<>(timers);
         PrevActiveCharacter = prevActiveCharacter;
         NewActiveCharacter = newActiveCharacter;
     }

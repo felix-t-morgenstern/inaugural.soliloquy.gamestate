@@ -17,8 +17,6 @@ public class ActiveCharactersProviderStub implements ActiveCharactersProvider {
     private static final Character CHARACTER_3 = new CharacterStub();
     private static final VariableCache DATA_3 = new VariableCacheStub();
 
-    public int _numberOfTimesToProvideEmptyCollection;
-
     public ActiveCharactersProviderStub() {
         ActiveCharacters = new CollectionStub<>();
 
@@ -29,10 +27,6 @@ public class ActiveCharactersProviderStub implements ActiveCharactersProvider {
 
     @Override
     public ReadableCollection<Pair<Character, VariableCache>> activeCharacters() {
-        if (_numberOfTimesToProvideEmptyCollection > 0) {
-            _numberOfTimesToProvideEmptyCollection--;
-            return new ReadableCollectionStub<>();
-        }
         return ActiveCharacters.representation();
     }
 }
