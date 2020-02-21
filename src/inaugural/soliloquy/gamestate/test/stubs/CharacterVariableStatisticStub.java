@@ -2,32 +2,32 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
-import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
+import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
+import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
-public class CharacterDepletableStatisticStub implements CharacterDepletableStatistic {
+public class CharacterVariableStatisticStub implements CharacterVariableStatistic {
     public boolean _isDeleted;
     public boolean _isCalculated;
-    public CharacterDepletableStatisticType _type;
+    public CharacterVariableStatisticType _type;
     public Character _character;
     public int _maxValue;
     private int _currentValue;
 
-    public CharacterDepletableStatisticStub() {
+    public CharacterVariableStatisticStub() {
 
     }
 
-    CharacterDepletableStatisticStub(CharacterDepletableStatisticType type) {
+    CharacterVariableStatisticStub(CharacterVariableStatisticType type) {
         _type = type;
     }
 
-    public CharacterDepletableStatisticStub(CharacterDepletableStatisticType type, Character character) {
+    public CharacterVariableStatisticStub(CharacterVariableStatisticType type, Character character) {
         _type = type;
         _character = character;
     }
 
     @Override
-    public CharacterDepletableStatisticType type() throws IllegalStateException {
+    public CharacterVariableStatisticType type() throws IllegalStateException {
         return _type;
     }
 

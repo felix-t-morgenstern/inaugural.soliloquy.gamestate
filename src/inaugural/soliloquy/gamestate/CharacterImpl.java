@@ -29,7 +29,7 @@ public class CharacterImpl implements Character {
     private final CharacterEvents EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
-    private final CharacterDepletableStatistics DEPLETABLE_STATISTICS;
+    private final CharacterVariableStatistics VARIABLE_STATISTICS;
     private final CharacterEntitiesOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>>
             STATIC_STATISTICS;
@@ -64,7 +64,7 @@ public class CharacterImpl implements Character {
                          CharacterEventsFactory characterEventsFactory,
                          CharacterEquipmentSlotsFactory equipmentSlotsFactory,
                          CharacterInventoryFactory inventoryFactory,
-                         CharacterDepletableStatisticsFactory depletableStatsFactory,
+                         CharacterVariableStatisticsFactory variableStatsFactory,
                          CharacterEntitiesOfTypeFactory entitiesOfTypeFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
                          VariableCache data) {
@@ -98,11 +98,11 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException("Character: inventoryFactory must be non-null");
         }
         INVENTORY = inventoryFactory.make(this);
-        if (depletableStatsFactory == null) {
+        if (variableStatsFactory == null) {
             throw new IllegalArgumentException(
-                    "Character: depletableStatsFactory must be non-null");
+                    "Character: variableStatsFactory must be non-null");
         }
-        DEPLETABLE_STATISTICS = depletableStatsFactory.make(this);
+        VARIABLE_STATISTICS = variableStatsFactory.make(this);
         if (entitiesOfTypeFactory == null) {
             throw new IllegalArgumentException(
                     "Character: entitiesOfTypeFactory must be non-null");
@@ -218,9 +218,9 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public CharacterDepletableStatistics depletableStatistics() throws IllegalStateException {
-        enforceInvariant("depletableStatistics", true);
-        return DEPLETABLE_STATISTICS;
+    public CharacterVariableStatistics variableStatistics() throws IllegalStateException {
+        enforceInvariant("variableStatistics", true);
+        return VARIABLE_STATISTICS;
     }
 
     @Override
@@ -281,7 +281,7 @@ public class CharacterImpl implements Character {
         _tile = null;
         EQUIPMENT_SLOTS.delete();
         INVENTORY.delete();
-        DEPLETABLE_STATISTICS.delete();
+        VARIABLE_STATISTICS.delete();
         STATIC_STATISTICS.delete();
         STATUS_EFFECTS.delete();
         ACTIVE_ABILITIES.delete();

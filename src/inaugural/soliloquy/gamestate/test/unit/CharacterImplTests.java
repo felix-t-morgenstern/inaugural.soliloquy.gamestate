@@ -28,7 +28,7 @@ class CharacterImplTests {
     private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new CharacterEquipmentSlotsFactoryStub();
     private final CharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryFactoryStub();
     private final CharacterEntitiesOfTypeFactory ENTITIES_OF_TYPE_FACTORY = new CharacterEntitiesOfTypeFactoryStub();
-    private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY = new CharacterDepletableStatisticsFactoryStub();
+    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY = new CharacterVariableStatisticsFactoryStub();
     private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new CharacterStatusEffectsFactoryStub();
     private final VariableCache DATA = new VariableCacheStub();
 
@@ -43,7 +43,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA);
@@ -60,7 +60,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -72,7 +72,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -84,7 +84,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -96,7 +96,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -108,7 +108,7 @@ class CharacterImplTests {
                 null,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -120,7 +120,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 null,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -132,7 +132,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 null,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -156,7 +156,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 null,
                 STATUS_EFFECTS_FACTORY,
                 DATA));
@@ -168,7 +168,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 null,
                 DATA));
@@ -180,7 +180,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 null));
@@ -202,7 +202,7 @@ class CharacterImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_OF_TYPE_FACTORY,
                 STATUS_EFFECTS_FACTORY,
                 DATA);
@@ -279,8 +279,8 @@ class CharacterImplTests {
     }
 
     @Test
-    void testDepletableStatistics() {
-        assertNotNull(_character.depletableStatistics());
+    void testVariableStatistics() {
+        assertNotNull(_character.variableStatistics());
     }
 
     @Test
@@ -355,7 +355,7 @@ class CharacterImplTests {
 
         CharacterInventoryStub inventory = (CharacterInventoryStub) _character.inventory();
 
-        CharacterDepletableStatistics depletableStats = _character.depletableStatistics();
+        CharacterVariableStatistics variableStats = _character.variableStatistics();
 
         CharacterEntitiesOfType<CharacterStaticStatisticType,
                 CharacterStatistic<CharacterStaticStatisticType>>
@@ -381,7 +381,7 @@ class CharacterImplTests {
         assertSame(_character, removedCharacter);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
-        assertTrue(depletableStats.isDeleted());
+        assertTrue(variableStats.isDeleted());
         assertTrue(staticStats.isDeleted());
         assertTrue(statusEffects.isDeleted());
         assertTrue(activeAbilities.isDeleted());
@@ -407,7 +407,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
-        assertThrows(IllegalStateException.class, () -> _character.depletableStatistics());
+        assertThrows(IllegalStateException.class, () -> _character.variableStatistics());
         assertThrows(IllegalStateException.class, () -> _character.staticStatistics());
         assertThrows(IllegalStateException.class, () -> _character.statusEffects());
         assertThrows(IllegalStateException.class, () -> _character.activeAbilities());
@@ -443,7 +443,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.events());
         assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> _character.inventory());
-        assertThrows(IllegalStateException.class, () -> _character.depletableStatistics());
+        assertThrows(IllegalStateException.class, () -> _character.variableStatistics());
         assertThrows(IllegalStateException.class, () -> _character.staticStatistics());
         assertThrows(IllegalStateException.class, () -> _character.statusEffects());
         assertThrows(IllegalStateException.class, () -> _character.activeAbilities());

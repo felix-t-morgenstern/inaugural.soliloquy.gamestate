@@ -31,7 +31,7 @@ public class RulesetStub implements Ruleset {
     }
 
     @Override
-    public EntityGroup<CharacterDepletableStatisticType> characterDepletableStatisticTypes() {
+    public EntityGroup<CharacterVariableStatisticType> variableStatisticTypesGrouped() {
         return null;
     }
 
@@ -96,7 +96,7 @@ public class RulesetStub implements Ruleset {
     }
 
     @Override
-    public Registry<CharacterDepletableStatisticType> depletableStatisticTypes() {
+    public Registry<CharacterVariableStatisticType> variableStatisticTypes() {
         return null;
     }
 

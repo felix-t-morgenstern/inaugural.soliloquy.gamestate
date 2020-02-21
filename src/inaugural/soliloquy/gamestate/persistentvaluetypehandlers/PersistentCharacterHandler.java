@@ -26,7 +26,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
     private final Function<String, CharacterAIType> GET_AI_TYPE;
     private final Function<String, GameCharacterEvent> GET_EVENT;
     private final Function<String, CharacterStaticStatisticType> GET_STATIC_STAT_TYPE;
-    private final Function<String, CharacterDepletableStatisticType> GET_DEPLETABLE_STAT_TYPE;
+    private final Function<String, CharacterVariableStatisticType> GET_VARIABLE_STAT_TYPE;
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
     private final Function<String, ActiveAbilityType> GET_ACTIVE_ABILITY_TYPE;
     private final Function<String, ReactiveAbilityType> GET_REACTIVE_ABILITY_TYPE;
@@ -45,8 +45,8 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
                                       Function<String, CharacterAIType> getAIType,
                                       Function<String, GameCharacterEvent> getEvent,
                                       Function<String, CharacterStaticStatisticType> getStaticStatType,
-                                      Function<String, CharacterDepletableStatisticType>
-                                              getDepletableStatType,
+                                      Function<String, CharacterVariableStatisticType>
+                                              getVariableStatType,
                                       Function<String, StatusEffectType> getStatusType,
                                       Function<String, ActiveAbilityType> getActiveAbilityType,
                                       Function<String, ReactiveAbilityType> getReactiveAbilityType,
@@ -92,11 +92,11 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
                     "PersistentCharacterHandler: getStaticStatType cannot be null");
         }
         GET_STATIC_STAT_TYPE = getStaticStatType;
-        if (getDepletableStatType == null) {
+        if (getVariableStatType == null) {
             throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getDepletableStatType cannot be null");
+                    "PersistentCharacterHandler: getVariableStatType cannot be null");
         }
-        GET_DEPLETABLE_STAT_TYPE = getDepletableStatType;
+        GET_VARIABLE_STAT_TYPE = getVariableStatType;
         if (getStatusType == null) {
             throw new IllegalArgumentException(
                     "PersistentCharacterHandler: getStatusType cannot be null");
@@ -162,11 +162,11 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
             readCharacter.inventory().add(ITEM_HANDLER.read(item));
         }
 
-        for(CharacterEntityWithTypeAndValueDTO depletableStat : dto.depletableStats) {
-            CharacterDepletableStatisticType type =
-                    GET_DEPLETABLE_STAT_TYPE.apply(depletableStat.typeId);
-            readCharacter.depletableStatistics().add(type);
-            readCharacter.depletableStatistics().get(type).setCurrentValue(depletableStat.value);
+        for(CharacterEntityWithTypeAndValueDTO variableStat : dto.variableStats) {
+            CharacterVariableStatisticType type =
+                    GET_VARIABLE_STAT_TYPE.apply(variableStat.typeId);
+            readCharacter.variableStatistics().add(type);
+            readCharacter.variableStatistics().get(type).setCurrentValue(variableStat.value);
         }
 
         for(String staticStat : dto.staticStats)
@@ -271,14 +271,14 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         }
 
         index = 0;
-        dto.depletableStats =
-                new CharacterEntityWithTypeAndValueDTO[character.depletableStatistics().size()];
-        for(CharacterDepletableStatistic depletableStat : character.depletableStatistics()) {
-            CharacterEntityWithTypeAndValueDTO depletableStatDTO =
+        dto.variableStats =
+                new CharacterEntityWithTypeAndValueDTO[character.variableStatistics().size()];
+        for(CharacterVariableStatistic variableStat : character.variableStatistics()) {
+            CharacterEntityWithTypeAndValueDTO variableStatDTO =
                     new CharacterEntityWithTypeAndValueDTO();
-            depletableStatDTO.typeId = depletableStat.type().id();
-            depletableStatDTO.value = depletableStat.getCurrentValue();
-            dto.depletableStats[index++] = depletableStatDTO;
+            variableStatDTO.typeId = variableStat.type().id();
+            variableStatDTO.value = variableStat.getCurrentValue();
+            dto.variableStats[index++] = variableStatDTO;
         }
 
         index = 0;
@@ -340,7 +340,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         CharacterEventDTO[] events;
         CharacterPairedDataDTO[] equipmentSlots;
         String[] inventoryItems;
-        CharacterEntityWithTypeAndValueDTO[] depletableStats;
+        CharacterEntityWithTypeAndValueDTO[] variableStats;
         String[] staticStats;
         CharacterEntityWithTypeAndValueDTO[] statusEffects;
         CharacterAbilityDTO[] activeAbilities;

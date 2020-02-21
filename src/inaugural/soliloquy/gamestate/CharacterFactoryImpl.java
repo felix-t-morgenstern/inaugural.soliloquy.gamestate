@@ -17,7 +17,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY;
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOTS_FACTORY;
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY;
-    private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY;
+    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY;
     private final CharacterEntitiesOfTypeFactory ENTITIES_FACTORY;
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
@@ -29,7 +29,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
                                 CharacterEventsFactory characterEventsFactory,
                                 CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory,
                                 CharacterInventoryFactory characterInventoryFactory,
-                                CharacterDepletableStatisticsFactory depletableStatsFactory,
+                                CharacterVariableStatisticsFactory variableStatsFactory,
                                 CharacterEntitiesOfTypeFactory entitiesFactory,
                                 CharacterStatusEffectsFactory characterStatusEffectsFactory,
                                 VariableCacheFactory dataFactory) {
@@ -63,11 +63,11 @@ public class CharacterFactoryImpl implements CharacterFactory {
                     "CharacterFactory: characterInventoryFactory must be non-null");
         }
         CHARACTER_INVENTORY_FACTORY = characterInventoryFactory;
-        if (depletableStatsFactory == null) {
+        if (variableStatsFactory == null) {
             throw new IllegalArgumentException(
-                    "CharacterFactory: depletableStatsFactory must be non-null");
+                    "CharacterFactory: variableStatsFactory must be non-null");
         }
-        DEPLETABLE_STATS_FACTORY = depletableStatsFactory;
+        VARIABLE_STATS_FACTORY = variableStatsFactory;
         if (entitiesFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterFactory: entitiesFactory must be non-null");
@@ -109,7 +109,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOTS_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
                 data);

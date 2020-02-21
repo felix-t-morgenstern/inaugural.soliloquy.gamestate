@@ -1,24 +1,24 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterDepletableStatistic;
-import soliloquy.specs.ruleset.entities.CharacterDepletableStatisticType;
+import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
+import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-public class CharacterDepletableStatisticImpl
-        extends AbstractCharacterValueFromModifiers<CharacterDepletableStatisticType>
-        implements CharacterDepletableStatistic {
+public class CharacterVariableStatisticImpl
+        extends AbstractCharacterValueFromModifiers<CharacterVariableStatisticType>
+        implements CharacterVariableStatistic {
     private int _currentValue;
 
-    public CharacterDepletableStatisticImpl(Character character,
-                                            CharacterDepletableStatisticType type,
-                                            CharacterStatisticCalculation
+    public CharacterVariableStatisticImpl(Character character,
+                                          CharacterVariableStatisticType type,
+                                          CharacterStatisticCalculation
                                                     vitalAttributeCalculation) {
         super(character, type, vitalAttributeCalculation);
     }
 
     @Override
-    public CharacterDepletableStatisticType type() throws IllegalStateException {
+    public CharacterVariableStatisticType type() throws IllegalStateException {
         enforceDeletionInvariants("type");
         return ENTITY_TYPE;
     }
@@ -39,11 +39,11 @@ public class CharacterDepletableStatisticImpl
     @Override
     public String getInterfaceName() throws IllegalStateException {
         enforceDeletionInvariants("getInterfaceName");
-        return CharacterDepletableStatistic.class.getCanonicalName();
+        return CharacterVariableStatistic.class.getCanonicalName();
     }
 
     @Override
     protected String className() {
-        return "CharacterVitalAttribute";
+        return "CharacterVariableStatistic";
     }
 }

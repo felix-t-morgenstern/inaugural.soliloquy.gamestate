@@ -29,8 +29,8 @@ public class CharacterStub implements Character {
     private final Collection<CharacterClassification> CLASSIFICATIONS = new CollectionStub<>();
     private final Map<String,String> PRONOUNS = new MapStub<>();
     private final CharacterEvents EVENTS = new CharacterEventsStub(this);
-    private final CharacterDepletableStatistics DEPLETABLE_STATS =
-            new CharacterDepletableStatisticsStub();
+    private final CharacterVariableStatistics VARIABLE_STATS =
+            new CharacterVariableStatisticsStub();
     private final CharacterEntitiesOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>>
             STATS = new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
@@ -138,8 +138,8 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public CharacterDepletableStatistics depletableStatistics() throws IllegalStateException {
-        return DEPLETABLE_STATS;
+    public CharacterVariableStatistics variableStatistics() throws IllegalStateException {
+        return VARIABLE_STATS;
     }
 
     @Override

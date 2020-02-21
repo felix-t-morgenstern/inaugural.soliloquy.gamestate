@@ -102,7 +102,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public CharacterDepletableStatistics depletableStatistics() throws IllegalStateException {
+    public CharacterVariableStatistics variableStatistics() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

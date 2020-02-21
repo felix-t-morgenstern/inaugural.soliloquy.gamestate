@@ -26,8 +26,8 @@ class CharacterFactoryImplTests {
             new CharacterEquipmentSlotsFactoryStub();
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY =
             new CharacterInventoryFactoryStub();
-    private final CharacterDepletableStatisticsFactory DEPLETABLE_STATS_FACTORY =
-            new CharacterDepletableStatisticsFactoryStub();
+    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY =
+            new CharacterVariableStatisticsFactoryStub();
     private final CharacterEntitiesOfTypeFactory ENTITIES_FACTORY =
             new CharacterEntitiesOfTypeFactoryStub();
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY =
@@ -47,7 +47,7 @@ class CharacterFactoryImplTests {
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOT_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
-                DEPLETABLE_STATS_FACTORY,
+                VARIABLE_STATS_FACTORY,
                 ENTITIES_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
                 DATA_FACTORY);
@@ -63,7 +63,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
@@ -74,7 +74,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
@@ -85,7 +85,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
@@ -96,7 +96,7 @@ class CharacterFactoryImplTests {
                         null,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
@@ -107,7 +107,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         null,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
@@ -118,7 +118,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         null,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
@@ -140,7 +140,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         null,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
@@ -151,7 +151,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         null,
                         DATA_FACTORY));
@@ -162,7 +162,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
-                        DEPLETABLE_STATS_FACTORY,
+                        VARIABLE_STATS_FACTORY,
                         ENTITIES_FACTORY,
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         null));

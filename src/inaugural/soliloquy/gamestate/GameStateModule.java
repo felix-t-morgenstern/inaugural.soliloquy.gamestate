@@ -57,8 +57,8 @@ public class GameStateModule extends AbstractModule {
                            Registry<GameMovementEvent> gameMovementEvents,
                            Registry<GameAbilityEvent> gameAbilityEvents,
                            Registry<CharacterStaticStatisticType> characterStaticStatisticTypes,
-                           Registry<CharacterDepletableStatisticType>
-                                   characterDepletableStatisticTypes,
+                           Registry<CharacterVariableStatisticType>
+                                   characterVariableStatisticTypes,
                            Registry<StatusEffectType> statusEffectTypes,
                            Registry<ActiveAbilityType> activeAbilityTypes,
                            Registry<ReactiveAbilityType> reactiveAbilityTypes,
@@ -95,13 +95,13 @@ public class GameStateModule extends AbstractModule {
         CharacterInventoryFactory characterInventoryFactory =
                 new CharacterInventoryFactoryImpl(collectionFactory);
 
-        CharacterEntityOfTypeFactory<CharacterDepletableStatisticType,
-                CharacterDepletableStatistic> characterDepletableStatisticFactory =
-                new CharacterDepletableStatisticFactory(characterStatisticCalculation);
+        CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
+                CharacterVariableStatistic> characterVariableStatisticFactory =
+                new CharacterVariableStatisticFactory(characterStatisticCalculation);
 
-        CharacterDepletableStatisticsFactory depletableStatsFactory =
-                new CharacterDepletableStatisticsFactoryImpl(mapFactory, collectionFactory,
-                        characterDepletableStatisticFactory);
+        CharacterVariableStatisticsFactory variableStatsFactory =
+                new CharacterVariableStatisticsFactoryImpl(mapFactory, collectionFactory,
+                        characterVariableStatisticFactory);
 
         CharacterEntitiesOfTypeFactory entitiesOfTypeFactory =
                 new CharacterEntitiesOfTypeFactoryImpl(collectionFactory);
@@ -111,14 +111,14 @@ public class GameStateModule extends AbstractModule {
 
         CharacterFactory characterFactory = new CharacterFactoryImpl(entityUuidFactory,
                 collectionFactory, mapFactory, characterEventsFactory,
-                characterEquipmentSlotsFactory, characterInventoryFactory, depletableStatsFactory,
+                characterEquipmentSlotsFactory, characterInventoryFactory, variableStatsFactory,
                 entitiesOfTypeFactory, characterStatusEffectsFactory, variableCacheFactory);
 
         PersistentValueTypeHandler<Character> characterHandler =
                 new PersistentCharacterHandler(characterFactory, uuidHandler, characterTypes::get,
                         characterClassifications::get, spriteSets::get, characterAITypes::get,
                         gameCharacterEvents::get, characterStaticStatisticTypes::get,
-                        characterDepletableStatisticTypes::get, statusEffectTypes::get,
+                        characterVariableStatisticTypes::get, statusEffectTypes::get,
                         activeAbilityTypes::get, reactiveAbilityTypes::get, dataHandler,
                         itemHandler);
 
