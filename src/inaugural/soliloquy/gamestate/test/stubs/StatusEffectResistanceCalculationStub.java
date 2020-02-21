@@ -14,7 +14,7 @@ public class StatusEffectResistanceCalculationStub implements StatusEffectResist
     public Element _element;
     public AbilitySource _abilitySource;
 
-    public static final int STATUS_EFFECT_TYPE_RESULT = 123;
+    public int StatusEffectTypeResult = 123;
 
     @Override
     public int calculateEffectiveChange(Character character, StatusEffectType statusEffectType,
@@ -27,7 +27,7 @@ public class StatusEffectResistanceCalculationStub implements StatusEffectResist
         _stopAtZero = stopAtZero;
         _element = element;
         _abilitySource = abilitySource;
-        return STATUS_EFFECT_TYPE_RESULT;
+        return StatusEffectTypeResult;
     }
 
     @Override

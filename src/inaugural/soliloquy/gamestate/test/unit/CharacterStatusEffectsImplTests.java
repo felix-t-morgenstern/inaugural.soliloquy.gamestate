@@ -10,7 +10,6 @@ import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
-import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,21 +18,16 @@ class CharacterStatusEffectsImplTests {
 
     private final StatusEffectType STATUS_EFFECT_TYPE_1 = new StatusEffectTypeStub();
     private final StatusEffectType STATUS_EFFECT_TYPE_2 = new StatusEffectTypeStub();
-
-    private Character _character;
-    private StatusEffectResistanceCalculation _statusEffectResistanceCalculation;
-    private Element _element;
-    private AbilitySource _abilitySource;
+    private final StatusEffectResistanceCalculationStub STATUS_EFFECT_RESISTANCE_CALCULATION =
+            new StatusEffectResistanceCalculationStub();
+    private final Character CHARACTER = new CharacterStub();
+    private final Element ELEMENT = new ElementStub();
+    private final AbilitySource ABILITY_SOURCE = new AbilitySourceStub();
 
     @BeforeEach
     void setUp() {
-        _character = new CharacterStub();
-        _statusEffectResistanceCalculation = new StatusEffectResistanceCalculationStub();
-        _element = new ElementStub();
-        _abilitySource = new AbilitySourceStub();
-
-        _characterStatusEffects = new CharacterStatusEffectsImpl(_character,
-                new MapFactoryStub(), _statusEffectResistanceCalculation);
+        _characterStatusEffects = new CharacterStatusEffectsImpl(CHARACTER,
+                new MapFactoryStub(), STATUS_EFFECT_RESISTANCE_CALCULATION);
     }
 
     @Test
@@ -80,53 +74,85 @@ class CharacterStatusEffectsImplTests {
     void testGetAndSetInvalidStatusEffectType() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterStatusEffects.getStatusEffectLevel(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterStatusEffects.setStatusEffectLevel(null, 0));
     }
 
     @Test
     void testClearGetAndSetNullOrDeletedCharacter() {
-        _character.delete();
-        assertThrows(IllegalStateException.class, () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
-        assertThrows(IllegalStateException.class, () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
+        CHARACTER.delete();
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
+        assertThrows(IllegalStateException.class,
+                () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
         assertThrows(IllegalStateException.class, _characterStatusEffects::clearStatusEffects);
 
         CharacterStatusEffects characterStatusEffects =
                 new CharacterStatusEffectsImpl(null, new MapFactoryStub(),
-                        _statusEffectResistanceCalculation);
-        assertThrows(IllegalStateException.class, () -> characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
-        assertThrows(IllegalStateException.class, () -> characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
+                        STATUS_EFFECT_RESISTANCE_CALCULATION);
+        assertThrows(IllegalStateException.class,
+                () -> characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
+        assertThrows(IllegalStateException.class,
+                () -> characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
         assertThrows(IllegalStateException.class, characterStatusEffects::clearStatusEffects);
     }
 
     @Test
     void testAlterStatusEffect() {
-        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true, _element,
-                _abilitySource);
+        final int amountAltered = 111;
+
+        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, amountAltered, true, ELEMENT,
+                ABILITY_SOURCE);
 
         assertEquals((int) _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1),
-                StatusEffectResistanceCalculationStub.STATUS_EFFECT_TYPE_RESULT);
-        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._statusEffectType,
-                STATUS_EFFECT_TYPE_1);
-        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._character, _character);
-        assertEquals(111, ((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._baseAmount);
-        assertTrue(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._stopAtZero);
-        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._element, _element);
-        assertSame(((StatusEffectResistanceCalculationStub) _statusEffectResistanceCalculation)._abilitySource,
-                _abilitySource);
+                STATUS_EFFECT_RESISTANCE_CALCULATION.StatusEffectTypeResult);
+        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._statusEffectType, STATUS_EFFECT_TYPE_1);
+        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._character, CHARACTER);
+        assertEquals(amountAltered, STATUS_EFFECT_RESISTANCE_CALCULATION._baseAmount);
+        assertTrue(STATUS_EFFECT_RESISTANCE_CALCULATION._stopAtZero);
+        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._element, ELEMENT);
+        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._abilitySource, ABILITY_SOURCE);
+    }
+
+    @Test
+    void testStatusEffectIsRemovedWhenSetToZero() {
+        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 1);
+
+        assertEquals(1, _characterStatusEffects.representation().size());
+
+        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0);
+
+        assertEquals(0, _characterStatusEffects.representation().size());
+    }
+
+    @Test
+    void testStatusEffectIsRemovedWhenAlteredToZero() {
+        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, true, ELEMENT,
+                ABILITY_SOURCE);
+
+        assertEquals(1, _characterStatusEffects.representation().size());
+
+        STATUS_EFFECT_RESISTANCE_CALCULATION.StatusEffectTypeResult =
+                -STATUS_EFFECT_RESISTANCE_CALCULATION.StatusEffectTypeResult;
+        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, true, ELEMENT,
+                ABILITY_SOURCE);
+
+        assertEquals(0, _characterStatusEffects.representation().size());
     }
 
     @Test
     void testAlterStatusEffectInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _characterStatusEffects.alterStatusEffect(null, 111, true, _element,
-                        _abilitySource));
+                () -> _characterStatusEffects.alterStatusEffect(null, 111, true, ELEMENT,
+                        ABILITY_SOURCE));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true,
-                        null, _abilitySource));
+                        null, ABILITY_SOURCE));
 
-        _character.delete();
+        CHARACTER.delete();
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true,
-                        _element, _abilitySource));
+                        ELEMENT, ABILITY_SOURCE));
     }
 
     @Test
@@ -139,7 +165,7 @@ class CharacterStatusEffectsImplTests {
                 () -> _characterStatusEffects.representation());
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, false,
-                        _element, _abilitySource));
+                        ELEMENT, ABILITY_SOURCE));
         assertThrows(IllegalStateException.class,
                 () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
         assertThrows(IllegalStateException.class,

@@ -71,14 +71,23 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
         }
         int effectiveChange = RESISTANCE_CALCULATION.calculateEffectiveChange(CHARACTER,
                 type, baseAmount, stopAtZero, element, abilitySource);
-        // TODO: Test and implement removal from STATUS_EFFECT_LEVELS when new value is zero!!!
-        STATUS_EFFECT_LEVELS.put(type, getStatusEffectLevel(type) + effectiveChange);
+        int currentLevel = getStatusEffectLevel(type);
+        if (effectiveChange == -currentLevel) {
+            STATUS_EFFECT_LEVELS.remove(type);
+        }
+        else {
+            STATUS_EFFECT_LEVELS.put(type, currentLevel + effectiveChange);
+        }
     }
 
     @Override
     public void setStatusEffectLevel(StatusEffectType type, int level)
             throws IllegalStateException {
         enforceInvariants("alterStatusEffect");
+        if (type == null) {
+            throw new IllegalArgumentException(
+                    "CharacterStatusEffects.setStatusEffectLevel: type cannot be null");
+        }
         if (level == 0) {
             STATUS_EFFECT_LEVELS.remove(type);
         } else {
