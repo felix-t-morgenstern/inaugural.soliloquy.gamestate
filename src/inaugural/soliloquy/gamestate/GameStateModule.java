@@ -62,7 +62,7 @@ public class GameStateModule extends AbstractModule {
                            Registry<StatusEffectType> statusEffectTypes,
                            Registry<ActiveAbilityType> activeAbilityTypes,
                            Registry<ReactiveAbilityType> reactiveAbilityTypes,
-                           Registry<Action> actions,
+                           @SuppressWarnings("rawtypes") Registry<Action> actions,
                            @Named("onCharacterTurnStart") Consumer<Character> onCharacterTurnStart,
                            @Named("onCharacterTurnEnd") Consumer<Character> onCharacterTurnEnd,
                            @Named("onRoundStart") Consumer<Void> onRoundStart,
@@ -97,14 +97,15 @@ public class GameStateModule extends AbstractModule {
 
         CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
                 CharacterVariableStatistic> characterVariableStatisticFactory =
-                new CharacterVariableStatisticFactory(characterStatisticCalculation);
+                new CharacterVariableStatisticFactory(variableCacheFactory,
+                        characterStatisticCalculation);
 
         CharacterVariableStatisticsFactory variableStatsFactory =
                 new CharacterVariableStatisticsFactoryImpl(mapFactory, collectionFactory,
-                        characterVariableStatisticFactory);
+                        variableCacheFactory, characterVariableStatisticFactory);
 
         CharacterEntitiesOfTypeFactory entitiesOfTypeFactory =
-                new CharacterEntitiesOfTypeFactoryImpl(collectionFactory);
+                new CharacterEntitiesOfTypeFactoryImpl(collectionFactory, variableCacheFactory);
 
         CharacterStatusEffectsFactory characterStatusEffectsFactory =
                 new CharacterStatusEffectsFactoryImpl(mapFactory, resistanceCalculation);

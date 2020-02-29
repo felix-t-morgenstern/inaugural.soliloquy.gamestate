@@ -1,46 +1,22 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterAbility;
+import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 
 public class CharacterAbilityImpl<TType extends AbilityType> extends HasDeletionInvariants
-        implements CharacterAbility<TType> {
-    private boolean _isHidden;
-    private boolean _isDisabled;
-
+        implements CharacterEntityOfType<TType> {
     private final Character CHARACTER;
     private final TType ABILITY_TYPE;
+    private final VariableCache DATA;
 
-    public CharacterAbilityImpl(Character character, TType abilityType){
+    public CharacterAbilityImpl(Character character, TType abilityType, VariableCache data){
         CHARACTER = Check.ifNull(character, "character");
         ABILITY_TYPE = Check.ifNull(abilityType, "abilityType");
-    }
-
-    @Override
-    public boolean getIsHidden() {
-        enforceDeletionInvariants("getIsHidden");
-        return _isHidden;
-    }
-
-    @Override
-    public void setIsHidden(boolean isHidden) {
-        enforceDeletionInvariants("setIsHidden");
-        _isHidden = isHidden;
-    }
-
-    @Override
-    public boolean getIsDisabled() {
-        enforceDeletionInvariants("getIsDisabled");
-        return _isDisabled;
-    }
-
-    @Override
-    public void setIsDisabled(boolean isDisabled) {
-        enforceDeletionInvariants("setIsDisabled");
-        _isDisabled = isDisabled;
+        DATA = Check.ifNull(data, "data");
     }
 
     @Override
@@ -50,15 +26,20 @@ public class CharacterAbilityImpl<TType extends AbilityType> extends HasDeletion
     }
 
     @Override
+    public VariableCache data() throws IllegalStateException {
+        return DATA;
+    }
+
+    @Override
     public String getInterfaceName() {
         enforceDeletionInvariants("getInterfaceName");
-        return CharacterAbility.class.getCanonicalName() + "<" + ABILITY_TYPE.getInterfaceName() +
-                ">";
+        return CharacterEntityOfType.class.getCanonicalName() + "<" +
+                ABILITY_TYPE.getInterfaceName() + ">";
     }
 
     @Override
     protected String className() {
-        return "CharacterAbility";
+        return "CharacterEntityOfType";
     }
 
     @Override

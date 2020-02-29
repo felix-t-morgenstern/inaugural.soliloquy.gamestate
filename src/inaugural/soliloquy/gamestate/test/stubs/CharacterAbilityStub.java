@@ -1,13 +1,15 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterAbility;
+import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
 import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 
-public class CharacterAbilityStub<TAbilityType extends AbilityType> implements CharacterAbility {
+public class CharacterAbilityStub<TAbilityType extends AbilityType>
+        implements CharacterEntityOfType<TAbilityType> {
     public boolean _isDeleted;
-    public boolean _isHidden;
     public TAbilityType _type;
+    public VariableCache _data = new VariableCacheStub();
 
     public CharacterAbilityStub() {
     }
@@ -16,24 +18,8 @@ public class CharacterAbilityStub<TAbilityType extends AbilityType> implements C
         _type = type;
     }
 
-    @Override
-    public boolean getIsHidden() {
-        return _isHidden;
-    }
-
-    @Override
-    public void setIsHidden(boolean b) {
-        _isHidden = b;
-    }
-
-    @Override
-    public boolean getIsDisabled() {
-        return false;
-    }
-
-    @Override
-    public void setIsDisabled(boolean b) {
-
+    public CharacterAbilityStub(Character character, TAbilityType type, VariableCache data) {
+        this(character, type);
     }
 
     @Override
@@ -43,7 +29,8 @@ public class CharacterAbilityStub<TAbilityType extends AbilityType> implements C
 
     @Override
     public String getInterfaceName() {
-        return CharacterAbility.class.getCanonicalName() + "<" + _type.getInterfaceName() + ">";
+        return CharacterEntityOfType.class.getCanonicalName() + "<" + _type.getInterfaceName() +
+                ">";
     }
 
     @Override
@@ -54,5 +41,10 @@ public class CharacterAbilityStub<TAbilityType extends AbilityType> implements C
     @Override
     public boolean isDeleted() {
         return _isDeleted;
+    }
+
+    @Override
+    public VariableCache data() throws IllegalStateException {
+        return _data;
     }
 }

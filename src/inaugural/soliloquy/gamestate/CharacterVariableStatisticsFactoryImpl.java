@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
@@ -13,31 +15,21 @@ public class CharacterVariableStatisticsFactoryImpl
         implements CharacterVariableStatisticsFactory {
     private final MapFactory MAP_FACTORY;
     private final CollectionFactory COLLECTION_FACTORY;
+    private final VariableCacheFactory DATA_FACTORY;
     private final CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
             CharacterVariableStatistic> FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
     public CharacterVariableStatisticsFactoryImpl(MapFactory mapFactory,
                                                   CollectionFactory collectionFactory,
+                                                  VariableCacheFactory dataFactory,
                                                   CharacterEntityOfTypeFactory<
                                                             CharacterVariableStatisticType,
                                                             CharacterVariableStatistic>
                                                             factory) {
-        if (mapFactory == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticsFactoryImpl: mapFactory cannot be null");
-        }
-        MAP_FACTORY = mapFactory;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticsFactoryImpl: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
-        if (factory == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticsFactoryImpl: factory cannot be null");
-        }
-        FACTORY = factory;
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
+        COLLECTION_FACTORY = Check.ifNull(collectionFactory, "collectionFactory");
+        DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
+        FACTORY = Check.ifNull(factory, "factory");
     }
 
     @Override
@@ -46,8 +38,8 @@ public class CharacterVariableStatisticsFactoryImpl
             throw new IllegalArgumentException(
                     "CharacterVariableStatisticsFactoryImpl.make: character cannot be null");
         }
-        return new CharacterVariableStatisticsImpl(character, MAP_FACTORY, COLLECTION_FACTORY,
-                FACTORY);
+        return new CharacterVariableStatisticsImpl(character, FACTORY, COLLECTION_FACTORY,
+                DATA_FACTORY, MAP_FACTORY);
     }
 
     @Override

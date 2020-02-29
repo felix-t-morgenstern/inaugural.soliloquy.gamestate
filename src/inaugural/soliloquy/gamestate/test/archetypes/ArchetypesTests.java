@@ -33,7 +33,7 @@ class ArchetypesTests {
 
     @Test
     void testCharacterActiveAbilityArchetype() {
-        assertEquals(CharacterAbility.class.getCanonicalName() + "<" +
+        assertEquals(CharacterEntityOfType.class.getCanonicalName() + "<" +
                 ActiveAbilityType.class.getCanonicalName() + ">",
                 new CharacterActiveAbilityArchetype().getInterfaceName());
     }
@@ -65,7 +65,7 @@ class ArchetypesTests {
 
     @Test
     void testCharacterReactiveAbilityArchetype() {
-        assertEquals(CharacterAbility.class.getCanonicalName() + "<" +
+        assertEquals(CharacterEntityOfType.class.getCanonicalName() + "<" +
                         ReactiveAbilityType.class.getCanonicalName() + ">",
                 new CharacterReactiveAbilityArchetype().getInterfaceName());
     }

@@ -1,6 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
@@ -10,6 +12,11 @@ public class CharacterStaticStatisticStub implements CharacterStatistic<Characte
 
     CharacterStaticStatisticStub(CharacterStaticStatisticType type) {
         _type = type;
+    }
+
+    CharacterStaticStatisticStub(Character character, CharacterStaticStatisticType type,
+                                 VariableCache data) {
+        this(type);
     }
 
     @Override
@@ -44,6 +51,11 @@ public class CharacterStaticStatisticStub implements CharacterStatistic<Characte
 
     @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public VariableCache data() throws IllegalStateException {
         return null;
     }
 }

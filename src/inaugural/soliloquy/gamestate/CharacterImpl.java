@@ -31,20 +31,19 @@ public class CharacterImpl implements Character {
     private final CharacterInventory INVENTORY;
     private final CharacterVariableStatistics VARIABLE_STATISTICS;
     private final CharacterEntitiesOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>>
-            STATIC_STATISTICS;
+            CharacterStatistic<CharacterStaticStatisticType>> STATIC_STATISTICS;
     private final CharacterStatusEffects STATUS_EFFECTS;
-    private final CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
-            ACTIVE_ABILITIES;
+    private final CharacterEntitiesOfType<ActiveAbilityType,
+            CharacterEntityOfType<ActiveAbilityType>> ACTIVE_ABILITIES;
     private final CharacterEntitiesOfType<ReactiveAbilityType,
-            CharacterAbility<ReactiveAbilityType>> REACTIVE_ABILITIES;
+            CharacterEntityOfType<ReactiveAbilityType>> REACTIVE_ABILITIES;
     private final VariableCache DATA;
 
-    private final static CharacterStatistic<CharacterStaticStatisticType> STATIC_STAT_ARCHETYPE =
+    private final static CharacterEntityOfType<CharacterStaticStatisticType> STATIC_STAT_ARCHETYPE =
             new CharacterStaticStatisticArchetype();
-    private final static CharacterAbility<ActiveAbilityType> ACTIVE_ABILITY_ARCHETYPE =
+    private final static CharacterEntityOfType<ActiveAbilityType> ACTIVE_ABILITY_ARCHETYPE =
             new CharacterActiveAbilityArchetype();
-    private final static CharacterAbility<ReactiveAbilityType> REACTIVE_ABILITY_ARCHETYPE =
+    private final static CharacterEntityOfType<ReactiveAbilityType> REACTIVE_ABILITY_ARCHETYPE =
             new CharacterReactiveAbilityArchetype();
 
     private Tile _tile;
@@ -107,12 +106,15 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException(
                     "Character: entitiesOfTypeFactory must be non-null");
         }
+        //noinspection unchecked
         STATIC_STATISTICS = entitiesOfTypeFactory.make(this, STATIC_STAT_ARCHETYPE);
         if (statusEffectsFactory == null) {
             throw new IllegalArgumentException("Character: statusEffectsFactory must be non-null");
         }
         STATUS_EFFECTS = statusEffectsFactory.make(this);
+        //noinspection unchecked
         ACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, ACTIVE_ABILITY_ARCHETYPE);
+        //noinspection unchecked
         REACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, REACTIVE_ABILITY_ARCHETYPE);
         if (data == null) {
             throw new IllegalArgumentException("Character: data must be non-null");
@@ -239,14 +241,16 @@ public class CharacterImpl implements Character {
 
     @Override
     public CharacterEntitiesOfType<ActiveAbilityType,
-            CharacterAbility<ActiveAbilityType>> activeAbilities() throws IllegalStateException {
+            CharacterEntityOfType<ActiveAbilityType>> activeAbilities()
+            throws IllegalStateException {
         enforceInvariant("activeAbilities", true);
         return ACTIVE_ABILITIES;
     }
 
     @Override
     public CharacterEntitiesOfType<ReactiveAbilityType,
-            CharacterAbility<ReactiveAbilityType>> reactiveAbilities() throws IllegalStateException {
+            CharacterEntityOfType<ReactiveAbilityType>> reactiveAbilities()
+            throws IllegalStateException {
         enforceInvariant("reactiveAbilities", true);
         return REACTIVE_ABILITIES;
     }

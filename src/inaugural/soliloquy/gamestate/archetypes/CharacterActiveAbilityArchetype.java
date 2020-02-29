@@ -1,29 +1,10 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.gamestate.entities.CharacterAbility;
+import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 
-public class CharacterActiveAbilityArchetype implements CharacterAbility<ActiveAbilityType> {
-    @Override
-    public boolean getIsHidden() {
-        return false;
-    }
-
-    @Override
-    public void setIsHidden(boolean b) {
-
-    }
-
-    @Override
-    public boolean getIsDisabled() {
-        return false;
-    }
-
-    @Override
-    public void setIsDisabled(boolean b) {
-
-    }
-
+public class CharacterActiveAbilityArchetype implements CharacterEntityOfType<ActiveAbilityType> {
     @Override
     public ActiveAbilityType type() {
         return null;
@@ -41,7 +22,12 @@ public class CharacterActiveAbilityArchetype implements CharacterAbility<ActiveA
 
     @Override
     public String getInterfaceName() {
-        return CharacterAbility.class.getCanonicalName() + "<" +
+        return CharacterEntityOfType.class.getCanonicalName() + "<" +
                 ActiveAbilityType.class.getCanonicalName() + ">";
+    }
+
+    @Override
+    public VariableCache data() throws IllegalStateException {
+        return null;
     }
 }

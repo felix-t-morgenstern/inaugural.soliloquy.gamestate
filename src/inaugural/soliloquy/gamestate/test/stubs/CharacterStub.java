@@ -33,18 +33,16 @@ public class CharacterStub implements Character {
             new CharacterVariableStatisticsStub();
     private final CharacterEntitiesOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>>
-            STATS = new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
-                new CharacterStaticStatisticStub(t)));
+            STATS = new CharacterEntitiesOfTypeStub<>(this, c -> t -> d ->
+            new CharacterStaticStatisticStub(c, t, d));
     private final CharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
-    @SuppressWarnings("unchecked")
-    private final CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
-            ACTIVE_ABILITIES = new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
-            new CharacterAbilityStub<ActiveAbilityType>(c, t)));
-    @SuppressWarnings("unchecked")
+    private final CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>>
+            ACTIVE_ABILITIES = new CharacterEntitiesOfTypeStub<>(this, c -> t -> d ->
+            new CharacterAbilityStub<>(c, t, d));
     private final CharacterEntitiesOfType<ReactiveAbilityType,
-            CharacterAbility<ReactiveAbilityType>> REACTIVE_ABILITIES =
-            new CharacterEntitiesOfTypeStub<>(this, t -> (c ->
-                new CharacterAbilityStub<ReactiveAbilityType>(c, t)));
+            CharacterEntityOfType<ReactiveAbilityType>> REACTIVE_ABILITIES =
+            new CharacterEntitiesOfTypeStub<>(this, c -> t -> d ->
+                    new CharacterAbilityStub<>(c, t, d));
 
     public Tile _tile;
 
@@ -155,13 +153,13 @@ public class CharacterStub implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
+    public CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>>
             activeAbilities() throws IllegalStateException {
         return ACTIVE_ABILITIES;
     }
 
     @Override
-    public CharacterEntitiesOfType<ReactiveAbilityType, CharacterAbility<ReactiveAbilityType>>
+    public CharacterEntitiesOfType<ReactiveAbilityType, CharacterEntityOfType<ReactiveAbilityType>>
             reactiveAbilities() throws IllegalStateException {
         return REACTIVE_ABILITIES;
     }

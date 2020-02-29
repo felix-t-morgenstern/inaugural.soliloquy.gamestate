@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
@@ -32,6 +33,11 @@ public class CharacterEntityStub implements CharacterEntityOfType<HasId> {
 
     @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public VariableCache data() throws IllegalStateException {
         return null;
     }
 }

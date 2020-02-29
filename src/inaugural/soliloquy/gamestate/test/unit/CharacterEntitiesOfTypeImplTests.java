@@ -2,19 +2,20 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.common.test.stubs.HasIdAndNameStub;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeImpl;
-import inaugural.soliloquy.gamestate.archetypes.ActiveAbilityTypeArchetype;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterAbilityStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterEntityStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterAbility;
 import soliloquy.specs.gamestate.entities.CharacterEntitiesOfType;
+import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 
 import java.util.ArrayList;
@@ -26,56 +27,58 @@ class CharacterEntitiesOfTypeImplTests {
     private final Character CHARACTER = new CharacterStub();
     private final ArrayList<HasId> TYPES_ADDED = new ArrayList<>();
     private final ArrayList<CharacterEntityStub> ENTITIES_ADDED = new ArrayList<>();
-    private final Function<HasId, Function<Character, CharacterEntityStub>> FACTORY = t -> c -> {
+    private final Function<Character,Function<HasId,Function<VariableCache,CharacterEntityStub>>>
+            FACTORY = c -> t -> d -> {
         _characterPassedIntoFactory = c;
+        _typePassedIntoFactory = t;
+        _dataPassedIntoFactory = d;
         TYPES_ADDED.add(t);
         CharacterEntityStub entity = new CharacterEntityStub(c,t);
         ENTITIES_ADDED.add(entity);
         return entity;
     };
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterEntityStub ARCHETYPE = new CharacterEntityStub(null,
             new HasIdAndNameStub("id", "name"));
 
     private Character _characterPassedIntoFactory;
+    private HasId _typePassedIntoFactory;
+    private VariableCache _dataPassedIntoFactory;
     private CharacterEntitiesOfType<HasId, CharacterEntityStub> _entitiesOfType;
 
     @BeforeEach
     void setUp() {
         _characterPassedIntoFactory = null;
         _entitiesOfType = new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY,
-                COLLECTION_FACTORY, ARCHETYPE);
+                COLLECTION_FACTORY, DATA_FACTORY, ARCHETYPE);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterEntitiesOfTypeImpl<>(null, FACTORY, COLLECTION_FACTORY,
-                        ARCHETYPE));
+                        DATA_FACTORY, ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, null, COLLECTION_FACTORY,
-                        ARCHETYPE));
+                        DATA_FACTORY, ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, null, ARCHETYPE));
+                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, null,
+                        DATA_FACTORY, ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, COLLECTION_FACTORY,
-                        null));
+                        null, ARCHETYPE));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, COLLECTION_FACTORY,
+                        DATA_FACTORY, null));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void testGetInterfaceName() {
-        Function<ActiveAbilityType, Function<Character, CharacterAbility<ActiveAbilityType>>>
-                factory = t -> c -> null;
-        CharacterAbility<ActiveAbilityType> archetype =
-                new CharacterAbilityStub<ActiveAbilityType>(null,
-                        new ActiveAbilityTypeArchetype());
         assertEquals(CharacterEntitiesOfType.class.getCanonicalName() + "<" +
-                CharacterAbility.class.getCanonicalName() + "<" +
+                        CharacterEntityOfType.class.getCanonicalName() + "<" +
                 ActiveAbilityType.class.getCanonicalName() + ">>",
-                new CharacterEntitiesOfTypeImpl<>(CHARACTER, factory, new CollectionFactoryStub(),
-                        archetype).getInterfaceName());
+                _entitiesOfType.getInterfaceName());
     }
 
     @Test
@@ -90,6 +93,8 @@ class CharacterEntitiesOfTypeImplTests {
         assertTrue(TYPES_ADDED.contains(type));
         assertNotNull(_entitiesOfType.get(type));
         assertSame(CHARACTER, _characterPassedIntoFactory);
+        // TODO: Test other parameters passed in
+        fail();
     }
 
     @Test

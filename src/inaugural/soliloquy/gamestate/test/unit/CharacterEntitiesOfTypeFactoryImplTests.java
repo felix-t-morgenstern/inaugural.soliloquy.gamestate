@@ -6,9 +6,12 @@ import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterEntityStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntitiesOfType;
@@ -20,29 +23,36 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEntitiesOfTypeFactoryImplTests {
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterEntityStub FACTORY_OUTPUT = new CharacterEntityStub(null, null);
-    private final Function<HasId, Function<Character, CharacterEntityStub>> FACTORY =
-            t -> c -> {
+    private final Function<Character,Function<HasId,Function<VariableCache,CharacterEntityStub>>>
+            FACTORY = c -> t -> d -> {
                 _characterPassedIntoFactory = c;
-        return FACTORY_OUTPUT;
+                _typePassedIntoFactory = t;
+                _dataPassedIntoFactory = d;
+                return FACTORY_OUTPUT;
             };
     private final Character CHARACTER = new CharacterStub();
     private final CharacterEntityStub ARCHETYPE =
             new CharacterEntityStub(null, new HasIdAndNameStub("", ""));
 
     private Character _characterPassedIntoFactory;
+    private HasId _typePassedIntoFactory;
+    private VariableCache _dataPassedIntoFactory;
     private CharacterEntitiesOfTypeFactory _factory;
 
     @BeforeEach
     void setUp() {
         _characterPassedIntoFactory = null;
-        _factory = new CharacterEntitiesOfTypeFactoryImpl(COLLECTION_FACTORY);
+        _factory = new CharacterEntitiesOfTypeFactoryImpl(COLLECTION_FACTORY, DATA_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterEntitiesOfTypeFactoryImpl(null));
+                new CharacterEntitiesOfTypeFactoryImpl(null, DATA_FACTORY));
+        assertThrows(IllegalArgumentException.class, () ->
+                new CharacterEntitiesOfTypeFactoryImpl(COLLECTION_FACTORY, null));
     }
 
     @Test
@@ -71,6 +81,8 @@ class CharacterEntitiesOfTypeFactoryImplTests {
 
         assertSame(FACTORY_OUTPUT, fromEntities);
         assertSame(CHARACTER, _characterPassedIntoFactory);
+        // TODO: Test other parameters passed in
+        fail();
     }
 
     @Test

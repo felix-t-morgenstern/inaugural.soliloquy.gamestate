@@ -1,5 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
@@ -10,30 +13,31 @@ public class CharacterVariableStatisticFactory
         implements CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
         CharacterVariableStatistic> {
     private final CharacterStatisticCalculation CALCULATION;
+    private final VariableCacheFactory DATA_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
-    public CharacterVariableStatisticFactory(CharacterStatisticCalculation calculation) {
-        if (calculation == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticFactory: calculation cannot be null");
-        }
-        CALCULATION = calculation;
+    public CharacterVariableStatisticFactory(VariableCacheFactory dataFactory,
+                                             CharacterStatisticCalculation calculation) {
+        DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
+        CALCULATION = Check.ifNull(calculation, "calculation");
     }
 
-    @SuppressWarnings("ConstantConditions")
+    // TODO: Test throws on invalid params
     @Override
     public CharacterVariableStatistic make(Character character,
                                              CharacterVariableStatisticType type)
             throws IllegalArgumentException {
-        if (character == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticFactory.make: character cannot be null");
-        }
-        if (type == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticFactory.make: type cannot be null");
-        }
-        return new CharacterVariableStatisticImpl(character, type, CALCULATION);
+        return make(character, type, DATA_FACTORY.make());
+    }
+
+    // TODO: Test and implement!
+    // TODO: Test throws on invalid params
+    @Override
+    public CharacterVariableStatistic make(Character character,
+                                           CharacterVariableStatisticType type,
+                                           VariableCache data) throws IllegalArgumentException {
+        return new CharacterVariableStatisticImpl(Check.ifNull(character, "character"),
+                Check.ifNull(type, "type"), Check.ifNull(data, "data"),
+                CALCULATION);
     }
 
     @Override

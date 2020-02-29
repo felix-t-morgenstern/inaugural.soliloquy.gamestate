@@ -4,28 +4,42 @@ import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterValueFromModifiers;
+import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
-abstract class AbstractCharacterValueFromModifiers<TEntityType extends CharacterStatisticType>
-        extends HasDeletionInvariants
-        implements CharacterValueFromModifiers {
-    final TEntityType ENTITY_TYPE;
+abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatisticType>
+        extends HasDeletionInvariants implements CharacterStatistic<TEntityType> {
     private final Character CHARACTER;
+    private final TEntityType ENTITY_TYPE;
+    private final VariableCache DATA;
     private final CharacterStatisticCalculation CHARACTER_STATISTIC_CALCULATION;
 
     private int _totalValue;
     private Map<String,Integer> _modifiers;
 
-    AbstractCharacterValueFromModifiers(Character character, TEntityType entityType,
-                                        CharacterStatisticCalculation characterStatisticCalculation) {
+    AbstractCharacterStatistic(Character character, TEntityType entityType, VariableCache data,
+                               CharacterStatisticCalculation characterStatisticCalculation) {
         CHARACTER = Check.ifNull(character, "character");
         ENTITY_TYPE = Check.ifNull(entityType, "entityType");
+        DATA = Check.ifNull(data, "data");
         CHARACTER_STATISTIC_CALCULATION = Check.ifNull(characterStatisticCalculation,
                 "characterStatisticCalculation");
+    }
+
+    @Override
+    public TEntityType type() {
+        enforceDeletionInvariants("type");
+        return ENTITY_TYPE;
+    }
+
+    @Override
+    public VariableCache data() {
+        enforceDeletionInvariants("data");
+        return DATA;
     }
 
     @Override
@@ -49,6 +63,14 @@ abstract class AbstractCharacterValueFromModifiers<TEntityType extends Character
                         .calculate(CHARACTER, ENTITY_TYPE);
         _totalValue = calculatedValueAndModifiers.getItem1();
         _modifiers = calculatedValueAndModifiers.getItem2();
+    }
+
+    // Todo: Ensure tested properly
+    @Override
+    public String getInterfaceName() {
+        enforceDeletionInvariants("getInterfaceName");
+        return CharacterStatistic.class.getCanonicalName() +  "<" + ENTITY_TYPE.getInterfaceName()
+                + ">";
     }
 
     @Override

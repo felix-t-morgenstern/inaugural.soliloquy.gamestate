@@ -4,8 +4,10 @@ import inaugural.soliloquy.gamestate.CharacterStaticStatisticFactory;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStaticStatisticTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
@@ -17,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterStaticStatisticFactoryTests {
     private final Character CHARACTER = new CharacterStub();
     private final CharacterStaticStatisticType TYPE = new CharacterStaticStatisticTypeStub();
+    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterStatisticCalculation CALCULATION =
             new CharacterStatisticCalculationStub();
 
@@ -26,14 +29,16 @@ class CharacterStaticStatisticFactoryTests {
 
     @BeforeEach
     void setUp() {
-        _characterStaticStatisticFactory = new CharacterStaticStatisticFactory(CALCULATION);
+        _characterStaticStatisticFactory = new CharacterStaticStatisticFactory(DATA_FACTORY,
+                CALCULATION);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterStaticStatisticFactory(null));
+                () -> new CharacterStaticStatisticFactory(null, CALCULATION));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterStaticStatisticFactory(DATA_FACTORY, null));
     }
 
     @Test
@@ -42,6 +47,7 @@ class CharacterStaticStatisticFactoryTests {
                 _characterStaticStatisticFactory.make(CHARACTER, TYPE);
 
         assertNotNull(staticStat);
+        // TODO: Consider verifying whether DATA_FACTORY was passed in properly
     }
 
     @Test

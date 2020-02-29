@@ -1,26 +1,22 @@
 package inaugural.soliloquy.gamestate;
 
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 public class CharacterVariableStatisticImpl
-        extends AbstractCharacterValueFromModifiers<CharacterVariableStatisticType>
+        extends AbstractCharacterStatistic<CharacterVariableStatisticType>
         implements CharacterVariableStatistic {
     private int _currentValue;
 
     public CharacterVariableStatisticImpl(Character character,
                                           CharacterVariableStatisticType type,
+                                          VariableCache data,
                                           CharacterStatisticCalculation
                                                     vitalAttributeCalculation) {
-        super(character, type, vitalAttributeCalculation);
-    }
-
-    @Override
-    public CharacterVariableStatisticType type() throws IllegalStateException {
-        enforceDeletionInvariants("type");
-        return ENTITY_TYPE;
+        super(character, type, data, vitalAttributeCalculation);
     }
 
     @Override
@@ -34,12 +30,6 @@ public class CharacterVariableStatisticImpl
             throws IllegalStateException, IllegalArgumentException {
         enforceDeletionInvariants("setCurrentValue");
         _currentValue = currentValue;
-    }
-
-    @Override
-    public String getInterfaceName() throws IllegalStateException {
-        enforceDeletionInvariants("getInterfaceName");
-        return CharacterVariableStatistic.class.getCanonicalName();
     }
 
     @Override

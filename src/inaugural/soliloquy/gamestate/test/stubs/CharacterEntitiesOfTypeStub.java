@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntitiesOfType;
@@ -16,22 +17,29 @@ public class CharacterEntitiesOfTypeStub<TEntityType extends HasId,
             implements CharacterEntitiesOfType<TEntityType, TCharacterEntity> {
     public Character CHARACTER;
     public HashMap<TEntityType, TCharacterEntity> ENTITIES;
-    public Function<TEntityType, Function<Character,TCharacterEntity>> MAKE_ENTITY;
+    public Function<Character,Function<TEntityType,Function<VariableCache,TCharacterEntity>>>
+            FACTORY;
 
     public boolean _isDeleted;
 
     public CharacterEntitiesOfTypeStub(Character character,
-                                       Function<TEntityType, Function<Character,TCharacterEntity>>
-                                               makeEntity) {
+                                       Function<Character,Function<TEntityType,
+                                               Function<VariableCache,TCharacterEntity>>>
+                                               factory) {
         CHARACTER = character;
-        MAKE_ENTITY = makeEntity;
+        FACTORY = factory;
         ENTITIES = new HashMap<>();
     }
 
     @Override
     public void add(TEntityType entityType) throws IllegalArgumentException {
+        add(entityType, new VariableCacheStub());
+    }
+
+    @Override
+    public void add(TEntityType entityType, VariableCache data) throws IllegalArgumentException {
         if (!ENTITIES.containsKey(entityType)) {
-            ENTITIES.put(entityType, MAKE_ENTITY.apply(entityType).apply(CHARACTER));
+            ENTITIES.put(entityType, FACTORY.apply(CHARACTER).apply(entityType).apply(data));
         }
     }
 

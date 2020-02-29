@@ -363,10 +363,10 @@ class CharacterImplTests {
 
         CharacterStatusEffects statusEffects = _character.statusEffects();
 
-        CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>>
+        CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>>
                 activeAbilities = _character.activeAbilities();
 
-        CharacterEntitiesOfType<ReactiveAbilityType, CharacterAbility<ReactiveAbilityType>>
+        CharacterEntitiesOfType<ReactiveAbilityType, CharacterEntityOfType<ReactiveAbilityType>>
                 reactiveAbilities = _character.reactiveAbilities();
 
         assertFalse(_character.isDeleted());

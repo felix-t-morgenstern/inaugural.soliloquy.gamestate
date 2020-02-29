@@ -117,12 +117,12 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<ActiveAbilityType, CharacterAbility<ActiveAbilityType>> activeAbilities() throws IllegalStateException {
+    public CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>> activeAbilities() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CharacterEntitiesOfType<ReactiveAbilityType, CharacterAbility<ReactiveAbilityType>> reactiveAbilities() throws IllegalStateException {
+    public CharacterEntitiesOfType<ReactiveAbilityType, CharacterEntityOfType<ReactiveAbilityType>> reactiveAbilities() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

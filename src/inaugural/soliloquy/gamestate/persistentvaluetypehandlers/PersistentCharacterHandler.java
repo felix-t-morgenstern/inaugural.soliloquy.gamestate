@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.*;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
@@ -35,7 +36,6 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
 
     private static final Character ARCHETYPE = new CharacterArchetype();
 
-    @SuppressWarnings("ConstantConditions")
     public PersistentCharacterHandler(CharacterFactory characterFactory,
                                       PersistentValueTypeHandler<EntityUuid> idHandler,
                                       Function<String, CharacterType> getCharacterType,
@@ -52,76 +52,21 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
                                       Function<String, ReactiveAbilityType> getReactiveAbilityType,
                                       PersistentValueTypeHandler<VariableCache> dataHandler,
                                       PersistentValueTypeHandler<Item> itemHandler) {
-        if (characterFactory == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: characterFactory cannot be null");
-        }
-        CHARACTER_FACTORY = characterFactory;
-        if (idHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: idHandler cannot be null");
-        }
-        ID_HANDLER = idHandler;
-        if (getCharacterType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getCharacterType cannot be null");
-        }
-        GET_CHARACTER_TYPE = getCharacterType;
-        if (getCharacterClassification == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getCharacterClassification cannot be null");
-        }
-        GET_CHARACTER_CLASSIFICATION = getCharacterClassification;
-        if (getSpriteSet == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getSpriteSet cannot be null");
-        }
-        GET_SPRITE_SET = getSpriteSet;
-        if (getAIType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getAIType cannot be null");
-        }
-        GET_AI_TYPE = getAIType;
-        if (getEvent == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getEvent cannot be null");
-        }
-        GET_EVENT = getEvent;
-        if (getStaticStatType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getStaticStatType cannot be null");
-        }
-        GET_STATIC_STAT_TYPE = getStaticStatType;
-        if (getVariableStatType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getVariableStatType cannot be null");
-        }
-        GET_VARIABLE_STAT_TYPE = getVariableStatType;
-        if (getStatusType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getStatusType cannot be null");
-        }
-        GET_STATUS_TYPE = getStatusType;
-        if (getActiveAbilityType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getActiveAbilityType cannot be null");
-        }
-        GET_ACTIVE_ABILITY_TYPE = getActiveAbilityType;
-        if (getReactiveAbilityType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: getReactiveAbilityType cannot be null");
-        }
-        GET_REACTIVE_ABILITY_TYPE = getReactiveAbilityType;
-        if (dataHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: dataHandler cannot be null");
-        }
-        DATA_HANDLER = dataHandler;
-        if (itemHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentCharacterHandler: itemHandler cannot be null");
-        }
-        ITEM_HANDLER = itemHandler;
+        CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
+        ID_HANDLER = Check.ifNull(idHandler, "idHandler");
+        GET_CHARACTER_TYPE = Check.ifNull(getCharacterType, "getCharacterType");
+        GET_CHARACTER_CLASSIFICATION = Check.ifNull(getCharacterClassification,
+                "getCharacterClassification");
+        GET_SPRITE_SET = Check.ifNull(getSpriteSet, "getSpriteSet");
+        GET_AI_TYPE = Check.ifNull(getAIType, "getAIType");
+        GET_EVENT = Check.ifNull(getEvent, "getEvent");
+        GET_STATIC_STAT_TYPE = Check.ifNull(getStaticStatType, "getStaticStatType");
+        GET_VARIABLE_STAT_TYPE = Check.ifNull(getVariableStatType, "getVariableStatType");
+        GET_STATUS_TYPE = Check.ifNull(getStatusType, "getStatusType");
+        GET_ACTIVE_ABILITY_TYPE = Check.ifNull(getActiveAbilityType, "getActiveAbilityType");
+        GET_REACTIVE_ABILITY_TYPE = Check.ifNull(getReactiveAbilityType, "getReactiveAbilityType");
+        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        ITEM_HANDLER = Check.ifNull(itemHandler, "itemHandler");
     }
 
     @Override
@@ -162,37 +107,32 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
             readCharacter.inventory().add(ITEM_HANDLER.read(item));
         }
 
-        for(CharacterEntityWithTypeAndValueDTO variableStat : dto.variableStats) {
+        for(CharacterVariableStatisticDTO variableStat : dto.variableStats) {
             CharacterVariableStatisticType type =
-                    GET_VARIABLE_STAT_TYPE.apply(variableStat.typeId);
-            readCharacter.variableStatistics().add(type);
-            readCharacter.variableStatistics().get(type).setCurrentValue(variableStat.value);
+                    GET_VARIABLE_STAT_TYPE.apply(variableStat.type);
+            readCharacter.variableStatistics().add(type, DATA_HANDLER.read(variableStat.data));
+            readCharacter.variableStatistics().get(type).setCurrentValue(variableStat.current);
         }
 
-        for(String staticStat : dto.staticStats)
+        for(CharacterEntityDTO staticStat : dto.staticStats)
         {
-            readCharacter.staticStatistics().add(GET_STATIC_STAT_TYPE.apply(staticStat));
+            readCharacter.staticStatistics().add(GET_STATIC_STAT_TYPE.apply(staticStat.type),
+                    DATA_HANDLER.read(staticStat.data));
         }
 
-        for(CharacterEntityWithTypeAndValueDTO statusEffect : dto.statusEffects) {
+        for(CharacterStatusEffectDTO statusEffect : dto.statusEffects) {
             readCharacter.statusEffects().setStatusEffectLevel(
-                    GET_STATUS_TYPE.apply(statusEffect.typeId), statusEffect.value);
+                    GET_STATUS_TYPE.apply(statusEffect.type), statusEffect.value);
         }
 
-        for(CharacterAbilityDTO activeAbility : dto.activeAbilities) {
-            ActiveAbilityType type = GET_ACTIVE_ABILITY_TYPE.apply(activeAbility.typeId);
-            readCharacter.activeAbilities().add(type);
-            if (activeAbility.isHidden) {
-                readCharacter.activeAbilities().get(type).setIsHidden(true);
-            }
+        for(CharacterEntityDTO activeAbility : dto.activeAbilities) {
+            ActiveAbilityType type = GET_ACTIVE_ABILITY_TYPE.apply(activeAbility.type);
+            readCharacter.activeAbilities().add(type, DATA_HANDLER.read(activeAbility.data));
         }
 
-        for(CharacterAbilityDTO reactiveAbility : dto.reactiveAbilities) {
-            ReactiveAbilityType type = GET_REACTIVE_ABILITY_TYPE.apply(reactiveAbility.typeId);
-            readCharacter.reactiveAbilities().add(type);
-            if (reactiveAbility.isHidden) {
-                readCharacter.reactiveAbilities().get(type).setIsHidden(true);
-            }
+        for(CharacterEntityDTO reactiveAbility : dto.reactiveAbilities) {
+            ReactiveAbilityType type = GET_REACTIVE_ABILITY_TYPE.apply(reactiveAbility.type);
+            readCharacter.reactiveAbilities().add(type, DATA_HANDLER.read(reactiveAbility.data));
         }
 
         readCharacter.setPlayerControlled(dto.isPlayerControlled);
@@ -272,47 +212,51 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
 
         index = 0;
         dto.variableStats =
-                new CharacterEntityWithTypeAndValueDTO[character.variableStatistics().size()];
+                new CharacterVariableStatisticDTO[character.variableStatistics().size()];
         for(CharacterVariableStatistic variableStat : character.variableStatistics()) {
-            CharacterEntityWithTypeAndValueDTO variableStatDTO =
-                    new CharacterEntityWithTypeAndValueDTO();
-            variableStatDTO.typeId = variableStat.type().id();
-            variableStatDTO.value = variableStat.getCurrentValue();
+            CharacterVariableStatisticDTO variableStatDTO =
+                    new CharacterVariableStatisticDTO();
+            variableStatDTO.type = variableStat.type().id();
+            variableStatDTO.data = DATA_HANDLER.write(variableStat.data());
+            variableStatDTO.current = variableStat.getCurrentValue();
             dto.variableStats[index++] = variableStatDTO;
         }
 
         index = 0;
-        dto.staticStats = new String[character.staticStatistics().size()];
+        dto.staticStats = new CharacterEntityDTO[character.staticStatistics().size()];
         for(CharacterStatistic<CharacterStaticStatisticType> stat : character.staticStatistics()) {
-            dto.staticStats[index++] = stat.type().id();
+            CharacterEntityDTO staticStatDTO = new CharacterEntityDTO();
+            staticStatDTO.type = stat.type().id();
+            staticStatDTO.data = DATA_HANDLER.write(stat.data());
+            dto.staticStats[index++] = staticStatDTO;
         }
 
         index = 0;
-        dto.statusEffects = new CharacterEntityWithTypeAndValueDTO[
+        dto.statusEffects = new CharacterStatusEffectDTO[
                 character.statusEffects().representation().size()];
         for(Pair<StatusEffectType, Integer> statEffect :
                 character.statusEffects().representation()) {
-            CharacterEntityWithTypeAndValueDTO statEffectDTO =
-                    new CharacterEntityWithTypeAndValueDTO();
-            statEffectDTO.typeId = statEffect.getItem1().id();
+            CharacterStatusEffectDTO statEffectDTO = new CharacterStatusEffectDTO();
+            statEffectDTO.type = statEffect.getItem1().id();
             statEffectDTO.value = statEffect.getItem2();
             dto.statusEffects[index++] = statEffectDTO;
         }
 
         index = 0;
-        dto.activeAbilities = new CharacterAbilityDTO[character.activeAbilities().size()];
-        for(CharacterAbility<ActiveAbilityType> charAbility : character.activeAbilities()) {
-            CharacterAbilityDTO abilityDTO = new CharacterAbilityDTO();
-            abilityDTO.typeId = charAbility.type().id();
-            abilityDTO.isHidden = charAbility.getIsHidden();
+        dto.activeAbilities = new CharacterEntityDTO[character.activeAbilities().size()];
+        for(CharacterEntityOfType<ActiveAbilityType> charAbility : character.activeAbilities()) {
+            CharacterEntityDTO abilityDTO = new CharacterEntityDTO();
+            abilityDTO.type = charAbility.type().id();
+            abilityDTO.data = DATA_HANDLER.write(charAbility.data());
             dto.activeAbilities[index++] = abilityDTO;
         }
 
         index = 0;
-        dto.reactiveAbilities = new CharacterAbilityDTO[character.reactiveAbilities().size()];
-        for(CharacterAbility<ReactiveAbilityType> charAbility : character.reactiveAbilities()) {
-            CharacterAbilityDTO abilityDTO = new CharacterAbilityDTO();
-            abilityDTO.typeId = charAbility.type().id();
+        dto.reactiveAbilities = new CharacterEntityDTO[character.reactiveAbilities().size()];
+        for(CharacterEntityOfType<ReactiveAbilityType> charAbility : character.reactiveAbilities()) {
+            CharacterEntityDTO abilityDTO = new CharacterEntityDTO();
+            abilityDTO.type = charAbility.type().id();
+            abilityDTO.data = DATA_HANDLER.write(charAbility.data());
             dto.reactiveAbilities[index++] = abilityDTO;
         }
 
@@ -340,11 +284,11 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         CharacterEventDTO[] events;
         CharacterPairedDataDTO[] equipmentSlots;
         String[] inventoryItems;
-        CharacterEntityWithTypeAndValueDTO[] variableStats;
-        String[] staticStats;
-        CharacterEntityWithTypeAndValueDTO[] statusEffects;
-        CharacterAbilityDTO[] activeAbilities;
-        CharacterAbilityDTO[] reactiveAbilities;
+        CharacterVariableStatisticDTO[] variableStats;
+        CharacterEntityDTO[] staticStats;
+        CharacterStatusEffectDTO[] statusEffects;
+        CharacterEntityDTO[] activeAbilities;
+        CharacterEntityDTO[] reactiveAbilities;
         boolean isPlayerControlled;
         String data;
         String name;
@@ -358,12 +302,15 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         String trigger;
         String[] events;
     }
-    private class CharacterEntityWithTypeAndValueDTO {
-        String typeId;
+    private class CharacterStatusEffectDTO {
+        String type;
         int value;
     }
-    private class CharacterAbilityDTO {
-        String typeId;
-        boolean isHidden;
+    private class CharacterEntityDTO {
+        String type;
+        String data;
+    }
+    private class CharacterVariableStatisticDTO extends CharacterEntityDTO {
+        int current;
     }
 }

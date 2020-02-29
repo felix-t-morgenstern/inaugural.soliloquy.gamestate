@@ -4,8 +4,10 @@ import inaugural.soliloquy.gamestate.CharacterVariableStatisticFactory;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterVariableStatisticTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
@@ -15,6 +17,7 @@ import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticFactoryTests {
+    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterStatisticCalculation CALCULATION =
             new CharacterStatisticCalculationStub();
     private final Character CHARACTER = new CharacterStub();
@@ -26,14 +29,15 @@ class CharacterVariableStatisticFactoryTests {
     @BeforeEach
     void setUp() {
         _characterVariableStatisticFactory =
-                new CharacterVariableStatisticFactory(CALCULATION);
+                new CharacterVariableStatisticFactory(DATA_FACTORY, CALCULATION);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterVariableStatisticFactory(null));
+                () -> new CharacterVariableStatisticFactory(null, CALCULATION));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterVariableStatisticFactory(DATA_FACTORY, null));
     }
 
     @Test

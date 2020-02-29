@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import inaugural.soliloquy.common.CanGetInterfaceName;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntitiesOfType;
@@ -21,14 +22,17 @@ public class CharacterEntitiesOfTypeFactoryStub extends CanGetInterfaceName
                 TCharacterEntityOfType> make(Character character, TCharacterEntityOfType archetype)
             throws IllegalArgumentException {
         return new CharacterEntitiesOfTypeStub<>(character,
-                ((Function<TEntityType, Function<Character, TCharacterEntityOfType>>) FACTORIES
+                ((Function<Character,Function<TEntityType,Function<VariableCache,
+                        TCharacterEntityOfType>>>) FACTORIES
                         .get(getProperTypeName(archetype))));
     }
 
     @Override
-    public <TEntityType extends HasId, TCharacterEntityOfType extends
-            CharacterEntityOfType<TEntityType>> void registerFactory(TCharacterEntityOfType archetype,
-                 Function<TEntityType, Function<Character, TCharacterEntityOfType>> factory)
+    public <TEntityType extends HasId, TCharacterEntityOfType
+            extends CharacterEntityOfType<TEntityType>>
+    void registerFactory(TCharacterEntityOfType archetype,
+                         Function<Character,Function<TEntityType,Function<VariableCache,
+                                 TCharacterEntityOfType>>> factory)
             throws IllegalArgumentException {
         FACTORIES.put(getProperTypeName(archetype), factory);
     }

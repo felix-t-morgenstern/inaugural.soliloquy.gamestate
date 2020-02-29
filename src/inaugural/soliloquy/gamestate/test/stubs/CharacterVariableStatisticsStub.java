@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
@@ -38,6 +39,11 @@ public class CharacterVariableStatisticsStub implements CharacterVariableStatist
         if (!STATS.containsKey(type)) {
             STATS.put(type, new CharacterVariableStatisticStub(type));
         }
+    }
+
+    @Override
+    public void add(CharacterVariableStatisticType type, VariableCache variableCache) throws IllegalArgumentException {
+
     }
 
     @Override

@@ -2,8 +2,10 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterVariableStatisticArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CharacterVariableStatisticTypeArchetype;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
+import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
@@ -23,24 +25,18 @@ public class CharacterVariableStatisticsImpl
 
     private final MapFactory MAP_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
     public CharacterVariableStatisticsImpl(Character character,
-                                           MapFactory mapFactory,
-                                           CollectionFactory collectionFactory,
                                            CharacterEntityOfTypeFactory<
                                                      CharacterVariableStatisticType,
                                                      CharacterVariableStatistic>
-                                                     factory) {
-        super(character, t -> c -> factory.make(c, t), collectionFactory, ARCHETYPE);
-        if (factory == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticsImpl: factory cannot be null");
-        }
-        if (mapFactory == null) {
-            throw new IllegalArgumentException(
-                    "CharacterVariableStatisticsImpl: mapFactory cannot be null");
-        }
-        MAP_FACTORY = mapFactory;
+                                                     factory,
+                                           CollectionFactory collectionFactory,
+                                           VariableCacheFactory dataFactory,
+                                           MapFactory mapFactory) {
+        super(character, c -> t -> d -> factory.make(c, t, d), collectionFactory, dataFactory,
+                ARCHETYPE);
+        Check.ifNull(factory, "factory");
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
     }
 
     @Override

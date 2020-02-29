@@ -4,9 +4,11 @@ import inaugural.soliloquy.gamestate.CharacterVariableStatisticImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterVariableStatisticTypeStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
@@ -20,13 +22,14 @@ class CharacterVariableStatisticImplTests {
     private final Character CHARACTER = new CharacterStub();
     private final CharacterVariableStatisticType CHARACTER_VARIABLE_STATISTIC_TYPE =
             new CharacterVariableStatisticTypeStub("VariableStatisticType");
+    private final VariableCache DATA = new VariableCacheStub();
     private final CharacterStatisticCalculation CHARACTER_STATISTIC_CALCULATION =
             new CharacterStatisticCalculationStub();
 
     @BeforeEach
     void setUp() {
         _characterVariableStatistic = new CharacterVariableStatisticImpl(CHARACTER,
-                CHARACTER_VARIABLE_STATISTIC_TYPE, CHARACTER_STATISTIC_CALCULATION);
+                CHARACTER_VARIABLE_STATISTIC_TYPE, DATA, CHARACTER_STATISTIC_CALCULATION);
     }
 
     // TODO: Test constructor with invalid params
@@ -68,6 +71,11 @@ class CharacterVariableStatisticImplTests {
     }
 
     @Test
+    void testData() {
+        fail();
+    }
+
+    @Test
     void testThrowsIllegalStateExceptionForDeadCharacter() {
         CHARACTER.delete();
 
@@ -79,6 +87,8 @@ class CharacterVariableStatisticImplTests {
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.calculate());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.representation());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.totalValue());
+        // TODO: Add assertion for data
+        fail();
     }
 
     @Test
@@ -93,5 +103,7 @@ class CharacterVariableStatisticImplTests {
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.calculate());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.representation());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.totalValue());
+        // TODO: Add assertion for data
+        fail();
     }
 }

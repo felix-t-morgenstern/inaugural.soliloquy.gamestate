@@ -1,42 +1,47 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
-import inaugural.soliloquy.gamestate.CharacterStatisticImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
+import inaugural.soliloquy.gamestate.CharacterStaticStatisticImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStaticStatisticTypeStub;
+import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
-import soliloquy.specs.ruleset.entities.CharacterStatisticType;
+import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CharacterStatisticImplTests {
+class CharacterStaticStatisticImplTests {
     private final Character CHARACTER = new CharacterStub();
-    private final CharacterStatisticType ATTRIBUTE_TYPE = new CharacterStaticStatisticTypeStub();
+    private final CharacterStaticStatisticType ATTRIBUTE_TYPE =
+            new CharacterStaticStatisticTypeStub();
+    private final VariableCache DATA = new VariableCacheStub();
     private final CharacterStatisticCalculation CHARACTER_ATTRIBUTE_CALCULATION =
             new CharacterStatisticCalculationStub();
 
-    private CharacterStatistic _characterStatistic;
+    private CharacterStatistic<CharacterStaticStatisticType> _characterStatistic;
 
     @BeforeEach
     void setUp() {
-        _characterStatistic = new CharacterStatisticImpl(CHARACTER, ATTRIBUTE_TYPE,
+        _characterStatistic = new CharacterStaticStatisticImpl(CHARACTER, ATTRIBUTE_TYPE, DATA,
                 CHARACTER_ATTRIBUTE_CALCULATION);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new CharacterStatisticImpl(null,
-                ATTRIBUTE_TYPE, CHARACTER_ATTRIBUTE_CALCULATION));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterStatisticImpl(CHARACTER,
-                null, CHARACTER_ATTRIBUTE_CALCULATION));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterStatisticImpl(CHARACTER,
-                ATTRIBUTE_TYPE, null));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(null,
+                ATTRIBUTE_TYPE, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
+                null, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
+                ATTRIBUTE_TYPE, DATA, null));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
+                ATTRIBUTE_TYPE, null, CHARACTER_ATTRIBUTE_CALCULATION));
     }
 
     @Test
