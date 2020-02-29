@@ -20,7 +20,8 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     private final Function<TType, Function<Character,TEntity>> FACTORY;
     private final CollectionFactory COLLECTION_FACTORY;
     private final TEntity ARCHETYPE;
-    private final CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
+
+    private static final CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
 
     final HashMap<TType, TEntity> ENTITIES = new HashMap<>();
 

@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CoordinateArchetype;
 import inaugural.soliloquy.gamestate.archetypes.ReadableCoordinateArchetype;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.factories.MapFactory;
@@ -39,27 +40,14 @@ public class CameraImpl implements Camera {
     public CameraImpl(CoordinateFactory coordinateFactory, CollectionFactory collectionFactory,
                       MapFactory mapFactory, TileVisibility tileVisibility,
                       Supplier<GameZone> getCurrentGameZone) {
-        if (coordinateFactory == null) {
-            throw new IllegalArgumentException("CameraImpl: coordinateFactory cannot be null");
-        }
-        COORDINATE_FACTORY = coordinateFactory;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("CameraImpl: mapFactory cannot be null");
-        }
+        COORDINATE_FACTORY = Check.ifNull(coordinateFactory, "coordinateFactory");
+        Check.ifNull(mapFactory, "mapFactory");
         CHARACTERS_PROVIDING_VISIBILITY = mapFactory.make(new CharacterArchetype(), 0);
         COORDINATES_PROVIDING_VISIBILITY = mapFactory.make(new CoordinateArchetype(), 0);
-        if (tileVisibility == null) {
-            throw new IllegalArgumentException("CameraImpl: tileVisibility cannot be null");
-        }
-        TILE_VISIBILITY = tileVisibility;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException("CameraImpl: collectionFactory cannot be null");
-        }
+        TILE_VISIBILITY = Check.ifNull(tileVisibility, "tileVisibility");
+        Check.ifNull(collectionFactory, "collectionFactory");
         VISIBLE_TILES = collectionFactory.make(new ReadableCoordinateArchetype());
-        if (getCurrentGameZone == null) {
-            throw new IllegalArgumentException("CameraImpl: getCurrentGameZone cannot be null");
-        }
-        GET_CURRENT_GAME_ZONE = getCurrentGameZone;
+        GET_CURRENT_GAME_ZONE = Check.ifNull(getCurrentGameZone, "getCurrentGameZone");
     }
 
     @Override
@@ -69,16 +57,8 @@ public class CameraImpl implements Camera {
 
     @Override
     public void setTileLocation(int x, int y) throws IllegalArgumentException {
-        if (x < 0) {
-            throw new IllegalArgumentException(
-                    "Camera.setTileLocation: x (" + x + ") cannot be < 0");
-        }
-        if (y < 0) {
-            throw new IllegalArgumentException(
-                    "Camera.setTileLocation: y (" + y + ") cannot be < 0");
-        }
-        _tileLocationX = x;
-        _tileLocationY = y;
+        _tileLocationX = Check.ifNonNegative(x, "x");
+        _tileLocationY = Check.ifNonNegative(y, "y");
     }
 
     @Override
@@ -88,16 +68,8 @@ public class CameraImpl implements Camera {
 
     @Override
     public void setPixelOffset(int x, int y) throws IllegalArgumentException {
-        if (x < 0) {
-            throw new IllegalArgumentException(
-                    "Camera.setPixelOffset: x (" + x + ") cannot be < 0");
-        }
-        if (y < 0) {
-            throw new IllegalArgumentException(
-                    "Camera.setPixelOffset: y (" + y + ") cannot be < 0");
-        }
-        _pixelOffsetX = x;
-        _pixelOffsetY = y;
+        _pixelOffsetX = Check.ifNonNegative(x, "x");
+        _pixelOffsetY = Check.ifNonNegative(y, "y");
     }
 
     @Override
@@ -107,12 +79,7 @@ public class CameraImpl implements Camera {
 
     @Override
     public void setTileRenderingRadius(int tileRenderingRadius) throws IllegalArgumentException {
-        if (tileRenderingRadius < 0) {
-            throw new IllegalArgumentException(
-                    "Camera.setTileRenderingRadius: tileRenderingRadius ("
-                            + tileRenderingRadius + ") cannot be < 0");
-        }
-        _tileRenderingRadius = tileRenderingRadius;
+        _tileRenderingRadius = Check.ifNonNegative(tileRenderingRadius, "tileRenderingRadius");
     }
 
     @Override

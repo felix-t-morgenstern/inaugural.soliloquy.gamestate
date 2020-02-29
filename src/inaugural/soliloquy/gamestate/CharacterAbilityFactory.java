@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterAbility;
 import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
@@ -9,27 +10,16 @@ public class CharacterAbilityFactory<TType extends AbilityType>
         implements CharacterEntityOfTypeFactory<TType, CharacterAbility<TType>> {
     private final TType ARCHETYPE;
 
-    @SuppressWarnings("ConstantConditions")
     public CharacterAbilityFactory(TType archetype) {
-        if (archetype == null) {
-            throw new IllegalArgumentException(
-                    "CharacterAbilityFactory: archetype cannot be null");
-        }
-        ARCHETYPE = archetype;
+        ARCHETYPE = Check.ifNull(archetype, "archetype");
     }
 
     @Override
     public CharacterAbility<TType> make(Character character, TType type)
             throws IllegalArgumentException {
-        if (character == null) {
-            throw new IllegalArgumentException(
-                    "CharacterAbilityFactory.make: character cannot be null");
-        }
-        if (type == null) {
-            throw new IllegalArgumentException(
-                    "CharacterAbilityFactory.make: type cannot be null");
-        }
-        return new CharacterAbilityImpl<>(character, type);
+        return new CharacterAbilityImpl<>(
+                Check.ifNull(character, "character"),
+                Check.ifNull(type, "type"));
     }
 
     @Override

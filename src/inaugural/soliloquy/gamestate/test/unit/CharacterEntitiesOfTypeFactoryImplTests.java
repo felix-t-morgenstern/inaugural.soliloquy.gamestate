@@ -39,7 +39,6 @@ class CharacterEntitiesOfTypeFactoryImplTests {
         _factory = new CharacterEntitiesOfTypeFactoryImpl(COLLECTION_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
@@ -50,6 +49,12 @@ class CharacterEntitiesOfTypeFactoryImplTests {
     void testMakeWithoutRegisteredFactory() {
         assertThrows(IllegalArgumentException.class, () ->
                 _factory.make(CHARACTER, ARCHETYPE));
+    }
+
+    @Test
+    void testMakeWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> _factory.make(null, ARCHETYPE));
+        assertThrows(IllegalArgumentException.class, () -> _factory.make(CHARACTER, null));
     }
 
     @Test
@@ -66,6 +71,14 @@ class CharacterEntitiesOfTypeFactoryImplTests {
 
         assertSame(FACTORY_OUTPUT, fromEntities);
         assertSame(CHARACTER, _characterPassedIntoFactory);
+    }
+
+    @Test
+    void testRegisterFactoryWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> _factory.registerFactory(null,
+                FACTORY));
+        assertThrows(IllegalArgumentException.class, () -> _factory.registerFactory(ARCHETYPE,
+                null));
     }
 
     @Test

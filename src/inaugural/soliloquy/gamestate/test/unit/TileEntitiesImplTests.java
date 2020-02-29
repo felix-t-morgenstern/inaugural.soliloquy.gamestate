@@ -9,13 +9,11 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.ReadablePair;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileEntities;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -170,10 +168,10 @@ class TileEntitiesImplTests {
     }
 
     @Test
-    void testAssignAddToGameZoneActionAfterAddingToGameZone() {
+    void testAssignActionAfterAdding() {
         final ArrayList<Item> addedToGameZone = new ArrayList<>();
 
-        _tileEntities.assignAddToGameZoneActionAfterAddingToGameZone(addedToGameZone::add);
+        _tileEntities.assignActionAfterAdding(addedToGameZone::add);
         _tileEntities.add(ITEM);
 
         assertEquals(1, addedToGameZone.size());
@@ -181,10 +179,10 @@ class TileEntitiesImplTests {
     }
 
     @Test
-    void testAssignRemoveFromGameZoneActionAfterAddingToGameZone() {
+    void testAssignActionAfterRemoving() {
         final ArrayList<Item> removedFromGameZone = new ArrayList<>();
 
-        _tileEntities.assignRemoveFromGameZoneActionAfterAddingToGameZone(
+        _tileEntities.assignActionAfterRemoving(
                 removedFromGameZone::add);
         _tileEntities.remove(ITEM);
 

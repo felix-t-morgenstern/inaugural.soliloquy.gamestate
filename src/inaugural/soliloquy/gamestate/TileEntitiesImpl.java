@@ -21,8 +21,8 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     private final static CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
 
-    private Consumer<TEntity> _addToGameZone;
-    private Consumer<TEntity> _removeFromGameZone;
+    private Consumer<TEntity> _actionAfterAdding;
+    private Consumer<TEntity> _actionAfterRemoving;
 
     @SuppressWarnings("ConstantConditions")
     public TileEntitiesImpl(Tile tile, TEntity archetype, PairFactory pairFactory,
@@ -67,8 +67,8 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         }
         ENTITIES.put(entity, zIndex);
         entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
-        if (_addToGameZone != null) {
-            _addToGameZone.accept(entity);
+        if (_actionAfterAdding != null) {
+            _actionAfterAdding.accept(entity);
         }
     }
 
@@ -121,8 +121,8 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         boolean entityWasPresent = ENTITIES.remove(entity) != null;
         if (entityWasPresent) {
             entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
-            if (_removeFromGameZone != null) {
-                _removeFromGameZone.accept(entity);
+            if (_actionAfterRemoving != null) {
+                _actionAfterRemoving.accept(entity);
             }
         }
         return entityWasPresent;
@@ -153,14 +153,14 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     }
 
     @Override
-    public void assignAddToGameZoneActionAfterAddingToGameZone(Consumer<TEntity> addToGameZone) {
-        _addToGameZone = addToGameZone;
+    public void assignActionAfterAdding(Consumer<TEntity> actionAfterAdding) {
+        _actionAfterAdding = actionAfterAdding;
     }
 
     @Override
-    public void assignRemoveFromGameZoneActionAfterAddingToGameZone(
-            Consumer<TEntity> removeFromGameZone) {
-        _removeFromGameZone = removeFromGameZone;
+    public void assignActionAfterRemoving(
+            Consumer<TEntity> actionAfterRemoving) {
+        _actionAfterRemoving = actionAfterRemoving;
     }
 
     @Override

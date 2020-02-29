@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterAbility;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -14,8 +15,8 @@ public class CharacterAbilityImpl<TType extends AbilityType> extends HasDeletion
     private final TType ABILITY_TYPE;
 
     public CharacterAbilityImpl(Character character, TType abilityType){
-        CHARACTER = character;
-        ABILITY_TYPE = abilityType;
+        CHARACTER = Check.ifNull(character, "character");
+        ABILITY_TYPE = Check.ifNull(abilityType, "abilityType");
     }
 
     @Override

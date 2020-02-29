@@ -62,6 +62,11 @@ class CameraFactoryImplTests {
     }
 
     @Test
+    void testMakeWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> _cameraFactory.make(null));
+    }
+
+    @Test
     void testGetInterfaceName() {
         assertEquals(CameraFactory.class.getCanonicalName(), _cameraFactory.getInterfaceName());
     }

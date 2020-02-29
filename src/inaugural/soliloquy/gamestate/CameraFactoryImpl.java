@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.factories.MapFactory;
@@ -16,28 +17,13 @@ public class CameraFactoryImpl implements CameraFactory {
     private final MapFactory MAP_FACTORY;
     private final TileVisibility TILE_VISIBILITY;
 
-    @SuppressWarnings("ConstantConditions")
     public CameraFactoryImpl(CoordinateFactory coordinateFactory,
                              CollectionFactory collectionFactory, MapFactory mapFactory,
                              TileVisibility tileVisibility) {
-        if (coordinateFactory == null) {
-            throw new IllegalArgumentException(
-                    "CameraFactoryImpl: coordinateFactory cannot be null");
-        }
-        COORDINATE_FACTORY = coordinateFactory;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "CameraFactoryImpl: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("CameraFactoryImpl: mapFactory cannot be null");
-        }
-        MAP_FACTORY = mapFactory;
-        if (tileVisibility == null) {
-            throw new IllegalArgumentException("CameraFactoryImpl: tileVisibility cannot be null");
-        }
-        TILE_VISIBILITY = tileVisibility;
+        COORDINATE_FACTORY = Check.ifNull(coordinateFactory, "coordinateFactory");
+        COLLECTION_FACTORY = Check.ifNull(collectionFactory, "collectionFactory");
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
+        TILE_VISIBILITY = Check.ifNull(tileVisibility, "tileVisibility");
     }
 
     @Override

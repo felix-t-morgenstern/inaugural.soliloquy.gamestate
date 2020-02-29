@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadableMap;
@@ -21,19 +22,10 @@ abstract class AbstractCharacterValueFromModifiers<TEntityType extends Character
 
     AbstractCharacterValueFromModifiers(Character character, TEntityType entityType,
                                         CharacterStatisticCalculation characterStatisticCalculation) {
-        if (character == null) {
-            throw new IllegalArgumentException(className() + ": character cannot be null");
-        }
-        CHARACTER = character;
-        if (entityType == null) {
-            throw new IllegalArgumentException(className() +  ": entityType cannot be null");
-        }
-        ENTITY_TYPE = entityType;
-        if (characterStatisticCalculation == null) {
-            throw new IllegalArgumentException(className() +
-                    ": characterStatisticCalculation cannot be null");
-        }
-        CHARACTER_STATISTIC_CALCULATION = characterStatisticCalculation;
+        CHARACTER = Check.ifNull(character, "character");
+        ENTITY_TYPE = Check.ifNull(entityType, "entityType");
+        CHARACTER_STATISTIC_CALCULATION = Check.ifNull(characterStatisticCalculation,
+                "characterStatisticCalculation");
     }
 
     @Override
