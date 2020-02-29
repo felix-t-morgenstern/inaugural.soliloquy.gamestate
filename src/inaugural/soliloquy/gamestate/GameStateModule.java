@@ -149,8 +149,13 @@ public class GameStateModule extends AbstractModule {
                 spriteHandler, dataHandler, wallSegmentTypes::get, gameMovementEvents::get,
                 gameAbilityEvents::get, groundTypes::get);
 
+        RoundManagerImpl roundManager = new RoundManagerImpl(collectionFactory, pairFactory,
+                variableCacheFactory, activeCharactersProvider, turnHandling, roundEndHandling);
+
         GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(coordinateFactory,
-                collectionFactory);
+                collectionFactory,
+                c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
+                roundManager::removeCharacterFromQueue);
 
         PersistentValueTypeHandler<GameZone> gameZoneHandler =
                 new PersistentGameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
@@ -160,9 +165,6 @@ public class GameStateModule extends AbstractModule {
 
         CameraFactory cameraFactory = new CameraFactoryImpl(coordinateFactory, collectionFactory,
                 mapFactory, tileVisibility);
-
-        RoundManagerImpl roundManager = new RoundManagerImpl(collectionFactory, pairFactory,
-                variableCacheFactory, activeCharactersProvider, turnHandling, roundEndHandling);
 
         Function<RoundManager, TimerFactory> timerFactoryFactory = r ->
                 new TimerFactoryImpl(roundManager::addOneTimeTimer,

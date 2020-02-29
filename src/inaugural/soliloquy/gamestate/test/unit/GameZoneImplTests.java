@@ -13,6 +13,7 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +28,8 @@ class GameZoneImplTests {
     private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final VariableCache DATA = new VariableCacheStub();
+    private final ArrayList<Character> ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
+    private final ArrayList<Character> REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
 
     private GameZone _gameZone;
 
@@ -39,50 +42,71 @@ class GameZoneImplTests {
         }
         TILES[1][0].characters().add(CHARACTER);
         _gameZone = new GameZoneImpl(ID, ZONE_TYPE, TILES, COORDINATE_FACTORY,
-                COLLECTION_FACTORY, DATA);
+                COLLECTION_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add,
+                REMOVED_FROM_ROUND_MANAGER::add);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(null, ZONE_TYPE,
-                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl("", ZONE_TYPE,
-                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, null,
-                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, "",
-                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                null, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                null, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithZeroXIndex = new Tile[0][1];
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                tilesWithZeroXIndex, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                tilesWithZeroXIndex, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithZeroYIndex = new Tile[1][0];
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                tilesWithZeroYIndex, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                tilesWithZeroYIndex, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithNullEntry = new Tile[1][1];
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                tilesWithNullEntry, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                tilesWithNullEntry, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithAssignedTile = new Tile[1][1];
         tilesWithAssignedTile[0][0] = new TileStub(0, 0, new VariableCacheStub());
         tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new GameZoneStub());
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                tilesWithAssignedTile, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                tilesWithAssignedTile, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithMismatchedXCoordinate = new Tile[1][1];
         tilesWithMismatchedXCoordinate[0][0] = new TileStub(1, 0, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                tilesWithMismatchedXCoordinate, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                tilesWithMismatchedXCoordinate, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithMismatchedYCoordinate = new Tile[1][1];
         tilesWithMismatchedYCoordinate[0][0] = new TileStub(0, 1, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                tilesWithMismatchedYCoordinate, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA));
+                tilesWithMismatchedYCoordinate, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                TILES, null, COLLECTION_FACTORY, DATA));
+                TILES, null, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                TILES, COORDINATE_FACTORY, null, DATA));
+                TILES, COORDINATE_FACTORY, null, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
-                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, null));
+                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, null,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
+                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                null, REMOVED_FROM_ROUND_MANAGER:: add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
+                TILES, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
+                ADDED_TO_END_OF_ROUND_MANAGER::add, null));
     }
 
     @Test
@@ -190,7 +214,7 @@ class GameZoneImplTests {
     }
 
     @Test
-    void testAddCharacterToGameZoneViaTileCharactersAndCharactersIterator() {
+    void testAddCharacterToGameZoneViaTileCharactersAndCharactersIteratorAndAddedToRoundManager() {
         Character character = new CharacterStub();
 
         _gameZone.tile(0,0).characters().add(character);
@@ -199,13 +223,17 @@ class GameZoneImplTests {
         assertEquals(2, charactersInGameZone.size());
         assertTrue(charactersInGameZone.contains(CHARACTER));
         assertTrue(charactersInGameZone.contains(character));
+        assertEquals(1, ADDED_TO_END_OF_ROUND_MANAGER.size());
+        assertSame(character, ADDED_TO_END_OF_ROUND_MANAGER.get(0));
     }
 
     @Test
-    void testRemoveCharacterFromGameZoneViaTileCharacters() {
+    void testRemoveCharacterFromGameZoneViaTileCharactersAndRemovedFromRoundManager() {
         _gameZone.tile(0,0).characters().remove(CHARACTER);
 
         assertEquals(0, _gameZone.charactersRepresentation().size());
+        assertEquals(1, REMOVED_FROM_ROUND_MANAGER.size());
+        assertSame(CHARACTER, REMOVED_FROM_ROUND_MANAGER.get(0));
     }
 
     @Test

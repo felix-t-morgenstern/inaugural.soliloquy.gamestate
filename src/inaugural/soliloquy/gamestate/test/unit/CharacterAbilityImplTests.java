@@ -13,14 +13,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterAbilityImplTests {
     private CharacterAbility<AbilityTypeStub> _characterAbility;
-    private AbilityTypeStub _abilityType;
+    private final AbilityTypeStub ABILITY_TYPE = new AbilityTypeStub();
 
     private final Character CHARACTER = new CharacterStub();
 
     @BeforeEach
     void setUp() {
-        _abilityType = new AbilityTypeStub();
-        _characterAbility = new CharacterAbilityImpl<AbilityTypeStub>(CHARACTER, _abilityType);
+        _characterAbility = new CharacterAbilityImpl<>(CHARACTER, ABILITY_TYPE);
+    }
+
+    @Test
+    void testConstructorWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> new CharacterAbilityImpl<>(null,
+                ABILITY_TYPE));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterAbilityImpl<AbilityTypeStub>(CHARACTER, null));
     }
 
     @Test
@@ -41,7 +48,7 @@ class CharacterAbilityImplTests {
 
     @Test
     void testAbilityType() {
-        assertSame(_characterAbility.type(), _abilityType);
+        assertSame(_characterAbility.type(), ABILITY_TYPE);
     }
 
     @Test

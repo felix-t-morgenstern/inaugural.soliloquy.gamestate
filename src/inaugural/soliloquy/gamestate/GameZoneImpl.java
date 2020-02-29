@@ -14,6 +14,8 @@ import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
+import java.util.function.Consumer;
+
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
     private final String TYPE;
@@ -35,7 +37,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     @SuppressWarnings("ConstantConditions")
     public GameZoneImpl(String id, String type, Tile[][] tiles,
                         CoordinateFactory coordinateFactory, CollectionFactory collectionFactory,
-                        VariableCache data) {
+                        VariableCache data, Consumer<Character> addToEndOfRoundManager,
+                        Consumer<Character> removeFromRoundManager) {
         if (id == null) {
             throw new IllegalArgumentException("GameZoneImpl: id cannot be null");
         }
@@ -63,6 +66,14 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         if (tiles[0].length == 0) {
             throw new IllegalArgumentException("GameZoneImpl: tiles has y length of 0");
         }
+        if (addToEndOfRoundManager == null) {
+            throw new IllegalArgumentException(
+                    "GameZoneImpl: addToEndOfRoundManager cannot be null");
+        }
+        if (removeFromRoundManager == null) {
+            throw new IllegalArgumentException(
+                    "GameZoneImpl: removeFromRoundManager cannot be null");
+        }
         TILES = new Tile[tiles.length][tiles[0].length];
         for(int x = 0; x < tiles.length; x++) {
             for(int y = 0; y < tiles[0].length; y++) {
@@ -81,10 +92,14 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                 }
                 TILES[x][y] = tiles[x][y];
                 tiles[x][y].assignGameZoneAfterAddedToGameZone(this);
-                tiles[x][y].characters().assignAddToGameZoneActionAfterAddingToGameZone(
-                        CHARACTERS_IN_GAME_ZONE::add);
-                tiles[x][y].characters().assignRemoveFromGameZoneActionAfterAddingToGameZone(
-                        CHARACTERS_IN_GAME_ZONE::remove);
+                tiles[x][y].characters().assignActionAfterAdding(c -> {
+                    CHARACTERS_IN_GAME_ZONE.add(c);
+                    addToEndOfRoundManager.accept(c);
+                });
+                tiles[x][y].characters().assignActionAfterRemoving(c -> {
+                    CHARACTERS_IN_GAME_ZONE.remove(c);
+                    removeFromRoundManager.accept(c);
+                });
                 tiles[x][y].characters().forEach(c -> CHARACTERS_IN_GAME_ZONE.add(c.getItem1()));
             }
         }
