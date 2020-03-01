@@ -27,6 +27,7 @@ public class CharacterAbilityImpl<TType extends AbilityType> extends HasDeletion
 
     @Override
     public VariableCache data() throws IllegalStateException {
+        enforceDeletionInvariants("data");
         return DATA;
     }
 

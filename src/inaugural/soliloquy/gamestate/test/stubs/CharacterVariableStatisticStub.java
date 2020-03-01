@@ -10,6 +10,7 @@ public class CharacterVariableStatisticStub implements CharacterVariableStatisti
     public boolean _isDeleted;
     public boolean _isCalculated;
     public CharacterVariableStatisticType _type;
+    public VariableCache _data;
     public Character _character;
     public int _maxValue;
     private int _currentValue;
@@ -27,9 +28,19 @@ public class CharacterVariableStatisticStub implements CharacterVariableStatisti
         _character = character;
     }
 
+    public CharacterVariableStatisticStub(CharacterVariableStatisticType type, Character character, VariableCache data) {
+        this(type, character);
+        _data = data;
+    }
+
     @Override
     public CharacterVariableStatisticType type() throws IllegalStateException {
         return _type;
+    }
+
+    @Override
+    public VariableCache data() throws IllegalStateException {
+        return _data;
     }
 
     @Override
@@ -69,11 +80,6 @@ public class CharacterVariableStatisticStub implements CharacterVariableStatisti
 
     @Override
     public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
-    public VariableCache data() throws IllegalStateException {
         return null;
     }
 }

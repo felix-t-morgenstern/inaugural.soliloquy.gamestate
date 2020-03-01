@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterStaticStatisticImplTests {
     private final Character CHARACTER = new CharacterStub();
-    private final CharacterStaticStatisticType ATTRIBUTE_TYPE =
+    private final CharacterStaticStatisticType TYPE =
             new CharacterStaticStatisticTypeStub();
     private final VariableCache DATA = new VariableCacheStub();
     private final CharacterStatisticCalculation CHARACTER_ATTRIBUTE_CALCULATION =
@@ -28,31 +28,37 @@ class CharacterStaticStatisticImplTests {
 
     @BeforeEach
     void setUp() {
-        _characterStatistic = new CharacterStaticStatisticImpl(CHARACTER, ATTRIBUTE_TYPE, DATA,
+        _characterStatistic = new CharacterStaticStatisticImpl(CHARACTER, TYPE, DATA,
                 CHARACTER_ATTRIBUTE_CALCULATION);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(null,
-                ATTRIBUTE_TYPE, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
+                TYPE, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
         assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
                 null, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
         assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
-                ATTRIBUTE_TYPE, DATA, null));
+                TYPE, DATA, null));
         assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
-                ATTRIBUTE_TYPE, null, CHARACTER_ATTRIBUTE_CALCULATION));
+                TYPE, null, CHARACTER_ATTRIBUTE_CALCULATION));
     }
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(CharacterStatistic.class.getCanonicalName(),
+        assertEquals(CharacterStatistic.class.getCanonicalName() + "<" +
+                        CharacterStaticStatisticType.class.getCanonicalName() + ">",
                 _characterStatistic.getInterfaceName());
     }
 
     @Test
-    void testAptitudeType() {
-        assertEquals(ATTRIBUTE_TYPE, _characterStatistic.type());
+    void testType() {
+        assertEquals(TYPE, _characterStatistic.type());
+    }
+
+    @Test
+    void testData() {
+        assertSame(DATA, _characterStatistic.data());
     }
 
     @Test
@@ -60,7 +66,7 @@ class CharacterStaticStatisticImplTests {
         _characterStatistic.calculate();
 
         assertSame(CHARACTER, CharacterStatisticCalculationStub._character);
-        assertSame(ATTRIBUTE_TYPE, CharacterStatisticCalculationStub._statisticType);
+        assertSame(TYPE, CharacterStatisticCalculationStub._statisticType);
         assertEquals(CharacterStatisticCalculationStub.VALUE, _characterStatistic.totalValue());
         ReadableMap<String,Integer> representation = _characterStatistic.representation();
         assertEquals(CharacterStatisticCalculationStub.MODIFIERS, representation);
@@ -76,6 +82,7 @@ class CharacterStaticStatisticImplTests {
         CHARACTER.delete();
 
         assertThrows(IllegalStateException.class, () -> _characterStatistic.type());
+        assertThrows(IllegalStateException.class, () -> _characterStatistic.data());
         assertThrows(IllegalStateException.class, () -> _characterStatistic.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _characterStatistic.calculate());
         assertThrows(IllegalStateException.class, () -> _characterStatistic.representation());
@@ -87,6 +94,7 @@ class CharacterStaticStatisticImplTests {
         _characterStatistic.delete();
 
         assertThrows(IllegalStateException.class, () -> _characterStatistic.type());
+        assertThrows(IllegalStateException.class, () -> _characterStatistic.data());
         assertThrows(IllegalStateException.class, () -> _characterStatistic.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _characterStatistic.calculate());
         assertThrows(IllegalStateException.class, () -> _characterStatistic.representation());

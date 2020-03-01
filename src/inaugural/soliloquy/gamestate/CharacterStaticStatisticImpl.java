@@ -20,4 +20,12 @@ public class CharacterStaticStatisticImpl
     protected String className() {
         return "CharacterStaticStatisticImpl";
     }
+
+    // Todo: Ensure tested properly
+    @Override
+    public String getInterfaceName() {
+        enforceDeletionInvariants("getInterfaceName");
+        return CharacterStatistic.class.getCanonicalName() +  "<" +
+                CharacterStaticStatisticType.class.getCanonicalName() + ">";
+    }
 }

@@ -34,7 +34,7 @@ class TileWallSegmentFactoryImplTests {
         TileWallSegment segment = _tileWallSegmentFactory.make();
 
         assertNotNull(segment);
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated, segment.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), segment.data());
     }
 
     @Test

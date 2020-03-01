@@ -29,11 +29,10 @@ public class CharacterStub implements Character {
     private final Collection<CharacterClassification> CLASSIFICATIONS = new CollectionStub<>();
     private final Map<String,String> PRONOUNS = new MapStub<>();
     private final CharacterEvents EVENTS = new CharacterEventsStub(this);
-    private final CharacterVariableStatistics VARIABLE_STATS =
-            new CharacterVariableStatisticsStub();
+    private final CharacterVariableStatistics VARIABLE_STATS;
     private final CharacterEntitiesOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>>
-            STATS = new CharacterEntitiesOfTypeStub<>(this, c -> t -> d ->
+            STATIC_STATS = new CharacterEntitiesOfTypeStub<>(this, c -> t -> d ->
             new CharacterStaticStatisticStub(c, t, d));
     private final CharacterStatusEffects STATUS_EFFECTS = new CharacterStatusEffectsStub();
     private final CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>>
@@ -52,12 +51,14 @@ public class CharacterStub implements Character {
     public CharacterStub() {
         ID = null;
         TYPE = null;
+        VARIABLE_STATS = new CharacterVariableStatisticsStub(this);
     }
 
     public CharacterStub(EntityUuid id, CharacterType type, VariableCache data) {
         ID = id;
         TYPE = type;
         _data = data;
+        VARIABLE_STATS = new CharacterVariableStatisticsStub(this);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class CharacterStub implements Character {
     public CharacterEntitiesOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>>
         staticStatistics() throws IllegalStateException {
-        return STATS;
+        return STATIC_STATS;
     }
 
     @Override

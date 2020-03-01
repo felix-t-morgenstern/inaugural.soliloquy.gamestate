@@ -9,6 +9,7 @@ import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 public class CharacterStaticStatisticStub implements CharacterStatistic<CharacterStaticStatisticType> {
     public boolean _isDeleted;
     private CharacterStaticStatisticType _type;
+    private VariableCache _data;
 
     CharacterStaticStatisticStub(CharacterStaticStatisticType type) {
         _type = type;
@@ -17,6 +18,7 @@ public class CharacterStaticStatisticStub implements CharacterStatistic<Characte
     CharacterStaticStatisticStub(Character character, CharacterStaticStatisticType type,
                                  VariableCache data) {
         this(type);
+        _data = data;
     }
 
     @Override
@@ -56,6 +58,6 @@ public class CharacterStaticStatisticStub implements CharacterStatistic<Characte
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        return null;
+        return _data;
     }
 }

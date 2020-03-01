@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.common.test.stubs.HasIdAndNameStub;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeFactoryImpl;
-import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeImpl;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterEntityStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
@@ -10,7 +9,6 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
@@ -23,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEntitiesOfTypeFactoryImplTests {
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterEntityStub FACTORY_OUTPUT = new CharacterEntityStub(null, null);
     private final Function<Character,Function<HasId,Function<VariableCache,CharacterEntityStub>>>
             FACTORY = c -> t -> d -> {
@@ -72,8 +70,8 @@ class CharacterEntitiesOfTypeFactoryImplTests {
         _factory.registerFactory(ARCHETYPE, FACTORY);
         HasId type = new HasIdAndNameStub("", "");
 
-        CharacterEntitiesOfType<HasId, CharacterEntityStub> entities =
-                _factory.make(CHARACTER, ARCHETYPE);
+        @SuppressWarnings("unchecked") CharacterEntitiesOfType<HasId, CharacterEntityStub>
+                entities = _factory.make(CHARACTER, ARCHETYPE);
 
         entities.add(type);
 
@@ -81,8 +79,8 @@ class CharacterEntitiesOfTypeFactoryImplTests {
 
         assertSame(FACTORY_OUTPUT, fromEntities);
         assertSame(CHARACTER, _characterPassedIntoFactory);
-        // TODO: Test other parameters passed in
-        fail();
+        assertSame(type, _typePassedIntoFactory);
+        assertSame(DATA_FACTORY.Created.get(0), _dataPassedIntoFactory);
     }
 
     @Test

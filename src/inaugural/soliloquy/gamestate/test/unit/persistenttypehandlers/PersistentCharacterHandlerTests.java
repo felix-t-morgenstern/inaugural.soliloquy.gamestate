@@ -97,7 +97,7 @@ class PersistentCharacterHandlerTests {
             new PersistentVariableCacheHandlerStub();
     private final PersistentValueTypeHandler<Item> ITEM_HANDLER = new PersistentItemHandlerStub();
 
-    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"characterTypeId\":\"characterTypeId\",\"classifications\":[\"classificationId\"],\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"reflexive\",\"val\":\"themselves\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"spriteSetId\":\"spriteSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"variableStats\":[{\"typeId\":\"variableStatTypeId\",\"value\":135}],\"staticStats\":[\"staticStatTypeId\"],\"statusEffects\":[{\"typeId\":\"statEffectTypeId\",\"value\":246}],\"activeAbilities\":[{\"typeId\":\"activeAbilityTypeId\",\"isHidden\":true}],\"reactiveAbilities\":[{\"typeId\":\"reactiveAbilityTypeId\",\"isHidden\":false}],\"isPlayerControlled\":true,\"data\":\"VariableCache0\",\"name\":\"charName\"}";
+    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"characterTypeId\":\"characterTypeId\",\"classifications\":[\"classificationId\"],\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"reflexive\",\"val\":\"themselves\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"spriteSetId\":\"spriteSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"variableStats\":[{\"current\":135,\"type\":\"variableStatTypeId\",\"data\":\"VariableCache0\"}],\"staticStats\":[{\"type\":\"staticStatTypeId\",\"data\":\"VariableCache1\"}],\"statusEffects\":[{\"type\":\"statEffectTypeId\",\"value\":246}],\"activeAbilities\":[{\"type\":\"activeAbilityTypeId\",\"data\":\"VariableCache2\"}],\"reactiveAbilities\":[{\"type\":\"reactiveAbilityTypeId\",\"data\":\"VariableCache3\"}],\"isPlayerControlled\":true,\"data\":\"VariableCache4\",\"name\":\"charName\"}";
 
     private PersistentValueTypeHandler<Character> _characterHandler;
 
@@ -121,7 +121,6 @@ class PersistentCharacterHandlerTests {
                 ITEM_HANDLER);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
@@ -240,8 +239,13 @@ class PersistentCharacterHandlerTests {
         ((CharacterStatusEffectsStub)character.statusEffects())._representation
                 .put(STAT_EFFECT_TYPE, 246);
         character.activeAbilities().add(ACTIVE_ABILITY_TYPE);
-        character.activeAbilities().get(ACTIVE_ABILITY_TYPE).setIsHidden(true);
+        //noinspection rawtypes
+        ((CharacterAbilityStub)character.activeAbilities().get(ACTIVE_ABILITY_TYPE))._data =
+                new VariableCacheStub();
         character.reactiveAbilities().add(REACTIVE_ABILITY_TYPE);
+        //noinspection rawtypes
+        ((CharacterAbilityStub)character.reactiveAbilities().get(REACTIVE_ABILITY_TYPE))._data =
+                new VariableCacheStub();
         character.setPlayerControlled(true);
         character.setName(NAME);
 
@@ -249,8 +253,16 @@ class PersistentCharacterHandlerTests {
 
         assertEquals(WRITTEN_VALUE, writtenValue);
         assertSame(id, ((PersistentEntityUuidHandlerStub)ID_HANDLER).WRITE_INPUTS.get(0));
-        assertSame(character.data(),
+        assertSame(character.variableStatistics().get(VARIABLE_STAT_TYPE).data(),
                 ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(0));
+        assertSame(character.staticStatistics().get(STATIC_STAT_TYPE).data(),
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(1));
+        assertSame(character.activeAbilities().get(ACTIVE_ABILITY_TYPE).data(),
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(2));
+        assertSame(character.reactiveAbilities().get(REACTIVE_ABILITY_TYPE).data(),
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(3));
+        assertSame(character.data(),
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(4));
     }
 
     @Test
@@ -283,6 +295,7 @@ class PersistentCharacterHandlerTests {
         assertEquals(1, readCharacter.events().representation().size());
         assertEquals(1, readCharacter.events().representation().get(TRIGGER).size());
         assertSame(EVENT, readCharacter.events().representation().get(TRIGGER).get(0));
+
         assertEquals(2, readCharacter.equipmentSlots().representation().size());
         assertTrue(((PersistentItemHandlerStub)ITEM_HANDLER).READ_OUTPUTS.contains(
                 readCharacter.equipmentSlots().itemInSlot(EQUIPMENT_SLOT_1)));
@@ -290,21 +303,41 @@ class PersistentCharacterHandlerTests {
         assertEquals(1, readCharacter.inventory().representation().size());
         assertTrue(((PersistentItemHandlerStub)ITEM_HANDLER).READ_OUTPUTS.contains(
                 readCharacter.inventory().representation().get(0)));
+
         assertEquals(1, readCharacter.variableStatistics().representation().size());
         assertEquals(135,
                 readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).getCurrentValue());
+        assertEquals("VariableCache0",
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(1));
+        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(1),
+                readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).data());
+
         assertEquals(1, readCharacter.staticStatistics().representation().size());
         assertSame(STATIC_STAT_TYPE,
                 readCharacter.staticStatistics().representation().get(0).type());
+        assertEquals("VariableCache1",
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(2));
+        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(2),
+                readCharacter.staticStatistics().get(STATIC_STAT_TYPE).data());
+
         assertEquals(1, readCharacter.statusEffects().representation().size());
         assertEquals(246,
                 readCharacter.statusEffects().getStatusEffectLevel(STAT_EFFECT_TYPE));
+
         assertEquals(1, readCharacter.activeAbilities().size());
-        assertTrue(readCharacter.activeAbilities().get(ACTIVE_ABILITY_TYPE).getIsHidden());
+        assertEquals("VariableCache2",
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(3));
+        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(3),
+                readCharacter.activeAbilities().get(ACTIVE_ABILITY_TYPE).data());
+
         assertEquals(1, readCharacter.reactiveAbilities().size());
-        assertFalse(readCharacter.reactiveAbilities().get(REACTIVE_ABILITY_TYPE).getIsHidden());
+        assertEquals("VariableCache3",
+                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(4));
+        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(4),
+                readCharacter.reactiveAbilities().get(REACTIVE_ABILITY_TYPE).data());
+
         assertTrue(readCharacter.getPlayerControlled());
-        assertEquals("VariableCache0",
+        assertEquals("VariableCache4",
                 ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(0));
         assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
                 readCharacter.data());

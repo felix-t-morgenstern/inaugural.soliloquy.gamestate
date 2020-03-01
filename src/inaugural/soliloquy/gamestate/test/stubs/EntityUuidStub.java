@@ -8,7 +8,7 @@ public class EntityUuidStub implements EntityUuid {
     private final UUID UUID;
 
     public EntityUuidStub() {
-        UUID = null;
+        UUID = java.util.UUID.randomUUID();
     }
 
     public EntityUuidStub(String uuid) {

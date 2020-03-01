@@ -36,4 +36,9 @@ public class CharacterVariableStatisticImpl
     protected String className() {
         return "CharacterVariableStatistic";
     }
+
+    @Override
+    public String getInterfaceName() {
+        return CharacterVariableStatistic.class.getCanonicalName();
+    }
 }

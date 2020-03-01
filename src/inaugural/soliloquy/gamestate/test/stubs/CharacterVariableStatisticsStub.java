@@ -4,6 +4,7 @@ import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
@@ -12,12 +13,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class CharacterVariableStatisticsStub implements CharacterVariableStatistics {
-    private HashMap<CharacterVariableStatisticType, CharacterVariableStatistic> STATS =
+    private final Character _character;
+
+    private final HashMap<CharacterVariableStatisticType, CharacterVariableStatistic> STATS =
             new HashMap<>();
 
     public boolean _isDeleted;
 
+    public CharacterVariableStatisticsStub(Character character) {
+        _character = character;
+    }
+
     CharacterVariableStatisticsStub() {
+        _character = new CharacterStub();
     }
 
     @Override
@@ -43,7 +51,9 @@ public class CharacterVariableStatisticsStub implements CharacterVariableStatist
 
     @Override
     public void add(CharacterVariableStatisticType type, VariableCache variableCache) throws IllegalArgumentException {
-
+        if (!STATS.containsKey(type)) {
+            STATS.put(type, new CharacterVariableStatisticStub(type, _character, variableCache));
+        }
     }
 
     @Override

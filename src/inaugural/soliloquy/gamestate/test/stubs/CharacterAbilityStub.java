@@ -20,6 +20,7 @@ public class CharacterAbilityStub<TAbilityType extends AbilityType>
 
     public CharacterAbilityStub(Character character, TAbilityType type, VariableCache data) {
         this(character, type);
+        _data = data;
     }
 
     @Override

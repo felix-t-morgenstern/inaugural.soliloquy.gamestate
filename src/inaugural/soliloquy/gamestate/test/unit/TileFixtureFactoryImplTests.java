@@ -74,8 +74,7 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated,
-                tileFixture.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
@@ -103,8 +102,7 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(ID, tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated,
-                tileFixture.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());

@@ -15,8 +15,8 @@ public class CharacterVariableStatisticFactoryStub
     }
 
     @Override
-    public CharacterVariableStatistic make(Character character, CharacterVariableStatisticType type, VariableCache variableCache) throws IllegalArgumentException {
-        return null;
+    public CharacterVariableStatistic make(Character character, CharacterVariableStatisticType type, VariableCache data) throws IllegalArgumentException {
+        return new CharacterVariableStatisticStub(type, character, data);
     }
 
     @Override

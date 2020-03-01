@@ -33,7 +33,8 @@ public class CharacterEntityStub implements CharacterEntityOfType<HasId> {
 
     @Override
     public String getInterfaceName() {
-        return null;
+        return CharacterEntityOfType.class.getCanonicalName() + "<" +
+                HasId.class.getCanonicalName() + ">";
     }
 
     @Override

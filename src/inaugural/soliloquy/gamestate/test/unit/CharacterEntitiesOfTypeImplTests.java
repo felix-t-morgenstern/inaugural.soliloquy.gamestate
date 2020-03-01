@@ -2,21 +2,16 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.common.test.stubs.HasIdAndNameStub;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterEntityStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntitiesOfType;
 import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -38,7 +33,7 @@ class CharacterEntitiesOfTypeImplTests {
         return entity;
     };
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterEntityStub ARCHETYPE = new CharacterEntityStub(null,
             new HasIdAndNameStub("id", "name"));
 
@@ -77,7 +72,7 @@ class CharacterEntitiesOfTypeImplTests {
     void testGetInterfaceName() {
         assertEquals(CharacterEntitiesOfType.class.getCanonicalName() + "<" +
                         CharacterEntityOfType.class.getCanonicalName() + "<" +
-                ActiveAbilityType.class.getCanonicalName() + ">>",
+                HasId.class.getCanonicalName() + ">>",
                 _entitiesOfType.getInterfaceName());
     }
 
@@ -93,8 +88,25 @@ class CharacterEntitiesOfTypeImplTests {
         assertTrue(TYPES_ADDED.contains(type));
         assertNotNull(_entitiesOfType.get(type));
         assertSame(CHARACTER, _characterPassedIntoFactory);
-        // TODO: Test other parameters passed in
-        fail();
+        assertSame(type, _typePassedIntoFactory);
+        assertSame(DATA_FACTORY.Created.get(0), _dataPassedIntoFactory);
+    }
+
+    @Test
+    void testAddWithData() {
+        HasId type = new HasIdAndNameStub("id", "name");
+        VariableCache data = new VariableCacheStub();
+
+        assertNull(_entitiesOfType.get(type));
+
+        _entitiesOfType.add(type, data);
+
+        assertEquals(1, TYPES_ADDED.size());
+        assertTrue(TYPES_ADDED.contains(type));
+        assertNotNull(_entitiesOfType.get(type));
+        assertSame(CHARACTER, _characterPassedIntoFactory);
+        assertSame(type, _typePassedIntoFactory);
+        assertSame(data, _dataPassedIntoFactory);
     }
 
     @Test

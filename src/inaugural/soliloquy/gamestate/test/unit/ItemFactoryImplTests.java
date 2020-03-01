@@ -63,7 +63,7 @@ class ItemFactoryImplTests {
         assertNotNull(item);
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, item.id());
         assertSame(ITEM_TYPE, item.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated, item.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
@@ -105,7 +105,7 @@ class ItemFactoryImplTests {
         assertNotNull(item);
         assertSame(ID, item.id());
         assertSame(ITEM_TYPE, item.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY)._mostRecentlyCreated, item.data());
+        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());

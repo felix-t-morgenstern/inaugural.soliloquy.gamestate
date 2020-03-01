@@ -8,6 +8,7 @@ import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
@@ -22,6 +23,7 @@ class CharacterVariableStatisticsImplTests {
     private final Character CHARACTER = new CharacterStub();
     private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
     private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterVariableStatisticFactoryStub FACTORY =
             new CharacterVariableStatisticFactoryStub();
 
@@ -29,24 +31,27 @@ class CharacterVariableStatisticsImplTests {
 
     @BeforeEach
     void setUp() {
-        _variableStats = new CharacterVariableStatisticsImpl(CHARACTER, MAP_FACTORY,
-                COLLECTION_FACTORY, FACTORY);
+        _variableStats = new CharacterVariableStatisticsImpl(CHARACTER, FACTORY,
+                COLLECTION_FACTORY, DATA_FACTORY, MAP_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(null, MAP_FACTORY, COLLECTION_FACTORY,
-                        FACTORY));
+                new CharacterVariableStatisticsImpl(null, FACTORY, COLLECTION_FACTORY,
+                        DATA_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterVariableStatisticsImpl(CHARACTER, null, COLLECTION_FACTORY,
-                        FACTORY));
+                        DATA_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, MAP_FACTORY, null,
-                        FACTORY));
+                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, null,
+                        DATA_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, MAP_FACTORY, COLLECTION_FACTORY,
-                        null));
+                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, COLLECTION_FACTORY,
+                        null, MAP_FACTORY));
+        assertThrows(IllegalArgumentException.class, () ->
+                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, COLLECTION_FACTORY,
+                        DATA_FACTORY, null));
     }
 
     @Test
@@ -66,6 +71,22 @@ class CharacterVariableStatisticsImplTests {
         assertNotNull(_variableStats.get(type));
         assertSame(CHARACTER,
                 ((CharacterVariableStatisticStub) _variableStats.get(type))._character);
+        assertSame(DATA_FACTORY.Created.get(0), _variableStats.get(type).data());
+    }
+
+    @Test
+    void testAddWithData() {
+        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        VariableCache data = new VariableCacheStub();
+
+        assertNull(_variableStats.get(type));
+
+        _variableStats.add(type, data);
+
+        assertNotNull(_variableStats.get(type));
+        assertSame(CHARACTER,
+                ((CharacterVariableStatisticStub) _variableStats.get(type))._character);
+        assertSame(data, _variableStats.get(type).data());
     }
 
     @Test

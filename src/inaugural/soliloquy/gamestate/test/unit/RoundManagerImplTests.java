@@ -206,11 +206,11 @@ public class RoundManagerImplTests {
     void testDataNotCreatedForExistingCharacter() {
         Character character = new CharacterStub();
         _roundManager.setCharacterPositionInQueue(character, 0);
-        VariableCache initialData = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData = VARIABLE_CACHE_FACTORY.Created.get(0);
 
         _roundManager.setCharacterPositionInQueue(character, 0);
 
-        assertSame(initialData, VARIABLE_CACHE_FACTORY._mostRecentlyCreated);
+        assertSame(initialData, VARIABLE_CACHE_FACTORY.Created.get(0));
     }
 
     @Test
@@ -254,13 +254,13 @@ public class RoundManagerImplTests {
     void testRemoveCharacterFromQueue() {
         Character character = new CharacterStub();
         _roundManager.setCharacterPositionInQueue(character, 0);
-        VariableCache initialData = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData = VARIABLE_CACHE_FACTORY.Created.get(0);
 
         assertTrue(_roundManager.removeCharacterFromQueue(character));
         assertFalse(_roundManager.removeCharacterFromQueue(character));
 
         _roundManager.setCharacterPositionInQueue(character, 0);
-        VariableCache dataAfterSecondAdd = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache dataAfterSecondAdd = VARIABLE_CACHE_FACTORY.Created.get(1);
 
         assertNotEquals(initialData, dataAfterSecondAdd);
     }
@@ -271,11 +271,11 @@ public class RoundManagerImplTests {
         Character character2 = new CharacterStub();
         Character character3 = new CharacterStub();
         _roundManager.setCharacterPositionInQueue(character1, 0);
-        VariableCache initialData1 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData1 = VARIABLE_CACHE_FACTORY.Created.get(0);
         _roundManager.setCharacterPositionInQueue(character2, 0);
-        VariableCache initialData2 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData2 = VARIABLE_CACHE_FACTORY.Created.get(1);
         _roundManager.setCharacterPositionInQueue(character3, 0);
-        VariableCache initialData3 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData3 = VARIABLE_CACHE_FACTORY.Created.get(2);
 
         _roundManager.clearQueue();
 
@@ -285,11 +285,11 @@ public class RoundManagerImplTests {
         assertFalse(_roundManager.characterIsInQueue(character3));
 
         _roundManager.setCharacterPositionInQueue(character1, Integer.MAX_VALUE);
-        VariableCache dataAfterSecondAdd1 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache dataAfterSecondAdd1 = VARIABLE_CACHE_FACTORY.Created.get(3);
         _roundManager.setCharacterPositionInQueue(character2, Integer.MAX_VALUE);
-        VariableCache dataAfterSecondAdd2 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache dataAfterSecondAdd2 = VARIABLE_CACHE_FACTORY.Created.get(4);
         _roundManager.setCharacterPositionInQueue(character3, Integer.MAX_VALUE);
-        VariableCache dataAfterSecondAdd3 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache dataAfterSecondAdd3 = VARIABLE_CACHE_FACTORY.Created.get(5);
 
         assertNotEquals(initialData1, dataAfterSecondAdd1);
         assertNotEquals(initialData2, dataAfterSecondAdd2);
@@ -302,11 +302,11 @@ public class RoundManagerImplTests {
         Character character2 = new CharacterStub();
         Character character3 = new CharacterStub();
         _roundManager.setCharacterPositionInQueue(character1, Integer.MAX_VALUE);
-        VariableCache initialData1 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData1 = VARIABLE_CACHE_FACTORY.Created.get(0);
         _roundManager.setCharacterPositionInQueue(character2, Integer.MAX_VALUE);
-        VariableCache initialData2 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData2 = VARIABLE_CACHE_FACTORY.Created.get(1);
         _roundManager.setCharacterPositionInQueue(character3, Integer.MAX_VALUE);
-        VariableCache initialData3 = VARIABLE_CACHE_FACTORY._mostRecentlyCreated;
+        VariableCache initialData3 = VARIABLE_CACHE_FACTORY.Created.get(2);
 
         ReadableCollection<ReadablePair<Character,VariableCache>> representation =
                 _roundManager.characterQueueRepresentation();

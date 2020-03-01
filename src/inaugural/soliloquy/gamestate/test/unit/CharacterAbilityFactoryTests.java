@@ -5,9 +5,10 @@ import inaugural.soliloquy.gamestate.archetypes.ActiveAbilityTypeArchetype;
 import inaugural.soliloquy.gamestate.test.stubs.ActiveAbilityTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
 import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
@@ -19,7 +20,7 @@ class CharacterAbilityFactoryTests {
     private final Character CHARACTER = new CharacterStub();
     private final ActiveAbilityType TYPE = new ActiveAbilityTypeStub("type");
     private final ActiveAbilityType ARCHETYPE = new ActiveAbilityTypeArchetype();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
     private CharacterEntityOfTypeFactory<ActiveAbilityType,
             CharacterEntityOfType<ActiveAbilityType>> _characterAbilityFactory;
 
@@ -43,12 +44,19 @@ class CharacterAbilityFactoryTests {
 
         assertNotNull(characterActiveAbility);
         assertSame(TYPE, characterActiveAbility.type());
+        assertSame(DATA_FACTORY.Created.get(0), characterActiveAbility.data());
         // TODO: Consider testing Character assignment via CharacterStub.delete
     }
 
     @Test
     void testMakeWithData() {
-        fail();
+        VariableCache data = new VariableCacheStub();
+        CharacterEntityOfType<ActiveAbilityType> characterActiveAbility =
+                _characterAbilityFactory.make(CHARACTER, TYPE, data);
+
+        assertNotNull(characterActiveAbility);
+        assertSame(TYPE, characterActiveAbility.type());
+        assertSame(data, characterActiveAbility.data());
     }
 
     @Test

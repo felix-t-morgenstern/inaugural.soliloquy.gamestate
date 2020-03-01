@@ -41,8 +41,13 @@ class CharacterVariableStatisticImplTests {
     }
 
     @Test
-    void testVitalAttributeType() {
+    void testType() {
         assertSame(CHARACTER_VARIABLE_STATISTIC_TYPE, _characterVariableStatistic.type());
+    }
+
+    @Test
+    void testData() {
+        assertSame(DATA, _characterVariableStatistic.data());
     }
 
     @Test
@@ -53,7 +58,7 @@ class CharacterVariableStatisticImplTests {
     }
 
     @Test
-    void testCalculateValue() {
+    void testCalculate() {
         _characterVariableStatistic.calculate();
 
         assertSame(CHARACTER, CharacterStatisticCalculationStub._character);
@@ -71,11 +76,6 @@ class CharacterVariableStatisticImplTests {
     }
 
     @Test
-    void testData() {
-        fail();
-    }
-
-    @Test
     void testThrowsIllegalStateExceptionForDeadCharacter() {
         CHARACTER.delete();
 
@@ -83,12 +83,10 @@ class CharacterVariableStatisticImplTests {
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.type());
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.getInterfaceName());
+        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.data());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.calculate());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.representation());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.totalValue());
-        // TODO: Add assertion for data
-        fail();
     }
 
     @Test
@@ -99,11 +97,9 @@ class CharacterVariableStatisticImplTests {
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.type());
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.getInterfaceName());
+        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.data());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.calculate());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.representation());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.totalValue());
-        // TODO: Add assertion for data
-        fail();
     }
 }

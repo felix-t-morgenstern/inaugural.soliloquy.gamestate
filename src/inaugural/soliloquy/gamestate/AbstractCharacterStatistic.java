@@ -65,14 +65,6 @@ abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatistic
         _modifiers = calculatedValueAndModifiers.getItem2();
     }
 
-    // Todo: Ensure tested properly
-    @Override
-    public String getInterfaceName() {
-        enforceDeletionInvariants("getInterfaceName");
-        return CharacterStatistic.class.getCanonicalName() +  "<" + ENTITY_TYPE.getInterfaceName()
-                + ">";
-    }
-
     @Override
     protected Deletable getContainingObject() {
         return CHARACTER;

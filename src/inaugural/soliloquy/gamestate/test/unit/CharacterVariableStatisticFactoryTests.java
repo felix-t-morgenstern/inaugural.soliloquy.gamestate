@@ -1,13 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterVariableStatisticFactory;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterVariableStatisticTypeStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
@@ -17,7 +14,7 @@ import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticFactoryTests {
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
     private final CharacterStatisticCalculation CALCULATION =
             new CharacterStatisticCalculationStub();
     private final Character CHARACTER = new CharacterStub();
@@ -47,7 +44,19 @@ class CharacterVariableStatisticFactoryTests {
 
         assertNotNull(characterVariableStat);
         assertSame(TYPE, characterVariableStat.type());
+        assertSame(DATA_FACTORY.Created.get(0), characterVariableStat.data());
         // TODO: Consider some tests of Character assignment via CharacterStub.delete
+    }
+
+    @Test
+    void testMakeWithData() {
+        VariableCache data = new VariableCacheStub();
+        CharacterVariableStatistic characterVariableStat =
+                _characterVariableStatisticFactory.make(CHARACTER, TYPE, data);
+
+        assertNotNull(characterVariableStat);
+        assertSame(TYPE, characterVariableStat.type());
+        assertSame(data, characterVariableStat.data());
     }
 
     @Test
