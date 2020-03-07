@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterStaticStatisticFactory;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -14,11 +16,11 @@ import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterStaticStatisticFactoryTests {
-    private final Character CHARACTER = new CharacterStub();
-    private final CharacterStaticStatisticType TYPE = new CharacterStaticStatisticTypeStub();
-    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final CharacterStaticStatisticType TYPE = new FakeCharacterStaticStatisticType();
+    private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final CharacterStatisticCalculation CALCULATION =
-            new CharacterStatisticCalculationStub();
+            new CharacterStatisticCalculationSpyDouble();
 
     private CharacterEntityOfTypeFactory<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>>

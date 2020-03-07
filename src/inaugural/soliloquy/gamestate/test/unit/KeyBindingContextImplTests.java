@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.KeyBindingContextImpl;
 import inaugural.soliloquy.gamestate.KeyBindingFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -11,7 +11,7 @@ import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingContextImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
 
     private KeyBindingContext _keyBindingContext;
 

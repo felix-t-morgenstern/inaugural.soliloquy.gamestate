@@ -2,29 +2,27 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CameraImpl;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.spydoubles.TileVisibilitySpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
-
-import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CameraImplTests {
     private Camera _camera;
 
-    private final CoordinateFactoryStub COORDINATE_FACTORY = new CoordinateFactoryStub();
-    private final CollectionFactoryStub COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final MapFactoryStub MAP_FACTORY = new MapFactoryStub();
-    private final TileVisibility TILE_VISIBILITY = new TileVisibilityStub();
-    private final GameZoneStub GAME_ZONE = new GameZoneStub();
+    private final FakeCoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
+    private final FakeCollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
+    private final TileVisibility TILE_VISIBILITY = new TileVisibilitySpyDouble();
+    private final FakeGameZone GAME_ZONE = new FakeGameZone();
 
     @BeforeEach
     void setUp() {
@@ -127,7 +125,7 @@ class CameraImplTests {
     void testCoordinatesProvidingVisibility() {
         assertNotNull(_camera.coordinatesProvidingVisibility());
 
-        Coordinate coordinate = new CoordinateStub(123,456);
+        Coordinate coordinate = new FakeCoordinate(123,456);
         _camera.coordinatesProvidingVisibility().put(coordinate,789);
         assertEquals(789, (int) _camera.coordinatesProvidingVisibility().get(coordinate));
     }
@@ -136,7 +134,7 @@ class CameraImplTests {
     void testVisibleTiles() {
         assertNotNull(_camera.visibleTiles());
 
-        Coordinate coordinate = new CoordinateStub(123,456);
+        Coordinate coordinate = new FakeCoordinate(123,456);
         _camera.visibleTiles().add(coordinate);
         assertEquals(123, _camera.visibleTiles().get(0).getX());
         assertEquals(456, _camera.visibleTiles().get(0).getY());
@@ -153,7 +151,7 @@ class CameraImplTests {
 
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
-        GAME_ZONE.FAKE_MAX_COORDINATES = new ReadableCoordinateStub(4,4);
+        GAME_ZONE.FAKE_MAX_COORDINATES = new FakeReadableCoordinate(4,4);
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);
@@ -175,16 +173,16 @@ class CameraImplTests {
         _camera.setTileLocation(10,10);
         _camera.setTileRenderingRadius(8);
 
-        Tile tile = new TileStub(new CoordinateStub(4,4));
-        Character character1 = new CharacterStub();
+        Tile tile = new FakeTile(new FakeCoordinate(4,4));
+        Character character1 = new FakeCharacter();
         tile.characters().add(character1);
-        //character1.setTile(new TileStub(new CoordinateStub(4,4)));
+        //character1.setTile(new FakeTile(new FakeCoordinate(4,4)));
 
         _camera.charactersProvidingVisibility().put(character1,3);
-        _camera.coordinatesProvidingVisibility().put(new CoordinateStub(17,13),2);
+        _camera.coordinatesProvidingVisibility().put(new FakeCoordinate(17,13),2);
 
         _camera.calculateVisibleTiles();
         assertEquals(22, _camera.visibleTiles().size());
-        assertEquals(22, ((TileVisibilityStub) TILE_VISIBILITY)._tilesChecked.size());
+        assertEquals(22, ((TileVisibilitySpyDouble) TILE_VISIBILITY)._tilesChecked.size());
     }
 }

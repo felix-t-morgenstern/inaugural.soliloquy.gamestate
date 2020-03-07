@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -17,15 +18,15 @@ import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFactoryImplTests {
-    private final GameZone GAME_ZONE = new GameZoneStub();
+    private final GameZone GAME_ZONE = new FakeGameZone();
     private final int X = 123;
     private final int Y = 456;
-    private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
-    private final TileEntitiesFactory TILE_ENTITIES_FACTORY = new TileEntitiesFactoryStub();
+    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
+    private final TileEntitiesFactory TILE_ENTITIES_FACTORY = new FakeTileEntitiesFactory();
     private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY =
-            new TileWallSegmentsFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+            new FakeTileWallSegmentsFactory();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
     private TileFactory _tileFactory;
@@ -34,7 +35,7 @@ class TileFactoryImplTests {
     void setUp() {
         _tileFactory = new TileFactoryImpl(COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
                 TILE_WALL_SEGMENTS_FACTORY, COLLECTION_FACTORY, MAP_FACTORY);
-        ((GameZoneStub) GAME_ZONE).TILES = new Tile[999][999];
+        ((FakeGameZone) GAME_ZONE).TILES = new Tile[999][999];
     }
 
     @SuppressWarnings("ConstantConditions")

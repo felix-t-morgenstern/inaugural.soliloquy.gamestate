@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.GameZoneImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -23,10 +24,10 @@ class GameZoneImplTests {
     private final String ZONE_TYPE = "zoneType";
     private final int MAX_X_COORDINATE = 1;
     private final int MAX_Y_COORDINATE = 2;
-    private final Character CHARACTER = new CharacterStub();
+    private final Character CHARACTER = new FakeCharacter();
     private final Tile[][] TILES = new Tile[MAX_X_COORDINATE+1][MAX_Y_COORDINATE+1];
-    private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
     private final VariableCache DATA = new VariableCacheStub();
     private final ArrayList<Character> ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
     private final ArrayList<Character> REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
@@ -37,7 +38,7 @@ class GameZoneImplTests {
     void setUp() {
         for(int x = 0; x < TILES.length; x++) {
             for(int y = 0; y < TILES[0].length; y++) {
-                TILES[x][y] = new TileStub(x, y, new VariableCacheStub());
+                TILES[x][y] = new FakeTile(x, y, new VariableCacheStub());
             }
         }
         TILES[1][0].characters().add(CHARACTER);
@@ -77,18 +78,18 @@ class GameZoneImplTests {
                 tilesWithNullEntry, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
                 ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithAssignedTile = new Tile[1][1];
-        tilesWithAssignedTile[0][0] = new TileStub(0, 0, new VariableCacheStub());
-        tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new GameZoneStub());
+        tilesWithAssignedTile[0][0] = new FakeTile(0, 0, new VariableCacheStub());
+        tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new FakeGameZone());
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
                 tilesWithAssignedTile, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
                 ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithMismatchedXCoordinate = new Tile[1][1];
-        tilesWithMismatchedXCoordinate[0][0] = new TileStub(1, 0, new VariableCacheStub());
+        tilesWithMismatchedXCoordinate[0][0] = new FakeTile(1, 0, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
                 tilesWithMismatchedXCoordinate, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
                 ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
         Tile[][] tilesWithMismatchedYCoordinate = new Tile[1][1];
-        tilesWithMismatchedYCoordinate[0][0] = new TileStub(0, 1, new VariableCacheStub());
+        tilesWithMismatchedYCoordinate[0][0] = new FakeTile(0, 1, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE,
                 tilesWithMismatchedYCoordinate, COORDINATE_FACTORY, COLLECTION_FACTORY, DATA,
                 ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER:: add));
@@ -215,7 +216,7 @@ class GameZoneImplTests {
 
     @Test
     void testAddCharacterToGameZoneViaTileCharactersAndCharactersIteratorAndAddedToRoundManager() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
 
         _gameZone.tile(0,0).characters().add(character);
 

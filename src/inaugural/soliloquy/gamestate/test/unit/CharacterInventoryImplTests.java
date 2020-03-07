@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterInventoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterInventoryImplTests {
-    private final Character CHARACTER = new CharacterStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final Item ITEM = new ItemStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final Item ITEM = new FakeItem();
 
     private CharacterInventory _characterInventory;
 
@@ -74,9 +74,9 @@ class CharacterInventoryImplTests {
 
     @Test
     void testRepresentation() {
-        Item item1 = new ItemStub();
-        Item item2 = new ItemStub();
-        Item item3 = new ItemStub();
+        Item item1 = new FakeItem();
+        Item item2 = new FakeItem();
+        Item item3 = new FakeItem();
         _characterInventory.add(item1);
         _characterInventory.add(item2);
         _characterInventory.add(item3);
@@ -95,28 +95,28 @@ class CharacterInventoryImplTests {
 
     @Test
     void testThrowOnAddItemPresentElsewhere() {
-        ((ItemStub)ITEM)._inventoryCharacter = new CharacterStub();
+        ((FakeItem)ITEM)._inventoryCharacter = new FakeCharacter();
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
-        ((ItemStub)ITEM)._inventoryCharacter = null;
-        ((ItemStub)ITEM)._tileFixture = new TileFixtureStub();
+        ((FakeItem)ITEM)._inventoryCharacter = null;
+        ((FakeItem)ITEM)._tileFixture = new FakeTileFixture();
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
-        ((ItemStub)ITEM)._tileFixture = null;
-        ((ItemStub)ITEM)._tile = new TileStub();
+        ((FakeItem)ITEM)._tileFixture = null;
+        ((FakeItem)ITEM)._tile = new FakeTile();
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
-        ((ItemStub)ITEM)._tile = null;
-        ((ItemStub)ITEM)._equipmentCharacter = new CharacterStub();
-        ((ItemStub)ITEM)._equipmentSlotType = "slotType";
+        ((FakeItem)ITEM)._tile = null;
+        ((FakeItem)ITEM)._equipmentCharacter = new FakeCharacter();
+        ((FakeItem)ITEM)._equipmentSlotType = "slotType";
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
     }
 
     @Test
     void testIterator() {
-        Item item1 = new ItemStub();
-        Item item2 = new ItemStub();
-        Item item3 = new ItemStub();
+        Item item1 = new FakeItem();
+        Item item2 = new FakeItem();
+        Item item3 = new FakeItem();
 
         _characterInventory.add(item1);
         _characterInventory.add(item2);

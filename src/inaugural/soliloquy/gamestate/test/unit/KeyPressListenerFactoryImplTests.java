@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.KeyPressListenerFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
@@ -10,7 +10,7 @@ import soliloquy.specs.gamestate.factories.KeyPressListenerFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyPressListenerFactoryImplTests {
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private KeyPressListenerFactory _keyPressListenerFactory;
 

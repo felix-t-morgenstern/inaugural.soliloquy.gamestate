@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterEquipmentSlotsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.EquipmentTypeStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
@@ -15,17 +16,17 @@ import soliloquy.specs.gamestate.entities.Item;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEquipmentSlotsImplTests {
-    private final Character CHARACTER = new CharacterStub();
-    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
-    private final Item ITEM = new ItemStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final PairFactory PAIR_FACTORY = new FakePairFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
+    private final Item ITEM = new FakeItem();
     private final String EQUIPMENT_SLOT_TYPE = "armor";
 
     private CharacterEquipmentSlots _characterEquipmentSlots;
 
     @BeforeEach
     void setUp() {
-        ((ItemStub)ITEM)._equipmentCharacter = null;
+        ((FakeItem)ITEM)._equipmentCharacter = null;
         _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER, PAIR_FACTORY,
                 MAP_FACTORY);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
@@ -131,30 +132,30 @@ class CharacterEquipmentSlotsImplTests {
     void testEquipItemAndCanEquipItemElsewhereInOtherLocationTypes() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
-        ((ItemStub) ITEM)._equipmentCharacter = CHARACTER;
-        ((ItemStub) ITEM)._equipmentSlotType = EQUIPMENT_SLOT_TYPE;
+        ((FakeItem) ITEM)._equipmentCharacter = CHARACTER;
+        ((FakeItem) ITEM)._equipmentSlotType = EQUIPMENT_SLOT_TYPE;
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
-        ((ItemStub) ITEM)._equipmentCharacter = null;
-        ((ItemStub) ITEM)._equipmentSlotType = null;
-        ((ItemStub) ITEM)._inventoryCharacter = CHARACTER;
+        ((FakeItem) ITEM)._equipmentCharacter = null;
+        ((FakeItem) ITEM)._equipmentSlotType = null;
+        ((FakeItem) ITEM)._inventoryCharacter = CHARACTER;
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
-        ((ItemStub) ITEM)._inventoryCharacter = null;
-        ((ItemStub) ITEM)._tile = new TileStub();
+        ((FakeItem) ITEM)._inventoryCharacter = null;
+        ((FakeItem) ITEM)._tile = new FakeTile();
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
-        ((ItemStub) ITEM)._tile = null;
-        ((ItemStub) ITEM)._tileFixture = new TileFixtureStub();
+        ((FakeItem) ITEM)._tile = null;
+        ((FakeItem) ITEM)._tileFixture = new FakeTileFixture();
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
@@ -163,7 +164,7 @@ class CharacterEquipmentSlotsImplTests {
 
     @Test
     void testPreviouslyEquippedItemUnassignedFromSlot() {
-        Item previousItem = new ItemStub();
+        Item previousItem = new FakeItem();
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, previousItem);
         assertNotNull(previousItem.equipmentSlot());
@@ -190,7 +191,7 @@ class CharacterEquipmentSlotsImplTests {
     void testItemReferencesCorrectSlotInvariant() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
-        ((ItemStub) ITEM)._equipmentCharacter = null;
+        ((FakeItem) ITEM)._equipmentCharacter = null;
 
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
@@ -205,7 +206,7 @@ class CharacterEquipmentSlotsImplTests {
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
 
-        ((ItemStub) ITEM)._equipmentCharacter = new CharacterStub();
+        ((FakeItem) ITEM)._equipmentCharacter = new FakeCharacter();
 
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
@@ -220,8 +221,8 @@ class CharacterEquipmentSlotsImplTests {
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
 
-        ((ItemStub) ITEM)._equipmentCharacter = CHARACTER;
-        ((ItemStub) ITEM)._equipmentSlotType = "NotAValidType";
+        ((FakeItem) ITEM)._equipmentCharacter = CHARACTER;
+        ((FakeItem) ITEM)._equipmentSlotType = "NotAValidType";
 
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));

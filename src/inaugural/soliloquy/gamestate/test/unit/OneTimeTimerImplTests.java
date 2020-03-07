@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.OneTimeTimerImpl;
-import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.RoundManagerStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
+import inaugural.soliloquy.gamestate.test.fakes.FakeRoundManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -14,8 +14,8 @@ class OneTimeTimerImplTests {
     private OneTimeTimer _oneTimeTimer;
 
     private final String TIMER_ID = "TimerId";
-    private final Action<Void> ACTION = new ActionStub<>();
-    private final RoundManagerStub ROUND_MANAGER = new RoundManagerStub();
+    private final Action<Void> ACTION = new FakeAction<>();
+    private final FakeRoundManager ROUND_MANAGER = new FakeRoundManager();
 
     @BeforeEach
     void setUp() {
@@ -51,7 +51,7 @@ class OneTimeTimerImplTests {
     @Test
     void testFire() {
         _oneTimeTimer.fire();
-        assertTrue(((ActionStub)ACTION)._actionRun);
+        assertTrue(((FakeAction)ACTION)._actionRun);
     }
 
     @Test

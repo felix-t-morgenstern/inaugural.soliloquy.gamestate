@@ -2,7 +2,8 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.common.test.stubs.HasIdAndNameStub;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -19,28 +20,28 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEntitiesOfTypeImplTests {
-    private final Character CHARACTER = new CharacterStub();
+    private final Character CHARACTER = new FakeCharacter();
     private final ArrayList<HasId> TYPES_ADDED = new ArrayList<>();
-    private final ArrayList<CharacterEntityStub> ENTITIES_ADDED = new ArrayList<>();
-    private final Function<Character,Function<HasId,Function<VariableCache,CharacterEntityStub>>>
+    private final ArrayList<FakeCharacterEntity> ENTITIES_ADDED = new ArrayList<>();
+    private final Function<Character,Function<HasId,Function<VariableCache, FakeCharacterEntity>>>
             FACTORY = c -> t -> d -> {
         _characterPassedIntoFactory = c;
         _typePassedIntoFactory = t;
         _dataPassedIntoFactory = d;
         TYPES_ADDED.add(t);
-        CharacterEntityStub entity = new CharacterEntityStub(c,t);
+        FakeCharacterEntity entity = new FakeCharacterEntity(c,t);
         ENTITIES_ADDED.add(entity);
         return entity;
     };
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
-    private final CharacterEntityStub ARCHETYPE = new CharacterEntityStub(null,
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
+    private final FakeCharacterEntity ARCHETYPE = new FakeCharacterEntity(null,
             new HasIdAndNameStub("id", "name"));
 
     private Character _characterPassedIntoFactory;
     private HasId _typePassedIntoFactory;
     private VariableCache _dataPassedIntoFactory;
-    private CharacterEntitiesOfType<HasId, CharacterEntityStub> _entitiesOfType;
+    private CharacterEntitiesOfType<HasId, FakeCharacterEntity> _entitiesOfType;
 
     @BeforeEach
     void setUp() {
@@ -115,11 +116,11 @@ class CharacterEntitiesOfTypeImplTests {
 
         _entitiesOfType.add(type);
 
-        CharacterEntityStub entity = _entitiesOfType.get(type);
+        FakeCharacterEntity entity = _entitiesOfType.get(type);
 
         _entitiesOfType.add(type);
 
-        CharacterEntityStub entityAfterSecondAdd = _entitiesOfType.get(type);
+        FakeCharacterEntity entityAfterSecondAdd = _entitiesOfType.get(type);
 
         assertSame(entity, entityAfterSecondAdd);
     }
@@ -189,7 +190,7 @@ class CharacterEntitiesOfTypeImplTests {
         _entitiesOfType.add(type2);
         _entitiesOfType.add(type3);
 
-        ReadableCollection<CharacterEntityStub> representation =
+        ReadableCollection<FakeCharacterEntity> representation =
                 _entitiesOfType.representation();
 
         assertNotNull(representation);
@@ -207,7 +208,7 @@ class CharacterEntitiesOfTypeImplTests {
         _entitiesOfType.add(type2);
         _entitiesOfType.add(type3);
 
-        ArrayList<CharacterEntityStub> fromIterator = new ArrayList<>();
+        ArrayList<FakeCharacterEntity> fromIterator = new ArrayList<>();
 
         _entitiesOfType.forEach(fromIterator::add);
 

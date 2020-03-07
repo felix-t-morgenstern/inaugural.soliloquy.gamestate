@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileFixtureFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.EntityUuidFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -19,14 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureFactoryImplTests {
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
-    private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
-            new TileFixtureItemsFactoryStub();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
-    private final FixtureType FIXTURE_TYPE = new FixtureTypeStub();
+            new FakeTileFixtureItemsFactory();
+    private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
+    private final FixtureType FIXTURE_TYPE = new FakeFixtureType();
     private final VariableCache DATA = new VariableCacheStub();
-    private final EntityUuid ID = new EntityUuidStub();
+    private final EntityUuid ID = new FakeEntityUuid();
 
     private TileFixtureFactory _tileFixtureFactory;
 
@@ -74,11 +76,11 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), tileFixture.data());
+        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((TileFixtureItemsStub)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
@@ -92,7 +94,7 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((TileFixtureItemsStub)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
@@ -102,11 +104,11 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(ID, tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), tileFixture.data());
+        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((TileFixtureItemsStub)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
@@ -120,7 +122,7 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture.pixelOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((TileFixtureItemsStub)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test

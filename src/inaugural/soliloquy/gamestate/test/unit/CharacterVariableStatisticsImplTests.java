@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterVariableStatisticsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -20,12 +21,12 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticsImplTests {
-    private final Character CHARACTER = new CharacterStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
-    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
-    private final CharacterVariableStatisticFactoryStub FACTORY =
-            new CharacterVariableStatisticFactoryStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
+    private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
+    private final FakeCharacterVariableStatisticFactory FACTORY =
+            new FakeCharacterVariableStatisticFactory();
 
     private CharacterVariableStatistics _variableStats;
 
@@ -62,7 +63,7 @@ class CharacterVariableStatisticsImplTests {
 
     @Test
     void testAddAndGet() {
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
 
         assertNull(_variableStats.get(type));
 
@@ -70,13 +71,13 @@ class CharacterVariableStatisticsImplTests {
 
         assertNotNull(_variableStats.get(type));
         assertSame(CHARACTER,
-                ((CharacterVariableStatisticStub) _variableStats.get(type))._character);
+                ((FakeCharacterVariableStatistic) _variableStats.get(type))._character);
         assertSame(DATA_FACTORY.Created.get(0), _variableStats.get(type).data());
     }
 
     @Test
     void testAddWithData() {
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
         VariableCache data = new VariableCacheStub();
 
         assertNull(_variableStats.get(type));
@@ -85,13 +86,13 @@ class CharacterVariableStatisticsImplTests {
 
         assertNotNull(_variableStats.get(type));
         assertSame(CHARACTER,
-                ((CharacterVariableStatisticStub) _variableStats.get(type))._character);
+                ((FakeCharacterVariableStatistic) _variableStats.get(type))._character);
         assertSame(data, _variableStats.get(type).data());
     }
 
     @Test
     void testAddExistingTypeIsNondestructive() {
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
 
         _variableStats.add(type);
 
@@ -106,16 +107,16 @@ class CharacterVariableStatisticsImplTests {
 
     @Test
     void testSize() {
-        _variableStats.add(new CharacterVariableStatisticTypeStub("id1"));
-        _variableStats.add(new CharacterVariableStatisticTypeStub("id2"));
-        _variableStats.add(new CharacterVariableStatisticTypeStub("id3"));
+        _variableStats.add(new FakeCharacterVariableStatisticType("id1"));
+        _variableStats.add(new FakeCharacterVariableStatisticType("id2"));
+        _variableStats.add(new FakeCharacterVariableStatisticType("id3"));
 
         assertEquals(3, _variableStats.size());
     }
 
     @Test
     void testContains() {
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
 
         assertFalse(_variableStats.contains(type));
 
@@ -126,7 +127,7 @@ class CharacterVariableStatisticsImplTests {
 
     @Test
     void testRemove() {
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
 
         assertFalse(_variableStats.remove(type));
 
@@ -147,11 +148,11 @@ class CharacterVariableStatisticsImplTests {
     @Test
     void testClear() {
         CharacterVariableStatisticType type1 =
-                new CharacterVariableStatisticTypeStub("id1");
+                new FakeCharacterVariableStatisticType("id1");
         CharacterVariableStatisticType type2 =
-                new CharacterVariableStatisticTypeStub("id2");
+                new FakeCharacterVariableStatisticType("id2");
         CharacterVariableStatisticType type3 =
-                new CharacterVariableStatisticTypeStub("id3");
+                new FakeCharacterVariableStatisticType("id3");
 
         _variableStats.add(type1);
         _variableStats.add(type2);
@@ -165,11 +166,11 @@ class CharacterVariableStatisticsImplTests {
     @Test
     void testGetCurrentValues() {
         CharacterVariableStatisticType type1 =
-                new CharacterVariableStatisticTypeStub("id1");
+                new FakeCharacterVariableStatisticType("id1");
         CharacterVariableStatisticType type2 =
-                new CharacterVariableStatisticTypeStub("id2");
+                new FakeCharacterVariableStatisticType("id2");
         CharacterVariableStatisticType type3 =
-                new CharacterVariableStatisticTypeStub("id3");
+                new FakeCharacterVariableStatisticType("id3");
 
         _variableStats.add(type1);
         _variableStats.add(type2);
@@ -192,19 +193,19 @@ class CharacterVariableStatisticsImplTests {
     @Test
     void testGetMaxValues() {
         CharacterVariableStatisticType type1 =
-                new CharacterVariableStatisticTypeStub("id1");
+                new FakeCharacterVariableStatisticType("id1");
         CharacterVariableStatisticType type2 =
-                new CharacterVariableStatisticTypeStub("id2");
+                new FakeCharacterVariableStatisticType("id2");
         CharacterVariableStatisticType type3 =
-                new CharacterVariableStatisticTypeStub("id3");
+                new FakeCharacterVariableStatisticType("id3");
 
         _variableStats.add(type1);
         _variableStats.add(type2);
         _variableStats.add(type3);
 
-        ((CharacterVariableStatisticStub) _variableStats.get(type1))._maxValue = 123;
-        ((CharacterVariableStatisticStub) _variableStats.get(type2))._maxValue = 456;
-        ((CharacterVariableStatisticStub) _variableStats.get(type3))._maxValue = 789;
+        ((FakeCharacterVariableStatistic) _variableStats.get(type1))._maxValue = 123;
+        ((FakeCharacterVariableStatistic) _variableStats.get(type2))._maxValue = 456;
+        ((FakeCharacterVariableStatistic) _variableStats.get(type3))._maxValue = 789;
 
         ReadableMap<CharacterVariableStatisticType,Integer> maxValues =
                 _variableStats.maxValues();
@@ -214,19 +215,19 @@ class CharacterVariableStatisticsImplTests {
         assertEquals(123, maxValues.get(type1));
         assertEquals(456, maxValues.get(type2));
         assertEquals(789, maxValues.get(type3));
-        assertTrue(((CharacterVariableStatisticStub) _variableStats.get(type1))._isCalculated);
-        assertTrue(((CharacterVariableStatisticStub) _variableStats.get(type2))._isCalculated);
-        assertTrue(((CharacterVariableStatisticStub) _variableStats.get(type3))._isCalculated);
+        assertTrue(((FakeCharacterVariableStatistic) _variableStats.get(type1))._isCalculated);
+        assertTrue(((FakeCharacterVariableStatistic) _variableStats.get(type2))._isCalculated);
+        assertTrue(((FakeCharacterVariableStatistic) _variableStats.get(type3))._isCalculated);
     }
 
     @Test
     void testRepresentation() {
         CharacterVariableStatisticType type1 =
-                new CharacterVariableStatisticTypeStub("id1");
+                new FakeCharacterVariableStatisticType("id1");
         CharacterVariableStatisticType type2 =
-                new CharacterVariableStatisticTypeStub("id2");
+                new FakeCharacterVariableStatisticType("id2");
         CharacterVariableStatisticType type3 =
-                new CharacterVariableStatisticTypeStub("id3");
+                new FakeCharacterVariableStatisticType("id3");
 
         _variableStats.add(type1);
         _variableStats.add(type2);
@@ -251,11 +252,11 @@ class CharacterVariableStatisticsImplTests {
     @Test
     void testIterator() {
         CharacterVariableStatisticType type1 =
-                new CharacterVariableStatisticTypeStub("id1");
+                new FakeCharacterVariableStatisticType("id1");
         CharacterVariableStatisticType type2 =
-                new CharacterVariableStatisticTypeStub("id2");
+                new FakeCharacterVariableStatisticType("id2");
         CharacterVariableStatisticType type3 =
-                new CharacterVariableStatisticTypeStub("id3");
+                new FakeCharacterVariableStatisticType("id3");
 
         _variableStats.add(type1);
         _variableStats.add(type2);
@@ -275,11 +276,11 @@ class CharacterVariableStatisticsImplTests {
     @Test
     void testDelete() {
         CharacterVariableStatisticType type1 =
-                new CharacterVariableStatisticTypeStub("id1");
+                new FakeCharacterVariableStatisticType("id1");
         CharacterVariableStatisticType type2 =
-                new CharacterVariableStatisticTypeStub("id2");
+                new FakeCharacterVariableStatisticType("id2");
         CharacterVariableStatisticType type3 =
-                new CharacterVariableStatisticTypeStub("id3");
+                new FakeCharacterVariableStatisticType("id3");
 
         _variableStats.add(type1);
         _variableStats.add(type2);
@@ -296,7 +297,7 @@ class CharacterVariableStatisticsImplTests {
 
     @Test
     void testDeletionInvariant() {
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
 
         _variableStats.delete();
 
@@ -314,7 +315,7 @@ class CharacterVariableStatisticsImplTests {
 
     @Test
     void testCharacterDeletionInvariant() {
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub("");
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
 
         CHARACTER.delete();
 

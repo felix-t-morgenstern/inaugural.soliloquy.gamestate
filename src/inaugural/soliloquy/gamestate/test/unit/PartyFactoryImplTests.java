@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.PartyFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import soliloquy.specs.gamestate.factories.PartyFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PartyFactoryImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
     private PartyFactory _partyFactory;

@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileFixtureItemsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -13,11 +13,11 @@ import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureItemsImplTests {
-    private final TileFixture TILE_FIXTURE = new TileFixtureStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final Item ITEM = new ItemStub();
-    private final Item ITEM_2 = new ItemStub();
-    private final Item ITEM_3 = new ItemStub();
+    private final TileFixture TILE_FIXTURE = new FakeTileFixture();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final Item ITEM = new FakeItem();
+    private final Item ITEM_2 = new FakeItem();
+    private final Item ITEM_3 = new FakeItem();
 
     private TileFixtureItems _tileFixtureItems;
 
@@ -53,39 +53,39 @@ class TileFixtureItemsImplTests {
     void testAddCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
 
-        assertSame(TILE_FIXTURE, ((ItemStub)ITEM)._tileFixture);
+        assertSame(TILE_FIXTURE, ((FakeItem)ITEM)._tileFixture);
     }
 
     @Test
     void testRemoveCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
-        assertSame(TILE_FIXTURE, ((ItemStub)ITEM)._tileFixture);
+        assertSame(TILE_FIXTURE, ((FakeItem)ITEM)._tileFixture);
 
         _tileFixtureItems.remove(ITEM);
 
-        assertNull(((ItemStub)ITEM)._tileFixture);
+        assertNull(((FakeItem)ITEM)._tileFixture);
     }
 
     @Test
     void testAddItemAlreadyPresentInOtherLocationTypes() {
-        ((ItemStub) ITEM)._equipmentCharacter = new CharacterStub();
-        ((ItemStub) ITEM)._equipmentSlotType = "EquipmentSlotType";
+        ((FakeItem) ITEM)._equipmentCharacter = new FakeCharacter();
+        ((FakeItem) ITEM)._equipmentSlotType = "EquipmentSlotType";
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
 
-        ((ItemStub) ITEM)._equipmentCharacter = null;
-        ((ItemStub) ITEM)._equipmentSlotType = null;
-        ((ItemStub) ITEM)._inventoryCharacter = new CharacterStub();
+        ((FakeItem) ITEM)._equipmentCharacter = null;
+        ((FakeItem) ITEM)._equipmentSlotType = null;
+        ((FakeItem) ITEM)._inventoryCharacter = new FakeCharacter();
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
 
-        ((ItemStub) ITEM)._inventoryCharacter = null;
-        ((ItemStub) ITEM)._tile = new TileStub();
+        ((FakeItem) ITEM)._inventoryCharacter = null;
+        ((FakeItem) ITEM)._tile = new FakeTile();
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
 
-        ((ItemStub) ITEM)._tile = null;
-        ((ItemStub) ITEM)._tileFixture = new TileFixtureStub();
+        ((FakeItem) ITEM)._tile = null;
+        ((FakeItem) ITEM)._tileFixture = new FakeTileFixture();
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
     }
@@ -165,7 +165,7 @@ class TileFixtureItemsImplTests {
     @Test
     void testItemAssignmentInvariant() {
         _tileFixtureItems.add(ITEM);
-        ((ItemStub) ITEM)._tileFixture = null;
+        ((FakeItem) ITEM)._tileFixture = null;
 
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));

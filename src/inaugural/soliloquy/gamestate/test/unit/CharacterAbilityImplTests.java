@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterAbilityImpl;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
 import inaugural.soliloquy.gamestate.test.stubs.AbilityTypeStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ class CharacterAbilityImplTests {
     private final AbilityTypeStub ABILITY_TYPE = new AbilityTypeStub();
     private final VariableCache DATA = new VariableCacheStub();
 
-    private final Character CHARACTER = new CharacterStub();
+    private final Character CHARACTER = new FakeCharacter();
 
     @BeforeEach
     void setUp() {

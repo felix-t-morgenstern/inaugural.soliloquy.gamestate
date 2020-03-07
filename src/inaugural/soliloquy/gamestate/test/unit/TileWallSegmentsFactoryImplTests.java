@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentsFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.PairFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakePairFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
@@ -14,9 +14,9 @@ import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentsFactoryImplTests {
-    private final Tile TILE = new TileStub();
-    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final Tile TILE = new FakeTile();
+    private final PairFactory PAIR_FACTORY = new FakePairFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private TileWallSegmentsFactory _tileWallSegmentsFactory;
 

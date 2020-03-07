@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentOneTimeTimerHandler;
-import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.OneTimeTimerStub;
-import inaugural.soliloquy.gamestate.test.stubs.RegistryStub;
-import inaugural.soliloquy.gamestate.test.stubs.TimerFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
+import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeTimer;
+import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTimerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -16,13 +16,13 @@ import soliloquy.specs.gamestate.factories.TimerFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentOneTimeTimerHandlerTests {
-    private final TimerFactory TIMER_FACTORY = new TimerFactoryStub();
+    private final TimerFactory TIMER_FACTORY = new FakeTimerFactory();
 
     private final String ONE_TIME_TIMER_ID = "oneTimeTimerId";
 
     private final String ACTION_ID = "actionId";
-    private final Action ACTION = new ActionStub(ACTION_ID);
-    private final Registry<Action> ACTIONS = new RegistryStub<>();
+    private final Action ACTION = new FakeAction(ACTION_ID);
+    private final Registry<Action> ACTIONS = new FakeRegistry<>();
 
     private final long ROUND_WHEN_GOES_OFF = 123123123;
 
@@ -62,7 +62,7 @@ class PersistentOneTimeTimerHandlerTests {
 
     @Test
     void testWrite() {
-        OneTimeTimer oneTimeTimer = new OneTimeTimerStub(ONE_TIME_TIMER_ID, ACTION);
+        OneTimeTimer oneTimeTimer = new FakeOneTimeTimer(ONE_TIME_TIMER_ID, ACTION);
         oneTimeTimer.setRoundWhenGoesOff(ROUND_WHEN_GOES_OFF);
 
         String writtenValue = _oneTimeTimerHandler.write(oneTimeTimer);

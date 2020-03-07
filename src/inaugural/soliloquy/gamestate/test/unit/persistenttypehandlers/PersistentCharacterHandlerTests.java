@@ -1,10 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentCharacterHandler;
-import inaugural.soliloquy.gamestate.test.stubs.*;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentEntityUuidHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentItemHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentVariableCacheHandlerStub;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentEntityUuidHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentItemHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentVariableCacheHandler;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
@@ -27,13 +28,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentCharacterHandlerTests {
-    private final CharacterFactory CHARACTER_FACTORY = new CharacterFactoryStub();
+    private final CharacterFactory CHARACTER_FACTORY = new FakeCharacterFactory();
 
-    private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER = new PersistentEntityUuidHandlerStub();
+    private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER = new FakePersistentEntityUuidHandler();
 
     private final Map<String, CharacterType> CHARACTER_TYPES = new HashMap<>();
     private final String CHARACTER_TYPE_ID = "characterTypeId";
-    private final CharacterType CHARACTER_TYPE = new CharacterTypeStub(CHARACTER_TYPE_ID);
+    private final CharacterType CHARACTER_TYPE = new FakeCharacterType(CHARACTER_TYPE_ID);
 
     private final String CASE_1 = "nominative";
     private final String CASE_2 = "oblique";
@@ -51,19 +52,19 @@ class PersistentCharacterHandlerTests {
 
     private final Map<String, CharacterClassification> CLASSIFICATIONS = new HashMap<>();
     private final String CLASSIFICATION_ID = "classificationId";
-    private final CharacterClassification CLASSIFICATION = new CharacterClassificationStub(CLASSIFICATION_ID);
+    private final CharacterClassification CLASSIFICATION = new FakeCharacterClassification(CLASSIFICATION_ID);
 
     private final Map<String, SpriteSet> SPRITE_SETS = new HashMap<>();
     private final String SPRITE_SET_ID = "spriteSetId";
-    private final SpriteSet SPRITE_SET = new SpriteSetStub(SPRITE_SET_ID);
+    private final SpriteSet SPRITE_SET = new FakeSpriteSet(SPRITE_SET_ID);
 
     private final Map<String, CharacterAIType> AI_TYPES = new HashMap<>();
     private final String AI_TYPE_ID = "aiTypeId";
-    private final CharacterAIType AI_TYPE = new CharacterAITypeStub(AI_TYPE_ID);
+    private final CharacterAIType AI_TYPE = new FakeCharacterAIType(AI_TYPE_ID);
 
     private final Map<String, GameCharacterEvent> EVENTS = new HashMap<>();
     private final String EVENT_ID = "eventId";
-    private final GameCharacterEvent EVENT = new GameCharacterEventStub(EVENT_ID);
+    private final GameCharacterEvent EVENT = new FakeGameCharacterEvent(EVENT_ID);
     private final String TRIGGER = "trigger";
 
     private final String EQUIPMENT_SLOT_1 = "equipmentSlot1";
@@ -71,31 +72,31 @@ class PersistentCharacterHandlerTests {
 
     private final Map<String, CharacterStaticStatisticType> STATIC_STAT_TYPES = new HashMap<>();
     private final String STATIC_STAT_TYPE_ID = "staticStatTypeId";
-    private final CharacterStaticStatisticType STATIC_STAT_TYPE = new CharacterStaticStatisticTypeStub(STATIC_STAT_TYPE_ID);
+    private final CharacterStaticStatisticType STATIC_STAT_TYPE = new FakeCharacterStaticStatisticType(STATIC_STAT_TYPE_ID);
 
     private final Map<String, CharacterVariableStatisticType> VARIABLE_STAT_TYPES = new HashMap<>();
     private final String VARIABLE_STAT_TYPE_ID = "variableStatTypeId";
-    private final CharacterVariableStatisticType VARIABLE_STAT_TYPE = new CharacterVariableStatisticTypeStub(VARIABLE_STAT_TYPE_ID);
+    private final CharacterVariableStatisticType VARIABLE_STAT_TYPE = new FakeCharacterVariableStatisticType(VARIABLE_STAT_TYPE_ID);
 
     private final Map<String, StatusEffectType> STAT_EFFECT_TYPES = new HashMap<>();
     private final String STAT_EFFECT_TYPE_ID = "statEffectTypeId";
-    private final StatusEffectType STAT_EFFECT_TYPE = new StatusEffectTypeStub(STAT_EFFECT_TYPE_ID);
+    private final StatusEffectType STAT_EFFECT_TYPE = new FakeStatusEffectType(STAT_EFFECT_TYPE_ID);
 
     private final Map<String, ActiveAbilityType> ACTIVE_ABILITY_TYPES = new HashMap<>();
     private final String ACTIVE_ABILITY_TYPE_ID = "activeAbilityTypeId";
-    private final ActiveAbilityType ACTIVE_ABILITY_TYPE = new ActiveAbilityTypeStub(ACTIVE_ABILITY_TYPE_ID);
+    private final ActiveAbilityType ACTIVE_ABILITY_TYPE = new FakeActiveAbilityType(ACTIVE_ABILITY_TYPE_ID);
 
     private final Map<String, ReactiveAbilityType> REACTIVE_ABILITY_TYPES = new HashMap<>();
     private final String REACTIVE_ABILITY_TYPE_ID = "reactiveAbilityTypeId";
-    private final ReactiveAbilityType REACTIVE_ABILITY_TYPE = new ReactiveAbilityTypeStub(REACTIVE_ABILITY_TYPE_ID);
+    private final ReactiveAbilityType REACTIVE_ABILITY_TYPE = new FakeReactiveAbilityType(REACTIVE_ABILITY_TYPE_ID);
 
     private final VariableCache DATA = new VariableCacheStub();
 
     private final String NAME = "charName";
 
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
-            new PersistentVariableCacheHandlerStub();
-    private final PersistentValueTypeHandler<Item> ITEM_HANDLER = new PersistentItemHandlerStub();
+            new FakePersistentVariableCacheHandler();
+    private final PersistentValueTypeHandler<Item> ITEM_HANDLER = new FakePersistentItemHandler();
 
     private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"characterTypeId\":\"characterTypeId\",\"classifications\":[\"classificationId\"],\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"reflexive\",\"val\":\"themselves\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"spriteSetId\":\"spriteSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"variableStats\":[{\"current\":135,\"type\":\"variableStatTypeId\",\"data\":\"VariableCache0\"}],\"staticStats\":[{\"type\":\"staticStatTypeId\",\"data\":\"VariableCache1\"}],\"statusEffects\":[{\"type\":\"statEffectTypeId\",\"value\":246}],\"activeAbilities\":[{\"type\":\"activeAbilityTypeId\",\"data\":\"VariableCache2\"}],\"reactiveAbilities\":[{\"type\":\"reactiveAbilityTypeId\",\"data\":\"VariableCache3\"}],\"isPlayerControlled\":true,\"data\":\"VariableCache4\",\"name\":\"charName\"}";
 
@@ -211,8 +212,8 @@ class PersistentCharacterHandlerTests {
 
     @Test
     void testWrite() {
-        EntityUuid id = new EntityUuidStub();
-        Character character = new CharacterStub(id, CHARACTER_TYPE, DATA);
+        EntityUuid id = new FakeEntityUuid();
+        Character character = new FakeCharacter(id, CHARACTER_TYPE, DATA);
         character.classifications().add(CLASSIFICATION);
         character.pronouns().put(CASE_1, ARTICLE_1);
         character.pronouns().put(CASE_2, ARTICLE_2);
@@ -223,28 +224,28 @@ class PersistentCharacterHandlerTests {
         character.setSpriteSet(SPRITE_SET);
         character.setAIType(AI_TYPE);
         character.events().addEvent(TRIGGER, EVENT);
-        CharacterEquipmentSlotsStub.EQUIPMENT_SLOTS.clear();
-        Item equipmentSlotItem = new ItemStub();
+        FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.clear();
+        Item equipmentSlotItem = new FakeItem();
         character.equipmentSlots().addCharacterEquipmentSlot(EQUIPMENT_SLOT_1);
         character.equipmentSlots().addCharacterEquipmentSlot(EQUIPMENT_SLOT_2);
         character.equipmentSlots().equipItemToSlot(EQUIPMENT_SLOT_1, equipmentSlotItem);
-        Item inventoryItem = new ItemStub();
+        Item inventoryItem = new FakeItem();
         character.inventory().add(inventoryItem);
         character.variableStatistics().add(VARIABLE_STAT_TYPE);
         CharacterVariableStatistic variableStat =
                 character.variableStatistics().get(VARIABLE_STAT_TYPE);
         variableStat.setCurrentValue(135);
         character.staticStatistics().add(STATIC_STAT_TYPE);
-        ((CharacterStatusEffectsStub)character.statusEffects())._representation.clear();
-        ((CharacterStatusEffectsStub)character.statusEffects())._representation
+        ((FakeCharacterStatusEffects)character.statusEffects())._representation.clear();
+        ((FakeCharacterStatusEffects)character.statusEffects())._representation
                 .put(STAT_EFFECT_TYPE, 246);
         character.activeAbilities().add(ACTIVE_ABILITY_TYPE);
         //noinspection rawtypes
-        ((CharacterAbilityStub)character.activeAbilities().get(ACTIVE_ABILITY_TYPE))._data =
+        ((FakeCharacterAbility)character.activeAbilities().get(ACTIVE_ABILITY_TYPE))._data =
                 new VariableCacheStub();
         character.reactiveAbilities().add(REACTIVE_ABILITY_TYPE);
         //noinspection rawtypes
-        ((CharacterAbilityStub)character.reactiveAbilities().get(REACTIVE_ABILITY_TYPE))._data =
+        ((FakeCharacterAbility)character.reactiveAbilities().get(REACTIVE_ABILITY_TYPE))._data =
                 new VariableCacheStub();
         character.setPlayerControlled(true);
         character.setName(NAME);
@@ -252,17 +253,17 @@ class PersistentCharacterHandlerTests {
         String writtenValue = _characterHandler.write(character);
 
         assertEquals(WRITTEN_VALUE, writtenValue);
-        assertSame(id, ((PersistentEntityUuidHandlerStub)ID_HANDLER).WRITE_INPUTS.get(0));
+        assertSame(id, ((FakePersistentEntityUuidHandler)ID_HANDLER).WRITE_INPUTS.get(0));
         assertSame(character.variableStatistics().get(VARIABLE_STAT_TYPE).data(),
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(0));
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(0));
         assertSame(character.staticStatistics().get(STATIC_STAT_TYPE).data(),
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(1));
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(1));
         assertSame(character.activeAbilities().get(ACTIVE_ABILITY_TYPE).data(),
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(2));
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(2));
         assertSame(character.reactiveAbilities().get(REACTIVE_ABILITY_TYPE).data(),
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(3));
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(3));
         assertSame(character.data(),
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).WRITE_INPUTS.get(4));
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(4));
     }
 
     @Test
@@ -272,13 +273,13 @@ class PersistentCharacterHandlerTests {
 
     @Test
     void testRead() {
-        CharacterEquipmentSlotsStub.EQUIPMENT_SLOTS.clear();
+        FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.clear();
         Character readCharacter = _characterHandler.read(WRITTEN_VALUE);
 
         assertNotNull(readCharacter);
         assertEquals("EntityUuid0",
-                ((PersistentEntityUuidHandlerStub)ID_HANDLER).READ_INPUTS.get(0));
-        assertSame(((PersistentEntityUuidHandlerStub)ID_HANDLER).READ_OUTPUTS.get(0),
+                ((FakePersistentEntityUuidHandler)ID_HANDLER).READ_INPUTS.get(0));
+        assertSame(((FakePersistentEntityUuidHandler)ID_HANDLER).READ_OUTPUTS.get(0),
                 readCharacter.id());
         assertSame(CHARACTER_TYPE, readCharacter.type());
         assertEquals(1, readCharacter.classifications().size());
@@ -297,27 +298,27 @@ class PersistentCharacterHandlerTests {
         assertSame(EVENT, readCharacter.events().representation().get(TRIGGER).get(0));
 
         assertEquals(2, readCharacter.equipmentSlots().representation().size());
-        assertTrue(((PersistentItemHandlerStub)ITEM_HANDLER).READ_OUTPUTS.contains(
+        assertTrue(((FakePersistentItemHandler)ITEM_HANDLER).READ_OUTPUTS.contains(
                 readCharacter.equipmentSlots().itemInSlot(EQUIPMENT_SLOT_1)));
         assertNull(readCharacter.equipmentSlots().itemInSlot(EQUIPMENT_SLOT_2));
         assertEquals(1, readCharacter.inventory().representation().size());
-        assertTrue(((PersistentItemHandlerStub)ITEM_HANDLER).READ_OUTPUTS.contains(
+        assertTrue(((FakePersistentItemHandler)ITEM_HANDLER).READ_OUTPUTS.contains(
                 readCharacter.inventory().representation().get(0)));
 
         assertEquals(1, readCharacter.variableStatistics().representation().size());
         assertEquals(135,
                 readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).getCurrentValue());
         assertEquals("VariableCache0",
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(1));
-        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(1),
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(1));
+        assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(1),
                 readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).data());
 
         assertEquals(1, readCharacter.staticStatistics().representation().size());
         assertSame(STATIC_STAT_TYPE,
                 readCharacter.staticStatistics().representation().get(0).type());
         assertEquals("VariableCache1",
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(2));
-        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(2),
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(2));
+        assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(2),
                 readCharacter.staticStatistics().get(STATIC_STAT_TYPE).data());
 
         assertEquals(1, readCharacter.statusEffects().representation().size());
@@ -326,20 +327,20 @@ class PersistentCharacterHandlerTests {
 
         assertEquals(1, readCharacter.activeAbilities().size());
         assertEquals("VariableCache2",
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(3));
-        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(3),
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(3));
+        assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(3),
                 readCharacter.activeAbilities().get(ACTIVE_ABILITY_TYPE).data());
 
         assertEquals(1, readCharacter.reactiveAbilities().size());
         assertEquals("VariableCache3",
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(4));
-        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(4),
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(4));
+        assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(4),
                 readCharacter.reactiveAbilities().get(REACTIVE_ABILITY_TYPE).data());
 
         assertTrue(readCharacter.getPlayerControlled());
         assertEquals("VariableCache4",
-                ((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_INPUTS.get(0));
-        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
+                ((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(0));
+        assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(0),
                 readCharacter.data());
         assertEquals(NAME, readCharacter.getName());
     }

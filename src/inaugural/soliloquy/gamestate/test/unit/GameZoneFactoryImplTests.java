@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.GameZoneFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -17,8 +18,8 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameZoneFactoryImplTests {
-    private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
     private final ArrayList<Character> ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
     private final ArrayList<Character> REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
     private final String ID = "GameZoneId";
@@ -59,8 +60,8 @@ class GameZoneFactoryImplTests {
 
     @Test
     void testMake() {
-        TILES[0][0] = new TileStub(0, 0, new VariableCacheStub());
-        TILES[0][1] = new TileStub(0, 1, new VariableCacheStub());
+        TILES[0][0] = new FakeTile(0, 0, new VariableCacheStub());
+        TILES[0][1] = new FakeTile(0, 1, new VariableCacheStub());
 
         GameZone gameZone = _gameZoneFactory.make(ID, TYPE, TILES, DATA);
 
@@ -93,16 +94,16 @@ class GameZoneFactoryImplTests {
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
                 tilesWithNullEntry, DATA));
         Tile[][] tilesWithAssignedTile = new Tile[1][1];
-        tilesWithAssignedTile[0][0] = new TileStub(0, 0, new VariableCacheStub());
-        tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new GameZoneStub());
+        tilesWithAssignedTile[0][0] = new FakeTile(0, 0, new VariableCacheStub());
+        tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new FakeGameZone());
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
                 tilesWithAssignedTile, DATA));
         Tile[][] tilesWithMismatchedXCoordinate = new Tile[1][1];
-        tilesWithMismatchedXCoordinate[0][0] = new TileStub(1, 0, new VariableCacheStub());
+        tilesWithMismatchedXCoordinate[0][0] = new FakeTile(1, 0, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
                 tilesWithMismatchedXCoordinate, DATA));
         Tile[][] tilesWithMismatchedYCoordinate = new Tile[1][1];
-        tilesWithMismatchedYCoordinate[0][0] = new TileStub(0, 1, new VariableCacheStub());
+        tilesWithMismatchedYCoordinate[0][0] = new FakeTile(0, 1, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
                 tilesWithMismatchedYCoordinate, DATA));
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE, TILES,

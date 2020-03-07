@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentItemHandler;
-import inaugural.soliloquy.gamestate.test.stubs.ItemFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.ItemStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeItemFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
-import inaugural.soliloquy.gamestate.test.stubs.RegistryStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentEntityUuidHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentVariableCacheHandlerStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentEntityUuidHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentVariableCacheHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
@@ -20,13 +20,13 @@ import soliloquy.specs.ruleset.entities.ItemType;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentItemHandlerTests {
-    private final Registry<ItemType> ITEM_TYPES_REGISTRY = new RegistryStub<>();
+    private final Registry<ItemType> ITEM_TYPES_REGISTRY = new FakeRegistry<>();
     private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER =
-            new PersistentEntityUuidHandlerStub();
+            new FakePersistentEntityUuidHandler();
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
-            new PersistentVariableCacheHandlerStub();
-    private final ItemFactory ITEM_FACTORY = new ItemFactoryStub();
-    private final Item ITEM = new ItemStub();
+            new FakePersistentVariableCacheHandler();
+    private final ItemFactory ITEM_FACTORY = new FakeItemFactory();
+    private final Item ITEM = new FakeItem();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final int NUM_CHARGES = 123;
     private final int NUM_IN_STACK = 456;
@@ -106,10 +106,10 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_WITH_CHARGES);
 
         assertNotNull(readItem);
-        assertSame(((PersistentEntityUuidHandlerStub) ID_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakePersistentEntityUuidHandler) ID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
-        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER)
+        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
         assertEquals(NUM_CHARGES, readItem.getCharges());
@@ -121,10 +121,10 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_STACKABLE);
 
         assertNotNull(readItem);
-        assertSame(((PersistentEntityUuidHandlerStub) ID_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakePersistentEntityUuidHandler) ID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
-        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER)
+        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
         assertEquals(NUM_IN_STACK, readItem.getNumberInStack());

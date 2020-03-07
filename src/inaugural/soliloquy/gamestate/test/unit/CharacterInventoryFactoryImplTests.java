@@ -1,23 +1,19 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterInventoryFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.ItemStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
-
-import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterInventoryFactoryImplTests {
-    private final Character CHARACTER = new CharacterStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
 
     private CharacterInventoryFactory _characterInventoryFactory;
 

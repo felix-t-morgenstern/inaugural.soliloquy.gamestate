@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterStatusEffectsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.AbilitySourceStub;
+import inaugural.soliloquy.gamestate.test.stubs.ElementStub;
+import inaugural.soliloquy.gamestate.test.spydoubles.StatusEffectResistanceCalculationSpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.ReadableMap;
@@ -16,18 +19,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterStatusEffectsImplTests {
     private CharacterStatusEffects _characterStatusEffects;
 
-    private final StatusEffectType STATUS_EFFECT_TYPE_1 = new StatusEffectTypeStub();
-    private final StatusEffectType STATUS_EFFECT_TYPE_2 = new StatusEffectTypeStub();
-    private final StatusEffectResistanceCalculationStub STATUS_EFFECT_RESISTANCE_CALCULATION =
-            new StatusEffectResistanceCalculationStub();
-    private final Character CHARACTER = new CharacterStub();
+    private final StatusEffectType STATUS_EFFECT_TYPE_1 = new FakeStatusEffectType();
+    private final StatusEffectType STATUS_EFFECT_TYPE_2 = new FakeStatusEffectType();
+    private final StatusEffectResistanceCalculationSpyDouble STATUS_EFFECT_RESISTANCE_CALCULATION =
+            new StatusEffectResistanceCalculationSpyDouble();
+    private final Character CHARACTER = new FakeCharacter();
     private final Element ELEMENT = new ElementStub();
     private final AbilitySource ABILITY_SOURCE = new AbilitySourceStub();
 
     @BeforeEach
     void setUp() {
         _characterStatusEffects = new CharacterStatusEffectsImpl(CHARACTER,
-                new MapFactoryStub(), STATUS_EFFECT_RESISTANCE_CALCULATION);
+                new FakeMapFactory(), STATUS_EFFECT_RESISTANCE_CALCULATION);
     }
 
     @Test
@@ -88,7 +91,7 @@ class CharacterStatusEffectsImplTests {
         assertThrows(IllegalStateException.class, _characterStatusEffects::clearStatusEffects);
 
         CharacterStatusEffects characterStatusEffects =
-                new CharacterStatusEffectsImpl(null, new MapFactoryStub(),
+                new CharacterStatusEffectsImpl(null, new FakeMapFactory(),
                         STATUS_EFFECT_RESISTANCE_CALCULATION);
         assertThrows(IllegalStateException.class,
                 () -> characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));

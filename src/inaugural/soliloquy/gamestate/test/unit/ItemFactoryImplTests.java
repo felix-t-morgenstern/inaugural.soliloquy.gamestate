@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.ItemFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.EntityUuidFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.EntityUuidFactory;
@@ -19,10 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ItemFactoryImplTests {
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
-    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
+    private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
+    private final PairFactory PAIR_FACTORY = new FakePairFactory();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
-    private final EntityUuid ID = new EntityUuidStub();
+    private final EntityUuid ID = new FakeEntityUuid();
     private final VariableCache DATA = new VariableCacheStub();
 
     private ItemFactory _itemFactory;
@@ -51,7 +54,7 @@ class ItemFactoryImplTests {
 
     @Test
     void testMake() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         String equipmentSlotType = "equipmentSlotType";
         Item item = _itemFactory.make(ITEM_TYPE, null);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
@@ -63,7 +66,7 @@ class ItemFactoryImplTests {
         assertNotNull(item);
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, item.id());
         assertSame(ITEM_TYPE, item.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), item.data());
+        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
@@ -72,7 +75,7 @@ class ItemFactoryImplTests {
 
     @Test
     void testMakeWithData() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         String equipmentSlotType = "equipmentSlotType";
         Item item = _itemFactory.make(ITEM_TYPE, DATA);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
@@ -93,7 +96,7 @@ class ItemFactoryImplTests {
 
     @Test
     void testMakeWithId() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         String equipmentSlotType = "equipmentSlotType";
         Item item = _itemFactory.make(ITEM_TYPE, null, ID);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
@@ -105,7 +108,7 @@ class ItemFactoryImplTests {
         assertNotNull(item);
         assertSame(ID, item.id());
         assertSame(ITEM_TYPE, item.type());
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), item.data());
+        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
@@ -114,7 +117,7 @@ class ItemFactoryImplTests {
 
     @Test
     void testMakeWithIdAndData() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         String equipmentSlotType = "equipmentSlotType";
         Item item = _itemFactory.make(ITEM_TYPE, DATA, ID);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);

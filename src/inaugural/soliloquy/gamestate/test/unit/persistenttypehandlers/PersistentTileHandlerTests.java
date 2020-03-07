@@ -1,8 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentTileHandler;
-import inaugural.soliloquy.gamestate.test.stubs.*;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.*;
+import inaugural.soliloquy.gamestate.test.stubs.SpriteStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
@@ -22,47 +24,47 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentTileHandlerTests {
-    private final TileFactory TILE_FACTORY = new TileFactoryStub();
+    private final TileFactory TILE_FACTORY = new FakeTileFactory();
     private final TileWallSegmentFactory TILE_WALL_SEGMENT_FACTORY =
-            new TileWallSegmentFactoryStub();
+            new FakeTileWallSegmentFactory();
 
-    private final PersistentValueTypeHandlerStub<Character> CHAR_HANDLER =
-            new PersistentCharacterHandlerStub();
-    private final PersistentValueTypeHandlerStub<Item> ITEM_HANDLER =
-            new PersistentItemHandlerStub();
-    private final PersistentValueTypeHandlerStub<TileFixture> FIXTURE_HANDLER =
-            new PersistentTileFixtureHandlerStub();
-    private final PersistentValueTypeHandlerStub<Sprite> SPRITE_HANDLER =
-            new PersistentSpriteHandlerStub();
+    private final FakePersistentValueTypeHandler<Character> CHAR_HANDLER =
+            new FakePersistentCharacterHandler();
+    private final FakePersistentValueTypeHandler<Item> ITEM_HANDLER =
+            new FakePersistentItemHandler();
+    private final FakePersistentValueTypeHandler<TileFixture> FIXTURE_HANDLER =
+            new FakePersistentTileFixtureHandler();
+    private final FakePersistentValueTypeHandler<Sprite> SPRITE_HANDLER =
+            new FakePersistentSpriteHandler();
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
-            new PersistentVariableCacheHandlerStub();
+            new FakePersistentVariableCacheHandler();
 
     private final int X = 123;
     private final int Y = 456;
     private final int HEIGHT = 789;
-    private final Character CHARACTER = new CharacterStub();
-    private final Item ITEM = new ItemStub();
-    private final TileFixture TILE_FIXTURE = new TileFixtureStub();
-    private final TileWallSegment TILE_WALL_SEGMENT = new TileWallSegmentStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final Item ITEM = new FakeItem();
+    private final TileFixture TILE_FIXTURE = new FakeTileFixture();
+    private final TileWallSegment TILE_WALL_SEGMENT = new FakeTileWallSegment();
     private final Sprite SPRITE = new SpriteStub();
     private final VariableCache DATA = new VariableCacheStub();
 
     private final String SEGMENT_TYPE_ID = "segmentTypeId";
-    private final WallSegmentType SEGMENT_TYPE = new WallSegmentTypeStub(SEGMENT_TYPE_ID);
+    private final WallSegmentType SEGMENT_TYPE = new FakeWallSegmentType(SEGMENT_TYPE_ID);
     private final HashMap<String, WallSegmentType> SEGMENT_TYPES = new HashMap<>();
 
     private final String MOVEMENT_EVENT_ID = "movementEventId";
     private final GameMovementEvent MOVEMENT_EVENT =
-            new GameMovementEventStub(MOVEMENT_EVENT_ID);
+            new FakeGameMovementEvent(MOVEMENT_EVENT_ID);
     private final HashMap<String,GameMovementEvent> MOVEMENT_EVENTS = new HashMap<>();
 
     private final String ABILITY_EVENT_ID = "abilityEventId";
     private final GameAbilityEvent ABILITY_EVENT =
-            new GameAbilityEventStub(ABILITY_EVENT_ID);
+            new FakeGameAbilityEvent(ABILITY_EVENT_ID);
     private final HashMap<String, GameAbilityEvent> ABILITY_EVENTS = new HashMap<>();
 
     private final String GROUND_TYPE_ID = "groundTypeId";
-    private final GroundType GROUND_TYPE = new GroundTypeStub(GROUND_TYPE_ID);
+    private final GroundType GROUND_TYPE = new FakeGroundType(GROUND_TYPE_ID);
     private final HashMap<String, GroundType> GROUND_TYPES = new HashMap<>();
 
     private final String WRITTEN_DATA = "{\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\",\"characters\":[{\"z\":111,\"entity\":\"Character0\"}],\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333,\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\",\"direction\":1,\"height\":444,\"z\":555,\"data\":\"VariableCache0\"}],\"movementEvents\":[\"movementEventId\"],\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666,\"entity\":\"Sprite0\"}],\"data\":\"VariableCache1\"}";
@@ -140,7 +142,7 @@ class PersistentTileHandlerTests {
 
     @Test
     void testWrite() {
-        Tile tile = new TileStub(X, Y, DATA);
+        Tile tile = new FakeTile(X, Y, DATA);
         tile.setHeight(HEIGHT);
         tile.setGroundType(GROUND_TYPE);
         tile.characters().add(CHARACTER, 111);
@@ -166,45 +168,45 @@ class PersistentTileHandlerTests {
         assertNotNull(readTile);
         assertEquals(X, readTile.location().getX());
         assertEquals(Y, readTile.location().getY());
-        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
                 readTile.data());
         assertEquals(HEIGHT, readTile.getHeight());
         assertSame(GROUND_TYPE, readTile.getGroundType());
 
         assertEquals(1, readTile.characters().size());
-        Character characterFromHandler = ((PersistentCharacterHandlerStub) CHAR_HANDLER)
+        Character characterFromHandler = ((FakePersistentCharacterHandler) CHAR_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.characters().contains(characterFromHandler));
-        assertEquals("Character0", ((PersistentCharacterHandlerStub) CHAR_HANDLER)
+        assertEquals("Character0", ((FakePersistentCharacterHandler) CHAR_HANDLER)
                 .READ_INPUTS.get(0));
         assertEquals(111, readTile.characters().getZIndex(characterFromHandler));
 
         assertEquals(1, readTile.items().size());
-        Item itemFromHandler = ((PersistentItemHandlerStub) ITEM_HANDLER)
+        Item itemFromHandler = ((FakePersistentItemHandler) ITEM_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.items().contains(itemFromHandler));
-        assertEquals("Item0", ((PersistentItemHandlerStub) ITEM_HANDLER)
+        assertEquals("Item0", ((FakePersistentItemHandler) ITEM_HANDLER)
                 .READ_INPUTS.get(0));
         assertEquals(222, readTile.items().getZIndex(itemFromHandler));
 
         assertEquals(1, readTile.fixtures().size());
-        TileFixture fixtureFromHandler = ((PersistentTileFixtureHandlerStub) FIXTURE_HANDLER)
+        TileFixture fixtureFromHandler = ((FakePersistentTileFixtureHandler) FIXTURE_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.fixtures().contains(fixtureFromHandler));
-        assertEquals("TileFixture0", ((PersistentTileFixtureHandlerStub) FIXTURE_HANDLER)
+        assertEquals("TileFixture0", ((FakePersistentTileFixtureHandler) FIXTURE_HANDLER)
                 .READ_INPUTS.get(0));
         assertEquals(333, readTile.fixtures().getZIndex(fixtureFromHandler));
 
         assertEquals(1, readTile.wallSegments().size());
         TileWallSegment segmentFromFactory =
-                ((TileWallSegmentFactoryStub) TILE_WALL_SEGMENT_FACTORY).FROM_FACTORY.get(0);
+                ((FakeTileWallSegmentFactory) TILE_WALL_SEGMENT_FACTORY).FROM_FACTORY.get(0);
         assertTrue(readTile.wallSegments().contains(segmentFromFactory));
         assertSame(SEGMENT_TYPE, segmentFromFactory.getType());
         assertSame(TileWallSegmentDirection.NORTH,
                 readTile.wallSegments().getDirection(segmentFromFactory));
         assertEquals(444, readTile.wallSegments().getHeight(segmentFromFactory));
         assertEquals(555, readTile.wallSegments().getZIndex(segmentFromFactory));
-        assertSame(((PersistentVariableCacheHandlerStub) DATA_HANDLER).READ_OUTPUTS.get(1),
+        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(1),
                 segmentFromFactory.data());
 
         assertEquals(1, readTile.movementEvents().size());
@@ -214,11 +216,11 @@ class PersistentTileHandlerTests {
         assertTrue(readTile.abilityEvents().contains(ABILITY_EVENT));
 
         assertEquals(1, readTile.sprites().size());
-        Sprite spriteFromHandler = ((PersistentSpriteHandlerStub) SPRITE_HANDLER)
+        Sprite spriteFromHandler = ((FakePersistentSpriteHandler) SPRITE_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.sprites().containsKey(spriteFromHandler));
         assertEquals(666, readTile.sprites().get(spriteFromHandler));
-        assertEquals("Sprite0", ((PersistentSpriteHandlerStub) SPRITE_HANDLER)
+        assertEquals("Sprite0", ((FakePersistentSpriteHandler) SPRITE_HANDLER)
                 .READ_INPUTS.get(0));
     }
 

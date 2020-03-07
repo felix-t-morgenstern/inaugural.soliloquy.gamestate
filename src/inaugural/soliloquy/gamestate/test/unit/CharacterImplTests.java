@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterEquipmentSlotsFactory;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -21,15 +23,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterImplTests {
     private Character _character;
 
-    private final EntityUuid ID = new EntityUuidStub("a94fad3f-483c-4bdb-b29a-72d36a489721");
-    private final CharacterType CHARACTER_TYPE = new CharacterTypeStub();
-    private final CharacterAIType AI_TYPE = new CharacterAITypeStub();
-    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new CharacterEventsFactoryStub();
-    private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new CharacterEquipmentSlotsFactoryStub();
-    private final CharacterInventoryFactory INVENTORY_FACTORY = new CharacterInventoryFactoryStub();
-    private final CharacterEntitiesOfTypeFactory ENTITIES_OF_TYPE_FACTORY = new CharacterEntitiesOfTypeFactoryStub();
-    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY = new CharacterVariableStatisticsFactoryStub();
-    private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new CharacterStatusEffectsFactoryStub();
+    private final EntityUuid ID = new FakeEntityUuid("a94fad3f-483c-4bdb-b29a-72d36a489721");
+    private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
+    private final CharacterAIType AI_TYPE = new FakeCharacterAIType();
+    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new FakeCharacterEventsFactory();
+    private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new FakeCharacterEquipmentSlotsFactory();
+    private final CharacterInventoryFactory INVENTORY_FACTORY = new FakeCharacterInventoryFactory();
+    private final CharacterEntitiesOfTypeFactory ENTITIES_OF_TYPE_FACTORY = new FakeCharacterEntitiesOfTypeFactory();
+    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY = new FakeCharacterVariableStatisticsFactory();
+    private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new FakeCharacterStatusEffectsFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
     @BeforeEach
@@ -38,8 +40,8 @@ class CharacterImplTests {
         _character = new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -55,8 +57,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 null,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -67,8 +69,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 null,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -80,7 +82,7 @@ class CharacterImplTests {
                 ID,
                 CHARACTER_TYPE,
                 null,
-                new MapFactoryStub(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -91,7 +93,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
+                new FakeCollectionFactory(),
                 null,
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -103,8 +105,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 null,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -115,8 +117,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 null,
                 INVENTORY_FACTORY,
@@ -127,8 +129,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 null,
@@ -139,8 +141,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -151,8 +153,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -163,8 +165,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -175,8 +177,8 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -197,8 +199,8 @@ class CharacterImplTests {
         Character character2 = new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new CollectionFactoryStub(),
-                new MapFactoryStub(),
+                new FakeCollectionFactory(),
+                new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
                 INVENTORY_FACTORY,
@@ -242,7 +244,7 @@ class CharacterImplTests {
 
     @Test
     void testSetAndGetSpriteSet() {
-        SpriteSet spriteSet = new SpriteSetStub();
+        SpriteSet spriteSet = new FakeSpriteSet();
         _character.setSpriteSet(spriteSet);
 
         assertEquals(spriteSet, _character.getSpriteSet());
@@ -269,7 +271,7 @@ class CharacterImplTests {
 
     @Test
     void testEquipment() {
-        assertSame(CharacterEquipmentSlotsFactoryStub.CHARACTER_EQUIPMENT_SLOTS,
+        assertSame(FakeCharacterEquipmentSlotsFactory.CHARACTER_EQUIPMENT_SLOTS,
                 _character.equipmentSlots());
     }
 
@@ -332,11 +334,11 @@ class CharacterImplTests {
 
     @Test
     void testAssignCharacterToTile() {
-        Tile tile = new TileStub();
+        Tile tile = new FakeTile();
         assertNull(_character.tile());
 
         // NB: Character.TILE should NOT be exposed, and calling Character.assignCharacterToTile
-        // violates the invariant condition; therefore, TileEntitiesStub calls
+        // violates the invariant condition; therefore, FakeTileEntities calls
         // Character.assignCharacterToTile indirectly, as it should be in production code
         tile.characters().add(_character);
 
@@ -346,14 +348,14 @@ class CharacterImplTests {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     void testDelete() {
-        Tile tile = new TileStub();
+        Tile tile = new FakeTile();
 
         tile.characters().add(_character);
 
-        CharacterEquipmentSlotsStub equipmentSlots =
-                (CharacterEquipmentSlotsStub) _character.equipmentSlots();
+        FakeCharacterEquipmentSlots equipmentSlots =
+                (FakeCharacterEquipmentSlots) _character.equipmentSlots();
 
-        CharacterInventoryStub inventory = (CharacterInventoryStub) _character.inventory();
+        FakeCharacterInventory inventory = (FakeCharacterInventory) _character.inventory();
 
         CharacterVariableStatistics variableStats = _character.variableStatistics();
 
@@ -370,14 +372,14 @@ class CharacterImplTests {
                 reactiveAbilities = _character.reactiveAbilities();
 
         assertFalse(_character.isDeleted());
-        assertFalse(((TileEntitiesStub)tile.characters()).REMOVED_ENTITIES
+        assertFalse(((FakeTileEntities)tile.characters()).REMOVED_ENTITIES
                 .contains(_character));
 
         _character.delete();
 
         assertTrue(_character.isDeleted());
         Character removedCharacter =
-                (Character) ((TileEntitiesStub)tile.characters()).REMOVED_ENTITIES.get(0);
+                (Character) ((FakeTileEntities)tile.characters()).REMOVED_ENTITIES.get(0);
         assertSame(_character, removedCharacter);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
@@ -401,7 +403,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.getDirection());
         assertThrows(IllegalStateException.class, () -> _character.setDirection(""));
         assertThrows(IllegalStateException.class, () -> _character.getSpriteSet());
-        assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
+        assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new FakeSpriteSet()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
         assertThrows(IllegalStateException.class, () -> _character.events());
@@ -424,9 +426,9 @@ class CharacterImplTests {
     @SuppressWarnings("rawtypes")
     @Test
     void testEnforceTileInvariant() {
-        TileStub tile = new TileStub();
+        FakeTile tile = new FakeTile();
         tile.characters().add(_character);
-        ((TileEntitiesStub)tile.characters()).ENTITIES.remove(_character);
+        ((FakeTileEntities)tile.characters()).ENTITIES.remove(_character);
 
         assertThrows(IllegalStateException.class, () -> _character.type());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
@@ -437,7 +439,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.getDirection());
         assertThrows(IllegalStateException.class, () -> _character.setDirection(""));
         assertThrows(IllegalStateException.class, () -> _character.getSpriteSet());
-        assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new SpriteSetStub()));
+        assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new FakeSpriteSet()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
         assertThrows(IllegalStateException.class, () -> _character.events());

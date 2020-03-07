@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentRecurringTimerHandler;
-import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.RecurringTimerStub;
-import inaugural.soliloquy.gamestate.test.stubs.RegistryStub;
-import inaugural.soliloquy.gamestate.test.stubs.TimerFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
+import inaugural.soliloquy.gamestate.test.fakes.FakeRecurringTimer;
+import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTimerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -16,13 +16,13 @@ import soliloquy.specs.gamestate.factories.TimerFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentRecurringTimerTests {
-    private final TimerFactory TIMER_FACTORY = new TimerFactoryStub();
+    private final TimerFactory TIMER_FACTORY = new FakeTimerFactory();
 
     private final String RECURRING_TIMER_ID = "recurringTimerId";
 
     private final String ACTION_ID = "actionId";
-    private final Action ACTION = new ActionStub(ACTION_ID);
-    private final Registry<Action> ACTIONS = new RegistryStub<>();
+    private final Action ACTION = new FakeAction(ACTION_ID);
+    private final Registry<Action> ACTIONS = new FakeRegistry<>();
 
     private final int ROUND_MODULO = 456;
     private final int ROUND_OFFSET = 123;
@@ -63,7 +63,7 @@ class PersistentRecurringTimerTests {
 
     @Test
     void testWrite() {
-        RecurringTimer recurringTimer = new RecurringTimerStub(RECURRING_TIMER_ID, ACTION);
+        RecurringTimer recurringTimer = new FakeRecurringTimer(RECURRING_TIMER_ID, ACTION);
         recurringTimer.setRoundModulo(ROUND_MODULO);
         recurringTimer.setRoundOffset(ROUND_OFFSET);
 

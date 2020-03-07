@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterEquipmentSlotsFactory;
+import inaugural.soliloquy.gamestate.test.stubs.EntityUuidFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -18,24 +21,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterFactoryImplTests {
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY =
-            new CharacterEventsFactoryStub();
+            new FakeCharacterEventsFactory();
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOT_FACTORY =
-            new CharacterEquipmentSlotsFactoryStub();
+            new FakeCharacterEquipmentSlotsFactory();
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY =
-            new CharacterInventoryFactoryStub();
+            new FakeCharacterInventoryFactory();
     private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY =
-            new CharacterVariableStatisticsFactoryStub();
+            new FakeCharacterVariableStatisticsFactory();
     private final CharacterEntitiesOfTypeFactory ENTITIES_FACTORY =
-            new CharacterEntitiesOfTypeFactoryStub();
+            new FakeCharacterEntitiesOfTypeFactory();
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY =
-            new CharacterStatusEffectsFactoryStub();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+            new FakeCharacterStatusEffectsFactory();
+    private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final VariableCache DATA = new VariableCacheStub();
-    private final CharacterType CHARACTER_TYPE = new CharacterTypeStub();
-    private final EntityUuid ENTITY_UUID = new EntityUuidStub();
+    private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
+    private final EntityUuid ENTITY_UUID = new FakeEntityUuid();
 
     private CharacterFactory _characterFactory;
 

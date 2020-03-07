@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import inaugural.soliloquy.gamestate.test.stubs.EquipmentTypeStub;
 import soliloquy.specs.common.entities.Function;
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.VariableCache;

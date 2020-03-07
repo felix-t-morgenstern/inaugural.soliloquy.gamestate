@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.KeyPressListenerImpl;
-import inaugural.soliloquy.gamestate.test.stubs.KeyBindingContextStub;
-import inaugural.soliloquy.gamestate.test.stubs.KeyBindingStub;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeKeyBindingContext;
+import inaugural.soliloquy.gamestate.test.fakes.FakeKeyBinding;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyPressListenerImplTests {
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final Panel SOURCE = new Panel();
 
     private KeyPressListener _keyPressListener;
@@ -48,10 +48,10 @@ class KeyPressListenerImplTests {
 
     @Test
     void testKeyPressed() throws InterruptedException {
-        KeyBindingStub keyBinding = new KeyBindingStub();
+        FakeKeyBinding keyBinding = new FakeKeyBinding();
         keyBinding.boundCharacters().add('a');
 
-        KeyBindingContext keyBindingContext = new KeyBindingContextStub();
+        KeyBindingContext keyBindingContext = new FakeKeyBindingContext();
         keyBindingContext.bindings().add(keyBinding);
 
         _keyPressListener.contexts().put(0,keyBindingContext);
@@ -68,10 +68,10 @@ class KeyPressListenerImplTests {
 
     @Test
     void testKeyReleased() throws InterruptedException {
-        KeyBindingStub keyBinding = new KeyBindingStub();
+        FakeKeyBinding keyBinding = new FakeKeyBinding();
         keyBinding.boundCharacters().add('a');
 
-        KeyBindingContext keyBindingContext = new KeyBindingContextStub();
+        KeyBindingContext keyBindingContext = new FakeKeyBindingContext();
         keyBindingContext.bindings().add(keyBinding);
 
         _keyPressListener.contexts().put(0,keyBindingContext);
@@ -88,10 +88,10 @@ class KeyPressListenerImplTests {
 
     @Test
     void testKeyTyped() throws InterruptedException {
-        KeyBindingStub keyBinding = new KeyBindingStub();
+        FakeKeyBinding keyBinding = new FakeKeyBinding();
         keyBinding.boundCharacters().add('a');
 
-        KeyBindingContext keyBindingContext = new KeyBindingContextStub();
+        KeyBindingContext keyBindingContext = new FakeKeyBindingContext();
         keyBindingContext.bindings().add(keyBinding);
 
         _keyPressListener.contexts().put(0,keyBindingContext);
@@ -108,16 +108,16 @@ class KeyPressListenerImplTests {
 
     @Test
     void testContextBlocksLowerContextEvents() throws InterruptedException {
-        KeyBindingStub lowerKeyBinding = new KeyBindingStub();
+        FakeKeyBinding lowerKeyBinding = new FakeKeyBinding();
         lowerKeyBinding.boundCharacters().add('a');
 
-        KeyBindingContext lowerKeyBindingContext = new KeyBindingContextStub();
+        KeyBindingContext lowerKeyBindingContext = new FakeKeyBindingContext();
         lowerKeyBindingContext.bindings().add(lowerKeyBinding);
 
-        KeyBindingStub upperKeyBinding = new KeyBindingStub();
+        FakeKeyBinding upperKeyBinding = new FakeKeyBinding();
         upperKeyBinding.boundCharacters().add('a');
 
-        KeyBindingContext upperKeyBindingContext = new KeyBindingContextStub();
+        KeyBindingContext upperKeyBindingContext = new FakeKeyBindingContext();
         upperKeyBindingContext.bindings().add(upperKeyBinding);
 
         upperKeyBindingContext.setBlocksAllLowerBindings(true);
@@ -158,16 +158,16 @@ class KeyPressListenerImplTests {
 
     @Test
     void testBindingBlocksLowerBindingEvents() throws InterruptedException {
-        KeyBindingStub lowerKeyBinding = new KeyBindingStub();
+        FakeKeyBinding lowerKeyBinding = new FakeKeyBinding();
         lowerKeyBinding.boundCharacters().add('a');
 
-        KeyBindingContext lowerKeyBindingContext = new KeyBindingContextStub();
+        KeyBindingContext lowerKeyBindingContext = new FakeKeyBindingContext();
         lowerKeyBindingContext.bindings().add(lowerKeyBinding);
 
-        KeyBindingStub upperKeyBinding = new KeyBindingStub();
+        FakeKeyBinding upperKeyBinding = new FakeKeyBinding();
         upperKeyBinding.boundCharacters().add('a');
 
-        KeyBindingContext upperKeyBindingContext = new KeyBindingContextStub();
+        KeyBindingContext upperKeyBindingContext = new FakeKeyBindingContext();
         upperKeyBindingContext.bindings().add(upperKeyBinding);
 
         upperKeyBinding.setBlocksLowerBindings(true);

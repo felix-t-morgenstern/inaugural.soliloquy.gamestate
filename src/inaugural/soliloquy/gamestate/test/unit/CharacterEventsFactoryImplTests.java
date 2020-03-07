@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterEventsFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.GameCharacterEventStub;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeGameCharacterEvent;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class CharacterEventsFactoryImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private CharacterEventsFactory _characterEventsFactory;
 
@@ -38,9 +38,9 @@ class CharacterEventsFactoryImplTests {
 
     @Test
     void testMake() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         String eventStubId = "eventStubId";
-        GameCharacterEventStub eventStub = new GameCharacterEventStub(eventStubId);
+        FakeGameCharacterEvent eventStub = new FakeGameCharacterEvent(eventStubId);
         String trigger = "trigger";
 
         CharacterEvents characterEvents = _characterEventsFactory.make(character);

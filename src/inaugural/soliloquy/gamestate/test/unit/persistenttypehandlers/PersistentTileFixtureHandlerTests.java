@@ -1,11 +1,12 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentTileFixtureHandler;
-import inaugural.soliloquy.gamestate.test.stubs.*;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentEntityUuidHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentItemHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentValueTypeHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentVariableCacheHandlerStub;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentEntityUuidHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentItemHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentValueTypeHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentVariableCacheHandler;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
@@ -24,14 +25,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class PersistentTileFixtureHandlerTests {
     private final Map<String, FixtureType> FIXTURE_TYPES = new HashMap<>();
     private final String FIXTURE_TYPE_ID = "fixtureTypeId";
-    private final FixtureType FIXTURE_TYPE = new FixtureTypeStub(FIXTURE_TYPE_ID);
-    private final TileFixtureFactory TILE_FIXTURE_FACTORY = new TileFixtureFactoryStub();
+    private final FixtureType FIXTURE_TYPE = new FakeFixtureType(FIXTURE_TYPE_ID);
+    private final TileFixtureFactory TILE_FIXTURE_FACTORY = new FakeTileFixtureFactory();
     private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER =
-            new PersistentEntityUuidHandlerStub();
+            new FakePersistentEntityUuidHandler();
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
-            new PersistentVariableCacheHandlerStub();
-    private final PersistentValueTypeHandlerStub<Item> ITEM_HANDLER =
-            new PersistentItemHandlerStub();
+            new FakePersistentVariableCacheHandler();
+    private final FakePersistentValueTypeHandler<Item> ITEM_HANDLER =
+            new FakePersistentItemHandler();
     private final int PIXEL_OFFSET_X = 123;
     private final int PIXEL_OFFSET_Y = 456;
     private final String NAME = "fixtureName";
@@ -84,12 +85,12 @@ class PersistentTileFixtureHandlerTests {
 
     @Test
     void testWrite() {
-        EntityUuid id = new EntityUuidStub();
+        EntityUuid id = new FakeEntityUuid();
         VariableCache data = new VariableCacheStub();
-        Item item1 = new ItemStub();
-        Item item2 = new ItemStub();
-        Item item3 = new ItemStub();
-        TileFixture tileFixture = new TileFixtureStub(id, FIXTURE_TYPE, data);
+        Item item1 = new FakeItem();
+        Item item2 = new FakeItem();
+        Item item3 = new FakeItem();
+        TileFixture tileFixture = new FakeTileFixture(id, FIXTURE_TYPE, data);
         tileFixture.pixelOffset().setX(PIXEL_OFFSET_X);
         tileFixture.pixelOffset().setY(PIXEL_OFFSET_Y);
         tileFixture.items().add(item1);
@@ -113,19 +114,19 @@ class PersistentTileFixtureHandlerTests {
         TileFixture tileFixture = _persistentTileFixtureHandler.read(WRITTEN_VALUE);
 
         assertNotNull(tileFixture);
-        assertSame(((PersistentEntityUuidHandlerStub)ID_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakePersistentEntityUuidHandler)ID_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.id());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((PersistentVariableCacheHandlerStub)DATA_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.data());
         assertEquals(PIXEL_OFFSET_X, tileFixture.pixelOffset().getX());
         assertEquals(PIXEL_OFFSET_Y, tileFixture.pixelOffset().getY());
         assertEquals(3, tileFixture.items().representation().size());
-        assertTrue(tileFixture.items().contains(((PersistentItemHandlerStub)ITEM_HANDLER)
+        assertTrue(tileFixture.items().contains(((FakePersistentItemHandler)ITEM_HANDLER)
                 .READ_OUTPUTS.get(0)));
-        assertTrue(tileFixture.items().contains(((PersistentItemHandlerStub)ITEM_HANDLER)
+        assertTrue(tileFixture.items().contains(((FakePersistentItemHandler)ITEM_HANDLER)
                 .READ_OUTPUTS.get(1)));
-        assertTrue(tileFixture.items().contains(((PersistentItemHandlerStub)ITEM_HANDLER)
+        assertTrue(tileFixture.items().contains(((FakePersistentItemHandler)ITEM_HANDLER)
                 .READ_OUTPUTS.get(2)));
         assertEquals(NAME, tileFixture.getName());
     }

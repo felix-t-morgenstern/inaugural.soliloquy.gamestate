@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.PairFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileWallSegmentStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakePairFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileWallSegment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentsImplTests {
-    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
-    private final Tile TILE = new TileStub();
-    private final TileWallSegment TILE_WALL_SEGMENT = new TileWallSegmentStub();
-    private final TileWallSegment TILE_WALL_SEGMENT_2 = new TileWallSegmentStub();
-    private final TileWallSegment TILE_WALL_SEGMENT_3 = new TileWallSegmentStub();
+    private final PairFactory PAIR_FACTORY = new FakePairFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
+    private final Tile TILE = new FakeTile();
+    private final TileWallSegment TILE_WALL_SEGMENT = new FakeTileWallSegment();
+    private final TileWallSegment TILE_WALL_SEGMENT_2 = new FakeTileWallSegment();
+    private final TileWallSegment TILE_WALL_SEGMENT_3 = new FakeTileWallSegment();
 
     private TileWallSegments _tileWallSegments;
 
@@ -89,9 +89,9 @@ class TileWallSegmentsImplTests {
         assertEquals(TileWallSegmentDirection.NOT_FOUND,
                 _tileWallSegments.getDirection(TILE_WALL_SEGMENT));
 
-        TileWallSegment northTileWallSegment = new TileWallSegmentStub();
-        TileWallSegment northwestTileWallSegment = new TileWallSegmentStub();
-        TileWallSegment westTileWallSegment = new TileWallSegmentStub();
+        TileWallSegment northTileWallSegment = new FakeTileWallSegment();
+        TileWallSegment northwestTileWallSegment = new FakeTileWallSegment();
+        TileWallSegment westTileWallSegment = new FakeTileWallSegment();
 
 
         _tileWallSegments.add(TileWallSegmentDirection.NORTH, northTileWallSegment, 0);
@@ -108,9 +108,9 @@ class TileWallSegmentsImplTests {
 
     @Test
     void testAddTileWallSegmentInAnotherTileWallSegments() {
-        TileWallSegments previousTileWallSegments = new TileWallSegmentsImpl(new TileStub(),
+        TileWallSegments previousTileWallSegments = new TileWallSegmentsImpl(new FakeTile(),
                 PAIR_FACTORY, MAP_FACTORY);
-        TileWallSegment tileWallSegment = new TileWallSegmentStub();
+        TileWallSegment tileWallSegment = new FakeTileWallSegment();
         previousTileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment, 0);
 
         assertThrows(IllegalArgumentException.class,
@@ -333,7 +333,7 @@ class TileWallSegmentsImplTests {
 
     @Test
     void testTileWallSegmentInCorrectTileWallSegmentsInvariant() {
-        TileWallSegmentStub tileWallSegment = new TileWallSegmentStub();
+        FakeTileWallSegment tileWallSegment = new FakeTileWallSegment();
         _tileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment, 0);
 
         tileWallSegment._tile = null;
@@ -344,7 +344,7 @@ class TileWallSegmentsImplTests {
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegments.getDirection(tileWallSegment));
 
-        tileWallSegment._tile = new TileStub();
+        tileWallSegment._tile = new FakeTile();
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegments.remove(tileWallSegment));
         assertThrows(IllegalStateException.class,

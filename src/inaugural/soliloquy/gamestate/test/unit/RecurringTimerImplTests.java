@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.RecurringTimerImpl;
-import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.RoundManagerStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
+import inaugural.soliloquy.gamestate.test.fakes.FakeRoundManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -14,8 +14,8 @@ class RecurringTimerImplTests {
     private RecurringTimer _recurringTimer;
 
     private final String TIMER_ID = "TimerId";
-    private final Action<Void> TIMER_ACTION = new ActionStub<>();
-    private final RoundManagerStub ROUND_MANAGER = new RoundManagerStub();
+    private final Action<Void> TIMER_ACTION = new FakeAction<>();
+    private final FakeRoundManager ROUND_MANAGER = new FakeRoundManager();
 
     @BeforeEach
     void setUp() {
@@ -59,7 +59,7 @@ class RecurringTimerImplTests {
     @Test
     void testFire() {
         _recurringTimer.fire();
-        assertTrue(((ActionStub)TIMER_ACTION)._actionRun);
+        assertTrue(((FakeAction)TIMER_ACTION)._actionRun);
     }
 
     @Test

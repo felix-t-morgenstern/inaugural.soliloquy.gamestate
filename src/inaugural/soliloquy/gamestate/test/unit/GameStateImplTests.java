@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.GameStateImpl;
+import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,17 +16,17 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameStateImplTests {
-    private final Party PARTY = new PartyStub();
+    private final Party PARTY = new FakeParty();
     private final VariableCache PERSISTENT_VARIABLE_CACHE =
             new VariableCacheStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
-    private final RegistryFactory REGISTRY_FACTORY = new RegistryFactoryStub();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
+    private final RegistryFactory REGISTRY_FACTORY = new FakeRegistryFactory();
     private final GameZonesRepo GAME_ZONES_REPO = new GameZonesRepoStub();
-    private final CameraFactoryStub CAMERA_FACTORY = new CameraFactoryStub();
-    private final RoundManager ROUND_MANAGER = new RoundManagerStub();
-    private final ItemFactory ITEM_FACTORY = new ItemFactoryStub();
-    private final CharacterFactory CHARACTER_FACTORY = new CharacterFactoryStub();
-    private final TimerFactoryStub TIMER_FACTORY = new TimerFactoryStub();
+    private final FakeCameraFactory CAMERA_FACTORY = new FakeCameraFactory();
+    private final RoundManager ROUND_MANAGER = new FakeRoundManager();
+    private final ItemFactory ITEM_FACTORY = new FakeItemFactory();
+    private final CharacterFactory CHARACTER_FACTORY = new FakeCharacterFactory();
+    private final FakeTimerFactory TIMER_FACTORY = new FakeTimerFactory();
     private final Function<RoundManager, TimerFactory> TIMER_FACTORY_FACTORY = r -> {
         _roundManagerForTimerFactoryFactory = r;
         return TIMER_FACTORY;
@@ -281,7 +282,7 @@ class GameStateImplTests {
 
     @Test
     void testGetAndSetGameZone() {
-        final GameZone gameZone = new GameZoneStub();
+        final GameZone gameZone = new FakeGameZone();
 
         assertNull(_gameState.getCurrentGameZone());
 
@@ -292,9 +293,9 @@ class GameStateImplTests {
 
     @Test
     void testCamera() {
-        _gameState.setCurrentGameZone(new GameZoneStub());
+        _gameState.setCurrentGameZone(new FakeGameZone());
 
-        assertSame(CameraFactoryStub.CAMERA, _gameState.camera());
+        assertSame(FakeCameraFactory.CAMERA, _gameState.camera());
         assertSame(CAMERA_FACTORY.GET_CURRENT_GAME_ZONE.get(), _gameState.getCurrentGameZone());
     }
 

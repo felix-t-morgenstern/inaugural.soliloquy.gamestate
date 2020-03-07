@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentImplTests {
     private final VariableCache DATA = new VariableCacheStub();
-    private final WallSegmentType WALL_SEGMENT_TYPE = new WallSegmentTypeStub();
+    private final WallSegmentType WALL_SEGMENT_TYPE = new FakeWallSegmentType();
 
     private TileWallSegment _tileWallSegment;
 
@@ -50,8 +51,8 @@ class TileWallSegmentImplTests {
 
     @Test
     void testAssignTileWallSegmentsToTileAfterAddingToTileWallSegmentsAndGetTile() {
-        Tile tile = new TileStub();
-        ((TileWallSegmentsStub)tile.wallSegments()).SEGMENTS
+        Tile tile = new FakeTile();
+        ((FakeTileWallSegments)tile.wallSegments()).SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).put(_tileWallSegment,
                 new TileWallSegmentDimensions() {
                     @Override
@@ -103,7 +104,7 @@ class TileWallSegmentImplTests {
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getType());
         assertThrows(IllegalStateException.class,
-                () -> _tileWallSegment.setType(new WallSegmentTypeStub()));
+                () -> _tileWallSegment.setType(new FakeWallSegmentType()));
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.tile());
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegment.assignTileAfterAddedToTileEntitiesOfType(null));
@@ -114,15 +115,15 @@ class TileWallSegmentImplTests {
 
     @Test
     void testAggregateAssignmentInvariant() {
-        Tile tile = new TileStub();
+        Tile tile = new FakeTile();
         tile.wallSegments().add(TileWallSegmentDirection.NORTH, _tileWallSegment, 0);
 
-        ((TileWallSegmentsStub)tile.wallSegments()).SEGMENTS
+        ((FakeTileWallSegments)tile.wallSegments()).SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).remove(_tileWallSegment);
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getType());
         assertThrows(IllegalStateException.class,
-                () -> _tileWallSegment.setType(new WallSegmentTypeStub()));
+                () -> _tileWallSegment.setType(new FakeWallSegmentType()));
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.tile());
         assertThrows(IllegalStateException.class,
                 () -> _tileWallSegment.assignTileAfterAddedToTileEntitiesOfType(null));

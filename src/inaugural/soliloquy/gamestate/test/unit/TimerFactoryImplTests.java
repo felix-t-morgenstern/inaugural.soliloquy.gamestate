@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TimerFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.RoundManagerStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
+import inaugural.soliloquy.gamestate.test.fakes.FakeRoundManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -13,7 +13,7 @@ import soliloquy.specs.gamestate.factories.TimerFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TimerFactoryImplTests {
-    private final RoundManagerStub ROUND_MANAGER = new RoundManagerStub();
+    private final FakeRoundManager ROUND_MANAGER = new FakeRoundManager();
 
     private TimerFactory _timerFactory;
 
@@ -33,7 +33,7 @@ class TimerFactoryImplTests {
     @Test
     void testMakeOneTimeTimer() {
         String timerId = "TimerId";
-        Action<Void> action = new ActionStub<>();
+        Action<Void> action = new FakeAction<>();
         long roundWhenGoesOff = 123123L;
 
         OneTimeTimer oneTimeTimer =
@@ -46,7 +46,7 @@ class TimerFactoryImplTests {
     @Test
     void testMakeRecurringTimer() {
         String timerId = "TimerId";
-        Action<Void> action = new ActionStub<>();
+        Action<Void> action = new FakeAction<>();
         int roundModulo = 123;
         int roundOffset = 12;
 

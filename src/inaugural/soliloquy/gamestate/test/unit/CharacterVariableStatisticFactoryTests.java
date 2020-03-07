@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterVariableStatisticFactory;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -14,12 +16,12 @@ import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticFactoryTests {
-    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
+    private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final CharacterStatisticCalculation CALCULATION =
-            new CharacterStatisticCalculationStub();
-    private final Character CHARACTER = new CharacterStub();
+            new CharacterStatisticCalculationSpyDouble();
+    private final Character CHARACTER = new FakeCharacter();
     private final CharacterVariableStatisticType TYPE =
-            new CharacterVariableStatisticTypeStub("type");
+            new FakeCharacterVariableStatisticType("type");
 
     private CharacterVariableStatisticFactory _characterVariableStatisticFactory;
 
@@ -45,7 +47,7 @@ class CharacterVariableStatisticFactoryTests {
         assertNotNull(characterVariableStat);
         assertSame(TYPE, characterVariableStat.type());
         assertSame(DATA_FACTORY.Created.get(0), characterVariableStat.data());
-        // TODO: Consider some tests of Character assignment via CharacterStub.delete
+        // TODO: Consider some tests of Character assignment via FakeCharacter.delete
     }
 
     @Test

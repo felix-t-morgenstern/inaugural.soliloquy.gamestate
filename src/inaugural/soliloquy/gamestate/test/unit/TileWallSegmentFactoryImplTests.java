@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileWallSegmentFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import soliloquy.specs.gamestate.factories.TileWallSegmentFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentFactoryImplTests {
-    private VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
+    private VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private VariableCache DATA = new VariableCacheStub();
 
     private TileWallSegmentFactory _tileWallSegmentFactory;
@@ -34,7 +34,7 @@ class TileWallSegmentFactoryImplTests {
         TileWallSegment segment = _tileWallSegmentFactory.make();
 
         assertNotNull(segment);
-        assertSame(((VariableCacheFactoryStub)DATA_FACTORY).Created.get(0), segment.data());
+        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), segment.data());
     }
 
     @Test

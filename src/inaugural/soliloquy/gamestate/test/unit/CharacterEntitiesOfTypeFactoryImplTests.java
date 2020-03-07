@@ -2,10 +2,10 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.common.test.stubs.HasIdAndNameStub;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterEntityStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterEntity;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -20,19 +20,19 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEntitiesOfTypeFactoryImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final VariableCacheFactoryStub DATA_FACTORY = new VariableCacheFactoryStub();
-    private final CharacterEntityStub FACTORY_OUTPUT = new CharacterEntityStub(null, null);
-    private final Function<Character,Function<HasId,Function<VariableCache,CharacterEntityStub>>>
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
+    private final FakeCharacterEntity FACTORY_OUTPUT = new FakeCharacterEntity(null, null);
+    private final Function<Character,Function<HasId,Function<VariableCache, FakeCharacterEntity>>>
             FACTORY = c -> t -> d -> {
                 _characterPassedIntoFactory = c;
                 _typePassedIntoFactory = t;
                 _dataPassedIntoFactory = d;
                 return FACTORY_OUTPUT;
             };
-    private final Character CHARACTER = new CharacterStub();
-    private final CharacterEntityStub ARCHETYPE =
-            new CharacterEntityStub(null, new HasIdAndNameStub("", ""));
+    private final Character CHARACTER = new FakeCharacter();
+    private final FakeCharacterEntity ARCHETYPE =
+            new FakeCharacterEntity(null, new HasIdAndNameStub("", ""));
 
     private Character _characterPassedIntoFactory;
     private HasId _typePassedIntoFactory;
@@ -70,12 +70,12 @@ class CharacterEntitiesOfTypeFactoryImplTests {
         _factory.registerFactory(ARCHETYPE, FACTORY);
         HasId type = new HasIdAndNameStub("", "");
 
-        @SuppressWarnings("unchecked") CharacterEntitiesOfType<HasId, CharacterEntityStub>
+        @SuppressWarnings("unchecked") CharacterEntitiesOfType<HasId, FakeCharacterEntity>
                 entities = _factory.make(CHARACTER, ARCHETYPE);
 
         entities.add(type);
 
-        CharacterEntityStub fromEntities = entities.get(type);
+        FakeCharacterEntity fromEntities = entities.get(type);
 
         assertSame(FACTORY_OUTPUT, fromEntities);
         assertSame(CHARACTER, _characterPassedIntoFactory);

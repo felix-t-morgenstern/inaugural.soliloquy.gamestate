@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterVariableStatisticImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStatisticCalculationStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterVariableStatisticTypeStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterVariableStatisticType;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterVariableStatisticImplTests {
     private CharacterVariableStatistic _characterVariableStatistic;
 
-    private final Character CHARACTER = new CharacterStub();
+    private final Character CHARACTER = new FakeCharacter();
     private final CharacterVariableStatisticType CHARACTER_VARIABLE_STATISTIC_TYPE =
-            new CharacterVariableStatisticTypeStub("VariableStatisticType");
+            new FakeCharacterVariableStatisticType("VariableStatisticType");
     private final VariableCache DATA = new VariableCacheStub();
     private final CharacterStatisticCalculation CHARACTER_STATISTIC_CALCULATION =
-            new CharacterStatisticCalculationStub();
+            new CharacterStatisticCalculationSpyDouble();
 
     @BeforeEach
     void setUp() {
@@ -61,15 +61,15 @@ class CharacterVariableStatisticImplTests {
     void testCalculate() {
         _characterVariableStatistic.calculate();
 
-        assertSame(CHARACTER, CharacterStatisticCalculationStub._character);
+        assertSame(CHARACTER, CharacterStatisticCalculationSpyDouble._character);
         assertSame(CHARACTER_VARIABLE_STATISTIC_TYPE,
-                CharacterStatisticCalculationStub._statisticType);
-        assertEquals(CharacterStatisticCalculationStub.VALUE,
+                CharacterStatisticCalculationSpyDouble._statisticType);
+        assertEquals(CharacterStatisticCalculationSpyDouble.VALUE,
                 _characterVariableStatistic.totalValue());
         ReadableMap<String,Integer> representation =
                 _characterVariableStatistic.representation();
-        assertEquals(CharacterStatisticCalculationStub.MODIFIERS.size(), representation.size());
-        CharacterStatisticCalculationStub.MODIFIERS.forEach(p -> {
+        assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS.size(), representation.size());
+        CharacterStatisticCalculationSpyDouble.MODIFIERS.forEach(p -> {
             assertTrue(representation.containsKey(p.getItem1()));
             assertTrue(representation.containsValue(p.getItem2()));
         });

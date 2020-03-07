@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileEntitiesImpl;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileEntitiesImplTests {
-    private final Tile TILE = new TileStub();
+    private final Tile TILE = new FakeTile();
     private final Item ARCHETYPE = new ItemArchetype();
-    private final Item ITEM = new ItemStub();
-    private final Item ITEM_2 = new ItemStub();
-    private final Item ITEM_3 = new ItemStub();
-    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final Item ITEM = new FakeItem();
+    private final Item ITEM_2 = new FakeItem();
+    private final Item ITEM_3 = new FakeItem();
+    private final PairFactory PAIR_FACTORY = new FakePairFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private TileEntitiesImpl<Item> _tileEntities;
 
@@ -63,27 +63,27 @@ class TileEntitiesImplTests {
 
     @Test
     void testAddItemAlreadyElsewhereInVariousLocations() {
-        ((ItemStub) ITEM)._equipmentCharacter = new CharacterStub();
-        ((ItemStub) ITEM)._equipmentSlotType = "EquipmentSlotType";
+        ((FakeItem) ITEM)._equipmentCharacter = new FakeCharacter();
+        ((FakeItem) ITEM)._equipmentSlotType = "EquipmentSlotType";
 
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
 
-        ((ItemStub) ITEM)._equipmentCharacter = null;
-        ((ItemStub) ITEM)._equipmentSlotType = null;
-        ((ItemStub) ITEM)._inventoryCharacter = new CharacterStub();
+        ((FakeItem) ITEM)._equipmentCharacter = null;
+        ((FakeItem) ITEM)._equipmentSlotType = null;
+        ((FakeItem) ITEM)._inventoryCharacter = new FakeCharacter();
 
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
 
-        ((ItemStub) ITEM)._inventoryCharacter = null;
-        ((ItemStub) ITEM)._tile = new TileStub();
+        ((FakeItem) ITEM)._inventoryCharacter = null;
+        ((FakeItem) ITEM)._tile = new FakeTile();
 
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
 
-        ((ItemStub) ITEM)._tile = null;
-        ((ItemStub) ITEM)._tileFixture = new TileFixtureStub();
+        ((FakeItem) ITEM)._tile = null;
+        ((FakeItem) ITEM)._tileFixture = new FakeTileFixture();
 
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
         assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
@@ -246,7 +246,7 @@ class TileEntitiesImplTests {
     @Test
     void testItemAssignmentInvariant() {
         _tileEntities.add(ITEM);
-        ((ItemStub)ITEM)._tile = null;
+        ((FakeItem)ITEM)._tile = null;
 
         assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM,0));

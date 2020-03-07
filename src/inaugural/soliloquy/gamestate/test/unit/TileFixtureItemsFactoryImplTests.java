@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileFixtureItemsFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.TileFixtureStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -12,8 +12,8 @@ import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureItemsFactoryImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final TileFixture TILE_FIXTURE = new TileFixtureStub();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final TileFixture TILE_FIXTURE = new FakeTileFixture();
 
     private TileFixtureItemsFactory _tileFixtureItemsFactory;
 

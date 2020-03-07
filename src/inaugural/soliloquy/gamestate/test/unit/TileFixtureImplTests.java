@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.TileFixtureImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CoordinateFactory;
@@ -21,17 +22,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class TileFixtureImplTests {
     private TileFixture _tileFixture;
 
-    private final EntityUuid ID = new EntityUuidStub();
-    private final FixtureType TYPE = new FixtureTypeStub();
-    private final CoordinateFactory COORDINATE_FACTORY = new CoordinateFactoryStub();
+    private final EntityUuid ID = new FakeEntityUuid();
+    private final FixtureType TYPE = new FakeFixtureType();
+    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
-            new TileFixtureItemsFactoryStub();
+            new FakeTileFixtureItemsFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
     @BeforeEach
     void setUp() {
         _tileFixture = new TileFixtureImpl(ID, TYPE, COORDINATE_FACTORY,
-                new CollectionFactoryStub(), TILE_FIXTURE_ITEMS_FACTORY, DATA);
+                new FakeCollectionFactory(), TILE_FIXTURE_ITEMS_FACTORY, DATA);
     }
 
     @Test
@@ -82,12 +83,12 @@ class TileFixtureImplTests {
     @Test
     void testTileFixtureItems() {
         assertNotNull(_tileFixture.items());
-        assertSame(_tileFixture, ((TileFixtureItemsStub)_tileFixture.items()).TILE_FIXTURE);
+        assertSame(_tileFixture, ((FakeTileFixtureItems)_tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
     void testAssignTileFixtureToTile() {
-        Tile tile = new TileStub();
+        Tile tile = new FakeTile();
         assertNull(_tileFixture.tile());
 
         // NB: TileFixture.TILE should NOT be exposed, and calling TileFixture.assignCharacterToTile
@@ -105,11 +106,11 @@ class TileFixtureImplTests {
 
     @Test
     void testDelete() {
-        Tile tile = new TileStub();
+        Tile tile = new FakeTile();
         tile.fixtures().add(_tileFixture);
         TileFixtureItems containedItems = _tileFixture.items();
         HashMap<TileFixture,Integer> entities =
-                ((TileEntitiesStub<TileFixture>)tile.fixtures()).ENTITIES;
+                ((FakeTileEntities<TileFixture>)tile.fixtures()).ENTITIES;
         int originalNumberOfContainedItems = entities.size();
 
         _tileFixture.delete();
@@ -147,9 +148,9 @@ class TileFixtureImplTests {
 
     @Test
     void testContainingTileInvariant() {
-        Tile tile = new TileStub();
+        Tile tile = new FakeTile();
         tile.fixtures().add(_tileFixture);
-        ((TileEntitiesStub<TileFixture>)tile.fixtures()).ENTITIES.remove(_tileFixture);
+        ((FakeTileEntities<TileFixture>)tile.fixtures()).ENTITIES.remove(_tileFixture);
 
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.type());

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.KeyBindingImpl;
-import inaugural.soliloquy.gamestate.test.stubs.ActionStub;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -12,10 +12,10 @@ import soliloquy.specs.gamestate.entities.KeyBinding;
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final Action<Void> KEY_PRESS_ACTION = new ActionStub<>();
-    private final Action<Void> KEY_RELEASE_ACTION = new ActionStub<>();
-    private final Action<Void> KEY_TYPE_ACTION = new ActionStub<>();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final Action<Void> KEY_PRESS_ACTION = new FakeAction<>();
+    private final Action<Void> KEY_RELEASE_ACTION = new FakeAction<>();
+    private final Action<Void> KEY_TYPE_ACTION = new FakeAction<>();
 
     private KeyBinding _keyBinding;
 

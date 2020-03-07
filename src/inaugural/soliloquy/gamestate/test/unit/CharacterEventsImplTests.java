@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterEventsImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.GameCharacterEventStub;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeGameCharacterEvent;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -18,9 +18,9 @@ import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEventsImplTests {
-    private final Character CHARACTER = new CharacterStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private CharacterEvents _characterEvents;
 
@@ -53,10 +53,10 @@ class CharacterEventsImplTests {
         String event3Id = "event3Id";
         String event4Id = "event4Id";
 
-        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
-        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
-        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
-        GameCharacterEvent event4 = new GameCharacterEventStub(event4Id);
+        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
+        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
+        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
+        GameCharacterEvent event4 = new FakeGameCharacterEvent(event4Id);
 
         String trigger1 = "trigger1";
         String trigger2 = "trigger2";
@@ -83,7 +83,7 @@ class CharacterEventsImplTests {
     void testAddEventTwice() {
         String event1Id = "event1Id";
 
-        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
+        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
 
         String trigger1 = "trigger1";
 
@@ -105,9 +105,9 @@ class CharacterEventsImplTests {
         String event2Id = "event2Id";
         String event3Id = "event3Id";
 
-        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
-        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
-        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
+        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
+        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
 
         String trigger1 = "trigger1";
         String trigger2 = "trigger2";
@@ -138,9 +138,9 @@ class CharacterEventsImplTests {
         String event2Id = "event2Id";
         String event3Id = "event3Id";
 
-        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
-        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
-        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
+        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
+        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
 
         String trigger1 = "trigger1";
         String trigger2 = "trigger2";
@@ -163,9 +163,9 @@ class CharacterEventsImplTests {
         String event2Id = "event2Id";
         String event3Id = "event3Id";
 
-        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
-        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
-        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
+        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
+        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
 
         String trigger1 = "trigger1";
         String trigger2 = "trigger2";
@@ -191,9 +191,9 @@ class CharacterEventsImplTests {
         String event2Id = "event2Id";
         String event3Id = "event3Id";
 
-        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
-        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
-        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
+        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
+        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
 
         String trigger1 = "trigger1";
         String trigger2 = "trigger2";
@@ -217,9 +217,9 @@ class CharacterEventsImplTests {
         String event2Id = "event2Id";
         String event3Id = "event3Id";
 
-        GameCharacterEvent event1 = new GameCharacterEventStub(event1Id);
-        GameCharacterEvent event2 = new GameCharacterEventStub(event2Id);
-        GameCharacterEvent event3 = new GameCharacterEventStub(event3Id);
+        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
+        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
+        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
 
         String trigger1 = "trigger1";
         String trigger2 = "trigger2";
@@ -249,9 +249,9 @@ class CharacterEventsImplTests {
         String event2Id = "event2Id";
         String event3Id = "event3Id";
 
-        GameCharacterEventStub event1 = new GameCharacterEventStub(event1Id);
-        GameCharacterEventStub event2 = new GameCharacterEventStub(event2Id);
-        GameCharacterEventStub event3 = new GameCharacterEventStub(event3Id);
+        FakeGameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
+        FakeGameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
+        FakeGameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
 
         String trigger1 = "trigger1";
         String trigger2 = "trigger2";
@@ -278,7 +278,7 @@ class CharacterEventsImplTests {
     void testDeletedInvariant() {
         String event1Id = "event1Id";
 
-        GameCharacterEventStub event1 = new GameCharacterEventStub(event1Id);
+        FakeGameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
 
         String trigger1 = "trigger1";
 
@@ -295,7 +295,7 @@ class CharacterEventsImplTests {
     void testCharacterDeletedInvariant() {
         String event1Id = "event1Id";
 
-        GameCharacterEventStub event1 = new GameCharacterEventStub(event1Id);
+        FakeGameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
 
         String trigger1 = "trigger1";
 

@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.PartyImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CollectionFactoryStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ class PartyImplTests {
 
     @BeforeEach
     void setUp() {
-        _party = new PartyImpl(new CollectionFactoryStub(), DATA);
+        _party = new PartyImpl(new FakeCollectionFactory(), DATA);
     }
 
     @Test

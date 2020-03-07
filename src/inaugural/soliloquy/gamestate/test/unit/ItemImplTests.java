@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.ItemImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.stubs.EntityUuidFactoryStub;
+import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.EntityUuidFactory;
@@ -18,24 +21,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemImplTests {
     private Item _item;
 
-    private final EntityUuid ID = new EntityUuidStub("64fd6bf1-4e57-492a-a8fb-5f1494f7ddf0");
+    private final EntityUuid ID = new FakeEntityUuid("64fd6bf1-4e57-492a-a8fb-5f1494f7ddf0");
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final VariableCache DATA = new VariableCacheStub();
-    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
+    private final PairFactory PAIR_FACTORY = new FakePairFactory();
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
 
-    private final Character CHARACTER = new CharacterStub();
+    private final Character CHARACTER = new FakeCharacter();
     private final CharacterEquipmentSlots CHARACTER_EQUIPMENT_SLOTS =
-            ((CharacterStub) CHARACTER).EQUIPMENT;
+            ((FakeCharacter) CHARACTER).EQUIPMENT;
     private final String CHARACTER_EQUIPMENT_SLOT_TYPE = "slotType";
-    private final CharacterInventory CHARACTER_INVENTORY = ((CharacterStub) CHARACTER).INVENTORY;
-    private final Tile TILE = new TileStub();
-    private final TileFixture TILE_FIXTURE = new TileFixtureStub();
+    private final CharacterInventory CHARACTER_INVENTORY = ((FakeCharacter) CHARACTER).INVENTORY;
+    private final Tile TILE = new FakeTile();
+    private final TileFixture TILE_FIXTURE = new FakeTileFixture();
 
     @BeforeEach
     void setUp() {
-        CharacterEquipmentSlotsStub.ITEM_IN_SLOT_RESULT_OVERRIDE = null;
-        CharacterInventoryStub.OVERRIDE_CONTAINS = null;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = null;
+        FakeCharacterInventory.OVERRIDE_CONTAINS = null;
         _item = new ItemImpl(ID, ITEM_TYPE, DATA, PAIR_FACTORY, ENTITY_UUID_FACTORY);
     }
 
@@ -149,9 +152,9 @@ class ItemImplTests {
 
     @Test
     void testAssignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot() {
-        CharacterEquipmentSlotsStub.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
 
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
 
         _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 character, CHARACTER_EQUIPMENT_SLOT_TYPE);
@@ -165,7 +168,7 @@ class ItemImplTests {
 
     @Test
     void testAssignCharacterInventoryToItemAfterAddingToCharacterInventory() {
-        CharacterInventoryStub.OVERRIDE_CONTAINS = true;
+        FakeCharacterInventory.OVERRIDE_CONTAINS = true;
 
         _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER);
 
@@ -183,7 +186,7 @@ class ItemImplTests {
 
     @Test
     void testAssignTileFixtureAfterAddedItemToTileFixtureItems() {
-        TileFixtureItemsStub tileFixtureItems = new TileFixtureItemsStub(null);
+        FakeTileFixtureItems tileFixtureItems = new FakeTileFixtureItems(null);
 
         _item.assignTileFixtureAfterAddedItemToTileFixtureItems(
                 tileFixtureItems.TILE_FIXTURE);
@@ -259,7 +262,7 @@ class ItemImplTests {
 
     @Test
     void testAssignToNullCharacterEquipmentSlotsNullifiesGetEquipmentSlot() {
-        CharacterEquipmentSlotsStub.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
 
         _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE);
@@ -272,7 +275,7 @@ class ItemImplTests {
 
     @Test
     void testAssignToNullEquipmentSlotTypeNullifiesGetEquipmentSlot() {
-        CharacterEquipmentSlotsStub.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
 
         _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE);
@@ -285,7 +288,7 @@ class ItemImplTests {
 
     @Test
     void testAssignToEmptyEquipmentSlotTypeNullifiesGetEquipmentSlot() {
-        CharacterEquipmentSlotsStub.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
 
         _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE);
@@ -370,42 +373,42 @@ class ItemImplTests {
         CHARACTER_INVENTORY.add(_item);
         assertTrue(CHARACTER_INVENTORY.contains(_item));
         int originalCharacterInventorySize =
-                ((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.size();
+                ((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.size();
 
         _item.delete();
 
         assertFalse(CHARACTER_INVENTORY.contains(_item));
-        assertFalse(((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.contains(_item));
+        assertFalse(((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.contains(_item));
         assertEquals(originalCharacterInventorySize - 1,
-                ((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.size());
+                ((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.size());
     }
 
     @Test
     void testDeleteRemovesItemFromTileFixtureItems() {
         TILE_FIXTURE.items().add(_item);
         assertTrue(TILE_FIXTURE.items().contains(_item));
-        int originalTileFixtureSize = ((TileFixtureItemsStub)TILE_FIXTURE.items())._items.size();
+        int originalTileFixtureSize = ((FakeTileFixtureItems)TILE_FIXTURE.items())._items.size();
 
         _item.delete();
 
         assertFalse(TILE_FIXTURE.items().contains(_item));
-        assertFalse(((TileFixtureItemsStub)TILE_FIXTURE.items())._items.contains(_item));
+        assertFalse(((FakeTileFixtureItems)TILE_FIXTURE.items())._items.contains(_item));
         assertEquals(originalTileFixtureSize - 1,
-                ((TileFixtureItemsStub)TILE_FIXTURE.items())._items.size());
+                ((FakeTileFixtureItems)TILE_FIXTURE.items())._items.size());
     }
 
     @Test
     void testDeleteRemovesItemFromTileItems() {
         TILE.items().add(_item);
         assertTrue(TILE.items().contains(_item));
-        int originalTileFixtureSize = ((TileEntitiesStub) TILE.items()).ENTITIES.size();
+        int originalTileFixtureSize = ((FakeTileEntities) TILE.items()).ENTITIES.size();
 
         _item.delete();
 
         assertFalse(TILE.items().contains(_item));
-        assertFalse(((TileEntitiesStub) TILE.items()).ENTITIES.containsKey(_item));
+        assertFalse(((FakeTileEntities) TILE.items()).ENTITIES.containsKey(_item));
         assertEquals(originalTileFixtureSize - 1,
-                ((TileEntitiesStub) TILE.items()).ENTITIES.size());
+                ((FakeTileEntities) TILE.items()).ENTITIES.size());
     }
 
     @Test
@@ -441,7 +444,7 @@ class ItemImplTests {
     @Test
     void testItemNotFoundInCharacterEquipmentSlotInvariant() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
-        CharacterEquipmentSlotsStub.EQUIPMENT_SLOTS.removeByKey(CHARACTER_EQUIPMENT_SLOT_TYPE);
+        FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.removeByKey(CHARACTER_EQUIPMENT_SLOT_TYPE);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
@@ -472,7 +475,7 @@ class ItemImplTests {
     @Test
     void testItemNotFoundInCharacterInventoryInvariant() {
         CHARACTER_INVENTORY.add(_item);
-        ((CharacterInventoryStub)CHARACTER_INVENTORY).ITEMS.remove(_item);
+        ((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.remove(_item);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
@@ -503,7 +506,7 @@ class ItemImplTests {
     @Test
     void testItemNotFoundInTileItemsInvariant() {
         TILE.items().add(_item);
-        ((TileEntitiesStub) TILE.items()).ENTITIES.remove(_item);
+        ((FakeTileEntities) TILE.items()).ENTITIES.remove(_item);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
@@ -533,9 +536,9 @@ class ItemImplTests {
 
     @Test
     void testItemNotFoundInTileFixtureItemsInvariant() {
-        TileFixtureStub tileFixture = new TileFixtureStub();
+        FakeTileFixture tileFixture = new FakeTileFixture();
         tileFixture.items().add(_item);
-        ((TileFixtureItemsStub)tileFixture.items())._items.remove(_item);
+        ((FakeTileFixtureItems)tileFixture.items())._items.remove(_item);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());

@@ -1,9 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentGameZoneHandler;
-import inaugural.soliloquy.gamestate.test.stubs.*;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentTileHandlerStub;
-import inaugural.soliloquy.gamestate.test.stubs.persistenttypehandlers.PersistentVariableCacheHandlerStub;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentTileHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers.FakePersistentVariableCacheHandler;
+import inaugural.soliloquy.gamestate.test.spydoubles.GameZoneFactorySpyDouble;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
@@ -18,16 +20,16 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentGameZoneHandlerTests {
-    private final GameZoneFactoryStub GAME_ZONE_FACTORY = new GameZoneFactoryStub();
-    private final PersistentTileHandlerStub TILE_HANDLER = new PersistentTileHandlerStub();
-    private final PersistentVariableCacheHandlerStub DATA_HANDLER =
-            new PersistentVariableCacheHandlerStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
+    private final GameZoneFactorySpyDouble GAME_ZONE_FACTORY = new GameZoneFactorySpyDouble();
+    private final FakePersistentTileHandler TILE_HANDLER = new FakePersistentTileHandler();
+    private final FakePersistentVariableCacheHandler DATA_HANDLER =
+            new FakePersistentVariableCacheHandler();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
     private final HashMap<String, Action> ACTIONS = new HashMap<>();
     private final String ON_ENTRY_ACTION_ID = "onEntryActionId";
-    private final Action ON_ENTRY_ACTION = new VoidActionStub(ON_ENTRY_ACTION_ID);
+    private final Action ON_ENTRY_ACTION = new FakeVoidAction(ON_ENTRY_ACTION_ID);
     private final String ON_EXIT_ACTION_ID = "onExitActionId";
-    private final Action ON_EXIT_ACTION = new VoidActionStub(ON_EXIT_ACTION_ID);
+    private final Action ON_EXIT_ACTION = new FakeVoidAction(ON_EXIT_ACTION_ID);
     private final String ID = "id";
     private final String TYPE = "type";
     private final VariableCache DATA = new VariableCacheStub();
@@ -70,10 +72,10 @@ class PersistentGameZoneHandlerTests {
         Tile[][] tiles = new Tile[3][3];
         for(int x = 0; x < tiles.length; x++) {
             for(int y = 0; y < tiles[0].length; y++){
-                tiles[x][y] = new TileStub();
+                tiles[x][y] = new FakeTile();
             }
         }
-        GameZone gameZone = new GameZoneStub(ID, TYPE, tiles, DATA);
+        GameZone gameZone = new FakeGameZone(ID, TYPE, tiles, DATA);
         gameZone.setName(NAME);
         gameZone.onEntry().add(ON_ENTRY_ACTION);
         gameZone.onExit().add(ON_EXIT_ACTION);

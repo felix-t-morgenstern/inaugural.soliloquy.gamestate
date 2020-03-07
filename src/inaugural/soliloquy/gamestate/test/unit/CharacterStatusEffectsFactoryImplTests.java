@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterStatusEffectsFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.CharacterStub;
-import inaugural.soliloquy.gamestate.test.stubs.MapFactoryStub;
-import inaugural.soliloquy.gamestate.test.stubs.StatusEffectResistanceCalculationStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
+import inaugural.soliloquy.gamestate.test.spydoubles.StatusEffectResistanceCalculationSpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
@@ -14,10 +14,10 @@ import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterStatusEffectsFactoryImplTests {
-    private final Character CHARACTER = new CharacterStub();
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
+    private final Character CHARACTER = new FakeCharacter();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION =
-            new StatusEffectResistanceCalculationStub();
+            new StatusEffectResistanceCalculationSpyDouble();
 
     private CharacterStatusEffectsFactory _characterStatusEffectsFactory;
 

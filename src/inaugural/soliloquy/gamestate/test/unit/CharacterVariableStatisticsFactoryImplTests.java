@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterVariableStatisticsFactoryImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -16,11 +16,11 @@ import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticsFactoryImplTests {
-    private final MapFactory MAP_FACTORY = new MapFactoryStub();
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final VariableCacheFactory DATA_FACTORY = new VariableCacheFactoryStub();
-    private final CharacterVariableStatisticFactoryStub ENTITY_FACTORY =
-            new CharacterVariableStatisticFactoryStub();
+    private final MapFactory MAP_FACTORY = new FakeMapFactory();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
+    private final FakeCharacterVariableStatisticFactory ENTITY_FACTORY =
+            new FakeCharacterVariableStatisticFactory();
 
     private CharacterVariableStatisticsFactory _characterVariableStatisticsFactory;
 
@@ -49,7 +49,7 @@ class CharacterVariableStatisticsFactoryImplTests {
 
     @Test
     void testMake() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
 
         CharacterVariableStatistics characterVariableStatistics =
                 _characterVariableStatisticsFactory.make(character);
@@ -57,7 +57,7 @@ class CharacterVariableStatisticsFactoryImplTests {
         assertNotNull(characterVariableStatistics);
 
         String typeId = "typeId";
-        CharacterVariableStatisticType type = new CharacterVariableStatisticTypeStub(typeId);
+        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType(typeId);
         characterVariableStatistics.add(type);
 
         CharacterVariableStatistic characterVariableStatistic =
@@ -65,9 +65,9 @@ class CharacterVariableStatisticsFactoryImplTests {
 
         assertNotNull(characterVariableStatistic);
         assertSame(character,
-                ((CharacterVariableStatisticStub)characterVariableStatistic)._character);
+                ((FakeCharacterVariableStatistic)characterVariableStatistic)._character);
         assertEquals(type,
-                ((CharacterVariableStatisticStub)characterVariableStatistic)._type);
+                ((FakeCharacterVariableStatistic)characterVariableStatistic)._type);
     }
 
     @Test

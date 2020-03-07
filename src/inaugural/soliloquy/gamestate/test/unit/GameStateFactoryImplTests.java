@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.GameStateFactoryImpl;
+import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,16 +17,16 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameStateFactoryImplTests {
-    private final Party PARTY = new PartyStub();
+    private final Party PARTY = new FakeParty();
     private final VariableCache DATA = new VariableCacheStub();
-    private final MapFactoryStub MAP_FACTORY = new MapFactoryStub();
-    private final RegistryFactoryStub REGISTRY_FACTORY = new RegistryFactoryStub();
+    private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
+    private final FakeRegistryFactory REGISTRY_FACTORY = new FakeRegistryFactory();
     private final GameZonesRepoStub GAME_ZONES_REPO = new GameZonesRepoStub();
-    private final CameraFactoryStub CAMERA_FACTORY = new CameraFactoryStub();
-    private final RoundManagerStub ROUND_MANAGER = new RoundManagerStub();
-    private final ItemFactoryStub ITEM_FACTORY = new ItemFactoryStub();
-    private final CharacterFactoryStub CHARACTER_FACTORY = new CharacterFactoryStub();
-    private final TimerFactoryStub TIMER_FACTORY = new TimerFactoryStub();
+    private final FakeCameraFactory CAMERA_FACTORY = new FakeCameraFactory();
+    private final FakeRoundManager ROUND_MANAGER = new FakeRoundManager();
+    private final FakeItemFactory ITEM_FACTORY = new FakeItemFactory();
+    private final FakeCharacterFactory CHARACTER_FACTORY = new FakeCharacterFactory();
+    private final FakeTimerFactory TIMER_FACTORY = new FakeTimerFactory();
     private final Function<RoundManager, TimerFactory> TIMER_FACTORY_FACTORY = r -> {
         _roundManagerForTimerFactoryFactory = r;
         return TIMER_FACTORY;

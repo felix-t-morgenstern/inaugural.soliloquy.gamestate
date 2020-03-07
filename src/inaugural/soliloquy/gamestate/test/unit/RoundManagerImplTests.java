@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.RoundManagerImpl;
-import inaugural.soliloquy.gamestate.test.stubs.*;
+import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.spydoubles.RoundEndHandlingSpyDouble;
+import inaugural.soliloquy.gamestate.test.spydoubles.TurnHandlingSpyDouble;
+import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CollectionFactory;
@@ -21,13 +24,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RoundManagerImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new CollectionFactoryStub();
-    private final PairFactory PAIR_FACTORY = new PairFactoryStub();
-    private final VariableCacheFactoryStub VARIABLE_CACHE_FACTORY = new VariableCacheFactoryStub();
-    private final ActiveCharactersProviderStub ACTIVE_CHARACTERS_PROVIDER =
-            new ActiveCharactersProviderStub();
-    private final TurnHandlingStub TURN_HANDLING = new TurnHandlingStub();
-    private final RoundEndHandlingStub ROUND_END_HANDLING = new RoundEndHandlingStub();
+    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final PairFactory PAIR_FACTORY = new FakePairFactory();
+    private final FakeVariableCacheFactory VARIABLE_CACHE_FACTORY = new FakeVariableCacheFactory();
+    private final FakeActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER =
+            new FakeActiveCharactersProvider();
+    private final TurnHandlingSpyDouble TURN_HANDLING = new TurnHandlingSpyDouble();
+    private final RoundEndHandlingSpyDouble ROUND_END_HANDLING = new RoundEndHandlingSpyDouble();
 
     private RoundManager _roundManager;
 
@@ -74,9 +77,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testSetAndGetNewCharacterPositionInQueue() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character1, 0);
         _roundManager.setCharacterPositionInQueue(character2, 1);
@@ -89,9 +92,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testSetCharacterPositionWithRoundData() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         VariableCache roundData1 = new VariableCacheStub();
         VariableCache roundData2 = new VariableCacheStub();
@@ -112,9 +115,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testQueueSize() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
         _roundManager.setCharacterPositionInQueue(character1, 0);
         _roundManager.setCharacterPositionInQueue(character2, 1);
         _roundManager.setCharacterPositionInQueue(character3, 2);
@@ -126,7 +129,7 @@ public class RoundManagerImplTests {
 
     @Test
     void testCharacterRoundData() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character, 0);
 
@@ -135,7 +138,7 @@ public class RoundManagerImplTests {
 
     @Test
     void testCharacterRoundDataPairArchetypes() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character, 0);
 
@@ -146,9 +149,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testSetCharacterPositionDisplacesOtherCharacters() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character1, 0);
         _roundManager.setCharacterPositionInQueue(character2, 1);
@@ -159,9 +162,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testPlaceCharacterAtBackOfQueue() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character1, 0);
         _roundManager.setCharacterPositionInQueue(character2, 1);
@@ -172,9 +175,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testMoveCharacterToBackOfQueue() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character1, 0);
         _roundManager.setCharacterPositionInQueue(character2, 1);
@@ -188,9 +191,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testMoveToMiddleOfQueue() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character1, 0);
         _roundManager.setCharacterPositionInQueue(character2, 1);
@@ -204,7 +207,7 @@ public class RoundManagerImplTests {
 
     @Test
     void testDataNotCreatedForExistingCharacter() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         _roundManager.setCharacterPositionInQueue(character, 0);
         VariableCache initialData = VARIABLE_CACHE_FACTORY.Created.get(0);
 
@@ -220,16 +223,16 @@ public class RoundManagerImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _roundManager.setCharacterPositionInQueue(null, 0));
         assertThrows(IllegalArgumentException.class,
-                () -> _roundManager.setCharacterPositionInQueue(new CharacterStub(), -1));
+                () -> _roundManager.setCharacterPositionInQueue(new FakeCharacter(), -1));
         assertThrows(IllegalArgumentException.class,
                 () -> _roundManager.getCharacterPositionInQueue(null));
         assertThrows(IllegalArgumentException.class,
                 () -> _roundManager.setCharacterPositionInQueue(null, 0, roundData));
         assertThrows(IllegalArgumentException.class,
-                () -> _roundManager.setCharacterPositionInQueue(new CharacterStub(), -1,
+                () -> _roundManager.setCharacterPositionInQueue(new FakeCharacter(), -1,
                         roundData));
         assertThrows(IllegalArgumentException.class,
-                () -> _roundManager.setCharacterPositionInQueue(new CharacterStub(), 0, null));
+                () -> _roundManager.setCharacterPositionInQueue(new FakeCharacter(), 0, null));
     }
 
     @Test
@@ -239,7 +242,7 @@ public class RoundManagerImplTests {
 
     @Test
     void testCharacterIsInQueue() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         _roundManager.setCharacterPositionInQueue(character, 0);
 
         assertTrue(_roundManager.characterIsInQueue(character));
@@ -252,7 +255,7 @@ public class RoundManagerImplTests {
 
     @Test
     void testRemoveCharacterFromQueue() {
-        Character character = new CharacterStub();
+        Character character = new FakeCharacter();
         _roundManager.setCharacterPositionInQueue(character, 0);
         VariableCache initialData = VARIABLE_CACHE_FACTORY.Created.get(0);
 
@@ -267,9 +270,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testClearQueue() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
         _roundManager.setCharacterPositionInQueue(character1, 0);
         VariableCache initialData1 = VARIABLE_CACHE_FACTORY.Created.get(0);
         _roundManager.setCharacterPositionInQueue(character2, 0);
@@ -298,9 +301,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testCharacterQueueRepresentation() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
         _roundManager.setCharacterPositionInQueue(character1, Integer.MAX_VALUE);
         VariableCache initialData1 = VARIABLE_CACHE_FACTORY.Created.get(0);
         _roundManager.setCharacterPositionInQueue(character2, Integer.MAX_VALUE);
@@ -327,8 +330,8 @@ public class RoundManagerImplTests {
 
     @Test
     void testEndActiveCharacterTurnAndActiveCharacter() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
 
         _roundManager.setCharacterPositionInQueue(character1, Integer.MAX_VALUE);
         _roundManager.setCharacterPositionInQueue(character2, Integer.MAX_VALUE);
@@ -381,9 +384,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testOneTimeTimersRepresentation() {
-        OneTimeTimer oneTimeTimer1 = new OneTimeTimerStub();
-        OneTimeTimer oneTimeTimer2 = new OneTimeTimerStub();
-        OneTimeTimer oneTimeTimer3 = new OneTimeTimerStub();
+        OneTimeTimer oneTimeTimer1 = new FakeOneTimeTimer();
+        OneTimeTimer oneTimeTimer2 = new FakeOneTimeTimer();
+        OneTimeTimer oneTimeTimer3 = new FakeOneTimeTimer();
 
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
@@ -407,9 +410,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testRecurringTimersRepresentation() {
-        RecurringTimer recurringTimer1 = new RecurringTimerStub();
-        RecurringTimer recurringTimer2 = new RecurringTimerStub();
-        RecurringTimer recurringTimer3 = new RecurringTimerStub();
+        RecurringTimer recurringTimer1 = new FakeRecurringTimer();
+        RecurringTimer recurringTimer2 = new FakeRecurringTimer();
+        RecurringTimer recurringTimer3 = new FakeRecurringTimer();
 
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
@@ -436,32 +439,32 @@ public class RoundManagerImplTests {
         final int roundNumber = 123;
         _roundManager.setRoundNumber(roundNumber);
 
-        RecurringTimerStub recurringTimer1 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer1 = new FakeRecurringTimer();
         recurringTimer1.setRoundModulo(2);
         recurringTimer1.setRoundOffset(0);
         recurringTimer1.setPriority(0);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
-        RecurringTimerStub recurringTimer2 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer2 = new FakeRecurringTimer();
         recurringTimer2.setRoundModulo(4);
         recurringTimer2.setRoundOffset(0);
         recurringTimer2.setPriority(1);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
-        RecurringTimerStub recurringTimer3 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer3 = new FakeRecurringTimer();
         recurringTimer3.setRoundModulo(4);
         recurringTimer3.setRoundOffset(1);
         recurringTimer3.setPriority(2);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
-        RecurringTimerStub recurringTimer4 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer4 = new FakeRecurringTimer();
         recurringTimer4.setRoundModulo(5);
         recurringTimer4.setRoundOffset(0);
         recurringTimer4.setPriority(3);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer4);
 
-        OneTimeTimerStub oneTimeTimer1 = new OneTimeTimerStub();
+        FakeOneTimeTimer oneTimeTimer1 = new FakeOneTimeTimer();
         oneTimeTimer1.setRoundWhenGoesOff(roundNumber+1);
         oneTimeTimer1.setPriority(4);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
-        OneTimeTimerStub oneTimeTimer2 = new OneTimeTimerStub();
+        FakeOneTimeTimer oneTimeTimer2 = new FakeOneTimeTimer();
         oneTimeTimer2.setRoundWhenGoesOff(roundNumber+2);
         oneTimeTimer2.setPriority(5);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
@@ -507,9 +510,9 @@ public class RoundManagerImplTests {
         final int roundNumber = 123;
         _roundManager.setRoundNumber(roundNumber);
 
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         VariableCache roundData1 = new VariableCacheStub();
         VariableCache roundData2 = new VariableCacheStub();
@@ -520,38 +523,38 @@ public class RoundManagerImplTests {
         _roundManager.setCharacterPositionInQueue(character3, 2, roundData3);
 
         // Should fire TWICE
-        RecurringTimerStub recurringTimer1 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer1 = new FakeRecurringTimer();
         recurringTimer1.setRoundModulo(2);
         recurringTimer1.setRoundOffset(0);
         recurringTimer1.setPriority(0);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
         // Should fire
-        RecurringTimerStub recurringTimer2 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer2 = new FakeRecurringTimer();
         recurringTimer2.setRoundModulo(4);
         recurringTimer2.setRoundOffset(0);
         recurringTimer2.setPriority(1);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
         // Should fire
-        RecurringTimerStub recurringTimer3 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer3 = new FakeRecurringTimer();
         recurringTimer3.setRoundModulo(4);
         recurringTimer3.setRoundOffset(1);
         recurringTimer3.setPriority(2);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
         // Should NOT fire
-        RecurringTimerStub recurringTimer4 = new RecurringTimerStub();
+        FakeRecurringTimer recurringTimer4 = new FakeRecurringTimer();
         recurringTimer4.setRoundModulo(5);
         recurringTimer4.setRoundOffset(2);
         recurringTimer4.setPriority(3);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer4);
 
         // Should fire
-        OneTimeTimerStub oneTimeTimer1 = new OneTimeTimerStub(
+        FakeOneTimeTimer oneTimeTimer1 = new FakeOneTimeTimer(
                 ((RoundManagerImpl)_roundManager)::removeOneTimeTimer);
         oneTimeTimer1.setRoundWhenGoesOff(roundNumber+1);
         oneTimeTimer1.setPriority(4);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
         // Should NOT fire
-        OneTimeTimerStub oneTimeTimer2 = new OneTimeTimerStub(
+        FakeOneTimeTimer oneTimeTimer2 = new FakeOneTimeTimer(
                 ((RoundManagerImpl)_roundManager)::removeOneTimeTimer);
         oneTimeTimer2.setRoundWhenGoesOff(roundNumber+4);
         oneTimeTimer2.setPriority(5);
@@ -643,17 +646,17 @@ public class RoundManagerImplTests {
         _roundManager.setRoundNumber(initialRoundNumber);
         final int roundsToAdvance = 37;
 
-        RecurringTimer recurringTimer1 = new RecurringTimerStub();
+        RecurringTimer recurringTimer1 = new FakeRecurringTimer();
         recurringTimer1.setRoundModulo(1);
         recurringTimer1.setRoundOffset(0);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
 
-        RecurringTimer recurringTimer2 = new RecurringTimerStub();
+        RecurringTimer recurringTimer2 = new FakeRecurringTimer();
         recurringTimer2.setRoundModulo(10);
         recurringTimer2.setRoundOffset(2);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
 
-        RecurringTimer recurringTimer3 = new RecurringTimerStub();
+        RecurringTimer recurringTimer3 = new FakeRecurringTimer();
         recurringTimer3.setRoundModulo(10);
         recurringTimer3.setRoundOffset(3);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
@@ -682,9 +685,9 @@ public class RoundManagerImplTests {
 
     @Test
     void testIterator() {
-        Character character1 = new CharacterStub();
-        Character character2 = new CharacterStub();
-        Character character3 = new CharacterStub();
+        Character character1 = new FakeCharacter();
+        Character character2 = new FakeCharacter();
+        Character character3 = new FakeCharacter();
 
         VariableCache roundData1 = new VariableCacheStub();
         VariableCache roundData2 = new VariableCacheStub();
