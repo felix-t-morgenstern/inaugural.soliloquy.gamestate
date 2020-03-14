@@ -30,12 +30,12 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
     }
 
     @Override
-    public void assignActionAfterAdding(Consumer<TEntity> actionAfterAdding) {
+    public void initializeActionAfterAdding(Consumer<TEntity> actionAfterAdding) {
         _actionAfterAdding = actionAfterAdding;
     }
 
     @Override
-    public void assignActionAfterRemoving(Consumer<TEntity> actionAfterRemoving) {
+    public void initializeActionAfterRemoving(Consumer<TEntity> actionAfterRemoving) {
         _actionAfterRemoving = actionAfterRemoving;
     }
 

@@ -92,11 +92,11 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                 }
                 TILES[x][y] = tiles[x][y];
                 tiles[x][y].assignGameZoneAfterAddedToGameZone(this);
-                tiles[x][y].characters().assignActionAfterAdding(c -> {
+                tiles[x][y].characters().initializeActionAfterAdding(c -> {
                     CHARACTERS_IN_GAME_ZONE.add(c);
                     addToEndOfRoundManager.accept(c);
                 });
-                tiles[x][y].characters().assignActionAfterRemoving(c -> {
+                tiles[x][y].characters().initializeActionAfterRemoving(c -> {
                     CHARACTERS_IN_GAME_ZONE.remove(c);
                     removeFromRoundManager.accept(c);
                 });

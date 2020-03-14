@@ -168,10 +168,10 @@ class TileEntitiesImplTests {
     }
 
     @Test
-    void testAssignActionAfterAdding() {
+    void testInitializeActionAfterAdding() {
         final ArrayList<Item> addedToGameZone = new ArrayList<>();
 
-        _tileEntities.assignActionAfterAdding(addedToGameZone::add);
+        _tileEntities.initializeActionAfterAdding(addedToGameZone::add);
         _tileEntities.add(ITEM);
 
         assertEquals(1, addedToGameZone.size());
@@ -179,10 +179,10 @@ class TileEntitiesImplTests {
     }
 
     @Test
-    void testAssignActionAfterRemoving() {
+    void testInitializeActionAfterRemoving() {
         final ArrayList<Item> removedFromGameZone = new ArrayList<>();
 
-        _tileEntities.assignActionAfterRemoving(
+        _tileEntities.initializeActionAfterRemoving(
                 removedFromGameZone::add);
         _tileEntities.remove(ITEM);
 
@@ -193,6 +193,19 @@ class TileEntitiesImplTests {
 
         assertEquals(1, removedFromGameZone.size());
         assertTrue(removedFromGameZone.contains(ITEM));
+    }
+
+    @Test
+    void testInitializeMoreThanOnce() {
+        _tileEntities.initializeActionAfterAdding(null);
+        _tileEntities.initializeActionAfterAdding(e -> {});
+        assertThrows(UnsupportedOperationException.class,
+                () -> _tileEntities.initializeActionAfterAdding(e -> {}));
+
+        _tileEntities.initializeActionAfterRemoving(null);
+        _tileEntities.initializeActionAfterRemoving(e -> {});
+        assertThrows(UnsupportedOperationException.class,
+                () -> _tileEntities.initializeActionAfterRemoving(e -> {}));
     }
 
     @Test

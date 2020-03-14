@@ -153,13 +153,23 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     }
 
     @Override
-    public void assignActionAfterAdding(Consumer<TEntity> actionAfterAdding) {
+    public void initializeActionAfterAdding(Consumer<TEntity> actionAfterAdding) {
+        if (_actionAfterAdding != null) {
+            throw new UnsupportedOperationException(
+                    "TileEntitiesImpl.initializeActionAfterAdding: actionAfterAdding " +
+                            "already assigned");
+        }
         _actionAfterAdding = actionAfterAdding;
     }
 
     @Override
-    public void assignActionAfterRemoving(
+    public void initializeActionAfterRemoving(
             Consumer<TEntity> actionAfterRemoving) {
+        if (_actionAfterRemoving != null) {
+            throw new UnsupportedOperationException(
+                    "TileEntitiesImpl.initializeActionAfterRemoving: actionAfterRemoving " +
+                            "already assigned");
+        }
         _actionAfterRemoving = actionAfterRemoving;
     }
 
