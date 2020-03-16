@@ -12,7 +12,6 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
-import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +22,7 @@ class CharacterVariableStatisticImplTests {
     private final CharacterVariableStatisticType CHARACTER_VARIABLE_STATISTIC_TYPE =
             new FakeCharacterVariableStatisticType("VariableStatisticType");
     private final VariableCache DATA = new VariableCacheStub();
-    private final CharacterStatisticCalculation CHARACTER_STATISTIC_CALCULATION =
+    private final CharacterStatisticCalculationSpyDouble CHARACTER_STATISTIC_CALCULATION =
             new CharacterStatisticCalculationSpyDouble();
 
     @BeforeEach
@@ -61,9 +60,9 @@ class CharacterVariableStatisticImplTests {
     void testCalculate() {
         _characterVariableStatistic.calculate();
 
-        assertSame(CHARACTER, CharacterStatisticCalculationSpyDouble._character);
+        assertSame(CHARACTER, CHARACTER_STATISTIC_CALCULATION._character);
         assertSame(CHARACTER_VARIABLE_STATISTIC_TYPE,
-                CharacterStatisticCalculationSpyDouble._statisticType);
+                CHARACTER_STATISTIC_CALCULATION._statisticType);
         assertEquals(CharacterStatisticCalculationSpyDouble.VALUE,
                 _characterVariableStatistic.totalValue());
         ReadableMap<String,Integer> representation =

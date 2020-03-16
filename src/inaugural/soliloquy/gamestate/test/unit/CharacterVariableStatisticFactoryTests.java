@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticFactoryTests {
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
-    private final CharacterStatisticCalculation CALCULATION =
+    private final CharacterStatisticCalculationSpyDouble CALCULATION =
             new CharacterStatisticCalculationSpyDouble();
     private final Character CHARACTER = new FakeCharacter();
     private final CharacterVariableStatisticType TYPE =
@@ -67,6 +67,16 @@ class CharacterVariableStatisticFactoryTests {
                 () -> _characterVariableStatisticFactory.make(null, TYPE));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterVariableStatisticFactory.make(CHARACTER, null));
+    }
+
+    @Test
+    void testCharacterAssignment() {
+        CharacterVariableStatistic characterVariableStat =
+                _characterVariableStatisticFactory.make(CHARACTER, TYPE);
+
+        characterVariableStat.calculate();
+
+        assertSame(CHARACTER, CALCULATION._character);
     }
 
     @Test

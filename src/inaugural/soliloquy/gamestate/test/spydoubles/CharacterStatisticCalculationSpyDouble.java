@@ -12,8 +12,9 @@ public class CharacterStatisticCalculationSpyDouble implements CharacterStatisti
     public static final int VALUE = 123123;
     public static final Map<String,Integer> MODIFIERS = new FakeMapFactory().make("",0);
 
-    public static Character _character;
-    public static CharacterStatisticType _statisticType;
+    public Character _character;
+    public CharacterStatisticType _statisticType;
+
     @Override
     public Pair<Integer, Map<String, Integer>> calculate(Character character,
                                                          CharacterStatisticType statisticType)
