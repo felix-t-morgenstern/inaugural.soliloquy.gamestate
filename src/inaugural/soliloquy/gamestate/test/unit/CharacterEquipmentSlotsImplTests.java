@@ -32,7 +32,6 @@ class CharacterEquipmentSlotsImplTests {
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
@@ -119,6 +118,18 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
+    void testGetAndSetCanAlterEquipmentInSlotWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(""));
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterEquipmentSlots.setCanAlterEquipmentInSlot(null, true));
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterEquipmentSlots.setCanAlterEquipmentInSlot("", true));
+    }
+
+    @Test
     void testEquipItemToSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
@@ -126,6 +137,14 @@ class CharacterEquipmentSlotsImplTests {
         assertSame(ITEM, _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
         assertSame(CHARACTER, ITEM.equipmentSlot().getFirstArchetype());
         assertEquals(EQUIPMENT_SLOT_TYPE, ITEM.equipmentSlot().getSecondArchetype());
+    }
+
+    @Test
+    void testEquipItemToSlotWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterEquipmentSlots.equipItemToSlot(null, ITEM));
+        assertThrows(IllegalArgumentException.class,
+                () -> _characterEquipmentSlots.equipItemToSlot("", ITEM));
     }
 
     @Test
@@ -287,7 +306,7 @@ class CharacterEquipmentSlotsImplTests {
                 () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(""));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     void testGetRepresentation() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
