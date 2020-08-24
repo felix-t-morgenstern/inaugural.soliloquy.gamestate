@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.abilities.AbilityType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,6 +51,15 @@ class CharacterAbilityImplTests {
         assertEquals(CharacterEntityOfType.class.getCanonicalName() + "<" +
                 AbilityType.class.getCanonicalName() + ">",
                     _characterAbility.getInterfaceName());
+    }
+
+    @Test
+    void testDeletionInvariant() {
+        _characterAbility.delete();
+
+        assertThrows(EntityDeletedException.class, () -> _characterAbility.type());
+        assertThrows(EntityDeletedException.class, () -> _characterAbility.data());
+        assertThrows(EntityDeletedException.class, () -> _characterAbility.getInterfaceName());
     }
 
     @Test

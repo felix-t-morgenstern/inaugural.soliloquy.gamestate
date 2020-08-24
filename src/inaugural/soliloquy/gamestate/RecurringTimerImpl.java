@@ -23,21 +23,25 @@ public class RecurringTimerImpl extends TimerAbstract implements RecurringTimer 
 
     @Override
     public int getRoundModulo() {
+        enforceDeletionInvariants("getRoundModulo");
         return _roundModulo;
     }
 
     @Override
     public void setRoundModulo(int roundModulo) throws IllegalArgumentException {
+        enforceDeletionInvariants("setRoundModulo");
         _roundModulo = roundModulo;
     }
 
     @Override
     public int getRoundOffset() {
+        enforceDeletionInvariants("getRoundOffset");
         return _roundOffset;
     }
 
     @Override
     public void setRoundOffset(int roundOffset) throws IllegalArgumentException {
+        enforceDeletionInvariants("setRoundOffset");
         _roundOffset = roundOffset;
     }
 

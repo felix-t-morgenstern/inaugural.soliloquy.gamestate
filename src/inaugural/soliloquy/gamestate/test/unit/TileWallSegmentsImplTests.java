@@ -12,6 +12,7 @@ import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
 
@@ -286,23 +287,23 @@ class TileWallSegmentsImplTests {
     void testDeletedInvariant() {
         _tileWallSegments.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileWallSegments.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegments.representation());
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegments.getInterfaceName());
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegments.representation());
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT, 0,
                         0));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegments.getZIndex(TILE_WALL_SEGMENT));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegments.setZIndex(TILE_WALL_SEGMENT, 0));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegments.contains(TILE_WALL_SEGMENT));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegments.remove(TILE_WALL_SEGMENT));
-        assertThrows(IllegalStateException.class, () -> _tileWallSegments.size());
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegments.size());
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegments.size(TileWallSegmentDirection.NORTH));
     }
 

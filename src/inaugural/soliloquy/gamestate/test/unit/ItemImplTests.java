@@ -14,6 +14,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -415,30 +416,30 @@ class ItemImplTests {
     void testDeletionInvariant() {
         _item.delete();
 
-        assertThrows(IllegalStateException.class, () -> _item.type());
-        assertThrows(IllegalStateException.class, () -> _item.getCharges());
-        assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
-        assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
-        assertThrows(IllegalStateException.class, () -> _item.setNumberInStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.takeFromStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.equipmentSlot());
-        assertThrows(IllegalStateException.class, () -> _item.inventoryCharacter());
-        assertThrows(IllegalStateException.class, () -> _item.tile());
-        assertThrows(IllegalStateException.class, () -> _item.tileFixture());
-        assertThrows(IllegalStateException.class, () ->
+        assertThrows(EntityDeletedException.class, () -> _item.type());
+        assertThrows(EntityDeletedException.class, () -> _item.getCharges());
+        assertThrows(EntityDeletedException.class, () -> _item.setCharges(1));
+        assertThrows(EntityDeletedException.class, () -> _item.getNumberInStack());
+        assertThrows(EntityDeletedException.class, () -> _item.setNumberInStack(1));
+        assertThrows(EntityDeletedException.class, () -> _item.takeFromStack(1));
+        assertThrows(EntityDeletedException.class, () -> _item.equipmentSlot());
+        assertThrows(EntityDeletedException.class, () -> _item.inventoryCharacter());
+        assertThrows(EntityDeletedException.class, () -> _item.tile());
+        assertThrows(EntityDeletedException.class, () -> _item.tileFixture());
+        assertThrows(EntityDeletedException.class, () ->
                 _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                         CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class, () ->
+        assertThrows(EntityDeletedException.class, () ->
                 _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
-        assertThrows(IllegalStateException.class, () ->
+        assertThrows(EntityDeletedException.class, () ->
                 _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
-        assertThrows(IllegalStateException.class, () ->
+        assertThrows(EntityDeletedException.class, () ->
                 _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
-        assertThrows(IllegalStateException.class, () -> _item.getName());
-        assertThrows(IllegalStateException.class, () -> _item.setName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getPluralName());
-        assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
-        assertThrows(IllegalStateException.class, () -> _item.delete());
+        assertThrows(EntityDeletedException.class, () -> _item.getName());
+        assertThrows(EntityDeletedException.class, () -> _item.setName(""));
+        assertThrows(EntityDeletedException.class, () -> _item.getPluralName());
+        assertThrows(EntityDeletedException.class, () -> _item.setPluralName(""));
+        assertThrows(EntityDeletedException.class, () -> _item.delete());
     }
 
     @Test

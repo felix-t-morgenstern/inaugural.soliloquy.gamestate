@@ -7,6 +7,7 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -260,7 +261,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
 
     private void enforceDeletionInvariants(String methodName) {
         if (_isDeleted) {
-            throw new IllegalStateException("TileWallSegmentsImpl." + methodName +
+            throw new EntityDeletedException("TileWallSegmentsImpl." + methodName +
                     ": tile is deleted");
         }
         if (TILE.isDeleted()) {

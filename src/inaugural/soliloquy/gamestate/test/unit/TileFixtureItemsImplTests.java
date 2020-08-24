@@ -9,6 +9,7 @@ import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -144,11 +145,11 @@ class TileFixtureItemsImplTests {
     void testDeletedInvariant() {
         _tileFixtureItems.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.representation());
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.contains(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.getInterfaceName());
+        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.representation());
+        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.add(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.remove(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.contains(ITEM));
     }
 
     @Test

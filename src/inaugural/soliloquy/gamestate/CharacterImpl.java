@@ -12,6 +12,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
@@ -347,7 +348,7 @@ public class CharacterImpl implements Character {
 
     private void enforceInvariant(String methodName, boolean cannotBeDeleted) {
         if (cannotBeDeleted && _deleted) {
-            throw new IllegalStateException("CharacterImpl." + methodName +
+            throw new EntityDeletedException("CharacterImpl." + methodName +
                     ": Character is deleted");
         }
         if (_tile != null && !_tile.characters().contains(this)) {

@@ -9,6 +9,7 @@ import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
 
@@ -140,6 +141,16 @@ class CharacterInventoryImplTests {
 
         assertTrue(_characterInventory.isDeleted());
         assertTrue(ITEM.isDeleted());
+    }
+
+    @Test
+    void testDeletionInvariant() {
+        _characterInventory.delete();
+
+        assertThrows(EntityDeletedException.class, () -> _characterInventory.add(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _characterInventory.contains(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _characterInventory.remove(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _characterInventory.representation());
     }
 
     @Test

@@ -8,6 +8,7 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.HashSet;
 import java.util.Iterator;

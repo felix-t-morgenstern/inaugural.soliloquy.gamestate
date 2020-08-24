@@ -14,6 +14,7 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
@@ -193,24 +194,25 @@ class TileImplTests {
 
     @Test
     void testDeletedInvariant() {
+        ((FakeGameZone)GAME_ZONE).TILES[X][Y] = _tile;
         _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
 
         GAME_ZONE.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tile.gameZone());
-        assertThrows(IllegalStateException.class, () -> _tile.location());
-        assertThrows(IllegalStateException.class, () -> _tile.getHeight());
-        assertThrows(IllegalStateException.class, () -> _tile.setHeight(0));
-        assertThrows(IllegalStateException.class, () -> _tile.getGroundType());
-        assertThrows(IllegalStateException.class, () -> _tile.setGroundType(new FakeGroundType()));
-        assertThrows(IllegalStateException.class, () -> _tile.characters());
-        assertThrows(IllegalStateException.class, () -> _tile.fixtures());
-        assertThrows(IllegalStateException.class, () -> _tile.items());
-        assertThrows(IllegalStateException.class, () -> _tile.wallSegments());
-        assertThrows(IllegalStateException.class, () -> _tile.movementEvents());
-        assertThrows(IllegalStateException.class, () -> _tile.abilityEvents());
-        assertThrows(IllegalStateException.class, () -> _tile.sprites());
-        assertThrows(IllegalStateException.class, () -> _tile.data());
+        assertThrows(EntityDeletedException.class, () -> _tile.gameZone());
+        assertThrows(EntityDeletedException.class, () -> _tile.location());
+        assertThrows(EntityDeletedException.class, () -> _tile.getHeight());
+        assertThrows(EntityDeletedException.class, () -> _tile.setHeight(0));
+        assertThrows(EntityDeletedException.class, () -> _tile.getGroundType());
+        assertThrows(EntityDeletedException.class, () -> _tile.setGroundType(new FakeGroundType()));
+        assertThrows(EntityDeletedException.class, () -> _tile.characters());
+        assertThrows(EntityDeletedException.class, () -> _tile.fixtures());
+        assertThrows(EntityDeletedException.class, () -> _tile.items());
+        assertThrows(EntityDeletedException.class, () -> _tile.wallSegments());
+        assertThrows(EntityDeletedException.class, () -> _tile.movementEvents());
+        assertThrows(EntityDeletedException.class, () -> _tile.abilityEvents());
+        assertThrows(EntityDeletedException.class, () -> _tile.sprites());
+        assertThrows(EntityDeletedException.class, () -> _tile.data());
     }
 
     @Test

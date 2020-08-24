@@ -10,6 +10,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
@@ -394,33 +395,33 @@ class CharacterImplTests {
     void testThrowsIllegalStateExceptionWhenDeleted() {
         _character.delete();
 
-        assertThrows(IllegalStateException.class, () -> _character.type());
-        assertThrows(IllegalStateException.class, () -> _character.classifications());
-        assertThrows(IllegalStateException.class, () -> _character.pronouns());
-        assertThrows(IllegalStateException.class, () -> _character.tile());
-        assertThrows(IllegalStateException.class, () -> _character.getStance());
-        assertThrows(IllegalStateException.class, () -> _character.setStance(""));
-        assertThrows(IllegalStateException.class, () -> _character.getDirection());
-        assertThrows(IllegalStateException.class, () -> _character.setDirection(""));
-        assertThrows(IllegalStateException.class, () -> _character.getSpriteSet());
-        assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new FakeSpriteSet()));
-        assertThrows(IllegalStateException.class, () -> _character.getAIType());
-        assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
-        assertThrows(IllegalStateException.class, () -> _character.events());
-        assertThrows(IllegalStateException.class, () -> _character.equipmentSlots());
-        assertThrows(IllegalStateException.class, () -> _character.inventory());
-        assertThrows(IllegalStateException.class, () -> _character.variableStatistics());
-        assertThrows(IllegalStateException.class, () -> _character.staticStatistics());
-        assertThrows(IllegalStateException.class, () -> _character.statusEffects());
-        assertThrows(IllegalStateException.class, () -> _character.activeAbilities());
-        assertThrows(IllegalStateException.class, () -> _character.reactiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _character.getPlayerControlled());
-        assertThrows(IllegalStateException.class, () -> _character.setPlayerControlled(true));
-        assertThrows(IllegalStateException.class, () -> _character.data());
-        assertThrows(IllegalStateException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
-        assertThrows(IllegalStateException.class, () -> _character.getName());
-        assertThrows(IllegalStateException.class, () -> _character.setName(""));
-        assertThrows(IllegalStateException.class, () -> _character.getInterfaceName());
+        assertThrows(EntityDeletedException.class, () -> _character.type());
+        assertThrows(EntityDeletedException.class, () -> _character.classifications());
+        assertThrows(EntityDeletedException.class, () -> _character.pronouns());
+        assertThrows(EntityDeletedException.class, () -> _character.tile());
+        assertThrows(EntityDeletedException.class, () -> _character.getStance());
+        assertThrows(EntityDeletedException.class, () -> _character.setStance(""));
+        assertThrows(EntityDeletedException.class, () -> _character.getDirection());
+        assertThrows(EntityDeletedException.class, () -> _character.setDirection(""));
+        assertThrows(EntityDeletedException.class, () -> _character.getSpriteSet());
+        assertThrows(EntityDeletedException.class, () -> _character.setSpriteSet(new FakeSpriteSet()));
+        assertThrows(EntityDeletedException.class, () -> _character.getAIType());
+        assertThrows(EntityDeletedException.class, () -> _character.setAIType(null));
+        assertThrows(EntityDeletedException.class, () -> _character.events());
+        assertThrows(EntityDeletedException.class, () -> _character.equipmentSlots());
+        assertThrows(EntityDeletedException.class, () -> _character.inventory());
+        assertThrows(EntityDeletedException.class, () -> _character.variableStatistics());
+        assertThrows(EntityDeletedException.class, () -> _character.staticStatistics());
+        assertThrows(EntityDeletedException.class, () -> _character.statusEffects());
+        assertThrows(EntityDeletedException.class, () -> _character.activeAbilities());
+        assertThrows(EntityDeletedException.class, () -> _character.reactiveAbilities());
+        assertThrows(EntityDeletedException.class, () -> _character.getPlayerControlled());
+        assertThrows(EntityDeletedException.class, () -> _character.setPlayerControlled(true));
+        assertThrows(EntityDeletedException.class, () -> _character.data());
+        assertThrows(EntityDeletedException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(EntityDeletedException.class, () -> _character.getName());
+        assertThrows(EntityDeletedException.class, () -> _character.setName(""));
+        assertThrows(EntityDeletedException.class, () -> _character.getInterfaceName());
     }
 
     @SuppressWarnings("rawtypes")

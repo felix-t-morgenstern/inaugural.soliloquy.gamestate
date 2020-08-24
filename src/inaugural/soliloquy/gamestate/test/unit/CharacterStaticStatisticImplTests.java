@@ -11,6 +11,7 @@ import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,11 +93,11 @@ class CharacterStaticStatisticImplTests {
     void testEnforceDeletionInvariant() {
         _characterStatistic.delete();
 
-        assertThrows(IllegalStateException.class, () -> _characterStatistic.type());
-        assertThrows(IllegalStateException.class, () -> _characterStatistic.data());
-        assertThrows(IllegalStateException.class, () -> _characterStatistic.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _characterStatistic.calculate());
-        assertThrows(IllegalStateException.class, () -> _characterStatistic.representation());
-        assertThrows(IllegalStateException.class, () -> _characterStatistic.totalValue());
+        assertThrows(EntityDeletedException.class, () -> _characterStatistic.type());
+        assertThrows(EntityDeletedException.class, () -> _characterStatistic.data());
+        assertThrows(EntityDeletedException.class, () -> _characterStatistic.getInterfaceName());
+        assertThrows(EntityDeletedException.class, () -> _characterStatistic.calculate());
+        assertThrows(EntityDeletedException.class, () -> _characterStatistic.representation());
+        assertThrows(EntityDeletedException.class, () -> _characterStatistic.totalValue());
     }
 }

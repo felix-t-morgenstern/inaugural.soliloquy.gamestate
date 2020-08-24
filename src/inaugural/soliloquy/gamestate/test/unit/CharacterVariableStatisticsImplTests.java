@@ -13,6 +13,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 import java.util.ArrayList;
@@ -301,16 +302,16 @@ class CharacterVariableStatisticsImplTests {
 
         _variableStats.delete();
 
-        assertThrows(IllegalStateException.class, () -> _variableStats.add(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.get(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.contains(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.remove(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.size());
-        assertThrows(IllegalStateException.class, () -> _variableStats.clear());
-        assertThrows(IllegalStateException.class, () -> _variableStats.representation());
-        assertThrows(IllegalStateException.class, () -> _variableStats.iterator());
-        assertThrows(IllegalStateException.class, () -> _variableStats.currentValues());
-        assertThrows(IllegalStateException.class, () -> _variableStats.maxValues());
+        assertThrows(EntityDeletedException.class, () -> _variableStats.add(type));
+        assertThrows(EntityDeletedException.class, () -> _variableStats.get(type));
+        assertThrows(EntityDeletedException.class, () -> _variableStats.contains(type));
+        assertThrows(EntityDeletedException.class, () -> _variableStats.remove(type));
+        assertThrows(EntityDeletedException.class, () -> _variableStats.size());
+        assertThrows(EntityDeletedException.class, () -> _variableStats.clear());
+        assertThrows(EntityDeletedException.class, () -> _variableStats.representation());
+        assertThrows(EntityDeletedException.class, () -> _variableStats.iterator());
+        assertThrows(EntityDeletedException.class, () -> _variableStats.currentValues());
+        assertThrows(EntityDeletedException.class, () -> _variableStats.maxValues());
     }
 
     @Test

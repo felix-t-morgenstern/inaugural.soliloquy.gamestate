@@ -10,6 +10,7 @@ import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDimensions;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -102,15 +103,15 @@ class TileWallSegmentImplTests {
     void testDeletionInvariant() {
         _tileWallSegment.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getType());
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.getType());
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegment.setType(new FakeWallSegmentType()));
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.tile());
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.tile());
+        assertThrows(EntityDeletedException.class,
                 () -> _tileWallSegment.assignTileAfterAddedToTileEntitiesOfType(null));
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.data());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.getName());
-        assertThrows(IllegalStateException.class, () -> _tileWallSegment.setName(""));
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.data());
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.getName());
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.setName(""));
     }
 
     @Test

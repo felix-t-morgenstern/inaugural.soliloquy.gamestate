@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
-import inaugural.soliloquy.common.test.stubs.HasIdAndNameStub;
+import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
@@ -13,6 +13,7 @@ import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEntitiesOfType;
 import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -36,7 +37,7 @@ class CharacterEntitiesOfTypeImplTests {
     private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeCharacterEntity ARCHETYPE = new FakeCharacterEntity(null,
-            new HasIdAndNameStub("id", "name"));
+            new FakeHasIdAndName("id", "name"));
 
     private Character _characterPassedIntoFactory;
     private HasId _typePassedIntoFactory;
@@ -79,7 +80,7 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testAddAndGet() {
-        HasId type = new HasIdAndNameStub("id", "name");
+        HasId type = new FakeHasIdAndName("id", "name");
 
         assertNull(_entitiesOfType.get(type));
 
@@ -95,7 +96,7 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testAddWithData() {
-        HasId type = new HasIdAndNameStub("id", "name");
+        HasId type = new FakeHasIdAndName("id", "name");
         VariableCache data = new VariableCacheStub();
 
         assertNull(_entitiesOfType.get(type));
@@ -112,7 +113,7 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testAddExistingTypeIsNondestructive() {
-        HasId type = new HasIdAndNameStub("id", "name");
+        HasId type = new FakeHasIdAndName("id", "name");
 
         _entitiesOfType.add(type);
 
@@ -127,16 +128,16 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testSize() {
-        _entitiesOfType.add(new HasIdAndNameStub("id1", "name1"));
-        _entitiesOfType.add(new HasIdAndNameStub("id2", "name2"));
-        _entitiesOfType.add(new HasIdAndNameStub("id3", "name3"));
+        _entitiesOfType.add(new FakeHasIdAndName("id1", "name1"));
+        _entitiesOfType.add(new FakeHasIdAndName("id2", "name2"));
+        _entitiesOfType.add(new FakeHasIdAndName("id3", "name3"));
 
         assertEquals(3, _entitiesOfType.size());
     }
 
     @Test
     void testContains() {
-        HasId type = new HasIdAndNameStub("id", "name");
+        HasId type = new FakeHasIdAndName("id", "name");
 
         assertFalse(_entitiesOfType.contains(type));
 
@@ -147,7 +148,7 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testRemove() {
-        HasId type = new HasIdAndNameStub("id", "name");
+        HasId type = new FakeHasIdAndName("id", "name");
 
         assertFalse(_entitiesOfType.remove(type));
 
@@ -167,9 +168,9 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testClear() {
-        HasId type1 = new HasIdAndNameStub("id1", "name1");
-        HasId type2 = new HasIdAndNameStub("id2", "name2");
-        HasId type3 = new HasIdAndNameStub("id3", "name3");
+        HasId type1 = new FakeHasIdAndName("id1", "name1");
+        HasId type2 = new FakeHasIdAndName("id2", "name2");
+        HasId type3 = new FakeHasIdAndName("id3", "name3");
 
         _entitiesOfType.add(type1);
         _entitiesOfType.add(type2);
@@ -182,9 +183,9 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testRepresentation() {
-        HasId type1 = new HasIdAndNameStub("id1", "name1");
-        HasId type2 = new HasIdAndNameStub("id2", "name2");
-        HasId type3 = new HasIdAndNameStub("id3", "name3");
+        HasId type1 = new FakeHasIdAndName("id1", "name1");
+        HasId type2 = new FakeHasIdAndName("id2", "name2");
+        HasId type3 = new FakeHasIdAndName("id3", "name3");
 
         _entitiesOfType.add(type1);
         _entitiesOfType.add(type2);
@@ -200,9 +201,9 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testIterator() {
-        HasId type1 = new HasIdAndNameStub("id1", "name1");
-        HasId type2 = new HasIdAndNameStub("id2", "name2");
-        HasId type3 = new HasIdAndNameStub("id3", "name3");
+        HasId type1 = new FakeHasIdAndName("id1", "name1");
+        HasId type2 = new FakeHasIdAndName("id2", "name2");
+        HasId type3 = new FakeHasIdAndName("id3", "name3");
 
         _entitiesOfType.add(type1);
         _entitiesOfType.add(type2);
@@ -218,9 +219,9 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testDelete() {
-        HasId type1 = new HasIdAndNameStub("id1", "name1");
-        HasId type2 = new HasIdAndNameStub("id2", "name2");
-        HasId type3 = new HasIdAndNameStub("id3", "name3");
+        HasId type1 = new FakeHasIdAndName("id1", "name1");
+        HasId type2 = new FakeHasIdAndName("id2", "name2");
+        HasId type3 = new FakeHasIdAndName("id3", "name3");
 
         _entitiesOfType.add(type1);
         _entitiesOfType.add(type2);
@@ -234,23 +235,23 @@ class CharacterEntitiesOfTypeImplTests {
 
     @Test
     void testDeletionInvariant() {
-        HasId type = new HasIdAndNameStub("id", "name");
+        HasId type = new FakeHasIdAndName("id", "name");
 
         _entitiesOfType.delete();
 
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.add(type));
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.get(type));
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.contains(type));
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.remove(type));
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.size());
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.clear());
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.representation());
-        assertThrows(IllegalStateException.class, () -> _entitiesOfType.iterator());
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.add(type));
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.get(type));
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.contains(type));
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.remove(type));
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.size());
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.clear());
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.representation());
+        assertThrows(EntityDeletedException.class, () -> _entitiesOfType.iterator());
     }
 
     @Test
     void testCharacterDeletionInvariant() {
-        HasId type = new HasIdAndNameStub("id", "name");
+        HasId type = new FakeHasIdAndName("id", "name");
 
         CHARACTER.delete();
 

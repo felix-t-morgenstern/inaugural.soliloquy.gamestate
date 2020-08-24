@@ -11,6 +11,7 @@ import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
@@ -135,15 +136,15 @@ class TileFixtureImplTests {
     void testDeletedInvariant() {
         _tileFixture.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.type());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.pixelOffset());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.movementEvents());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.items());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
-        assertThrows(IllegalStateException.class, () -> _tileFixture.data());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.getName());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.setName(""));
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.tile());
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.type());
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.pixelOffset());
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.movementEvents());
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.items());
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.data());
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.getName());
+        assertThrows(EntityDeletedException.class, () -> _tileFixture.setName(""));
     }
 
     @Test

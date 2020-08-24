@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
-import inaugural.soliloquy.common.test.stubs.HasIdAndNameStub;
+import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterEntity;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterEntitiesOfTypeFactoryImplTests {
     private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
-    private final FakeCharacterEntity FACTORY_OUTPUT = new FakeCharacterEntity(null, null);
+    private final FakeCharacterEntity FACTORY_OUTPUT = new FakeCharacterEntity(null, null); // TODO: Determine whether and where factory output should be checked
     private final Function<Character,Function<HasId,Function<VariableCache, FakeCharacterEntity>>>
             FACTORY = c -> t -> d -> {
                 _characterPassedIntoFactory = c;
@@ -32,7 +32,7 @@ class CharacterEntitiesOfTypeFactoryImplTests {
             };
     private final Character CHARACTER = new FakeCharacter();
     private final FakeCharacterEntity ARCHETYPE =
-            new FakeCharacterEntity(null, new HasIdAndNameStub("", ""));
+            new FakeCharacterEntity(null, new FakeHasIdAndName("", ""));
 
     private Character _characterPassedIntoFactory;
     private HasId _typePassedIntoFactory;
@@ -68,7 +68,7 @@ class CharacterEntitiesOfTypeFactoryImplTests {
     @Test
     void testRegisterFactoryAndMake() {
         _factory.registerFactory(ARCHETYPE, FACTORY);
-        HasId type = new HasIdAndNameStub("", "");
+        HasId type = new FakeHasIdAndName("", "");
 
         @SuppressWarnings("unchecked") CharacterEntitiesOfType<HasId, FakeCharacterEntity>
                 entities = _factory.make(CHARACTER, ARCHETYPE);

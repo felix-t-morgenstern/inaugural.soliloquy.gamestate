@@ -12,6 +12,7 @@ import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileEntities;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
 
@@ -234,13 +235,13 @@ class TileEntitiesImplTests {
     void testDeletedInvariant() {
         _tileEntities.delete();
 
-        assertThrows(IllegalStateException.class, () -> _tileEntities.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileEntities.representation());
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM,0));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.contains(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.remove(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.iterator());
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.getInterfaceName());
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.representation());
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.add(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.add(ITEM,0));
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.contains(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.remove(ITEM));
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.iterator());
     }
 
     @Test

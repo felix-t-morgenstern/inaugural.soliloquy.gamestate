@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,5 +82,19 @@ class RecurringTimerImplTests {
         _recurringTimer.delete();
 
         assertFalse(ROUND_MANAGER.RecurringTimers.contains(_recurringTimer));
+    }
+
+    @Test
+    void testDeletedInvariant() {
+        _recurringTimer.delete();
+
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.id());
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.fire());
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.getPriority());
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.setPriority(0));
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.getRoundModulo());
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.setRoundModulo(0));
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.getRoundOffset());
+        assertThrows(EntityDeletedException.class, () -> _recurringTimer.setRoundOffset(0));
     }
 }

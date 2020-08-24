@@ -13,6 +13,7 @@ import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -284,11 +285,11 @@ class CharacterEventsImplTests {
 
         _characterEvents.delete();
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterEvents.addEvent(trigger1, event1));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterEvents.clearTrigger(trigger1));
-        assertThrows(IllegalStateException.class, () -> _characterEvents.clearAllTriggers());
+        assertThrows(EntityDeletedException.class, () -> _characterEvents.clearAllTriggers());
     }
 
     @Test

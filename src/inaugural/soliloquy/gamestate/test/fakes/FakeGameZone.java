@@ -125,8 +125,8 @@ public class FakeGameZone implements GameZone {
     @Override
     public void delete() throws IllegalStateException {
         _isDeleted = true;
-        for (Tile[] col : TILES) {
-            for (Tile tile : col) {
+        for (Tile[] row : TILES) {
+            for (Tile tile : row) {
                 if (tile != null) {
                     tile.delete();
                 }

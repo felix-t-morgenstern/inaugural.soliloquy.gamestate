@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import soliloquy.specs.gamestate.entities.Deletable;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 abstract class HasDeletionInvariants implements Deletable {
     private boolean _isDeleted;
@@ -11,7 +12,7 @@ abstract class HasDeletionInvariants implements Deletable {
 
     void enforceDeletionInvariants(String methodName) {
         if (_isDeleted) {
-            throw new IllegalStateException(className() + "." + methodName +
+            throw new EntityDeletedException(className() + "." + methodName +
                     ": object is deleted");
         }
         if (containingClassName() != null && getContainingObject() != null &&

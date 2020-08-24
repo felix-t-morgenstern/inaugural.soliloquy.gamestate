@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,5 +74,17 @@ class OneTimeTimerImplTests {
         _oneTimeTimer.delete();
 
         assertFalse(ROUND_MANAGER.OneTimeTimers.contains(_oneTimeTimer));
+    }
+
+    @Test
+    void testDeletedInvariant() {
+        _oneTimeTimer.delete();
+
+        assertThrows(EntityDeletedException.class, () -> _oneTimeTimer.id());
+        assertThrows(EntityDeletedException.class, () -> _oneTimeTimer.fire());
+        assertThrows(EntityDeletedException.class, () -> _oneTimeTimer.getPriority());
+        assertThrows(EntityDeletedException.class, () -> _oneTimeTimer.setPriority(0));
+        assertThrows(EntityDeletedException.class, () -> _oneTimeTimer.getRoundWhenGoesOff());
+        assertThrows(EntityDeletedException.class, () -> _oneTimeTimer.setRoundWhenGoesOff(0));
     }
 }

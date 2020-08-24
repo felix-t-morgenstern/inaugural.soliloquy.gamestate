@@ -7,8 +7,10 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
 
+// TODO: Consider extending HasDeletionInvariants
 public class ItemImpl implements Item {
     private final EntityUuid ID;
     private final ItemType ITEM_TYPE;
@@ -328,7 +330,7 @@ public class ItemImpl implements Item {
 
     private void enforceDeletionInvariant(String methodName) {
         if (_isDeleted) {
-            throw new IllegalStateException("ItemImpl." + methodName + ": Item is deleted");
+            throw new EntityDeletedException("ItemImpl." + methodName + ": Item is deleted");
         }
     }
 

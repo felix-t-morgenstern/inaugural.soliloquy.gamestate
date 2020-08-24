@@ -21,11 +21,13 @@ public class OneTimeTimerImpl extends TimerAbstract implements OneTimeTimer {
 
     @Override
     public long getRoundWhenGoesOff() {
+        enforceDeletionInvariants("getRoundWhenGoesOff");
         return _roundWhenGoesOff;
     }
 
     @Override
     public void setRoundWhenGoesOff(long roundWhenGoesOff) throws IllegalArgumentException {
+        enforceDeletionInvariants("setRoundWhenGoesOff");
         _roundWhenGoesOff = roundWhenGoesOff;
     }
 

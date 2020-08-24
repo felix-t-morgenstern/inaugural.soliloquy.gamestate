@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
@@ -162,18 +163,18 @@ class CharacterStatusEffectsImplTests {
     void testEnforceDeletionInvariant() {
         _characterStatusEffects.delete();
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterStatusEffects.representation());
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, false,
                         ELEMENT, ABILITY_SOURCE));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterStatusEffects.clearStatusEffects());
-        assertThrows(IllegalStateException.class,
+        assertThrows(EntityDeletedException.class,
                 () -> _characterStatusEffects.getInterfaceName());
     }
 }
