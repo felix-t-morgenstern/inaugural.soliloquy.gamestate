@@ -1,6 +1,10 @@
 
-.idea/*
 *.class
-*.iml
-.idea/codeStyles/codeStyleConfig.xml
+.idea/inaugural.soliloquy.gamestate.iml
+.idea/libraries
+.idea/tasks.xml
+.idea/uiDesigner.xml
+.idea/usage.statistics.xml
+.idea/workspace.xml
+.idea/shelf
 target/*
