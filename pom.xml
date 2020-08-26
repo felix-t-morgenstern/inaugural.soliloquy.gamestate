@@ -49,14 +49,14 @@
 
     <distributionManagement>
         <repository>
-            <id>inaugural.soliloquy.gamestate</id>
+            <id>github</id>
             <name>Soliloquy, Inaugural Engine, Gamestate Module</name>
             <uniqueVersion>false</uniqueVersion>
-            <url>file://${project.build.directory}/mvn-repo</url>
+            <url>https://maven.pkg.github.com/felix-t-morgenstern/inaugural.soliloquy.gamestate</url>
         </repository>
         <snapshotRepository>
-            <id>inaugural.soliloquy.common</id>
-            <name>Soliloquy, Inaugural Engine, Gamestate Module</name>
+            <id>github</id>
+            <name>Soliloquy Specifications</name>
             <uniqueVersion>false</uniqueVersion>
             <url>file://${project.build.directory}/mvn-repo</url>
         </snapshotRepository>
