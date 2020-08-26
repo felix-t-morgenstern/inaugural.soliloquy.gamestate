@@ -56,7 +56,7 @@
         </repository>
         <snapshotRepository>
             <id>github</id>
-            <name>Soliloquy Specifications</name>
+            <name>Soliloquy, Inaugural Engine, Gamestate Module</name>
             <uniqueVersion>false</uniqueVersion>
             <url>file://${project.build.directory}/mvn-repo</url>
         </snapshotRepository>
