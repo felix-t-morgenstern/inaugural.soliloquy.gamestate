@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
@@ -28,30 +29,19 @@ public class ItemImpl implements Item {
     private boolean _isDeleted;
     private String _name;
     private String _pluralName;
+    private float _xTileWidthOffset;
+    private float _yTileHeightOffset;
 
     @SuppressWarnings("ConstantConditions")
     public ItemImpl(EntityUuid id, ItemType itemType, VariableCache data, PairFactory pairFactory,
                     EntityUuidFactory entityUuidFactory) {
-        if (id == null) {
-            throw new IllegalArgumentException("ItemImpl: id cannot be null");
-        }
-        ID = id;
-        if (itemType == null) {
-            throw new IllegalArgumentException("ItemImpl: itemType cannot be null");
-        }
-        ITEM_TYPE = itemType;
-        if (data == null) {
-            throw new IllegalArgumentException("ItemImpl: data cannot be null");
-        }
-        DATA = data;
-        if (pairFactory == null) {
-            throw new IllegalArgumentException("ItemImpl: pairFactory cannot be null");
-        }
-        PAIR_FACTORY = pairFactory;
-        if (entityUuidFactory == null) {
-            throw new IllegalArgumentException("ItemImpl: entityUuidFactory cannot be null");
-        }
-        ENTITY_UUID_FACTORY = entityUuidFactory;
+        ID = Check.ifNull(id, "id");
+        ITEM_TYPE = Check.ifNull(itemType, "itemType");
+        _xTileWidthOffset = ITEM_TYPE.defaultXTileWidthOffset();
+        _yTileHeightOffset = ITEM_TYPE.defaultYTileHeightOffset();
+        DATA = Check.ifNull(data, "data");
+        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
+        ENTITY_UUID_FACTORY = Check.ifNull(entityUuidFactory, "entityUuidFactory");
     }
 
     @Override
@@ -81,11 +71,7 @@ public class ItemImpl implements Item {
             throw new UnsupportedOperationException(
                     "ItemImpl.setCharges: ItemType doesn't have charges");
         }
-        if (charges < 0) {
-            throw new IllegalArgumentException(String.format(
-                    "ItemImpl.setCharges: charges (%d) cannot be less than 0", charges));
-        }
-        _charges = charges;
+        _charges = Check.throwOnLtValue(charges, 0, "charges");
     }
 
     @Override
@@ -99,6 +85,7 @@ public class ItemImpl implements Item {
         }
     }
 
+    // TODO: Ensure that numberInStack cannot be less than 0
     @Override
     public void setNumberInStack(int numberInStack)
             throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
@@ -356,5 +343,35 @@ public class ItemImpl implements Item {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned TileItems does not contain this Item");
         }
+    }
+
+    @Override
+    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
+        enforceDeletionInvariant("getXTileWidthOffset");
+        enforceAssignmentInvariant("getXTileWidthOffset");
+        return _xTileWidthOffset;
+    }
+
+    @Override
+    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
+        enforceDeletionInvariant("getYTileHeightOffset");
+        enforceAssignmentInvariant("getYTileHeightOffset");
+        return _yTileHeightOffset;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float xTileWidthOffset)
+            throws IllegalStateException, EntityDeletedException {
+        enforceDeletionInvariant("setXTileWidthOffset");
+        enforceAssignmentInvariant("setXTileWidthOffset");
+        _xTileWidthOffset = xTileWidthOffset;
+    }
+
+    @Override
+    public void setYTileHeightOffset(float yTileHeightOffset)
+            throws IllegalStateException, EntityDeletedException {
+        enforceDeletionInvariant("setYTileHeightOffset");
+        enforceAssignmentInvariant("setYTileHeightOffset");
+        _yTileHeightOffset = yTileHeightOffset;
     }
 }

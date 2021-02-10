@@ -71,8 +71,8 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
         TileFixture tileFixture = TILE_FIXTURE_FACTORY.make(
                 GET_FIXTURE_TYPE.apply(dto.fixtureTypeId),
                 DATA_HANDLER.read(dto.data), ID_HANDLER.read(dto.id));
-        tileFixture.pixelOffset().setX(dto.pixelOffsetX);
-        tileFixture.pixelOffset().setY(dto.pixelOffsetY);
+        tileFixture.setXTileWidthOffset(dto.tileWidthOffset);
+        tileFixture.setYTileHeightOffset(dto.tileHeightOffset);
         for(int i = 0; i < dto.items.length; i++) {
             tileFixture.items().add(ITEMS_HANDLER.read(dto.items[i]));
         }
@@ -89,8 +89,8 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
         TileFixtureDTO dto = new TileFixtureDTO();
         dto.id = ID_HANDLER.write(tileFixture.id());
         dto.fixtureTypeId = tileFixture.type().id();
-        dto.pixelOffsetX = tileFixture.pixelOffset().getX();
-        dto.pixelOffsetY = tileFixture.pixelOffset().getY();
+        dto.tileWidthOffset = tileFixture.getXTileWidthOffset();
+        dto.tileHeightOffset = tileFixture.getYTileHeightOffset();
         ReadableCollection<Item> items = tileFixture.items().representation();
         dto.items = new String[items.size()];
         for(int i = 0; i < items.size(); i++) {
@@ -106,11 +106,12 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
         return ARCHETYPE;
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class TileFixtureDTO {
         String id;
         String fixtureTypeId;
-        int pixelOffsetX;
-        int pixelOffsetY;
+        float tileWidthOffset;
+        float tileHeightOffset;
         String[] items;
         String data;
         String name;

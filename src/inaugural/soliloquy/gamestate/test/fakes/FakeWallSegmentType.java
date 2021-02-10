@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
-import soliloquy.specs.sprites.entities.Sprite;
 
 public class FakeWallSegmentType implements WallSegmentType {
     String _id;

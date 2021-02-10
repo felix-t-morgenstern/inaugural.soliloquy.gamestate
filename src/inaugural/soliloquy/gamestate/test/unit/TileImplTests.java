@@ -20,8 +20,8 @@ import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
 import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
+import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
-import soliloquy.specs.sprites.entities.Sprite;
 
 import static org.junit.jupiter.api.Assertions.*;
 

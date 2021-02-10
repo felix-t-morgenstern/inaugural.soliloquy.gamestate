@@ -31,8 +31,8 @@ public class CameraImpl implements Camera {
 
     private int _tileLocationX;
     private int _tileLocationY;
-    private int _pixelOffsetX;
-    private int _pixelOffsetY;
+    private float _xTileWidthOffset;
+    private float _yTileWidthOffset;
     private int _tileRenderingRadius;
     private boolean _allTilesVisible;
 
@@ -61,15 +61,25 @@ public class CameraImpl implements Camera {
         _tileLocationY = Check.ifNonNegative(y, "y");
     }
 
+    // TODO: Test and implement
     @Override
-    public ReadableCoordinate getPixelOffset() {
-        return COORDINATE_FACTORY.make(_pixelOffsetX, _pixelOffsetY).readOnlyRepresentation();
+    public float getXTileWidthOffset() {
+        return _xTileWidthOffset;
     }
 
     @Override
-    public void setPixelOffset(int x, int y) throws IllegalArgumentException {
-        _pixelOffsetX = Check.ifNonNegative(x, "x");
-        _pixelOffsetY = Check.ifNonNegative(y, "y");
+    public float getYTileHeightOffset() {
+        return _yTileWidthOffset;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float xTileWidthOffset) {
+        _xTileWidthOffset = xTileWidthOffset;
+    }
+
+    @Override
+    public void setYTileHeightOffset(float yTileHeightOffset) {
+        _yTileWidthOffset = yTileHeightOffset;
     }
 
     @Override

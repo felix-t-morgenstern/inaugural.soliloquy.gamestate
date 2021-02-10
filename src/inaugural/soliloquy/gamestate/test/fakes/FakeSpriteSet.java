@@ -1,8 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.sprites.entities.Sprite;
-import soliloquy.specs.sprites.entities.SpriteSet;
+import soliloquy.specs.graphics.assets.AssetSnippet;
+import soliloquy.specs.graphics.assets.SpriteSet;
 
 public class FakeSpriteSet implements SpriteSet {
     private final String ID;
@@ -21,22 +20,12 @@ public class FakeSpriteSet implements SpriteSet {
     }
 
     @Override
-    public Sprite getSprite(String s) {
-        return null;
-    }
-
-    @Override
-    public Sprite getSprite(String s, String s1) {
-        return null;
-    }
-
-    @Override
-    public Map<String, Integer> graphicalTransformations() {
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public AssetSnippet getImageAndBoundariesForTypeAndDirection(String s, String s1) throws IllegalArgumentException {
         return null;
     }
 }

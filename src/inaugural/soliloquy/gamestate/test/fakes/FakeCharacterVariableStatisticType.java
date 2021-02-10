@@ -4,10 +4,10 @@ import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.graphics.assets.Sprite;
+import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
-import soliloquy.specs.sprites.entities.Sprite;
-import soliloquy.specs.sprites.entities.SpriteSet;
 
 import java.util.function.BiConsumer;
 

@@ -2,11 +2,11 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
@@ -14,7 +14,8 @@ import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class FakeTileFixture implements TileFixture {
     private boolean _isDeleted;
-    private Coordinate _pixelOffset;
+    private float _xTileWidthOffset;
+    private float _yTileHeightOffset;
     private EntityUuid _id;
     private FixtureType _fixtureType;
     private VariableCache _data;
@@ -33,7 +34,6 @@ public class FakeTileFixture implements TileFixture {
         _id = id;
         _fixtureType = fixtureType;
         _data = data;
-        _pixelOffset = new FakeCoordinate();
     }
 
     @Override
@@ -44,11 +44,6 @@ public class FakeTileFixture implements TileFixture {
     @Override
     public FixtureType type() throws IllegalStateException {
         return _fixtureType;
-    }
-
-    @Override
-    public Coordinate pixelOffset() throws IllegalStateException {
-        return _pixelOffset;
     }
 
     @Override
@@ -110,5 +105,25 @@ public class FakeTileFixture implements TileFixture {
     @Override
     public EntityUuid id() {
         return _id;
+    }
+
+    @Override
+    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
+        return _xTileWidthOffset;
+    }
+
+    @Override
+    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
+        return _yTileHeightOffset;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float v) throws IllegalStateException, EntityDeletedException {
+        _xTileWidthOffset = v;
+    }
+
+    @Override
+    public void setYTileHeightOffset(float v) throws IllegalStateException, EntityDeletedException {
+        _yTileHeightOffset = v;
     }
 }

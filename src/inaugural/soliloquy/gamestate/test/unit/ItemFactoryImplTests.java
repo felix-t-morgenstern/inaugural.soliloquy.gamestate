@@ -71,6 +71,8 @@ class ItemFactoryImplTests {
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
+        assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }
 
     @Test
@@ -92,6 +94,8 @@ class ItemFactoryImplTests {
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
+        assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }
 
     @Test
@@ -113,6 +117,8 @@ class ItemFactoryImplTests {
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
+        assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }
 
     @Test
@@ -134,6 +140,8 @@ class ItemFactoryImplTests {
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
         assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
+        assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }
 
     @Test

@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
+import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
-import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class FakeCharacterStaticStatisticType implements CharacterStaticStatisticType {
     private final String ID;

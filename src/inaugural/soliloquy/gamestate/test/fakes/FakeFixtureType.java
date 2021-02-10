@@ -1,17 +1,21 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
+import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.graphics.assets.Sprite;
+import soliloquy.specs.graphics.colorshifting.ColorShiftType;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.FixtureType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
-import soliloquy.specs.sprites.entities.Sprite;
 
 public class FakeFixtureType implements FixtureType {
     public String _id;
+
+    public final static float DEFAULT_X_TILE_WIDTH_OFFSET = 0.111f;
+    public final static float DEFAULT_Y_TILE_HEIGHT_OFFSET = 0.222f;
 
     public FakeFixtureType() {
 
@@ -24,11 +28,6 @@ public class FakeFixtureType implements FixtureType {
     @Override
     public boolean isContainer() throws IllegalStateException {
         return false;
-    }
-
-    @Override
-    public Coordinate defaultOffset() throws IllegalStateException {
-        return null;
     }
 
     @Override
@@ -74,5 +73,20 @@ public class FakeFixtureType implements FixtureType {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public Collection<ColorShiftType> defaultColorShifts() {
+        return null;
+    }
+
+    @Override
+    public float defaultXTileWidthOffset() {
+        return DEFAULT_X_TILE_WIDTH_OFFSET;
+    }
+
+    @Override
+    public float defaultYTileHeightOffset() {
+        return DEFAULT_Y_TILE_HEIGHT_OFFSET;
     }
 }

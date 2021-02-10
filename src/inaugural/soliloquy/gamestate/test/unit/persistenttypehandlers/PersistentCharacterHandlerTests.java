@@ -16,11 +16,11 @@ import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
+import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
-import soliloquy.specs.sprites.entities.SpriteSet;
 
 import java.util.HashMap;
 import java.util.Map;

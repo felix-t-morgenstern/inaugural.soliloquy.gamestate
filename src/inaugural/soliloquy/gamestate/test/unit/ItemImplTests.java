@@ -12,10 +12,9 @@ import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.ruleset.entities.ItemType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +22,7 @@ class ItemImplTests {
     private Item _item;
 
     private final EntityUuid ID = new FakeEntityUuid("64fd6bf1-4e57-492a-a8fb-5f1494f7ddf0");
-    private final ItemType ITEM_TYPE = new ItemTypeStub();
+    private final ItemTypeStub ITEM_TYPE = new ItemTypeStub();
     private final VariableCache DATA = new VariableCacheStub();
     private final PairFactory PAIR_FACTORY = new FakePairFactory();
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
@@ -43,7 +42,6 @@ class ItemImplTests {
         _item = new ItemImpl(ID, ITEM_TYPE, DATA, PAIR_FACTORY, ENTITY_UUID_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, ITEM_TYPE, DATA,
@@ -346,6 +344,30 @@ class ItemImplTests {
     }
 
     @Test
+    void testCreatedItemTakesDefaultOffsets() {
+        assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, _item.getXTileWidthOffset());
+        assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, _item.getYTileHeightOffset());
+    }
+
+    @Test
+    void testSetAndGetXTileWidthOffset() {
+        float offset = 0.123f;
+
+        _item.setXTileWidthOffset(offset);
+
+        assertEquals(offset, _item.getXTileWidthOffset());
+    }
+
+    @Test
+    void testSetAndGetYTileHeightOffset() {
+        float offset = 0.123f;
+
+        _item.setYTileHeightOffset(offset);
+
+        assertEquals(offset, _item.getYTileHeightOffset());
+    }
+
+    @Test
     void testGetNameWithNullItemImplPluralNameReturnsItemTypePluralName() {
         _item.setPluralName(null);
 
@@ -398,6 +420,7 @@ class ItemImplTests {
                 ((FakeTileFixtureItems)TILE_FIXTURE.items())._items.size());
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void testDeleteRemovesItemFromTileItems() {
         TILE.items().add(_item);
@@ -439,6 +462,10 @@ class ItemImplTests {
         assertThrows(EntityDeletedException.class, () -> _item.setName(""));
         assertThrows(EntityDeletedException.class, () -> _item.getPluralName());
         assertThrows(EntityDeletedException.class, () -> _item.setPluralName(""));
+        assertThrows(EntityDeletedException.class, () -> _item.getXTileWidthOffset());
+        assertThrows(EntityDeletedException.class, () -> _item.getYTileHeightOffset());
+        assertThrows(EntityDeletedException.class, () -> _item.setXTileWidthOffset(0f));
+        assertThrows(EntityDeletedException.class, () -> _item.setYTileHeightOffset(0f));
         assertThrows(EntityDeletedException.class, () -> _item.delete());
     }
 
@@ -470,6 +497,10 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
         assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
+        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
+        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
+        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
         assertThrows(IllegalStateException.class, () -> _item.delete());
     }
 
@@ -501,9 +532,14 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
         assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
+        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
+        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
+        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
         assertThrows(IllegalStateException.class, () -> _item.delete());
     }
 
+    @SuppressWarnings("rawtypes")
     @Test
     void testItemNotFoundInTileItemsInvariant() {
         TILE.items().add(_item);
@@ -532,6 +568,10 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
         assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
+        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
+        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
+        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
         assertThrows(IllegalStateException.class, () -> _item.delete());
     }
 
@@ -564,6 +604,10 @@ class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
         assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
+        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
+        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
+        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
         assertThrows(IllegalStateException.class, () -> _item.delete());
     }
 }

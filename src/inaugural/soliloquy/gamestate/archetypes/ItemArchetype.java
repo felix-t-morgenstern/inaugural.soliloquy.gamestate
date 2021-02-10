@@ -5,6 +5,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 public class ItemArchetype implements Item {
@@ -121,6 +122,26 @@ public class ItemArchetype implements Item {
 
     @Override
     public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
+
+    }
+
+    @Override
+    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
+        return 0;
+    }
+
+    @Override
+    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
+        return 0;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float v) throws IllegalStateException, EntityDeletedException {
+
+    }
+
+    @Override
+    public void setYTileHeightOffset(float v) throws IllegalStateException, EntityDeletedException {
 
     }
 }

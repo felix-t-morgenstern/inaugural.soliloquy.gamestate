@@ -15,9 +15,9 @@ import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileFactory;
 import soliloquy.specs.gamestate.factories.TileWallSegmentFactory;
+import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
-import soliloquy.specs.sprites.entities.Sprite;
 
 import java.util.HashMap;
 

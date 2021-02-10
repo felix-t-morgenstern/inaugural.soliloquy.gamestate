@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.ruleset.entities.Element;
-import soliloquy.specs.sprites.entities.SpriteSet;
 
 public class ElementStub implements Element {
     @Override

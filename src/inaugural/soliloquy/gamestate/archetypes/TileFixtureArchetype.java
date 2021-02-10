@@ -2,11 +2,11 @@ package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
@@ -25,11 +25,6 @@ public class TileFixtureArchetype implements TileFixture {
 
     @Override
     public FixtureType type() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public Coordinate pixelOffset() throws IllegalStateException {
         return null;
     }
 
@@ -86,5 +81,25 @@ public class TileFixtureArchetype implements TileFixture {
     @Override
     public EntityUuid id() {
         return null;
+    }
+
+    @Override
+    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
+        return 0;
+    }
+
+    @Override
+    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
+        return 0;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float v) throws IllegalStateException, EntityDeletedException {
+
+    }
+
+    @Override
+    public void setYTileHeightOffset(float v) throws IllegalStateException, EntityDeletedException {
+
     }
 }

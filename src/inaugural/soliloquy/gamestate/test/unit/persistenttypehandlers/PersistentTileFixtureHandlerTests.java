@@ -33,11 +33,11 @@ class PersistentTileFixtureHandlerTests {
             new FakePersistentVariableCacheHandler();
     private final FakePersistentValueTypeHandler<Item> ITEM_HANDLER =
             new FakePersistentItemHandler();
-    private final int PIXEL_OFFSET_X = 123;
-    private final int PIXEL_OFFSET_Y = 456;
+    private final float X_TILE_WIDTH_OFFSET = 0.123f;
+    private final float Y_TILE_HEIGHT_OFFSET = 0.456f;
     private final String NAME = "fixtureName";
 
-    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"fixtureTypeId\":\"fixtureTypeId\",\"pixelOffsetX\":123,\"pixelOffsetY\":456,\"items\":[\"Item0\",\"Item1\",\"Item2\"],\"data\":\"VariableCache0\",\"name\":\"fixtureName\"}";
+    private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"fixtureTypeId\":\"fixtureTypeId\",\"tileWidthOffset\":0.123,\"tileHeightOffset\":0.456,\"items\":[\"Item0\",\"Item1\",\"Item2\"],\"data\":\"VariableCache0\",\"name\":\"fixtureName\"}";
 
     private PersistentValueTypeHandler<TileFixture> _persistentTileFixtureHandler;
 
@@ -91,8 +91,8 @@ class PersistentTileFixtureHandlerTests {
         Item item2 = new FakeItem();
         Item item3 = new FakeItem();
         TileFixture tileFixture = new FakeTileFixture(id, FIXTURE_TYPE, data);
-        tileFixture.pixelOffset().setX(PIXEL_OFFSET_X);
-        tileFixture.pixelOffset().setY(PIXEL_OFFSET_Y);
+        tileFixture.setXTileWidthOffset(X_TILE_WIDTH_OFFSET);
+        tileFixture.setYTileHeightOffset(Y_TILE_HEIGHT_OFFSET);
         tileFixture.items().add(item1);
         tileFixture.items().add(item2);
         tileFixture.items().add(item3);
@@ -119,8 +119,8 @@ class PersistentTileFixtureHandlerTests {
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.data());
-        assertEquals(PIXEL_OFFSET_X, tileFixture.pixelOffset().getX());
-        assertEquals(PIXEL_OFFSET_Y, tileFixture.pixelOffset().getY());
+        assertEquals(X_TILE_WIDTH_OFFSET, tileFixture.getXTileWidthOffset());
+        assertEquals(Y_TILE_HEIGHT_OFFSET, tileFixture.getYTileHeightOffset());
         assertEquals(3, tileFixture.items().representation().size());
         assertTrue(tileFixture.items().contains(((FakePersistentItemHandler)ITEM_HANDLER)
                 .READ_OUTPUTS.get(0)));

@@ -19,12 +19,22 @@ public class FakeCamera implements Camera {
     }
 
     @Override
-    public ReadableCoordinate getPixelOffset() {
-        return null;
+    public float getXTileWidthOffset() {
+        return 0;
     }
 
     @Override
-    public void setPixelOffset(int i, int i1) throws IllegalArgumentException {
+    public float getYTileHeightOffset() {
+        return 0;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float v) {
+
+    }
+
+    @Override
+    public void setYTileHeightOffset(float v) {
 
     }
 

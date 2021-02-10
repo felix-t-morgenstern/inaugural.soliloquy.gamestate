@@ -10,11 +10,11 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
+import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
-import soliloquy.specs.sprites.entities.SpriteSet;
 
 import java.util.function.Function;
 
@@ -294,18 +294,22 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         String name;
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class CharacterPairedDataDTO {
         String key;
         String val;
     }
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class CharacterEventDTO {
         String trigger;
         String[] events;
     }
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class CharacterStatusEffectDTO {
         String type;
         int value;
     }
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class CharacterEntityDTO {
         String type;
         String data;

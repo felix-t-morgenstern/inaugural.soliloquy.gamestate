@@ -1,13 +1,15 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
+import soliloquy.specs.common.infrastructure.Collection;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.graphics.assets.Sprite;
+import soliloquy.specs.graphics.colorshifting.ColorShiftType;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
-import soliloquy.specs.sprites.entities.Sprite;
 
 public class FakeGroundType implements GroundType {
     private String _id;
@@ -62,6 +64,11 @@ public class FakeGroundType implements GroundType {
 
     @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public Collection<ColorShiftType> defaultColorShifts() {
         return null;
     }
 }

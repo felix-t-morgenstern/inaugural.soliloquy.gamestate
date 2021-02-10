@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
@@ -13,24 +13,27 @@ import soliloquy.specs.ruleset.entities.FixtureType;
 public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements TileFixture {
     private final EntityUuid ID;
     private final FixtureType TYPE;
-    private final Coordinate PIXEL_OFFSET;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final VariableCache DATA;
 
     private String _name;
+    private float _xTileWidthOffset;
+    private float _yTileHeightOffset;
 
+    @SuppressWarnings("ConstantConditions")
     public TileFixtureImpl(EntityUuid id,
                            FixtureType fixtureType,
-                           CoordinateFactory coordinateFactory,
                            CollectionFactory collectionFactory,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
                            VariableCache data) {
         super(collectionFactory);
-        ID = id;
-        TYPE = fixtureType;
-        PIXEL_OFFSET = coordinateFactory.make(0,0);
-        TILE_FIXTURE_ITEMS = tileFixtureItemsFactory.make(this);
-        DATA = data;
+        ID = Check.ifNull(id, "id");
+        TYPE = Check.ifNull(fixtureType, "fixtureType");
+        _xTileWidthOffset = TYPE.defaultXTileWidthOffset();
+        _yTileHeightOffset = TYPE.defaultYTileHeightOffset();
+        TILE_FIXTURE_ITEMS = Check.ifNull(tileFixtureItemsFactory, "tileFixtureItemsFactory")
+                .make(this);
+        DATA = Check.ifNull(data, "data");
     }
 
     @Override
@@ -50,13 +53,6 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
         enforceDeletionInvariants("fixtureType");
         enforceCorrectTileInvariant("fixtureType");
         return TYPE;
-    }
-
-    @Override
-    public Coordinate pixelOffset() throws IllegalStateException {
-        enforceDeletionInvariants("pixelOffset");
-        enforceCorrectTileInvariant("pixelOffset");
-        return PIXEL_OFFSET;
     }
 
     @Override
@@ -139,5 +135,31 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
     @Override
     protected TileEntities<TileFixture> getTileAggregation() {
         return _tile.fixtures();
+    }
+
+    @Override
+    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
+        enforceInvariants("getXTileWidthOffset");
+        return _xTileWidthOffset;
+    }
+
+    @Override
+    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
+        enforceInvariants("getYTileHeightOffset");
+        return _yTileHeightOffset;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float xTileWidthOffset)
+            throws IllegalStateException, EntityDeletedException {
+        enforceInvariants("setXTileWidthOffset");
+        _xTileWidthOffset = xTileWidthOffset;
+    }
+
+    @Override
+    public void setYTileHeightOffset(float yTileHeightOffset)
+            throws IllegalStateException, EntityDeletedException {
+        enforceInvariants("setYTileHeightOffset");
+        _yTileHeightOffset = yTileHeightOffset;
     }
 }

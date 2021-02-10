@@ -3,6 +3,7 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
@@ -21,31 +22,14 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
 
     private static final Item ARCHETYPE = new ItemArchetype();
 
-    @SuppressWarnings("ConstantConditions")
     public PersistentItemHandler(Function<String, ItemType> getItemType,
                                  PersistentValueTypeHandler<EntityUuid> entityUuidHandler,
                                  PersistentValueTypeHandler<VariableCache> dataHandler,
                                  ItemFactory itemFactory) {
-        if (getItemType == null) {
-            throw new IllegalArgumentException(
-                    "PersistentItemHandler: getItemType cannot be null");
-        }
-        GET_ITEM_TYPE = getItemType;
-        if (entityUuidHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentItemHandler: entityUuidHandler cannot be null");
-        }
-        ENTITY_UUID_HANDLER = entityUuidHandler;
-        if (dataHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentItemHandler: dataHandler cannot be null");
-        }
-        DATA_HANDLER = dataHandler;
-        if (itemFactory == null) {
-            throw new IllegalArgumentException(
-                    "PersistentItemHandler: itemFactory cannot be null");
-        }
-        ITEM_FACTORY = itemFactory;
+        GET_ITEM_TYPE = Check.ifNull(getItemType, "getItemType");
+        ENTITY_UUID_HANDLER = Check.ifNull(entityUuidHandler, "entityUuidHandler");
+        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
     }
 
     @Override
@@ -67,6 +51,8 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
         ItemType itemType = GET_ITEM_TYPE.apply(itemDTO.typeId);
         VariableCache data = DATA_HANDLER.read(itemDTO.data);
         Item readItem = ITEM_FACTORY.make(itemType, data, id);
+        readItem.setXTileWidthOffset(itemDTO.xOffset);
+        readItem.setYTileHeightOffset(itemDTO.yOffset);
         if (itemType.hasCharges()) {
             readItem.setCharges(itemDTO.charges);
         } else if (itemType.isStackable()) {
@@ -83,6 +69,8 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
         ItemDTO itemDTO = new ItemDTO();
         itemDTO.id = ENTITY_UUID_HANDLER.write(item.id());
         itemDTO.typeId = item.type().id();
+        itemDTO.xOffset = item.getXTileWidthOffset();
+        itemDTO.yOffset = item.getYTileHeightOffset();
         if (item.type().hasCharges()) {
             itemDTO.charges = item.getCharges();
         } else if (item.type().isStackable()) {
@@ -92,9 +80,12 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
         return new Gson().toJson(itemDTO);
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class ItemDTO {
         String id;
         String typeId;
+        Float xOffset;
+        Float yOffset;
         Integer charges;
         Integer numberInStack;
         String data;

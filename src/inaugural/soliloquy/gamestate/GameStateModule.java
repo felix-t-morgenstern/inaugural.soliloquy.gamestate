@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.name.Named;
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.*;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.*;
@@ -10,22 +9,21 @@ import soliloquy.specs.common.infrastructure.PersistentValuesHandler;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.graphics.assets.Sprite;
+import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.gameconcepts.*;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
-import soliloquy.specs.sprites.entities.Sprite;
-import soliloquy.specs.sprites.entities.SpriteSet;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class GameStateModule extends AbstractModule {
@@ -63,10 +61,6 @@ public class GameStateModule extends AbstractModule {
                            Registry<ActiveAbilityType> activeAbilityTypes,
                            Registry<ReactiveAbilityType> reactiveAbilityTypes,
                            @SuppressWarnings("rawtypes") Registry<Action> actions,
-                           @Named("onCharacterTurnStart") Consumer<Character> onCharacterTurnStart,
-                           @Named("onCharacterTurnEnd") Consumer<Character> onCharacterTurnEnd,
-                           @Named("onRoundStart") Consumer<Void> onRoundStart,
-                           @Named("onRoundEnd") Consumer<Void> onRoundEnd,
                            java.util.Map<String, Path> fileLocations) {
         PersistentValueTypeHandler<EntityUuid> uuidHandler =
                 persistentValuesHandler.getPersistentValueTypeHandler(
@@ -127,8 +121,7 @@ public class GameStateModule extends AbstractModule {
                 new TileFixtureItemsFactoryImpl(collectionFactory);
 
         TileFixtureFactory tileFixtureFactory = new TileFixtureFactoryImpl(entityUuidFactory,
-                coordinateFactory, collectionFactory, tileFixtureItemsFactory,
-                variableCacheFactory);
+                collectionFactory, tileFixtureItemsFactory, variableCacheFactory);
 
         PersistentValueTypeHandler<TileFixture> tileFixturesHandler =
                 new PersistentTileFixtureHandler(fixtureTypes::get, tileFixtureFactory,

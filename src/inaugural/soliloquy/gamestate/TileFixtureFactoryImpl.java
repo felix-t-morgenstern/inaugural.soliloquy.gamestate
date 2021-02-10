@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -13,42 +13,19 @@ import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class TileFixtureFactoryImpl implements TileFixtureFactory {
     private final EntityUuidFactory ENTITY_UUID_FACTORY;
-    private final CoordinateFactory COORDINATE_FACTORY;
     private final CollectionFactory COLLECTION_FACTORY;
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
     public TileFixtureFactoryImpl(EntityUuidFactory entityUuidFactory,
-                                  CoordinateFactory coordinateFactory,
                                   CollectionFactory collectionFactory,
                                   TileFixtureItemsFactory tileFixtureItemsFactory,
                                   VariableCacheFactory dataFactory) {
-        if (entityUuidFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureFactoryImpl: entityUuidFactory cannot be null");
-        }
-        ENTITY_UUID_FACTORY = entityUuidFactory;
-        if (coordinateFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureFactoryImpl: coordinateFactory cannot be null");
-        }
-        COORDINATE_FACTORY = coordinateFactory;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureFactoryImpl: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
-        if (tileFixtureItemsFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureFactoryImpl: tileFixtureItemsFactory cannot be null");
-        }
-        TILE_FIXTURE_ITEMS_FACTORY = tileFixtureItemsFactory;
-        if (dataFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureFactoryImpl: dataFactory cannot be null");
-        }
-        DATA_FACTORY = dataFactory;
+        ENTITY_UUID_FACTORY = Check.ifNull(entityUuidFactory, "entityUuidFactory");
+        COLLECTION_FACTORY = Check.ifNull(collectionFactory, "collectionFactory");
+        TILE_FIXTURE_ITEMS_FACTORY = Check.ifNull(tileFixtureItemsFactory,
+                "tileFixtureItemsFactory");
+        DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
     }
 
     @Override
@@ -60,15 +37,9 @@ public class TileFixtureFactoryImpl implements TileFixtureFactory {
     @Override
     public TileFixture make(FixtureType fixtureType, VariableCache data, EntityUuid entityUuid)
             throws IllegalArgumentException {
-        if (fixtureType == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureFactoryImpl.make: fixtureType cannot be null");
-        }
-        if (entityUuid == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureFactoryImpl.make: entityUuid cannot be null");
-        }
-        return new TileFixtureImpl(entityUuid, fixtureType, COORDINATE_FACTORY, COLLECTION_FACTORY,
+        Check.ifNull(fixtureType, "fixtureType");
+        Check.ifNull(entityUuid, "entityUuid");
+        return new TileFixtureImpl(entityUuid, fixtureType, COLLECTION_FACTORY,
                 TILE_FIXTURE_ITEMS_FACTORY,
                 data == null ? DATA_FACTORY.make() : data);
     }

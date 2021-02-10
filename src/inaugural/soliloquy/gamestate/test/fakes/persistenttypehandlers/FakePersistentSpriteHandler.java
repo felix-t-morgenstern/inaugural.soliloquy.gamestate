@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes.persistenttypehandlers;
 
 import inaugural.soliloquy.gamestate.test.stubs.SpriteStub;
-import soliloquy.specs.sprites.entities.Sprite;
+import soliloquy.specs.graphics.assets.Sprite;
 
 public class FakePersistentSpriteHandler extends FakePersistentValueTypeHandler<Sprite> {
     @Override

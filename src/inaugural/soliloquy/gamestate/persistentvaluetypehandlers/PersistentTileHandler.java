@@ -12,9 +12,9 @@ import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileFactory;
 import soliloquy.specs.gamestate.factories.TileWallSegmentFactory;
+import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
-import soliloquy.specs.sprites.entities.Sprite;
 
 import java.util.function.Function;
 
@@ -254,6 +254,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
         String data;
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class TileEntityDTO {
         TileEntityDTO(int z, String entity) {
             this.z = z;
@@ -264,6 +265,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile> implements P
         String entity;
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class TileWallSegmentDTO {
         TileWallSegmentDTO(String type, int direction, int height, int z,
                            String data) {

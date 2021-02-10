@@ -7,7 +7,6 @@ import inaugural.soliloquy.gamestate.test.spydoubles.TileVisibilitySpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -30,7 +29,6 @@ class CameraImplTests {
                 TILE_VISIBILITY, () -> GAME_ZONE);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CameraImpl(null,
@@ -72,24 +70,21 @@ class CameraImplTests {
     }
 
     @Test
-    void testGetAndSetPixelOffset() {
-        _camera.setPixelOffset(123,456);
-        assertEquals(123, _camera.getPixelOffset().getX());
-        assertEquals(456, _camera.getPixelOffset().getY());
+    void testGetAndSetXTileWidthOffset() {
+        float offset = 0.123f;
+
+        _camera.setXTileWidthOffset(offset);
+
+        assertEquals(offset, _camera.getXTileWidthOffset());
     }
 
     @Test
-    void testSetInvalidPixelOffset() {
-        assertThrows(IllegalArgumentException.class, () -> _camera.setPixelOffset(-1,0));
-        assertThrows(IllegalArgumentException.class, () -> _camera.setPixelOffset(0,-1));
-    }
+    void testGetAndSetYTileHeightOffset() {
+        float offset = 0.123f;
 
-    @SuppressWarnings("unused")
-    @Test
-    void testGetPixelOffsetProducesClone() {
-        _camera.setPixelOffset(123,456);
-        ReadableCoordinate pixelOffset = _camera.getPixelOffset();
-        assertThrows(ClassCastException.class, () -> {Coordinate x = (Coordinate)pixelOffset;});
+        _camera.setYTileHeightOffset(offset);
+
+        assertEquals(offset, _camera.getYTileHeightOffset());
     }
 
     @Test

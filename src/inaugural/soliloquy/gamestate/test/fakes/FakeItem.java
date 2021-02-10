@@ -6,6 +6,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 public class FakeItem implements Item {
@@ -18,6 +19,8 @@ public class FakeItem implements Item {
     public Character _inventoryCharacter;
     public TileFixture _tileFixture;
     public Tile _tile;
+    public float _xTileWidthOffset;
+    public float _yTileHeightOffset;
 
     private Integer _charges;
     private Integer _numberInStack;
@@ -163,5 +166,25 @@ public class FakeItem implements Item {
     @Override
     public void setPluralName(String s) throws IllegalArgumentException {
 
+    }
+
+    @Override
+    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
+        return _xTileWidthOffset;
+    }
+
+    @Override
+    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
+        return _yTileHeightOffset;
+    }
+
+    @Override
+    public void setXTileWidthOffset(float v) throws IllegalStateException, EntityDeletedException {
+        _xTileWidthOffset = v;
+    }
+
+    @Override
+    public void setYTileHeightOffset(float v) throws IllegalStateException, EntityDeletedException {
+        _yTileHeightOffset = v;
     }
 }

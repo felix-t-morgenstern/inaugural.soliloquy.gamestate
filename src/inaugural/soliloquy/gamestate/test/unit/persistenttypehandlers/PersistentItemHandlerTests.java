@@ -26,13 +26,15 @@ class PersistentItemHandlerTests {
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
             new FakePersistentVariableCacheHandler();
     private final ItemFactory ITEM_FACTORY = new FakeItemFactory();
-    private final Item ITEM = new FakeItem();
+    private final FakeItem ITEM = new FakeItem();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final int NUM_CHARGES = 123;
     private final int NUM_IN_STACK = 456;
+    private final float X_TILE_WIDTH_OFFSET = 0.546f;
+    private final float Y_TILE_HEIGHT_OFFSET = 0.213f;
 
-    private final String DATA_WITH_CHARGES = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"charges\":123,\"data\":\"VariableCache0\"}";
-    private final String DATA_STACKABLE = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"numberInStack\":456,\"data\":\"VariableCache0\"}";
+    private final String DATA_WITH_CHARGES = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"charges\":123,\"data\":\"VariableCache0\"}";
+    private final String DATA_STACKABLE = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"numberInStack\":456,\"data\":\"VariableCache0\"}";
 
     private PersistentValueTypeHandler<Item> _persistentItemHandler;
 
@@ -40,12 +42,13 @@ class PersistentItemHandlerTests {
     void setUp() {
         ItemTypeStub._hasCharges = false;
         ItemTypeStub._isStackable = false;
+        ITEM._xTileWidthOffset = X_TILE_WIDTH_OFFSET;
+        ITEM._yTileHeightOffset = Y_TILE_HEIGHT_OFFSET;
         ITEM_TYPES_REGISTRY.add(ITEM_TYPE);
         _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, ID_HANDLER,
                 DATA_HANDLER, ITEM_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
@@ -109,6 +112,8 @@ class PersistentItemHandlerTests {
         assertSame(((FakePersistentEntityUuidHandler) ID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
+        assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
+        assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
         assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
@@ -124,6 +129,8 @@ class PersistentItemHandlerTests {
         assertSame(((FakePersistentEntityUuidHandler) ID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.id());
         assertSame(ITEM_TYPE, readItem.type());
+        assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
+        assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
         assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
