@@ -26,7 +26,8 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     private final VariableCacheFactory DATA_FACTORY;
     private final TEntity ARCHETYPE;
 
-    private static final CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
+    private static final CanGetInterfaceNameOfInput CAN_GET_INTERFACE_NAME_OF_INPUT =
+            new CanGetInterfaceNameOfInput();
 
     final HashMap<TType, TEntity> ENTITIES = new HashMap<>();
 
@@ -138,6 +139,6 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     @Override
     public String getInterfaceName() {
         return CharacterEntitiesOfType.class.getCanonicalName() + "<" +
-                CAN_GET_INTERFACE_NAME.getProperTypeName(ARCHETYPE) + ">";
+                CAN_GET_INTERFACE_NAME_OF_INPUT.getProperTypeName(ARCHETYPE) + ">";
     }
 }

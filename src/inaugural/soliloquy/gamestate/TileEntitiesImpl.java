@@ -19,7 +19,8 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     private final MapFactory MAP_FACTORY;
     final HashMap<TEntity,Integer> ENTITIES;
 
-    private final static CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
+    private final static CanGetInterfaceNameOfInput CAN_GET_INTERFACE_NAME_OF_INPUT =
+            new CanGetInterfaceNameOfInput();
 
     private Consumer<TEntity> _actionAfterAdding;
     private Consumer<TEntity> _actionAfterRemoving;
@@ -177,7 +178,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     public String getInterfaceName() {
         enforceDeletionInvariants("getInterfaceName");
         return TileEntities.class.getCanonicalName() + "<" +
-                CAN_GET_INTERFACE_NAME.getProperTypeName(getArchetype()) + ">";
+                CAN_GET_INTERFACE_NAME_OF_INPUT.getProperTypeName(getArchetype()) + ">";
     }
 
     @Override

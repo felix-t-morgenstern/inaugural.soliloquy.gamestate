@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
-import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
+import inaugural.soliloquy.tools.persistentvaluetypehandlers.PersistentTypeHandler;
 import soliloquy.specs.common.infrastructure.*;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;

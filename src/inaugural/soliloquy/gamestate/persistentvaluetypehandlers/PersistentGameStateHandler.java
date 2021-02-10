@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
-import inaugural.soliloquy.common.persistentvaluetypehandlers.PersistentTypeHandler;
 import inaugural.soliloquy.gamestate.archetypes.GameStateArchetype;
+import inaugural.soliloquy.tools.persistentvaluetypehandlers.PersistentTypeHandler;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.ReadablePair;

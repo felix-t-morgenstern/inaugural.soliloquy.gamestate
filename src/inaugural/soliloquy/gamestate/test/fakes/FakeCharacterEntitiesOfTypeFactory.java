@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import inaugural.soliloquy.common.CanGetInterfaceName;
+import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;

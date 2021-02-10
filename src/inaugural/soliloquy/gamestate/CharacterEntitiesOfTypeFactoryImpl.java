@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate;
 
-import inaugural.soliloquy.common.CanGetInterfaceName;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
@@ -14,7 +13,7 @@ import soliloquy.specs.gamestate.factories.CharacterEntitiesOfTypeFactory;
 import java.util.HashMap;
 import java.util.function.Function;
 
-public class CharacterEntitiesOfTypeFactoryImpl extends CanGetInterfaceName
+public class CharacterEntitiesOfTypeFactoryImpl extends CanGetInterfaceNameOfInput
         implements CharacterEntitiesOfTypeFactory {
     private final CollectionFactory COLLECTION_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;

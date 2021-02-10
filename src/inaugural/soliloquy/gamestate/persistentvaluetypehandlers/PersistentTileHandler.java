@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
-import inaugural.soliloquy.common.HasOneGenericParam;
 import inaugural.soliloquy.gamestate.archetypes.TileArchetype;
+import inaugural.soliloquy.tools.generic.HasOneGenericParam;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -18,7 +18,8 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 import java.util.function.Function;
 
-public class PersistentTileHandler extends HasOneGenericParam<Tile> implements PersistentValueTypeHandler<Tile> {
+public class PersistentTileHandler extends HasOneGenericParam<Tile>
+        implements PersistentValueTypeHandler<Tile> {
     private final TileFactory TILE_FACTORY;
     private final TileWallSegmentFactory TILE_WALL_SEGMENT_FACTORY;
 
