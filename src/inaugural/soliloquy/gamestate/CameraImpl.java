@@ -2,16 +2,13 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CoordinateArchetype;
-import inaugural.soliloquy.gamestate.archetypes.ReadableCoordinateArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -26,7 +23,7 @@ public class CameraImpl implements Camera {
     private final Map<Character,Integer> CHARACTERS_PROVIDING_VISIBILITY;
     private final Map<Coordinate,Integer> COORDINATES_PROVIDING_VISIBILITY;
     private final TileVisibility TILE_VISIBILITY;
-    private final Collection<ReadableCoordinate> VISIBLE_TILES;
+    private final List<Coordinate> VISIBLE_TILES;
     private final Supplier<GameZone> GET_CURRENT_GAME_ZONE;
 
     private int _tileLocationX;
@@ -37,7 +34,7 @@ public class CameraImpl implements Camera {
     private boolean _allTilesVisible;
 
     @SuppressWarnings("ConstantConditions")
-    public CameraImpl(CoordinateFactory coordinateFactory, CollectionFactory collectionFactory,
+    public CameraImpl(CoordinateFactory coordinateFactory, ListFactory listFactory,
                       MapFactory mapFactory, TileVisibility tileVisibility,
                       Supplier<GameZone> getCurrentGameZone) {
         COORDINATE_FACTORY = Check.ifNull(coordinateFactory, "coordinateFactory");
@@ -45,8 +42,8 @@ public class CameraImpl implements Camera {
         CHARACTERS_PROVIDING_VISIBILITY = mapFactory.make(new CharacterArchetype(), 0);
         COORDINATES_PROVIDING_VISIBILITY = mapFactory.make(new CoordinateArchetype(), 0);
         TILE_VISIBILITY = Check.ifNull(tileVisibility, "tileVisibility");
-        Check.ifNull(collectionFactory, "collectionFactory");
-        VISIBLE_TILES = collectionFactory.make(new ReadableCoordinateArchetype());
+        Check.ifNull(listFactory, "listFactory");
+        VISIBLE_TILES = listFactory.make(new CoordinateArchetype());
         GET_CURRENT_GAME_ZONE = Check.ifNull(getCurrentGameZone, "getCurrentGameZone");
     }
 
@@ -136,21 +133,15 @@ public class CameraImpl implements Camera {
                 }
             }
         } else {
-            HashMap<ReadableCoordinate,Integer> coordinatesProvidingVisibility = new HashMap<>();
-            for(Pair<Character,Integer> characterProvidingVisibility
-                    : CHARACTERS_PROVIDING_VISIBILITY) {
-                coordinatesProvidingVisibility.put(characterProvidingVisibility.getItem1().tile()
-                        .location(), characterProvidingVisibility.getItem2());
-            }
-            for(Pair<Coordinate,Integer> coordinateProvidingVisibility
-                    : COORDINATES_PROVIDING_VISIBILITY) {
-                coordinatesProvidingVisibility.put(coordinateProvidingVisibility.getItem1(),
-                        coordinateProvidingVisibility.getItem2());
-            }
-            for(java.util.Map.Entry<ReadableCoordinate,Integer> coordinateProvidingVisibility
-                    : coordinatesProvidingVisibility.entrySet()) {
-                ReadableCoordinate coordinate = coordinateProvidingVisibility.getKey();
-                Integer coordinateVisibilityRadius = coordinateProvidingVisibility.getValue();
+            HashMap<Coordinate,Integer> coordinatesProvidingVisibility = new HashMap<>();
+            CHARACTERS_PROVIDING_VISIBILITY.keySet().forEach(characterProvidingVisibility ->
+                    coordinatesProvidingVisibility
+                            .put(characterProvidingVisibility.tile().location(),
+                                    CHARACTERS_PROVIDING_VISIBILITY.get(characterProvidingVisibility)));
+            COORDINATES_PROVIDING_VISIBILITY.keySet().forEach(coordinateProvidingVisibility ->
+                    coordinatesProvidingVisibility.put(coordinateProvidingVisibility,
+                            COORDINATES_PROVIDING_VISIBILITY.get(coordinateProvidingVisibility)));
+            coordinatesProvidingVisibility.forEach((coordinate, coordinateVisibilityRadius) -> {
                 Tile originTile = gameZone.tile(coordinate.getX(), coordinate.getY());
                 int minVisibleX = Math.max(0,
                         coordinate.getX() - (coordinateVisibilityRadius - 1));
@@ -176,12 +167,12 @@ public class CameraImpl implements Camera {
                         }
                     }
                 }
-            }
+            });
         }
     }
 
     private boolean visibleTilesContainsCoordinate(int x, int y) {
-        for(ReadableCoordinate coordinate : VISIBLE_TILES) {
+        for(Coordinate coordinate : VISIBLE_TILES) {
             if (coordinate.getX() == x && coordinate.getY() == y) {
                 return true;
             }
@@ -190,7 +181,7 @@ public class CameraImpl implements Camera {
     }
 
     @Override
-    public Collection<ReadableCoordinate> visibleTiles() {
+    public List<Coordinate> visibleTiles() {
         return VISIBLE_TILES;
     }
 

@@ -1,20 +1,16 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.CollectionFactory;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
 
 public class CharacterInventoryFactoryImpl implements CharacterInventoryFactory {
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
-    public CharacterInventoryFactoryImpl(CollectionFactory collectionFactory) {
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "CharacterInventoryFactory: collectionFactory must not be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
+    public CharacterInventoryFactoryImpl(ListFactory listFactory) {
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
     }
 
     @Override
@@ -23,7 +19,7 @@ public class CharacterInventoryFactoryImpl implements CharacterInventoryFactory 
             throw new IllegalArgumentException(
                     "CharacterInventoryFactory.make: character must not be null");
         }
-        return new CharacterInventoryImpl(character, COLLECTION_FACTORY);
+        return new CharacterInventoryImpl(character, LIST_FACTORY);
     }
 
     @Override

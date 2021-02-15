@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
-import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileEntities;
@@ -113,7 +113,7 @@ class TileEntitiesImplTests {
         _tileEntities.add(ITEM_2);
         _tileEntities.add(ITEM_3);
 
-        ReadableMap<Item,Integer> representation = _tileEntities.representation();
+        Map<Item,Integer> representation = _tileEntities.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());
@@ -132,7 +132,7 @@ class TileEntitiesImplTests {
     void testAddAtZIndex() {
         final int zIndex = 123;
         _tileEntities.add(ITEM, zIndex);
-        ReadableMap<Item,Integer> representation = _tileEntities.representation();
+        Map<Item,Integer> representation = _tileEntities.representation();
 
         assertEquals((Integer) zIndex, representation.get(ITEM));
     }
@@ -143,7 +143,7 @@ class TileEntitiesImplTests {
         _tileEntities.add(ITEM_2, 456);
         _tileEntities.add(ITEM_3, 789);
 
-        ArrayList<ReadablePair<Item,Integer>> fromIterator = new ArrayList<>();
+        ArrayList<Pair<Item,Integer>> fromIterator = new ArrayList<>();
 
         _tileEntities.forEach(fromIterator::add);
 

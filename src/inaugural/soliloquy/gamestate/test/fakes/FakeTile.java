@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -19,8 +19,8 @@ public class FakeTile implements Tile {
     private final TileEntities<TileFixture> FIXTURES = new FakeTileEntities<>(this);
     private final TileEntities<Item> TILE_ITEMS = new FakeTileEntities<>(this);
     private final TileWallSegments TILE_WALL_SEGMENTS = new FakeTileWallSegments(this);
-    private final Collection<GameMovementEvent> MOVEMENT_EVENTS = new FakeCollection<>();
-    private final Collection<GameAbilityEvent> ABILITY_EVENTS = new FakeCollection<>();
+    private final List<GameMovementEvent> MOVEMENT_EVENTS = new FakeList<>();
+    private final List<GameAbilityEvent> ABILITY_EVENTS = new FakeList<>();
 
     private final Map<Sprite, Integer> SPRITES = new FakeMap<>();
 
@@ -28,7 +28,7 @@ public class FakeTile implements Tile {
     private GroundType _groundType;
     private boolean _isDeleted;
 
-    private ReadableCoordinate _tileLocation;
+    private Coordinate _tileLocation;
     private VariableCache _data;
 
     public FakeTile() {
@@ -37,10 +37,10 @@ public class FakeTile implements Tile {
 
     public FakeTile(GameZone gameZone, int x, int y) {
         _gameZone = gameZone;
-        _tileLocation = new FakeReadableCoordinate(x, y);
+        _tileLocation = new FakeCoordinate(x, y);
     }
 
-    public FakeTile(ReadableCoordinate tileLocation) {
+    public FakeTile(Coordinate tileLocation) {
         _tileLocation = tileLocation;
         _gameZone = new FakeGameZone();
     }
@@ -71,7 +71,7 @@ public class FakeTile implements Tile {
     }
 
     @Override
-    public ReadableCoordinate location() throws IllegalStateException {
+    public Coordinate location() throws IllegalStateException {
         return _tileLocation;
     }
 
@@ -131,12 +131,12 @@ public class FakeTile implements Tile {
     }
 
     @Override
-    public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
+    public List<GameMovementEvent> movementEvents() throws IllegalStateException {
         return MOVEMENT_EVENTS;
     }
 
     @Override
-    public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
+    public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
         return ABILITY_EVENTS;
     }
 

@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
@@ -27,7 +27,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public Collection<CharacterClassification> classifications() throws IllegalStateException {
+    public List<CharacterClassification> classifications() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 

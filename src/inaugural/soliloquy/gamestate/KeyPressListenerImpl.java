@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
@@ -52,13 +52,11 @@ public class KeyPressListenerImpl implements KeyPressListener {
     }
 
     private void handleKeyEvent(KeyEvent e, Consumer<KeyBinding> onEvent) {
-        ArrayList<Integer> indicesArr = new ArrayList<>();
-        Collection<Integer> indices = CONTEXTS.getKeys();
-        indices.forEach(indicesArr::add);
+        ArrayList<Integer> indicesArr = new ArrayList<>(CONTEXTS.keySet());
         Collections.sort(indicesArr);
         for(Integer index : indicesArr) {
             KeyBindingContext context = CONTEXTS.get(index);
-            Collection<KeyBinding> bindings = context.bindings();
+            List<KeyBinding> bindings = context.bindings();
             for(KeyBinding binding : bindings) {
                 if (binding.boundCharacters().contains(e.getKeyChar())) {
                     onEvent.accept(binding);

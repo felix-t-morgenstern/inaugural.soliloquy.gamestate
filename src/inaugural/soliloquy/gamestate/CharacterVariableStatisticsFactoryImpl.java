@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.gamestate.entities.Character;
@@ -14,20 +14,20 @@ import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 public class CharacterVariableStatisticsFactoryImpl
         implements CharacterVariableStatisticsFactory {
     private final MapFactory MAP_FACTORY;
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
     private final CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
             CharacterVariableStatistic> FACTORY;
 
     public CharacterVariableStatisticsFactoryImpl(MapFactory mapFactory,
-                                                  CollectionFactory collectionFactory,
+                                                  ListFactory listFactory,
                                                   VariableCacheFactory dataFactory,
                                                   CharacterEntityOfTypeFactory<
                                                             CharacterVariableStatisticType,
                                                             CharacterVariableStatistic>
                                                             factory) {
         MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
-        COLLECTION_FACTORY = Check.ifNull(collectionFactory, "collectionFactory");
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
         FACTORY = Check.ifNull(factory, "factory");
     }
@@ -38,7 +38,7 @@ public class CharacterVariableStatisticsFactoryImpl
             throw new IllegalArgumentException(
                     "CharacterVariableStatisticsFactoryImpl.make: character cannot be null");
         }
-        return new CharacterVariableStatisticsImpl(character, FACTORY, COLLECTION_FACTORY,
+        return new CharacterVariableStatisticsImpl(character, FACTORY, LIST_FACTORY,
                 DATA_FACTORY, MAP_FACTORY);
     }
 

@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
@@ -26,14 +26,14 @@ public class FakeCharacter implements Character {
 
     private final EntityUuid ID;
     private final CharacterType TYPE;
-    private final Collection<CharacterClassification> CLASSIFICATIONS = new FakeCollection<>();
+    private final List<CharacterClassification> CLASSIFICATIONS = new FakeList<>();
     private final Map<String,String> PRONOUNS = new FakeMap<>();
     private final CharacterEvents EVENTS = new FakeCharacterEvents(this);
     private final CharacterVariableStatistics VARIABLE_STATS;
     private final CharacterEntitiesOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>>
             STATIC_STATS = new FakeCharacterEntitiesOfType<>(this, c -> t -> d ->
-            new FakeCharacterStaticStatistic(c, t, d));
+            new FakeCharacterStaticStatistic(t, d));
     private final CharacterStatusEffects STATUS_EFFECTS = new FakeCharacterStatusEffects();
     private final CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>>
             ACTIVE_ABILITIES = new FakeCharacterEntitiesOfType<>(this, c -> t -> d ->
@@ -67,7 +67,7 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public Collection<CharacterClassification> classifications() throws IllegalStateException {
+    public List<CharacterClassification> classifications() throws IllegalStateException {
         return CLASSIFICATIONS;
     }
 

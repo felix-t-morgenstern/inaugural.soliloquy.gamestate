@@ -3,11 +3,10 @@ package inaugural.soliloquy.gamestate.test.archetypes;
 import inaugural.soliloquy.gamestate.archetypes.*;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -109,7 +108,7 @@ class ArchetypesTests {
 
     @Test
     void testGameCharacterEventReadableCollectionArchetype() {
-        assertEquals(ReadableCollection.class.getCanonicalName() + "<" +
+        assertEquals(List.class.getCanonicalName() + "<" +
                 GameCharacterEvent.class.getCanonicalName() + ">",
                 new GameCharacterEventReadableCollectionArchetype().getInterfaceName());
     }
@@ -159,12 +158,6 @@ class ArchetypesTests {
     void testReactiveAbilityTypeArchetype() {
         assertEquals(ReactiveAbilityType.class.getCanonicalName(),
                 new ReactiveAbilityTypeArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testReadableCoordinateArchetype() {
-        assertEquals(ReadableCoordinate.class.getCanonicalName(),
-                new ReadableCoordinateArchetype().getInterfaceName());
     }
 
     @Test

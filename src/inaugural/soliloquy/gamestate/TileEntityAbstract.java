@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.factories.ListFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
@@ -19,7 +19,7 @@ public abstract class TileEntityAbstract<TEntity extends TileEntity>
         super();
     }
 
-    TileEntityAbstract(CollectionFactory collectionFactory) {
+    TileEntityAbstract(ListFactory collectionFactory) {
         super(collectionFactory);
     }
 
@@ -34,7 +34,7 @@ public abstract class TileEntityAbstract<TEntity extends TileEntity>
     }
 
     @Override
-    public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
+    public List<GameMovementEvent> movementEvents() throws IllegalStateException {
         if (!(this instanceof TileFixture)) {
             throw new UnsupportedOperationException();
         }
@@ -42,7 +42,7 @@ public abstract class TileEntityAbstract<TEntity extends TileEntity>
     }
 
     @Override
-    public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
+    public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
         if (!(this instanceof TileFixture)) {
             throw new UnsupportedOperationException();
         }

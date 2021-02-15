@@ -2,15 +2,15 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterEventsImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameCharacterEvent;
 import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -20,25 +20,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEventsImplTests {
     private final Character CHARACTER = new FakeCharacter();
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private CharacterEvents _characterEvents;
 
     @BeforeEach
     void setUp() {
-        _characterEvents = new CharacterEventsImpl(CHARACTER, COLLECTION_FACTORY, MAP_FACTORY);
+        _characterEvents = new CharacterEventsImpl(CHARACTER, LIST_FACTORY, MAP_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterEventsImpl(null, COLLECTION_FACTORY, MAP_FACTORY));
+                new CharacterEventsImpl(null, LIST_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterEventsImpl(CHARACTER, null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterEventsImpl(CHARACTER, COLLECTION_FACTORY, null));
+                new CharacterEventsImpl(CHARACTER, LIST_FACTORY, null));
     }
 
     @Test
@@ -67,8 +66,7 @@ class CharacterEventsImplTests {
         _characterEvents.addEvent(trigger1, event3);
         _characterEvents.addEvent(trigger2, event4);
 
-        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
-                _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(2, representation.size());
@@ -91,8 +89,7 @@ class CharacterEventsImplTests {
         _characterEvents.addEvent(trigger1, event1);
         _characterEvents.addEvent(trigger1, event1);
 
-        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
-                _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(1, representation.size());
@@ -124,8 +121,7 @@ class CharacterEventsImplTests {
         assertTrue(_characterEvents.removeEvent(trigger1, event3));
         assertFalse(_characterEvents.removeEvent(trigger1, event3));
 
-        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
-                _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(1, representation.size());
@@ -177,8 +173,7 @@ class CharacterEventsImplTests {
 
         _characterEvents.clearTrigger(trigger1);
 
-        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
-                _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(1, representation.size());
@@ -205,8 +200,7 @@ class CharacterEventsImplTests {
 
         _characterEvents.clearAllTriggers();
 
-        ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation =
-                _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(0, representation.size());
@@ -230,9 +224,9 @@ class CharacterEventsImplTests {
         _characterEvents.addEvent(trigger2, event2);
         _characterEvents.addEvent(trigger3, event1);
 
-        ReadableCollection<String> event1Triggers = _characterEvents.getTriggersForEvent(event1);
-        ReadableCollection<String> event2Triggers = _characterEvents.getTriggersForEvent(event2);
-        ReadableCollection<String> event3Triggers = _characterEvents.getTriggersForEvent(event3);
+        List<String> event1Triggers = _characterEvents.getTriggersForEvent(event1);
+        List<String> event2Triggers = _characterEvents.getTriggersForEvent(event2);
+        List<String> event3Triggers = _characterEvents.getTriggersForEvent(event3);
 
         assertEquals(2, event1Triggers.size());
         assertTrue(event1Triggers.contains(trigger1));

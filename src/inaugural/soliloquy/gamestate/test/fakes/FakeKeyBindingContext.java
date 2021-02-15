@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 
 public class FakeKeyBindingContext implements KeyBindingContext {
-    private Collection<KeyBinding> BINDINGS = new FakeCollection<>();
+    private List<KeyBinding> BINDINGS = new FakeList<>();
 
     private boolean _blocksAllLowerBindings;
 
     @Override
-    public Collection<KeyBinding> bindings() {
+    public List<KeyBinding> bindings() {
         return BINDINGS;
     }
 

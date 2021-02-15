@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
-import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
@@ -33,7 +33,6 @@ class TileWallSegmentsImplTests {
         _tileWallSegments = new TileWallSegmentsImpl(TILE, PAIR_FACTORY, MAP_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
@@ -196,8 +195,8 @@ class TileWallSegmentsImplTests {
         _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2, 56, 78);
         _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 90, 123456);
 
-        ArrayList<ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
-                TileWallSegmentDimensions>>> fromIterator = new ArrayList<>();
+        ArrayList<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
+                        TileWallSegmentDimensions>>> fromIterator = new ArrayList<>();
 
         _tileWallSegments.forEach(fromIterator::add);
 
@@ -234,8 +233,8 @@ class TileWallSegmentsImplTests {
         _tileWallSegments.add(TileWallSegmentDirection.NORTH, TILE_WALL_SEGMENT_2, 56, 78);
         _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 90, 123456);
 
-        ReadableMap<TileWallSegmentDirection,ReadableMap<TileWallSegment,
-                TileWallSegmentDimensions>> representation = _tileWallSegments.representation();
+        Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>>
+                representation = _tileWallSegments.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());

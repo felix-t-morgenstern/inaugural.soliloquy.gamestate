@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileEntities;
 import soliloquy.specs.gamestate.entities.TileEntity;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class FakeTileEntities<TEntity extends TileEntity> implements TileEntities<TEntity> {
     public final HashMap<TEntity,Integer> ENTITIES = new HashMap<>();
     public final Tile TILE;
-    public final Collection<TEntity> REMOVED_ENTITIES = new FakeCollection<>();
+    public final List<TEntity> REMOVED_ENTITIES = new FakeList<>();
 
     private boolean _isDeleted;
     private Consumer<TEntity> _actionAfterAdding;
@@ -25,7 +25,7 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
     }
 
     @Override
-    public ReadableMap<TEntity, Integer> representation() {
+    public Map<TEntity, Integer> representation() {
         return null;
     }
 
@@ -98,7 +98,7 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
     }
 
     @Override
-    public Iterator<ReadablePair<TEntity, Integer>> iterator() {
+    public Iterator<Pair<TEntity, Integer>> iterator() {
         Iterator<TEntity> entities = ENTITIES.keySet().iterator();
         return new Iterator<>() {
             @Override
@@ -107,7 +107,7 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
             }
 
             @Override
-            public ReadablePair<TEntity, Integer> next() {
+            public Pair<TEntity, Integer> next() {
                 TEntity entity = entities.next();
                 return new FakePair<>(entity, ENTITIES.get(entity));
             }

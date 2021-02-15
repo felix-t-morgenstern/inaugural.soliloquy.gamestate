@@ -1,15 +1,14 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
 public class FakeActiveCharactersProvider implements ActiveCharactersProvider {
-    public final Collection<Pair<Character,VariableCache>> ActiveCharacters;
+    public final List<Pair<Character,VariableCache>> ActiveCharacters;
 
     private static final Character CHARACTER_1 = new FakeCharacter();
     private static final VariableCache DATA_1 = new VariableCacheStub();
@@ -19,7 +18,7 @@ public class FakeActiveCharactersProvider implements ActiveCharactersProvider {
     private static final VariableCache DATA_3 = new VariableCacheStub();
 
     public FakeActiveCharactersProvider() {
-        ActiveCharacters = new FakeCollection<>();
+        ActiveCharacters = new FakeList<>();
 
         ActiveCharacters.add(new FakePair<>(CHARACTER_1, DATA_1));
         ActiveCharacters.add(new FakePair<>(CHARACTER_2, DATA_2));
@@ -27,7 +26,7 @@ public class FakeActiveCharactersProvider implements ActiveCharactersProvider {
     }
 
     @Override
-    public ReadableCollection<Pair<Character, VariableCache>> activeCharacters() {
-        return ActiveCharacters.representation();
+    public List<Pair<Character, VariableCache>> activeCharacters() {
+        return ActiveCharacters.makeClone();
     }
 }

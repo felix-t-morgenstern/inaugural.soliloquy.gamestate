@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.StatusEffectTypeArchetype;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -45,7 +44,7 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public ReadableMap<StatusEffectType, Integer> representation() {
+    public Map<StatusEffectType, Integer> representation() {
         enforceInvariants("getAllStatusEffects");
         Map<StatusEffectType, Integer> statusEffectLevels =
                 MAP_FACTORY.make(STATUS_EFFECT_TYPE_ARCHETYPE, 0);
@@ -53,7 +52,7 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
                 STATUS_EFFECT_LEVELS.entrySet()) {
             statusEffectLevels.put(statusEffectLevel.getKey(), statusEffectLevel.getValue());
         }
-        return statusEffectLevels.readOnlyRepresentation();
+        return statusEffectLevels;
     }
 
     @Override

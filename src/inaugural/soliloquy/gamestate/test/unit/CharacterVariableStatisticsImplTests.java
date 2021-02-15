@@ -5,10 +5,10 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticsImplTests {
     private final Character CHARACTER = new FakeCharacter();
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeCharacterVariableStatisticFactory FACTORY =
@@ -34,25 +34,25 @@ class CharacterVariableStatisticsImplTests {
     @BeforeEach
     void setUp() {
         _variableStats = new CharacterVariableStatisticsImpl(CHARACTER, FACTORY,
-                COLLECTION_FACTORY, DATA_FACTORY, MAP_FACTORY);
+                LIST_FACTORY, DATA_FACTORY, MAP_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(null, FACTORY, COLLECTION_FACTORY,
+                new CharacterVariableStatisticsImpl(null, FACTORY, LIST_FACTORY,
                         DATA_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, null, COLLECTION_FACTORY,
+                new CharacterVariableStatisticsImpl(CHARACTER, null, LIST_FACTORY,
                         DATA_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, null,
                         DATA_FACTORY, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, COLLECTION_FACTORY,
+                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, LIST_FACTORY,
                         null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, COLLECTION_FACTORY,
+                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, LIST_FACTORY,
                         DATA_FACTORY, null));
     }
 
@@ -181,8 +181,7 @@ class CharacterVariableStatisticsImplTests {
         _variableStats.get(type2).setCurrentValue(456);
         _variableStats.get(type3).setCurrentValue(789);
 
-        ReadableMap<CharacterVariableStatisticType,Integer> currentValues =
-                _variableStats.currentValues();
+        Map<CharacterVariableStatisticType,Integer> currentValues = _variableStats.currentValues();
 
         assertNotNull(currentValues);
         assertEquals(3, currentValues.size());
@@ -208,8 +207,7 @@ class CharacterVariableStatisticsImplTests {
         ((FakeCharacterVariableStatistic) _variableStats.get(type2))._maxValue = 456;
         ((FakeCharacterVariableStatistic) _variableStats.get(type3))._maxValue = 789;
 
-        ReadableMap<CharacterVariableStatisticType,Integer> maxValues =
-                _variableStats.maxValues();
+        Map<CharacterVariableStatisticType,Integer> maxValues = _variableStats.maxValues();
 
         assertNotNull(maxValues);
         assertEquals(3, maxValues.size());
@@ -234,8 +232,7 @@ class CharacterVariableStatisticsImplTests {
         _variableStats.add(type2);
         _variableStats.add(type3);
 
-        ReadableCollection<CharacterVariableStatistic> representation =
-                _variableStats.representation();
+        List<CharacterVariableStatistic> representation = _variableStats.representation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
@@ -263,8 +260,7 @@ class CharacterVariableStatisticsImplTests {
         _variableStats.add(type2);
         _variableStats.add(type3);
 
-        ReadableCollection<CharacterVariableStatistic> representation =
-                _variableStats.representation();
+        List<CharacterVariableStatistic> representation = _variableStats.representation();
 
         ArrayList<CharacterVariableStatistic> fromIterator = new ArrayList<>();
 
@@ -287,8 +283,7 @@ class CharacterVariableStatisticsImplTests {
         _variableStats.add(type2);
         _variableStats.add(type3);
 
-        ReadableCollection<CharacterVariableStatistic> representation =
-                _variableStats.representation();
+        List<CharacterVariableStatistic> representation = _variableStats.representation();
 
         _variableStats.delete();
 

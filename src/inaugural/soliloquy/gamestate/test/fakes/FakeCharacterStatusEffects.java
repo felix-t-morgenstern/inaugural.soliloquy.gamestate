@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
@@ -30,8 +29,8 @@ public class FakeCharacterStatusEffects implements CharacterStatusEffects {
     }
 
     @Override
-    public ReadableMap<StatusEffectType, Integer> representation() throws IllegalStateException {
-        return _representation.readOnlyRepresentation();
+    public Map<StatusEffectType, Integer> representation() throws IllegalStateException {
+        return _representation.makeClone();
     }
 
     @Override

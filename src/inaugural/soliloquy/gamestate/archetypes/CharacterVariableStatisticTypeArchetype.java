@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.graphics.assets.Sprite;
@@ -78,17 +77,17 @@ public class CharacterVariableStatisticTypeArchetype implements CharacterVariabl
     }
 
     @Override
-    public ReadablePair<BiConsumer<Character, Integer>, Integer> onTurnStart() {
+    public Pair<BiConsumer<Character, Integer>, Integer> onTurnStart() {
         return null;
     }
 
     @Override
-    public ReadablePair<BiConsumer<Character, Integer>, Integer> onTurnEnd() {
+    public Pair<BiConsumer<Character, Integer>, Integer> onTurnEnd() {
         return null;
     }
 
     @Override
-    public ReadablePair<BiConsumer<Character, Integer>, Integer> onRoundEnd() {
+    public Pair<BiConsumer<Character, Integer>, Integer> onRoundEnd() {
         return null;
     }
 }

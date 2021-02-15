@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
@@ -76,7 +76,7 @@ public class FakeFixtureType implements FixtureType {
     }
 
     @Override
-    public Collection<ColorShiftType> defaultColorShifts() {
+    public List<ColorShiftType> defaultColorShifts() {
         return null;
     }
 

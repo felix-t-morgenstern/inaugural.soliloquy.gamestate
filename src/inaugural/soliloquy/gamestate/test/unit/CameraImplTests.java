@@ -18,7 +18,7 @@ class CameraImplTests {
     private Camera _camera;
 
     private final FakeCoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
-    private final FakeCollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final FakeListFactory COLLECTION_FACTORY = new FakeListFactory();
     private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
     private final TileVisibility TILE_VISIBILITY = new TileVisibilitySpyDouble();
     private final FakeGameZone GAME_ZONE = new FakeGameZone();
@@ -146,7 +146,7 @@ class CameraImplTests {
 
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
-        GAME_ZONE.FAKE_MAX_COORDINATES = new FakeReadableCoordinate(4,4);
+        GAME_ZONE.FAKE_MAX_COORDINATES = new FakeCoordinate(4,4);
         _camera.setAllTilesVisible(true);
         _camera.setTileLocation(2,2);
         _camera.setTileRenderingRadius(5);

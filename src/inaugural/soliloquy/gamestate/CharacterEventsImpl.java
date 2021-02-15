@@ -2,12 +2,11 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.GameCharacterEventArchetype;
 import inaugural.soliloquy.gamestate.archetypes.GameCharacterEventReadableCollectionArchetype;
-import soliloquy.specs.common.factories.CollectionFactory;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -18,30 +17,19 @@ import java.util.HashMap;
 
 public class CharacterEventsImpl extends HasDeletionInvariants implements CharacterEvents {
     private final Character CHARACTER;
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
     private final MapFactory MAP_FACTORY;
     private final HashMap<String, ArrayList<GameCharacterEvent>> EVENTS;
 
     private final GameCharacterEvent EVENT_ARCHETYPE = new GameCharacterEventArchetype();
-    private final ReadableCollection<GameCharacterEvent> EVENTS_ARCHETYPE =
+    private final List<GameCharacterEvent> EVENTS_ARCHETYPE =
             new GameCharacterEventReadableCollectionArchetype();
 
-    @SuppressWarnings("ConstantConditions")
-    public CharacterEventsImpl(Character character, CollectionFactory collectionFactory,
+    public CharacterEventsImpl(Character character, ListFactory listFactory,
                                MapFactory mapFactory) {
-        if (character == null) {
-            throw new IllegalArgumentException("CharacterEventsImpl: character cannot be null");
-        }
-        CHARACTER = character;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "CharacterEventsImpl: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("CharacterEventsImpl: mapFactory cannot be null");
-        }
-        MAP_FACTORY = mapFactory;
+        CHARACTER = Check.ifNull(character, "character");
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
         EVENTS = new HashMap<>();
     }
 
@@ -71,16 +59,16 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     }
 
     @Override
-    public ReadableCollection<String> getTriggersForEvent(GameCharacterEvent event)
+    public List<String> getTriggersForEvent(GameCharacterEvent event)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("getTriggersForEvent");
-        Collection<String> triggersForEvent = COLLECTION_FACTORY.make("");
+        List<String> triggersForEvent = LIST_FACTORY.make("");
         EVENTS.forEach((trigger,events) -> {
             if (events.contains(event)) {
                 triggersForEvent.add(trigger);
             }
         });
-        return triggersForEvent.representation();
+        return triggersForEvent;
     }
 
     @Override
@@ -115,15 +103,15 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     }
 
     @Override
-    public ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation()
+    public Map<String, List<GameCharacterEvent>> representation()
             throws IllegalStateException {
         enforceDeletionInvariants("_representation");
-        Map<String,ReadableCollection<GameCharacterEvent>> representation =
+        Map<String,List<GameCharacterEvent>> representation =
                 MAP_FACTORY.make("", EVENTS_ARCHETYPE);
         EVENTS.forEach((t,e) -> {
-            Collection<GameCharacterEvent> events = COLLECTION_FACTORY.make(EVENT_ARCHETYPE);
-            e.forEach(events::add);
-            representation.put(t, events.representation());
+            List<GameCharacterEvent> events = LIST_FACTORY.make(EVENT_ARCHETYPE);
+            events.addAll(e);
+            representation.put(t, events);
         });
         return representation;
     }

@@ -1,25 +1,24 @@
 package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.KeyBindingContextFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.gamestate.factories.KeyBindingContextFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingContextFactoryImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
 
     private KeyBindingContextFactory _keyBindingContextFactory;
 
     @BeforeEach
     void setUp() {
-        _keyBindingContextFactory = new KeyBindingContextFactoryImpl(COLLECTION_FACTORY);
+        _keyBindingContextFactory = new KeyBindingContextFactoryImpl(LIST_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,

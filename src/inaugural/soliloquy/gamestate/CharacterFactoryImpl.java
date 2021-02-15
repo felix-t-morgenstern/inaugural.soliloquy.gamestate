@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.EntityUuidFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -12,7 +12,7 @@ import soliloquy.specs.ruleset.entities.CharacterType;
 
 public class CharacterFactoryImpl implements CharacterFactory {
     private final EntityUuidFactory ENTITY_UUID_FACTORY;
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
     private final MapFactory MAP_FACTORY;
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY;
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOTS_FACTORY;
@@ -24,7 +24,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
 
     @SuppressWarnings("ConstantConditions")
     public CharacterFactoryImpl(EntityUuidFactory entityUuidFactory,
-                                CollectionFactory collectionFactory,
+                                ListFactory listFactory,
                                 MapFactory mapFactory,
                                 CharacterEventsFactory characterEventsFactory,
                                 CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory,
@@ -38,11 +38,11 @@ public class CharacterFactoryImpl implements CharacterFactory {
                     "CharacterFactory: entityUuidFactory must be non-null");
         }
         ENTITY_UUID_FACTORY = entityUuidFactory;
-        if (collectionFactory == null) {
+        if (listFactory == null) {
             throw new IllegalArgumentException(
-                    "CharacterFactory: collectionFactory must be non-null");
+                    "CharacterFactory: listFactory must be non-null");
         }
-        COLLECTION_FACTORY = collectionFactory;
+        LIST_FACTORY = listFactory;
         if (mapFactory == null) {
             throw new IllegalArgumentException(
                     "CharacterFactory: mapFactory must be non-null");
@@ -104,7 +104,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
         }
         return new CharacterImpl(entityUuid,
                 characterType,
-                COLLECTION_FACTORY,
+                LIST_FACTORY,
                 MAP_FACTORY,
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOTS_FACTORY,

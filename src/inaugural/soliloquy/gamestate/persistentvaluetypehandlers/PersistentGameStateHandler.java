@@ -3,9 +3,9 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.GameStateArchetype;
 import inaugural.soliloquy.tools.persistentvaluetypehandlers.PersistentTypeHandler;
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -111,7 +111,7 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
     }
 
     private Character findInTile(GameZone currentGameZone, String id, int x, int y) {
-        for (ReadablePair<Character, Integer> character :
+        for (Pair<Character, Integer> character :
                 currentGameZone.tile(x, y).characters()) {
             if (character.getItem1().id().toString().equals(id)) {
                 return character.getItem1();
@@ -154,7 +154,7 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         dto.roundNumber = gameState.roundManager().getRoundNumber();
         dto.charsInRound = new CharacterInRoundDTO[gameState.roundManager().queueSize()];
         int index = 0;
-        for(ReadablePair<Character, VariableCache> charWithData : gameState.roundManager()) {
+        for(Pair<Character, VariableCache> charWithData : gameState.roundManager()) {
             dto.charsInRound[index] = new CharacterInRoundDTO();
             dto.charsInRound[index].id = charWithData.getItem1().id().toString();
             dto.charsInRound[index].x = charWithData.getItem1().tile().location().getX();
@@ -162,14 +162,13 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
             dto.charsInRound[index].data = VARIABLE_CACHE_HANDLER.write(charWithData.getItem2());
             index++;
         }
-        ReadableCollection<OneTimeTimer> oneTimeTimers =
-                gameState.roundManager().oneTimeTimersRepresentation();
+        List<OneTimeTimer> oneTimeTimers = gameState.roundManager().oneTimeTimersRepresentation();
         dto.oneTimeTimers = new String[oneTimeTimers.size()];
         index = 0;
         for(OneTimeTimer oneTimeTimer : oneTimeTimers) {
             dto.oneTimeTimers[index++] = ONE_TIME_TIMER_HANDLER.write(oneTimeTimer);
         }
-        ReadableCollection<RecurringTimer> recurringTimers =
+        List<RecurringTimer> recurringTimers =
                 gameState.roundManager().recurringTimersRepresentation();
         dto.recurringTimers = new String[recurringTimers.size()];
         index = 0;

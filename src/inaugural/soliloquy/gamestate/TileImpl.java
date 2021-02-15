@@ -1,13 +1,13 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.*;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -19,13 +19,13 @@ import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
 public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
-    private final ReadableCoordinate LOCATION;
+    private final Coordinate LOCATION;
     private final TileEntities<Character> TILE_CHARACTERS;
     private final TileEntities<Item> TILE_ITEMS;
     private final TileEntities<TileFixture> TILE_FIXTURES;
     private final TileWallSegments TILE_WALL_SEGMENTS;
-    private final Collection<GameMovementEvent> MOVEMENT_EVENTS;
-    private final Collection<GameAbilityEvent> ABILITY_EVENTS;
+    private final List<GameMovementEvent> MOVEMENT_EVENTS;
+    private final List<GameAbilityEvent> ABILITY_EVENTS;
     private final Map<Sprite, Integer> SPRITES;
     private final VariableCache DATA;
 
@@ -47,14 +47,14 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
                     CoordinateFactory coordinateFactory,
                     TileEntitiesFactory tileEntitiesFactory,
                     TileWallSegmentsFactory tileWallSegmentsFactory,
-                    CollectionFactory collectionFactory,
+                    ListFactory listFactory,
                     MapFactory mapFactory,
                     VariableCache data) {
-        super(collectionFactory);
+        super(listFactory);
         if (coordinateFactory == null) {
             throw new IllegalArgumentException("TileImpl: coordinateFactory cannot be null");
         }
-        LOCATION = coordinateFactory.make(x, y).readOnlyRepresentation();
+        LOCATION = coordinateFactory.make(x, y);
         if (tileEntitiesFactory == null) {
             throw new IllegalArgumentException("TileImpl: tileEntitiesFactory cannot be null");
         }
@@ -66,11 +66,11 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
             throw new IllegalArgumentException("TileImpl: tileWallSegmentsFactory cannot be null");
         }
         TILE_WALL_SEGMENTS = tileWallSegmentsFactory.make(this);
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException("TileImpl: collectionFactory cannot be null");
+        if (listFactory == null) {
+            throw new IllegalArgumentException("TileImpl: listFactory cannot be null");
         }
-        MOVEMENT_EVENTS = collectionFactory.make(MOVEMENT_EVENT_ARCHETYPE);
-        ABILITY_EVENTS = collectionFactory.make(ABILITY_EVENT_ARCHETYPE);
+        MOVEMENT_EVENTS = listFactory.make(MOVEMENT_EVENT_ARCHETYPE);
+        ABILITY_EVENTS = listFactory.make(ABILITY_EVENT_ARCHETYPE);
         if (mapFactory == null) {
             throw new IllegalArgumentException("TileImpl: mapFactory cannot be null");
         }
@@ -88,11 +88,12 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
         return _gameZone;
     }
 
+    // TODO: Ensure that clone is made
     @Override
-    public ReadableCoordinate location() throws IllegalStateException {
+    public Coordinate location() throws IllegalStateException {
         enforceDeletionInvariants("location");
         enforceLocationCorrespondenceInvariant("location");
-        return LOCATION;
+        return LOCATION.makeClone();
     }
 
     @Override
@@ -152,14 +153,14 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     }
 
     @Override
-    public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
+    public List<GameMovementEvent> movementEvents() throws IllegalStateException {
         enforceDeletionInvariants("movementEvents");
         enforceLocationCorrespondenceInvariant("movementEvents");
         return MOVEMENT_EVENTS;
     }
 
     @Override
-    public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
+    public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
         enforceDeletionInvariants("abilityEvents");
         enforceLocationCorrespondenceInvariant("abilityEvents");
         return ABILITY_EVENTS;

@@ -16,6 +16,7 @@ import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class PersistentCharacterHandler extends PersistentTypeHandler<Character> {
@@ -154,111 +155,108 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
 
         dto.classifications = new String[character.classifications().size()];
 
-        int index = 0;
+        AtomicInteger classificationIndex = new AtomicInteger(0);
         for(CharacterClassification classification : character.classifications()) {
-            dto.classifications[index++] = classification.id();
+            dto.classifications[classificationIndex.getAndIncrement()] = classification.id();
         }
 
         dto.pronouns = new CharacterPairedDataDTO[character.pronouns().size()];
 
-        index = 0;
-        for(Pair<String,String> pronoun : character.pronouns()) {
+        AtomicInteger pronounsIndex = new AtomicInteger(0);
+        character.pronouns().forEach((pronounType, pronoun) -> {
             CharacterPairedDataDTO pronounDTO = new CharacterPairedDataDTO();
-            pronounDTO.key = pronoun.getItem1();
-            pronounDTO.val = pronoun.getItem2();
-            dto.pronouns[index++] = pronounDTO;
-        }
+            pronounDTO.key = pronounType;
+            pronounDTO.val = pronoun;
+            dto.pronouns[pronounsIndex.getAndIncrement()] = pronounDTO;
+        });
 
         dto.stance = character.getStance();
         dto.direction = character.getDirection();
         dto.spriteSetId = character.getSpriteSet().id();
         dto.aiTypeId = character.getAIType().id();
-        ReadableMap<String, ReadableCollection<GameCharacterEvent>> events =
+        Map<String, List<GameCharacterEvent>> eventsRepresentation =
                 character.events().representation();
 
-        index = 0;
-        dto.events = new CharacterEventDTO[events.size()];
-        for(Pair<String,ReadableCollection<GameCharacterEvent>> triggerEvents : events) {
+        AtomicInteger eventsIndex = new AtomicInteger(0);
+        dto.events = new CharacterEventDTO[eventsRepresentation.size()];
+        eventsRepresentation.forEach((trigger, events) -> {
             CharacterEventDTO eventDTO = new CharacterEventDTO();
-            eventDTO.trigger = triggerEvents.getItem1();
-            eventDTO.events = new String[triggerEvents.getItem2().size()];
-            for (int i = 0; i < triggerEvents.getItem2().size(); i++) {
-                eventDTO.events[i] = triggerEvents.getItem2().get(i).id();
+            eventDTO.trigger = trigger;
+            eventDTO.events = new String[events.size()];
+            for (int i = 0; i < events.size(); i++) {
+                eventDTO.events[i] = events.get(i).id();
             }
-            dto.events[index++] = eventDTO;
-        }
+            dto.events[eventsIndex.getAndIncrement()] = eventDTO;
+        });
 
-        index = 0;
-        ReadableMap<String,Item> equipmentSlots = character.equipmentSlots().representation();
-        dto.equipmentSlots = new CharacterPairedDataDTO[equipmentSlots.size()];
-        for(Pair<String,Item> equipmentSlot : equipmentSlots)
-        {
+        AtomicInteger equipmentSlotsIndex = new AtomicInteger(0);
+        Map<String,Item> equipmentSlotsRepresentation =
+                character.equipmentSlots().representation();
+        dto.equipmentSlots = new CharacterPairedDataDTO[equipmentSlotsRepresentation.size()];
+        equipmentSlotsRepresentation.forEach((slotType, item) -> {
             CharacterPairedDataDTO equipmentSlotDTO = new CharacterPairedDataDTO();
-            equipmentSlotDTO.key = equipmentSlot.getItem1();
-            if (equipmentSlot.getItem2() != null)
+            equipmentSlotDTO.key = slotType;
+            if (item != null)
             {
-                equipmentSlotDTO.val = ITEM_HANDLER.write(equipmentSlot.getItem2());
+                equipmentSlotDTO.val = ITEM_HANDLER.write(item);
             }
-            dto.equipmentSlots[index++] = equipmentSlotDTO;
-        }
+            dto.equipmentSlots[equipmentSlotsIndex.getAndIncrement()] = equipmentSlotDTO;
+        });
 
-        index = 0;
-        ReadableCollection<Item> inventoryItems = character.inventory().representation();
+        AtomicInteger inventoryIndex = new AtomicInteger(0);
+        List<Item> inventoryItems = character.inventory().representation();
         dto.inventoryItems = new String[inventoryItems.size()];
-        for(Item inventoryItem : character.inventory().representation())
-        {
-            dto.inventoryItems[index++] = ITEM_HANDLER.write(inventoryItem);
-        }
+        inventoryItems.forEach(item ->
+                dto.inventoryItems[inventoryIndex.getAndIncrement()] = ITEM_HANDLER.write(item));
 
-        index = 0;
+        AtomicInteger variableStatsIndex = new AtomicInteger(0);
         dto.variableStats =
                 new CharacterVariableStatisticDTO[character.variableStatistics().size()];
-        for(CharacterVariableStatistic variableStat : character.variableStatistics()) {
+        character.variableStatistics().forEach(variableStat -> {
             CharacterVariableStatisticDTO variableStatDTO =
                     new CharacterVariableStatisticDTO();
             variableStatDTO.type = variableStat.type().id();
             variableStatDTO.data = DATA_HANDLER.write(variableStat.data());
             variableStatDTO.current = variableStat.getCurrentValue();
-            dto.variableStats[index++] = variableStatDTO;
-        }
+            dto.variableStats[variableStatsIndex.getAndIncrement()] = variableStatDTO;
+        });
 
-        index = 0;
+        AtomicInteger staticStatsIndex = new AtomicInteger(0);
         dto.staticStats = new CharacterEntityDTO[character.staticStatistics().size()];
-        for(CharacterStatistic<CharacterStaticStatisticType> stat : character.staticStatistics()) {
+        character.staticStatistics().forEach(staticStat -> {
             CharacterEntityDTO staticStatDTO = new CharacterEntityDTO();
-            staticStatDTO.type = stat.type().id();
-            staticStatDTO.data = DATA_HANDLER.write(stat.data());
-            dto.staticStats[index++] = staticStatDTO;
-        }
+            staticStatDTO.type = staticStat.type().id();
+            staticStatDTO.data = DATA_HANDLER.write(staticStat.data());
+            dto.staticStats[staticStatsIndex.getAndIncrement()] = staticStatDTO;
+        });
 
-        index = 0;
+        AtomicInteger statusEffectsIndex = new AtomicInteger(0);
         dto.statusEffects = new CharacterStatusEffectDTO[
                 character.statusEffects().representation().size()];
-        for(Pair<StatusEffectType, Integer> statEffect :
-                character.statusEffects().representation()) {
+        character.statusEffects().representation().forEach((type, value) -> {
             CharacterStatusEffectDTO statEffectDTO = new CharacterStatusEffectDTO();
-            statEffectDTO.type = statEffect.getItem1().id();
-            statEffectDTO.value = statEffect.getItem2();
-            dto.statusEffects[index++] = statEffectDTO;
-        }
+            statEffectDTO.type = type.id();
+            statEffectDTO.value = value;
+            dto.statusEffects[statusEffectsIndex.getAndIncrement()] = statEffectDTO;
+        });
 
-        index = 0;
+        AtomicInteger activeAbilitiesIndex = new AtomicInteger(0);
         dto.activeAbilities = new CharacterEntityDTO[character.activeAbilities().size()];
-        for(CharacterEntityOfType<ActiveAbilityType> charAbility : character.activeAbilities()) {
+        character.activeAbilities().forEach(charAbility -> {
             CharacterEntityDTO abilityDTO = new CharacterEntityDTO();
             abilityDTO.type = charAbility.type().id();
             abilityDTO.data = DATA_HANDLER.write(charAbility.data());
-            dto.activeAbilities[index++] = abilityDTO;
-        }
+            dto.activeAbilities[activeAbilitiesIndex.getAndIncrement()] = abilityDTO;
+        });
 
-        index = 0;
+        AtomicInteger reactiveAbilitiesIndex = new AtomicInteger(0);
         dto.reactiveAbilities = new CharacterEntityDTO[character.reactiveAbilities().size()];
-        for(CharacterEntityOfType<ReactiveAbilityType> charAbility : character.reactiveAbilities()) {
+        character.reactiveAbilities().forEach(charAbility -> {
             CharacterEntityDTO abilityDTO = new CharacterEntityDTO();
             abilityDTO.type = charAbility.type().id();
             abilityDTO.data = DATA_HANDLER.write(charAbility.data());
-            dto.reactiveAbilities[index++] = abilityDTO;
-        }
+            dto.reactiveAbilities[reactiveAbilitiesIndex.getAndIncrement()] = abilityDTO;
+        });
 
         dto.isPlayerControlled = character.getPlayerControlled();
         dto.data = DATA_HANDLER.write(character.data());

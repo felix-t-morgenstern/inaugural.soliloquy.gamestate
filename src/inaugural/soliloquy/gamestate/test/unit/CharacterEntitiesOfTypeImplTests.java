@@ -6,8 +6,8 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.factories.ListFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
@@ -34,7 +34,7 @@ class CharacterEntitiesOfTypeImplTests {
         ENTITIES_ADDED.add(entity);
         return entity;
     };
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeCharacterEntity ARCHETYPE = new FakeCharacterEntity(null,
             new FakeHasIdAndName("id", "name"));
@@ -48,25 +48,25 @@ class CharacterEntitiesOfTypeImplTests {
     void setUp() {
         _characterPassedIntoFactory = null;
         _entitiesOfType = new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY,
-                COLLECTION_FACTORY, DATA_FACTORY, ARCHETYPE);
+                LIST_FACTORY, DATA_FACTORY, ARCHETYPE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEntitiesOfTypeImpl<>(null, FACTORY, COLLECTION_FACTORY,
+                () -> new CharacterEntitiesOfTypeImpl<>(null, FACTORY, LIST_FACTORY,
                         DATA_FACTORY, ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, null, COLLECTION_FACTORY,
+                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, null, LIST_FACTORY,
                         DATA_FACTORY, ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, null,
                         DATA_FACTORY, ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, COLLECTION_FACTORY,
+                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, LIST_FACTORY,
                         null, ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, COLLECTION_FACTORY,
+                () -> new CharacterEntitiesOfTypeImpl<>(CHARACTER, FACTORY, LIST_FACTORY,
                         DATA_FACTORY, null));
     }
 
@@ -191,8 +191,7 @@ class CharacterEntitiesOfTypeImplTests {
         _entitiesOfType.add(type2);
         _entitiesOfType.add(type3);
 
-        ReadableCollection<FakeCharacterEntity> representation =
-                _entitiesOfType.representation();
+        List<FakeCharacterEntity> representation = _entitiesOfType.representation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());

@@ -2,13 +2,13 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.archetypes.VoidActionArchetype;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.factories.ListFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -19,14 +19,14 @@ import java.util.function.Consumer;
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
     private final String TYPE;
-    private final ReadableCoordinate MAX_COORDINATES;
+    private final Coordinate MAX_COORDINATES;
     private final Tile[][] TILES;
     @SuppressWarnings("rawtypes")
-    private final Collection<Action> ENTRY_ACTIONS;
+    private final List<Action> ENTRY_ACTIONS;
     @SuppressWarnings("rawtypes")
-    private final Collection<Action> EXIT_ACTIONS;
+    private final List<Action> EXIT_ACTIONS;
     private final VariableCache DATA;
-    public final Collection<Character> CHARACTERS_IN_GAME_ZONE;
+    public final List<Character> CHARACTERS_IN_GAME_ZONE;
 
     @SuppressWarnings("rawtypes")
     private final static Action ACTION_ARCHETYPE = new VoidActionArchetype();
@@ -36,44 +36,20 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @SuppressWarnings("ConstantConditions")
     public GameZoneImpl(String id, String type, Tile[][] tiles,
-                        CoordinateFactory coordinateFactory, CollectionFactory collectionFactory,
+                        CoordinateFactory coordinateFactory, ListFactory listFactory,
                         VariableCache data, Consumer<Character> addToEndOfRoundManager,
                         Consumer<Character> removeFromRoundManager) {
-        if (id == null) {
-            throw new IllegalArgumentException("GameZoneImpl: id cannot be null");
-        }
-        if (id.equals("")) {
-            throw new IllegalArgumentException("GameZoneImpl: id cannot be empty");
-        }
-        ID = id;
-        if (type == null) {
-            throw new IllegalArgumentException("GameZoneImpl: type cannot be null");
-        }
-        if (type.equals("")) {
-            throw new IllegalArgumentException("GameZoneImpl: type cannot be empty");
-        }
-        TYPE = type;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException("GameZoneImpl: tileFactory cannot be null");
-        }
-        CHARACTERS_IN_GAME_ZONE = collectionFactory.make(CHARACTER_ARCHETYPE);
-        if (tiles == null) {
-            throw new IllegalArgumentException("GameZoneImpl: tiles is null");
-        }
-        if (tiles.length == 0) {
-            throw new IllegalArgumentException("GameZoneImpl: tiles has x length of 0");
-        }
-        if (tiles[0].length == 0) {
-            throw new IllegalArgumentException("GameZoneImpl: tiles has y length of 0");
-        }
-        if (addToEndOfRoundManager == null) {
-            throw new IllegalArgumentException(
-                    "GameZoneImpl: addToEndOfRoundManager cannot be null");
-        }
-        if (removeFromRoundManager == null) {
-            throw new IllegalArgumentException(
-                    "GameZoneImpl: removeFromRoundManager cannot be null");
-        }
+        ID = Check.ifNullOrEmpty(id, "id");
+        TYPE = Check.ifNullOrEmpty(type, "type");
+        CHARACTERS_IN_GAME_ZONE = Check.ifNull(listFactory, "listFactory")
+                .make(CHARACTER_ARCHETYPE);
+
+        Check.ifNull(tiles, "tiles");
+        Check.throwOnLteZero(tiles.length, "tiles.length");
+        Check.throwOnLteZero(tiles[0].length, "tiles[0].length");
+        Check.ifNull(addToEndOfRoundManager, "addToEndOfRoundManager");
+        Check.ifNull(removeFromRoundManager, "removeFromRoundManager");
+
         TILES = new Tile[tiles.length][tiles[0].length];
         for(int x = 0; x < tiles.length; x++) {
             for(int y = 0; y < tiles[0].length; y++) {
@@ -107,12 +83,9 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
             throw new IllegalArgumentException("GameZoneImpl: coordinateFactory cannot be null");
         }
         MAX_COORDINATES = coordinateFactory.make(tiles.length - 1,tiles[0].length - 1);
-        ENTRY_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
-        EXIT_ACTIONS = collectionFactory.make(ACTION_ARCHETYPE);
-        if (data == null) {
-            throw new IllegalArgumentException("GameZoneImpl: data cannot be null");
-        }
-        DATA = data;
+        ENTRY_ACTIONS = listFactory.make(ACTION_ARCHETYPE);
+        EXIT_ACTIONS = listFactory.make(ACTION_ARCHETYPE);
+        DATA = Check.ifNull(data, "data");
     }
 
     @Override
@@ -120,9 +93,10 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         return TYPE;
     }
 
+    // TODO: Ensure that this is a clone
     @Override
-    public ReadableCoordinate maxCoordinates() {
-        return MAX_COORDINATES;
+    public Coordinate maxCoordinates() {
+        return MAX_COORDINATES.makeClone();
     }
 
     @Override
@@ -142,21 +116,24 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         return TILES[x][y];
     }
 
+    // TODO: Ensure this object is a clone
     @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action> onEntry() {
-        return ENTRY_ACTIONS;
+    public List<Action> onEntry() {
+        return ENTRY_ACTIONS.makeClone();
     }
 
+    // TODO: Ensure this object is a clone
     @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action> onExit() {
-        return EXIT_ACTIONS;
+    public List<Action> onExit() {
+        return EXIT_ACTIONS.makeClone();
     }
 
+    // TODO: Ensure this object is a clone
     @Override
-    public ReadableCollection<Character> charactersRepresentation() {
-        return CHARACTERS_IN_GAME_ZONE.representation();
+    public List<Character> charactersRepresentation() {
+        return CHARACTERS_IN_GAME_ZONE.makeClone();
     }
 
     @Override

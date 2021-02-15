@@ -3,8 +3,7 @@ package inaugural.soliloquy.gamestate;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.*;
 
 import java.util.HashMap;
@@ -146,11 +145,11 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     }
 
     @Override
-    public ReadableMap<TEntity, Integer> representation() throws IllegalStateException {
+    public Map<TEntity, Integer> representation() throws IllegalStateException {
         enforceDeletionInvariants("representation");
         Map<TEntity, Integer> entities = MAP_FACTORY.make(ARCHETYPE, 0);
         ENTITIES.forEach(entities::put);
-        return entities.readOnlyRepresentation();
+        return entities;
     }
 
     @Override
@@ -217,7 +216,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     }
 
     @Override
-    public Iterator<ReadablePair<TEntity, Integer>> iterator() {
+    public Iterator<Pair<TEntity, Integer>> iterator() {
         enforceDeletionInvariants("iterator");
         Iterator<TEntity> entities = ENTITIES.keySet().iterator();
         Iterator<Integer> zIndices = ENTITIES.values().iterator();
@@ -228,8 +227,8 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
             }
 
             @Override
-            public ReadablePair<TEntity, Integer> next() {
-                return PAIR_FACTORY.make(entities.next(), zIndices.next()).representation();
+            public Pair<TEntity, Integer> next() {
+                return PAIR_FACTORY.make(entities.next(), zIndices.next());
             }
         };
     }

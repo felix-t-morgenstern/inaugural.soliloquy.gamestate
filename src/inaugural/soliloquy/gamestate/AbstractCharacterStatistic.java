@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
@@ -49,10 +48,9 @@ abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatistic
     }
 
     @Override
-    public ReadableMap<String, Integer> representation() throws IllegalStateException {
+    public Map<String, Integer> representation() throws IllegalStateException {
         enforceDeletionInvariants("representation");
-        // TODO: Test and implement whether truly read-only
-        return _modifiers.readOnlyRepresentation();
+        return _modifiers.makeClone();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 
 public class CoordinateArchetype implements Coordinate {
     @Override
@@ -25,11 +24,6 @@ public class CoordinateArchetype implements Coordinate {
     }
 
     @Override
-    public ReadableCoordinate readOnlyRepresentation() {
-        return null;
-    }
-
-    @Override
     public Coordinate makeClone() {
         return null;
     }
@@ -40,7 +34,7 @@ public class CoordinateArchetype implements Coordinate {
     }
 
     @Override
-    public int compareTo(ReadableCoordinate o) {
+    public int compareTo(Coordinate o) {
         return 0;
     }
 }

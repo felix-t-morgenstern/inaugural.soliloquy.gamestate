@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
@@ -30,7 +30,7 @@ public class FakeCharacterType implements CharacterType {
     }
 
     @Override
-    public Map<String, Collection<GameCharacterEvent>> events() {
+    public Map<String, List<GameCharacterEvent>> events() {
         return null;
     }
 

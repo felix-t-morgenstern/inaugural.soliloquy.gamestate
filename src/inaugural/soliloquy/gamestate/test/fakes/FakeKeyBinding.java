@@ -1,14 +1,14 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.logger.Logger;
 
 @SuppressWarnings("rawtypes")
 public class FakeKeyBinding implements KeyBinding {
-    private final Collection<Character> BOUND_CHARACTERS = new FakeCollection<>();
+    private final List<Character> BOUND_CHARACTERS = new FakeList<>();
     private final Action PRESS_ACTION = new PressAction();
     private final Action RELEASE_ACTION = new ReleaseAction();
     private final Action TYPE_ACTION = new TypeAction();
@@ -20,7 +20,7 @@ public class FakeKeyBinding implements KeyBinding {
     private boolean _blocksLowerBindings;
 
     @Override
-    public Collection<Character> boundCharacters() {
+    public List<Character> boundCharacters() {
         return BOUND_CHARACTERS;
     }
 

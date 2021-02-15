@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 
 public class VariableCacheStub implements VariableCache {
     public VariableCacheStub _cloneResult;
@@ -23,12 +23,12 @@ public class VariableCacheStub implements VariableCache {
     }
 
     @Override
-    public ReadableCollection<String> namesRepresentation() {
+    public List<String> namesRepresentation() {
         return null;
     }
 
     @Override
-    public ReadableMap<String, Object> variablesRepresentation() {
+    public Map<String, Object> variablesRepresentation() {
         return null;
     }
 

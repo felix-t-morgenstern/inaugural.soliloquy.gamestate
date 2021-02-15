@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
@@ -27,7 +27,7 @@ public class CharacterVariableStatisticArchetype implements CharacterVariableSta
     }
 
     @Override
-    public ReadableMap<String, Integer> representation() throws IllegalStateException {
+    public Map<String, Integer> representation() throws IllegalStateException {
         return null;
     }
 

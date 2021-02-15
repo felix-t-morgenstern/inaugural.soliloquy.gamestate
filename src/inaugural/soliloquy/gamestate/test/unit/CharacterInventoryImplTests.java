@@ -4,8 +4,8 @@ import inaugural.soliloquy.gamestate.CharacterInventoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.factories.ListFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
@@ -17,21 +17,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterInventoryImplTests {
     private final Character CHARACTER = new FakeCharacter();
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final Item ITEM = new FakeItem();
 
     private CharacterInventory _characterInventory;
 
     @BeforeEach
     void setUp() {
-        _characterInventory = new CharacterInventoryImpl(CHARACTER, COLLECTION_FACTORY);
+        _characterInventory = new CharacterInventoryImpl(CHARACTER, LIST_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(null,
-                COLLECTION_FACTORY));
+                LIST_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(CHARACTER,
                 null));
     }
@@ -82,7 +81,7 @@ class CharacterInventoryImplTests {
         _characterInventory.add(item2);
         _characterInventory.add(item3);
 
-        ReadableCollection<Item> representation = _characterInventory.representation();
+        List<Item> representation = _characterInventory.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getArchetype());

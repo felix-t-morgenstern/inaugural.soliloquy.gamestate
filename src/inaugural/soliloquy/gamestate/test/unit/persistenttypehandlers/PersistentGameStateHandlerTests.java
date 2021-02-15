@@ -10,7 +10,7 @@ import inaugural.soliloquy.gamestate.test.stubs.GameZonesRepoStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -158,7 +158,7 @@ class PersistentGameStateHandlerTests {
         assertTrue(gameState.party().characters().contains(CHARACTER_HANDLER.READ_OUTPUTS.get(0)));
         assertEquals(2, gameState.party().characters().size());
         assertEquals(ROUND_NUMBER, gameState.roundManager().getRoundNumber());
-        ArrayList<ReadablePair<Character, VariableCache>> charactersWithData = new ArrayList<>();
+        ArrayList<Pair<Character, VariableCache>> charactersWithData = new ArrayList<>();
         gameState.roundManager().forEach(charactersWithData::add);
         assertEquals("VariableCache2", VARIABLE_CACHE_HANDLER.READ_INPUTS.get(2));
         assertEquals("VariableCache3", VARIABLE_CACHE_HANDLER.READ_INPUTS.get(3));

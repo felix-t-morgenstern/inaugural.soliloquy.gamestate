@@ -3,11 +3,12 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterQueueEntryArchetype;
 import inaugural.soliloquy.gamestate.archetypes.OneTimeTimerArchetype;
 import inaugural.soliloquy.gamestate.archetypes.RecurringTimerArchetype;
-import soliloquy.specs.common.factories.CollectionFactory;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.*;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Timer;
@@ -18,16 +19,16 @@ import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
 import java.util.*;
 
 public class RoundManagerImpl implements RoundManager {
-    private final Collection<OneTimeTimer> ONE_TIME_TIMERS;
-    private final Collection<RecurringTimer> RECURRING_TIMERS;
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final List<OneTimeTimer> ONE_TIME_TIMERS;
+    private final List<RecurringTimer> RECURRING_TIMERS;
+    private final ListFactory LIST_FACTORY;
     private final PairFactory PAIR_FACTORY;
     private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
     private final ActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER;
     private final TurnHandling TURN_HANDLING;
     private final RoundEndHandling ROUND_END_HANDLING;
 
-    private final List<Character> QUEUE = new LinkedList<>();
+    private final java.util.List<Character> QUEUE = new LinkedList<>();
     private final HashMap<Character, VariableCache> CHARACTERS_DATA = new HashMap<>();
     private final Pair<Character, VariableCache> QUEUE_ENTRY_ARCHETYPE =
             new CharacterQueueEntryArchetype();
@@ -37,40 +38,21 @@ public class RoundManagerImpl implements RoundManager {
     private Character _activeCharacter;
 
     @SuppressWarnings("ConstantConditions")
-    public RoundManagerImpl(CollectionFactory collectionFactory,
+    public RoundManagerImpl(ListFactory listFactory,
                             PairFactory pairFactory,
                             VariableCacheFactory variableCacheFactory,
                             ActiveCharactersProvider activeCharactersProvider,
                             TurnHandling turnHandling,
                             RoundEndHandling roundEndHandling) {
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "RoundManagerImpl: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
-        if (pairFactory == null) {
-            throw new IllegalArgumentException("RoundManagerImpl: pairFactory cannot be null");
-        }
-        PAIR_FACTORY = pairFactory;
-        if (variableCacheFactory == null) {
-            throw new IllegalArgumentException("RoundManagerImpl: variableCacheFactory cannot be null");
-        }
-        VARIABLE_CACHE_FACTORY = variableCacheFactory;
-        ONE_TIME_TIMERS = COLLECTION_FACTORY.make(new OneTimeTimerArchetype());
-        RECURRING_TIMERS = COLLECTION_FACTORY.make(new RecurringTimerArchetype());
-        if (activeCharactersProvider == null) {
-            throw new IllegalArgumentException(
-                    "RoundManagerImpl: activeCharactersProvider cannot be null");
-        }
-        ACTIVE_CHARACTERS_PROVIDER = activeCharactersProvider;
-        if (turnHandling == null) {
-            throw new IllegalArgumentException("RoundManagerImpl: turnHandling cannot be null");
-        }
-        TURN_HANDLING = turnHandling;
-        if (roundEndHandling == null) {
-            throw new IllegalArgumentException("RoundManagerImpl: roundEndHandling cannot be null");
-        }
-        ROUND_END_HANDLING = roundEndHandling;
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
+        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
+        VARIABLE_CACHE_FACTORY = Check.ifNull(variableCacheFactory, "variableCacheFactory");
+        ONE_TIME_TIMERS = LIST_FACTORY.make(new OneTimeTimerArchetype());
+        RECURRING_TIMERS = LIST_FACTORY.make(new RecurringTimerArchetype());
+        ACTIVE_CHARACTERS_PROVIDER = Check.ifNull(activeCharactersProvider,
+                "activeCharactersProvider");
+        TURN_HANDLING = Check.ifNull(turnHandling, "turnHandling");
+        ROUND_END_HANDLING = Check.ifNull(roundEndHandling, "roundEndHandling");
     }
 
     @Override
@@ -166,15 +148,12 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public ReadableCollection<ReadablePair<Character, VariableCache>>
-        characterQueueRepresentation() {
-        Collection<ReadablePair<Character,VariableCache>> data =
-                COLLECTION_FACTORY.make(QUEUE_ENTRY_ARCHETYPE);
+    public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
+        List<Pair<Character,VariableCache>> data = LIST_FACTORY.make(QUEUE_ENTRY_ARCHETYPE);
         for (Character character : QUEUE) {
-            data.add(PAIR_FACTORY.make(character,
-                    CHARACTERS_DATA.get(character)).representation());
+            data.add(PAIR_FACTORY.make(character, CHARACTERS_DATA.get(character)));
         }
-        return data.representation();
+        return data;
     }
 
     @Override
@@ -281,8 +260,8 @@ public class RoundManagerImpl implements RoundManager {
         ROUND_END_EVENTS_TO_FIRE.clear();
     }
 
-    private List<Timer> getTimersToFire(int prevRoundNumber) {
-        TreeMap<Integer, List<Timer>> timersToFire = new TreeMap<>();
+    private java.util.List<Timer> getTimersToFire(int prevRoundNumber) {
+        TreeMap<Integer, java.util.List<Timer>> timersToFire = new TreeMap<>();
         for(OneTimeTimer oneTimeTimer : ONE_TIME_TIMERS) {
             if (_roundNumber >= oneTimeTimer.getRoundWhenGoesOff()) {
                 addToTimersToFire(timersToFire, oneTimeTimer, 1);
@@ -295,14 +274,12 @@ public class RoundManagerImpl implements RoundManager {
                 addToTimersToFire(timersToFire, recurringTimer, numberOfTimesToAdd);
             }
         }
-        List<Timer> results = new ArrayList<>();
-        timersToFire.keySet().forEach(i -> {
-            timersToFire.get(i).forEach(t -> results.add(0, t));
-        });
+        java.util.List<Timer> results = new ArrayList<>();
+        timersToFire.keySet().forEach(i -> timersToFire.get(i).forEach(t -> results.add(0, t)));
         return results;
     }
 
-    private static void addToTimersToFire(TreeMap<Integer, List<Timer>> timersToFire,
+    private static void addToTimersToFire(TreeMap<Integer, java.util.List<Timer>> timersToFire,
                                           Timer timer, int numberOfTimesToAdd) {
         if (!timersToFire.containsKey(timer.getPriority())) {
             timersToFire.put(timer.getPriority(), new ArrayList<>());
@@ -334,13 +311,13 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public ReadableCollection<OneTimeTimer> oneTimeTimersRepresentation() {
-        return ONE_TIME_TIMERS.representation();
+    public List<OneTimeTimer> oneTimeTimersRepresentation() {
+        return ONE_TIME_TIMERS.makeClone();
     }
 
     @Override
-    public ReadableCollection<RecurringTimer> recurringTimersRepresentation() {
-        return RECURRING_TIMERS.representation();
+    public List<RecurringTimer> recurringTimersRepresentation() {
+        return RECURRING_TIMERS.makeClone();
     }
 
     @Override
@@ -349,8 +326,8 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public Iterator<ReadablePair<Character, VariableCache>> iterator() {
-        return new Iterator<ReadablePair<Character, VariableCache>>() {
+    public Iterator<Pair<Character, VariableCache>> iterator() {
+        return new Iterator<>() {
             private final Iterator<Character> iterator = QUEUE.iterator();
 
             @Override
@@ -359,9 +336,9 @@ public class RoundManagerImpl implements RoundManager {
             }
 
             @Override
-            public ReadablePair<Character, VariableCache> next() {
+            public Pair<Character, VariableCache> next() {
                 Character next = iterator.next();
-                return PAIR_FACTORY.make(next, CHARACTERS_DATA.get(next)).representation();
+                return PAIR_FACTORY.make(next, CHARACTERS_DATA.get(next)).makeClone();
             }
         };
     }

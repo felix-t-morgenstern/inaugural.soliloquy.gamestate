@@ -1,9 +1,8 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
 
@@ -74,7 +73,7 @@ public class FakeCamera implements Camera {
     }
 
     @Override
-    public Collection<ReadableCoordinate> visibleTiles() {
+    public List<Coordinate> visibleTiles() {
         return null;
     }
 

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.factories.PairFactory;
-import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.*;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class FakeTileWallSegments implements TileWallSegments {
     }
 
     @Override
-    public ReadableMap<TileWallSegmentDirection, ReadableMap<TileWallSegment, TileWallSegmentDimensions>> representation() throws IllegalStateException {
+    public Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>> representation() throws IllegalStateException {
         return null;
     }
 
@@ -151,8 +151,8 @@ public class FakeTileWallSegments implements TileWallSegments {
     }
 
     @Override
-    public Iterator<ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
-            TileWallSegmentDimensions>>>
+    public Iterator<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
+                TileWallSegmentDimensions>>>
     iterator() {
         Iterator<TileWallSegment> northSegments =
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).keySet().iterator();
@@ -169,25 +169,21 @@ public class FakeTileWallSegments implements TileWallSegments {
             }
 
             @Override
-            public ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
-                    TileWallSegmentDimensions>>
+            public Pair<TileWallSegmentDirection, Pair<TileWallSegment, TileWallSegmentDimensions>>
             next() {
                 TileWallSegment segment;
                 return northSegments.hasNext() ?
                         PAIR_FACTORY.make(TileWallSegmentDirection.NORTH,
                                 PAIR_FACTORY.make(segment = northSegments.next(),
-                                        SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
-                                        .representation()).representation()
+                                        SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment)))
                         : northwestSegments.hasNext() ?
                         PAIR_FACTORY.make(TileWallSegmentDirection.NORTHWEST,
                                 PAIR_FACTORY.make(segment = northwestSegments.next(),
                                         SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
-                                                .get(segment))
-                                        .representation()).representation()
+                                                .get(segment)))
                         : PAIR_FACTORY.make(TileWallSegmentDirection.WEST,
                         PAIR_FACTORY.make(segment = westSegments.next(),
-                                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment))
-                                .representation()).representation();
+                                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment)));
             }
         };
     }

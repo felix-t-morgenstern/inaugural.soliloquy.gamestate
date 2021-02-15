@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -59,7 +59,7 @@ public class FakeCharacterVariableStatistic implements CharacterVariableStatisti
     }
 
     @Override
-    public ReadableMap<String, Integer> representation() throws IllegalStateException {
+    public Map<String, Integer> representation() throws IllegalStateException {
         return null;
     }
 

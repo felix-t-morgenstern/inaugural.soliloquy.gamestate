@@ -29,7 +29,7 @@ import java.util.function.Function;
 public class GameStateModule extends AbstractModule {
     private GameStateFactory _gameStateFactory;
 
-    public GameStateModule(CollectionFactory collectionFactory,
+    public GameStateModule(ListFactory listFactory,
                            CoordinateFactory coordinateFactory,
                            EntityUuidFactory entityUuidFactory,
                            MapFactory mapFactory,
@@ -81,13 +81,13 @@ public class GameStateModule extends AbstractModule {
                 uuidHandler, dataHandler, itemFactory);
 
         CharacterEventsFactory characterEventsFactory =
-                new CharacterEventsFactoryImpl(collectionFactory, mapFactory);
+                new CharacterEventsFactoryImpl(listFactory, mapFactory);
 
         CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory =
                 new CharacterEquipmentSlotsFactoryImpl(pairFactory, mapFactory);
 
         CharacterInventoryFactory characterInventoryFactory =
-                new CharacterInventoryFactoryImpl(collectionFactory);
+                new CharacterInventoryFactoryImpl(listFactory);
 
         CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
                 CharacterVariableStatistic> characterVariableStatisticFactory =
@@ -95,17 +95,17 @@ public class GameStateModule extends AbstractModule {
                         characterStatisticCalculation);
 
         CharacterVariableStatisticsFactory variableStatsFactory =
-                new CharacterVariableStatisticsFactoryImpl(mapFactory, collectionFactory,
+                new CharacterVariableStatisticsFactoryImpl(mapFactory, listFactory,
                         variableCacheFactory, characterVariableStatisticFactory);
 
         CharacterEntitiesOfTypeFactory entitiesOfTypeFactory =
-                new CharacterEntitiesOfTypeFactoryImpl(collectionFactory, variableCacheFactory);
+                new CharacterEntitiesOfTypeFactoryImpl(listFactory, variableCacheFactory);
 
         CharacterStatusEffectsFactory characterStatusEffectsFactory =
                 new CharacterStatusEffectsFactoryImpl(mapFactory, resistanceCalculation);
 
         CharacterFactory characterFactory = new CharacterFactoryImpl(entityUuidFactory,
-                collectionFactory, mapFactory, characterEventsFactory,
+                listFactory, mapFactory, characterEventsFactory,
                 characterEquipmentSlotsFactory, characterInventoryFactory, variableStatsFactory,
                 entitiesOfTypeFactory, characterStatusEffectsFactory, variableCacheFactory);
 
@@ -118,10 +118,10 @@ public class GameStateModule extends AbstractModule {
                         itemHandler);
 
         TileFixtureItemsFactory tileFixtureItemsFactory =
-                new TileFixtureItemsFactoryImpl(collectionFactory);
+                new TileFixtureItemsFactoryImpl(listFactory);
 
         TileFixtureFactory tileFixtureFactory = new TileFixtureFactoryImpl(entityUuidFactory,
-                collectionFactory, tileFixtureItemsFactory, variableCacheFactory);
+                listFactory, tileFixtureItemsFactory, variableCacheFactory);
 
         PersistentValueTypeHandler<TileFixture> tileFixturesHandler =
                 new PersistentTileFixtureHandler(fixtureTypes::get, tileFixtureFactory,
@@ -133,7 +133,7 @@ public class GameStateModule extends AbstractModule {
                 new TileWallSegmentsFactoryImpl(pairFactory, mapFactory);
 
         TileFactory tileFactory = new TileFactoryImpl(coordinateFactory, tileEntitiesFactory,
-                tileWallSegmentsFactory, collectionFactory, mapFactory);
+                tileWallSegmentsFactory, listFactory, mapFactory);
 
         TileWallSegmentFactory tileWallSegmentFactory =
                 new TileWallSegmentFactoryImpl(variableCacheFactory);
@@ -143,21 +143,21 @@ public class GameStateModule extends AbstractModule {
                 spriteHandler, dataHandler, wallSegmentTypes::get, gameMovementEvents::get,
                 gameAbilityEvents::get, groundTypes::get);
 
-        RoundManagerImpl roundManager = new RoundManagerImpl(collectionFactory, pairFactory,
+        RoundManagerImpl roundManager = new RoundManagerImpl(listFactory, pairFactory,
                 variableCacheFactory, activeCharactersProvider, turnHandling, roundEndHandling);
 
         GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(coordinateFactory,
-                collectionFactory,
+                listFactory,
                 c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
                 roundManager::removeCharacterFromQueue);
 
         PersistentValueTypeHandler<GameZone> gameZoneHandler =
                 new PersistentGameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
-                        collectionFactory, actions::get);
+                        actions::get);
 
         GameZonesRepo gameZonesRepo = new GameZonesRepoImpl(gameZoneHandler, fileLocations);
 
-        CameraFactory cameraFactory = new CameraFactoryImpl(coordinateFactory, collectionFactory,
+        CameraFactory cameraFactory = new CameraFactoryImpl(coordinateFactory, listFactory,
                 mapFactory, tileVisibility);
 
         Function<RoundManager, TimerFactory> timerFactoryFactory = r ->
@@ -165,10 +165,10 @@ public class GameStateModule extends AbstractModule {
                         roundManager::removeOneTimeTimer, roundManager::addRecurringTimer,
                         roundManager::removeRecurringTimer);
 
-        KeyBindingFactory keyBindingFactory = new KeyBindingFactoryImpl(collectionFactory);
+        KeyBindingFactory keyBindingFactory = new KeyBindingFactoryImpl(listFactory);
 
         KeyBindingContextFactory keyBindingContextFactory =
-                new KeyBindingContextFactoryImpl(collectionFactory);
+                new KeyBindingContextFactoryImpl(listFactory);
 
         KeyPressListenerFactory keyPressListenerFactory =
                 new KeyPressListenerFactoryImpl(mapFactory);

@@ -3,8 +3,8 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.TileArchetype;
 import inaugural.soliloquy.tools.generic.HasOneGenericParam;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
-import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -176,28 +176,28 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
 
         dto.characters = new TileEntityDTO[tile.characters().size()];
         index = 0;
-        for (ReadablePair<Character, Integer> pair : tile.characters()) {
+        for (Pair<Character, Integer> pair : tile.characters()) {
             dto.characters[index++] = new TileEntityDTO(pair.getItem2(),
                     CHARACTERS_HANDLER.write(pair.getItem1()));
         }
 
         dto.items = new TileEntityDTO[tile.items().size()];
         index = 0;
-        for (ReadablePair<Item, Integer> pair : tile.items()) {
+        for (Pair<Item, Integer> pair : tile.items()) {
             dto.items[index++] = new TileEntityDTO(pair.getItem2(),
                     ITEMS_HANDLER.write(pair.getItem1()));
         }
 
         dto.fixtures = new TileEntityDTO[tile.fixtures().size()];
         index = 0;
-        for (ReadablePair<TileFixture, Integer> pair : tile.fixtures()) {
+        for (Pair<TileFixture, Integer> pair : tile.fixtures()) {
             dto.fixtures[index++] = new TileEntityDTO(pair.getItem2(),
                     FIXTURES_HANDLER.write(pair.getItem1()));
         }
 
         dto.wallSegments = new TileWallSegmentDTO[tile.wallSegments().size()];
         index = 0;
-        for (ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
+        for (Pair<TileWallSegmentDirection, Pair<TileWallSegment,
                 TileWallSegmentDimensions>> pair : tile.wallSegments()) {
             TileWallSegmentDimensions dimens = pair.getItem2().getItem2();
             dto.wallSegments[index++] =
@@ -220,9 +220,9 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
 
         dto.sprites = new TileEntityDTO[tile.sprites().size()];
         index = 0;
-        for(ReadablePair<Sprite, Integer> pair : tile.sprites()) {
-            dto.sprites[index++] = new TileEntityDTO(pair.getItem2(),
-                    SPRITE_HANDLER.write(pair.getItem1()));
+        for(Sprite sprite : tile.sprites().keySet()) {
+            dto.sprites[index++] =
+                    new TileEntityDTO(tile.sprites().get(sprite), SPRITE_HANDLER.write(sprite));
         }
 
         dto.data = DATA_HANDLER.write(tile.data());

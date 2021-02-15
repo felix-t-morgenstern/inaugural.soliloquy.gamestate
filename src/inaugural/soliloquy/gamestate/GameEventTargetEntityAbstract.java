@@ -2,15 +2,16 @@ package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.GameAbilityEventArchetype;
 import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.GameEventTargetEntity;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 
 abstract class GameEventTargetEntityAbstract extends HasDeletionInvariants implements GameEventTargetEntity {
-    private final Collection<GameMovementEvent> MOVEMENT_EVENTS;
-    private final Collection<GameAbilityEvent> ABILITY_EVENTS;
+    private final List<GameMovementEvent> MOVEMENT_EVENTS;
+    private final List<GameAbilityEvent> ABILITY_EVENTS;
 
     private final static GameMovementEvent GAME_MOVEMENT_EVENT_ARCHETYPE =
             new GameMovementEventArchetype();
@@ -23,24 +24,24 @@ abstract class GameEventTargetEntityAbstract extends HasDeletionInvariants imple
         ABILITY_EVENTS = null;
     }
 
-    GameEventTargetEntityAbstract(CollectionFactory collectionFactory) {
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException("TileImpl: collectionFactory cannot be null");
-        }
-        MOVEMENT_EVENTS = collectionFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
-        ABILITY_EVENTS = collectionFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
+    GameEventTargetEntityAbstract(ListFactory listFactory) {
+        Check.ifNull(listFactory, "listFactory");
+        MOVEMENT_EVENTS = listFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
+        ABILITY_EVENTS = listFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
     }
 
+    // TODO: Test to ensure that clones are produced
     @Override
-    public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
+    public List<GameMovementEvent> movementEvents() throws IllegalStateException {
         enforceInvariants("movementEvents");
-        return MOVEMENT_EVENTS;
+        return MOVEMENT_EVENTS.makeClone();
     }
 
+    // TODO: Test to ensure that clones are produced
     @Override
-    public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
+    public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
         enforceInvariants("abilityEvents");
-        return ABILITY_EVENTS;
+        return ABILITY_EVENTS.makeClone();
     }
 
     abstract void enforceInvariants(String methodName);

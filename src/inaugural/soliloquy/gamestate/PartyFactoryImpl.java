@@ -1,25 +1,21 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.CollectionFactory;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
 public class PartyFactoryImpl implements PartyFactory {
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
-    public PartyFactoryImpl(CollectionFactory collectionFactory) {
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "PartyFactoryImpl: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
+    public PartyFactoryImpl(ListFactory listFactory) {
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
     }
 
     @Override
     public Party make(VariableCache data) throws IllegalArgumentException {
-        return new PartyImpl(COLLECTION_FACTORY, data);
+        return new PartyImpl(LIST_FACTORY, data);
     }
 
     @Override

@@ -6,7 +6,6 @@ import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -48,7 +47,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     }
 
     @Override
-    public ReadableMap<String, Item> representation()
+    public Map<String, Item> representation()
             throws IllegalStateException {
         enforceDeletionInvariants("getRepresentation");
         Map<String, Item> characterEquipmentSlots =
@@ -57,7 +56,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
             characterEquipmentSlots.put(equipmentSlot.getKey(),
                     equipmentSlot.getValue().getItem1());
         }
-        return characterEquipmentSlots.readOnlyRepresentation();
+        return characterEquipmentSlots;
     }
 
     @Override

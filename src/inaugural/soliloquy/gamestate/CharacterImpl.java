@@ -4,9 +4,10 @@ import inaugural.soliloquy.gamestate.archetypes.CharacterActiveAbilityArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CharacterClassificationArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CharacterReactiveAbilityArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CharacterStaticStatisticArchetype;
-import soliloquy.specs.common.factories.CollectionFactory;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
@@ -25,7 +26,7 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 public class CharacterImpl implements Character {
     private final EntityUuid ID;
     private final CharacterType CHARACTER_TYPE;
-    private final Collection<CharacterClassification> CHARACTER_CLASSIFICATIONS;
+    private final List<CharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final Map<String,String> PRONOUNS;
     private final CharacterEvents EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
@@ -59,7 +60,7 @@ public class CharacterImpl implements Character {
     @SuppressWarnings("ConstantConditions")
     public CharacterImpl(EntityUuid id,
                          CharacterType characterType,
-                         CollectionFactory collectionFactory,
+                         ListFactory listFactory,
                          MapFactory mapFactory,
                          CharacterEventsFactory characterEventsFactory,
                          CharacterEquipmentSlotsFactory equipmentSlotsFactory,
@@ -68,59 +69,25 @@ public class CharacterImpl implements Character {
                          CharacterEntitiesOfTypeFactory entitiesOfTypeFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
                          VariableCache data) {
-        if (id == null) {
-            throw new IllegalArgumentException("Character: id must be non-null");
-        }
-        ID = id;
-        if (characterType == null) {
-            throw new IllegalArgumentException("Character: characterType must be non-null");
-        }
-        CHARACTER_TYPE = characterType;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException("Character: collectionFactory must be non-null");
-        }
-        CHARACTER_CLASSIFICATIONS = collectionFactory.make(new CharacterClassificationArchetype());
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("Character: mapFactory must be non-null");
-        }
-        PRONOUNS = mapFactory.make("","");
-        if (characterEventsFactory == null) {
-            throw new IllegalArgumentException(
-                    "Character: characterEventsFactory must be non-null");
-        }
-        EVENTS = characterEventsFactory.make(this);
-        if (equipmentSlotsFactory == null) {
-            throw new IllegalArgumentException(
-                    "Character: equipmentSlotsFactory must be non-null");
-        }
-        EQUIPMENT_SLOTS = equipmentSlotsFactory.make(this);
-        if (inventoryFactory == null) {
-            throw new IllegalArgumentException("Character: inventoryFactory must be non-null");
-        }
-        INVENTORY = inventoryFactory.make(this);
-        if (variableStatsFactory == null) {
-            throw new IllegalArgumentException(
-                    "Character: variableStatsFactory must be non-null");
-        }
-        VARIABLE_STATISTICS = variableStatsFactory.make(this);
-        if (entitiesOfTypeFactory == null) {
-            throw new IllegalArgumentException(
-                    "Character: entitiesOfTypeFactory must be non-null");
-        }
+        ID = Check.ifNull(id, "id");
+        CHARACTER_TYPE = Check.ifNull(characterType, "characterType");
+        CHARACTER_CLASSIFICATIONS = Check.ifNull(listFactory, "listFactory")
+                .make(new CharacterClassificationArchetype());
+        PRONOUNS = Check.ifNull(mapFactory, "mapFactory").make("","");
+        EVENTS = Check.ifNull(characterEventsFactory, "characterEventsFactory").make(this);
+        EQUIPMENT_SLOTS = Check.ifNull(equipmentSlotsFactory, "equipmentSlotsFactory").make(this);
+        INVENTORY = Check.ifNull(inventoryFactory, "inventoryFactory").make(this);
+        VARIABLE_STATISTICS = Check.ifNull(variableStatsFactory, "variableStatsFactory")
+                .make(this);
         //noinspection unchecked
-        STATIC_STATISTICS = entitiesOfTypeFactory.make(this, STATIC_STAT_ARCHETYPE);
-        if (statusEffectsFactory == null) {
-            throw new IllegalArgumentException("Character: statusEffectsFactory must be non-null");
-        }
-        STATUS_EFFECTS = statusEffectsFactory.make(this);
+        STATIC_STATISTICS = Check.ifNull(entitiesOfTypeFactory, "entitiesOfTypeFactory")
+                .make(this, STATIC_STAT_ARCHETYPE);
+        STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").make(this);
         //noinspection unchecked
         ACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, ACTIVE_ABILITY_ARCHETYPE);
         //noinspection unchecked
         REACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, REACTIVE_ABILITY_ARCHETYPE);
-        if (data == null) {
-            throw new IllegalArgumentException("Character: data must be non-null");
-        }
-        DATA = data;
+        DATA = Check.ifNull(data, "data");
     }
 
     @Override
@@ -130,7 +97,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Collection<CharacterClassification> classifications() throws IllegalStateException {
+    public List<CharacterClassification> classifications() throws IllegalStateException {
         enforceInvariant("classifications", true);
         return CHARACTER_CLASSIFICATIONS;
     }

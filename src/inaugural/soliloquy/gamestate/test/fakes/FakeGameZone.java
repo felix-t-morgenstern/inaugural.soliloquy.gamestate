@@ -1,10 +1,9 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -13,16 +12,16 @@ public class FakeGameZone implements GameZone {
     public int _maxX = 99;
     public int _maxY = 99;
 
-    public ReadableCoordinate FAKE_MAX_COORDINATES = null;
+    public Coordinate FAKE_MAX_COORDINATES = null;
 
     public String ID = "GameZoneStubId";
     public Tile[][] TILES = new Tile[_maxX+1][_maxY+1];
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 
     @SuppressWarnings("rawtypes")
-    private final Collection<Action> ON_ENTRY = new FakeCollection<>();
+    private final List<Action> ON_ENTRY = new FakeList<>();
     @SuppressWarnings("rawtypes")
-    private final Collection<Action> ON_EXIT = new FakeCollection<>();
+    private final List<Action> ON_EXIT = new FakeList<>();
 
     private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
 
@@ -66,7 +65,7 @@ public class FakeGameZone implements GameZone {
 
     @SuppressWarnings("ReplaceNullCheck")
     @Override
-    public ReadableCoordinate maxCoordinates() {
+    public Coordinate maxCoordinates() {
         if (THROW_EXCEPTION_ON_GET_MAX_COORDINATES) {
             throw new GameZoneStubException(this);
         }
@@ -87,18 +86,18 @@ public class FakeGameZone implements GameZone {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action> onEntry() {
+    public List<Action> onEntry() {
         return ON_ENTRY;
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Collection<Action> onExit() {
+    public List<Action> onExit() {
         return ON_EXIT;
     }
 
     @Override
-    public ReadableCollection<Character> charactersRepresentation() {
+    public List<Character> charactersRepresentation() {
         return null;
     }
 
@@ -144,6 +143,7 @@ public class FakeGameZone implements GameZone {
         return _data;
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     public class GameZoneStubException extends RuntimeException {
         final GameZone GAME_ZONE;
 

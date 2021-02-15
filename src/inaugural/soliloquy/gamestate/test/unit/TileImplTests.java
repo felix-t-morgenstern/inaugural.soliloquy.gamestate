@@ -5,11 +5,10 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -34,7 +33,7 @@ class TileImplTests {
     private final TileEntitiesFactory TILE_ENTITIES_FACTORY = new FakeTileEntitiesFactory();
     private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY =
             new FakeTileWallSegmentsFactory();
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
@@ -43,7 +42,7 @@ class TileImplTests {
     @BeforeEach
     void setUp() {
         _tile = new TileImpl(X, Y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, COLLECTION_FACTORY, MAP_FACTORY, DATA);
+                TILE_WALL_SEGMENTS_FACTORY, LIST_FACTORY, MAP_FACTORY, DATA);
         ((FakeGameZone) GAME_ZONE).TILES = new Tile[999][999];
         ((FakeGameZone) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
     }
@@ -52,30 +51,29 @@ class TileImplTests {
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 null, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                COLLECTION_FACTORY, MAP_FACTORY, DATA));
+                LIST_FACTORY, MAP_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, null, TILE_WALL_SEGMENTS_FACTORY,
-                COLLECTION_FACTORY, MAP_FACTORY, DATA));
+                LIST_FACTORY, MAP_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, null,
-                COLLECTION_FACTORY, MAP_FACTORY, DATA));
+                LIST_FACTORY, MAP_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
                 null, MAP_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                COLLECTION_FACTORY, null, DATA));
+                LIST_FACTORY, null, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                COLLECTION_FACTORY, MAP_FACTORY, null));
+                LIST_FACTORY, MAP_FACTORY, null));
     }
 
     @Test
     void testLocation() {
-        ReadableCoordinate location = _tile.location();
+        Coordinate location = _tile.location();
 
         assertNotNull(location);
-        assertFalse(location instanceof Coordinate);
         assertEquals(X, location.getX());
         assertEquals(Y, location.getY());
     }

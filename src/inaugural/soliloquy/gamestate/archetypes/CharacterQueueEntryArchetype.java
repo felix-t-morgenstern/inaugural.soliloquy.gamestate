@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 
@@ -27,11 +26,6 @@ public class CharacterQueueEntryArchetype implements Pair<Character, VariableCac
     }
 
     @Override
-    public ReadablePair<Character, VariableCache> representation() {
-        return null;
-    }
-
-    @Override
     public Character getFirstArchetype() throws IllegalStateException {
         return null;
     }
@@ -45,5 +39,10 @@ public class CharacterQueueEntryArchetype implements Pair<Character, VariableCac
     public String getInterfaceName() {
         return Pair.class.getCanonicalName() + "<" + Character.class.getCanonicalName() + "," +
                 VariableCache.class.getCanonicalName() + ">";
+    }
+
+    @Override
+    public Pair<Character, VariableCache> makeClone() {
+        return null;
     }
 }

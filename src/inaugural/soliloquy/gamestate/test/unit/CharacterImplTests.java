@@ -40,7 +40,7 @@ class CharacterImplTests {
         _character = new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -57,7 +57,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 null,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -69,7 +69,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 null,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -93,7 +93,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 null,
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -105,7 +105,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 null,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -117,7 +117,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 null,
@@ -129,7 +129,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -141,7 +141,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -153,7 +153,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -165,7 +165,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -177,7 +177,7 @@ class CharacterImplTests {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,
@@ -199,7 +199,7 @@ class CharacterImplTests {
         Character character2 = new CharacterImpl(
                 ID,
                 CHARACTER_TYPE,
-                new FakeCollectionFactory(),
+                new FakeListFactory(),
                 new FakeMapFactory(),
                 CHARACTER_EVENTS_FACTORY,
                 EQUIPMENT_SLOTS_FACTORY,

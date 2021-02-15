@@ -5,8 +5,8 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.factories.CoordinateFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameZoneFactoryImplTests {
     private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final ArrayList<Character> ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
     private final ArrayList<Character> REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
     private final String ID = "GameZoneId";
@@ -31,24 +31,23 @@ class GameZoneFactoryImplTests {
 
     @BeforeEach
     void setUp() {
-        _gameZoneFactory = new GameZoneFactoryImpl(COORDINATE_FACTORY, COLLECTION_FACTORY,
+        _gameZoneFactory = new GameZoneFactoryImpl(COORDINATE_FACTORY, LIST_FACTORY,
                 ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(null, COLLECTION_FACTORY,
+                () -> new GameZoneFactoryImpl(null, LIST_FACTORY,
                         ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(COORDINATE_FACTORY, null,
                         ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(COORDINATE_FACTORY, COLLECTION_FACTORY,
+                () -> new GameZoneFactoryImpl(COORDINATE_FACTORY, LIST_FACTORY,
                         null, REMOVED_FROM_ROUND_MANAGER::add));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(COORDINATE_FACTORY, COLLECTION_FACTORY,
+                () -> new GameZoneFactoryImpl(COORDINATE_FACTORY, LIST_FACTORY,
                         ADDED_TO_END_OF_ROUND_MANAGER::add, null));
     }
 

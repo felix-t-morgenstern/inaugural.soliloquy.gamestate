@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -14,22 +14,14 @@ import java.util.ArrayList;
 public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
         implements TileFixtureItems {
     private final TileFixture TILE_FIXTURE;
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
     private final ArrayList<Item> CONTAINED_ITEMS;
 
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
-    @SuppressWarnings("ConstantConditions")
-    public TileFixtureItemsImpl(TileFixture tileFixture, CollectionFactory collectionFactory) {
-        if (tileFixture == null) {
-            throw new IllegalArgumentException("TileFixtureItems: tileFixture must be non-null");
-        }
-        TILE_FIXTURE = tileFixture;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureItems: collectionFactory must be non-null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
+    public TileFixtureItemsImpl(TileFixture tileFixture, ListFactory listFactory) {
+        TILE_FIXTURE = Check.ifNull(tileFixture, "tileFixture");
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         CONTAINED_ITEMS = new ArrayList<>();
     }
 
@@ -49,13 +41,11 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
     }
 
     @Override
-    public ReadableCollection<Item> representation() throws UnsupportedOperationException, IllegalStateException {
+    public List<Item> representation() throws UnsupportedOperationException, IllegalStateException {
         enforceDeletionInvariants("getRepresentation");
-        Collection<Item> items = COLLECTION_FACTORY.make(ITEM_ARCHETYPE);
-        for(Item item : CONTAINED_ITEMS) {
-            items.add(item);
-        }
-        return items.representation();
+        List<Item> items = LIST_FACTORY.make(ITEM_ARCHETYPE);
+        items.addAll(CONTAINED_ITEMS);
+        return items;
     }
 
     @Override

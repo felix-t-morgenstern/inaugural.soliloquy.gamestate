@@ -2,12 +2,12 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.GameZoneArchetype;
+import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistentvaluetypehandlers.PersistentTypeHandler;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.factories.CollectionFactory;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
@@ -18,43 +18,20 @@ public class PersistentGameZoneHandler extends PersistentTypeHandler<GameZone> {
     private final GameZoneFactory GAME_ZONE_FACTORY;
     private final PersistentValueTypeHandler<Tile> TILE_HANDLER;
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
-    private final CollectionFactory COLLECTION_FACTORY;
     @SuppressWarnings("rawtypes")
     private final Function<String, Action> GET_ACTION;
 
     private static final GameZone ARCHETYPE = new GameZoneArchetype();
 
-    @SuppressWarnings({"rawtypes", "ConstantConditions"})
+    @SuppressWarnings("rawtypes")
     public PersistentGameZoneHandler(GameZoneFactory gameZoneFactory,
                                      PersistentValueTypeHandler<Tile> tileHandler,
                                      PersistentValueTypeHandler<VariableCache> dataHandler,
-                                     CollectionFactory collectionFactory,
                                      Function<String, Action> getAction) {
-        if (gameZoneFactory == null) {
-            throw new IllegalArgumentException(
-                    "PersistentGameZoneHandler: gameZoneFactory cannot be null");
-        }
-        GAME_ZONE_FACTORY = gameZoneFactory;
-        if (tileHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentGameZoneHandler: tileHandler cannot be null");
-        }
-        TILE_HANDLER = tileHandler;
-        if (dataHandler == null) {
-            throw new IllegalArgumentException(
-                    "PersistentGameZoneHandler: dataHandler cannot be null");
-        }
-        DATA_HANDLER = dataHandler;
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "PersistentGameZoneHandler: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
-        if (getAction == null) {
-            throw new IllegalArgumentException(
-                    "PersistentGameZoneHandler: getAction cannot be null");
-        }
-        GET_ACTION = getAction;
+        GAME_ZONE_FACTORY = Check.ifNull(gameZoneFactory, "gameZoneFactory");
+        TILE_HANDLER = Check.ifNull(tileHandler, "tileHandler");
+        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        GET_ACTION = Check.ifNull(getAction, "getAction");
     }
 
     @Override
@@ -108,7 +85,7 @@ public class PersistentGameZoneHandler extends PersistentTypeHandler<GameZone> {
         for(Action action : gameZone.onExit()) {
             dto.onExit[index++] = action.id();
         }
-        ReadableCoordinate maxCoordinates = gameZone.maxCoordinates();
+        Coordinate maxCoordinates = gameZone.maxCoordinates();
         dto.maxX = maxCoordinates.getX();
         dto.maxY = maxCoordinates.getY();
         dto.tiles = new String[maxCoordinates.getX()+1][maxCoordinates.getY()+1];
@@ -120,6 +97,7 @@ public class PersistentGameZoneHandler extends PersistentTypeHandler<GameZone> {
         return new Gson().toJson(dto);
     }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
     private class GameZoneDTO {
         String id;
         String type;

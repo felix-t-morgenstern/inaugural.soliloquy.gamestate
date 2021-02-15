@@ -1,8 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
@@ -15,7 +14,7 @@ public class FakeCharacterStaticStatistic implements CharacterStatistic<Characte
         _type = type;
     }
 
-    FakeCharacterStaticStatistic(Character character, CharacterStaticStatisticType type,
+    FakeCharacterStaticStatistic(CharacterStaticStatisticType type,
                                  VariableCache data) {
         this(type);
         _data = data;
@@ -42,7 +41,7 @@ public class FakeCharacterStaticStatistic implements CharacterStatistic<Characte
     }
 
     @Override
-    public ReadableMap<String, Integer> representation() throws IllegalStateException {
+    public Map<String, Integer> representation() throws IllegalStateException {
         return null;
     }
 

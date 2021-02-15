@@ -1,24 +1,20 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.CollectionFactory;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.factories.KeyBindingContextFactory;
 
 public class KeyBindingContextFactoryImpl implements KeyBindingContextFactory {
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
-    public KeyBindingContextFactoryImpl(CollectionFactory collectionFactory) {
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "KeyBindingContextFactoryImpl: collectionFactory cannot be null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
+    public KeyBindingContextFactoryImpl(ListFactory listFactory) {
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
     }
 
     @Override
     public KeyBindingContext make() {
-        return new KeyBindingContextImpl(COLLECTION_FACTORY);
+        return new KeyBindingContextImpl(LIST_FACTORY);
     }
 
     @Override

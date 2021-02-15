@@ -7,11 +7,10 @@ import inaugural.soliloquy.gamestate.test.spydoubles.TurnHandlingSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.PairFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadablePair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
@@ -19,12 +18,11 @@ import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RoundManagerImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final PairFactory PAIR_FACTORY = new FakePairFactory();
     private final FakeVariableCacheFactory VARIABLE_CACHE_FACTORY = new FakeVariableCacheFactory();
     private final FakeActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER =
@@ -36,12 +34,11 @@ public class RoundManagerImplTests {
 
     @BeforeEach
     void setUp() {
-        _roundManager = new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
+        _roundManager = new RoundManagerImpl(LIST_FACTORY, PAIR_FACTORY,
                 VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
                 ROUND_END_HANDLING);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
@@ -49,23 +46,23 @@ public class RoundManagerImplTests {
                         VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
                         ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(COLLECTION_FACTORY, null,
+                () -> new RoundManagerImpl(LIST_FACTORY, null,
                         VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
                         ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
+                () -> new RoundManagerImpl(LIST_FACTORY, PAIR_FACTORY,
                         null, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
                         ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
+                () -> new RoundManagerImpl(LIST_FACTORY, PAIR_FACTORY,
                         VARIABLE_CACHE_FACTORY, null, TURN_HANDLING,
                         ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
+                () -> new RoundManagerImpl(LIST_FACTORY, PAIR_FACTORY,
                         VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, null,
                         ROUND_END_HANDLING));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(COLLECTION_FACTORY, PAIR_FACTORY,
+                () -> new RoundManagerImpl(LIST_FACTORY, PAIR_FACTORY,
                         VARIABLE_CACHE_FACTORY, ACTIVE_CHARACTERS_PROVIDER, TURN_HANDLING,
                         null));
     }
@@ -311,7 +308,7 @@ public class RoundManagerImplTests {
         _roundManager.setCharacterPositionInQueue(character3, Integer.MAX_VALUE);
         VariableCache initialData3 = VARIABLE_CACHE_FACTORY.Created.get(2);
 
-        ReadableCollection<ReadablePair<Character,VariableCache>> representation =
+        List<Pair<Character,VariableCache>> representation =
                 _roundManager.characterQueueRepresentation();
 
         assertNotNull(representation);
@@ -392,8 +389,7 @@ public class RoundManagerImplTests {
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
         ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer3);
 
-        ReadableCollection<OneTimeTimer> representation =
-                _roundManager.oneTimeTimersRepresentation();
+        List<OneTimeTimer> representation = _roundManager.oneTimeTimersRepresentation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
@@ -418,8 +414,7 @@ public class RoundManagerImplTests {
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
         ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
 
-        ReadableCollection<RecurringTimer> representation =
-                _roundManager.recurringTimersRepresentation();
+        List<RecurringTimer> representation = _roundManager.recurringTimersRepresentation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
@@ -668,7 +663,7 @@ public class RoundManagerImplTests {
         assertEquals(3, getCount(recurringTimer3, ROUND_END_HANDLING.Timers));
     }
 
-    private <T> int getCount(T item, List<T> items) {
+    private <T> int getCount(T item, java.util.List<T> items) {
         int hits = 0;
         for (T t : items) {
             if (t == item) {
@@ -697,7 +692,7 @@ public class RoundManagerImplTests {
         _roundManager.setCharacterPositionInQueue(character2, 1, roundData2);
         _roundManager.setCharacterPositionInQueue(character3, 2, roundData3);
 
-        ArrayList<ReadablePair<Character, VariableCache>> fromIterator = new ArrayList<>();
+        ArrayList<Pair<Character, VariableCache>> fromIterator = new ArrayList<>();
 
         _roundManager.forEach(fromIterator::add);
 

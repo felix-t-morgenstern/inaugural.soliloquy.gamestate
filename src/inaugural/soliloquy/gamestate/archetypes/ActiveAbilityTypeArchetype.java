@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
@@ -9,10 +9,6 @@ import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 
 public class ActiveAbilityTypeArchetype implements ActiveAbilityType {
-    @Override
-    public void use(AbilitySource abilitySource, Collection<Pair<Character, Tile>> collection, VariableCache genericParamsSet) {
-
-    }
 
     @Override
     public String description(VariableCache genericParamsSet) throws IllegalStateException {
@@ -52,5 +48,10 @@ public class ActiveAbilityTypeArchetype implements ActiveAbilityType {
     @Override
     public String getInterfaceName() {
         return ActiveAbilityType.class.getCanonicalName();
+    }
+
+    @Override
+    public void use(AbilitySource abilitySource, List<Pair<Character, Tile>> list, VariableCache variableCache) {
+
     }
 }

@@ -3,11 +3,10 @@ package inaugural.soliloquy.gamestate;
 import inaugural.soliloquy.gamestate.archetypes.CharacterVariableStatisticArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CharacterVariableStatisticTypeArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
@@ -30,26 +29,26 @@ public class CharacterVariableStatisticsImpl
                                                      CharacterVariableStatisticType,
                                                      CharacterVariableStatistic>
                                                      factory,
-                                           CollectionFactory collectionFactory,
+                                           ListFactory listFactory,
                                            VariableCacheFactory dataFactory,
                                            MapFactory mapFactory) {
-        super(character, c -> t -> d -> factory.make(c, t, d), collectionFactory, dataFactory,
+        super(character, c -> t -> d -> factory.make(c, t, d), listFactory, dataFactory,
                 ARCHETYPE);
         Check.ifNull(factory, "factory");
         MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
     }
 
     @Override
-    public ReadableMap<CharacterVariableStatisticType, Integer> currentValues() {
+    public Map<CharacterVariableStatisticType, Integer> currentValues() {
         enforceDeletionInvariants("currentValues");
         Map<CharacterVariableStatisticType, Integer> currentValues =
                 MAP_FACTORY.make(TYPE_ARCHETYPE, 0);
         ENTITIES.forEach((t,s) -> currentValues.put(t, s.getCurrentValue()));
-        return currentValues.readOnlyRepresentation();
+        return currentValues;
     }
 
     @Override
-    public ReadableMap<CharacterVariableStatisticType, Integer> maxValues() {
+    public Map<CharacterVariableStatisticType, Integer> maxValues() {
         enforceDeletionInvariants("maxValues");
         Map<CharacterVariableStatisticType, Integer> maxValues =
                 MAP_FACTORY.make(TYPE_ARCHETYPE, 0);
@@ -57,7 +56,7 @@ public class CharacterVariableStatisticsImpl
             s.calculate();
             maxValues.put(t, s.totalValue());
         });
-        return maxValues.readOnlyRepresentation();
+        return maxValues;
     }
 
     @Override

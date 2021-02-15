@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
@@ -15,14 +15,14 @@ import java.util.function.Function;
 
 public class CharacterEntitiesOfTypeFactoryImpl extends CanGetInterfaceNameOfInput
         implements CharacterEntitiesOfTypeFactory {
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
     private final HashMap<String,Object> ENTITY_FACTORIES = new HashMap<>();
 
-    public CharacterEntitiesOfTypeFactoryImpl(CollectionFactory collectionFactory,
+    public CharacterEntitiesOfTypeFactoryImpl(ListFactory listFactory,
                                               VariableCacheFactory dataFactory) {
-        COLLECTION_FACTORY = Check.ifNull(collectionFactory, "collectionFactory");
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
     }
 
@@ -42,7 +42,7 @@ public class CharacterEntitiesOfTypeFactoryImpl extends CanGetInterfaceNameOfInp
                 character,
                 ((Function<Character, Function<TEntityType, Function<VariableCache, TCharacterEntityOfType>>>)
                         ENTITY_FACTORIES.get(getProperTypeName(archetype))),
-                COLLECTION_FACTORY,
+                LIST_FACTORY,
                 DATA_FACTORY,
                 archetype);
     }

@@ -4,11 +4,11 @@ import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.CharacterEntitiesOfTypeFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterEntity;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
@@ -20,7 +20,7 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEntitiesOfTypeFactoryImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeCharacterEntity FACTORY_OUTPUT = new FakeCharacterEntity(null, null); // TODO: Determine whether and where factory output should be checked
     private final Function<Character,Function<HasId,Function<VariableCache, FakeCharacterEntity>>>
@@ -42,7 +42,7 @@ class CharacterEntitiesOfTypeFactoryImplTests {
     @BeforeEach
     void setUp() {
         _characterPassedIntoFactory = null;
-        _factory = new CharacterEntitiesOfTypeFactoryImpl(COLLECTION_FACTORY, DATA_FACTORY);
+        _factory = new CharacterEntitiesOfTypeFactoryImpl(LIST_FACTORY, DATA_FACTORY);
     }
 
     @Test
@@ -50,7 +50,7 @@ class CharacterEntitiesOfTypeFactoryImplTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterEntitiesOfTypeFactoryImpl(null, DATA_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterEntitiesOfTypeFactoryImpl(COLLECTION_FACTORY, null));
+                new CharacterEntitiesOfTypeFactoryImpl(LIST_FACTORY, null));
     }
 
     @Test

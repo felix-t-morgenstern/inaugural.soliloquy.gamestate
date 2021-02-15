@@ -1,28 +1,26 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingArchetype;
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.common.infrastructure.Collection;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 
 public class KeyBindingContextImpl implements KeyBindingContext {
-    private final Collection<KeyBinding> BINDINGS;
+    private final List<KeyBinding> BINDINGS;
     private static final KeyBinding ARCHETYPE = new KeyBindingArchetype();
 
     private boolean _blocksAllLowerBindings;
 
-    public KeyBindingContextImpl(CollectionFactory collectionFactory) {
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "KeyBindingContextImpl: collectionFactory cannot be null");
-        }
-        BINDINGS = collectionFactory.make(ARCHETYPE);
+    public KeyBindingContextImpl(ListFactory listFactory) {
+        BINDINGS = Check.ifNull(listFactory, "listFactory").make(ARCHETYPE);
     }
 
+    // TODO: Ensure that this is a clone
     @Override
-    public Collection<KeyBinding> bindings() {
-        return BINDINGS;
+    public List<KeyBinding> bindings() {
+        return BINDINGS.makeClone();
     }
 
     @Override

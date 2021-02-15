@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterVariableStatisticTy
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -66,13 +66,11 @@ class CharacterVariableStatisticImplTests {
                 CHARACTER_STATISTIC_CALCULATION._statisticType);
         assertEquals(CharacterStatisticCalculationSpyDouble.VALUE,
                 _characterVariableStatistic.totalValue());
-        ReadableMap<String,Integer> representation =
+        Map<String,Integer> representation =
                 _characterVariableStatistic.representation();
         assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS.size(), representation.size());
-        CharacterStatisticCalculationSpyDouble.MODIFIERS.forEach(p -> {
-            assertTrue(representation.containsKey(p.getItem1()));
-            assertTrue(representation.containsValue(p.getItem2()));
-        });
+        CharacterStatisticCalculationSpyDouble.MODIFIERS.forEach((modifierType, value) ->
+                assertEquals(value, representation.get(modifierType)));
     }
 
     @Test

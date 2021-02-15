@@ -2,12 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit;
 
 import inaugural.soliloquy.gamestate.CharacterEventsFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCollectionFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameCharacterEvent;
 import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
@@ -17,23 +17,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class CharacterEventsFactoryImplTests {
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private CharacterEventsFactory _characterEventsFactory;
 
     @BeforeEach
     void setUp() {
-        _characterEventsFactory = new CharacterEventsFactoryImpl(COLLECTION_FACTORY, MAP_FACTORY);
+        _characterEventsFactory = new CharacterEventsFactoryImpl(LIST_FACTORY, MAP_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterEventsFactoryImpl(null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEventsFactoryImpl(COLLECTION_FACTORY, null));
+                () -> new CharacterEventsFactoryImpl(LIST_FACTORY, null));
     }
 
     @Test

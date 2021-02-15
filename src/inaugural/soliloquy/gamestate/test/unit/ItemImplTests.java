@@ -472,7 +472,7 @@ class ItemImplTests {
     @Test
     void testItemNotFoundInCharacterEquipmentSlotInvariant() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
-        FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.removeByKey(CHARACTER_EQUIPMENT_SLOT_TYPE);
+        FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.remove(CHARACTER_EQUIPMENT_SLOT_TYPE);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());

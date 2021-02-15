@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.shared.HasId;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -27,7 +27,7 @@ public class FakeRegistry<T extends HasId> implements Registry<T> {
     }
 
     @Override
-    public void addAll(ReadableCollection<? extends T> collection) throws UnsupportedOperationException {
+    public void addAll(Object[] objects) throws IllegalArgumentException {
 
     }
 
@@ -37,18 +37,23 @@ public class FakeRegistry<T extends HasId> implements Registry<T> {
     }
 
     @Override
+    public void addAll(Collection<T> collection) throws IllegalArgumentException {
+
+    }
+
+    @Override
     public void clear() throws UnsupportedOperationException {
 
     }
 
     @Override
-    public boolean remove(T t) throws UnsupportedOperationException {
-        return false;
+    public List<T> representation() {
+        return null;
     }
 
     @Override
-    public ReadableCollection<T> representation() {
-        return null;
+    public boolean remove(T t) throws UnsupportedOperationException {
+        return false;
     }
 
     @Override
@@ -59,26 +64,6 @@ public class FakeRegistry<T extends HasId> implements Registry<T> {
     @Override
     public boolean contains(T t) {
         return false;
-    }
-
-    @Override
-    public boolean equals(ReadableCollection<T> readableCollection) {
-        return false;
-    }
-
-    @Override
-    public T get(int i) {
-        return null;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
     }
 
     @Override
@@ -98,11 +83,6 @@ public class FakeRegistry<T extends HasId> implements Registry<T> {
 
     @Override
     public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
-    public Collection<T> makeClone() {
         return null;
     }
 }

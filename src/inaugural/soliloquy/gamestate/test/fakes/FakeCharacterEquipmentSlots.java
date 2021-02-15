@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
@@ -33,8 +33,8 @@ public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
     }
 
     @Override
-    public ReadableMap<String, Item> representation() throws IllegalStateException {
-        return EQUIPMENT_SLOTS;
+    public Map<String, Item> representation() throws IllegalStateException {
+        return EQUIPMENT_SLOTS.makeClone();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
     @Override
     public Item removeCharacterEquipmentSlot(String s)
             throws IllegalArgumentException, IllegalStateException {
-        Item item = EQUIPMENT_SLOTS.removeByKey(s);
+        Item item = EQUIPMENT_SLOTS.remove(s);
         if (item != null) {
             item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
         }

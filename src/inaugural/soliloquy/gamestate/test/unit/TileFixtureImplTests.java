@@ -29,26 +29,26 @@ class TileFixtureImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileFixture = new TileFixtureImpl(ID, TYPE, new FakeCollectionFactory(),
+        _tileFixture = new TileFixtureImpl(ID, TYPE, new FakeListFactory(),
                 TILE_FIXTURE_ITEMS_FACTORY, DATA);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(null, TYPE, new FakeCollectionFactory(),
+                () -> new TileFixtureImpl(null, TYPE, new FakeListFactory(),
                         TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(ID, null, new FakeCollectionFactory(),
+                () -> new TileFixtureImpl(ID, null, new FakeListFactory(),
                         TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureImpl(ID, TYPE, null,
                         TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(ID, TYPE, new FakeCollectionFactory(),
+                () -> new TileFixtureImpl(ID, TYPE, new FakeListFactory(),
                         null, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(ID, TYPE, new FakeCollectionFactory(),
+                () -> new TileFixtureImpl(ID, TYPE, new FakeListFactory(),
                         TILE_FIXTURE_ITEMS_FACTORY, null));
     }
 

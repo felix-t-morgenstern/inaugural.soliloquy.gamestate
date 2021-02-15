@@ -9,7 +9,7 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -24,12 +24,12 @@ class PersistentGameZoneHandlerTests {
     private final FakePersistentTileHandler TILE_HANDLER = new FakePersistentTileHandler();
     private final FakePersistentVariableCacheHandler DATA_HANDLER =
             new FakePersistentVariableCacheHandler();
-    private final CollectionFactory COLLECTION_FACTORY = new FakeCollectionFactory();
+    @SuppressWarnings("rawtypes")
     private final HashMap<String, Action> ACTIONS = new HashMap<>();
     private final String ON_ENTRY_ACTION_ID = "onEntryActionId";
-    private final Action ON_ENTRY_ACTION = new FakeVoidAction(ON_ENTRY_ACTION_ID);
+    private final Action<Void> ON_ENTRY_ACTION = new FakeVoidAction(ON_ENTRY_ACTION_ID);
     private final String ON_EXIT_ACTION_ID = "onExitActionId";
-    private final Action ON_EXIT_ACTION = new FakeVoidAction(ON_EXIT_ACTION_ID);
+    private final Action<Void> ON_EXIT_ACTION = new FakeVoidAction(ON_EXIT_ACTION_ID);
     private final String ID = "id";
     private final String TYPE = "type";
     private final VariableCache DATA = new VariableCacheStub();
@@ -44,27 +44,23 @@ class PersistentGameZoneHandlerTests {
         ACTIONS.put(ON_ENTRY_ACTION_ID, ON_ENTRY_ACTION);
         ACTIONS.put(ON_EXIT_ACTION_ID, ON_EXIT_ACTION);
         _gameZoneHandler = new PersistentGameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
-                DATA_HANDLER, COLLECTION_FACTORY, ACTIONS::get);
+                DATA_HANDLER, ACTIONS::get);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentGameZoneHandler(null, TILE_HANDLER,
-                        DATA_HANDLER, COLLECTION_FACTORY, ACTIONS::get));
+                        DATA_HANDLER, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentGameZoneHandler(GAME_ZONE_FACTORY, null,
-                        DATA_HANDLER, COLLECTION_FACTORY, ACTIONS::get));
+                        DATA_HANDLER, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentGameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
-                        null, COLLECTION_FACTORY, ACTIONS::get));
+                        null, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new PersistentGameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
-                        DATA_HANDLER, null, ACTIONS::get));
-        assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
-                        DATA_HANDLER, COLLECTION_FACTORY, null));
+                        DATA_HANDLER, null));
     }
 
     @Test

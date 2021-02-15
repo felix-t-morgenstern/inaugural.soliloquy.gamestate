@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.gamestate.archetypes.TileWallSegmentArchetype;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableMap;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
@@ -25,20 +25,10 @@ public class TileWallSegmentsImpl implements TileWallSegments {
 
     private boolean _isDeleted;
 
-    @SuppressWarnings("ConstantConditions")
     public TileWallSegmentsImpl(Tile tile, PairFactory pairFactory, MapFactory mapFactory) {
-        if (tile == null) {
-            throw new IllegalArgumentException("TileWallSegments: tile must be non-null");
-        }
-        TILE = tile;
-        if (pairFactory == null) {
-            throw new IllegalArgumentException("TileWallSegments: pairFactory must be non-null");
-        }
-        PAIR_FACTORY = pairFactory;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("TileWallSegments: mapFactory must be non-null");
-        }
-        MAP_FACTORY = mapFactory;
+        TILE = Check.ifNull(tile, "tile");
+        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
 
         SEGMENTS = new HashMap<>();
         SEGMENTS.put(TileWallSegmentDirection.NORTH, new HashMap<>());
@@ -53,11 +43,11 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     }
 
     @Override
-    public ReadableMap<TileWallSegmentDirection,
-            ReadableMap<TileWallSegment,TileWallSegmentDimensions>> representation()
+    public Map<TileWallSegmentDirection, Map<TileWallSegment,TileWallSegmentDimensions>>
+    representation()
             throws IllegalStateException {
         enforceDeletionInvariants("representation");
-        Map<TileWallSegmentDirection, ReadableMap<TileWallSegment, TileWallSegmentDimensions>>
+        Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>>
                 map = MAP_FACTORY.make(TileWallSegmentDirection.UNKNOWN,
                         MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE));
 
@@ -72,11 +62,11 @@ public class TileWallSegmentsImpl implements TileWallSegments {
         SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).forEach(northwest::put);
         SEGMENTS.get(TileWallSegmentDirection.WEST).forEach(west::put);
 
-        map.put(TileWallSegmentDirection.NORTH, north.readOnlyRepresentation());
-        map.put(TileWallSegmentDirection.NORTHWEST, northwest.readOnlyRepresentation());
-        map.put(TileWallSegmentDirection.WEST, west.readOnlyRepresentation());
+        map.put(TileWallSegmentDirection.NORTH, north);
+        map.put(TileWallSegmentDirection.NORTHWEST, northwest);
+        map.put(TileWallSegmentDirection.WEST, west);
 
-        return map.readOnlyRepresentation();
+        return map;
     }
 
     @Override
@@ -302,8 +292,8 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     }
 
     @Override
-    public Iterator<ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
-            TileWallSegmentDimensions>>>
+    public Iterator<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
+                TileWallSegmentDimensions>>>
         iterator() {
         Iterator<TileWallSegment> northSegments =
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).keySet().iterator();
@@ -320,25 +310,21 @@ public class TileWallSegmentsImpl implements TileWallSegments {
             }
 
             @Override
-            public ReadablePair<TileWallSegmentDirection, ReadablePair<TileWallSegment,
-                    TileWallSegmentDimensions>>
+            public Pair<TileWallSegmentDirection, Pair<TileWallSegment, TileWallSegmentDimensions>>
                 next() {
                 TileWallSegment segment;
                 return northSegments.hasNext() ?
                         PAIR_FACTORY.make(TileWallSegmentDirection.NORTH,
                                 PAIR_FACTORY.make(segment = northSegments.next(),
-                                        SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
-                                            .representation()).representation()
+                                        SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment)))
                         : northwestSegments.hasNext() ?
                         PAIR_FACTORY.make(TileWallSegmentDirection.NORTHWEST,
                                 PAIR_FACTORY.make(segment = northwestSegments.next(),
                                         SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
-                                                .get(segment))
-                                            .representation()).representation()
+                                                .get(segment)))
                         : PAIR_FACTORY.make(TileWallSegmentDirection.WEST,
                                 PAIR_FACTORY.make(segment = westSegments.next(),
-                                        SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment))
-                                        .representation()).representation();
+                                        SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment)));
             }
         };
     }

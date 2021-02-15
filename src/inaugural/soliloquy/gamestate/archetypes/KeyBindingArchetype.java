@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
 public class KeyBindingArchetype implements KeyBinding {
     @Override
-    public Collection<Character> boundCharacters() {
+    public List<Character> boundCharacters() {
         return null;
     }
 

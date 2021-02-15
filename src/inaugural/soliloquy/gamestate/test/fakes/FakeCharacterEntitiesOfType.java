@@ -1,8 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
@@ -70,10 +69,10 @@ public class FakeCharacterEntitiesOfType<TEntityType extends HasId,
     }
 
     @Override
-    public ReadableCollection<TCharacterEntity> representation() {
-        Collection<TCharacterEntity> representation = new FakeCollection<>();
-        ENTITIES.values().forEach(representation::add);
-        return representation.representation();
+    public List<TCharacterEntity> representation() {
+        List<TCharacterEntity> representation = new FakeList<>();
+        representation.addAll(ENTITIES.values());
+        return representation;
     }
 
     @Override

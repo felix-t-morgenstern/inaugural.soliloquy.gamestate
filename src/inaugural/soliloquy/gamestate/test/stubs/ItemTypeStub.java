@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Function;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.graphics.assets.SpriteSet;
@@ -65,17 +65,17 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public Collection<ActiveAbility> activeAbilities() {
+    public List<ActiveAbility> activeAbilities() {
         return null;
     }
 
     @Override
-    public Collection<ReactiveAbility> reactiveAbilities() {
+    public List<ReactiveAbility> reactiveAbilities() {
         return null;
     }
 
     @Override
-    public Collection<PassiveAbility> passiveAbilities() {
+    public List<PassiveAbility> passiveAbilities() {
         return null;
     }
 

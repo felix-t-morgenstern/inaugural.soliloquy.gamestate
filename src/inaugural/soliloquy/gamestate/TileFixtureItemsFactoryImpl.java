@@ -1,23 +1,16 @@
 package inaugural.soliloquy.gamestate;
 
-import soliloquy.specs.common.factories.CollectionFactory;
-import soliloquy.specs.gamestate.entities.Item;
+import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 
-import java.util.function.Predicate;
-
 public class TileFixtureItemsFactoryImpl implements TileFixtureItemsFactory {
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
-    public TileFixtureItemsFactoryImpl(CollectionFactory collectionFactory) {
-        if (collectionFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureItemsFactory: collectionFactory must be non-null");
-        }
-        COLLECTION_FACTORY = collectionFactory;
+    public TileFixtureItemsFactoryImpl(ListFactory listFactory) {
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
     }
 
     @Override
@@ -26,7 +19,7 @@ public class TileFixtureItemsFactoryImpl implements TileFixtureItemsFactory {
             throw new IllegalArgumentException(
                     "TileFixtureItemsFactory.make: tileFixture must be non-null");
         }
-        return new TileFixtureItemsImpl(tileFixture, COLLECTION_FACTORY);
+        return new TileFixtureItemsImpl(tileFixture, LIST_FACTORY);
     }
 
     @Override

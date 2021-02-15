@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -19,7 +19,7 @@ public class TileArchetype implements Tile {
     }
 
     @Override
-    public ReadableCoordinate location() throws IllegalStateException {
+    public Coordinate location() throws IllegalStateException {
         return null;
     }
 
@@ -64,12 +64,12 @@ public class TileArchetype implements Tile {
     }
 
     @Override
-    public Collection<GameMovementEvent> movementEvents() throws IllegalStateException {
+    public List<GameMovementEvent> movementEvents() throws IllegalStateException {
         return null;
     }
 
     @Override
-    public Collection<GameAbilityEvent> abilityEvents() throws IllegalStateException {
+    public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
         return null;
     }
 

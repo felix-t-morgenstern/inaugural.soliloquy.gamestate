@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
@@ -16,7 +16,7 @@ public class FakeActiveAbilityType implements ActiveAbilityType {
     }
 
     @Override
-    public void use(AbilitySource abilitySource, Collection<Pair<Character, Tile>> collection, VariableCache variableCache) {
+    public void use(AbilitySource abilitySource, List<Pair<Character, Tile>> collection, VariableCache variableCache) {
 
     }
 

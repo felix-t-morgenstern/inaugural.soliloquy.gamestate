@@ -1,10 +1,9 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.CollectionFactory;
+import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Character;
@@ -22,7 +21,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     private final Character CHARACTER;
     private final Function<Character,Function<TType,Function<VariableCache,TEntity>>>
             ENTITY_FACTORY;
-    private final CollectionFactory COLLECTION_FACTORY;
+    private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
     private final TEntity ARCHETYPE;
 
@@ -34,12 +33,12 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     public CharacterEntitiesOfTypeImpl(Character character,
                                        Function<Character,Function<TType,Function<VariableCache,
                                                TEntity>>> entityFactory,
-                                       CollectionFactory collectionFactory,
+                                       ListFactory listFactory,
                                        VariableCacheFactory dataFactory,
                                        TEntity archetype) {
         CHARACTER = Check.ifNull(character, "character");
         ENTITY_FACTORY = Check.ifNull(entityFactory, "entityFactory");
-        COLLECTION_FACTORY = Check.ifNull(collectionFactory, "collectionFactory");
+        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
         ARCHETYPE = Check.ifNull(archetype, "archetype");
     }
@@ -101,11 +100,11 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     }
 
     @Override
-    public ReadableCollection<TEntity> representation() {
+    public List<TEntity> representation() {
         enforceDeletionInvariants("representation");
-        Collection<TEntity> entities = COLLECTION_FACTORY.make(ARCHETYPE);
-        ENTITIES.values().forEach(entities::add);
-        return entities.representation();
+        List<TEntity> entities = LIST_FACTORY.make(ARCHETYPE);
+        entities.addAll(ENTITIES.values());
+        return entities;
     }
 
     @Override

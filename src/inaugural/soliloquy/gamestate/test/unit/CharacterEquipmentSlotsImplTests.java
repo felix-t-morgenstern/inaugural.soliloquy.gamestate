@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
@@ -307,17 +306,19 @@ class CharacterEquipmentSlotsImplTests {
                 () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(""));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test
     void testGetRepresentation() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
-        ReadableMap characterEquipmentSlotsRepresentation =
+        Map<String, Item> characterEquipmentSlotsRepresentation =
+                _characterEquipmentSlots.representation();
+        Map<String, Item> characterEquipmentSlotsRepresentationSecond =
                 _characterEquipmentSlots.representation();
 
         assertNotNull(characterEquipmentSlotsRepresentation);
-        assertFalse(characterEquipmentSlotsRepresentation instanceof Map);
+        assertNotSame(characterEquipmentSlotsRepresentation,
+                characterEquipmentSlotsRepresentationSecond);
         assertEquals(1, characterEquipmentSlotsRepresentation.size());
         assertSame(ITEM, characterEquipmentSlotsRepresentation.get(EQUIPMENT_SLOT_TYPE));
     }

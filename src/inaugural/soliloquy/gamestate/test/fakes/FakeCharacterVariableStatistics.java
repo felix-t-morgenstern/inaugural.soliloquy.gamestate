@@ -1,8 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadableMap;
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -29,17 +28,17 @@ public class FakeCharacterVariableStatistics implements CharacterVariableStatist
     }
 
     @Override
-    public ReadableMap<CharacterVariableStatisticType, Integer> currentValues() {
+    public Map<CharacterVariableStatisticType, Integer> currentValues() {
         FakeMap<CharacterVariableStatisticType, Integer> currentValues = new FakeMap<>();
         STATS.forEach((t,s) -> currentValues.put(t, s.getCurrentValue()));
-        return currentValues.readOnlyRepresentation();
+        return currentValues;
     }
 
     @Override
-    public ReadableMap<CharacterVariableStatisticType, Integer> maxValues() {
+    public Map<CharacterVariableStatisticType, Integer> maxValues() {
         FakeMap<CharacterVariableStatisticType, Integer> maxValues = new FakeMap<>();
         STATS.forEach((t,s) -> maxValues.put(t, s.totalValue()));
-        return maxValues.readOnlyRepresentation();
+        return maxValues;
     }
 
     @Override
@@ -82,10 +81,10 @@ public class FakeCharacterVariableStatistics implements CharacterVariableStatist
     }
 
     @Override
-    public ReadableCollection<CharacterVariableStatistic> representation() {
-        Collection<CharacterVariableStatistic> representation = new FakeCollection<>();
-        STATS.values().forEach(representation::add);
-        return representation.representation();
+    public List<CharacterVariableStatistic> representation() {
+        List<CharacterVariableStatistic> representation = new FakeList<>();
+        representation.addAll(STATS.values());
+        return representation;
     }
 
     @Override

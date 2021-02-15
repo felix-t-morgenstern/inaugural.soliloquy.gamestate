@@ -1,18 +1,18 @@
 package inaugural.soliloquy.gamestate.test.spydoubles;
 
-import inaugural.soliloquy.gamestate.test.fakes.FakeCollection;
+import inaugural.soliloquy.gamestate.test.fakes.FakeList;
 import inaugural.soliloquy.gamestate.test.fakes.FakePair;
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.valueobjects.ReadableCoordinate;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 
 public class TileVisibilitySpyDouble implements TileVisibility {
-    public Collection<Pair<ReadableCoordinate, ReadableCoordinate>> _tilesChecked;
+    public List<Pair<Coordinate, Coordinate>> _tilesChecked;
 
     public TileVisibilitySpyDouble() {
-        _tilesChecked = new FakeCollection<>();
+        _tilesChecked = new FakeList<>();
     }
 
     @Override

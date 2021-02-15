@@ -1,9 +1,8 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadablePair;
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.OneTimeTimer;
@@ -13,24 +12,23 @@ import soliloquy.specs.gamestate.entities.RoundManager;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 public class FakeRoundManager implements RoundManager {
-    private final List<Character> QUEUE = new LinkedList<>();
+    private final java.util.List<Character> QUEUE = new LinkedList<>();
     private final HashMap<Character, VariableCache> CHARACTERS_DATA = new HashMap<>();
 
-    public final Collection<OneTimeTimer> OneTimeTimers = new FakeCollection<>();
-    public final Collection<RecurringTimer> RecurringTimers = new FakeCollection<>();
+    public final List<OneTimeTimer> OneTimeTimers = new FakeList<>();
+    public final List<RecurringTimer> RecurringTimers = new FakeList<>();
 
     private int _roundNumber;
 
     @Override
-    public ReadableCollection<ReadablePair<Character, VariableCache>> characterQueueRepresentation() {
-        Collection<ReadablePair<Character, VariableCache>> collection = new FakeCollection<>();
+    public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
+        List<Pair<Character, VariableCache>> collection = new FakeList<>();
         QUEUE.forEach(c -> {
-            collection.add(new FakeReadablePair<>(c, CHARACTERS_DATA.get(c)));
+            collection.add(new FakePair<>(c, CHARACTERS_DATA.get(c)));
         });
-        return collection.representation();
+        return collection;
     }
 
     @Override
@@ -109,12 +107,12 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public ReadableCollection<OneTimeTimer> oneTimeTimersRepresentation() {
+    public List<OneTimeTimer> oneTimeTimersRepresentation() {
         return OneTimeTimers;
     }
 
     @Override
-    public ReadableCollection<RecurringTimer> recurringTimersRepresentation() {
+    public List<RecurringTimer> recurringTimersRepresentation() {
         return RecurringTimers;
     }
 
@@ -124,8 +122,8 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public Iterator<ReadablePair<Character, VariableCache>> iterator() {
-        return new Iterator<ReadablePair<Character, VariableCache>>() {
+    public Iterator<Pair<Character, VariableCache>> iterator() {
+        return new Iterator<>() {
             private final Iterator<Character> iterator = QUEUE.iterator();
 
             @Override
@@ -134,9 +132,9 @@ public class FakeRoundManager implements RoundManager {
             }
 
             @Override
-            public ReadablePair<Character, VariableCache> next() {
+            public Pair<Character, VariableCache> next() {
                 Character next = iterator.next();
-                return new FakePair<>(next, CHARACTERS_DATA.get(next)).representation();
+                return new FakePair<>(next, CHARACTERS_DATA.get(next));
             }
         };
     }

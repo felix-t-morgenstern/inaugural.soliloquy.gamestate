@@ -1,18 +1,16 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FakeTileFixtureItems implements TileFixtureItems {
     public final TileFixture TILE_FIXTURE;
 
-    public final List<Item> _items = new ArrayList<>();
+    public final java.util.List<Item> _items = new ArrayList<>();
 
     private boolean _deleted;
 
@@ -36,11 +34,11 @@ public class FakeTileFixtureItems implements TileFixtureItems {
     }
 
     @Override
-    public ReadableCollection<Item> representation()
+    public List<Item> representation()
             throws UnsupportedOperationException, IllegalStateException {
-        Collection<Item> items = new FakeCollection<>();
-        _items.forEach(items::add);
-        return items.representation();
+        List<Item> items = new FakeList<>();
+        items.addAll(_items);
+        return items;
     }
 
     @Override

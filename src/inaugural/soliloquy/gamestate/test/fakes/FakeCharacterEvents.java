@@ -1,9 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Collection;
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.ReadableCollection;
-import soliloquy.specs.common.infrastructure.ReadableMap;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
@@ -38,7 +36,7 @@ public class FakeCharacterEvents implements CharacterEvents {
     }
 
     @Override
-    public ReadableCollection<String> getTriggersForEvent(GameCharacterEvent gameCharacterEvent) throws IllegalArgumentException, IllegalStateException {
+    public List<String> getTriggersForEvent(GameCharacterEvent gameCharacterEvent) throws IllegalArgumentException, IllegalStateException {
         return null;
     }
 
@@ -58,14 +56,14 @@ public class FakeCharacterEvents implements CharacterEvents {
     }
 
     @Override
-    public ReadableMap<String, ReadableCollection<GameCharacterEvent>> representation() throws IllegalStateException {
-        Map<String,ReadableCollection<GameCharacterEvent>> representation = new FakeMap<>();
+    public Map<String, List<GameCharacterEvent>> representation() throws IllegalStateException {
+        Map<String,List<GameCharacterEvent>> representation = new FakeMap<>();
         EVENTS.forEach((t,e) -> {
-            Collection<GameCharacterEvent> events = new FakeCollection<>();
-            e.forEach(events::add);
+            List<GameCharacterEvent> events = new FakeList<>();
+            events.addAll(e);
             representation.put(t,events);
         });
-        return representation.readOnlyRepresentation();
+        return representation;
     }
 
     @Override
