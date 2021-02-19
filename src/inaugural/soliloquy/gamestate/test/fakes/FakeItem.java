@@ -32,6 +32,10 @@ public class FakeItem implements Item {
 
     }
 
+    public FakeItem(ItemType itemType) {
+        _itemType = itemType;
+    }
+
     public FakeItem(ItemType itemType, VariableCache data, EntityUuid id) {
         _id = id;
         _itemType = itemType;

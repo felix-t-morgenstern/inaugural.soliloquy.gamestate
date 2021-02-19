@@ -1,13 +1,16 @@
 package inaugural.soliloquy.gamestate;
 
 import com.google.inject.AbstractModule;
+import inaugural.soliloquy.gamestate.entities.GameZonesRepoImpl;
+import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
+import inaugural.soliloquy.gamestate.factories.*;
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.*;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.*;
-import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
-import soliloquy.specs.common.infrastructure.PersistentValuesHandler;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.PersistentValuesHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;

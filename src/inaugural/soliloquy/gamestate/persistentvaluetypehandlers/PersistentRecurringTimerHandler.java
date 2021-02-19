@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.RecurringTimerArchetype;
-import inaugural.soliloquy.tools.persistentvaluetypehandlers.PersistentTypeHandler;
+import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.factories.TimerFactory;

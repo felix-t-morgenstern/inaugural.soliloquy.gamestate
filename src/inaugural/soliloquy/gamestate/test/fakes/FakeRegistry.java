@@ -26,19 +26,24 @@ public class FakeRegistry<T extends HasId> implements Registry<T> {
         REGISTRY.put(t.id(), t);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addAll(Object[] objects) throws IllegalArgumentException {
-
+        for (Object object : objects) {
+            add((T) object);
+        }
     }
 
     @Override
     public void addAll(T[] ts) throws UnsupportedOperationException {
-
+        for(T t : ts) {
+            add(t);
+        }
     }
 
     @Override
     public void addAll(Collection<T> collection) throws IllegalArgumentException {
-
+        collection.forEach(this::add);
     }
 
     @Override

@@ -3,9 +3,9 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.persistentvaluetypehandlers.PersistentTypeHandler;
-import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
+import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
@@ -39,13 +39,7 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
 
     @Override
     public Item read(String input) throws IllegalArgumentException {
-        if (input == null) {
-            throw new IllegalArgumentException("PersistentItemHandler.read: input cannot be null");
-        }
-        if (input.equals("")) {
-            throw new IllegalArgumentException(
-                    "PersistentItemHandler.read: input cannot be empty");
-        }
+        Check.ifNullOrEmpty(input, "input");
         ItemDTO itemDTO = new Gson().fromJson(input, ItemDTO.class);
         EntityUuid id = ENTITY_UUID_HANDLER.read(itemDTO.id);
         ItemType itemType = GET_ITEM_TYPE.apply(itemDTO.typeId);
@@ -63,9 +57,7 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
 
     @Override
     public String write(Item item) {
-        if (item == null) {
-            throw new IllegalArgumentException("PersistentItemHandler.write: item cannot be null");
-        }
+        Check.ifNull(item, "item");
         ItemDTO itemDTO = new ItemDTO();
         itemDTO.id = ENTITY_UUID_HANDLER.write(item.id());
         itemDTO.typeId = item.type().id();

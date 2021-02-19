@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.gamestate.entities.GameState;
+import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.factories.GameStateFactory;
 

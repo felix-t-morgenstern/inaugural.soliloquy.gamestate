@@ -2,11 +2,12 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.GameStateArchetype;
-import inaugural.soliloquy.tools.persistentvaluetypehandlers.PersistentTypeHandler;
+import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.PersistentValueTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.GameStateFactory;

@@ -12,8 +12,8 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 public class ItemTypeStub implements ItemType {
-    public static boolean _hasCharges = true;
-    public static boolean _isStackable = true;
+    public boolean HasCharges = true;
+    public boolean IsStackable = true;
 
     private static EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
 
@@ -46,7 +46,7 @@ public class ItemTypeStub implements ItemType {
 
     @Override
     public boolean isStackable() {
-        return _isStackable;
+        return IsStackable;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ItemTypeStub implements ItemType {
 
     @Override
     public boolean hasCharges() {
-        return _hasCharges;
+        return HasCharges;
     }
 
     @Override
