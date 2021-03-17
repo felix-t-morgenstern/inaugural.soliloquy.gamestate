@@ -15,7 +15,7 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.factories.*;
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
@@ -51,7 +51,7 @@ public class CharacterImpl implements Character {
     private Tile _tile;
     private String _stance;
     private String _direction;
-    private SpriteSet _spriteSet;
+    private ImageAssetSet _imageAssetSet;
     private boolean _playerControlled;
     private boolean _deleted;
     private String _name;
@@ -140,16 +140,16 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public SpriteSet getSpriteSet() throws IllegalStateException {
-        enforceInvariant("getSpriteSet", true);
-        return _spriteSet;
+    public ImageAssetSet getImageAssetSet() throws IllegalStateException {
+        enforceInvariant("getImageAssetSet", true);
+        return _imageAssetSet;
     }
 
     @Override
-    public void setSpriteSet(SpriteSet spriteSet)
+    public void setImageAssetSet(ImageAssetSet imageAssetSet)
             throws IllegalArgumentException, IllegalStateException {
-        enforceInvariant("setSpriteSet", true);
-        _spriteSet = spriteSet;
+        enforceInvariant("setImageAssetSet", true);
+        _imageAssetSet = imageAssetSet;
     }
 
     @Override

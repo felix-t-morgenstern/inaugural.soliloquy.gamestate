@@ -6,7 +6,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
@@ -18,7 +18,7 @@ public class FakeCharacter implements Character {
     private boolean _isDeleted;
     private String _stance;
     private String _direction;
-    private SpriteSet _spriteSet;
+    private ImageAssetSet _imageAssetSet;
     private CharacterAIType _aiType;
     private boolean _playerControlled;
     private String _name;
@@ -102,13 +102,13 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public SpriteSet getSpriteSet() throws IllegalStateException {
-        return _spriteSet;
+    public ImageAssetSet getImageAssetSet() throws IllegalStateException {
+        return _imageAssetSet;
     }
 
     @Override
-    public void setSpriteSet(SpriteSet spriteSet) throws IllegalArgumentException, IllegalStateException {
-        _spriteSet = spriteSet;
+    public void setImageAssetSet(ImageAssetSet imageAssetSet) throws IllegalArgumentException, IllegalStateException {
+        _imageAssetSet = imageAssetSet;
     }
 
     @Override

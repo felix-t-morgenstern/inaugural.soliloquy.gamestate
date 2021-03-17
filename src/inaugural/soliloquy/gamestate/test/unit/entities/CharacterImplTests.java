@@ -11,7 +11,6 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.factories.*;
-import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
@@ -244,10 +243,10 @@ class CharacterImplTests {
 
     @Test
     void testSetAndGetSpriteSet() {
-        SpriteSet spriteSet = new FakeSpriteSet();
-        _character.setSpriteSet(spriteSet);
+        FakeImageAssetSet imageAssetSet = new FakeImageAssetSet();
+        _character.setImageAssetSet(imageAssetSet);
 
-        assertEquals(spriteSet, _character.getSpriteSet());
+        assertEquals(imageAssetSet, _character.getImageAssetSet());
     }
 
     @Test
@@ -402,8 +401,8 @@ class CharacterImplTests {
         assertThrows(EntityDeletedException.class, () -> _character.setStance(""));
         assertThrows(EntityDeletedException.class, () -> _character.getDirection());
         assertThrows(EntityDeletedException.class, () -> _character.setDirection(""));
-        assertThrows(EntityDeletedException.class, () -> _character.getSpriteSet());
-        assertThrows(EntityDeletedException.class, () -> _character.setSpriteSet(new FakeSpriteSet()));
+        assertThrows(EntityDeletedException.class, () -> _character.getImageAssetSet());
+        assertThrows(EntityDeletedException.class, () -> _character.setImageAssetSet(new FakeImageAssetSet()));
         assertThrows(EntityDeletedException.class, () -> _character.getAIType());
         assertThrows(EntityDeletedException.class, () -> _character.setAIType(null));
         assertThrows(EntityDeletedException.class, () -> _character.events());
@@ -438,8 +437,8 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.setStance(""));
         assertThrows(IllegalStateException.class, () -> _character.getDirection());
         assertThrows(IllegalStateException.class, () -> _character.setDirection(""));
-        assertThrows(IllegalStateException.class, () -> _character.getSpriteSet());
-        assertThrows(IllegalStateException.class, () -> _character.setSpriteSet(new FakeSpriteSet()));
+        assertThrows(IllegalStateException.class, () -> _character.getImageAssetSet());
+        assertThrows(IllegalStateException.class, () -> _character.setImageAssetSet(new FakeImageAssetSet()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
         assertThrows(IllegalStateException.class, () -> _character.events());

@@ -4,8 +4,8 @@ import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.graphics.assets.Sprite;
-import soliloquy.specs.graphics.colorshifting.ColorShiftType;
+import soliloquy.specs.graphics.assets.ImageAsset;
+import soliloquy.specs.graphics.colorshifting.ColorShift;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -28,7 +28,7 @@ public class FakeGroundType implements GroundType {
     }
 
     @Override
-    public Sprite sprite() {
+    public ImageAsset imageAsset() {
         return null;
     }
 
@@ -68,7 +68,7 @@ public class FakeGroundType implements GroundType {
     }
 
     @Override
-    public List<ColorShiftType> defaultColorShifts() {
+    public List<ColorShift> defaultColorShifts() {
         return null;
     }
 }

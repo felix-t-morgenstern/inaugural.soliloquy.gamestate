@@ -4,8 +4,8 @@ import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.graphics.assets.Sprite;
-import soliloquy.specs.graphics.colorshifting.ColorShiftType;
+import soliloquy.specs.graphics.assets.ImageAsset;
+import soliloquy.specs.graphics.colorshifting.ColorShift;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.FixtureType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -36,7 +36,7 @@ public class FakeFixtureType implements FixtureType {
     }
 
     @Override
-    public Sprite sprite() {
+    public ImageAsset imageAsset() {
         return null;
     }
 
@@ -76,11 +76,6 @@ public class FakeFixtureType implements FixtureType {
     }
 
     @Override
-    public List<ColorShiftType> defaultColorShifts() {
-        return null;
-    }
-
-    @Override
     public float defaultXTileWidthOffset() {
         return DEFAULT_X_TILE_WIDTH_OFFSET;
     }
@@ -88,5 +83,10 @@ public class FakeFixtureType implements FixtureType {
     @Override
     public float defaultYTileHeightOffset() {
         return DEFAULT_Y_TILE_HEIGHT_OFFSET;
+    }
+
+    @Override
+    public List<ColorShift> defaultColorShifts() {
+        return null;
     }
 }

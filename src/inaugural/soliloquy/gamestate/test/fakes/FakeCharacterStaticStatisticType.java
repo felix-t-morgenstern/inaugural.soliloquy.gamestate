@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
 public class FakeCharacterStaticStatisticType implements CharacterStaticStatisticType {
@@ -30,17 +30,12 @@ public class FakeCharacterStaticStatisticType implements CharacterStaticStatisti
     }
 
     @Override
-    public SpriteSet getSpriteSet() {
+    public String getInterfaceName() {
         return null;
     }
 
     @Override
-    public void setSpriteSet(SpriteSet spriteSet) {
-
-    }
-
-    @Override
-    public String getInterfaceName() {
+    public ImageAssetSet imageAssetSet() {
         return null;
     }
 }

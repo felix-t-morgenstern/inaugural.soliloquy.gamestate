@@ -4,7 +4,7 @@ import soliloquy.specs.common.entities.Function;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.EquipmentType;
 import soliloquy.specs.ruleset.entities.ItemType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -80,7 +80,7 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public SpriteSet spriteSet() {
+    public ImageAssetSet imageAssetSet() {
         return null;
     }
 

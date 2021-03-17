@@ -3,8 +3,8 @@ package inaugural.soliloquy.gamestate.test.fakes;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.graphics.assets.Sprite;
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAsset;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
@@ -63,22 +63,7 @@ public class FakeCharacterVariableStatisticType implements CharacterVariableStat
     }
 
     @Override
-    public SpriteSet getSpriteSet() {
-        return null;
-    }
-
-    @Override
-    public void setSpriteSet(SpriteSet spriteSet) {
-
-    }
-
-    @Override
     public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
-    public Pair<Sprite, Integer> getIcon(Object o, String s, Character character) {
         return null;
     }
 
@@ -94,6 +79,16 @@ public class FakeCharacterVariableStatisticType implements CharacterVariableStat
 
     @Override
     public Pair<BiConsumer<Character, Integer>, Integer> onRoundEnd() {
+        return null;
+    }
+
+    @Override
+    public ImageAssetSet imageAssetSet() {
+        return null;
+    }
+
+    @Override
+    public Pair<ImageAsset, Integer> getIcon(CharacterVariableStatisticType type, String s, Character character) {
         return null;
     }
 }

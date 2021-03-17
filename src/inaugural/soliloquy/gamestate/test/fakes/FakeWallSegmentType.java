@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
-import soliloquy.specs.graphics.assets.Sprite;
+import soliloquy.specs.graphics.assets.ImageAsset;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class FakeWallSegmentType implements WallSegmentType {
@@ -22,7 +22,7 @@ public class FakeWallSegmentType implements WallSegmentType {
     }
 
     @Override
-    public Sprite sprite() {
+    public ImageAsset imageAsset() {
         return null;
     }
 

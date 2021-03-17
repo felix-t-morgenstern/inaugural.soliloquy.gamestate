@@ -18,8 +18,8 @@ import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.graphics.assets.Sprite;
-import soliloquy.specs.graphics.assets.SpriteSet;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
@@ -52,7 +52,7 @@ public class GameStateModule extends AbstractModule {
                            Registry<GroundType> groundTypes,
                            Registry<FixtureType> fixtureTypes,
                            Registry<WallSegmentType> wallSegmentTypes,
-                           Registry<SpriteSet> spriteSets,
+                           Registry<ImageAssetSet> imageAssetSets,
                            Registry<CharacterAIType> characterAITypes,
                            Registry<GameCharacterEvent> gameCharacterEvents,
                            Registry<GameMovementEvent> gameMovementEvents,
@@ -114,7 +114,7 @@ public class GameStateModule extends AbstractModule {
 
         PersistentValueTypeHandler<Character> characterHandler =
                 new PersistentCharacterHandler(characterFactory, uuidHandler, characterTypes::get,
-                        characterClassifications::get, spriteSets::get, characterAITypes::get,
+                        characterClassifications::get, imageAssetSets::get, characterAITypes::get,
                         gameCharacterEvents::get, characterStaticStatisticTypes::get,
                         characterVariableStatisticTypes::get, statusEffectTypes::get,
                         activeAbilityTypes::get, reactiveAbilityTypes::get, dataHandler,

@@ -11,7 +11,7 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
@@ -25,7 +25,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
     private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER;
     private final Function<String, CharacterType> GET_CHARACTER_TYPE;
     private final Function<String, CharacterClassification> GET_CHARACTER_CLASSIFICATION;
-    private final Function<String, SpriteSet> GET_SPRITE_SET;
+    private final Function<String, ImageAssetSet> GET_IMAGE_ASSET_SET;
     private final Function<String, CharacterAIType> GET_AI_TYPE;
     private final Function<String, GameCharacterEvent> GET_EVENT;
     private final Function<String, CharacterStaticStatisticType> GET_STATIC_STAT_TYPE;
@@ -43,7 +43,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
                                       Function<String, CharacterType> getCharacterType,
                                       Function<String, CharacterClassification>
                                               getCharacterClassification,
-                                      Function<String, SpriteSet> getSpriteSet,
+                                      Function<String, ImageAssetSet> getImageAssetSet,
                                       Function<String, CharacterAIType> getAIType,
                                       Function<String, GameCharacterEvent> getEvent,
                                       Function<String, CharacterStaticStatisticType> getStaticStatType,
@@ -59,7 +59,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         GET_CHARACTER_TYPE = Check.ifNull(getCharacterType, "getCharacterType");
         GET_CHARACTER_CLASSIFICATION = Check.ifNull(getCharacterClassification,
                 "getCharacterClassification");
-        GET_SPRITE_SET = Check.ifNull(getSpriteSet, "getSpriteSet");
+        GET_IMAGE_ASSET_SET = Check.ifNull(getImageAssetSet, "getImageAssetSet");
         GET_AI_TYPE = Check.ifNull(getAIType, "getAIType");
         GET_EVENT = Check.ifNull(getEvent, "getEvent");
         GET_STATIC_STAT_TYPE = Check.ifNull(getStaticStatType, "getStaticStatType");
@@ -88,7 +88,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         }
         readCharacter.setStance(dto.stance);
         readCharacter.setDirection(dto.direction);
-        readCharacter.setSpriteSet(GET_SPRITE_SET.apply(dto.spriteSetId));
+        readCharacter.setImageAssetSet(GET_IMAGE_ASSET_SET.apply(dto.assetSetId));
         readCharacter.setAIType(GET_AI_TYPE.apply(dto.aiTypeId));
 
         for (CharacterEventDTO eventDTO : dto.events) {
@@ -173,7 +173,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
 
         dto.stance = character.getStance();
         dto.direction = character.getDirection();
-        dto.spriteSetId = character.getSpriteSet().id();
+        dto.assetSetId = character.getImageAssetSet().id();
         dto.aiTypeId = character.getAIType().id();
         Map<String, List<GameCharacterEvent>> eventsRepresentation =
                 character.events().representation();
@@ -278,7 +278,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         CharacterPairedDataDTO[] pronouns;
         String stance;
         String direction;
-        String spriteSetId;
+        String assetSetId;
         String aiTypeId;
         CharacterEventDTO[] events;
         CharacterPairedDataDTO[] equipmentSlots;

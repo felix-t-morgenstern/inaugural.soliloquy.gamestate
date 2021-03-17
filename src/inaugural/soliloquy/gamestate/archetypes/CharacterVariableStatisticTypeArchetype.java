@@ -3,8 +3,8 @@ package inaugural.soliloquy.gamestate.archetypes;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.graphics.assets.Sprite;
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAsset;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
@@ -57,23 +57,13 @@ public class CharacterVariableStatisticTypeArchetype implements CharacterVariabl
     }
 
     @Override
-    public SpriteSet getSpriteSet() {
+    public ImageAssetSet imageAssetSet() {
         return null;
-    }
-
-    @Override
-    public void setSpriteSet(SpriteSet spriteSet) {
-
     }
 
     @Override
     public String getInterfaceName() {
         return CharacterVariableStatisticType.class.getCanonicalName();
-    }
-
-    @Override
-    public Pair<Sprite, Integer> getIcon(Object o, String s, Character character) {
-        return null;
     }
 
     @Override
@@ -88,6 +78,11 @@ public class CharacterVariableStatisticTypeArchetype implements CharacterVariabl
 
     @Override
     public Pair<BiConsumer<Character, Integer>, Integer> onRoundEnd() {
+        return null;
+    }
+
+    @Override
+    public Pair<ImageAsset, Integer> getIcon(CharacterVariableStatisticType type, String s, Character character) {
         return null;
     }
 }

@@ -6,7 +6,7 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.graphics.assets.SpriteSet;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
@@ -67,12 +67,12 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public SpriteSet getSpriteSet() throws IllegalStateException {
+    public ImageAssetSet getImageAssetSet() throws IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setSpriteSet(SpriteSet spriteSet) throws IllegalArgumentException, IllegalStateException {
+    public void setImageAssetSet(ImageAssetSet imageAssetSet) throws IllegalArgumentException, IllegalStateException {
         throw new UnsupportedOperationException();
     }
 
