@@ -48,6 +48,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
                                  Function<String, GameMovementEvent> getMovementEvent,
                                  Function<String, GameAbilityEvent> getAbilityEvent,
                                  Function<String, GroundType> getGroundType) {
+        super(ARCHETYPE);
         if (tileFactory == null) {
             throw new IllegalArgumentException(
                     "PersistentTileHandler: tileFactory cannot be null");
@@ -233,11 +234,6 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
     @Override
     public String getUnparameterizedInterfaceName() {
         return PersistentValueTypeHandler.class.getCanonicalName();
-    }
-
-    @Override
-    public Tile getArchetype() {
-        return ARCHETYPE;
     }
 
     private class TileDTO {
