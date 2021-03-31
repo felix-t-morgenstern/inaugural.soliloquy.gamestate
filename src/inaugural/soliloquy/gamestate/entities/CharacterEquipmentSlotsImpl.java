@@ -42,14 +42,14 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariants("getInterfaceName");
+        enforceDeletionInvariants();
         return CharacterEquipmentSlots.class.getCanonicalName();
     }
 
     @Override
     public Map<String, Item> representation()
             throws IllegalStateException {
-        enforceDeletionInvariants("getRepresentation");
+        enforceDeletionInvariants();
         Map<String, Item> characterEquipmentSlots =
                 MAP_FACTORY.make("", ITEM_ARCHETYPE);
         for (java.util.Map.Entry<String, Pair<Item, Boolean>> equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
@@ -62,7 +62,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public void addCharacterEquipmentSlot(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("addCharacterEquipmentSlot");
+        enforceDeletionInvariants();
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
             EQUIPMENT_SLOTS.putIfAbsent(equipmentSlotType,
@@ -73,7 +73,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public boolean equipmentSlotExists(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("equipmentSlotExists");
+        enforceDeletionInvariants();
         enforceItemReferencesCorrectSlotInvariant("equipmentSlotExists",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
@@ -83,7 +83,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public Item removeCharacterEquipmentSlot(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("removeCharacterEquipmentSlot");
+        enforceDeletionInvariants();
         enforceItemReferencesCorrectSlotInvariant("removeCharacterEquipmentSlot",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
@@ -97,7 +97,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public Item itemInSlot(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("itemInSlot");
+        enforceDeletionInvariants();
         enforceItemReferencesCorrectSlotInvariant("itemInSlot",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
@@ -113,7 +113,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public boolean canEquipItemToSlot(String equipmentSlotType, Item item)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("canEquipItemToSlot");
+        enforceDeletionInvariants();
         enforceItemReferencesCorrectSlotInvariant("canEquipItemToSlot",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
@@ -134,7 +134,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public Item equipItemToSlot(String equipmentSlotType, Item item)
             throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
-        enforceDeletionInvariants("equipItemToSlot");
+        enforceDeletionInvariants();
         enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
@@ -168,7 +168,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public boolean getCanAlterEquipmentInSlot(String equipmentSlotType)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("getCanAlterEquipmentInSlot");
+        enforceDeletionInvariants();
         enforceItemReferencesCorrectSlotInvariant("getCanAlterEquipmentInSlot",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
@@ -185,18 +185,13 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     public void setCanAlterEquipmentInSlot(String equipmentSlotType,
                                            boolean canAlterEquipmentInSlot)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("setCanAlterEquipmentInSlot");
+        enforceDeletionInvariants();
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.setCanAlterEquipmentInSlot: no equipment slot of specified type");
         }
         EQUIPMENT_SLOTS.get(equipmentSlotType).setItem2(canAlterEquipmentInSlot);
-    }
-
-    @Override
-    protected String className() {
-        return "CharacterEquipmentSlots";
     }
 
     @Override

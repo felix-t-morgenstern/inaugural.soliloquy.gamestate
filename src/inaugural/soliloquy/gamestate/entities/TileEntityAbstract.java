@@ -52,7 +52,7 @@ public abstract class TileEntityAbstract<TEntity extends TileEntity>
     @Override
     void enforceInvariants(String methodName) {
         enforceCorrectTileInvariant(methodName);
-        enforceDeletionInvariants(methodName);
+        enforceDeletionInvariants();
     }
 
     @SuppressWarnings("unchecked")
@@ -62,6 +62,8 @@ public abstract class TileEntityAbstract<TEntity extends TileEntity>
                     ": this is not present on its specified Tile");
         }
     }
+
+    protected abstract String className();
 
     protected abstract TileEntities<TEntity> getTileAggregation();
 }

@@ -36,13 +36,13 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariants("getInterfaceName");
+        enforceDeletionInvariants();
         return TileFixtureItems.class.getCanonicalName();
     }
 
     @Override
     public List<Item> representation() throws UnsupportedOperationException, IllegalStateException {
-        enforceDeletionInvariants("getRepresentation");
+        enforceDeletionInvariants();
         List<Item> items = LIST_FACTORY.make(ITEM_ARCHETYPE);
         items.addAll(CONTAINED_ITEMS);
         return items;
@@ -50,7 +50,7 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("add");
+        enforceDeletionInvariants();
         enforceItemAssignmentInvariant(item, "add");
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.add: item must be non-null");
@@ -64,7 +64,7 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("remove");
+        enforceDeletionInvariants();
         enforceItemAssignmentInvariant(item, "remove");
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.remove: item must be non-null");
@@ -78,17 +78,12 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public boolean contains(Item item) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("contains");
+        enforceDeletionInvariants();
         enforceItemAssignmentInvariant(item, "contains");
         if (item == null) {
             throw new IllegalArgumentException("TileFixtureItems.contains: item must be non-null");
         }
         return CONTAINED_ITEMS.contains(item);
-    }
-
-    @Override
-    protected String className() {
-        return "TileFixtureItems";
     }
 
     @Override

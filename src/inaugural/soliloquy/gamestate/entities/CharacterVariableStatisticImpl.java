@@ -21,20 +21,15 @@ public class CharacterVariableStatisticImpl
 
     @Override
     public int getCurrentValue() throws IllegalStateException {
-        enforceDeletionInvariants("getCurrentValue");
+        enforceDeletionInvariants();
         return _currentValue;
     }
 
     @Override
     public void setCurrentValue(int currentValue)
             throws IllegalStateException, IllegalArgumentException {
-        enforceDeletionInvariants("setCurrentValue");
+        enforceDeletionInvariants();
         _currentValue = currentValue;
-    }
-
-    @Override
-    protected String className() {
-        return "CharacterVariableStatistic";
     }
 
     @Override

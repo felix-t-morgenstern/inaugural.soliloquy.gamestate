@@ -36,7 +36,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     @Override
     public void addEvent(String trigger, GameCharacterEvent event)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("addEvent");
+        enforceDeletionInvariants();
         if(!EVENTS.containsKey(trigger)) {
             EVENTS.put(trigger, new ArrayList<>());
         }
@@ -48,20 +48,20 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     @Override
     public void clearTrigger(String trigger)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("clearTrigger");
+        enforceDeletionInvariants();
         EVENTS.remove(trigger);
     }
 
     @Override
     public void clearAllTriggers() throws IllegalStateException {
-        enforceDeletionInvariants("clearAllTriggers");
+        enforceDeletionInvariants();
         EVENTS.clear();
     }
 
     @Override
     public List<String> getTriggersForEvent(GameCharacterEvent event)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("getTriggersForEvent");
+        enforceDeletionInvariants();
         List<String> triggersForEvent = LIST_FACTORY.make("");
         EVENTS.forEach((trigger,events) -> {
             if (events.contains(event)) {
@@ -74,7 +74,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     @Override
     public boolean removeEvent(String trigger, GameCharacterEvent event)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("removeEvent");
+        enforceDeletionInvariants();
         ArrayList<GameCharacterEvent> triggerEvents = EVENTS.get(trigger);
         if (triggerEvents == null) {
             return false;
@@ -89,14 +89,14 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     @Override
     public boolean containsEvent(String trigger, GameCharacterEvent event)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("containsEvent");
+        enforceDeletionInvariants();
         ArrayList<GameCharacterEvent> triggerEvents = EVENTS.get(trigger);
         return triggerEvents != null && triggerEvents.contains(event);
     }
 
     @Override
     public void fire(String trigger) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("fire");
+        enforceDeletionInvariants();
         if (EVENTS.containsKey(trigger)) {
             EVENTS.get(trigger).forEach(event -> event.fire(CHARACTER));
         }
@@ -105,7 +105,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     @Override
     public Map<String, List<GameCharacterEvent>> representation()
             throws IllegalStateException {
-        enforceDeletionInvariants("_representation");
+        enforceDeletionInvariants();
         Map<String,List<GameCharacterEvent>> representation =
                 MAP_FACTORY.make("", EVENTS_ARCHETYPE);
         EVENTS.forEach((t,e) -> {
@@ -122,17 +122,12 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     }
 
     @Override
-    protected String className() {
-        return "CharacterEventsImpl";
-    }
-
-    @Override
     protected String containingClassName() {
         return "Character";
     }
 
     @Override
-    Deletable getContainingObject() {
+    protected Deletable getContainingObject() {
         return CHARACTER;
     }
 }

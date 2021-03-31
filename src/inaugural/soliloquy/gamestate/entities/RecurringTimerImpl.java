@@ -11,6 +11,7 @@ public class RecurringTimerImpl extends TimerAbstract implements RecurringTimer 
 
     private final Consumer<RecurringTimer> REMOVE_RECURRING_TIMER_FROM_ROUND_MANAGER;
 
+    @SuppressWarnings("rawtypes")
     public RecurringTimerImpl(String timerId, Action action, int roundModulo, int roundOffset,
                               Consumer<RecurringTimer> addRecurringTimerToRoundManager,
                               Consumer<RecurringTimer> removeRecurringTimerFromRoundManager) {
@@ -23,25 +24,25 @@ public class RecurringTimerImpl extends TimerAbstract implements RecurringTimer 
 
     @Override
     public int getRoundModulo() {
-        enforceDeletionInvariants("getRoundModulo");
+        enforceDeletionInvariants();
         return _roundModulo;
     }
 
     @Override
     public void setRoundModulo(int roundModulo) throws IllegalArgumentException {
-        enforceDeletionInvariants("setRoundModulo");
+        enforceDeletionInvariants();
         _roundModulo = roundModulo;
     }
 
     @Override
     public int getRoundOffset() {
-        enforceDeletionInvariants("getRoundOffset");
+        enforceDeletionInvariants();
         return _roundOffset;
     }
 
     @Override
     public void setRoundOffset(int roundOffset) throws IllegalArgumentException {
-        enforceDeletionInvariants("setRoundOffset");
+        enforceDeletionInvariants();
         _roundOffset = roundOffset;
     }
 
@@ -60,11 +61,6 @@ public class RecurringTimerImpl extends TimerAbstract implements RecurringTimer 
         }
         RecurringTimer recurringTimer = (RecurringTimer) o;
         return ID.equals(recurringTimer.id());
-    }
-
-    @Override
-    protected String className() {
-        return "RecurringTimer";
     }
 
     @Override

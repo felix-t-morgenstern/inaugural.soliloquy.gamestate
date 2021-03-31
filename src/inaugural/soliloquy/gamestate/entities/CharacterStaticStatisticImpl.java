@@ -16,15 +16,10 @@ public class CharacterStaticStatisticImpl
         super(character, type, data, characterStatisticCalculation);
     }
 
-    @Override
-    protected String className() {
-        return "CharacterStaticStatisticImpl";
-    }
-
     // Todo: Ensure tested properly
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariants("getInterfaceName");
+        enforceDeletionInvariants();
         return CharacterStatistic.class.getCanonicalName() +  "<" +
                 CharacterStaticStatisticType.class.getCanonicalName() + ">";
     }

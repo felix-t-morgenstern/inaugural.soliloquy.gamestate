@@ -83,7 +83,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
 
     @Override
     public GameZone gameZone() throws IllegalStateException {
-        enforceDeletionInvariants("gameZone");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("gameZone");
         return _gameZone;
     }
@@ -91,84 +91,84 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
     // TODO: Ensure that clone is made
     @Override
     public Coordinate location() throws IllegalStateException {
-        enforceDeletionInvariants("location");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("location");
         return LOCATION.makeClone();
     }
 
     @Override
     public int getHeight() throws IllegalStateException {
-        enforceDeletionInvariants("getHeight");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("getHeight");
         return _height;
     }
 
     @Override
     public void setHeight(int height) throws IllegalStateException {
-        enforceDeletionInvariants("setHeight");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("setHeight");
         _height = height;
     }
 
     @Override
     public GroundType getGroundType() throws IllegalStateException {
-        enforceDeletionInvariants("getGroundType");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("getGroundType");
         return _groundType;
     }
 
     @Override
     public void setGroundType(GroundType groundType) throws IllegalStateException {
-        enforceDeletionInvariants("setGroundType");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("setGroundType");
         _groundType = groundType;
     }
 
     @Override
     public TileEntities<Character> characters() {
-        enforceDeletionInvariants("characters");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("characters");
         return TILE_CHARACTERS;
     }
 
     @Override
     public TileEntities<Item> items() {
-        enforceDeletionInvariants("items");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("items");
         return TILE_ITEMS;
     }
 
     @Override
     public TileEntities<TileFixture> fixtures() throws IllegalStateException {
-        enforceDeletionInvariants("fixtures");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("fixtures");
         return TILE_FIXTURES;
     }
 
     @Override
     public TileWallSegments wallSegments() throws IllegalStateException {
-        enforceDeletionInvariants("wallSegments");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("wallSegments");
         return TILE_WALL_SEGMENTS;
     }
 
     @Override
     public List<GameMovementEvent> movementEvents() throws IllegalStateException {
-        enforceDeletionInvariants("movementEvents");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("movementEvents");
         return MOVEMENT_EVENTS;
     }
 
     @Override
     public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
-        enforceDeletionInvariants("abilityEvents");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("abilityEvents");
         return ABILITY_EVENTS;
     }
 
     @Override
     public Map<Sprite, Integer> sprites() throws IllegalStateException {
-        enforceDeletionInvariants("sprites");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("sprites");
         return SPRITES;
     }
@@ -189,14 +189,9 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        enforceDeletionInvariants("data");
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("data");
         return DATA;
-    }
-
-    @Override
-    protected String className() {
-        return "TileImpl";
     }
 
     @Override
@@ -266,7 +261,7 @@ public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
 
     @Override
     void enforceInvariants(String methodName) {
-        enforceDeletionInvariants(methodName);
+        enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant(methodName);
     }
 }

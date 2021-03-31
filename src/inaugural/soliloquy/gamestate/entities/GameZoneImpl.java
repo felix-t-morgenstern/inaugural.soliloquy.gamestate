@@ -168,11 +168,6 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    protected String className() {
-        return "GameZoneImpl";
-    }
-
-    @Override
     protected String containingClassName() {
         return null;
     }

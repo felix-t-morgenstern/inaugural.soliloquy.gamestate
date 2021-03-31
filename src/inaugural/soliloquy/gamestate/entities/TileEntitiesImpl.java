@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
+import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.PairFactory;
@@ -56,14 +57,15 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     @SuppressWarnings("ConstantConditions")
     public void add(TEntity entity, int zIndex) throws IllegalArgumentException {
-        enforceDeletionInvariants("add");
+        enforceDeletionInvariants();
         enforceAssignmentInvariant(entity, "add");
         if (entity == null) {
-            throw new IllegalArgumentException(className() + ".add: entity must be non-null");
+            throw new IllegalArgumentException("TileEntitiesImpl.add: entity must be non-null");
         }
         if (entityIsPresentElsewhere(entity))
         {
-            throw new IllegalArgumentException(className() + ".add: entity is present elsewhere");
+            throw new IllegalArgumentException(
+                    "TileEntitiesImpl.add: entity is present elsewhere");
         }
         ENTITIES.put(entity, zIndex);
         entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
@@ -84,12 +86,9 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     @Override
     public Integer getZIndex(TEntity entity)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("getZIndex");
+        enforceDeletionInvariants();
         enforceAssignmentInvariant(entity, "getZIndex");
-        if (entity == null) {
-            throw new IllegalArgumentException(className() +
-                    ".getZIndex: entity must be non-null");
-        }
+        Check.ifNull(entity, "entity");
         if (!ENTITIES.containsKey(entity)) {
             return null;
         }
@@ -99,25 +98,20 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     @Override
     public void setZIndex(TEntity entity, int z)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("setZIndex");
+        enforceDeletionInvariants();
         enforceAssignmentInvariant(entity, "setZIndex");
-        if (entity == null) {
-            throw new IllegalArgumentException(className() +
-                    ".getZIndex: entity must be non-null");
-        }
+        Check.ifNull(entity, "entity");
         if (!ENTITIES.containsKey(entity)) {
-            throw new IllegalArgumentException(className() + ".getZIndex: entity is not present");
+            throw new IllegalArgumentException(
+                    "TileEntitiesImpl.getZIndex: entity is not present");
         }
         ENTITIES.put(entity, z);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public boolean remove(TEntity entity) {
-        enforceDeletionInvariants("remove");
+        enforceDeletionInvariants();
         enforceAssignmentInvariant(entity, "remove");
-        if (entity == null) {
-            throw new IllegalArgumentException(className() + ".remove: entity must be non-null");
-        }
+        Check.ifNull(entity, "entity");
         boolean entityWasPresent = ENTITIES.remove(entity) != null;
         if (entityWasPresent) {
             entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
@@ -130,7 +124,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     @SuppressWarnings("ConstantConditions")
     public boolean contains(TEntity entity) throws IllegalArgumentException {
-        enforceDeletionInvariants("contains");
+        enforceDeletionInvariants();
         enforceAssignmentInvariant(entity, "contains");
         if (entity == null) {
             throw new IllegalArgumentException(
@@ -146,7 +140,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     @Override
     public Map<TEntity, Integer> representation() throws IllegalStateException {
-        enforceDeletionInvariants("representation");
+        enforceDeletionInvariants();
         Map<TEntity, Integer> entities = MAP_FACTORY.make(ARCHETYPE, 0);
         ENTITIES.forEach(entities::put);
         return entities;
@@ -175,14 +169,9 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariants("getInterfaceName");
+        enforceDeletionInvariants();
         return TileEntities.class.getCanonicalName() + "<" +
                 CAN_GET_INTERFACE_NAME.getProperTypeName(getArchetype()) + ">";
-    }
-
-    @Override
-    protected String className() {
-        return "TileItems";
     }
 
     @Override
@@ -217,7 +206,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     @Override
     public Iterator<Pair<TEntity, Integer>> iterator() {
-        enforceDeletionInvariants("iterator");
+        enforceDeletionInvariants();
         Iterator<TEntity> entities = ENTITIES.keySet().iterator();
         Iterator<Integer> zIndices = ENTITIES.values().iterator();
         return new Iterator<>() {

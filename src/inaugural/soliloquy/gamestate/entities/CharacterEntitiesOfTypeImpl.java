@@ -50,7 +50,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
 
     @Override
     public void add(TType type, VariableCache data) throws IllegalArgumentException {
-        enforceDeletionInvariants("add");
+        enforceDeletionInvariants();
         if (!ENTITIES.containsKey(type)) {
             ENTITIES.put(Check.ifNull(type, "type"),
                     ENTITY_FACTORY.apply(CHARACTER).apply(type).apply(Check.ifNull(data, "data")));
@@ -59,7 +59,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
 
     @Override
     public TEntity get(TType type) throws IllegalArgumentException {
-        enforceDeletionInvariants("get");
+        enforceDeletionInvariants();
         if (type == null) {
             throw new IllegalArgumentException(
                     "CharacterEntitiesOfTypeImpl.get: type cannot be null");
@@ -69,13 +69,13 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
 
     @Override
     public int size() {
-        enforceDeletionInvariants("size");
+        enforceDeletionInvariants();
         return ENTITIES.size();
     }
 
     @Override
     public boolean remove(TType type) throws IllegalArgumentException {
-        enforceDeletionInvariants("remove");
+        enforceDeletionInvariants();
         if (type == null) {
             throw new IllegalArgumentException(
                     "CharacterEntitiesOfTypeImpl.remove: type cannot be null");
@@ -85,7 +85,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
 
     @Override
     public boolean contains(TType type) throws IllegalArgumentException {
-        enforceDeletionInvariants("contains");
+        enforceDeletionInvariants();
         if (type == null) {
             throw new IllegalArgumentException(
                     "CharacterEntitiesOfTypeImpl.contains: type cannot be null");
@@ -95,13 +95,13 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
 
     @Override
     public void clear() {
-        enforceDeletionInvariants("clear");
+        enforceDeletionInvariants();
         ENTITIES.clear();
     }
 
     @Override
     public List<TEntity> representation() {
-        enforceDeletionInvariants("representation");
+        enforceDeletionInvariants();
         List<TEntity> entities = LIST_FACTORY.make(ARCHETYPE);
         entities.addAll(ENTITIES.values());
         return entities;
@@ -109,13 +109,8 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
 
     @Override
     public Iterator<TEntity> iterator() {
-        enforceDeletionInvariants("iterator");
+        enforceDeletionInvariants();
         return ENTITIES.values().iterator();
-    }
-
-    @Override
-    protected String className() {
-        return "CharacterEntitiesOfTypeImpl";
     }
 
     @Override
@@ -124,7 +119,7 @@ public class CharacterEntitiesOfTypeImpl<TType extends HasId,
     }
 
     @Override
-    Deletable getContainingObject() {
+    protected Deletable getContainingObject() {
         return CHARACTER;
     }
 

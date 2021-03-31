@@ -107,11 +107,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    protected String className() {
-        return "CharacterStatusEffects";
-    }
-
-    @Override
     protected String containingClassName() {
         return "Character";
     }
@@ -126,6 +121,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
             throw new IllegalStateException("CharacterStatusEffects." + methodName +
                     ": character is null");
         }
-        enforceDeletionInvariants(methodName);
+        enforceDeletionInvariants();
     }
 }

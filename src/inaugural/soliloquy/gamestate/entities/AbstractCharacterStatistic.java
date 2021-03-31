@@ -31,31 +31,31 @@ abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatistic
 
     @Override
     public TEntityType type() {
-        enforceDeletionInvariants("type");
+        enforceDeletionInvariants();
         return ENTITY_TYPE;
     }
 
     @Override
     public VariableCache data() {
-        enforceDeletionInvariants("data");
+        enforceDeletionInvariants();
         return DATA;
     }
 
     @Override
     public int totalValue() throws IllegalStateException {
-        enforceDeletionInvariants("totalValue");
+        enforceDeletionInvariants();
         return _totalValue;
     }
 
     @Override
     public Map<String, Integer> representation() throws IllegalStateException {
-        enforceDeletionInvariants("representation");
+        enforceDeletionInvariants();
         return _modifiers.makeClone();
     }
 
     @Override
     public void calculate() throws IllegalStateException {
-        enforceDeletionInvariants("calculate");
+        enforceDeletionInvariants();
         Pair<Integer,Map<String,Integer>> calculatedValueAndModifiers =
                 CHARACTER_STATISTIC_CALCULATION
                         .calculate(CHARACTER, ENTITY_TYPE);

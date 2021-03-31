@@ -40,7 +40,7 @@ public class CharacterVariableStatisticsImpl
 
     @Override
     public Map<CharacterVariableStatisticType, Integer> currentValues() {
-        enforceDeletionInvariants("currentValues");
+        enforceDeletionInvariants();
         Map<CharacterVariableStatisticType, Integer> currentValues =
                 MAP_FACTORY.make(TYPE_ARCHETYPE, 0);
         ENTITIES.forEach((t,s) -> currentValues.put(t, s.getCurrentValue()));
@@ -49,7 +49,7 @@ public class CharacterVariableStatisticsImpl
 
     @Override
     public Map<CharacterVariableStatisticType, Integer> maxValues() {
-        enforceDeletionInvariants("maxValues");
+        enforceDeletionInvariants();
         Map<CharacterVariableStatisticType, Integer> maxValues =
                 MAP_FACTORY.make(TYPE_ARCHETYPE, 0);
         ENTITIES.forEach((t,s) -> {

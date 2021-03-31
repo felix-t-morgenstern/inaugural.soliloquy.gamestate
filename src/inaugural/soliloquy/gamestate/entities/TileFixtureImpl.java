@@ -43,21 +43,21 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
 
     @Override
     public Tile tile() throws IllegalStateException {
-        enforceDeletionInvariants("tile");
+        enforceDeletionInvariants();
         enforceCorrectTileInvariant("tile");
         return _tile;
     }
 
     @Override
     public FixtureType type() throws IllegalStateException {
-        enforceDeletionInvariants("fixtureType");
+        enforceDeletionInvariants();
         enforceCorrectTileInvariant("fixtureType");
         return TYPE;
     }
 
     @Override
     public TileFixtureItems items() throws IllegalStateException {
-        enforceDeletionInvariants("containedItems");
+        enforceDeletionInvariants();
         enforceCorrectTileInvariant("containedItems");
         return TILE_FIXTURE_ITEMS;
     }
@@ -65,7 +65,7 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
     @Override
     public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("assignTileAfterAddedToTileEntitiesOfType");
+        enforceDeletionInvariants();
         enforceCorrectTileInvariant("assignTileAfterAddedToTileEntitiesOfType");
         _tile = tile;
         enforceCorrectTileInvariant("assignTileAfterAddedToTileEntitiesOfType");

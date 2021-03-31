@@ -21,26 +21,21 @@ public class CharacterAbilityImpl<TType extends AbilityType> extends HasDeletion
 
     @Override
     public TType type() {
-        enforceDeletionInvariants("abilityType");
+        enforceDeletionInvariants();
         return ABILITY_TYPE;
     }
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        enforceDeletionInvariants("data");
+        enforceDeletionInvariants();
         return DATA;
     }
 
     @Override
     public String getInterfaceName() {
-        enforceDeletionInvariants("getInterfaceName");
+        enforceDeletionInvariants();
         return CharacterEntityOfType.class.getCanonicalName() + "<" +
                 ABILITY_TYPE.getInterfaceName() + ">";
-    }
-
-    @Override
-    protected String className() {
-        return "CharacterEntityOfType";
     }
 
     @Override

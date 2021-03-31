@@ -3,23 +3,41 @@ package inaugural.soliloquy.gamestate.entities;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-abstract class HasDeletionInvariants implements Deletable {
+import java.util.function.Function;
+
+public abstract class HasDeletionInvariants implements Deletable {
     private boolean _isDeleted;
 
-    protected abstract String className();
     protected abstract String containingClassName();
-    abstract Deletable getContainingObject();
+    protected abstract Deletable getContainingObject();
 
-    void enforceDeletionInvariants(String methodName) {
+    protected void enforceDeletionInvariants() {
         if (_isDeleted) {
-            throw new EntityDeletedException(className() + "." + methodName +
-                    ": object is deleted");
+            throwException("object is deleted", EntityDeletedException::new);
         }
         if (containingClassName() != null && getContainingObject() != null &&
                 getContainingObject().isDeleted()) {
-            throw new IllegalStateException(className() + "." + methodName + ": containing " +
-                    containingClassName() + " is deleted");
+            throwException("containing " + containingClassName() + " is deleted",
+                    IllegalStateException::new);
         }
+    }
+
+    private static void throwException(String exceptionMessage,
+                                       Function<String, RuntimeException> exceptionFactory) {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        StackTraceElement callingMethod = null;
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            if (!stackTraceElement.getClassName().equals(HasDeletionInvariants.class.getName()) &&
+                    !stackTraceElement.getClassName().equals(Thread.class.getName())) {
+                callingMethod = stackTraceElement;
+                break;
+            }
+        }
+        assert callingMethod != null;
+        String className = callingMethod.getClassName();
+        String methodName = callingMethod.getMethodName();
+        throw exceptionFactory.apply(className +
+                (!methodName.equals("<init>") ? "." + methodName : "") + ": " + exceptionMessage);
     }
 
     @Override

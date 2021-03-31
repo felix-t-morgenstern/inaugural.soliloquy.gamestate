@@ -24,25 +24,25 @@ public abstract class TimerAbstract extends HasDeletionInvariants implements Tim
     @SuppressWarnings("unchecked")
     @Override
     public void fire() {
-        enforceDeletionInvariants("fire");
+        enforceDeletionInvariants();
         ACTION.run(null);
     }
 
     @Override
     public int getPriority() {
-        enforceDeletionInvariants("getPriority");
+        enforceDeletionInvariants();
         return _priority;
     }
 
     @Override
     public void setPriority(int priority) {
-        enforceDeletionInvariants("setPriority");
+        enforceDeletionInvariants();
         _priority = priority;
     }
 
     @Override
     public String id() throws IllegalStateException {
-        enforceDeletionInvariants("id");
+        enforceDeletionInvariants();
         return ID;
     }
 

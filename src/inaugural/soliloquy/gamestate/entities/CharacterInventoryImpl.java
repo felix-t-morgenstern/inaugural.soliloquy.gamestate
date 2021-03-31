@@ -27,11 +27,6 @@ public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
     }
 
     @Override
-    protected String className() {
-        return "CharacterInventoryImpl";
-    }
-
-    @Override
     protected String containingClassName() {
         return "Character";
     }
@@ -45,7 +40,7 @@ public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
     public List<Item> representation() throws IllegalStateException {
         // TODO: Consider using a Collection under the hood, to avoid duplicate Collection creation
         //       (and refactor similar implementations)
-        enforceDeletionInvariants("_representation");
+        enforceDeletionInvariants();
         List<Item> representation = LIST_FACTORY.make(ITEM_ARCHETYPE);
         representation.addAll(INVENTORY);
         return representation;
@@ -53,7 +48,7 @@ public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("add");
+        enforceDeletionInvariants();
         throwOnNullOrDeletedItem("add", item);
         if (itemIsPresentElsewhere(item)) {
             throw new IllegalArgumentException(
@@ -64,14 +59,14 @@ public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("remove");
+        enforceDeletionInvariants();
         throwOnNullOrDeletedItem("remove", item);
         return INVENTORY.remove(item);
     }
 
     @Override
     public boolean contains(Item item) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("contains");
+        enforceDeletionInvariants();
         throwOnNullOrDeletedItem("contains", item);
         return INVENTORY.contains(item);
     }

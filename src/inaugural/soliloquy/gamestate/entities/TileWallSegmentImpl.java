@@ -25,21 +25,21 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
 
     @Override
     public WallSegmentType getType() throws IllegalStateException {
-        enforceDeletionInvariants("getType");
+        enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("getType");
         return _type;
     }
 
     @Override
     public void setType(WallSegmentType wallSegmentType) throws IllegalStateException {
-        enforceDeletionInvariants("setType");
+        enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("setType");
         _type = wallSegmentType;
     }
 
     @Override
     public Tile tile() {
-        enforceDeletionInvariants("tile");
+        enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("tile");
         return _tile;
     }
@@ -47,7 +47,7 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     @Override
     public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
             throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants("assignTileAfterAddedToTileEntitiesOfType");
+        enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant(
                 "assignTileAfterAddedToTileEntitiesOfType");
         _tile = tile;
@@ -56,28 +56,23 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        enforceDeletionInvariants("data");
+        enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("data");
         return DATA;
     }
 
     @Override
     public String getName() {
-        enforceDeletionInvariants("getName");
+        enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("getName");
         return _name;
     }
 
     @Override
     public void setName(String name) {
-        enforceDeletionInvariants("setName");
+        enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("setName");
         _name = name;
-    }
-
-    @Override
-    protected String className() {
-        return "TileWallSegment";
     }
 
     @Override
