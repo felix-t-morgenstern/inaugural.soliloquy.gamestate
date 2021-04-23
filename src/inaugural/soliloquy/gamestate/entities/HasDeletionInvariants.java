@@ -1,8 +1,10 @@
 package inaugural.soliloquy.gamestate.entities;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
+import java.util.ArrayList;
 import java.util.function.Function;
 
 public abstract class HasDeletionInvariants implements Deletable {
@@ -24,20 +26,13 @@ public abstract class HasDeletionInvariants implements Deletable {
 
     private static void throwException(String exceptionMessage,
                                        Function<String, RuntimeException> exceptionFactory) {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        StackTraceElement callingMethod = null;
-        for (StackTraceElement stackTraceElement : stackTrace) {
-            if (!stackTraceElement.getClassName().equals(HasDeletionInvariants.class.getName()) &&
-                    !stackTraceElement.getClassName().equals(Thread.class.getName())) {
-                callingMethod = stackTraceElement;
-                break;
-            }
-        }
-        assert callingMethod != null;
-        String className = callingMethod.getClassName();
-        String methodName = callingMethod.getMethodName();
-        throw exceptionFactory.apply(className +
-                (!methodName.equals("<init>") ? "." + methodName : "") + ": " + exceptionMessage);
+        @SuppressWarnings("rawtypes") ArrayList<Class> classes = new ArrayList<>() {{
+            add(HasDeletionInvariants.class);
+            add(Thread.class);
+            add(Check.class);
+        }};
+        throw exceptionFactory.apply(Check.getFirstStackTraceElementNotInClasses(classes) +
+                ": " + exceptionMessage);
     }
 
     @Override
