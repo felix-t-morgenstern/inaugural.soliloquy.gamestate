@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.gamestate.archetypes.CharacterQueueEntryArchetype;
-import inaugural.soliloquy.gamestate.archetypes.OneTimeTimerArchetype;
-import inaugural.soliloquy.gamestate.archetypes.RecurringTimerArchetype;
+import inaugural.soliloquy.gamestate.archetypes.OneTimeTurnBasedTimerArchetype;
+import inaugural.soliloquy.gamestate.archetypes.RecurringTurnBasedTimerArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.PairFactory;
@@ -11,7 +11,9 @@ import soliloquy.specs.common.infrastructure.*;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.Timer;
+import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.TurnBasedTimer;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 import soliloquy.specs.ruleset.gameconcepts.RoundEndHandling;
 import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
@@ -19,8 +21,8 @@ import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
 import java.util.*;
 
 public class RoundManagerImpl implements RoundManager {
-    private final List<OneTimeTimer> ONE_TIME_TIMERS;
-    private final List<RecurringTimer> RECURRING_TIMERS;
+    private final List<OneTimeTurnBasedTimer> ONE_TIME_TURN_BASED_TIMERS;
+    private final List<RecurringTurnBasedTimer> RECURRING_TURN_BASED_TIMERS;
     private final ListFactory LIST_FACTORY;
     private final PairFactory PAIR_FACTORY;
     private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
@@ -47,8 +49,8 @@ public class RoundManagerImpl implements RoundManager {
         LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
         VARIABLE_CACHE_FACTORY = Check.ifNull(variableCacheFactory, "variableCacheFactory");
-        ONE_TIME_TIMERS = LIST_FACTORY.make(new OneTimeTimerArchetype());
-        RECURRING_TIMERS = LIST_FACTORY.make(new RecurringTimerArchetype());
+        ONE_TIME_TURN_BASED_TIMERS = LIST_FACTORY.make(new OneTimeTurnBasedTimerArchetype());
+        RECURRING_TURN_BASED_TIMERS = LIST_FACTORY.make(new RecurringTurnBasedTimerArchetype());
         ACTIVE_CHARACTERS_PROVIDER = Check.ifNull(activeCharactersProvider,
                 "activeCharactersProvider");
         TURN_HANDLING = Check.ifNull(turnHandling, "turnHandling");
@@ -260,42 +262,43 @@ public class RoundManagerImpl implements RoundManager {
         ROUND_END_EVENTS_TO_FIRE.clear();
     }
 
-    private java.util.List<Timer> getTimersToFire(int prevRoundNumber) {
-        TreeMap<Integer, java.util.List<Timer>> timersToFire = new TreeMap<>();
-        for(OneTimeTimer oneTimeTimer : ONE_TIME_TIMERS) {
-            if (_roundNumber >= oneTimeTimer.getRoundWhenGoesOff()) {
-                addToTimersToFire(timersToFire, oneTimeTimer, 1);
+    private java.util.List<TurnBasedTimer> getTimersToFire(int prevRoundNumber) {
+        TreeMap<Integer, java.util.List<TurnBasedTimer>> timersToFire = new TreeMap<>();
+        for(OneTimeTurnBasedTimer oneTimeTurnBasedTimer : ONE_TIME_TURN_BASED_TIMERS) {
+            if (_roundNumber >= oneTimeTurnBasedTimer.roundWhenGoesOff()) {
+                addToTimersToFire(timersToFire, oneTimeTurnBasedTimer, 1);
             }
         }
-        for(RecurringTimer recurringTimer : RECURRING_TIMERS) {
-            int numberOfTimesToAdd = numberOfTimesToFireRecurringTimer(recurringTimer,
+        for(RecurringTurnBasedTimer recurringTurnBasedTimer : RECURRING_TURN_BASED_TIMERS) {
+            int numberOfTimesToAdd = numberOfTimesToFireRecurringTimer(recurringTurnBasedTimer,
                     prevRoundNumber);
             if (numberOfTimesToAdd > 0) {
-                addToTimersToFire(timersToFire, recurringTimer, numberOfTimesToAdd);
+                addToTimersToFire(timersToFire, recurringTurnBasedTimer, numberOfTimesToAdd);
             }
         }
-        java.util.List<Timer> results = new ArrayList<>();
+        java.util.List<TurnBasedTimer> results = new ArrayList<>();
         timersToFire.keySet().forEach(i -> timersToFire.get(i).forEach(t -> results.add(0, t)));
         return results;
     }
 
-    private static void addToTimersToFire(TreeMap<Integer, java.util.List<Timer>> timersToFire,
-                                          Timer timer, int numberOfTimesToAdd) {
-        if (!timersToFire.containsKey(timer.getPriority())) {
-            timersToFire.put(timer.getPriority(), new ArrayList<>());
+    private static void addToTimersToFire(TreeMap<Integer,
+            java.util.List<TurnBasedTimer>> turnBasedTimersToFire, TurnBasedTimer timer,
+                                          int numberOfTimesToAdd) {
+        if (!turnBasedTimersToFire.containsKey(timer.priority())) {
+            turnBasedTimersToFire.put(timer.priority(), new ArrayList<>());
         }
-        timersToFire.get(timer.getPriority()).addAll(
+        turnBasedTimersToFire.get(timer.priority()).addAll(
                 Collections.nCopies(numberOfTimesToAdd, timer));
     }
 
-    private int numberOfTimesToFireRecurringTimer(RecurringTimer recurringTimer,
+    private int numberOfTimesToFireRecurringTimer(RecurringTurnBasedTimer recurringTimer,
                                                   int prevRoundNumber) {
         int roundsElapsed = _roundNumber - prevRoundNumber;
-        int modulo = recurringTimer.getRoundModulo();
+        int modulo = recurringTimer.roundModulo();
         if (modulo == 1) {
             return roundsElapsed;
         }
-        int offset = recurringTimer.getRoundOffset();
+        int offset = recurringTimer.roundOffset();
 
         // Calculate number of whole periods
         int numberOfPeriods = roundsElapsed / modulo;
@@ -311,13 +314,13 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public List<OneTimeTimer> oneTimeTimersRepresentation() {
-        return ONE_TIME_TIMERS.makeClone();
+    public List<OneTimeTurnBasedTimer> oneTimeTurnBasedTimersRepresentation() {
+        return ONE_TIME_TURN_BASED_TIMERS.makeClone();
     }
 
     @Override
-    public List<RecurringTimer> recurringTimersRepresentation() {
-        return RECURRING_TIMERS.makeClone();
+    public List<RecurringTurnBasedTimer> recurringTurnBasedTimersRepresentation() {
+        return RECURRING_TURN_BASED_TIMERS.makeClone();
     }
 
     @Override
@@ -344,22 +347,22 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
-    public void addOneTimeTimer(OneTimeTimer oneTimeTimer) {
-        ONE_TIME_TIMERS.add(oneTimeTimer);
+    public void addOneTimeTurnBasedTimer(OneTimeTurnBasedTimer oneTimeTurnBasedTimer) {
+        ONE_TIME_TURN_BASED_TIMERS.add(oneTimeTurnBasedTimer);
     }
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
-    public void removeOneTimeTimer(OneTimeTimer oneTimeTimer) {
-        ONE_TIME_TIMERS.remove(oneTimeTimer);
+    public void removeOneTimeTurnBasedTimer(OneTimeTurnBasedTimer oneTimeTurnBasedTimer) {
+        ONE_TIME_TURN_BASED_TIMERS.remove(oneTimeTurnBasedTimer);
     }
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
-    public void addRecurringTimer(RecurringTimer recurringTimer) {
-        RECURRING_TIMERS.add(recurringTimer);
+    public void addRecurringTurnBasedTimer(RecurringTurnBasedTimer recurringTurnBasedTimer) {
+        RECURRING_TURN_BASED_TIMERS.add(recurringTurnBasedTimer);
     }
 
     // NB: These are NOT exposed by the interface; calling these directly is strongly discouraged
-    public void removeRecurringTimer(RecurringTimer recurringTimer) {
-        RECURRING_TIMERS.remove(recurringTimer);
+    public void removeRecurringTurnBasedTimer(RecurringTurnBasedTimer recurringTurnBasedTimer) {
+        RECURRING_TURN_BASED_TIMERS.remove(recurringTurnBasedTimer);
     }
 }

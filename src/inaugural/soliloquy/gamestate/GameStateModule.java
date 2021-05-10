@@ -163,10 +163,10 @@ public class GameStateModule extends AbstractModule {
         CameraFactory cameraFactory = new CameraFactoryImpl(coordinateFactory, listFactory,
                 mapFactory, tileVisibility);
 
-        Function<RoundManager, TimerFactory> timerFactoryFactory = r ->
-                new TimerFactoryImpl(roundManager::addOneTimeTimer,
-                        roundManager::removeOneTimeTimer, roundManager::addRecurringTimer,
-                        roundManager::removeRecurringTimer);
+        Function<RoundManager, TurnBasedTimerFactory> turnBasedTimerFactoryFactory = r ->
+                new TurnBasedTimerFactoryImpl(roundManager::addOneTimeTurnBasedTimer,
+                        roundManager::removeOneTimeTurnBasedTimer, roundManager::addRecurringTurnBasedTimer,
+                        roundManager::removeRecurringTurnBasedTimer);
 
         KeyBindingFactory keyBindingFactory = new KeyBindingFactoryImpl(listFactory);
 
@@ -177,8 +177,9 @@ public class GameStateModule extends AbstractModule {
                 new KeyPressListenerFactoryImpl(mapFactory);
 
         _gameStateFactory = new GameStateFactoryImpl(mapFactory, registryFactory, gameZonesRepo,
-                cameraFactory, roundManager, itemFactory, characterFactory, timerFactoryFactory,
-                keyBindingFactory, keyBindingContextFactory, keyPressListenerFactory);
+                cameraFactory, roundManager, itemFactory, characterFactory,
+                turnBasedTimerFactoryFactory, keyBindingFactory, keyBindingContextFactory,
+                keyPressListenerFactory);
     }
 
     @Override

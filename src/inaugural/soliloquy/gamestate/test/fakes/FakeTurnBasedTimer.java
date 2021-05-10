@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.gamestate.entities.Timer;
+import soliloquy.specs.gamestate.entities.timers.TurnBasedTimer;
 
-public abstract class FakeTimer implements Timer {
+public abstract class FakeTurnBasedTimer implements TurnBasedTimer {
     private String _id;
     private int _priority;
     @SuppressWarnings("rawtypes")
@@ -12,12 +12,13 @@ public abstract class FakeTimer implements Timer {
     public boolean _fired;
 
     @SuppressWarnings("rawtypes")
-    FakeTimer(String id, Action action) {
+    FakeTurnBasedTimer(String id, Action action, int priority) {
         _id = id;
         _action = action;
+        _priority = priority;
     }
 
-    FakeTimer() {
+    FakeTurnBasedTimer() {
 
     }
 
@@ -33,13 +34,8 @@ public abstract class FakeTimer implements Timer {
     }
 
     @Override
-    public int getPriority() {
+    public int priority() {
         return _priority;
-    }
-
-    @Override
-    public void setPriority(int i) {
-        _priority = i;
     }
 
     @Override

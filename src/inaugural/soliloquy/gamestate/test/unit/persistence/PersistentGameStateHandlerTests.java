@@ -3,8 +3,8 @@ package inaugural.soliloquy.gamestate.test.unit.persistence;
 import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentGameStateHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentCharacterHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentOneTimeTimerHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentRecurringTimerHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentOneTimeTurnBasedTimerHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentRecurringTurnBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentVariableCacheHandler;
 import inaugural.soliloquy.gamestate.test.stubs.GameZonesRepoStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
@@ -15,8 +15,8 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
 import soliloquy.specs.gamestate.GameState;
-import soliloquy.specs.gamestate.entities.OneTimeTimer;
-import soliloquy.specs.gamestate.entities.RecurringTimer;
+import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
 import java.util.ArrayList;
@@ -31,10 +31,10 @@ class PersistentGameStateHandlerTests {
             new FakePersistentVariableCacheHandler();
     private final FakePersistentCharacterHandler CHARACTER_HANDLER =
             new FakePersistentCharacterHandler();
-    private final FakePersistentOneTimeTimerHandler ONE_TIME_TIMER_HANDLER =
-            new FakePersistentOneTimeTimerHandler();
-    private final FakePersistentRecurringTimerHandler RECURRING_TIMER_HANDLER =
-            new FakePersistentRecurringTimerHandler();
+    private final FakePersistentOneTimeTurnBasedTimerHandler ONE_TIME_TIMER_HANDLER =
+            new FakePersistentOneTimeTurnBasedTimerHandler();
+    private final FakePersistentRecurringTurnBasedTimerHandler RECURRING_TIMER_HANDLER =
+            new FakePersistentRecurringTurnBasedTimerHandler();
     private final String GAME_ZONE_ID = "gameZoneId";
     private final VariableCache DATA = new VariableCacheStub();
     private final String PC_IN_GAME_ZONE_ID = "b37594cf-5cd5-441d-9dff-adc7392c221e";
@@ -47,7 +47,7 @@ class PersistentGameStateHandlerTests {
 
     private PersistentValueTypeHandler<GameState> _gameStateHandler;
 
-    private final String WRITTEN_DATA = "{\"currentGameZoneId\":\"gameZoneId\",\"pcsInCurrentGameZone\":[{\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"}],\"pcsNotInCurrentGameZone\":[\"Character0\"],\"data\":\"VariableCache0\",\"partyAttributes\":\"VariableCache1\",\"roundNumber\":123456,\"charsInRound\":[{\"data\":\"VariableCache2\",\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"},{\"data\":\"VariableCache3\",\"x\":56,\"y\":78,\"id\":\"740390c6-6956-4f21-8dea-98f2c8ef3cbb\"}],\"oneTimeTimers\":[\"OneTimeTimer0\"],\"recurringTimers\":[\"RecurringTimer0\"]}";
+    private final String WRITTEN_DATA = "{\"currentGameZoneId\":\"gameZoneId\",\"pcsInCurrentGameZone\":[{\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"}],\"pcsNotInCurrentGameZone\":[\"Character0\"],\"data\":\"VariableCache0\",\"partyAttributes\":\"VariableCache1\",\"roundNumber\":123456,\"charsInRound\":[{\"data\":\"VariableCache2\",\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"},{\"data\":\"VariableCache3\",\"x\":56,\"y\":78,\"id\":\"740390c6-6956-4f21-8dea-98f2c8ef3cbb\"}],\"oneTimeTurnBasedTimers\":[\"OneTimeTimer0\"],\"recurringTurnBasedTimers\":[\"RecurringTimer0\"]}";
 
     @BeforeEach
     void setUp() {
@@ -114,10 +114,10 @@ class PersistentGameStateHandlerTests {
         gameState.RoundManager.setCharacterPositionInQueue(pcInGameZone, 0, pcInGameZoneRoundData);
         gameState.RoundManager.setCharacterPositionInQueue(npcInGameZone, 1,
                 nonPcInGameZoneRoundData);
-        OneTimeTimer oneTimeTimer = new FakeOneTimeTimer();
-        gameState.RoundManager.OneTimeTimers.add(oneTimeTimer);
-        RecurringTimer recurringTimer = new FakeRecurringTimer();
-        gameState.RoundManager.RecurringTimers.add(recurringTimer);
+        OneTimeTurnBasedTimer oneTimeTurnBasedTimer = new FakeOneTimeTurnBasedTimer();
+        gameState.RoundManager.OneTimeTurnBasedTimers.add(oneTimeTurnBasedTimer);
+        RecurringTurnBasedTimer recurringTurnBasedTimer = new FakeRecurringTurnBasedTimer();
+        gameState.RoundManager.RecurringTurnBasedTimers.add(recurringTurnBasedTimer);
 
         String writtenData = _gameStateHandler.write(gameState);
 

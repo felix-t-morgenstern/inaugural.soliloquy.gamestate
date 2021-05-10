@@ -13,6 +13,8 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
@@ -150,9 +152,9 @@ class ArchetypesTests {
     }
 
     @Test
-    void testOneTimeTimerArchetype() {
-        assertEquals(OneTimeTimer.class.getCanonicalName(),
-                new OneTimeTimerArchetype().getInterfaceName());
+    void testOneTimeTurnBasedTimerArchetype() {
+        assertEquals(OneTimeTurnBasedTimer.class.getCanonicalName(),
+                new OneTimeTurnBasedTimerArchetype().getInterfaceName());
     }
 
     @Test
@@ -162,9 +164,9 @@ class ArchetypesTests {
     }
 
     @Test
-    void testRecurringTimerArchetype() {
-        assertEquals(RecurringTimer.class.getCanonicalName(),
-                new RecurringTimerArchetype().getInterfaceName());
+    void testRecurringTurnBasedTimerArchetype() {
+        assertEquals(RecurringTurnBasedTimer.class.getCanonicalName(),
+                new RecurringTurnBasedTimerArchetype().getInterfaceName());
     }
 
     @Test

@@ -20,7 +20,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final RoundManager ROUND_MANAGER;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
-    private final Function<RoundManager, TimerFactory> TIMER_FACTORY_FACTORY;
+    private final Function<RoundManager, TurnBasedTimerFactory> TURN_BASED_TIMER_FACTORY_FACTORY;
     private final KeyBindingFactory KEY_BINDING_FACTORY;
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY;
@@ -30,7 +30,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
                                 GameZonesRepo gameZonesRepo, CameraFactory cameraFactory,
                                 RoundManager roundManager, ItemFactory itemFactory,
                                 CharacterFactory characterFactory,
-                                Function<RoundManager, TimerFactory> timerFactoryFactory,
+                                Function<RoundManager, TurnBasedTimerFactory>
+                                            turnBasedTimerFactoryFactory,
                                 KeyBindingFactory keyBindingFactory,
                                 KeyBindingContextFactory keyBindingContextFactory,
                                 KeyPressListenerFactory keyPressListenerFactory) {
@@ -49,7 +50,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
         }
         GAME_ZONES_REPO = gameZonesRepo;
         if (cameraFactory == null) {
-            throw new IllegalArgumentException("GameStateFactoryImpl: cameraFactory cannot be null");
+            throw new IllegalArgumentException(
+                    "GameStateFactoryImpl: cameraFactory cannot be null");
         }
         CAMERA_FACTORY = cameraFactory;
         if (roundManager == null) {
@@ -66,11 +68,11 @@ public class GameStateFactoryImpl implements GameStateFactory {
                     "GameStateFactoryImpl: characterFactory cannot be null");
         }
         CHARACTER_FACTORY = characterFactory;
-        if (timerFactoryFactory == null) {
+        if (turnBasedTimerFactoryFactory == null) {
             throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: timerFactoryFactory cannot be null");
+                    "GameStateFactoryImpl: turnBasedTimerFactoryFactory cannot be null");
         }
-        TIMER_FACTORY_FACTORY = timerFactoryFactory;
+        TURN_BASED_TIMER_FACTORY_FACTORY = turnBasedTimerFactoryFactory;
         if (keyBindingFactory == null) {
             throw new IllegalArgumentException(
                     "GameStateFactoryImpl: keyBindingFactory cannot be null");
@@ -92,7 +94,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
     public GameState make(Party party, VariableCache variableCache) throws IllegalArgumentException {
         return new GameStateImpl(party, variableCache, MAP_FACTORY, REGISTRY_FACTORY,
                 GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER, ITEM_FACTORY, CHARACTER_FACTORY,
-                TIMER_FACTORY_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                TURN_BASED_TIMER_FACTORY_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
                 KEY_PRESS_LISTENER_FACTORY);
     }
 

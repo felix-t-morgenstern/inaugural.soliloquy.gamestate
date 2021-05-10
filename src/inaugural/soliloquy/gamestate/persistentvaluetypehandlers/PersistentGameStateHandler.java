@@ -10,6 +10,8 @@ import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 import soliloquy.specs.gamestate.factories.GameStateFactory;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
@@ -22,8 +24,10 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
     private final GameZonesRepo GAME_ZONES_REPO;
     private final PersistentValueTypeHandler<VariableCache> VARIABLE_CACHE_HANDLER;
     private final PersistentValueTypeHandler<Character> CHARACTER_HANDLER;
-    private final PersistentValueTypeHandler<OneTimeTimer> ONE_TIME_TIMER_HANDLER;
-    private final PersistentValueTypeHandler<RecurringTimer> RECURRING_TIMER_HANDLER;
+    private final PersistentValueTypeHandler<OneTimeTurnBasedTimer>
+            ONE_TIME_TURN_BASED_TIMER_HANDLER;
+    private final PersistentValueTypeHandler<RecurringTurnBasedTimer>
+            RECURRING_TURN_BASED_TIMER_HANDLER;
 
     private static final GameState ARCHETYPE = new GameStateArchetype();
 
@@ -34,9 +38,10 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                                       PersistentValueTypeHandler<VariableCache>
                                               variableCacheHandler,
                                       PersistentValueTypeHandler<Character> characterHandler,
-                                      PersistentValueTypeHandler<OneTimeTimer> oneTimeTimerHandler,
-                                      PersistentValueTypeHandler<RecurringTimer>
-                                                  recurringTimerHandler) {
+                                      PersistentValueTypeHandler<OneTimeTurnBasedTimer>
+                                                  oneTimeTurnBasedTimerHandler,
+                                      PersistentValueTypeHandler<RecurringTurnBasedTimer>
+                                                  recurringTurnBasedTimerHandler) {
         if (gameStateFactory == null) {
             throw new IllegalArgumentException(
                     "PersistentGameStateHandler: gameStateFactory cannot be null");
@@ -62,16 +67,16 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                     "PersistentGameStateHandler: characterHandler cannot be null");
         }
         CHARACTER_HANDLER = characterHandler;
-        if (oneTimeTimerHandler == null) {
+        if (oneTimeTurnBasedTimerHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: oneTimeTimerHandler cannot be null");
+                    "PersistentGameStateHandler: oneTimeTurnBasedTimerHandler cannot be null");
         }
-        ONE_TIME_TIMER_HANDLER = oneTimeTimerHandler;
-        if (recurringTimerHandler == null) {
+        ONE_TIME_TURN_BASED_TIMER_HANDLER = oneTimeTurnBasedTimerHandler;
+        if (recurringTurnBasedTimerHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: recurringTimerHandler cannot be null");
+                    "PersistentGameStateHandler: recurringTurnBasedTimerHandler cannot be null");
         }
-        RECURRING_TIMER_HANDLER = recurringTimerHandler;
+        RECURRING_TURN_BASED_TIMER_HANDLER = recurringTurnBasedTimerHandler;
     }
 
     @Override
@@ -106,8 +111,8 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                     Integer.MAX_VALUE, VARIABLE_CACHE_HANDLER.read(charDto.data)
             );
         }
-        Arrays.stream(dto.oneTimeTimers).forEach(ONE_TIME_TIMER_HANDLER::read);
-        Arrays.stream(dto.recurringTimers).forEach(RECURRING_TIMER_HANDLER::read);
+        Arrays.stream(dto.oneTimeTurnBasedTimers).forEach(ONE_TIME_TURN_BASED_TIMER_HANDLER::read);
+        Arrays.stream(dto.recurringTurnBasedTimers).forEach(RECURRING_TURN_BASED_TIMER_HANDLER::read);
         return gameState;
     }
 
@@ -122,6 +127,7 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                 " not found at (" + x + "," + y + ")");
     }
 
+    // TODO: Organize this method a bit better
     @Override
     public String write(GameState gameState) {
         if (gameState == null) {
@@ -163,18 +169,23 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
             dto.charsInRound[index].data = VARIABLE_CACHE_HANDLER.write(charWithData.getItem2());
             index++;
         }
-        List<OneTimeTimer> oneTimeTimers = gameState.roundManager().oneTimeTimersRepresentation();
-        dto.oneTimeTimers = new String[oneTimeTimers.size()];
+
+        List<OneTimeTurnBasedTimer> oneTimeTurnBasedTimers =
+                gameState.roundManager().oneTimeTurnBasedTimersRepresentation();
+        dto.oneTimeTurnBasedTimers = new String[oneTimeTurnBasedTimers.size()];
         index = 0;
-        for(OneTimeTimer oneTimeTimer : oneTimeTimers) {
-            dto.oneTimeTimers[index++] = ONE_TIME_TIMER_HANDLER.write(oneTimeTimer);
+        for(OneTimeTurnBasedTimer oneTimeTurnBasedTimer : oneTimeTurnBasedTimers) {
+            dto.oneTimeTurnBasedTimers[index++] =
+                    ONE_TIME_TURN_BASED_TIMER_HANDLER.write(oneTimeTurnBasedTimer);
         }
-        List<RecurringTimer> recurringTimers =
-                gameState.roundManager().recurringTimersRepresentation();
-        dto.recurringTimers = new String[recurringTimers.size()];
+
+        List<RecurringTurnBasedTimer> recurringTurnBasedTimers =
+                gameState.roundManager().recurringTurnBasedTimersRepresentation();
+        dto.recurringTurnBasedTimers = new String[recurringTurnBasedTimers.size()];
         index = 0;
-        for(RecurringTimer recurringTimer : recurringTimers) {
-            dto.recurringTimers[index++] = RECURRING_TIMER_HANDLER.write(recurringTimer);
+        for(RecurringTurnBasedTimer recurringTurnBasedTimer : recurringTurnBasedTimers) {
+            dto.recurringTurnBasedTimers[index++] =
+                    RECURRING_TURN_BASED_TIMER_HANDLER.write(recurringTurnBasedTimer);
         }
         return new Gson().toJson(dto);
     }
@@ -187,8 +198,8 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         String partyAttributes;
         int roundNumber;
         CharacterInRoundDTO[] charsInRound;
-        String[] oneTimeTimers;
-        String[] recurringTimers;
+        String[] oneTimeTurnBasedTimers;
+        String[] recurringTurnBasedTimers;
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")

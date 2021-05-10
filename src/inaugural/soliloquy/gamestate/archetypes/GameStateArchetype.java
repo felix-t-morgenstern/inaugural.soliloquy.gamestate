@@ -77,7 +77,7 @@ public class GameStateArchetype implements GameState {
     }
 
     @Override
-    public TimerFactory timerFactory() {
+    public TurnBasedTimerFactory turnBasedTimerFactory() {
         return null;
     }
 

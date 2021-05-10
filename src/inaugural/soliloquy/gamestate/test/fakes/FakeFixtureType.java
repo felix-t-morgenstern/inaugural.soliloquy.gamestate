@@ -5,7 +5,7 @@ import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.graphics.assets.ImageAsset;
-import soliloquy.specs.graphics.colorshifting.ColorShift;
+import soliloquy.specs.graphics.renderables.colorshifting.ColorShift;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.FixtureType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;

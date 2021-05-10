@@ -30,7 +30,7 @@ public class GameStateImpl implements GameState {
     private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
-    private final TimerFactory TIMER_FACTORY;
+    private final TurnBasedTimerFactory TIMER_FACTORY;
     private final KeyBindingFactory KEY_BINDING_FACTORY;
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY;
@@ -56,7 +56,7 @@ public class GameStateImpl implements GameState {
                          RoundManager roundManager,
                          ItemFactory itemFactory,
                          CharacterFactory characterFactory,
-                         Function<RoundManager,TimerFactory> timerFactoryFactory,
+                         Function<RoundManager,TurnBasedTimerFactory> turnBasedTimerFactoryFactory,
                          KeyBindingFactory keyBindingFactory,
                          KeyBindingContextFactory keyBindingContextFactory,
                          KeyPressListenerFactory keyPressListenerFactory) {
@@ -99,10 +99,11 @@ public class GameStateImpl implements GameState {
             throw new IllegalArgumentException("GameState: characterFactory must be non-null");
         }
         CHARACTER_FACTORY = characterFactory;
-        if (timerFactoryFactory == null) {
-            throw new IllegalArgumentException("GameState: timerFactoryFactory must be non-null");
+        if (turnBasedTimerFactoryFactory == null) {
+            throw new IllegalArgumentException(
+                    "GameState: turnBasedTimerFactoryFactory must be non-null");
         }
-        TIMER_FACTORY = timerFactoryFactory.apply(roundManager);
+        TIMER_FACTORY = turnBasedTimerFactoryFactory.apply(roundManager);
         if (keyBindingFactory == null) {
             throw new IllegalArgumentException("GameState: keyBindingFactory must be non-null");
         }
@@ -185,7 +186,7 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public TimerFactory timerFactory() {
+    public TurnBasedTimerFactory turnBasedTimerFactory() {
         return TIMER_FACTORY;
     }
 

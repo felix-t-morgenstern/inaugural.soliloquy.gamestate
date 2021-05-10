@@ -13,9 +13,9 @@ import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.OneTimeTimer;
-import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 
 import java.util.ArrayList;
 
@@ -375,58 +375,55 @@ public class RoundManagerImplTests {
     }
 
     @Test
-    void testOneTimeTimers() {
-        assertNotNull(_roundManager.oneTimeTimersRepresentation());
-    }
+    void testOneTimeTurnBasedTimersRepresentation() {
+        OneTimeTurnBasedTimer oneTimeTurnBasedTimer1 = new FakeOneTimeTurnBasedTimer();
+        OneTimeTurnBasedTimer oneTimeTurnBasedTimer2 = new FakeOneTimeTurnBasedTimer();
+        OneTimeTurnBasedTimer oneTimeTurnBasedTimer3 = new FakeOneTimeTurnBasedTimer();
 
-    @Test
-    void testOneTimeTimersRepresentation() {
-        OneTimeTimer oneTimeTimer1 = new FakeOneTimeTimer();
-        OneTimeTimer oneTimeTimer2 = new FakeOneTimeTimer();
-        OneTimeTimer oneTimeTimer3 = new FakeOneTimeTimer();
+        ((RoundManagerImpl)_roundManager).addOneTimeTurnBasedTimer(oneTimeTurnBasedTimer1);
+        ((RoundManagerImpl)_roundManager).addOneTimeTurnBasedTimer(oneTimeTurnBasedTimer2);
+        ((RoundManagerImpl)_roundManager).addOneTimeTurnBasedTimer(oneTimeTurnBasedTimer3);
 
-        ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
-        ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
-        ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer3);
-
-        List<OneTimeTimer> representation = _roundManager.oneTimeTimersRepresentation();
+        List<OneTimeTurnBasedTimer> representation =
+                _roundManager.oneTimeTurnBasedTimersRepresentation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        assertTrue(representation.contains(oneTimeTimer1));
-        assertTrue(representation.contains(oneTimeTimer2));
-        assertTrue(representation.contains(oneTimeTimer3));
+        assertTrue(representation.contains(oneTimeTurnBasedTimer1));
+        assertTrue(representation.contains(oneTimeTurnBasedTimer2));
+        assertTrue(representation.contains(oneTimeTurnBasedTimer3));
 
-        ((RoundManagerImpl)_roundManager).removeOneTimeTimer(oneTimeTimer1);
+        ((RoundManagerImpl)_roundManager).removeOneTimeTurnBasedTimer(oneTimeTurnBasedTimer1);
 
-        representation = _roundManager.oneTimeTimersRepresentation();
+        representation = _roundManager.oneTimeTurnBasedTimersRepresentation();
 
-        assertFalse(representation.contains(oneTimeTimer1));
+        assertFalse(representation.contains(oneTimeTurnBasedTimer1));
     }
 
     @Test
-    void testRecurringTimersRepresentation() {
-        RecurringTimer recurringTimer1 = new FakeRecurringTimer();
-        RecurringTimer recurringTimer2 = new FakeRecurringTimer();
-        RecurringTimer recurringTimer3 = new FakeRecurringTimer();
+    void testRecurringTurnBasedTimersRepresentation() {
+        RecurringTurnBasedTimer recurringTurnBasedTimer1 = new FakeRecurringTurnBasedTimer();
+        RecurringTurnBasedTimer recurringTurnBasedTimer2 = new FakeRecurringTurnBasedTimer();
+        RecurringTurnBasedTimer recurringTurnBasedTimer3 = new FakeRecurringTurnBasedTimer();
 
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer1);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer2);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer3);
 
-        List<RecurringTimer> representation = _roundManager.recurringTimersRepresentation();
+        List<RecurringTurnBasedTimer> representation =
+                _roundManager.recurringTurnBasedTimersRepresentation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        assertTrue(representation.contains(recurringTimer1));
-        assertTrue(representation.contains(recurringTimer2));
-        assertTrue(representation.contains(recurringTimer3));
+        assertTrue(representation.contains(recurringTurnBasedTimer1));
+        assertTrue(representation.contains(recurringTurnBasedTimer2));
+        assertTrue(representation.contains(recurringTurnBasedTimer3));
 
-        ((RoundManagerImpl)_roundManager).removeRecurringTimer(recurringTimer1);
+        ((RoundManagerImpl)_roundManager).removeRecurringTurnBasedTimer(recurringTurnBasedTimer1);
 
-        representation = _roundManager.recurringTimersRepresentation();
+        representation = _roundManager.recurringTurnBasedTimersRepresentation();
 
-        assertFalse(representation.contains(recurringTimer1));
+        assertFalse(representation.contains(recurringTurnBasedTimer1));
     }
 
     @Test
@@ -434,35 +431,25 @@ public class RoundManagerImplTests {
         final int roundNumber = 123;
         _roundManager.setRoundNumber(roundNumber);
 
-        FakeRecurringTimer recurringTimer1 = new FakeRecurringTimer();
-        recurringTimer1.setRoundModulo(2);
-        recurringTimer1.setRoundOffset(0);
-        recurringTimer1.setPriority(0);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
-        FakeRecurringTimer recurringTimer2 = new FakeRecurringTimer();
-        recurringTimer2.setRoundModulo(4);
-        recurringTimer2.setRoundOffset(0);
-        recurringTimer2.setPriority(1);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
-        FakeRecurringTimer recurringTimer3 = new FakeRecurringTimer();
-        recurringTimer3.setRoundModulo(4);
-        recurringTimer3.setRoundOffset(1);
-        recurringTimer3.setPriority(2);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
-        FakeRecurringTimer recurringTimer4 = new FakeRecurringTimer();
-        recurringTimer4.setRoundModulo(5);
-        recurringTimer4.setRoundOffset(0);
-        recurringTimer4.setPriority(3);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer4);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer1 =
+                new FakeRecurringTurnBasedTimer(null, null, 2, 0, 0);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer1);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer2 =
+                new FakeRecurringTurnBasedTimer(null, null, 4, 0, 1);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer2);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer3 =
+                new FakeRecurringTurnBasedTimer(null, null, 4, 1, 2);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer3);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer4 =
+                new FakeRecurringTurnBasedTimer(null, null, 5, 0, 3);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer4);
 
-        FakeOneTimeTimer oneTimeTimer1 = new FakeOneTimeTimer();
-        oneTimeTimer1.setRoundWhenGoesOff(roundNumber+1);
-        oneTimeTimer1.setPriority(4);
-        ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
-        FakeOneTimeTimer oneTimeTimer2 = new FakeOneTimeTimer();
-        oneTimeTimer2.setRoundWhenGoesOff(roundNumber+2);
-        oneTimeTimer2.setPriority(5);
-        ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
+        FakeOneTimeTurnBasedTimer oneTimeTurnBasedTimer1 =
+                new FakeOneTimeTurnBasedTimer(null, null, roundNumber + 1, 4);
+        ((RoundManagerImpl)_roundManager).addOneTimeTurnBasedTimer(oneTimeTurnBasedTimer1);
+        FakeOneTimeTurnBasedTimer oneTimeTurnBasedTimer2 =
+                new FakeOneTimeTurnBasedTimer(null, null, roundNumber + 2, 5);
+        ((RoundManagerImpl)_roundManager).addOneTimeTurnBasedTimer(oneTimeTurnBasedTimer2);
 
         _roundManager.endActiveCharacterTurn();
 
@@ -476,13 +463,13 @@ public class RoundManagerImplTests {
                     _roundManager.characterRoundData(character));
         }
 
-        assertEquals(3, ROUND_END_HANDLING.Timers.size());
-        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer1));
-        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer2));
-        assertTrue(ROUND_END_HANDLING.Timers.contains(oneTimeTimer1));
-        assertSame(oneTimeTimer1, ROUND_END_HANDLING.Timers.get(0));
-        assertSame(recurringTimer2, ROUND_END_HANDLING.Timers.get(1));
-        assertSame(recurringTimer1, ROUND_END_HANDLING.Timers.get(2));
+        assertEquals(3, ROUND_END_HANDLING.TurnBasedTimers.size());
+        assertTrue(ROUND_END_HANDLING.TurnBasedTimers.contains(recurringTurnBasedTimer1));
+        assertTrue(ROUND_END_HANDLING.TurnBasedTimers.contains(recurringTurnBasedTimer2));
+        assertTrue(ROUND_END_HANDLING.TurnBasedTimers.contains(oneTimeTurnBasedTimer1));
+        assertSame(oneTimeTurnBasedTimer1, ROUND_END_HANDLING.TurnBasedTimers.get(0));
+        assertSame(recurringTurnBasedTimer2, ROUND_END_HANDLING.TurnBasedTimers.get(1));
+        assertSame(recurringTurnBasedTimer1, ROUND_END_HANDLING.TurnBasedTimers.get(2));
 
         assertEquals(0, ROUND_END_HANDLING.TurnEnds.size());
         assertEquals(1, ROUND_END_HANDLING.TurnStarts.size());
@@ -518,42 +505,32 @@ public class RoundManagerImplTests {
         _roundManager.setCharacterPositionInQueue(character3, 2, roundData3);
 
         // Should fire TWICE
-        FakeRecurringTimer recurringTimer1 = new FakeRecurringTimer();
-        recurringTimer1.setRoundModulo(2);
-        recurringTimer1.setRoundOffset(0);
-        recurringTimer1.setPriority(0);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer1 =
+                new FakeRecurringTurnBasedTimer(null, null, 2, 0, 0);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer1);
         // Should fire
-        FakeRecurringTimer recurringTimer2 = new FakeRecurringTimer();
-        recurringTimer2.setRoundModulo(4);
-        recurringTimer2.setRoundOffset(0);
-        recurringTimer2.setPriority(1);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer2 =
+                new FakeRecurringTurnBasedTimer(null, null, 4, 0, 1);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer2);
         // Should fire
-        FakeRecurringTimer recurringTimer3 = new FakeRecurringTimer();
-        recurringTimer3.setRoundModulo(4);
-        recurringTimer3.setRoundOffset(1);
-        recurringTimer3.setPriority(2);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer3 =
+                new FakeRecurringTurnBasedTimer(null, null, 4, 1, 2);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer3);
         // Should NOT fire
-        FakeRecurringTimer recurringTimer4 = new FakeRecurringTimer();
-        recurringTimer4.setRoundModulo(5);
-        recurringTimer4.setRoundOffset(2);
-        recurringTimer4.setPriority(3);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer4);
+        FakeRecurringTurnBasedTimer recurringTurnBasedTimer4 =
+                new FakeRecurringTurnBasedTimer(null, null, 5, 2, 3);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer4);
 
         // Should fire
-        FakeOneTimeTimer oneTimeTimer1 = new FakeOneTimeTimer(
-                ((RoundManagerImpl)_roundManager)::removeOneTimeTimer);
-        oneTimeTimer1.setRoundWhenGoesOff(roundNumber+1);
-        oneTimeTimer1.setPriority(4);
-        ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer1);
+        FakeOneTimeTurnBasedTimer oneTimeTurnBasedTimer1 =
+                new FakeOneTimeTurnBasedTimer(null, null, roundNumber + 1, 4,
+                        ((RoundManagerImpl)_roundManager)::removeOneTimeTurnBasedTimer);
+        ((RoundManagerImpl)_roundManager).addOneTimeTurnBasedTimer(oneTimeTurnBasedTimer1);
         // Should NOT fire
-        FakeOneTimeTimer oneTimeTimer2 = new FakeOneTimeTimer(
-                ((RoundManagerImpl)_roundManager)::removeOneTimeTimer);
-        oneTimeTimer2.setRoundWhenGoesOff(roundNumber+4);
-        oneTimeTimer2.setPriority(5);
-        ((RoundManagerImpl)_roundManager).addOneTimeTimer(oneTimeTimer2);
+        FakeOneTimeTurnBasedTimer oneTimeTurnBasedTimer2 =
+                new FakeOneTimeTurnBasedTimer(null, null, roundNumber + 4, 5,
+                        ((RoundManagerImpl)_roundManager)::removeOneTimeTurnBasedTimer);
+        ((RoundManagerImpl)_roundManager).addOneTimeTurnBasedTimer(oneTimeTurnBasedTimer2);
 
         assertNull(_roundManager.activeCharacter());
 
@@ -583,16 +560,16 @@ public class RoundManagerImplTests {
 
         // These assertions test not only whether the correct number of Timers were sent to
         // RoundHandling, but also whether they were ordered properly by priority (i.e. desc)
-        assertEquals(5, ROUND_END_HANDLING.Timers.size());
-        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer1));
-        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer2));
-        assertTrue(ROUND_END_HANDLING.Timers.contains(recurringTimer3));
-        assertTrue(ROUND_END_HANDLING.Timers.contains(oneTimeTimer1));
-        assertSame(oneTimeTimer1, ROUND_END_HANDLING.Timers.get(0));
-        assertSame(recurringTimer3, ROUND_END_HANDLING.Timers.get(1));
-        assertSame(recurringTimer2, ROUND_END_HANDLING.Timers.get(2));
-        assertSame(recurringTimer1, ROUND_END_HANDLING.Timers.get(3));
-        assertSame(recurringTimer1, ROUND_END_HANDLING.Timers.get(4));
+        assertEquals(5, ROUND_END_HANDLING.TurnBasedTimers.size());
+        assertTrue(ROUND_END_HANDLING.TurnBasedTimers.contains(recurringTurnBasedTimer1));
+        assertTrue(ROUND_END_HANDLING.TurnBasedTimers.contains(recurringTurnBasedTimer2));
+        assertTrue(ROUND_END_HANDLING.TurnBasedTimers.contains(recurringTurnBasedTimer3));
+        assertTrue(ROUND_END_HANDLING.TurnBasedTimers.contains(oneTimeTurnBasedTimer1));
+        assertSame(oneTimeTurnBasedTimer1, ROUND_END_HANDLING.TurnBasedTimers.get(0));
+        assertSame(recurringTurnBasedTimer3, ROUND_END_HANDLING.TurnBasedTimers.get(1));
+        assertSame(recurringTurnBasedTimer2, ROUND_END_HANDLING.TurnBasedTimers.get(2));
+        assertSame(recurringTurnBasedTimer1, ROUND_END_HANDLING.TurnBasedTimers.get(3));
+        assertSame(recurringTurnBasedTimer1, ROUND_END_HANDLING.TurnBasedTimers.get(4));
 
         assertEquals(2, TURN_HANDLING.TurnStarts.size());
         assertSame(character1, TURN_HANDLING.TurnStarts.get(0).getItem1());
@@ -641,26 +618,23 @@ public class RoundManagerImplTests {
         _roundManager.setRoundNumber(initialRoundNumber);
         final int roundsToAdvance = 37;
 
-        RecurringTimer recurringTimer1 = new FakeRecurringTimer();
-        recurringTimer1.setRoundModulo(1);
-        recurringTimer1.setRoundOffset(0);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer1);
+        RecurringTurnBasedTimer recurringTurnBasedTimer1 =
+                new FakeRecurringTurnBasedTimer(null, null, 1, 0, 0);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer1);
 
-        RecurringTimer recurringTimer2 = new FakeRecurringTimer();
-        recurringTimer2.setRoundModulo(10);
-        recurringTimer2.setRoundOffset(2);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer2);
+        RecurringTurnBasedTimer recurringTurnBasedTimer2 =
+                new FakeRecurringTurnBasedTimer(null, null, 10, 2, 0);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer2);
 
-        RecurringTimer recurringTimer3 = new FakeRecurringTimer();
-        recurringTimer3.setRoundModulo(10);
-        recurringTimer3.setRoundOffset(3);
-        ((RoundManagerImpl)_roundManager).addRecurringTimer(recurringTimer3);
+        RecurringTurnBasedTimer recurringTurnBasedTimer3 =
+                new FakeRecurringTurnBasedTimer(null, null, 10, 3, 0);
+        ((RoundManagerImpl)_roundManager).addRecurringTurnBasedTimer(recurringTurnBasedTimer3);
 
         _roundManager.advanceRounds(roundsToAdvance);
 
-        assertEquals(roundsToAdvance, getCount(recurringTimer1, ROUND_END_HANDLING.Timers));
-        assertEquals(4, getCount(recurringTimer2, ROUND_END_HANDLING.Timers));
-        assertEquals(3, getCount(recurringTimer3, ROUND_END_HANDLING.Timers));
+        assertEquals(roundsToAdvance, getCount(recurringTurnBasedTimer1, ROUND_END_HANDLING.TurnBasedTimers));
+        assertEquals(4, getCount(recurringTurnBasedTimer2, ROUND_END_HANDLING.TurnBasedTimers));
+        assertEquals(3, getCount(recurringTurnBasedTimer3, ROUND_END_HANDLING.TurnBasedTimers));
     }
 
     private <T> int getCount(T item, java.util.List<T> items) {

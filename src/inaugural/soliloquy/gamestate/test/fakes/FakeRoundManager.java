@@ -5,9 +5,9 @@ import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.OneTimeTimer;
-import soliloquy.specs.gamestate.entities.RecurringTimer;
 import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,17 +17,15 @@ public class FakeRoundManager implements RoundManager {
     private final java.util.List<Character> QUEUE = new LinkedList<>();
     private final HashMap<Character, VariableCache> CHARACTERS_DATA = new HashMap<>();
 
-    public final List<OneTimeTimer> OneTimeTimers = new FakeList<>();
-    public final List<RecurringTimer> RecurringTimers = new FakeList<>();
+    public final List<OneTimeTurnBasedTimer> OneTimeTurnBasedTimers = new FakeList<>();
+    public final List<RecurringTurnBasedTimer> RecurringTurnBasedTimers = new FakeList<>();
 
     private int _roundNumber;
 
     @Override
     public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
         List<Pair<Character, VariableCache>> collection = new FakeList<>();
-        QUEUE.forEach(c -> {
-            collection.add(new FakePair<>(c, CHARACTERS_DATA.get(c)));
-        });
+        QUEUE.forEach(c -> collection.add(new FakePair<>(c, CHARACTERS_DATA.get(c))));
         return collection;
     }
 
@@ -107,13 +105,13 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public List<OneTimeTimer> oneTimeTimersRepresentation() {
-        return OneTimeTimers;
+    public List<OneTimeTurnBasedTimer> oneTimeTurnBasedTimersRepresentation() {
+        return OneTimeTurnBasedTimers;
     }
 
     @Override
-    public List<RecurringTimer> recurringTimersRepresentation() {
-        return RecurringTimers;
+    public List<RecurringTurnBasedTimer> recurringTurnBasedTimersRepresentation() {
+        return RecurringTurnBasedTimers;
     }
 
     @Override

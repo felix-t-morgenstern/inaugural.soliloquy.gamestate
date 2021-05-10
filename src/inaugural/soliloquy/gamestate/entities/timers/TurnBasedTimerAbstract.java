@@ -1,21 +1,26 @@
-package inaugural.soliloquy.gamestate.entities;
+package inaugural.soliloquy.gamestate.entities.timers;
 
+import inaugural.soliloquy.gamestate.entities.HasDeletionInvariants;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.Deletable;
-import soliloquy.specs.gamestate.entities.Timer;
+import soliloquy.specs.gamestate.entities.timers.TurnBasedTimer;
 
-public abstract class TimerAbstract extends HasDeletionInvariants implements Timer {
+public abstract class TurnBasedTimerAbstract extends HasDeletionInvariants implements TurnBasedTimer {
+    @SuppressWarnings("rawtypes")
     private final Action ACTION;
 
     final String ID;
 
-    private int _priority;
+    private final int PRIORITY;
 
-    TimerAbstract(String timerId, Action action) {
+    TurnBasedTimerAbstract(String timerId, @SuppressWarnings("rawtypes") Action action,
+                           int priority) {
         ID = timerId;
         ACTION = action;
+        PRIORITY = priority;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Action action() {
         return ACTION;
@@ -29,15 +34,9 @@ public abstract class TimerAbstract extends HasDeletionInvariants implements Tim
     }
 
     @Override
-    public int getPriority() {
+    public int priority() {
         enforceDeletionInvariants();
-        return _priority;
-    }
-
-    @Override
-    public void setPriority(int priority) {
-        enforceDeletionInvariants();
-        _priority = priority;
+        return PRIORITY;
     }
 
     @Override

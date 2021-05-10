@@ -27,8 +27,9 @@ class GameStateImplTests {
     private final RoundManager ROUND_MANAGER = new FakeRoundManager();
     private final ItemFactory ITEM_FACTORY = new FakeItemFactory();
     private final CharacterFactory CHARACTER_FACTORY = new FakeCharacterFactory();
-    private final FakeTimerFactory TIMER_FACTORY = new FakeTimerFactory();
-    private final Function<RoundManager, TimerFactory> TIMER_FACTORY_FACTORY = r -> {
+    private final FakeTurnBasedTimerFactory TIMER_FACTORY = new FakeTurnBasedTimerFactory();
+    private final Function<RoundManager, TurnBasedTimerFactory> TURN_BASED_TIMER_FACTORY_FACTORY =
+            r -> {
         _roundManagerForTimerFactoryFactory = r;
         return TIMER_FACTORY;
     };
@@ -53,7 +54,7 @@ class GameStateImplTests {
                 ROUND_MANAGER,
                 ITEM_FACTORY,
                 CHARACTER_FACTORY,
-                TIMER_FACTORY_FACTORY,
+                TURN_BASED_TIMER_FACTORY_FACTORY,
                 KEY_BINDING_FACTORY,
                 KEY_BINDING_CONTEXT_FACTORY,
                 KEY_PRESS_LISTENER_FACTORY);
@@ -72,7 +73,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -86,7 +87,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -100,7 +101,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -114,7 +115,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -128,7 +129,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -142,7 +143,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -156,7 +157,7 @@ class GameStateImplTests {
                         null,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -170,7 +171,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         null,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -184,7 +185,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         null,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -212,7 +213,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         null,
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -226,7 +227,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         null,
                         KEY_PRESS_LISTENER_FACTORY));
@@ -240,7 +241,7 @@ class GameStateImplTests {
                         ROUND_MANAGER,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
-                        TIMER_FACTORY_FACTORY,
+                        TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
                         null));
@@ -321,8 +322,8 @@ class GameStateImplTests {
     }
 
     @Test
-    void testTimerFactory() {
-        assertSame(TIMER_FACTORY, _gameState.timerFactory());
+    void testTurnBasedTimerFactory() {
+        assertSame(TIMER_FACTORY, _gameState.turnBasedTimerFactory());
         assertSame(ROUND_MANAGER, _roundManagerForTimerFactoryFactory);
     }
 
