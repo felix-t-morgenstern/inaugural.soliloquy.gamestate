@@ -162,7 +162,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public EntityUuid id() {
+    public EntityUuid uuid() {
         throw new UnsupportedOperationException();
     }
 }

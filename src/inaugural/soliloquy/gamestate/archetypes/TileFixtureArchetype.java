@@ -79,7 +79,7 @@ public class TileFixtureArchetype implements TileFixture {
     }
 
     @Override
-    public EntityUuid id() {
+    public EntityUuid uuid() {
         return null;
     }
 

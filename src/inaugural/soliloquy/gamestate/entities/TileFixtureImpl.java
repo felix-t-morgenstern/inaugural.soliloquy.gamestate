@@ -11,7 +11,7 @@ import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements TileFixture {
-    private final EntityUuid ID;
+    private final EntityUuid UUID;
     private final FixtureType TYPE;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final VariableCache DATA;
@@ -21,13 +21,13 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
     private float _yTileHeightOffset;
 
     @SuppressWarnings("ConstantConditions")
-    public TileFixtureImpl(EntityUuid id,
+    public TileFixtureImpl(EntityUuid uuid,
                            FixtureType fixtureType,
                            ListFactory listFactory,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
                            VariableCache data) {
         super(listFactory);
-        ID = Check.ifNull(id, "id");
+        UUID = Check.ifNull(uuid, "uuid");
         TYPE = Check.ifNull(fixtureType, "fixtureType");
         _xTileWidthOffset = TYPE.defaultXTileWidthOffset();
         _yTileHeightOffset = TYPE.defaultYTileHeightOffset();
@@ -37,8 +37,8 @@ public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements 
     }
 
     @Override
-    public EntityUuid id() {
-        return ID;
+    public EntityUuid uuid() {
+        return UUID;
     }
 
     @Override

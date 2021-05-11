@@ -16,7 +16,7 @@ public class FakeTileFixture implements TileFixture {
     private boolean _isDeleted;
     private float _xTileWidthOffset;
     private float _yTileHeightOffset;
-    private EntityUuid _id;
+    private EntityUuid _uuid;
     private FixtureType _fixtureType;
     private VariableCache _data;
     private String _name;
@@ -31,7 +31,7 @@ public class FakeTileFixture implements TileFixture {
 
     public FakeTileFixture(EntityUuid id, FixtureType fixtureType, VariableCache data) {
         TILE_FIXTURE_ITEMS = new FakeTileFixtureItems(this);
-        _id = id;
+        _uuid = id;
         _fixtureType = fixtureType;
         _data = data;
     }
@@ -103,8 +103,8 @@ public class FakeTileFixture implements TileFixture {
     }
 
     @Override
-    public EntityUuid id() {
-        return _id;
+    public EntityUuid uuid() {
+        return _uuid;
     }
 
     @Override

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PersistentItemHandlerTests {
     private final Registry<ItemType> ITEM_TYPES_REGISTRY = new FakeRegistry<>();
-    private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER =
+    private final PersistentValueTypeHandler<EntityUuid> UUID_HANDLER =
             new FakePersistentEntityUuidHandler();
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
             new FakePersistentVariableCacheHandler();
@@ -47,23 +47,24 @@ class PersistentItemHandlerTests {
         _item._xTileWidthOffset = X_TILE_WIDTH_OFFSET;
         _item._yTileHeightOffset = Y_TILE_HEIGHT_OFFSET;
         ITEM_TYPES_REGISTRY.add(_itemType);
-        _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, ID_HANDLER,
+        _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
                 DATA_HANDLER, ITEM_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(null, ID_HANDLER, DATA_HANDLER, ITEM_FACTORY));
+                () -> new PersistentItemHandler(null, UUID_HANDLER,
+                        DATA_HANDLER, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, null, DATA_HANDLER,
-                        ITEM_FACTORY));
+                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, null,
+                        DATA_HANDLER, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, ID_HANDLER, null,
-                        ITEM_FACTORY));
+                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
+                        null, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, ID_HANDLER, DATA_HANDLER,
-                        null));
+                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
+                        DATA_HANDLER, null));
     }
 
     @Test
@@ -111,8 +112,8 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_WITH_CHARGES);
 
         assertNotNull(readItem);
-        assertSame(((FakePersistentEntityUuidHandler) ID_HANDLER).READ_OUTPUTS.get(0),
-                readItem.id());
+        assertSame(((FakePersistentEntityUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
+                readItem.uuid());
         assertSame(_itemType, readItem.type());
         assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
         assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
@@ -128,8 +129,8 @@ class PersistentItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_STACKABLE);
 
         assertNotNull(readItem);
-        assertSame(((FakePersistentEntityUuidHandler) ID_HANDLER).READ_OUTPUTS.get(0),
-                readItem.id());
+        assertSame(((FakePersistentEntityUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
+                readItem.uuid());
         assertSame(_itemType, readItem.type());
         assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
         assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());

@@ -24,7 +24,7 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 public class CharacterImpl implements Character {
-    private final EntityUuid ID;
+    private final EntityUuid UUID;
     private final CharacterType CHARACTER_TYPE;
     private final List<CharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final Map<String,String> PRONOUNS;
@@ -58,7 +58,7 @@ public class CharacterImpl implements Character {
     private CharacterAIType _aiType;
 
     @SuppressWarnings("ConstantConditions")
-    public CharacterImpl(EntityUuid id,
+    public CharacterImpl(EntityUuid uuid,
                          CharacterType characterType,
                          ListFactory listFactory,
                          MapFactory mapFactory,
@@ -69,7 +69,7 @@ public class CharacterImpl implements Character {
                          CharacterEntitiesOfTypeFactory entitiesOfTypeFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
                          VariableCache data) {
-        ID = Check.ifNull(id, "id");
+        UUID = Check.ifNull(uuid, "uuid");
         CHARACTER_TYPE = Check.ifNull(characterType, "characterType");
         CHARACTER_CLASSIFICATIONS = Check.ifNull(listFactory, "listFactory")
                 .make(new CharacterClassificationArchetype());
@@ -287,8 +287,8 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public EntityUuid id() {
-        return ID;
+    public EntityUuid uuid() {
+        return UUID;
     }
 
     @Override
@@ -310,7 +310,7 @@ public class CharacterImpl implements Character {
         {
             return false;
         }
-        return character.id().equals(ID);
+        return character.uuid().equals(UUID);
     }
 
     private void enforceInvariant(String methodName, boolean cannotBeDeleted) {

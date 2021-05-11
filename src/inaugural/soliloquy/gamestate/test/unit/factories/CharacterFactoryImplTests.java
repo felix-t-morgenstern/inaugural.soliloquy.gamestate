@@ -182,7 +182,7 @@ class CharacterFactoryImplTests {
         Character character = _characterFactory.make(CHARACTER_TYPE);
 
         assertNotNull(character);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, character.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, character.uuid());
     }
 
     @Test
@@ -190,7 +190,7 @@ class CharacterFactoryImplTests {
         Character character = _characterFactory.make(CHARACTER_TYPE, ENTITY_UUID, DATA);
 
         assertNotNull(character);
-        assertSame(ENTITY_UUID, character.id());
+        assertSame(ENTITY_UUID, character.uuid());
         assertSame(DATA, character.data());
     }
 

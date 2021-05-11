@@ -63,13 +63,13 @@ class ItemFactoryImplTests {
         Item takenFromStack = item.takeFromStack(5);
 
         assertNotNull(item);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, item.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, item.uuid());
         assertSame(ITEM_TYPE, item.type());
         assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.uuid());
         assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
         assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }
@@ -86,13 +86,13 @@ class ItemFactoryImplTests {
         Item takenFromStack = item.takeFromStack(5);
 
         assertNotNull(item);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, item.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, item.uuid());
         assertSame(ITEM_TYPE, item.type());
         assertSame(DATA, item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.uuid());
         assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
         assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }
@@ -109,13 +109,13 @@ class ItemFactoryImplTests {
         Item takenFromStack = item.takeFromStack(5);
 
         assertNotNull(item);
-        assertSame(ID, item.id());
+        assertSame(ID, item.uuid());
         assertSame(ITEM_TYPE, item.type());
         assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.uuid());
         assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
         assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }
@@ -132,13 +132,13 @@ class ItemFactoryImplTests {
         Item takenFromStack = item.takeFromStack(5);
 
         assertNotNull(item);
-        assertSame(ID, item.id());
+        assertSame(ID, item.uuid());
         assertSame(ITEM_TYPE, item.type());
         assertSame(DATA, item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.uuid());
         assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, item.getXTileWidthOffset());
         assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, item.getYTileHeightOffset());
     }

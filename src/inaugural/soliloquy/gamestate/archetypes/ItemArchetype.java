@@ -36,7 +36,7 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public EntityUuid id() {
+    public EntityUuid uuid() {
         return null;
     }
 

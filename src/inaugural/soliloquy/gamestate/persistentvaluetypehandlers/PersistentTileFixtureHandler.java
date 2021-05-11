@@ -67,7 +67,7 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
                     "PersistentTileFixtureHandler.write: tileFixture cannot be null");
         }
         TileFixtureDTO dto = new TileFixtureDTO();
-        dto.id = ID_HANDLER.write(tileFixture.id());
+        dto.id = ID_HANDLER.write(tileFixture.uuid());
         dto.fixtureTypeId = tileFixture.type().id();
         dto.tileWidthOffset = tileFixture.getXTileWidthOffset();
         dto.tileHeightOffset = tileFixture.getYTileHeightOffset();

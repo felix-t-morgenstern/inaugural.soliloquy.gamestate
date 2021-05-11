@@ -24,7 +24,7 @@ public class FakeItem implements Item {
 
     private Integer _charges;
     private Integer _numberInStack;
-    private EntityUuid _id;
+    private EntityUuid _uuid;
     private ItemType _itemType;
     private VariableCache _data;
 
@@ -36,8 +36,8 @@ public class FakeItem implements Item {
         _itemType = itemType;
     }
 
-    public FakeItem(ItemType itemType, VariableCache data, EntityUuid id) {
-        _id = id;
+    public FakeItem(ItemType itemType, VariableCache data, EntityUuid uuid) {
+        _uuid = uuid;
         _itemType = itemType;
         _data = data;
     }
@@ -128,8 +128,8 @@ public class FakeItem implements Item {
     }
 
     @Override
-    public EntityUuid id() {
-        return _id;
+    public EntityUuid uuid() {
+        return _uuid;
     }
 
     @Override

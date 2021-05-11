@@ -13,7 +13,7 @@ import soliloquy.specs.ruleset.entities.ItemType;
 
 // TODO: Consider extending HasDeletionInvariants
 public class ItemImpl implements Item {
-    private final EntityUuid ID;
+    private final EntityUuid UUID;
     private final ItemType ITEM_TYPE;
     private final VariableCache DATA;
     private final PairFactory PAIR_FACTORY;
@@ -33,9 +33,9 @@ public class ItemImpl implements Item {
     private float _yTileHeightOffset;
 
     @SuppressWarnings("ConstantConditions")
-    public ItemImpl(EntityUuid id, ItemType itemType, VariableCache data, PairFactory pairFactory,
+    public ItemImpl(EntityUuid uuid, ItemType itemType, VariableCache data, PairFactory pairFactory,
                     EntityUuidFactory entityUuidFactory) {
-        ID = Check.ifNull(id, "id");
+        UUID = Check.ifNull(uuid, "uuid");
         ITEM_TYPE = Check.ifNull(itemType, "itemType");
         _xTileWidthOffset = ITEM_TYPE.defaultXTileWidthOffset();
         _yTileHeightOffset = ITEM_TYPE.defaultYTileHeightOffset();
@@ -212,8 +212,8 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public EntityUuid id() {
-        return ID;
+    public EntityUuid uuid() {
+        return UUID;
     }
 
     @Override
@@ -312,7 +312,7 @@ public class ItemImpl implements Item {
         {
             return false;
         }
-        return item.id().equals(ID);
+        return item.uuid().equals(UUID);
     }
 
     private void enforceDeletionInvariant(String methodName) {

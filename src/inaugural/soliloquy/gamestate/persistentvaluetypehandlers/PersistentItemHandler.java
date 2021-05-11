@@ -59,7 +59,7 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
     public String write(Item item) {
         Check.ifNull(item, "item");
         ItemDTO itemDTO = new ItemDTO();
-        itemDTO.id = ENTITY_UUID_HANDLER.write(item.id());
+        itemDTO.id = ENTITY_UUID_HANDLER.write(item.uuid());
         itemDTO.typeId = item.type().id();
         itemDTO.xOffset = item.getXTileWidthOffset();
         itemDTO.yOffset = item.getYTileHeightOffset();

@@ -151,7 +151,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
                     "PersistentCharacterHandler.write: character cannot be null");
         }
         CharacterDTO dto = new CharacterDTO();
-        dto.id = ID_HANDLER.write(character.id());
+        dto.id = ID_HANDLER.write(character.uuid());
         dto.characterTypeId = character.type().id();
 
         dto.classifications = new String[character.classifications().size()];

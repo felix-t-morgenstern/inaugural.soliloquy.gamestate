@@ -62,7 +62,7 @@ class TileFixtureFactoryImplTests {
         TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, null);
 
         assertNotNull(tileFixture);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
@@ -79,7 +79,7 @@ class TileFixtureFactoryImplTests {
         TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, DATA);
 
         assertNotNull(tileFixture);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.id());
+        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(DATA, tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
@@ -96,7 +96,7 @@ class TileFixtureFactoryImplTests {
         TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, null, ID);
 
         assertNotNull(tileFixture);
-        assertSame(ID, tileFixture.id());
+        assertSame(ID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
@@ -113,7 +113,7 @@ class TileFixtureFactoryImplTests {
         TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, DATA, ID);
 
         assertNotNull(tileFixture);
-        assertSame(ID, tileFixture.id());
+        assertSame(ID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(DATA, tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,

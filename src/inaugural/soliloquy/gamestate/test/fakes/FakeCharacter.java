@@ -24,7 +24,7 @@ public class FakeCharacter implements Character {
     private String _name;
     private VariableCache _data;
 
-    private final EntityUuid ID;
+    private final EntityUuid UUID;
     private final CharacterType TYPE;
     private final List<CharacterClassification> CLASSIFICATIONS = new FakeList<>();
     private final Map<String,String> PRONOUNS = new FakeMap<>();
@@ -49,13 +49,13 @@ public class FakeCharacter implements Character {
     public final FakeCharacterInventory INVENTORY = new FakeCharacterInventory(this);
 
     public FakeCharacter() {
-        ID = null;
+        UUID = null;
         TYPE = null;
         VARIABLE_STATS = new FakeCharacterVariableStatistics(this);
     }
 
-    public FakeCharacter(EntityUuid id, CharacterType type, VariableCache data) {
-        ID = id;
+    public FakeCharacter(EntityUuid uuid, CharacterType type, VariableCache data) {
+        UUID = uuid;
         TYPE = type;
         _data = data;
         VARIABLE_STATS = new FakeCharacterVariableStatistics(this);
@@ -196,8 +196,8 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public EntityUuid id() {
-        return ID;
+    public EntityUuid uuid() {
+        return UUID;
     }
 
     @Override

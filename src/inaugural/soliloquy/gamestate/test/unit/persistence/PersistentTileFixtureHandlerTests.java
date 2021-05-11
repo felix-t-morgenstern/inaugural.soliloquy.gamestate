@@ -49,7 +49,6 @@ class PersistentTileFixtureHandlerTests {
                 TILE_FIXTURE_FACTORY, ID_HANDLER, DATA_HANDLER, ITEM_HANDLER);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
@@ -115,7 +114,7 @@ class PersistentTileFixtureHandlerTests {
 
         assertNotNull(tileFixture);
         assertSame(((FakePersistentEntityUuidHandler)ID_HANDLER).READ_OUTPUTS.get(0),
-                tileFixture.id());
+                tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(((FakePersistentVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.data());

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CharacterImplTests {
     private Character _character;
 
-    private final EntityUuid ID = new FakeEntityUuid("a94fad3f-483c-4bdb-b29a-72d36a489721");
+    private final EntityUuid UUID = new FakeEntityUuid("a94fad3f-483c-4bdb-b29a-72d36a489721");
     private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
     private final CharacterAIType AI_TYPE = new FakeCharacterAIType();
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new FakeCharacterEventsFactory();
@@ -37,7 +37,7 @@ class CharacterImplTests {
     void setUp() {
 
         _character = new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -50,7 +50,6 @@ class CharacterImplTests {
                 DATA);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
@@ -66,7 +65,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 null,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -78,7 +77,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 null,
                 new FakeMapFactory(),
@@ -90,7 +89,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 null,
@@ -102,7 +101,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -114,7 +113,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -126,7 +125,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -138,7 +137,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -150,7 +149,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -162,7 +161,7 @@ class CharacterImplTests {
                 STATUS_EFFECTS_FACTORY,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -174,7 +173,7 @@ class CharacterImplTests {
                 null,
                 DATA));
         assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -196,7 +195,7 @@ class CharacterImplTests {
 
     void testEquals() {
         Character character2 = new CharacterImpl(
-                ID,
+                UUID,
                 CHARACTER_TYPE,
                 new FakeListFactory(),
                 new FakeMapFactory(),
@@ -327,8 +326,8 @@ class CharacterImplTests {
     }
 
     @Test
-    void testId() {
-        assertSame(ID, _character.id());
+    void testUuid() {
+        assertSame(UUID, _character.uuid());
     }
 
     @Test
@@ -344,7 +343,7 @@ class CharacterImplTests {
         assertSame(tile, _character.tile());
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes"})
     @Test
     void testDelete() {
         Tile tile = new FakeTile();

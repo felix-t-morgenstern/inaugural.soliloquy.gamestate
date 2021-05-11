@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TileFixtureImplTests {
     private TileFixture _tileFixture;
 
-    private final EntityUuid ID = new FakeEntityUuid();
+    private final EntityUuid UUID = new FakeEntityUuid();
     private final FakeFixtureType TYPE = new FakeFixtureType();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new FakeTileFixtureItemsFactory();
@@ -29,7 +29,7 @@ class TileFixtureImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileFixture = new TileFixtureImpl(ID, TYPE, new FakeListFactory(),
+        _tileFixture = new TileFixtureImpl(UUID, TYPE, new FakeListFactory(),
                 TILE_FIXTURE_ITEMS_FACTORY, DATA);
     }
 
@@ -39,16 +39,16 @@ class TileFixtureImplTests {
                 () -> new TileFixtureImpl(null, TYPE, new FakeListFactory(),
                         TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(ID, null, new FakeListFactory(),
+                () -> new TileFixtureImpl(UUID, null, new FakeListFactory(),
                         TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(ID, TYPE, null,
+                () -> new TileFixtureImpl(UUID, TYPE, null,
                         TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(ID, TYPE, new FakeListFactory(),
+                () -> new TileFixtureImpl(UUID, TYPE, new FakeListFactory(),
                         null, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(ID, TYPE, new FakeListFactory(),
+                () -> new TileFixtureImpl(UUID, TYPE, new FakeListFactory(),
                         TILE_FIXTURE_ITEMS_FACTORY, null));
     }
 
@@ -58,8 +58,8 @@ class TileFixtureImplTests {
     }
 
     @Test
-    void testId() {
-        assertSame(ID, _tileFixture.id());
+    void testUuid() {
+        assertSame(UUID, _tileFixture.uuid());
     }
 
     @Test
