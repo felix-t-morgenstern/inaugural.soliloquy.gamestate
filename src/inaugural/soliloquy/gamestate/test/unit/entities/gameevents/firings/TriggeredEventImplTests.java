@@ -48,7 +48,8 @@ class TriggeredEventImplTests {
         assertEquals(PRIORITY, _triggeredEvent.priority());
     }
 
-    // NB: This test case requires parallelization, since 
+    // NB: This test case requires parallelization, since it must be tested whether the block
+    //     placed on the GameSaveBlocker _ONLY_ occurs _AFTER_ the conclusion of firing
     @Test
     void testFireAndPlacingBlocksOnGameSaveBlocker() {
         assertEquals(1, GAME_SAVE_BLOCKER.PlaceTriggeredEventBlockInputs.size());
