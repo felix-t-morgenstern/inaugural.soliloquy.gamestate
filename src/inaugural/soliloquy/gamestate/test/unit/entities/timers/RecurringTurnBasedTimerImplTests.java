@@ -1,4 +1,4 @@
-package inaugural.soliloquy.gamestate.test.unit.entities;
+package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.RecurringTurnBasedTimerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
