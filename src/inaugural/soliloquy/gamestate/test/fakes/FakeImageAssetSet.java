@@ -28,4 +28,9 @@ public class FakeImageAssetSet implements ImageAssetSet {
     public ImageAsset getImageAssetForTypeAndDirection(String s, String s1) throws IllegalArgumentException {
         return null;
     }
+
+    @Override
+    public boolean capturesMouseEvents() {
+        return false;
+    }
 }
