@@ -8,6 +8,7 @@
       <w>stackable</w>
       <w>unassign</w>
       <w>unequip</w>
+      <w>unpause</w>
     </words>
   </dictionary>
 </component>

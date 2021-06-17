@@ -32,8 +32,8 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
     public void registerRecurringTimer(RecurringClockBasedTimer recurringClockBasedTimer)
             throws IllegalArgumentException {
         Check.ifNull(recurringClockBasedTimer, "recurringClockBasedTimer");
-        if (recurringClockBasedTimer.firingTimeModuloOffset() >=
-                recurringClockBasedTimer.firingTimePeriod()) {
+        if (recurringClockBasedTimer.periodModuloOffset() >=
+                recurringClockBasedTimer.periodDuration()) {
             throw new IllegalArgumentException(
                     "ClockBasedTimerManagerImpl.registerRecurringTimer: firingTimeModuloOffset " +
                             "cannot be greater than or equal to firingTimePeriod");
@@ -76,20 +76,20 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
         ONE_TIME_CLOCK_BASED_TIMERS.removeAll(oneTimeTurnBasedTimersToRemove);
         RECURRING_CLOCK_BASED_TIMERS.forEach(recurringClockBasedTimer -> {
             long offsetAdjustedTimestamp =
-                    timestamp - recurringClockBasedTimer.firingTimeModuloOffset();
+                    timestamp - recurringClockBasedTimer.periodModuloOffset();
             long offsetAdjustedLastFiringTime = recurringClockBasedTimer.lastFiringTimestamp()
-                    - recurringClockBasedTimer.firingTimeModuloOffset();
+                    - recurringClockBasedTimer.periodModuloOffset();
             if (recurringClockBasedTimer.fireMultipleTimesForMultiplePeriodsElapsed()) {
                 int numberOfTimesToFire =
                         (int)(offsetAdjustedTimestamp - offsetAdjustedLastFiringTime)
-                                / recurringClockBasedTimer.firingTimePeriod();
+                                / recurringClockBasedTimer.periodDuration();
                 while(numberOfTimesToFire-- > 0) {
                     FRAME_EXECUTOR.registerFrameBlockingEvent(recurringClockBasedTimer::fire);
                 }
             }
             else {
                 if (offsetAdjustedTimestamp - offsetAdjustedLastFiringTime >=
-                        recurringClockBasedTimer.firingTimePeriod()) {
+                        recurringClockBasedTimer.periodDuration()) {
                     FRAME_EXECUTOR.registerFrameBlockingEvent(recurringClockBasedTimer::fire);
                 }
             }

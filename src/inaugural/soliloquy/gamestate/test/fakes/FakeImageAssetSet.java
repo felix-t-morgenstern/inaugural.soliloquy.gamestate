@@ -30,7 +30,7 @@ public class FakeImageAssetSet implements ImageAssetSet {
     }
 
     @Override
-    public boolean capturesMouseEvents() {
+    public boolean supportsMouseEventCapturing() {
         return false;
     }
 }

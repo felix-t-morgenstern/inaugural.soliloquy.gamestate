@@ -23,7 +23,8 @@ public class RecurringTurnBasedTimerImpl extends TurnBasedTimerAbstract
         super(timerId, action, priority);
         ROUND_MODULO = roundModulo;
         ROUND_OFFSET = roundOffset;
-        REMOVE_RECURRING_TURN_BASED_TIMER_FROM_ROUND_MANAGER = removeRecurringTurnBasedTimerFromRoundManager;
+        REMOVE_RECURRING_TURN_BASED_TIMER_FROM_ROUND_MANAGER =
+                removeRecurringTurnBasedTimerFromRoundManager;
         addRecurringTurnBasedTimerToRoundManager.accept(this);
     }
 

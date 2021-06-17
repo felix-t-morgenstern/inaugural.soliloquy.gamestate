@@ -71,8 +71,8 @@ class ClockBasedTimerManagerImplTests {
         long globalClockGlobalTimestamp = 100;
         RECURRING_CLOCK_BASED_TIMER.FireMultipleTimesForMultiplePeriodsElapsed = false;
         RECURRING_CLOCK_BASED_TIMER.LastFiringTimestamp = 91;
-        RECURRING_CLOCK_BASED_TIMER.FiringTimePeriod = 10;
-        RECURRING_CLOCK_BASED_TIMER.FiringTimeModuloOffset = 1;
+        RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 10;
+        RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset = 1;
 
         _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
@@ -104,8 +104,8 @@ class ClockBasedTimerManagerImplTests {
         long globalClockGlobalTimestamp = 100;
         RECURRING_CLOCK_BASED_TIMER.FireMultipleTimesForMultiplePeriodsElapsed = true;
         RECURRING_CLOCK_BASED_TIMER.LastFiringTimestamp = 91;
-        RECURRING_CLOCK_BASED_TIMER.FiringTimePeriod = 10;
-        RECURRING_CLOCK_BASED_TIMER.FiringTimeModuloOffset = 1;
+        RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 10;
+        RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset = 1;
 
         _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
@@ -150,8 +150,8 @@ class ClockBasedTimerManagerImplTests {
         long globalClockGlobalTimestamp = 100;
         RECURRING_CLOCK_BASED_TIMER.FireMultipleTimesForMultiplePeriodsElapsed = false;
         RECURRING_CLOCK_BASED_TIMER.LastFiringTimestamp = 90;
-        RECURRING_CLOCK_BASED_TIMER.FiringTimePeriod = 10;
-        RECURRING_CLOCK_BASED_TIMER.FiringTimeModuloOffset = 0;
+        RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 10;
+        RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset = 0;
         _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
         _clockBasedTimerManager.deregisterRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
@@ -170,8 +170,8 @@ class ClockBasedTimerManagerImplTests {
 
     @Test
     void testRegisterRecurringTimerWithInvalidParams() {
-        RECURRING_CLOCK_BASED_TIMER.FiringTimeModuloOffset =
-                RECURRING_CLOCK_BASED_TIMER.FiringTimePeriod = 123;
+        RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset =
+                RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 123;
 
         assertThrows(IllegalArgumentException.class,
                 () -> _clockBasedTimerManager.registerRecurringTimer(null));

@@ -27,12 +27,22 @@ public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
     }
 
     @Override
-    public void fire(long timestamp) {
-        FiredTimes.add(timestamp);
+    public Long pausedTimestamp() {
+        return null;
     }
 
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public String actionId() {
+        return null;
+    }
+
+    @Override
+    public void fire(long timestamp) {
+        FiredTimes.add(timestamp);
     }
 }
