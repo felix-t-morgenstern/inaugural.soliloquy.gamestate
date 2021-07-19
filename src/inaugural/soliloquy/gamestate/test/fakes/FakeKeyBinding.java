@@ -25,8 +25,18 @@ public class FakeKeyBinding implements KeyBinding {
     }
 
     @Override
-    public Action getOnPress() {
-        return PRESS_ACTION;
+    public void press(long l) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public String onPressActionId() {
+        return null;
+    }
+
+    @Override
+    public void release(long l) throws IllegalArgumentException {
+
     }
 
     @Override
@@ -35,22 +45,12 @@ public class FakeKeyBinding implements KeyBinding {
     }
 
     @Override
-    public Action getOnRelease() {
-        return RELEASE_ACTION;
+    public String onReleaseActionId() {
+        return null;
     }
 
     @Override
     public void setOnRelease(Action action) {
-
-    }
-
-    @Override
-    public Action getOnType() {
-        return TYPE_ACTION;
-    }
-
-    @Override
-    public void setOnType(Action action) {
 
     }
 

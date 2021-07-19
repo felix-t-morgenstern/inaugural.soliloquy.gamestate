@@ -36,19 +36,20 @@ public class KeyPressListenerImpl implements KeyPressListener {
         return KeyPressListener.class.getCanonicalName();
     }
 
+    // TODO: DELETE THIS!
     @Override
     public void keyTyped(KeyEvent e) {
-        handleKeyEvent(e, binding -> binding.getOnType().run(null));
+        handleKeyEvent(e, binding -> binding.press(-1L));
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        handleKeyEvent(e, binding -> binding.getOnPress().run(null));
+        handleKeyEvent(e, binding -> binding.press(-1L));
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        handleKeyEvent(e, binding -> binding.getOnRelease().run(null));
+        handleKeyEvent(e, binding -> binding.release(-1L));
     }
 
     private void handleKeyEvent(KeyEvent e, Consumer<KeyBinding> onEvent) {

@@ -9,12 +9,8 @@ import soliloquy.specs.gamestate.entities.KeyBinding;
 public class KeyBindingImpl implements KeyBinding {
     private final List<Character> BOUND_CHARACTERS;
 
-    @SuppressWarnings("rawtypes")
-    private Action _onPress;
-    @SuppressWarnings("rawtypes")
-    private Action _onRelease;
-    @SuppressWarnings("rawtypes")
-    private Action _onType;
+    private Action<Long> _onPress;
+    private Action<Long> _onRelease;
     private boolean _blocksLowerBindings;
 
     @SuppressWarnings("ConstantConditions")
@@ -28,37 +24,34 @@ public class KeyBindingImpl implements KeyBinding {
         return BOUND_CHARACTERS.makeClone();
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Action getOnPress() {
-        return _onPress;
+    public void press(long l) throws IllegalArgumentException {
+
     }
 
     @Override
-    public void setOnPress(Action onPress) {
+    public String onPressActionId() {
+        return null;
+    }
+
+    @Override
+    public void release(long l) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public String onReleaseActionId() {
+        return null;
+    }
+
+    @Override
+    public void setOnPress(Action<Long> onPress) {
         _onPress = onPress;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Action getOnRelease() {
-        return _onRelease;
-    }
-
-    @Override
-    public void setOnRelease(Action onRelease) {
+    public void setOnRelease(Action<Long> onRelease) {
         _onRelease = onRelease;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Action getOnType() {
-        return _onType;
-    }
-
-    @Override
-    public void setOnType(Action onType) {
-        _onType = onType;
     }
 
     @Override

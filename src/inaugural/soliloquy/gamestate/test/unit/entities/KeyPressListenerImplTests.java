@@ -86,6 +86,7 @@ class KeyPressListenerImplTests {
         assertTrue(keyBinding._released);
     }
 
+    // TODO: Is this test necessary?
     @Test
     void testKeyTyped() throws InterruptedException {
         FakeKeyBinding keyBinding = new FakeKeyBinding();

@@ -13,9 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingImplTests {
     private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final Action<Void> KEY_PRESS_ACTION = new FakeAction<>();
-    private final Action<Void> KEY_RELEASE_ACTION = new FakeAction<>();
-    private final Action<Void> KEY_TYPE_ACTION = new FakeAction<>();
+    private final Action<Long> KEY_PRESS_ACTION = new FakeAction<>();
+    private final Action<Long> KEY_RELEASE_ACTION = new FakeAction<>();
 
     private KeyBinding _keyBinding;
 
@@ -40,24 +39,29 @@ class KeyBindingImplTests {
     }
 
     @Test
-    void testSetAndGetOnPress() {
+    void testSetOnPressAndOnPressActionId() {
         _keyBinding.setOnPress(KEY_PRESS_ACTION);
 
-        assertSame(KEY_PRESS_ACTION, _keyBinding.getOnPress());
+        //assertSame(KEY_PRESS_ACTION, _keyBinding.getOnPress());
+        fail("Complete this test");
     }
 
     @Test
-    void testSetAndGetOnRelease() {
+    void testSetOnReleaseAndOnReleaseActionId() {
         _keyBinding.setOnRelease(KEY_RELEASE_ACTION);
 
-        assertSame(KEY_RELEASE_ACTION, _keyBinding.getOnRelease());
+        //assertSame(KEY_RELEASE_ACTION, _keyBinding.getOnRelease());
+        fail("Complete this test");
     }
 
     @Test
-    void testSetAndGetOnType() {
-        _keyBinding.setOnType(KEY_TYPE_ACTION);
+    void testPress() {
+        fail("Complete this test");
+    }
 
-        assertSame(KEY_TYPE_ACTION, _keyBinding.getOnType());
+    @Test
+    void testRelease() {
+        fail("Complete this test");
     }
 
     @Test

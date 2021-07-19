@@ -10,37 +10,34 @@ public class KeyBindingArchetype implements KeyBinding {
         return null;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Action getOnPress() {
+    public void press(long l) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void setOnPress(Action<Long> action) {
+
+    }
+
+    @Override
+    public String onPressActionId() {
         return null;
     }
 
     @Override
-    public void setOnPress(Action action) {
+    public void release(long l) throws IllegalArgumentException {
 
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    public Action getOnRelease() {
+    public void setOnRelease(Action<Long> action) {
+
+    }
+
+    @Override
+    public String onReleaseActionId() {
         return null;
-    }
-
-    @Override
-    public void setOnRelease(Action action) {
-
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Action getOnType() {
-        return null;
-    }
-
-    @Override
-    public void setOnType(Action action) {
-
     }
 
     @Override
