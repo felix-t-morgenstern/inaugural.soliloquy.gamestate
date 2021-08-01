@@ -18,7 +18,7 @@ public class RecurringClockBasedTimerImpl
                                         Action<Long> firingAction,
                                         boolean fireMultipleTimesForMultiplePeriodsElapsed,
                                         Long pausedTimestamp, long lastFiringTimestamp) {
-        super(periodDuration, periodModuloOffset, pausedTimestamp);
+        super(periodDuration, periodModuloOffset, pausedTimestamp, null);
         if (pausedTimestamp != null && lastFiringTimestamp > pausedTimestamp) {
             throw new IllegalArgumentException("RecurringClockBasedTimerImpl: " +
                     "lastFiringTimestamp (" + lastFiringTimestamp + ") cannot be after " +

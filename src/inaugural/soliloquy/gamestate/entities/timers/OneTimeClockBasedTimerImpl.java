@@ -12,7 +12,7 @@ public class OneTimeClockBasedTimerImpl
 
     public OneTimeClockBasedTimerImpl(long firingTime, Action<Long> firingAction,
                                       Long pausedTimestamp) {
-        super(firingTime, pausedTimestamp);
+        super(firingTime, pausedTimestamp, null);
         if (pausedTimestamp != null && pausedTimestamp >= firingTime) {
             throw new IllegalArgumentException("OneTimeClockBasedTimerImpl: pausedTimestamp (" +
                     pausedTimestamp + ") cannot be greater than or equal to firingTime (" +
