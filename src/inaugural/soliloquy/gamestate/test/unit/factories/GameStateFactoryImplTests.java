@@ -36,8 +36,8 @@ class GameStateFactoryImplTests {
     private final KeyBindingFactoryStub KEY_BINDING_FACTORY = new KeyBindingFactoryStub();
     private final KeyBindingContextFactoryStub KEY_BINDING_CONTEXT_FACTORY =
             new KeyBindingContextFactoryStub();
-    private final KeyPressListenerFactoryStub KEY_PRESS_LISTENER_FACTORY =
-            new KeyPressListenerFactoryStub();
+    private final KeyEventListenerFactoryStub KEY_PRESS_LISTENER_FACTORY =
+            new KeyEventListenerFactoryStub();
 
     private RoundManager _roundManagerForTimerFactoryFactory;
     private GameStateFactory _gameStateFactory;

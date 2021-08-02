@@ -92,7 +92,7 @@ public class GameStateArchetype implements GameState {
     }
 
     @Override
-    public KeyPressListenerFactory keyPressListenerFactory() {
+    public KeyEventListener keyEventListener() {
         return null;
     }
 

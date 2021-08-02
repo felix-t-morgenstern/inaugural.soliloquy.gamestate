@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.factories;
 
 import inaugural.soliloquy.gamestate.GameStateImpl;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -23,9 +24,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final Function<RoundManager, TurnBasedTimerFactory> TURN_BASED_TIMER_FACTORY_FACTORY;
     private final KeyBindingFactory KEY_BINDING_FACTORY;
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
-    private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY;
+    private final KeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
     public GameStateFactoryImpl(MapFactory mapFactory, RegistryFactory registryFactory,
                                 GameZonesRepo gameZonesRepo, CameraFactory cameraFactory,
                                 RoundManager roundManager, ItemFactory itemFactory,
@@ -34,60 +34,21 @@ public class GameStateFactoryImpl implements GameStateFactory {
                                             turnBasedTimerFactoryFactory,
                                 KeyBindingFactory keyBindingFactory,
                                 KeyBindingContextFactory keyBindingContextFactory,
-                                KeyPressListenerFactory keyPressListenerFactory) {
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("GameStateFactoryImpl: mapFactory cannot be null");
-        }
-        MAP_FACTORY = mapFactory;
-        if (registryFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: registryFactory cannot be null");
-        }
-        REGISTRY_FACTORY = registryFactory;
-        if (gameZonesRepo == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: gameZonesRepo cannot be null");
-        }
-        GAME_ZONES_REPO = gameZonesRepo;
-        if (cameraFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: cameraFactory cannot be null");
-        }
-        CAMERA_FACTORY = cameraFactory;
-        if (roundManager == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: roundManager cannot be null");
-        }
-        ROUND_MANAGER = roundManager;
-        if (itemFactory == null) {
-            throw new IllegalArgumentException("GameStateFactoryImpl: itemFactory cannot be null");
-        }
-        ITEM_FACTORY = itemFactory;
-        if (characterFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: characterFactory cannot be null");
-        }
-        CHARACTER_FACTORY = characterFactory;
-        if (turnBasedTimerFactoryFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: turnBasedTimerFactoryFactory cannot be null");
-        }
-        TURN_BASED_TIMER_FACTORY_FACTORY = turnBasedTimerFactoryFactory;
-        if (keyBindingFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: keyBindingFactory cannot be null");
-        }
-        KEY_BINDING_FACTORY = keyBindingFactory;
-        if (keyBindingContextFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: keyBindingContextFactory cannot be null");
-        }
-        KEY_BINDING_CONTEXT_FACTORY = keyBindingContextFactory;
-        if (keyPressListenerFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameStateFactoryImpl: keyPressListenerFactory cannot be null");
-        }
-        KEY_PRESS_LISTENER_FACTORY = keyPressListenerFactory;
+                                KeyEventListenerFactory keyEventListenerFactory) {
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
+        REGISTRY_FACTORY = Check.ifNull(registryFactory, "registryFactory");
+        GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
+        CAMERA_FACTORY = Check.ifNull(cameraFactory, "cameraFactory");
+        ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
+        ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
+        CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
+        TURN_BASED_TIMER_FACTORY_FACTORY = Check.ifNull(turnBasedTimerFactoryFactory,
+                "turnBasedTimerFactoryFactory");
+        KEY_BINDING_FACTORY = Check.ifNull(keyBindingFactory, "keyBindingFactory");
+        KEY_BINDING_CONTEXT_FACTORY = Check.ifNull(keyBindingContextFactory,
+                "keyBindingContextFactory");
+        KEY_EVENT_LISTENER_FACTORY = Check.ifNull(keyEventListenerFactory,
+                "keyEventListenerFactory");
     }
 
     @Override
@@ -95,7 +56,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
         return new GameStateImpl(party, variableCache, MAP_FACTORY, REGISTRY_FACTORY,
                 GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER, ITEM_FACTORY, CHARACTER_FACTORY,
                 TURN_BASED_TIMER_FACTORY_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
-                KEY_PRESS_LISTENER_FACTORY);
+                KEY_EVENT_LISTENER_FACTORY);
     }
 
     @Override

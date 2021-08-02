@@ -5,7 +5,6 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
@@ -13,8 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingImplTests {
     private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final Action<Long> KEY_PRESS_ACTION = new FakeAction<>();
-    private final Action<Long> KEY_RELEASE_ACTION = new FakeAction<>();
+    private final String KEY_PRESS_ACTION_ID = "keyPressActionId";
+    private final String KEY_RELEASE_ACTION_ID = "keyReleaseActionId";
+    private final FakeAction<Long> KEY_PRESS_ACTION = new FakeAction<>(KEY_PRESS_ACTION_ID);
+    private final FakeAction<Long> KEY_RELEASE_ACTION = new FakeAction<>(KEY_RELEASE_ACTION_ID);
+    private final long TIMESTAMP = 123123L;
 
     private KeyBinding _keyBinding;
 
@@ -39,29 +41,27 @@ class KeyBindingImplTests {
     }
 
     @Test
-    void testSetOnPressAndOnPressActionId() {
+    void testSetOnPressAndOnPressActionIdAndPress() {
+        assertNull(_keyBinding.onPressActionId());
+
         _keyBinding.setOnPress(KEY_PRESS_ACTION);
 
-        //assertSame(KEY_PRESS_ACTION, _keyBinding.getOnPress());
-        fail("Complete this test");
+        _keyBinding.press(TIMESTAMP);
+
+        assertEquals(KEY_PRESS_ACTION_ID, _keyBinding.onPressActionId());
+        assertEquals(TIMESTAMP, KEY_PRESS_ACTION._mostRecentInput);
     }
 
     @Test
-    void testSetOnReleaseAndOnReleaseActionId() {
+    void testSetOnReleaseAndOnReleaseActionIdAndRelease() {
+        assertNull(_keyBinding.onReleaseActionId());
+
         _keyBinding.setOnRelease(KEY_RELEASE_ACTION);
 
-        //assertSame(KEY_RELEASE_ACTION, _keyBinding.getOnRelease());
-        fail("Complete this test");
-    }
+        _keyBinding.release(TIMESTAMP);
 
-    @Test
-    void testPress() {
-        fail("Complete this test");
-    }
-
-    @Test
-    void testRelease() {
-        fail("Complete this test");
+        assertEquals(KEY_RELEASE_ACTION_ID, _keyBinding.onReleaseActionId());
+        assertEquals(TIMESTAMP, KEY_RELEASE_ACTION._mostRecentInput);
     }
 
     @Test
@@ -69,5 +69,14 @@ class KeyBindingImplTests {
         _keyBinding.setBlocksLowerBindings(true);
 
         assertTrue(_keyBinding.getBlocksLowerBindings());
+    }
+
+    @Test
+    void testPressAndReleaseWithInvalidParams() {
+        _keyBinding.press(TIMESTAMP);
+        _keyBinding.release(TIMESTAMP);
+
+        assertThrows(IllegalArgumentException.class, () -> _keyBinding.press(TIMESTAMP - 1));
+        assertThrows(IllegalArgumentException.class, () -> _keyBinding.release(TIMESTAMP - 1));
     }
 }

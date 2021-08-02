@@ -4,6 +4,7 @@ import inaugural.soliloquy.gamestate.archetypes.CharacterAITypeArchetype;
 import inaugural.soliloquy.gamestate.archetypes.GameAbilityEventArchetype;
 import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.Map;
@@ -33,7 +34,7 @@ public class GameStateImpl implements GameState {
     private final TurnBasedTimerFactory TIMER_FACTORY;
     private final KeyBindingFactory KEY_BINDING_FACTORY;
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
-    private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY;
+    private final KeyEventListener KEY_EVENT_LISTENER;
 
     private final static KeyBindingContext KEY_BINDING_CONTEXT_ARCHETYPE =
             new KeyBindingContextArchetype();
@@ -59,65 +60,28 @@ public class GameStateImpl implements GameState {
                          Function<RoundManager,TurnBasedTimerFactory> turnBasedTimerFactoryFactory,
                          KeyBindingFactory keyBindingFactory,
                          KeyBindingContextFactory keyBindingContextFactory,
-                         KeyPressListenerFactory keyPressListenerFactory) {
-        if (party == null) {
-            throw new IllegalArgumentException("GameState: party must be non-null");
-        }
-        PARTY = party;
-        if (data == null) {
-            throw new IllegalArgumentException(
-                    "GameState: data must be non-null");
-        }
-        DATA = data;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("GameState: mapFactory must be non-null");
-        }
+                         KeyEventListenerFactory keyEventListenerFactory) {
+        PARTY = Check.ifNull(party, "party");
+        DATA = Check.ifNull(data, "data");
+        Check.ifNull(mapFactory, "mapFactory");
         CHARACTER_AI_TYPES = mapFactory.make("", CHARACTER_AI_TYPE_ARCHETYPE);
-        if (gameZonesRepo == null) {
-            throw new IllegalArgumentException("GameState: gameZonesRepo must be non-null");
-        }
-        GAME_ZONES_REPO = gameZonesRepo;
-        if (cameraFactory == null) {
-            throw new IllegalArgumentException("GameState: cameraFactory must be non-null");
-        }
-        CAMERA = cameraFactory.make(this::getCurrentGameZone);
-        if (registryFactory == null) {
-            throw new IllegalArgumentException("GameState: registryFactory must be non-null");
-        }
+        GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
+        CAMERA = Check.ifNull(cameraFactory, "cameraFactory").make(this::getCurrentGameZone);
+        Check.ifNull(registryFactory, "registryFactory");
         MOVEMENT_EVENTS = registryFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
         ABILITY_EVENTS = registryFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
-        if (roundManager == null) {
-            throw new IllegalArgumentException("GameState: roundManager must be non-null");
-        }
-        ROUND_MANAGER = roundManager;
+        ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         KEY_BINDING_CONTEXTS = mapFactory.make(0, KEY_BINDING_CONTEXT_ARCHETYPE);
-        if (itemFactory == null) {
-            throw new IllegalArgumentException("GameState: itemFactory must be non-null");
-        }
-        ITEM_FACTORY = itemFactory;
-        if (characterFactory == null) {
-            throw new IllegalArgumentException("GameState: characterFactory must be non-null");
-        }
-        CHARACTER_FACTORY = characterFactory;
-        if (turnBasedTimerFactoryFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameState: turnBasedTimerFactoryFactory must be non-null");
-        }
-        TIMER_FACTORY = turnBasedTimerFactoryFactory.apply(roundManager);
-        if (keyBindingFactory == null) {
-            throw new IllegalArgumentException("GameState: keyBindingFactory must be non-null");
-        }
-        KEY_BINDING_FACTORY = keyBindingFactory;
-        if (keyBindingContextFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameState: keyBindingContextFactory must be non-null");
-        }
-        KEY_BINDING_CONTEXT_FACTORY = keyBindingContextFactory;
-        if (keyPressListenerFactory == null) {
-            throw new IllegalArgumentException(
-                    "GameState: keyPressListenerFactory must be non-null");
-        }
-        KEY_PRESS_LISTENER_FACTORY = keyPressListenerFactory;
+        ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
+        CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
+        TIMER_FACTORY = Check.ifNull(turnBasedTimerFactoryFactory, "turnBasedTimerFactoryFactory")
+                .apply(roundManager);
+        KEY_BINDING_FACTORY = Check.ifNull(keyBindingFactory, "keyBindingFactory");
+        KEY_BINDING_CONTEXT_FACTORY = Check.ifNull(keyBindingContextFactory,
+                "keyBindingContextFactory");
+        // TODO: Ensure that most recent timestamp info is fed into this class!
+        KEY_EVENT_LISTENER = Check.ifNull(keyEventListenerFactory,
+                "keyEventListenerFactory").make(null);
     }
 
     @Override
@@ -201,8 +165,8 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public KeyPressListenerFactory keyPressListenerFactory() {
-        return KEY_PRESS_LISTENER_FACTORY;
+    public KeyEventListener keyEventListener() {
+        return KEY_EVENT_LISTENER;
     }
 
     @Override

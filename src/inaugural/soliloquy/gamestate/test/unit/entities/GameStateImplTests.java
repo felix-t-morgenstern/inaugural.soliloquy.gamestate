@@ -36,8 +36,8 @@ class GameStateImplTests {
     private final KeyBindingFactory KEY_BINDING_FACTORY = new KeyBindingFactoryStub();
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY =
             new KeyBindingContextFactoryStub();
-    private final KeyPressListenerFactory KEY_PRESS_LISTENER_FACTORY =
-            new KeyPressListenerFactoryStub();
+    private final FakeKeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY =
+            new FakeKeyEventListenerFactory();
 
     private RoundManager _roundManagerForTimerFactoryFactory;
     private GameState _gameState;
@@ -57,7 +57,7 @@ class GameStateImplTests {
                 TURN_BASED_TIMER_FACTORY_FACTORY,
                 KEY_BINDING_FACTORY,
                 KEY_BINDING_CONTEXT_FACTORY,
-                KEY_PRESS_LISTENER_FACTORY);
+                KEY_EVENT_LISTENER_FACTORY);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -76,7 +76,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         null,
@@ -90,7 +90,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -104,7 +104,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -118,7 +118,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -132,7 +132,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -146,7 +146,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -160,7 +160,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -174,7 +174,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -188,7 +188,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -202,7 +202,7 @@ class GameStateImplTests {
                         null,
                         KEY_BINDING_FACTORY,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -216,7 +216,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         null,
                         KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -230,7 +230,7 @@ class GameStateImplTests {
                         TURN_BASED_TIMER_FACTORY_FACTORY,
                         KEY_BINDING_FACTORY,
                         null,
-                        KEY_PRESS_LISTENER_FACTORY));
+                        KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
@@ -339,6 +339,6 @@ class GameStateImplTests {
 
     @Test
     void testKeyPressListenerFactory() {
-        assertNotNull(_gameState.keyPressListenerFactory());
+        assertSame(KEY_EVENT_LISTENER_FACTORY.CREATED, _gameState.keyEventListener());
     }
 }

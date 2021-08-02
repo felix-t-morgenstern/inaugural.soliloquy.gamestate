@@ -173,13 +173,13 @@ public class GameStateModule extends AbstractModule {
         KeyBindingContextFactory keyBindingContextFactory =
                 new KeyBindingContextFactoryImpl(listFactory);
 
-        KeyPressListenerFactory keyPressListenerFactory =
-                new KeyPressListenerFactoryImpl(mapFactory);
+        KeyEventListenerFactory keyEventListenerFactory =
+                new KeyEventListenerFactoryImpl(listFactory, mapFactory);
 
         _gameStateFactory = new GameStateFactoryImpl(mapFactory, registryFactory, gameZonesRepo,
                 cameraFactory, roundManager, itemFactory, characterFactory,
                 turnBasedTimerFactoryFactory, keyBindingFactory, keyBindingContextFactory,
-                keyPressListenerFactory);
+                keyEventListenerFactory);
     }
 
     @Override
