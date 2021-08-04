@@ -8,7 +8,7 @@ import java.util.Collection;
 public class FakeListFactory implements ListFactory {
     @Override
     public <T> List<T> make(T archetype) throws IllegalArgumentException {
-        return new FakeList<T>(archetype);
+        return new FakeList<>(archetype);
     }
 
     @Override
@@ -17,8 +17,9 @@ public class FakeListFactory implements ListFactory {
     }
 
     @Override
-    public <V> List<V> make(Collection<V> collection, V v) throws IllegalArgumentException {
-        throw new UnsupportedOperationException();
+    public <V> List<V> make(Collection<V> collection, V archetype)
+            throws IllegalArgumentException {
+        return new FakeList<>(collection, archetype);
     }
 
     @Override
