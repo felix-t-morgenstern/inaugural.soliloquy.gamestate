@@ -11,8 +11,8 @@ public class OneTimeClockBasedTimerImpl
     private final Action<Long> FIRING_ACTION;
 
     public OneTimeClockBasedTimerImpl(long firingTime, Action<Long> firingAction,
-                                      Long pausedTimestamp) {
-        super(firingTime, pausedTimestamp, null);
+                                      Long pausedTimestamp, Long mostRecentTimestamp) {
+        super(firingTime, pausedTimestamp, mostRecentTimestamp);
         if (pausedTimestamp != null && pausedTimestamp >= firingTime) {
             throw new IllegalArgumentException("OneTimeClockBasedTimerImpl: pausedTimestamp (" +
                     pausedTimestamp + ") cannot be greater than or equal to firingTime (" +
@@ -38,11 +38,17 @@ public class OneTimeClockBasedTimerImpl
 
     @Override
     public void fire(long timestamp) {
+        TIMESTAMP_VALIDATOR.validateTimestamp(timestamp);
         if (_pausedTimestamp != null && timestamp >= _pausedTimestamp) {
             throw new UnsupportedOperationException("OneTimeClockBasedTimerImpl.fire: timestamp " +
                     "(" + timestamp + ") cannot be greater than current pausedTimestamp (" +
                     _pausedTimestamp + ")");
         }
         FIRING_ACTION.run(timestamp);
+    }
+
+    @Override
+    public Long mostRecentTimestamp() {
+        return TIMESTAMP_VALIDATOR.mostRecentTimestamp();
     }
 }

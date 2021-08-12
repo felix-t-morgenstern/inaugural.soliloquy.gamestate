@@ -157,6 +157,11 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
         public String getInterfaceName() {
             return OneTimeClockBasedTimer.class.getCanonicalName();
         }
+
+        @Override
+        public Long mostRecentTimestamp() {
+            return null;
+        }
     }
 
     private static class RecurringClockBasedTimerArchetype implements RecurringClockBasedTimer {
@@ -209,6 +214,11 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
         @Override
         public String getInterfaceName() {
             return RecurringClockBasedTimer.class.getCanonicalName();
+        }
+
+        @Override
+        public Long mostRecentTimestamp() {
+            return null;
         }
     }
 }

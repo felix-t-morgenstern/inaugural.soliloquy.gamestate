@@ -22,6 +22,7 @@ class ClockBasedTimerFactoryImplTests {
     private final FakeAction<Long> FIRING_ACTION = new FakeAction<>(FIRING_ACTION_ID);
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = true;
     private final long LAST_FIRING_TIMESTAMP = 123123L;
+    private final long MOST_RECENT_TIMESTAMP = 456456L;
 
     private ClockBasedTimerFactory _clockBasedTimerFactory;
 
@@ -41,21 +42,31 @@ class ClockBasedTimerFactoryImplTests {
         OneTimeClockBasedTimer oneTimeClockBasedTimer = _clockBasedTimerFactory.make(
                 FIRING_TIME,
                 FIRING_ACTION,
-                PAUSE_TIME);
+                PAUSE_TIME,
+                MOST_RECENT_TIMESTAMP);
 
         assertNotNull(oneTimeClockBasedTimer);
         assertTrue(oneTimeClockBasedTimer instanceof OneTimeClockBasedTimerImpl);
         assertEquals(FIRING_ACTION_ID, oneTimeClockBasedTimer.actionId());
         assertEquals(FIRING_TIME, oneTimeClockBasedTimer.firingTime());
         assertEquals(PAUSE_TIME, oneTimeClockBasedTimer.pausedTimestamp());
+        assertEquals(MOST_RECENT_TIMESTAMP, oneTimeClockBasedTimer.mostRecentTimestamp());
     }
 
     @Test
     void testMakeOneTimeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(FIRING_TIME, FIRING_ACTION, FIRING_TIME));
+                _clockBasedTimerFactory.make(FIRING_TIME, FIRING_ACTION, FIRING_TIME,
+                        MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(FIRING_TIME, null, FIRING_TIME - 1));
+                _clockBasedTimerFactory.make(FIRING_TIME, null, FIRING_TIME - 1,
+                        MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class, () ->
+                _clockBasedTimerFactory.make(FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
+                        null));
+        assertThrows(IllegalArgumentException.class, () ->
+                _clockBasedTimerFactory.make(FIRING_TIME, FIRING_ACTION, MOST_RECENT_TIMESTAMP + 1,
+                        MOST_RECENT_TIMESTAMP));
     }
 
     @Test
@@ -66,7 +77,8 @@ class ClockBasedTimerFactoryImplTests {
                 FIRING_ACTION,
                 FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                 PAUSE_TIME,
-                LAST_FIRING_TIMESTAMP
+                LAST_FIRING_TIMESTAMP,
+                MOST_RECENT_TIMESTAMP
         );
 
         assertNotNull(recurringClockBasedTimer);
@@ -78,28 +90,40 @@ class ClockBasedTimerFactoryImplTests {
                 recurringClockBasedTimer.fireMultipleTimesForMultiplePeriodsElapsed());
         assertEquals(PAUSE_TIME, recurringClockBasedTimer.pausedTimestamp());
         assertEquals(LAST_FIRING_TIMESTAMP, recurringClockBasedTimer.lastFiringTimestamp());
+        assertEquals(MOST_RECENT_TIMESTAMP, recurringClockBasedTimer.mostRecentTimestamp());
     }
 
     @Test
     void testMakeRecurringWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
                 _clockBasedTimerFactory.make(0, 0,
-                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP));
+                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
                 _clockBasedTimerFactory.make(PERIOD_DURATION, -1,
-                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP));
+                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
                 _clockBasedTimerFactory.make(PERIOD_DURATION, PERIOD_DURATION,
-                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP));
+                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
                 _clockBasedTimerFactory.make(PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        null, true, null, LAST_FIRING_TIMESTAMP));
+                        null, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
                 _clockBasedTimerFactory.make(PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        FIRING_ACTION, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP));
+                        FIRING_ACTION, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP,
+                        MOST_RECENT_TIMESTAMP));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                _clockBasedTimerFactory.make(PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
+                        FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSE_TIME,
+                        LAST_FIRING_TIMESTAMP, null));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                _clockBasedTimerFactory.make(PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
+                        FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
+                        MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
     }
 }

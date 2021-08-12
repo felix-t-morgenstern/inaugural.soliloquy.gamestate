@@ -17,8 +17,9 @@ public class RecurringClockBasedTimerImpl
     public RecurringClockBasedTimerImpl(int periodDuration, int periodModuloOffset,
                                         Action<Long> firingAction,
                                         boolean fireMultipleTimesForMultiplePeriodsElapsed,
-                                        Long pausedTimestamp, long lastFiringTimestamp) {
-        super(periodDuration, periodModuloOffset, pausedTimestamp, null);
+                                        Long pausedTimestamp, long lastFiringTimestamp,
+                                        Long mostRecentTimestamp) {
+        super(periodDuration, periodModuloOffset, pausedTimestamp, mostRecentTimestamp);
         if (pausedTimestamp != null && lastFiringTimestamp > pausedTimestamp) {
             throw new IllegalArgumentException("RecurringClockBasedTimerImpl: " +
                     "lastFiringTimestamp (" + lastFiringTimestamp + ") cannot be after " +
@@ -57,11 +58,17 @@ public class RecurringClockBasedTimerImpl
 
     @Override
     public void fire(long timestamp) {
+        TIMESTAMP_VALIDATOR.validateTimestamp(timestamp);
         if (_pausedTimestamp != null && timestamp >= _pausedTimestamp) {
             throw new UnsupportedOperationException("RecurringClockBasedTimerImpl.fire: " +
                     "timestamp (" + timestamp + ") cannot be greater than current " +
                     "pausedTimestamp (" + _pausedTimestamp + ")");
         }
         FIRING_ACTION.run(_lastFiringTimestamp = timestamp);
+    }
+
+    @Override
+    public Long mostRecentTimestamp() {
+        return TIMESTAMP_VALIDATOR.mostRecentTimestamp();
     }
 }

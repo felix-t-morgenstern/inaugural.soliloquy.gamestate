@@ -63,4 +63,9 @@ public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
     public void fire(long timestamp) {
         FiredTimes.add(timestamp);
     }
+
+    @Override
+    public Long mostRecentTimestamp() {
+        return null;
+    }
 }

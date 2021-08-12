@@ -45,4 +45,9 @@ public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
     public void fire(long timestamp) {
         FiredTimes.add(timestamp);
     }
+
+    @Override
+    public Long mostRecentTimestamp() {
+        return null;
+    }
 }
