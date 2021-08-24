@@ -1,12 +1,11 @@
 package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.timing.FinitePausableAtTimeAbstract;
+import inaugural.soliloquy.tools.timing.AbstractFinitePausableAtTime;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
-public class OneTimeClockBasedTimerImpl
-        extends FinitePausableAtTimeAbstract
+public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
         implements OneTimeClockBasedTimer {
     private final Action<Long> FIRING_ACTION;
 

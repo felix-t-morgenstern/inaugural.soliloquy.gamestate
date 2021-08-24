@@ -5,7 +5,7 @@ import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.timers.TurnBasedTimer;
 
-public abstract class TurnBasedTimerAbstract extends HasDeletionInvariants implements TurnBasedTimer {
+public abstract class AbstractTurnBasedTimer extends HasDeletionInvariants implements TurnBasedTimer {
     @SuppressWarnings("rawtypes")
     private final Action ACTION;
 
@@ -13,7 +13,7 @@ public abstract class TurnBasedTimerAbstract extends HasDeletionInvariants imple
 
     private final int PRIORITY;
 
-    TurnBasedTimerAbstract(String timerId, @SuppressWarnings("rawtypes") Action action,
+    AbstractTurnBasedTimer(String timerId, @SuppressWarnings("rawtypes") Action action,
                            int priority) {
         ID = timerId;
         ACTION = action;

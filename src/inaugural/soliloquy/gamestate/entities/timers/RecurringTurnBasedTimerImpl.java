@@ -5,7 +5,7 @@ import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 
 import java.util.function.Consumer;
 
-public class RecurringTurnBasedTimerImpl extends TurnBasedTimerAbstract
+public class RecurringTurnBasedTimerImpl extends AbstractTurnBasedTimer
         implements RecurringTurnBasedTimer {
     private final int ROUND_MODULO;
     private final int ROUND_OFFSET;

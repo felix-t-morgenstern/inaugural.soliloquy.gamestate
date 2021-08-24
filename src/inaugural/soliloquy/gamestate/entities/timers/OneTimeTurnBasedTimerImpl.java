@@ -5,7 +5,7 @@ import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
 
 import java.util.function.Consumer;
 
-public class OneTimeTurnBasedTimerImpl extends TurnBasedTimerAbstract
+public class OneTimeTurnBasedTimerImpl extends AbstractTurnBasedTimer
         implements OneTimeTurnBasedTimer {
     private final long ROUND_WHEN_GOES_OFF;
 

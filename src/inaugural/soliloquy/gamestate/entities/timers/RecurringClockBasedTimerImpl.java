@@ -1,13 +1,12 @@
 package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.timing.LoopingPausableAtTimeAbstract;
+import inaugural.soliloquy.tools.timing.AbstractLoopingPausableAtTime;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
 // TODO: Consider abstracting out shared functionality between Recurring and OneTime ClockBasedTimers
-public class RecurringClockBasedTimerImpl
-        extends LoopingPausableAtTimeAbstract
+public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
         implements RecurringClockBasedTimer {
     private final Action<Long> FIRING_ACTION;
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED;

@@ -102,7 +102,7 @@
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>inaugural.soliloquy.tools</artifactId>
-            <version>0.0.60</version>
+            <version>0.0.61</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

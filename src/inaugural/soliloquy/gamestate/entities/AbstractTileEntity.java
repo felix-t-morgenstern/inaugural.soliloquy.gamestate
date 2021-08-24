@@ -6,20 +6,20 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 
-// NB: TileEntityAbstract extends GameEventTargetEntityAbstract, since TileFixture implements both
+// NB: AbstractTileEntity extends AbstractGameEventTargetEntity, since TileFixture implements both
 // GameEventTargetEntity and TileEntity, but all other Tile entities do not. This is why there are
 // two constructors--one for TileFixture, and one for the others--and why the two methods from
 // GameEventTargetEntity throw UnsupportedOperationException when the implementation of this class
 // is not a TileFixture.
-public abstract class TileEntityAbstract<TEntity extends TileEntity>
-        extends GameEventTargetEntityAbstract implements TileEntity {
+public abstract class AbstractTileEntity<TEntity extends TileEntity>
+        extends AbstractGameEventTargetEntity implements TileEntity {
     protected Tile _tile;
 
-    TileEntityAbstract() {
+    AbstractTileEntity() {
         super();
     }
 
-    TileEntityAbstract(ListFactory collectionFactory) {
+    AbstractTileEntity(ListFactory collectionFactory) {
         super(collectionFactory);
     }
 

@@ -9,7 +9,7 @@ import soliloquy.specs.gamestate.entities.GameEventTargetEntity;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 
-abstract class GameEventTargetEntityAbstract extends HasDeletionInvariants implements GameEventTargetEntity {
+abstract class AbstractGameEventTargetEntity extends HasDeletionInvariants implements GameEventTargetEntity {
     private final List<GameMovementEvent> MOVEMENT_EVENTS;
     private final List<GameAbilityEvent> ABILITY_EVENTS;
 
@@ -18,13 +18,13 @@ abstract class GameEventTargetEntityAbstract extends HasDeletionInvariants imple
     private final static GameAbilityEvent GAME_ABILITY_EVENT_ARCHETYPE =
             new GameAbilityEventArchetype();
 
-    // NB: This constructor is to ONLY be used by TileEntityAbstract
-    GameEventTargetEntityAbstract() {
+    // NB: This constructor is to ONLY be used by AbstractTileEntity
+    AbstractGameEventTargetEntity() {
         MOVEMENT_EVENTS = null;
         ABILITY_EVENTS = null;
     }
 
-    GameEventTargetEntityAbstract(ListFactory listFactory) {
+    AbstractGameEventTargetEntity(ListFactory listFactory) {
         Check.ifNull(listFactory, "listFactory");
         MOVEMENT_EVENTS = listFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
         ABILITY_EVENTS = listFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);

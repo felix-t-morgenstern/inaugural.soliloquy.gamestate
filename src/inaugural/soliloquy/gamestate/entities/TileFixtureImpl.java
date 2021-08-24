@@ -10,7 +10,7 @@ import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
-public class TileFixtureImpl extends TileEntityAbstract<TileFixture> implements TileFixture {
+public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements TileFixture {
     private final EntityUuid UUID;
     private final FixtureType TYPE;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;

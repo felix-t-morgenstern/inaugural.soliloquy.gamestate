@@ -18,7 +18,7 @@ import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
-public class TileImpl extends GameEventTargetEntityAbstract implements Tile {
+public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final Coordinate LOCATION;
     private final TileEntities<Character> TILE_CHARACTERS;
     private final TileEntities<Item> TILE_ITEMS;
