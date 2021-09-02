@@ -1,18 +1,22 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class FakeCharacter implements Character {
     private boolean _isDeleted;
@@ -30,18 +34,14 @@ public class FakeCharacter implements Character {
     private final Map<String,String> PRONOUNS = new FakeMap<>();
     private final CharacterEvents EVENTS = new FakeCharacterEvents(this);
     private final CharacterVariableStatistics VARIABLE_STATS;
-    private final CharacterEntitiesOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>>
-            STATIC_STATS = new FakeCharacterEntitiesOfType<>(this, c -> t -> d ->
+    private final EntityMembersOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>, Character>
+            STATIC_STATS = new FakeEntityMembersOfType<>(this, c -> t -> d ->
             new FakeCharacterStaticStatistic(t, d));
     private final CharacterStatusEffects STATUS_EFFECTS = new FakeCharacterStatusEffects();
-    private final CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>>
-            ACTIVE_ABILITIES = new FakeCharacterEntitiesOfType<>(this, c -> t -> d ->
-            new FakeCharacterAbility<>(c, t, d));
-    private final CharacterEntitiesOfType<ReactiveAbilityType,
-            CharacterEntityOfType<ReactiveAbilityType>> REACTIVE_ABILITIES =
-            new FakeCharacterEntitiesOfType<>(this, c -> t -> d ->
-                    new FakeCharacterAbility<>(c, t, d));
+    private final List<PassiveAbility> PASSIVE_ABILITIES = new ArrayList<>();
+    private final List<ActiveAbility> ACTIVE_ABILITIES = new ArrayList<>();
+    private final List<ReactiveAbility> REACTIVE_ABILITIES = new ArrayList<>();
 
     public Tile _tile;
 
@@ -142,8 +142,8 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>>
+    public EntityMembersOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>, Character>
         staticStatistics() throws IllegalStateException {
         return STATIC_STATS;
     }
@@ -154,14 +154,17 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<ActiveAbilityType, CharacterEntityOfType<ActiveAbilityType>>
-            activeAbilities() throws IllegalStateException {
+    public List<PassiveAbility> passiveAbilities() throws EntityDeletedException {
+        return PASSIVE_ABILITIES;
+    }
+
+    @Override
+    public List<ActiveAbility> activeAbilities() throws IllegalStateException {
         return ACTIVE_ABILITIES;
     }
 
     @Override
-    public CharacterEntitiesOfType<ReactiveAbilityType, CharacterEntityOfType<ReactiveAbilityType>>
-            reactiveAbilities() throws IllegalStateException {
+    public List<ReactiveAbility> reactiveAbilities() throws IllegalStateException {
         return REACTIVE_ABILITIES;
     }
 

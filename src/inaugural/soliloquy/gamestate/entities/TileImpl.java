@@ -1,22 +1,21 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.*;
+import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
+import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
+import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
-import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
 import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final Coordinate LOCATION;
@@ -24,8 +23,6 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final TileEntities<Item> TILE_ITEMS;
     private final TileEntities<TileFixture> TILE_FIXTURES;
     private final TileWallSegments TILE_WALL_SEGMENTS;
-    private final List<GameMovementEvent> MOVEMENT_EVENTS;
-    private final List<GameAbilityEvent> ABILITY_EVENTS;
     private final Map<Sprite, Integer> SPRITES;
     private final VariableCache DATA;
 
@@ -36,21 +33,14 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final static Character CHARACTER_ARCHETYPE = new CharacterArchetype();
     private final static Item ITEM_ARCHETYPE = new ItemArchetype();
     private final static TileFixture TILE_FIXTURE_ARCHETYPE = new TileFixtureArchetype();
-    private final static GameMovementEvent MOVEMENT_EVENT_ARCHETYPE =
-            new GameMovementEventArchetype();
-    private final static GameAbilityEvent ABILITY_EVENT_ARCHETYPE =
-            new GameAbilityEventArchetype();
-    private final static Sprite SPRITE_ARCHETYPE = new SpriteArchetype();
 
     @SuppressWarnings("ConstantConditions")
     public TileImpl(int x, int y,
                     CoordinateFactory coordinateFactory,
                     TileEntitiesFactory tileEntitiesFactory,
                     TileWallSegmentsFactory tileWallSegmentsFactory,
-                    ListFactory listFactory,
-                    MapFactory mapFactory,
                     VariableCache data) {
-        super(listFactory);
+        super();
         if (coordinateFactory == null) {
             throw new IllegalArgumentException("TileImpl: coordinateFactory cannot be null");
         }
@@ -66,15 +56,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
             throw new IllegalArgumentException("TileImpl: tileWallSegmentsFactory cannot be null");
         }
         TILE_WALL_SEGMENTS = tileWallSegmentsFactory.make(this);
-        if (listFactory == null) {
-            throw new IllegalArgumentException("TileImpl: listFactory cannot be null");
-        }
-        MOVEMENT_EVENTS = listFactory.make(MOVEMENT_EVENT_ARCHETYPE);
-        ABILITY_EVENTS = listFactory.make(ABILITY_EVENT_ARCHETYPE);
-        if (mapFactory == null) {
-            throw new IllegalArgumentException("TileImpl: mapFactory cannot be null");
-        }
-        SPRITES = mapFactory.make(SPRITE_ARCHETYPE, 0);
+        SPRITES = new HashMap<>();
         if (data == null) {
             throw new IllegalArgumentException("TileImpl: data cannot be null");
         }
@@ -153,20 +135,6 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     }
 
     @Override
-    public List<GameMovementEvent> movementEvents() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("movementEvents");
-        return MOVEMENT_EVENTS;
-    }
-
-    @Override
-    public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("abilityEvents");
-        return ABILITY_EVENTS;
-    }
-
-    @Override
     public Map<Sprite, Integer> sprites() throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("sprites");
@@ -225,6 +193,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
         super.delete();
     }
 
+    // TODO: Test enforcement of deletion invariants
     @Override
     public GameEventTarget makeGameEventTarget() throws IllegalStateException {
         Tile tile = this;
@@ -236,6 +205,11 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
 
             @Override
             public TileFixture tileFixture() {
+                return null;
+            }
+
+            @Override
+            public TileWallSegment tileWallSegment() {
                 return null;
             }
 

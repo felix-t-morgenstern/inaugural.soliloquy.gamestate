@@ -6,7 +6,6 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -14,12 +13,9 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
 import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
-import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,8 +29,6 @@ class TileImplTests {
     private final TileEntitiesFactory TILE_ENTITIES_FACTORY = new FakeTileEntitiesFactory();
     private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY =
             new FakeTileWallSegmentsFactory();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
     private Tile _tile;
@@ -42,7 +36,7 @@ class TileImplTests {
     @BeforeEach
     void setUp() {
         _tile = new TileImpl(X, Y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, LIST_FACTORY, MAP_FACTORY, DATA);
+                TILE_WALL_SEGMENTS_FACTORY, DATA);
         ((FakeGameZone) GAME_ZONE).TILES = new Tile[999][999];
         ((FakeGameZone) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
     }
@@ -50,23 +44,17 @@ class TileImplTests {
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                null, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                LIST_FACTORY, MAP_FACTORY, DATA));
+                null, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, null, TILE_WALL_SEGMENTS_FACTORY,
-                LIST_FACTORY, MAP_FACTORY, DATA));
+                COORDINATE_FACTORY, null, TILE_WALL_SEGMENTS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, null,
-                LIST_FACTORY, MAP_FACTORY, DATA));
+                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, null, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                null, MAP_FACTORY, DATA));
+                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                LIST_FACTORY, null, DATA));
+                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY,
-                LIST_FACTORY, MAP_FACTORY, null));
+                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, null));
     }
 
     @Test
@@ -121,24 +109,16 @@ class TileImplTests {
     @Test
     void testMovementEvents() {
         assertNotNull(_tile.movementEvents());
-        assertEquals(GameMovementEvent.class.getCanonicalName(),
-                _tile.movementEvents().getArchetype().getInterfaceName());
     }
 
     @Test
     void testAbilityEvents() {
         assertNotNull(_tile.abilityEvents());
-        assertEquals(GameAbilityEvent.class.getCanonicalName(),
-                _tile.abilityEvents().getArchetype().getInterfaceName());
     }
 
     @Test
     void testSprites() {
         assertNotNull(_tile.sprites());
-        assertNotNull(_tile.sprites().getFirstArchetype());
-        assertNotNull(_tile.sprites().getSecondArchetype());
-        assertEquals(Sprite.class.getCanonicalName(),
-                _tile.sprites().getFirstArchetype().getInterfaceName());
     }
 
     @Test
@@ -153,6 +133,7 @@ class TileImplTests {
         assertNotNull(gameEventTarget);
         assertNotNull(gameEventTarget.tile());
         assertNull(gameEventTarget.tileFixture());
+        assertNull(gameEventTarget.tileWallSegment());
         assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }
 

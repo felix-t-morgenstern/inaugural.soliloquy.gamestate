@@ -1,14 +1,7 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterActiveAbilityArchetype;
-import inaugural.soliloquy.gamestate.archetypes.CharacterClassificationArchetype;
-import inaugural.soliloquy.gamestate.archetypes.CharacterReactiveAbilityArchetype;
 import inaugural.soliloquy.gamestate.archetypes.CharacterStaticStatisticArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
@@ -19,9 +12,15 @@ import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CharacterImpl implements Character {
     private final EntityUuid UUID;
@@ -32,21 +31,18 @@ public class CharacterImpl implements Character {
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
     private final CharacterVariableStatistics VARIABLE_STATISTICS;
-    private final CharacterEntitiesOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>> STATIC_STATISTICS;
+    private final EntityMembersOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>, Character> STATIC_STATISTICS;
     private final CharacterStatusEffects STATUS_EFFECTS;
-    private final CharacterEntitiesOfType<ActiveAbilityType,
-            CharacterEntityOfType<ActiveAbilityType>> ACTIVE_ABILITIES;
-    private final CharacterEntitiesOfType<ReactiveAbilityType,
-            CharacterEntityOfType<ReactiveAbilityType>> REACTIVE_ABILITIES;
+    private final List<PassiveAbility> PASSIVE_ABILITIES;
+    private final List<ActiveAbility> ACTIVE_ABILITIES;
+    private final List<ReactiveAbility> REACTIVE_ABILITIES;
     private final VariableCache DATA;
 
-    private final static CharacterEntityOfType<CharacterStaticStatisticType> STATIC_STAT_ARCHETYPE =
+    private final static CharacterStatistic<CharacterStaticStatisticType> STATIC_STAT_ARCHETYPE =
             new CharacterStaticStatisticArchetype();
-    private final static CharacterEntityOfType<ActiveAbilityType> ACTIVE_ABILITY_ARCHETYPE =
-            new CharacterActiveAbilityArchetype();
-    private final static CharacterEntityOfType<ReactiveAbilityType> REACTIVE_ABILITY_ARCHETYPE =
-            new CharacterReactiveAbilityArchetype();
+    private final static CharacterStaticStatisticTypeArchetype STATIC_STAT_TYPE_ARCHETYPE =
+            new CharacterStaticStatisticTypeArchetype();
 
     private Tile _tile;
     private String _stance;
@@ -60,33 +56,28 @@ public class CharacterImpl implements Character {
     @SuppressWarnings("ConstantConditions")
     public CharacterImpl(EntityUuid uuid,
                          CharacterType characterType,
-                         ListFactory listFactory,
-                         MapFactory mapFactory,
                          CharacterEventsFactory characterEventsFactory,
                          CharacterEquipmentSlotsFactory equipmentSlotsFactory,
                          CharacterInventoryFactory inventoryFactory,
                          CharacterVariableStatisticsFactory variableStatsFactory,
-                         CharacterEntitiesOfTypeFactory entitiesOfTypeFactory,
+                         EntityMembersOfTypeFactory entityMembersOfTypeFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
                          VariableCache data) {
         UUID = Check.ifNull(uuid, "uuid");
         CHARACTER_TYPE = Check.ifNull(characterType, "characterType");
-        CHARACTER_CLASSIFICATIONS = Check.ifNull(listFactory, "listFactory")
-                .make(new CharacterClassificationArchetype());
-        PRONOUNS = Check.ifNull(mapFactory, "mapFactory").make("","");
+        CHARACTER_CLASSIFICATIONS = new ArrayList<>();
+        PRONOUNS = new HashMap<>();
         EVENTS = Check.ifNull(characterEventsFactory, "characterEventsFactory").make(this);
         EQUIPMENT_SLOTS = Check.ifNull(equipmentSlotsFactory, "equipmentSlotsFactory").make(this);
         INVENTORY = Check.ifNull(inventoryFactory, "inventoryFactory").make(this);
         VARIABLE_STATISTICS = Check.ifNull(variableStatsFactory, "variableStatsFactory")
                 .make(this);
-        //noinspection unchecked
-        STATIC_STATISTICS = Check.ifNull(entitiesOfTypeFactory, "entitiesOfTypeFactory")
-                .make(this, STATIC_STAT_ARCHETYPE);
+        STATIC_STATISTICS = Check.ifNull(entityMembersOfTypeFactory, "entityMembersOfTypeFactory")
+                .make(this, STATIC_STAT_TYPE_ARCHETYPE, STATIC_STAT_ARCHETYPE);
         STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").make(this);
-        //noinspection unchecked
-        ACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, ACTIVE_ABILITY_ARCHETYPE);
-        //noinspection unchecked
-        REACTIVE_ABILITIES = entitiesOfTypeFactory.make(this, REACTIVE_ABILITY_ARCHETYPE);
+        PASSIVE_ABILITIES = new ArrayList<>();
+        ACTIVE_ABILITIES = new ArrayList<>();
+        REACTIVE_ABILITIES = new ArrayList<>();
         DATA = Check.ifNull(data, "data");
     }
 
@@ -194,8 +185,8 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>> staticStatistics()
+    public EntityMembersOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>, Character> staticStatistics()
             throws IllegalStateException {
         enforceInvariant("staticStatistics", true);
         return STATIC_STATISTICS;
@@ -208,17 +199,19 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public CharacterEntitiesOfType<ActiveAbilityType,
-            CharacterEntityOfType<ActiveAbilityType>> activeAbilities()
-            throws IllegalStateException {
+    public List<PassiveAbility> passiveAbilities() throws EntityDeletedException {
+        enforceInvariant("passiveAbilities", true);
+        return PASSIVE_ABILITIES;
+    }
+
+    @Override
+    public List<ActiveAbility> activeAbilities() throws IllegalStateException {
         enforceInvariant("activeAbilities", true);
         return ACTIVE_ABILITIES;
     }
 
     @Override
-    public CharacterEntitiesOfType<ReactiveAbilityType,
-            CharacterEntityOfType<ReactiveAbilityType>> reactiveAbilities()
-            throws IllegalStateException {
+    public List<ReactiveAbility> reactiveAbilities() throws IllegalStateException {
         enforceInvariant("reactiveAbilities", true);
         return REACTIVE_ABILITIES;
     }
@@ -256,8 +249,6 @@ public class CharacterImpl implements Character {
         VARIABLE_STATISTICS.delete();
         STATIC_STATISTICS.delete();
         STATUS_EFFECTS.delete();
-        ACTIVE_ABILITIES.delete();
-        REACTIVE_ABILITIES.delete();
     }
 
     @Override
@@ -321,6 +312,35 @@ public class CharacterImpl implements Character {
         if (_tile != null && !_tile.characters().contains(this)) {
             throw new IllegalStateException("CharacterImpl." + methodName +
                     ": Character is not present on its specified Tile");
+        }
+    }
+
+    private static class CharacterStaticStatisticTypeArchetype
+            implements CharacterStaticStatisticType {
+
+        @Override
+        public String id() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public String getDescription() {
+            return null;
+        }
+
+        @Override
+        public void setDescription(String s) {
+
+        }
+
+        @Override
+        public ImageAssetSet imageAssetSet() {
+            return null;
+        }
+
+        @Override
+        public String getInterfaceName() {
+            return CharacterStaticStatisticType.class.getCanonicalName();
         }
     }
 }

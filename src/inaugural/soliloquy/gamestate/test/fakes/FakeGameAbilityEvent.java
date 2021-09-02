@@ -1,22 +1,17 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.logger.Logger;
-import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
-import soliloquy.specs.ruleset.entities.abilities.AbilityType;
+import soliloquy.specs.ruleset.entities.abilities.Ability;
 
 public class FakeGameAbilityEvent implements GameAbilityEvent {
     private String _id;
 
     public FakeGameAbilityEvent(String id) {
         _id = id;
-    }
-
-    @Override
-    public void fire(AbilitySource abilitySource, AbilityType abilityType, GameEventTarget gameEventTarget) throws IllegalArgumentException {
-
     }
 
     @Override
@@ -37,5 +32,10 @@ public class FakeGameAbilityEvent implements GameAbilityEvent {
     @Override
     public String getInterfaceName() {
         return null;
+    }
+
+    @Override
+    public void fire(AbilitySource abilitySource, Ability ability, GameEventTarget gameEventTarget) throws IllegalArgumentException {
+
     }
 }

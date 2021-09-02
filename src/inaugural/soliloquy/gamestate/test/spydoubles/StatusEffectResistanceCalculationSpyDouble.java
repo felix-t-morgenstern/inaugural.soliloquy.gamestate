@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.spydoubles;
 
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
-import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 public class StatusEffectResistanceCalculationSpyDouble implements StatusEffectResistanceCalculation {

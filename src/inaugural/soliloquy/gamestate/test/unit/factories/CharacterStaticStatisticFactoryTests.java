@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
-import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
+import soliloquy.specs.gamestate.factories.EntityMemberOfTypeFactory;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
@@ -22,8 +22,8 @@ class CharacterStaticStatisticFactoryTests {
     private final CharacterStatisticCalculation CALCULATION =
             new CharacterStatisticCalculationSpyDouble();
 
-    private CharacterEntityOfTypeFactory<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>>
+    private EntityMemberOfTypeFactory<CharacterStaticStatisticType,
+                CharacterStatistic<CharacterStaticStatisticType>, Character>
         _characterStaticStatisticFactory;
 
     @BeforeEach
@@ -71,7 +71,7 @@ class CharacterStaticStatisticFactoryTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(CharacterEntityOfTypeFactory.class.getCanonicalName() + "<" +
+        assertEquals(EntityMemberOfTypeFactory.class.getCanonicalName() + "<" +
                 CharacterStaticStatisticType.class.getCanonicalName() + "," +
                 CharacterStatistic.class.getCanonicalName() + "<" +
                 CharacterStaticStatisticType.class.getCanonicalName() + ">>",

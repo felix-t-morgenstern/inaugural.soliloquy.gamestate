@@ -8,6 +8,11 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+
+import java.util.List;
 
 public class FakeItem implements Item {
     private final ItemType ITEM_TYPE = new ItemTypeStub();
@@ -125,6 +130,21 @@ public class FakeItem implements Item {
     public void assignTileFixtureAfterAddedItemToTileFixtureItems(TileFixture tileFixture)
             throws IllegalArgumentException, IllegalStateException {
         _tileFixture = tileFixture;
+    }
+
+    @Override
+    public List<PassiveAbility> passiveAbilities() throws EntityDeletedException {
+        return null;
+    }
+
+    @Override
+    public List<ActiveAbility> activeAbilities() throws EntityDeletedException {
+        return null;
+    }
+
+    @Override
+    public List<ReactiveAbility> reactiveAbilities() throws EntityDeletedException {
+        return null;
     }
 
     @Override

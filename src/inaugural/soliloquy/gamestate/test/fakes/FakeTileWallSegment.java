@@ -1,8 +1,12 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
+import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class FakeTileWallSegment implements TileWallSegment {
@@ -70,6 +74,21 @@ public class FakeTileWallSegment implements TileWallSegment {
 
     @Override
     public String getInterfaceName() {
+        return null;
+    }
+
+    @Override
+    public List<GameMovementEvent> movementEvents() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public List<GameAbilityEvent> abilityEvents() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public GameEventTarget makeGameEventTarget() throws IllegalStateException {
         return null;
     }
 }

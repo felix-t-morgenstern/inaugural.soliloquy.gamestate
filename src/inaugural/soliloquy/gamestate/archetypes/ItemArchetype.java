@@ -7,6 +7,11 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+
+import java.util.List;
 
 public class ItemArchetype implements Item {
 
@@ -113,6 +118,21 @@ public class ItemArchetype implements Item {
     @Override
     public void assignTileFixtureAfterAddedItemToTileFixtureItems(TileFixture tileFixture) throws IllegalArgumentException, IllegalStateException {
 
+    }
+
+    @Override
+    public List<ActiveAbility> activeAbilities() throws EntityDeletedException {
+        return null;
+    }
+
+    @Override
+    public List<PassiveAbility> passiveAbilities() throws EntityDeletedException {
+        return null;
+    }
+
+    @Override
+    public List<ReactiveAbility> reactiveAbilities() throws EntityDeletedException {
+        return null;
     }
 
     @Override

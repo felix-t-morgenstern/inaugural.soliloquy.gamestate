@@ -1,13 +1,14 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.TileFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCoordinateFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeGameZone;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileEntitiesFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileWallSegmentsFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -25,8 +26,6 @@ class TileFactoryImplTests {
     private final TileEntitiesFactory TILE_ENTITIES_FACTORY = new FakeTileEntitiesFactory();
     private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY =
             new FakeTileWallSegmentsFactory();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
     private TileFactory _tileFactory;
@@ -34,28 +33,21 @@ class TileFactoryImplTests {
     @BeforeEach
     void setUp() {
         _tileFactory = new TileFactoryImpl(COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, LIST_FACTORY, MAP_FACTORY);
+                TILE_WALL_SEGMENTS_FACTORY);
         ((FakeGameZone) GAME_ZONE).TILES = new Tile[999][999];
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFactoryImpl(null, TILE_ENTITIES_FACTORY,
-                        TILE_WALL_SEGMENTS_FACTORY, LIST_FACTORY, MAP_FACTORY));
+                        TILE_WALL_SEGMENTS_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFactoryImpl(COORDINATE_FACTORY, null,
-                        TILE_WALL_SEGMENTS_FACTORY, LIST_FACTORY, MAP_FACTORY));
+                        TILE_WALL_SEGMENTS_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFactoryImpl(COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                        null, LIST_FACTORY, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFactoryImpl(COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                        TILE_WALL_SEGMENTS_FACTORY, null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFactoryImpl(COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                        TILE_WALL_SEGMENTS_FACTORY, LIST_FACTORY, null));
+                        null));
     }
 
     @Test

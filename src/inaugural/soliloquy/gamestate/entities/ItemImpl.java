@@ -10,6 +10,12 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // TODO: Consider extending HasDeletionInvariants
 public class ItemImpl implements Item {
@@ -18,6 +24,9 @@ public class ItemImpl implements Item {
     private final VariableCache DATA;
     private final PairFactory PAIR_FACTORY;
     private final EntityUuidFactory ENTITY_UUID_FACTORY;
+    private final List<PassiveAbility> PASSIVE_ABILITIES;
+    private final List<ActiveAbility> ACTIVE_ABILITIES;
+    private final List<ReactiveAbility> REACTIVE_ABILITIES;
 
     private int _charges;
     private int _numberInStack;
@@ -42,6 +51,9 @@ public class ItemImpl implements Item {
         DATA = Check.ifNull(data, "data");
         PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
         ENTITY_UUID_FACTORY = Check.ifNull(entityUuidFactory, "entityUuidFactory");
+        PASSIVE_ABILITIES = new ArrayList<>();
+        ACTIVE_ABILITIES = new ArrayList<>();
+        REACTIVE_ABILITIES = new ArrayList<>();
     }
 
     @Override
@@ -196,6 +208,27 @@ public class ItemImpl implements Item {
         _characterInventoryCharacter = null;
         _containingTile = null;
         enforceAssignmentInvariant("assignTileFixtureAfterAddedItemToTileFixtureItems");
+    }
+
+    @Override
+    public List<PassiveAbility> passiveAbilities() throws EntityDeletedException {
+        enforceDeletionInvariant("passiveAbilities");
+        enforceAssignmentInvariant("passiveAbilities");
+        return PASSIVE_ABILITIES;
+    }
+
+    @Override
+    public List<ActiveAbility> activeAbilities() throws EntityDeletedException {
+        enforceDeletionInvariant("activeAbilities");
+        enforceAssignmentInvariant("activeAbilities");
+        return ACTIVE_ABILITIES;
+    }
+
+    @Override
+    public List<ReactiveAbility> reactiveAbilities() throws EntityDeletedException {
+        enforceDeletionInvariant("reactiveAbilities");
+        enforceAssignmentInvariant("reactiveAbilities");
+        return REACTIVE_ABILITIES;
     }
 
     @Override

@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
+import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
-import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 

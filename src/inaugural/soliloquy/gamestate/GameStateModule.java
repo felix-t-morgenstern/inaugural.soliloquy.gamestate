@@ -21,8 +21,9 @@ import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.*;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.gameconcepts.*;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
@@ -61,8 +62,9 @@ public class GameStateModule extends AbstractModule {
                            Registry<CharacterVariableStatisticType>
                                    characterVariableStatisticTypes,
                            Registry<StatusEffectType> statusEffectTypes,
-                           Registry<ActiveAbilityType> activeAbilityTypes,
-                           Registry<ReactiveAbilityType> reactiveAbilityTypes,
+                           Registry<PassiveAbility> passiveAbilities,
+                           Registry<ActiveAbility> activeAbilities,
+                           Registry<ReactiveAbility> reactiveAbilities,
                            @SuppressWarnings("rawtypes") Registry<Action> actions,
                            java.util.Map<String, Path> fileLocations) {
         PersistentValueTypeHandler<EntityUuid> uuidHandler =
@@ -92,8 +94,8 @@ public class GameStateModule extends AbstractModule {
         CharacterInventoryFactory characterInventoryFactory =
                 new CharacterInventoryFactoryImpl(listFactory);
 
-        CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
-                CharacterVariableStatistic> characterVariableStatisticFactory =
+        EntityMemberOfTypeFactory<CharacterVariableStatisticType,
+                CharacterVariableStatistic, Character> characterVariableStatisticFactory =
                 new CharacterVariableStatisticFactory(variableCacheFactory,
                         characterStatisticCalculation);
 
@@ -101,30 +103,30 @@ public class GameStateModule extends AbstractModule {
                 new CharacterVariableStatisticsFactoryImpl(mapFactory, listFactory,
                         variableCacheFactory, characterVariableStatisticFactory);
 
-        CharacterEntitiesOfTypeFactory entitiesOfTypeFactory =
-                new CharacterEntitiesOfTypeFactoryImpl(listFactory, variableCacheFactory);
+        EntityMembersOfTypeFactory entitiesOfTypeFactory =
+                new EntityMembersOfTypeFactoryImpl(listFactory, variableCacheFactory);
 
         CharacterStatusEffectsFactory characterStatusEffectsFactory =
                 new CharacterStatusEffectsFactoryImpl(mapFactory, resistanceCalculation);
 
         CharacterFactory characterFactory = new CharacterFactoryImpl(entityUuidFactory,
-                listFactory, mapFactory, characterEventsFactory,
-                characterEquipmentSlotsFactory, characterInventoryFactory, variableStatsFactory,
-                entitiesOfTypeFactory, characterStatusEffectsFactory, variableCacheFactory);
+                characterEventsFactory, characterEquipmentSlotsFactory, characterInventoryFactory,
+                variableStatsFactory, entitiesOfTypeFactory, characterStatusEffectsFactory,
+                variableCacheFactory);
 
         PersistentValueTypeHandler<Character> characterHandler =
                 new PersistentCharacterHandler(characterFactory, uuidHandler, characterTypes::get,
                         characterClassifications::get, imageAssetSets::get, characterAITypes::get,
                         gameCharacterEvents::get, characterStaticStatisticTypes::get,
                         characterVariableStatisticTypes::get, statusEffectTypes::get,
-                        activeAbilityTypes::get, reactiveAbilityTypes::get, dataHandler,
-                        itemHandler);
+                        passiveAbilities::get, activeAbilities::get, reactiveAbilities::get,
+                        dataHandler, itemHandler);
 
         TileFixtureItemsFactory tileFixtureItemsFactory =
                 new TileFixtureItemsFactoryImpl(listFactory);
 
         TileFixtureFactory tileFixtureFactory = new TileFixtureFactoryImpl(entityUuidFactory,
-                listFactory, tileFixtureItemsFactory, variableCacheFactory);
+                tileFixtureItemsFactory, variableCacheFactory);
 
         PersistentValueTypeHandler<TileFixture> tileFixturesHandler =
                 new PersistentTileFixtureHandler(fixtureTypes::get, tileFixtureFactory,
@@ -136,7 +138,7 @@ public class GameStateModule extends AbstractModule {
                 new TileWallSegmentsFactoryImpl(pairFactory, mapFactory);
 
         TileFactory tileFactory = new TileFactoryImpl(coordinateFactory, tileEntitiesFactory,
-                tileWallSegmentsFactory, listFactory, mapFactory);
+                tileWallSegmentsFactory);
 
         TileWallSegmentFactory tileWallSegmentFactory =
                 new TileWallSegmentFactoryImpl(variableCacheFactory);

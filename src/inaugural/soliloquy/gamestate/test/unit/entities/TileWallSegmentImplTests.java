@@ -11,6 +11,7 @@ import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDimensions;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,6 +101,27 @@ class TileWallSegmentImplTests {
     }
 
     @Test
+    void testMovementEvents() {
+        assertNotNull(_tileWallSegment.movementEvents());
+    }
+
+    @Test
+    void testAbilityEvents() {
+        assertNotNull(_tileWallSegment.abilityEvents());
+    }
+
+    @Test
+    void testMakeGameEventTarget() {
+        GameEventTarget gameEventTarget = _tileWallSegment.makeGameEventTarget();
+
+        assertNotNull(gameEventTarget);
+        assertNotNull(gameEventTarget.tileWallSegment());
+        assertNull(gameEventTarget.tile());
+        assertNull(gameEventTarget.tileFixture());
+        assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
+    }
+
+    @Test
     void testDeletionInvariant() {
         _tileWallSegment.delete();
 
@@ -112,6 +134,9 @@ class TileWallSegmentImplTests {
         assertThrows(EntityDeletedException.class, () -> _tileWallSegment.data());
         assertThrows(EntityDeletedException.class, () -> _tileWallSegment.getName());
         assertThrows(EntityDeletedException.class, () -> _tileWallSegment.setName(""));
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.movementEvents());
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.abilityEvents());
+        assertThrows(EntityDeletedException.class, () -> _tileWallSegment.makeGameEventTarget());
     }
 
     @Test
@@ -131,5 +156,8 @@ class TileWallSegmentImplTests {
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.data());
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getName());
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.setName(""));
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.movementEvents());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.abilityEvents());
+        assertThrows(IllegalStateException.class, () -> _tileWallSegment.makeGameEventTarget());
     }
 }

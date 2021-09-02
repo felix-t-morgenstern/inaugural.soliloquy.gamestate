@@ -7,7 +7,6 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.EntityUuidFactory;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
@@ -19,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureFactoryImplTests {
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new FakeTileFixtureItemsFactory();
     private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
@@ -31,24 +29,21 @@ class TileFixtureFactoryImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileFixtureFactory = new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, LIST_FACTORY,
+        _tileFixtureFactory = new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY,
                 TILE_FIXTURE_ITEMS_FACTORY, DATA_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureFactoryImpl(null, LIST_FACTORY,
-                        TILE_FIXTURE_ITEMS_FACTORY, DATA_FACTORY));
+                () -> new TileFixtureFactoryImpl(null, TILE_FIXTURE_ITEMS_FACTORY,
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, null,
-                        TILE_FIXTURE_ITEMS_FACTORY, DATA_FACTORY));
+                        DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, LIST_FACTORY,
-                        null, DATA_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, LIST_FACTORY,
-                        TILE_FIXTURE_ITEMS_FACTORY, null));
+                () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, TILE_FIXTURE_ITEMS_FACTORY,
+                        null));
     }
 
     @Test

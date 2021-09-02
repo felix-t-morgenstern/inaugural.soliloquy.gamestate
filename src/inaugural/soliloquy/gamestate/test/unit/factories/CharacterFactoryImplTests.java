@@ -8,8 +8,6 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.EntityUuidFactory;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
@@ -21,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterFactoryImplTests {
     private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY =
             new FakeCharacterEventsFactory();
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOT_FACTORY =
@@ -31,8 +27,8 @@ class CharacterFactoryImplTests {
             new FakeCharacterInventoryFactory();
     private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY =
             new FakeCharacterVariableStatisticsFactory();
-    private final CharacterEntitiesOfTypeFactory ENTITIES_FACTORY =
-            new FakeCharacterEntitiesOfTypeFactory();
+    private final EntityMembersOfTypeFactory ENTITIES_FACTORY =
+            new FakeEntityMembersOfTypeFactory();
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY =
             new FakeCharacterStatusEffectsFactory();
     private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
@@ -45,8 +41,6 @@ class CharacterFactoryImplTests {
     @BeforeEach
     void setUp() {
         _characterFactory = new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                LIST_FACTORY,
-                MAP_FACTORY,
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOT_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
@@ -56,13 +50,10 @@ class CharacterFactoryImplTests {
                 DATA_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(null,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -73,8 +64,6 @@ class CharacterFactoryImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
                         null,
-                        MAP_FACTORY,
-                        CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
                         VARIABLE_STATS_FACTORY,
@@ -83,30 +72,6 @@ class CharacterFactoryImplTests {
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        null,
-                        CHARACTER_EVENTS_FACTORY,
-                        CHARACTER_EQUIPMENT_SLOT_FACTORY,
-                        CHARACTER_INVENTORY_FACTORY,
-                        VARIABLE_STATS_FACTORY,
-                        ENTITIES_FACTORY,
-                        CHARACTER_STATUS_EFFECTS_FACTORY,
-                        DATA_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
-                        null,
-                        CHARACTER_EQUIPMENT_SLOT_FACTORY,
-                        CHARACTER_INVENTORY_FACTORY,
-                        VARIABLE_STATS_FACTORY,
-                        ENTITIES_FACTORY,
-                        CHARACTER_STATUS_EFFECTS_FACTORY,
-                        DATA_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         null,
                         CHARACTER_INVENTORY_FACTORY,
@@ -116,8 +81,6 @@ class CharacterFactoryImplTests {
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         null,
@@ -127,8 +90,6 @@ class CharacterFactoryImplTests {
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -138,8 +99,6 @@ class CharacterFactoryImplTests {
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -149,8 +108,6 @@ class CharacterFactoryImplTests {
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -160,8 +117,6 @@ class CharacterFactoryImplTests {
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
-                        LIST_FACTORY,
-                        MAP_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,

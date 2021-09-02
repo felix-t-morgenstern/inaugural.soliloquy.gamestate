@@ -2,17 +2,17 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
-import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
+import soliloquy.specs.gamestate.entities.Deletable;
+import soliloquy.specs.gamestate.entities.EntityMemberOfType;
 
-public class FakeCharacterEntity implements CharacterEntityOfType<HasId> {
-    private final Character CHARACTER;
+public class FakeEntityMemberOfType implements EntityMemberOfType<HasId> {
+    private final Deletable CONTAINING_ENTITY;
     private final HasId TYPE;
 
     private boolean _isDeleted;
 
-    public FakeCharacterEntity(Character character, HasId type) {
-        CHARACTER = character;
+    public FakeEntityMemberOfType(Deletable containingEntity, HasId type) {
+        CONTAINING_ENTITY = containingEntity;
         TYPE = type;
     }
 
@@ -33,7 +33,7 @@ public class FakeCharacterEntity implements CharacterEntityOfType<HasId> {
 
     @Override
     public String getInterfaceName() {
-        return CharacterEntityOfType.class.getCanonicalName() + "<" +
+        return EntityMemberOfType.class.getCanonicalName() + "<" +
                 HasId.class.getCanonicalName() + ">";
     }
 

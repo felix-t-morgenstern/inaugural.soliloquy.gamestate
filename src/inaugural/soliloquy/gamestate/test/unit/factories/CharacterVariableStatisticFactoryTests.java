@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
-import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
+import soliloquy.specs.gamestate.factories.EntityMemberOfTypeFactory;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -80,7 +80,7 @@ class CharacterVariableStatisticFactoryTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(CharacterEntityOfTypeFactory.class.getCanonicalName() + "<" +
+        assertEquals(EntityMemberOfTypeFactory.class.getCanonicalName() + "<" +
                 CharacterVariableStatisticType.class.getCanonicalName() + "," +
                 CharacterVariableStatistic.class.getCanonicalName() + ">",
                 _characterVariableStatisticFactory.getInterfaceName());

@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
@@ -23,10 +22,9 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     @SuppressWarnings("ConstantConditions")
     public TileFixtureImpl(EntityUuid uuid,
                            FixtureType fixtureType,
-                           ListFactory listFactory,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
                            VariableCache data) {
-        super(listFactory);
+        super();
         UUID = Check.ifNull(uuid, "uuid");
         TYPE = Check.ifNull(fixtureType, "fixtureType");
         _xTileWidthOffset = TYPE.defaultXTileWidthOffset();
@@ -90,6 +88,11 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
             @Override
             public TileFixture tileFixture() {
                 return tileFixture;
+            }
+
+            @Override
+            public TileWallSegment tileWallSegment() {
+                return null;
             }
 
             @Override

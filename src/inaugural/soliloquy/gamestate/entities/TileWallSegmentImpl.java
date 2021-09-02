@@ -1,13 +1,11 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.gamestate.entities.Deletable;
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileWallSegment;
-import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWallSegment {
+public class TileWallSegmentImpl extends AbstractGameEventTargetEntity implements TileWallSegment {
     private final VariableCache DATA;
 
     private WallSegmentType _type;
@@ -76,13 +74,30 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
     }
 
     @Override
-    protected String containingClassName() {
-        return null;
-    }
+    public GameEventTarget makeGameEventTarget() throws IllegalStateException {
+        enforceInvariants("makeGameEventTarget");
+        TileWallSegment tileWallSegment = this;
+        return new GameEventTarget() {
+            @Override
+            public Tile tile() {
+                return null;
+            }
 
-    @Override
-    protected Deletable getContainingObject() {
-        return null;
+            @Override
+            public TileFixture tileFixture() {
+                return null;
+            }
+
+            @Override
+            public TileWallSegment tileWallSegment() {
+                return tileWallSegment;
+            }
+
+            @Override
+            public String getInterfaceName() {
+                return GameEventTarget.class.getCanonicalName();
+            }
+        };
     }
 
     @Override
@@ -99,5 +114,21 @@ public class TileWallSegmentImpl extends HasDeletionInvariants implements TileWa
                         ": This TileWallSegment not found in Tile to which it was assigned");
             }
         }
+    }
+
+    @Override
+    void enforceInvariants(String methodName) {
+        enforceDeletionInvariants();
+        enforceAggregateAssignmentInvariant(methodName);
+    }
+
+    @Override
+    protected String containingClassName() {
+        return "Tile";
+    }
+
+    @Override
+    protected Deletable getContainingObject() {
+        return _tile;
     }
 }

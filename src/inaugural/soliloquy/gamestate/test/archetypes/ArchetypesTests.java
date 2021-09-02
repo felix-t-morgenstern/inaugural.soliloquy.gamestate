@@ -20,26 +20,10 @@ import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
-import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArchetypesTests {
-    @Test
-    void testActiveAbilityTypeArchetype() {
-        assertEquals(ActiveAbilityType.class.getCanonicalName(),
-                new ActiveAbilityTypeArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testCharacterActiveAbilityArchetype() {
-        assertEquals(CharacterEntityOfType.class.getCanonicalName() + "<" +
-                ActiveAbilityType.class.getCanonicalName() + ">",
-                new CharacterActiveAbilityArchetype().getInterfaceName());
-    }
-
     @Test
     void testCharacterAITypeArchetype() {
         assertEquals(CharacterAIType.class.getCanonicalName(),
@@ -53,23 +37,10 @@ class ArchetypesTests {
     }
 
     @Test
-    void testCharacterClassificationArchetype() {
-        assertEquals(CharacterClassification.class.getCanonicalName(),
-                new CharacterClassificationArchetype().getInterfaceName());
-    }
-
-    @Test
     void testCharacterQueueEntryArchetype() {
         assertEquals(Pair.class.getCanonicalName() + "<" + Character.class.getCanonicalName() +
                 "," + VariableCache.class.getCanonicalName() + ">",
                     new CharacterQueueEntryArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testCharacterReactiveAbilityArchetype() {
-        assertEquals(CharacterEntityOfType.class.getCanonicalName() + "<" +
-                        ReactiveAbilityType.class.getCanonicalName() + ">",
-                new CharacterReactiveAbilityArchetype().getInterfaceName());
     }
 
     @Test
@@ -155,12 +126,6 @@ class ArchetypesTests {
     void testOneTimeTurnBasedTimerArchetype() {
         assertEquals(OneTimeTurnBasedTimer.class.getCanonicalName(),
                 new OneTimeTurnBasedTimerArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testReactiveAbilityTypeArchetype() {
-        assertEquals(ReactiveAbilityType.class.getCanonicalName(),
-                new ReactiveAbilityTypeArchetype().getInterfaceName());
     }
 
     @Test

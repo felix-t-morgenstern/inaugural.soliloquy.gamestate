@@ -4,17 +4,20 @@ import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
-import soliloquy.specs.common.infrastructure.*;
+import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.infrastructure.Map;
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.*;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbilityType;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbilityType;
+import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
+import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,8 +34,9 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
     private final Function<String, CharacterStaticStatisticType> GET_STATIC_STAT_TYPE;
     private final Function<String, CharacterVariableStatisticType> GET_VARIABLE_STAT_TYPE;
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
-    private final Function<String, ActiveAbilityType> GET_ACTIVE_ABILITY_TYPE;
-    private final Function<String, ReactiveAbilityType> GET_REACTIVE_ABILITY_TYPE;
+    private final Function<String, PassiveAbility> GET_PASSIVE_ABILITY;
+    private final Function<String, ActiveAbility> GET_ACTIVE_ABILITY;
+    private final Function<String, ReactiveAbility> GET_REACTIVE_ABILITY;
     private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
     private final PersistentValueTypeHandler<Item> ITEM_HANDLER;
 
@@ -50,8 +54,9 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
                                       Function<String, CharacterVariableStatisticType>
                                               getVariableStatType,
                                       Function<String, StatusEffectType> getStatusType,
-                                      Function<String, ActiveAbilityType> getActiveAbilityType,
-                                      Function<String, ReactiveAbilityType> getReactiveAbilityType,
+                                      Function<String, PassiveAbility> getPassiveAbility,
+                                      Function<String, ActiveAbility> getActiveAbility,
+                                      Function<String, ReactiveAbility> getReactiveAbility,
                                       PersistentValueTypeHandler<VariableCache> dataHandler,
                                       PersistentValueTypeHandler<Item> itemHandler) {
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
@@ -65,8 +70,9 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         GET_STATIC_STAT_TYPE = Check.ifNull(getStaticStatType, "getStaticStatType");
         GET_VARIABLE_STAT_TYPE = Check.ifNull(getVariableStatType, "getVariableStatType");
         GET_STATUS_TYPE = Check.ifNull(getStatusType, "getStatusType");
-        GET_ACTIVE_ABILITY_TYPE = Check.ifNull(getActiveAbilityType, "getActiveAbilityType");
-        GET_REACTIVE_ABILITY_TYPE = Check.ifNull(getReactiveAbilityType, "getReactiveAbilityType");
+        GET_PASSIVE_ABILITY = Check.ifNull(getPassiveAbility, "getPassiveAbility");
+        GET_ACTIVE_ABILITY = Check.ifNull(getActiveAbility, "getActiveAbility");
+        GET_REACTIVE_ABILITY = Check.ifNull(getReactiveAbility, "getReactiveAbility");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
         ITEM_HANDLER = Check.ifNull(itemHandler, "itemHandler");
     }
@@ -127,14 +133,19 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
                     GET_STATUS_TYPE.apply(statusEffect.type), statusEffect.value);
         }
 
-        for(CharacterEntityDTO activeAbility : dto.activeAbilities) {
-            ActiveAbilityType type = GET_ACTIVE_ABILITY_TYPE.apply(activeAbility.type);
-            readCharacter.activeAbilities().add(type, DATA_HANDLER.read(activeAbility.data));
+        for(String passiveAbilityId : dto.passiveAbilityIds) {
+            PassiveAbility passiveAbility = GET_PASSIVE_ABILITY.apply(passiveAbilityId);
+            readCharacter.passiveAbilities().add(passiveAbility);
         }
 
-        for(CharacterEntityDTO reactiveAbility : dto.reactiveAbilities) {
-            ReactiveAbilityType type = GET_REACTIVE_ABILITY_TYPE.apply(reactiveAbility.type);
-            readCharacter.reactiveAbilities().add(type, DATA_HANDLER.read(reactiveAbility.data));
+        for(String activeAbilityId : dto.activeAbilityIds) {
+            ActiveAbility activeAbility = GET_ACTIVE_ABILITY.apply(activeAbilityId);
+            readCharacter.activeAbilities().add(activeAbility);
+        }
+
+        for(String reactiveAbilityId : dto.reactiveAbilityIds) {
+            ReactiveAbility reactiveAbility = GET_REACTIVE_ABILITY.apply(reactiveAbilityId);
+            readCharacter.reactiveAbilities().add(reactiveAbility);
         }
 
         readCharacter.setPlayerControlled(dto.isPlayerControlled);
@@ -241,23 +252,22 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
             dto.statusEffects[statusEffectsIndex.getAndIncrement()] = statEffectDTO;
         });
 
+        AtomicInteger passiveAbilitiesIndex = new AtomicInteger(0);
+        dto.passiveAbilityIds = new String[character.passiveAbilities().size()];
+        character.passiveAbilities().forEach(passiveAbility ->
+                dto.passiveAbilityIds[passiveAbilitiesIndex.getAndIncrement()] =
+                        passiveAbility.id());
+
         AtomicInteger activeAbilitiesIndex = new AtomicInteger(0);
-        dto.activeAbilities = new CharacterEntityDTO[character.activeAbilities().size()];
-        character.activeAbilities().forEach(charAbility -> {
-            CharacterEntityDTO abilityDTO = new CharacterEntityDTO();
-            abilityDTO.type = charAbility.type().id();
-            abilityDTO.data = DATA_HANDLER.write(charAbility.data());
-            dto.activeAbilities[activeAbilitiesIndex.getAndIncrement()] = abilityDTO;
-        });
+        dto.activeAbilityIds = new String[character.activeAbilities().size()];
+        character.activeAbilities().forEach(activeAbility ->
+                dto.activeAbilityIds[activeAbilitiesIndex.getAndIncrement()] = activeAbility.id());
 
         AtomicInteger reactiveAbilitiesIndex = new AtomicInteger(0);
-        dto.reactiveAbilities = new CharacterEntityDTO[character.reactiveAbilities().size()];
-        character.reactiveAbilities().forEach(charAbility -> {
-            CharacterEntityDTO abilityDTO = new CharacterEntityDTO();
-            abilityDTO.type = charAbility.type().id();
-            abilityDTO.data = DATA_HANDLER.write(charAbility.data());
-            dto.reactiveAbilities[reactiveAbilitiesIndex.getAndIncrement()] = abilityDTO;
-        });
+        dto.reactiveAbilityIds = new String[character.reactiveAbilities().size()];
+        character.reactiveAbilities().forEach(reactiveAbility ->
+                dto.reactiveAbilityIds[reactiveAbilitiesIndex.getAndIncrement()] =
+                        reactiveAbility.id());
 
         dto.isPlayerControlled = character.getPlayerControlled();
         dto.data = DATA_HANDLER.write(character.data());
@@ -286,8 +296,9 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
         CharacterVariableStatisticDTO[] variableStats;
         CharacterEntityDTO[] staticStats;
         CharacterStatusEffectDTO[] statusEffects;
-        CharacterEntityDTO[] activeAbilities;
-        CharacterEntityDTO[] reactiveAbilities;
+        String[] passiveAbilityIds;
+        String[] activeAbilityIds;
+        String[] reactiveAbilityIds;
         boolean isPlayerControlled;
         String data;
         String name;

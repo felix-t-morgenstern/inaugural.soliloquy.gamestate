@@ -29,27 +29,19 @@ class TileFixtureImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileFixture = new TileFixtureImpl(UUID, TYPE, new FakeListFactory(),
-                TILE_FIXTURE_ITEMS_FACTORY, DATA);
+        _tileFixture = new TileFixtureImpl(UUID, TYPE, TILE_FIXTURE_ITEMS_FACTORY, DATA);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(null, TYPE, new FakeListFactory(),
-                        TILE_FIXTURE_ITEMS_FACTORY, DATA));
+                () -> new TileFixtureImpl(null, TYPE, TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(UUID, null, new FakeListFactory(),
-                        TILE_FIXTURE_ITEMS_FACTORY, DATA));
+                () -> new TileFixtureImpl(UUID, null, TILE_FIXTURE_ITEMS_FACTORY, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(UUID, TYPE, null,
-                        TILE_FIXTURE_ITEMS_FACTORY, DATA));
+                () -> new TileFixtureImpl(UUID, TYPE, null, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(UUID, TYPE, new FakeListFactory(),
-                        null, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(UUID, TYPE, new FakeListFactory(),
-                        TILE_FIXTURE_ITEMS_FACTORY, null));
+                () -> new TileFixtureImpl(UUID, TYPE, TILE_FIXTURE_ITEMS_FACTORY, null));
     }
 
     @Test
@@ -83,6 +75,7 @@ class TileFixtureImplTests {
 
         assertNotNull(gameEventTarget);
         assertNull(gameEventTarget.tile());
+        assertNull(gameEventTarget.tileWallSegment());
         assertNotNull(gameEventTarget.tileFixture());
         assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }

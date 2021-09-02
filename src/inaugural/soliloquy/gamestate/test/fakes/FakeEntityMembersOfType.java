@@ -4,29 +4,29 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
-import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterEntitiesOfType;
-import soliloquy.specs.gamestate.entities.CharacterEntityOfType;
+import soliloquy.specs.gamestate.entities.Deletable;
+import soliloquy.specs.gamestate.entities.EntityMemberOfType;
+import soliloquy.specs.gamestate.entities.EntityMembersOfType;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.function.Function;
 
-public class FakeCharacterEntitiesOfType<TEntityType extends HasId,
-        TCharacterEntity extends CharacterEntityOfType<TEntityType>>
-            implements CharacterEntitiesOfType<TEntityType, TCharacterEntity> {
-    public Character CHARACTER;
+public class FakeEntityMembersOfType<TEntityType extends HasId,
+        TCharacterEntity extends EntityMemberOfType<TEntityType>, TEntity extends Deletable>
+            implements EntityMembersOfType<TEntityType, TCharacterEntity, TEntity> {
+    public TEntity CONTAINING_ENTITY;
     public HashMap<TEntityType, TCharacterEntity> ENTITIES;
-    public Function<Character,Function<TEntityType,Function<VariableCache,TCharacterEntity>>>
+    public Function<TEntity,Function<TEntityType,Function<VariableCache,TCharacterEntity>>>
             FACTORY;
 
     public boolean _isDeleted;
 
-    public FakeCharacterEntitiesOfType(Character character,
-                                       Function<Character,Function<TEntityType,
+    public FakeEntityMembersOfType(TEntity containingEntity,
+                                   Function<TEntity,Function<TEntityType,
                                                Function<VariableCache,TCharacterEntity>>>
                                                factory) {
-        CHARACTER = character;
+        CONTAINING_ENTITY = containingEntity;
         FACTORY = factory;
         ENTITIES = new HashMap<>();
     }
@@ -39,7 +39,7 @@ public class FakeCharacterEntitiesOfType<TEntityType extends HasId,
     @Override
     public void add(TEntityType entityType, VariableCache data) throws IllegalArgumentException {
         if (!ENTITIES.containsKey(entityType)) {
-            ENTITIES.put(entityType, FACTORY.apply(CHARACTER).apply(entityType).apply(data));
+            ENTITIES.put(entityType, FACTORY.apply(CONTAINING_ENTITY).apply(entityType).apply(data));
         }
     }
 

@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Item;
-import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
+import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 
 public class AbilitySourceStub implements AbilitySource {
     @Override

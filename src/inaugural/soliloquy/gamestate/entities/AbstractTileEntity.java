@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+
+import java.util.List;
 
 // NB: AbstractTileEntity extends AbstractGameEventTargetEntity, since TileFixture implements both
 // GameEventTargetEntity and TileEntity, but all other Tile entities do not. This is why there are
@@ -12,15 +12,12 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 // GameEventTargetEntity throw UnsupportedOperationException when the implementation of this class
 // is not a TileFixture.
 public abstract class AbstractTileEntity<TEntity extends TileEntity>
-        extends AbstractGameEventTargetEntity implements TileEntity {
+        extends AbstractGameEventTargetEntity
+        implements TileEntity {
     protected Tile _tile;
 
     AbstractTileEntity() {
         super();
-    }
-
-    AbstractTileEntity(ListFactory collectionFactory) {
-        super(collectionFactory);
     }
 
     @Override

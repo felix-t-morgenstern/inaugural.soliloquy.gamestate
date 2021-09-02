@@ -2,9 +2,9 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
+import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
-import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
 
 public class FakeCharacterStatusEffects implements CharacterStatusEffects {
     public boolean _isDeleted;

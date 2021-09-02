@@ -6,13 +6,13 @@ import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
-import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
+import soliloquy.specs.gamestate.factories.EntityMemberOfTypeFactory;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 public class CharacterVariableStatisticFactory
-        implements CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
-        CharacterVariableStatistic> {
+        implements EntityMemberOfTypeFactory<CharacterVariableStatisticType,
+                        CharacterVariableStatistic, Character> {
     private final CharacterStatisticCalculation CALCULATION;
     private final VariableCacheFactory DATA_FACTORY;
 
@@ -43,7 +43,7 @@ public class CharacterVariableStatisticFactory
 
     @Override
     public String getInterfaceName() {
-        return CharacterEntityOfTypeFactory.class.getCanonicalName() + "<" +
+        return EntityMemberOfTypeFactory.class.getCanonicalName() + "<" +
                 CharacterVariableStatisticType.class.getCanonicalName() + "," +
                 CharacterVariableStatistic.class.getCanonicalName() + ">";
     }

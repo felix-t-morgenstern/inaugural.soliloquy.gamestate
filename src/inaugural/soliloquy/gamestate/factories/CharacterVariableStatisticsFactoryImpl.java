@@ -9,7 +9,7 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
 import soliloquy.specs.gamestate.factories.CharacterVariableStatisticsFactory;
-import soliloquy.specs.gamestate.factories.CharacterEntityOfTypeFactory;
+import soliloquy.specs.gamestate.factories.EntityMemberOfTypeFactory;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 public class CharacterVariableStatisticsFactoryImpl
@@ -17,15 +17,15 @@ public class CharacterVariableStatisticsFactoryImpl
     private final MapFactory MAP_FACTORY;
     private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
-    private final CharacterEntityOfTypeFactory<CharacterVariableStatisticType,
-            CharacterVariableStatistic> FACTORY;
+    private final EntityMemberOfTypeFactory<CharacterVariableStatisticType,
+                    CharacterVariableStatistic, Character> FACTORY;
 
     public CharacterVariableStatisticsFactoryImpl(MapFactory mapFactory,
                                                   ListFactory listFactory,
                                                   VariableCacheFactory dataFactory,
-                                                  CharacterEntityOfTypeFactory<
+                                                  EntityMemberOfTypeFactory<
                                                             CharacterVariableStatisticType,
-                                                            CharacterVariableStatistic>
+                                                            CharacterVariableStatistic, Character>
                                                             factory) {
         MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
         LIST_FACTORY = Check.ifNull(listFactory, "listFactory");

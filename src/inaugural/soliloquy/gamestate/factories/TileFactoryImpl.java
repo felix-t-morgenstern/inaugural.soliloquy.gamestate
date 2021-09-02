@@ -3,8 +3,6 @@ package inaugural.soliloquy.gamestate.factories;
 import inaugural.soliloquy.gamestate.entities.TileImpl;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
@@ -15,20 +13,14 @@ public class TileFactoryImpl implements TileFactory {
     private final CoordinateFactory COORDINATE_FACTORY;
     private final TileEntitiesFactory TILE_ENTITIES_FACTORY;
     private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY;
-    private final ListFactory LIST_FACTORY;
-    private final MapFactory MAP_FACTORY;
 
     public TileFactoryImpl(CoordinateFactory coordinateFactory,
                            TileEntitiesFactory tileEntitiesFactory,
-                           TileWallSegmentsFactory tileWallSegmentsFactory,
-                           ListFactory listFactory,
-                           MapFactory mapFactory) {
+                           TileWallSegmentsFactory tileWallSegmentsFactory) {
         COORDINATE_FACTORY = Check.ifNull(coordinateFactory, "coordinateFactory");
         TILE_ENTITIES_FACTORY = Check.ifNull(tileEntitiesFactory, "tileEntitiesFactory");
         TILE_WALL_SEGMENTS_FACTORY = Check.ifNull(tileWallSegmentsFactory,
                 "tileWallSegmentsFactory");
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
-        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
     }
 
     @Override
@@ -40,7 +32,7 @@ public class TileFactoryImpl implements TileFactory {
             throw new IllegalArgumentException("TileFactoryImpl.make: y cannot be negative");
         }
         return new TileImpl(x, y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, LIST_FACTORY, MAP_FACTORY, data);
+                TILE_WALL_SEGMENTS_FACTORY, data);
     }
 
     @Override

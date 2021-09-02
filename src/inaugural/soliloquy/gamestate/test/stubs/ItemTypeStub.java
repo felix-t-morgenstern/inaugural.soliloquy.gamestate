@@ -65,17 +65,17 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public List<ActiveAbility> activeAbilities() {
+    public List<ActiveAbility> defaultActiveAbilities() {
         return null;
     }
 
     @Override
-    public List<ReactiveAbility> reactiveAbilities() {
+    public List<ReactiveAbility> defaultReactiveAbilities() {
         return null;
     }
 
     @Override
-    public List<PassiveAbility> passiveAbilities() {
+    public List<PassiveAbility> defaultPassiveAbilities() {
         return null;
     }
 

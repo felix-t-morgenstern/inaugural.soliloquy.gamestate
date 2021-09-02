@@ -1,18 +1,13 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.game.Game;
+import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.logger.Logger;
-import soliloquy.specs.ruleset.entities.abilities.AbilitySource;
-import soliloquy.specs.ruleset.entities.abilities.AbilityType;
+import soliloquy.specs.ruleset.entities.abilities.Ability;
 
 public class GameAbilityEventArchetype implements GameAbilityEvent {
-    @Override
-    public void fire(AbilitySource abilitySource, AbilityType abilityType, GameEventTarget gameEventTarget) throws IllegalArgumentException {
-
-    }
-
     @Override
     public Game game() {
         return null;
@@ -31,5 +26,10 @@ public class GameAbilityEventArchetype implements GameAbilityEvent {
     @Override
     public String getInterfaceName() {
         return GameAbilityEvent.class.getCanonicalName();
+    }
+
+    @Override
+    public void fire(AbilitySource abilitySource, Ability ability, GameEventTarget gameEventTarget) throws IllegalArgumentException {
+
     }
 }

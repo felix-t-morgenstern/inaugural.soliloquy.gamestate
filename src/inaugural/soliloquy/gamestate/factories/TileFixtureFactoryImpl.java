@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.factories;
 import inaugural.soliloquy.gamestate.entities.TileFixtureImpl;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.EntityUuidFactory;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.EntityUuid;
@@ -14,16 +13,13 @@ import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class TileFixtureFactoryImpl implements TileFixtureFactory {
     private final EntityUuidFactory ENTITY_UUID_FACTORY;
-    private final ListFactory LIST_FACTORY;
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
     public TileFixtureFactoryImpl(EntityUuidFactory entityUuidFactory,
-                                  ListFactory listFactory,
                                   TileFixtureItemsFactory tileFixtureItemsFactory,
                                   VariableCacheFactory dataFactory) {
         ENTITY_UUID_FACTORY = Check.ifNull(entityUuidFactory, "entityUuidFactory");
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         TILE_FIXTURE_ITEMS_FACTORY = Check.ifNull(tileFixtureItemsFactory,
                 "tileFixtureItemsFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
@@ -40,7 +36,7 @@ public class TileFixtureFactoryImpl implements TileFixtureFactory {
             throws IllegalArgumentException {
         Check.ifNull(fixtureType, "fixtureType");
         Check.ifNull(entityUuid, "entityUuid");
-        return new TileFixtureImpl(entityUuid, fixtureType, LIST_FACTORY,
+        return new TileFixtureImpl(entityUuid, fixtureType,
                 TILE_FIXTURE_ITEMS_FACTORY,
                 data == null ? DATA_FACTORY.make() : data);
     }

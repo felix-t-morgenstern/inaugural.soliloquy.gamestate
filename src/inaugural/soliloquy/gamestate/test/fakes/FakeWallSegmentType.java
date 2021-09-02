@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.graphics.assets.ImageAsset;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
@@ -14,11 +12,6 @@ public class FakeWallSegmentType implements WallSegmentType {
 
     public FakeWallSegmentType(String id) {
         _id = id;
-    }
-
-    @Override
-    public TileWallSegment generate(Tile tile) {
-        return null;
     }
 
     @Override

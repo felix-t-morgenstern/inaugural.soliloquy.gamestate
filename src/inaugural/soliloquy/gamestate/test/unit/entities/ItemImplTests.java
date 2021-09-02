@@ -196,6 +196,21 @@ class ItemImplTests {
     }
 
     @Test
+    void testPassiveAbilities() {
+        assertNotNull(_item.passiveAbilities());
+    }
+
+    @Test
+    void testActiveAbilities() {
+        assertNotNull(_item.activeAbilities());
+    }
+
+    @Test
+    void testReactiveAbilities() {
+        assertNotNull(_item.reactiveAbilities());
+    }
+
+    @Test
     void testAssignEquipmentSlotToItemAfterAddedToEquipmentSlotNullifiesOtherAssignments() {
         CHARACTER_INVENTORY.add(_item);
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
@@ -460,6 +475,9 @@ class ItemImplTests {
                 _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(EntityDeletedException.class, () ->
                 _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(EntityDeletedException.class, () -> _item.passiveAbilities());
+        assertThrows(EntityDeletedException.class, () -> _item.activeAbilities());
+        assertThrows(EntityDeletedException.class, () -> _item.reactiveAbilities());
         assertThrows(EntityDeletedException.class, () -> _item.getName());
         assertThrows(EntityDeletedException.class, () -> _item.setName(""));
         assertThrows(EntityDeletedException.class, () -> _item.getPluralName());
@@ -495,6 +513,9 @@ class ItemImplTests {
                 _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _item.getName());
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
@@ -530,6 +551,9 @@ class ItemImplTests {
                 _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _item.getName());
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
@@ -566,6 +590,9 @@ class ItemImplTests {
                 _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _item.getName());
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
@@ -602,6 +629,9 @@ class ItemImplTests {
                 _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
                 _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
         assertThrows(IllegalStateException.class, () -> _item.getName());
         assertThrows(IllegalStateException.class, () -> _item.setName(""));
         assertThrows(IllegalStateException.class, () -> _item.getPluralName());
