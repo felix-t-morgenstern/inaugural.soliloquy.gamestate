@@ -12,24 +12,24 @@ import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.KeyEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class KeyEventListenerImpl implements KeyEventListener {
     private final ListFactory LIST_FACTORY;
-    private final Map<Integer, List<KeyBindingContext>> CONTEXTS;
+    private final MapFactory MAP_FACTORY;
+    private final TreeMap<Integer, List<KeyBindingContext>> CONTEXTS;
     private final TimestampValidator TIMESTAMP_VALIDATOR;
     private final HashMap<KeyBindingContext, Integer> PRIORITIES_BY_CONTEXTS;
 
     private static final KeyBindingContext ARCHETYPE = new KeyBindingContextArchetype();
 
-    @SuppressWarnings("ConstantConditions")
     public KeyEventListenerImpl(ListFactory listFactory, MapFactory mapFactory,
                                 Long mostRecentTimestamp) {
         LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
-        CONTEXTS = Check.ifNull(mapFactory, "mapFactory").make(0, LIST_FACTORY.make(ARCHETYPE));
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
+        CONTEXTS = new TreeMap<>();
         TIMESTAMP_VALIDATOR = new TimestampValidator(mostRecentTimestamp);
         PRIORITIES_BY_CONTEXTS = new HashMap<>();
     }
@@ -95,7 +95,7 @@ public class KeyEventListenerImpl implements KeyEventListener {
 
     @Override
     public Map<Integer, List<KeyBindingContext>> contextsRepresentation() {
-        return CONTEXTS.makeClone();
+        return MAP_FACTORY.make(CONTEXTS, 0, LIST_FACTORY.make(ARCHETYPE));
     }
 
     private void handleKeyEvent(char c, Consumer<KeyBinding> onEvent) {
@@ -104,10 +104,7 @@ public class KeyEventListenerImpl implements KeyEventListener {
 
     private void loopOverBindings(Character c, Consumer<KeyBinding> handleEvent,
                                   Consumer<Character> handleCharacter) {
-        ArrayList<Integer> indicesArr = new ArrayList<>(CONTEXTS.keySet());
-        Collections.sort(indicesArr);
-        for(Integer index : indicesArr) {
-            List<KeyBindingContext> contexts = CONTEXTS.get(index);
+        for(List<KeyBindingContext> contexts : CONTEXTS.values()) {
             for(KeyBindingContext context : contexts) {
                 List<KeyBinding> bindings = context.bindings();
                 for(KeyBinding binding : bindings) {

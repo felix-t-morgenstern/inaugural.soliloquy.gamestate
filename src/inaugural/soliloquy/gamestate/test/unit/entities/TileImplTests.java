@@ -50,10 +50,6 @@ class TileImplTests {
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, null, DATA));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
                 COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, null));
     }
 
