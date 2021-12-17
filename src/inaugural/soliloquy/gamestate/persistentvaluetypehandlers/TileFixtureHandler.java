@@ -3,10 +3,10 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
+import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -15,21 +15,21 @@ import soliloquy.specs.ruleset.entities.FixtureType;
 
 import java.util.function.Function;
 
-public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixture>
-        implements PersistentValueTypeHandler<TileFixture> {
+public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
     private final Function<String, FixtureType> GET_FIXTURE_TYPE;
     private final TileFixtureFactory TILE_FIXTURE_FACTORY;
-    private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER;
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
-    private final PersistentValueTypeHandler<Item> ITEMS_HANDLER;
+    private final TypeHandler<EntityUuid> ID_HANDLER;
+    private final TypeHandler<VariableCache> DATA_HANDLER;
+    private final TypeHandler<Item> ITEMS_HANDLER;
 
-    private final TileFixture ARCHETYPE = new TileFixtureArchetype();
+    private static final TileFixture ARCHETYPE = new TileFixtureArchetype();
 
-    public PersistentTileFixtureHandler(Function<String, FixtureType> getFixtureType,
-                                        TileFixtureFactory tileFixtureFactory,
-                                        PersistentValueTypeHandler<EntityUuid> idHandler,
-                                        PersistentValueTypeHandler<VariableCache> dataHandler,
-                                        PersistentValueTypeHandler<Item> itemsHandler) {
+    public TileFixtureHandler(Function<String, FixtureType> getFixtureType,
+                              TileFixtureFactory tileFixtureFactory,
+                              TypeHandler<EntityUuid> idHandler,
+                              TypeHandler<VariableCache> dataHandler,
+                              TypeHandler<Item> itemsHandler) {
+        super(ARCHETYPE);
         GET_FIXTURE_TYPE = Check.ifNull(getFixtureType, "getFixtureType");
         TILE_FIXTURE_FACTORY = Check.ifNull(tileFixtureFactory, "tileFixtureFactory");
         ID_HANDLER = Check.ifNull(idHandler, "idHandler");
@@ -41,11 +41,11 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
     public TileFixture read(String data) throws IllegalArgumentException {
         if (data == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileFixtureHandler.read: data cannot be null");
+                    "TileFixtureHandler.read: data cannot be null");
         }
         if (data.equals("")) {
             throw new IllegalArgumentException(
-                    "PersistentTileFixtureHandler.read: data cannot be empty");
+                    "TileFixtureHandler.read: data cannot be empty");
         }
         TileFixtureDTO dto = new Gson().fromJson(data, TileFixtureDTO.class);
         TileFixture tileFixture = TILE_FIXTURE_FACTORY.make(
@@ -64,7 +64,7 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
     public String write(TileFixture tileFixture) {
         if (tileFixture == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileFixtureHandler.write: tileFixture cannot be null");
+                    "TileFixtureHandler.write: tileFixture cannot be null");
         }
         TileFixtureDTO dto = new TileFixtureDTO();
         dto.id = ID_HANDLER.write(tileFixture.uuid());
@@ -81,13 +81,7 @@ public class PersistentTileFixtureHandler extends PersistentTypeHandler<TileFixt
         return new Gson().toJson(dto);
     }
 
-    @Override
-    public TileFixture getArchetype() {
-        return ARCHETYPE;
-    }
-
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class TileFixtureDTO {
+    private static class TileFixtureDTO {
         String id;
         String fixtureTypeId;
         float tileWidthOffset;

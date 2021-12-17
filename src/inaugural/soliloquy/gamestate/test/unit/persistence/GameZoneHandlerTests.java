@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentGameZoneHandler;
+import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.GameZoneHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentTileHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentVariableCacheHandler;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersistentGameZoneHandlerTests {
+class GameZoneHandlerTests {
     private final GameZoneFactorySpyDouble GAME_ZONE_FACTORY = new GameZoneFactorySpyDouble();
     private final FakePersistentTileHandler TILE_HANDLER = new FakePersistentTileHandler();
     private final FakePersistentVariableCacheHandler DATA_HANDLER =
@@ -34,7 +34,7 @@ class PersistentGameZoneHandlerTests {
     private final VariableCache DATA = new VariableCacheStub();
     private final String NAME = "name";
 
-    private PersistentValueTypeHandler<GameZone> _gameZoneHandler;
+    private TypeHandler<GameZone> _gameZoneHandler;
 
     private final String WRITTEN_DATA = "{\"id\":\"id\",\"type\":\"type\",\"name\":\"name\",\"data\":\"VariableCache0\",\"onEntry\":[\"onEntryActionId\"],\"onExit\":[\"onExitActionId\"],\"maxX\":2,\"maxY\":2,\"tiles\":[[\"Tile0\",\"Tile1\",\"Tile2\"],[\"Tile3\",\"Tile4\",\"Tile5\"],[\"Tile6\",\"Tile7\",\"Tile8\"]]}";
 
@@ -42,23 +42,23 @@ class PersistentGameZoneHandlerTests {
     void setUp() {
         ACTIONS.put(ON_ENTRY_ACTION_ID, ON_ENTRY_ACTION);
         ACTIONS.put(ON_EXIT_ACTION_ID, ON_EXIT_ACTION);
-        _gameZoneHandler = new PersistentGameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
+        _gameZoneHandler = new GameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
                 DATA_HANDLER, ACTIONS::get);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameZoneHandler(null, TILE_HANDLER,
+                () -> new GameZoneHandler(null, TILE_HANDLER,
                         DATA_HANDLER, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameZoneHandler(GAME_ZONE_FACTORY, null,
+                () -> new GameZoneHandler(GAME_ZONE_FACTORY, null,
                         DATA_HANDLER, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
+                () -> new GameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
                         null, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
+                () -> new GameZoneHandler(GAME_ZONE_FACTORY, TILE_HANDLER,
                         DATA_HANDLER, null));
     }
 

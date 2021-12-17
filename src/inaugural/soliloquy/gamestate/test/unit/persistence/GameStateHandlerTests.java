@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentGameStateHandler;
+import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.GameStateHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentCharacterHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentOneTimeTurnBasedTimerHandler;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersistentGameStateHandlerTests {
+class GameStateHandlerTests {
     private final FakeGameStateFactory GAME_STATE_FACTORY = new FakeGameStateFactory();
     private final PartyFactory PARTY_FACTORY = new FakePartyFactory();
     private final GameZonesRepoStub GAME_ZONES_REPO = new GameZonesRepoStub();
@@ -45,13 +45,13 @@ class PersistentGameStateHandlerTests {
     private final int NPC_Y = 78;
     private final int ROUND_NUMBER = 123456;
 
-    private PersistentValueTypeHandler<GameState> _gameStateHandler;
+    private TypeHandler<GameState> _gameStateHandler;
 
     private final String WRITTEN_DATA = "{\"currentGameZoneId\":\"gameZoneId\",\"pcsInCurrentGameZone\":[{\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"}],\"pcsNotInCurrentGameZone\":[\"Character0\"],\"data\":\"VariableCache0\",\"partyAttributes\":\"VariableCache1\",\"roundNumber\":123456,\"charsInRound\":[{\"data\":\"VariableCache2\",\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"},{\"data\":\"VariableCache3\",\"x\":56,\"y\":78,\"id\":\"740390c6-6956-4f21-8dea-98f2c8ef3cbb\"}],\"oneTimeTurnBasedTimers\":[\"OneTimeTimer0\"],\"recurringTurnBasedTimers\":[\"RecurringTimer0\"]}";
 
     @BeforeEach
     void setUp() {
-        _gameStateHandler = new PersistentGameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
+        _gameStateHandler = new GameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
                 GAME_ZONES_REPO, VARIABLE_CACHE_HANDLER, CHARACTER_HANDLER, ONE_TIME_TIMER_HANDLER,
                 RECURRING_TIMER_HANDLER);
     }
@@ -60,31 +60,31 @@ class PersistentGameStateHandlerTests {
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameStateHandler(null, PARTY_FACTORY,
+                () -> new GameStateHandler(null, PARTY_FACTORY,
                         GAME_ZONES_REPO, VARIABLE_CACHE_HANDLER, CHARACTER_HANDLER,
                         ONE_TIME_TIMER_HANDLER, RECURRING_TIMER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameStateHandler(GAME_STATE_FACTORY, null,
+                () -> new GameStateHandler(GAME_STATE_FACTORY, null,
                         GAME_ZONES_REPO, VARIABLE_CACHE_HANDLER, CHARACTER_HANDLER,
                         ONE_TIME_TIMER_HANDLER, RECURRING_TIMER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
+                () -> new GameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
                         null, VARIABLE_CACHE_HANDLER, CHARACTER_HANDLER,
                         ONE_TIME_TIMER_HANDLER, RECURRING_TIMER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
+                () -> new GameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
                         GAME_ZONES_REPO, null, CHARACTER_HANDLER,
                         ONE_TIME_TIMER_HANDLER, RECURRING_TIMER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
+                () -> new GameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
                         GAME_ZONES_REPO, VARIABLE_CACHE_HANDLER, null,
                         ONE_TIME_TIMER_HANDLER, RECURRING_TIMER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
+                () -> new GameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
                         GAME_ZONES_REPO, VARIABLE_CACHE_HANDLER, CHARACTER_HANDLER,
                         null, RECURRING_TIMER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentGameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
+                () -> new GameStateHandler(GAME_STATE_FACTORY, PARTY_FACTORY,
                         GAME_ZONES_REPO, VARIABLE_CACHE_HANDLER, CHARACTER_HANDLER,
                         ONE_TIME_TIMER_HANDLER, null));
     }
@@ -222,7 +222,7 @@ class PersistentGameStateHandlerTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
+        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                 GameState.class.getCanonicalName() + ">",
                 _gameStateHandler.getInterfaceName());
     }

@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.fakes.persistence;
 
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FakePersistentValueTypeHandler<T> implements PersistentValueTypeHandler<T> {
+public abstract class FakeTypeHandler<T> implements TypeHandler<T> {
     public final List<String> READ_INPUTS = new ArrayList<>();
     public final List<T> READ_OUTPUTS = new ArrayList<>();
 

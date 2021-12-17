@@ -3,9 +3,9 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
+import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
@@ -13,28 +13,24 @@ import soliloquy.specs.ruleset.entities.ItemType;
 
 import java.util.function.Function;
 
-public class PersistentItemHandler extends PersistentTypeHandler<Item> {
+public class ItemHandler extends AbstractTypeHandler<Item> {
     // TODO: Shift from Registry to ReadableRegistry; generate "Registry.readOnlyAccess", also refactor into other infrastructure classes
     private final Function<String, ItemType> GET_ITEM_TYPE;
-    private final PersistentValueTypeHandler<EntityUuid> ENTITY_UUID_HANDLER;
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
+    private final TypeHandler<EntityUuid> ENTITY_UUID_HANDLER;
+    private final TypeHandler<VariableCache> DATA_HANDLER;
     private final ItemFactory ITEM_FACTORY;
 
     private static final Item ARCHETYPE = new ItemArchetype();
 
-    public PersistentItemHandler(Function<String, ItemType> getItemType,
-                                 PersistentValueTypeHandler<EntityUuid> entityUuidHandler,
-                                 PersistentValueTypeHandler<VariableCache> dataHandler,
-                                 ItemFactory itemFactory) {
+    public ItemHandler(Function<String, ItemType> getItemType,
+                       TypeHandler<EntityUuid> entityUuidHandler,
+                       TypeHandler<VariableCache> dataHandler,
+                       ItemFactory itemFactory) {
+        super(ARCHETYPE);
         GET_ITEM_TYPE = Check.ifNull(getItemType, "getItemType");
         ENTITY_UUID_HANDLER = Check.ifNull(entityUuidHandler, "entityUuidHandler");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
-    }
-
-    @Override
-    public Item getArchetype() {
-        return ARCHETYPE;
     }
 
     @Override
@@ -72,8 +68,7 @@ public class PersistentItemHandler extends PersistentTypeHandler<Item> {
         return new Gson().toJson(itemDTO);
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class ItemDTO {
+    private static class ItemDTO {
         String id;
         String typeId;
         Float xOffset;

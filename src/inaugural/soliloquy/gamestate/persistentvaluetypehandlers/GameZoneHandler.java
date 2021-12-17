@@ -3,10 +3,10 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.GameZoneArchetype;
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
+import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -14,29 +14,25 @@ import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
 import java.util.function.Function;
 
-public class PersistentGameZoneHandler extends PersistentTypeHandler<GameZone> {
+public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     private final GameZoneFactory GAME_ZONE_FACTORY;
-    private final PersistentValueTypeHandler<Tile> TILE_HANDLER;
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
+    private final TypeHandler<Tile> TILE_HANDLER;
+    private final TypeHandler<VariableCache> DATA_HANDLER;
     @SuppressWarnings("rawtypes")
     private final Function<String, Action> GET_ACTION;
 
     private static final GameZone ARCHETYPE = new GameZoneArchetype();
 
     @SuppressWarnings("rawtypes")
-    public PersistentGameZoneHandler(GameZoneFactory gameZoneFactory,
-                                     PersistentValueTypeHandler<Tile> tileHandler,
-                                     PersistentValueTypeHandler<VariableCache> dataHandler,
-                                     Function<String, Action> getAction) {
+    public GameZoneHandler(GameZoneFactory gameZoneFactory,
+                           TypeHandler<Tile> tileHandler,
+                           TypeHandler<VariableCache> dataHandler,
+                           Function<String, Action> getAction) {
+        super(ARCHETYPE);
         GAME_ZONE_FACTORY = Check.ifNull(gameZoneFactory, "gameZoneFactory");
         TILE_HANDLER = Check.ifNull(tileHandler, "tileHandler");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
         GET_ACTION = Check.ifNull(getAction, "getAction");
-    }
-
-    @Override
-    public GameZone getArchetype() {
-        return ARCHETYPE;
     }
 
     @Override
@@ -68,7 +64,7 @@ public class PersistentGameZoneHandler extends PersistentTypeHandler<GameZone> {
     public String write(GameZone gameZone) {
         if (gameZone == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameZoneHandler.write: gameZone cannot be null");
+                    "GameZoneHandler.write: gameZone cannot be null");
         }
         GameZoneDTO dto = new GameZoneDTO();
         dto.id = gameZone.id();
@@ -97,8 +93,7 @@ public class PersistentGameZoneHandler extends PersistentTypeHandler<GameZone> {
         return new Gson().toJson(dto);
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class GameZoneDTO {
+    private static class GameZoneDTO {
         String id;
         String type;
         String name;

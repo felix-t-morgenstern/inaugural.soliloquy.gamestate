@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import soliloquy.specs.common.exceptions.SoliloquyIOException;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.GameZonesRepo;
 
@@ -16,11 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameZonesRepoImpl implements GameZonesRepo {
-    private final PersistentValueTypeHandler<GameZone> GAME_ZONE_HANDLER;
+    private final TypeHandler<GameZone> GAME_ZONE_HANDLER;
     private final HashMap<String, Path> FILE_LOCATIONS = new HashMap<>();
 
     @SuppressWarnings("ConstantConditions")
-    public GameZonesRepoImpl(PersistentValueTypeHandler<GameZone> gameZoneHandler,
+    public GameZonesRepoImpl(TypeHandler<GameZone> gameZoneHandler,
                              Map<String, Path> fileLocations) {
         if (gameZoneHandler == null) {
             throw new IllegalArgumentException(

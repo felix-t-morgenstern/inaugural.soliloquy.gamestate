@@ -9,7 +9,7 @@ import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.*;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.persistence.PersistentValuesHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
@@ -67,22 +67,22 @@ public class GameStateModule extends AbstractModule {
                            Registry<ReactiveAbility> reactiveAbilities,
                            @SuppressWarnings("rawtypes") Registry<Action> actions,
                            java.util.Map<String, Path> fileLocations) {
-        PersistentValueTypeHandler<EntityUuid> uuidHandler =
-                persistentValuesHandler.getPersistentValueTypeHandler(
+        TypeHandler<EntityUuid> uuidHandler =
+                persistentValuesHandler.getTypeHandler(
                         EntityUuid.class.getCanonicalName());
 
-        PersistentValueTypeHandler<VariableCache> dataHandler =
-                persistentValuesHandler.getPersistentValueTypeHandler(
+        TypeHandler<VariableCache> dataHandler =
+                persistentValuesHandler.getTypeHandler(
                         VariableCache.class.getCanonicalName());
 
-        PersistentValueTypeHandler<Sprite> spriteHandler =
-                persistentValuesHandler.getPersistentValueTypeHandler(
+        TypeHandler<Sprite> spriteHandler =
+                persistentValuesHandler.getTypeHandler(
                         Sprite.class.getCanonicalName());
 
                 ItemFactory itemFactory = new ItemFactoryImpl(entityUuidFactory, variableCacheFactory,
                 pairFactory);
 
-        PersistentValueTypeHandler<Item> itemHandler = new PersistentItemHandler(itemTypes::get,
+        TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get,
                 uuidHandler, dataHandler, itemFactory);
 
         CharacterEventsFactory characterEventsFactory =
@@ -114,8 +114,8 @@ public class GameStateModule extends AbstractModule {
                 variableStatsFactory, entitiesOfTypeFactory, characterStatusEffectsFactory,
                 variableCacheFactory);
 
-        PersistentValueTypeHandler<Character> characterHandler =
-                new PersistentCharacterHandler(characterFactory, uuidHandler, characterTypes::get,
+        TypeHandler<Character> characterHandler =
+                new CharacterHandler(characterFactory, uuidHandler, characterTypes::get,
                         characterClassifications::get, imageAssetSets::get, characterAITypes::get,
                         gameCharacterEvents::get, characterStaticStatisticTypes::get,
                         characterVariableStatisticTypes::get, statusEffectTypes::get,
@@ -128,8 +128,8 @@ public class GameStateModule extends AbstractModule {
         TileFixtureFactory tileFixtureFactory = new TileFixtureFactoryImpl(entityUuidFactory,
                 tileFixtureItemsFactory, variableCacheFactory);
 
-        PersistentValueTypeHandler<TileFixture> tileFixturesHandler =
-                new PersistentTileFixtureHandler(fixtureTypes::get, tileFixtureFactory,
+        TypeHandler<TileFixture> tileFixturesHandler =
+                new TileFixtureHandler(fixtureTypes::get, tileFixtureFactory,
                         uuidHandler, dataHandler, itemHandler);
 
         TileEntitiesFactory tileEntitiesFactory = new TileEntitiesFactoryImpl(pairFactory,
@@ -143,7 +143,7 @@ public class GameStateModule extends AbstractModule {
         TileWallSegmentFactory tileWallSegmentFactory =
                 new TileWallSegmentFactoryImpl(variableCacheFactory);
 
-        PersistentValueTypeHandler<Tile> tileHandler = new PersistentTileHandler(tileFactory,
+        TypeHandler<Tile> tileHandler = new TileHandler(tileFactory,
                 tileWallSegmentFactory, characterHandler, itemHandler, tileFixturesHandler,
                 spriteHandler, dataHandler, wallSegmentTypes::get, gameMovementEvents::get,
                 gameAbilityEvents::get, groundTypes::get);
@@ -156,8 +156,8 @@ public class GameStateModule extends AbstractModule {
                 c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
                 roundManager::removeCharacterFromQueue);
 
-        PersistentValueTypeHandler<GameZone> gameZoneHandler =
-                new PersistentGameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
+        TypeHandler<GameZone> gameZoneHandler =
+                new GameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
                         actions::get);
 
         GameZonesRepo gameZonesRepo = new GameZonesRepoImpl(gameZoneHandler, fileLocations);

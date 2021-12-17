@@ -3,11 +3,11 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
+import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Item;
@@ -23,9 +23,9 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-public class PersistentCharacterHandler extends PersistentTypeHandler<Character> {
+public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final CharacterFactory CHARACTER_FACTORY;
-    private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER;
+    private final TypeHandler<EntityUuid> ID_HANDLER;
     private final Function<String, CharacterType> GET_CHARACTER_TYPE;
     private final Function<String, CharacterClassification> GET_CHARACTER_CLASSIFICATION;
     private final Function<String, ImageAssetSet> GET_IMAGE_ASSET_SET;
@@ -37,28 +37,29 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
     private final Function<String, PassiveAbility> GET_PASSIVE_ABILITY;
     private final Function<String, ActiveAbility> GET_ACTIVE_ABILITY;
     private final Function<String, ReactiveAbility> GET_REACTIVE_ABILITY;
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
-    private final PersistentValueTypeHandler<Item> ITEM_HANDLER;
+    private final TypeHandler<VariableCache> DATA_HANDLER;
+    private final TypeHandler<Item> ITEM_HANDLER;
 
     private static final Character ARCHETYPE = new CharacterArchetype();
 
-    public PersistentCharacterHandler(CharacterFactory characterFactory,
-                                      PersistentValueTypeHandler<EntityUuid> idHandler,
-                                      Function<String, CharacterType> getCharacterType,
-                                      Function<String, CharacterClassification>
+    public CharacterHandler(CharacterFactory characterFactory,
+                            TypeHandler<EntityUuid> idHandler,
+                            Function<String, CharacterType> getCharacterType,
+                            Function<String, CharacterClassification>
                                               getCharacterClassification,
-                                      Function<String, ImageAssetSet> getImageAssetSet,
-                                      Function<String, CharacterAIType> getAIType,
-                                      Function<String, GameCharacterEvent> getEvent,
-                                      Function<String, CharacterStaticStatisticType> getStaticStatType,
-                                      Function<String, CharacterVariableStatisticType>
+                            Function<String, ImageAssetSet> getImageAssetSet,
+                            Function<String, CharacterAIType> getAIType,
+                            Function<String, GameCharacterEvent> getEvent,
+                            Function<String, CharacterStaticStatisticType> getStaticStatType,
+                            Function<String, CharacterVariableStatisticType>
                                               getVariableStatType,
-                                      Function<String, StatusEffectType> getStatusType,
-                                      Function<String, PassiveAbility> getPassiveAbility,
-                                      Function<String, ActiveAbility> getActiveAbility,
-                                      Function<String, ReactiveAbility> getReactiveAbility,
-                                      PersistentValueTypeHandler<VariableCache> dataHandler,
-                                      PersistentValueTypeHandler<Item> itemHandler) {
+                            Function<String, StatusEffectType> getStatusType,
+                            Function<String, PassiveAbility> getPassiveAbility,
+                            Function<String, ActiveAbility> getActiveAbility,
+                            Function<String, ReactiveAbility> getReactiveAbility,
+                            TypeHandler<VariableCache> dataHandler,
+                            TypeHandler<Item> itemHandler) {
+        super(ARCHETYPE);
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
         ID_HANDLER = Check.ifNull(idHandler, "idHandler");
         GET_CHARACTER_TYPE = Check.ifNull(getCharacterType, "getCharacterType");
@@ -159,7 +160,7 @@ public class PersistentCharacterHandler extends PersistentTypeHandler<Character>
     public String write(Character character) {
         if (character == null) {
             throw new IllegalArgumentException(
-                    "PersistentCharacterHandler.write: character cannot be null");
+                    "CharacterHandler.write: character cannot be null");
         }
         CharacterDTO dto = new CharacterDTO();
         dto.id = ID_HANDLER.write(character.uuid());

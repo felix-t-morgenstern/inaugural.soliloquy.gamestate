@@ -4,7 +4,7 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import soliloquy.specs.common.infrastructure.VariableCache;
 
 public class FakePersistentVariableCacheHandler
-        extends FakePersistentValueTypeHandler<VariableCache> {
+        extends FakeTypeHandler<VariableCache> {
     @Override
     public String typeName() {
         return "VariableCache";

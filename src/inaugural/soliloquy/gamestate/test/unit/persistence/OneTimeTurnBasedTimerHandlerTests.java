@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentOneTimeTimerHandler;
+import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.OneTimeTurnBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeTurnBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Registry;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
 import soliloquy.specs.gamestate.factories.TurnBasedTimerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersistentOneTimeTurnBasedTimerHandlerTests {
+class OneTimeTurnBasedTimerHandlerTests {
     private final TurnBasedTimerFactory TURN_BASED_TIMER_FACTORY = new FakeTurnBasedTimerFactory();
 
     private final String ONE_TIME_TIMER_ID = "oneTimeTurnBasedTimerId";
@@ -31,21 +31,21 @@ class PersistentOneTimeTurnBasedTimerHandlerTests {
 
     private final String WRITTEN_VALUE = "{\"id\":\"oneTimeTurnBasedTimerId\",\"actionId\":\"actionId\",\"round\":123123123,\"priority\":456}";
 
-    private PersistentValueTypeHandler<OneTimeTurnBasedTimer> _oneTimeTurnBasedTimerHandler;
+    private TypeHandler<OneTimeTurnBasedTimer> _oneTimeTurnBasedTimerHandler;
 
     @BeforeEach
     void setUp() {
         ACTIONS.add(ACTION);
 
-        _oneTimeTurnBasedTimerHandler = new PersistentOneTimeTimerHandler(TURN_BASED_TIMER_FACTORY, ACTIONS::get);
+        _oneTimeTurnBasedTimerHandler = new OneTimeTurnBasedTimerHandler(TURN_BASED_TIMER_FACTORY, ACTIONS::get);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentOneTimeTimerHandler(null, ACTIONS::get));
+                () -> new OneTimeTurnBasedTimerHandler(null, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentOneTimeTimerHandler(TURN_BASED_TIMER_FACTORY, null));
+                () -> new OneTimeTurnBasedTimerHandler(TURN_BASED_TIMER_FACTORY, null));
     }
 
     @Test
@@ -57,7 +57,7 @@ class PersistentOneTimeTurnBasedTimerHandlerTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
+        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                 OneTimeTurnBasedTimer.class.getCanonicalName() + ">",
                 _oneTimeTurnBasedTimerHandler.getInterfaceName());
     }

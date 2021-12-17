@@ -2,10 +2,10 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.TileArchetype;
-import inaugural.soliloquy.tools.generic.HasOneGenericParam;
+import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -18,16 +18,15 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 import java.util.function.Function;
 
-public class PersistentTileHandler extends HasOneGenericParam<Tile>
-        implements PersistentValueTypeHandler<Tile> {
+public class TileHandler extends AbstractTypeHandler<Tile> {
     private final TileFactory TILE_FACTORY;
     private final TileWallSegmentFactory TILE_WALL_SEGMENT_FACTORY;
 
-    private final PersistentValueTypeHandler<Character> CHARACTERS_HANDLER;
-    private final PersistentValueTypeHandler<Item> ITEMS_HANDLER;
-    private final PersistentValueTypeHandler<TileFixture> FIXTURES_HANDLER;
-    private final PersistentValueTypeHandler<Sprite> SPRITE_HANDLER;
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER;
+    private final TypeHandler<Character> CHARACTERS_HANDLER;
+    private final TypeHandler<Item> ITEMS_HANDLER;
+    private final TypeHandler<TileFixture> FIXTURES_HANDLER;
+    private final TypeHandler<Sprite> SPRITE_HANDLER;
+    private final TypeHandler<VariableCache> DATA_HANDLER;
 
     private final Function<String, WallSegmentType> GET_SEGMENT_TYPE;
     private final Function<String, GameMovementEvent> GET_MOVEMENT_EVENT;
@@ -37,71 +36,71 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
     private static final Tile ARCHETYPE = new TileArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public PersistentTileHandler(TileFactory tileFactory,
-                                 TileWallSegmentFactory tileWallSegmentFactory,
-                                 PersistentValueTypeHandler<Character> charactersHandler,
-                                 PersistentValueTypeHandler<Item> itemsHandler,
-                                 PersistentValueTypeHandler<TileFixture> fixturesHandler,
-                                 PersistentValueTypeHandler<Sprite> spriteHandler,
-                                 PersistentValueTypeHandler<VariableCache> dataHandler,
-                                 Function<String, WallSegmentType> getSegmentType,
-                                 Function<String, GameMovementEvent> getMovementEvent,
-                                 Function<String, GameAbilityEvent> getAbilityEvent,
-                                 Function<String, GroundType> getGroundType) {
+    public TileHandler(TileFactory tileFactory,
+                       TileWallSegmentFactory tileWallSegmentFactory,
+                       TypeHandler<Character> charactersHandler,
+                       TypeHandler<Item> itemsHandler,
+                       TypeHandler<TileFixture> fixturesHandler,
+                       TypeHandler<Sprite> spriteHandler,
+                       TypeHandler<VariableCache> dataHandler,
+                       Function<String, WallSegmentType> getSegmentType,
+                       Function<String, GameMovementEvent> getMovementEvent,
+                       Function<String, GameAbilityEvent> getAbilityEvent,
+                       Function<String, GroundType> getGroundType) {
         super(ARCHETYPE);
         if (tileFactory == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: tileFactory cannot be null");
+                    "TileHandler: tileFactory cannot be null");
         }
         TILE_FACTORY = tileFactory;
         if (tileWallSegmentFactory == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: tileWallSegmentFactory cannot be null");
+                    "TileHandler: tileWallSegmentFactory cannot be null");
         }
         TILE_WALL_SEGMENT_FACTORY = tileWallSegmentFactory;
         if (charactersHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: charactersHandler cannot be null");
+                    "TileHandler: charactersHandler cannot be null");
         }
         CHARACTERS_HANDLER = charactersHandler;
         if (itemsHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: itemsHandler cannot be null");
+                    "TileHandler: itemsHandler cannot be null");
         }
         ITEMS_HANDLER = itemsHandler;
         if (fixturesHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: fixturesHandler cannot be null");
+                    "TileHandler: fixturesHandler cannot be null");
         }
         FIXTURES_HANDLER = fixturesHandler;
         if (spriteHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: spriteHandler cannot be null");
+                    "TileHandler: spriteHandler cannot be null");
         }
         SPRITE_HANDLER = spriteHandler;
         if (dataHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: dataHandler cannot be null");
+                    "TileHandler: dataHandler cannot be null");
         }
         DATA_HANDLER = dataHandler;
         if (getSegmentType == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: getSegmentType cannot be null");
+                    "TileHandler: getSegmentType cannot be null");
         }
         GET_SEGMENT_TYPE = getSegmentType;
         if (getMovementEvent == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: getMovementEvent cannot be null");
+                    "TileHandler: getMovementEvent cannot be null");
         }
         GET_MOVEMENT_EVENT = getMovementEvent;
         if (getAbilityEvent == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: getAbilityEvent cannot be null");
+                    "TileHandler: getAbilityEvent cannot be null");
         }
         GET_ABILITY_EVENT = getAbilityEvent;
         if (getGroundType == null) {
             throw new IllegalArgumentException(
-                    "PersistentTileHandler: getGroundType cannot be null");
+                    "TileHandler: getGroundType cannot be null");
         }
         GET_GROUND_TYPE = getGroundType;
     }
@@ -109,10 +108,10 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
     @Override
     public Tile read(String data) throws IllegalArgumentException {
         if (data == null) {
-            throw new IllegalArgumentException("PersistentTileHandler.read: data cannot be null");
+            throw new IllegalArgumentException("TileHandler.read: data cannot be null");
         }
         if (data.equals("")) {
-            throw new IllegalArgumentException("PersistentTileHandler.read: data cannot be empty");
+            throw new IllegalArgumentException("TileHandler.read: data cannot be empty");
         }
 
         TileDTO dto = new Gson().fromJson(data, TileDTO.class);
@@ -164,7 +163,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
     @Override
     public String write(Tile tile) {
         if (tile == null) {
-            throw new IllegalArgumentException("PersistentTileHandler.write: tile cannot be null");
+            throw new IllegalArgumentException("TileHandler.write: tile cannot be null");
         }
 
         TileDTO dto = new TileDTO();
@@ -231,12 +230,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
         return new Gson().toJson(dto, TileDTO.class);
     }
 
-    @Override
-    public String getUnparameterizedInterfaceName() {
-        return PersistentValueTypeHandler.class.getCanonicalName();
-    }
-
-    private class TileDTO {
+    private static class TileDTO {
         int x;
         int y;
         int height;
@@ -251,8 +245,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
         String data;
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class TileEntityDTO {
+    private static class TileEntityDTO {
         TileEntityDTO(int z, String entity) {
             this.z = z;
             this.entity = entity;
@@ -262,8 +255,7 @@ public class PersistentTileHandler extends HasOneGenericParam<Tile>
         String entity;
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class TileWallSegmentDTO {
+    private static class TileWallSegmentDTO {
         TileWallSegmentDTO(String type, int direction, int height, int z,
                            String data) {
             this.type = type;

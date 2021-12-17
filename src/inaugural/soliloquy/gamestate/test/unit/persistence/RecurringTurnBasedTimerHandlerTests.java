@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentRecurringTurnBasedTimerHandler;
+import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.RecurringTurnBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRecurringTurnBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Registry;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 import soliloquy.specs.gamestate.factories.TurnBasedTimerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersistentRecurringTurnBasedTimerTests {
+class RecurringTurnBasedTimerHandlerTests {
     private final TurnBasedTimerFactory TURN_BASED_TIMER_FACTORY = new FakeTurnBasedTimerFactory();
 
     private final String RECURRING_TIMER_ID = "recurringTurnBasedTimerId";
@@ -32,22 +32,22 @@ class PersistentRecurringTurnBasedTimerTests {
 
     private final String WRITTEN_VALUE = "{\"id\":\"recurringTurnBasedTimerId\",\"actionId\":\"actionId\",\"roundModulo\":456,\"roundOffset\":123,\"priority\":789}";
 
-    private PersistentValueTypeHandler<RecurringTurnBasedTimer> _recurringTurnBasedTimerHandler;
+    private TypeHandler<RecurringTurnBasedTimer> _recurringTurnBasedTimerHandler;
 
     @BeforeEach
     void setUp() {
         ACTIONS.add(ACTION);
 
-        _recurringTurnBasedTimerHandler = new PersistentRecurringTurnBasedTimerHandler(
+        _recurringTurnBasedTimerHandler = new RecurringTurnBasedTimerHandler(
                 TURN_BASED_TIMER_FACTORY, ACTIONS::get);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentRecurringTurnBasedTimerHandler(null, ACTIONS::get));
+                () -> new RecurringTurnBasedTimerHandler(null, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentRecurringTurnBasedTimerHandler(TURN_BASED_TIMER_FACTORY, null));
+                () -> new RecurringTurnBasedTimerHandler(TURN_BASED_TIMER_FACTORY, null));
     }
 
     @Test
@@ -59,7 +59,7 @@ class PersistentRecurringTurnBasedTimerTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
+        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         RecurringTurnBasedTimer.class.getCanonicalName() + ">",
                 _recurringTurnBasedTimerHandler.getInterfaceName());
     }

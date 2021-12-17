@@ -1,16 +1,16 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentTileFixtureHandler;
+import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.TileFixtureHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentEntityUuidHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentItemHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentValueTypeHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeTypeHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentVariableCacheHandler;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -22,16 +22,16 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersistentTileFixtureHandlerTests {
+class TileFixtureHandlerTests {
     private final Map<String, FixtureType> FIXTURE_TYPES = new HashMap<>();
     private final String FIXTURE_TYPE_ID = "fixtureTypeId";
     private final FixtureType FIXTURE_TYPE = new FakeFixtureType(FIXTURE_TYPE_ID);
     private final TileFixtureFactory TILE_FIXTURE_FACTORY = new FakeTileFixtureFactory();
-    private final PersistentValueTypeHandler<EntityUuid> ID_HANDLER =
+    private final TypeHandler<EntityUuid> ID_HANDLER =
             new FakePersistentEntityUuidHandler();
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
+    private final TypeHandler<VariableCache> DATA_HANDLER =
             new FakePersistentVariableCacheHandler();
-    private final FakePersistentValueTypeHandler<Item> ITEM_HANDLER =
+    private final FakeTypeHandler<Item> ITEM_HANDLER =
             new FakePersistentItemHandler();
     private final float X_TILE_WIDTH_OFFSET = 0.123f;
     private final float Y_TILE_HEIGHT_OFFSET = 0.456f;
@@ -39,47 +39,47 @@ class PersistentTileFixtureHandlerTests {
 
     private final String WRITTEN_VALUE = "{\"id\":\"EntityUuid0\",\"fixtureTypeId\":\"fixtureTypeId\",\"tileWidthOffset\":0.123,\"tileHeightOffset\":0.456,\"items\":[\"Item0\",\"Item1\",\"Item2\"],\"data\":\"VariableCache0\",\"name\":\"fixtureName\"}";
 
-    private PersistentValueTypeHandler<TileFixture> _persistentTileFixtureHandler;
+    private TypeHandler<TileFixture> _tileFixtureHandler;
 
     @BeforeEach
     void setUp() {
         FIXTURE_TYPES.put(FIXTURE_TYPE_ID, FIXTURE_TYPE);
 
-        _persistentTileFixtureHandler = new PersistentTileFixtureHandler(FIXTURE_TYPES::get,
-                TILE_FIXTURE_FACTORY, ID_HANDLER, DATA_HANDLER, ITEM_HANDLER);
+        _tileFixtureHandler = new TileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
+                ID_HANDLER, DATA_HANDLER, ITEM_HANDLER);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentTileFixtureHandler(null, TILE_FIXTURE_FACTORY,
+                () -> new TileFixtureHandler(null, TILE_FIXTURE_FACTORY,
                         ID_HANDLER, DATA_HANDLER, ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentTileFixtureHandler(FIXTURE_TYPES::get, null,
+                () -> new TileFixtureHandler(FIXTURE_TYPES::get, null,
                         ID_HANDLER, DATA_HANDLER, ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentTileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
+                () -> new TileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
                         null, DATA_HANDLER, ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentTileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
+                () -> new TileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
                         ID_HANDLER, null, ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentTileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
+                () -> new TileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
                         ID_HANDLER, DATA_HANDLER, null));
     }
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
+        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         TileFixture.class.getCanonicalName() + ">",
-                _persistentTileFixtureHandler.getInterfaceName());
+                _tileFixtureHandler.getInterfaceName());
     }
 
     @Test
     void testGetArchetype() {
-        assertNotNull(_persistentTileFixtureHandler.getArchetype());
+        assertNotNull(_tileFixtureHandler.getArchetype());
         assertEquals(TileFixture.class.getCanonicalName(),
-                _persistentTileFixtureHandler.getArchetype().getInterfaceName());
+                _tileFixtureHandler.getArchetype().getInterfaceName());
     }
 
     @Test
@@ -97,7 +97,7 @@ class PersistentTileFixtureHandlerTests {
         tileFixture.items().add(item3);
         tileFixture.setName(NAME);
 
-        String writtenValue = _persistentTileFixtureHandler.write(tileFixture);
+        String writtenValue = _tileFixtureHandler.write(tileFixture);
 
         assertEquals(WRITTEN_VALUE, writtenValue);
     }
@@ -105,12 +105,12 @@ class PersistentTileFixtureHandlerTests {
     @Test
     void testWriteWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _persistentTileFixtureHandler.write(null));
+                () -> _tileFixtureHandler.write(null));
     }
 
     @Test
     void testRead() {
-        TileFixture tileFixture = _persistentTileFixtureHandler.read(WRITTEN_VALUE);
+        TileFixture tileFixture = _tileFixtureHandler.read(WRITTEN_VALUE);
 
         assertNotNull(tileFixture);
         assertSame(((FakePersistentEntityUuidHandler)ID_HANDLER).READ_OUTPUTS.get(0),
@@ -133,8 +133,8 @@ class PersistentTileFixtureHandlerTests {
     @Test
     void testReadWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _persistentTileFixtureHandler.read(null));
+                () -> _tileFixtureHandler.read(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _persistentTileFixtureHandler.read(""));
+                () -> _tileFixtureHandler.read(""));
     }
 }

@@ -6,7 +6,7 @@ import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentGameZo
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.GameZonesRepo;
 
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameZonesRepoImplTests {
     private final GameZone GAME_ZONE = new FakeGameZone();
-    private final PersistentValueTypeHandler<GameZone> GAME_ZONE_HANDLER =
+    private final TypeHandler<GameZone> GAME_ZONE_HANDLER =
             new FakePersistentGameZoneHandler();
     private final HashMap<String, Path> FILE_LOCATIONS = new HashMap<>();
     private final String DIRECTORY_NAME = "gameZone1";

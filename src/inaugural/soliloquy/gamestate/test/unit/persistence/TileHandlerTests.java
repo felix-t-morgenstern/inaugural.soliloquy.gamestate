@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentTileHandler;
+import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.TileHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.*;
 import inaugural.soliloquy.gamestate.test.stubs.SpriteStub;
@@ -8,7 +8,7 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -23,20 +23,20 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersistentTileHandlerTests {
+class TileHandlerTests {
     private final TileFactory TILE_FACTORY = new FakeTileFactory();
     private final TileWallSegmentFactory TILE_WALL_SEGMENT_FACTORY =
             new FakeTileWallSegmentFactory();
 
-    private final FakePersistentValueTypeHandler<Character> CHAR_HANDLER =
+    private final FakeTypeHandler<Character> CHAR_HANDLER =
             new FakePersistentCharacterHandler();
-    private final FakePersistentValueTypeHandler<Item> ITEM_HANDLER =
+    private final FakeTypeHandler<Item> ITEM_HANDLER =
             new FakePersistentItemHandler();
-    private final FakePersistentValueTypeHandler<TileFixture> FIXTURE_HANDLER =
+    private final FakeTypeHandler<TileFixture> FIXTURE_HANDLER =
             new FakePersistentTileFixtureHandler();
-    private final FakePersistentValueTypeHandler<Sprite> SPRITE_HANDLER =
+    private final FakeTypeHandler<Sprite> SPRITE_HANDLER =
             new FakePersistentSpriteHandler();
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
+    private final TypeHandler<VariableCache> DATA_HANDLER =
             new FakePersistentVariableCacheHandler();
 
     private final int X = 123;
@@ -69,7 +69,7 @@ class PersistentTileHandlerTests {
 
     private final String WRITTEN_DATA = "{\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\",\"characters\":[{\"z\":111,\"entity\":\"Character0\"}],\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333,\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\",\"direction\":1,\"height\":444,\"z\":555,\"data\":\"VariableCache0\"}],\"movementEvents\":[\"movementEventId\"],\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666,\"entity\":\"Sprite0\"}],\"data\":\"VariableCache1\"}";
 
-    private PersistentValueTypeHandler<Tile> _tileHandler;
+    private TypeHandler<Tile> _tileHandler;
 
     @BeforeEach
     void setUp() {
@@ -80,7 +80,7 @@ class PersistentTileHandlerTests {
 
         TILE_WALL_SEGMENT.setType(SEGMENT_TYPE);
 
-        _tileHandler = new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY,
+        _tileHandler = new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY,
                 CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                 SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get);
     }
@@ -89,53 +89,53 @@ class PersistentTileHandlerTests {
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(null, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(null, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, null, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, null, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
                         GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, null,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, null,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
                         GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         null, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
                         GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, null, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
                         GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, null, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
                         GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, null,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
                         GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         null, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, null, ABILITY_EVENTS::get, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, null, GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
-                new PersistentTileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
+                new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
                         SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, null));
     }
@@ -232,7 +232,7 @@ class PersistentTileHandlerTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
+        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                 Tile.class.getCanonicalName() + ">",
                 _tileHandler.getInterfaceName());
     }

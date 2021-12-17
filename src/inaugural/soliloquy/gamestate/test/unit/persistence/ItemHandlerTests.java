@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.PersistentItemHandler;
+import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.ItemHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeItemFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
@@ -19,11 +19,11 @@ import soliloquy.specs.ruleset.entities.ItemType;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PersistentItemHandlerTests {
+class ItemHandlerTests {
     private final Registry<ItemType> ITEM_TYPES_REGISTRY = new FakeRegistry<>();
-    private final PersistentValueTypeHandler<EntityUuid> UUID_HANDLER =
+    private final TypeHandler<EntityUuid> UUID_HANDLER =
             new FakePersistentEntityUuidHandler();
-    private final PersistentValueTypeHandler<VariableCache> DATA_HANDLER =
+    private final TypeHandler<VariableCache> DATA_HANDLER =
             new FakePersistentVariableCacheHandler();
     private final ItemFactory ITEM_FACTORY = new FakeItemFactory();
     private final int NUM_CHARGES = 123;
@@ -36,7 +36,7 @@ class PersistentItemHandlerTests {
 
     private FakeItem _item;
     private ItemTypeStub _itemType;
-    private PersistentValueTypeHandler<Item> _persistentItemHandler;
+    private TypeHandler<Item> _persistentItemHandler;
 
     @BeforeEach
     void setUp() {
@@ -47,23 +47,23 @@ class PersistentItemHandlerTests {
         _item._xTileWidthOffset = X_TILE_WIDTH_OFFSET;
         _item._yTileHeightOffset = Y_TILE_HEIGHT_OFFSET;
         ITEM_TYPES_REGISTRY.add(_itemType);
-        _persistentItemHandler = new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
+        _persistentItemHandler = new ItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
                 DATA_HANDLER, ITEM_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(null, UUID_HANDLER,
+                () -> new ItemHandler(null, UUID_HANDLER,
                         DATA_HANDLER, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, null,
+                () -> new ItemHandler(ITEM_TYPES_REGISTRY::get, null,
                         DATA_HANDLER, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
+                () -> new ItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
                         null, ITEM_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new PersistentItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
+                () -> new ItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
                         DATA_HANDLER, null));
     }
 
@@ -76,7 +76,7 @@ class PersistentItemHandlerTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(PersistentValueTypeHandler.class.getCanonicalName() + "<" +
+        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                 Item.class.getCanonicalName() + ">",
                 _persistentItemHandler.getInterfaceName());
     }

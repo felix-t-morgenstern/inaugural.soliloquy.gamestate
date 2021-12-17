@@ -4,7 +4,7 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeRecurringTurnBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 
 public class FakePersistentRecurringTurnBasedTimerHandler
-        extends FakePersistentValueTypeHandler<RecurringTurnBasedTimer> {
+        extends FakeTypeHandler<RecurringTurnBasedTimer> {
     @Override
     public String typeName() {
         return "RecurringTimer";

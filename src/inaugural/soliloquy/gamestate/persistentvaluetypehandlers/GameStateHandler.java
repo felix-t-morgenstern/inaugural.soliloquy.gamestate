@@ -2,11 +2,11 @@ package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
 
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.GameStateArchetype;
-import inaugural.soliloquy.tools.persistence.PersistentTypeHandler;
+import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.PersistentValueTypeHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
@@ -18,81 +18,77 @@ import soliloquy.specs.gamestate.factories.PartyFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class PersistentGameStateHandler extends PersistentTypeHandler<GameState> {
+public class GameStateHandler extends AbstractTypeHandler<GameState> {
     private final GameStateFactory GAME_STATE_FACTORY;
     private final PartyFactory PARTY_FACTORY;
     private final GameZonesRepo GAME_ZONES_REPO;
-    private final PersistentValueTypeHandler<VariableCache> VARIABLE_CACHE_HANDLER;
-    private final PersistentValueTypeHandler<Character> CHARACTER_HANDLER;
-    private final PersistentValueTypeHandler<OneTimeTurnBasedTimer>
+    private final TypeHandler<VariableCache> VARIABLE_CACHE_HANDLER;
+    private final TypeHandler<Character> CHARACTER_HANDLER;
+    private final TypeHandler<OneTimeTurnBasedTimer>
             ONE_TIME_TURN_BASED_TIMER_HANDLER;
-    private final PersistentValueTypeHandler<RecurringTurnBasedTimer>
+    private final TypeHandler<RecurringTurnBasedTimer>
             RECURRING_TURN_BASED_TIMER_HANDLER;
 
     private static final GameState ARCHETYPE = new GameStateArchetype();
 
     @SuppressWarnings("ConstantConditions")
-    public PersistentGameStateHandler(GameStateFactory gameStateFactory,
-                                      PartyFactory partyFactory,
-                                      GameZonesRepo gameZonesRepo,
-                                      PersistentValueTypeHandler<VariableCache>
+    public GameStateHandler(GameStateFactory gameStateFactory,
+                            PartyFactory partyFactory,
+                            GameZonesRepo gameZonesRepo,
+                            TypeHandler<VariableCache>
                                               variableCacheHandler,
-                                      PersistentValueTypeHandler<Character> characterHandler,
-                                      PersistentValueTypeHandler<OneTimeTurnBasedTimer>
+                            TypeHandler<Character> characterHandler,
+                            TypeHandler<OneTimeTurnBasedTimer>
                                                   oneTimeTurnBasedTimerHandler,
-                                      PersistentValueTypeHandler<RecurringTurnBasedTimer>
+                            TypeHandler<RecurringTurnBasedTimer>
                                                   recurringTurnBasedTimerHandler) {
+        super(ARCHETYPE);
         if (gameStateFactory == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: gameStateFactory cannot be null");
+                    "GameStateHandler: gameStateFactory cannot be null");
         }
         GAME_STATE_FACTORY = gameStateFactory;
         if (partyFactory == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: partyFactory cannot be null");
+                    "GameStateHandler: partyFactory cannot be null");
         }
         PARTY_FACTORY = partyFactory;
         if (gameZonesRepo == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: gameZonesRepo cannot be null");
+                    "GameStateHandler: gameZonesRepo cannot be null");
         }
         GAME_ZONES_REPO = gameZonesRepo;
         if (variableCacheHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: variableCacheHandler cannot be null");
+                    "GameStateHandler: variableCacheHandler cannot be null");
         }
         VARIABLE_CACHE_HANDLER = variableCacheHandler;
         if (characterHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: characterHandler cannot be null");
+                    "GameStateHandler: characterHandler cannot be null");
         }
         CHARACTER_HANDLER = characterHandler;
         if (oneTimeTurnBasedTimerHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: oneTimeTurnBasedTimerHandler cannot be null");
+                    "GameStateHandler: oneTimeTurnBasedTimerHandler cannot be null");
         }
         ONE_TIME_TURN_BASED_TIMER_HANDLER = oneTimeTurnBasedTimerHandler;
         if (recurringTurnBasedTimerHandler == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler: recurringTurnBasedTimerHandler cannot be null");
+                    "GameStateHandler: recurringTurnBasedTimerHandler cannot be null");
         }
         RECURRING_TURN_BASED_TIMER_HANDLER = recurringTurnBasedTimerHandler;
-    }
-
-    @Override
-    public GameState getArchetype() {
-        return ARCHETYPE;
     }
 
     @Override
     public GameState read(String writtenData) throws IllegalArgumentException {
         if (writtenData == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler.read: writtenData cannot be null");
+                    "GameStateHandler.read: writtenData cannot be null");
         }
         if (writtenData.equals("")) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler.read: writtenData cannot be empty");
+                    "GameStateHandler.read: writtenData cannot be empty");
         }
         GameStateDTO dto = new Gson().fromJson(writtenData, GameStateDTO.class);
         Party party = PARTY_FACTORY.make(VARIABLE_CACHE_HANDLER.read(dto.partyAttributes));
@@ -123,7 +119,7 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
                 return character.getItem1();
             }
         }
-        throw new IllegalArgumentException("PersistentGameStateHandler: character " + id +
+        throw new IllegalArgumentException("GameStateHandler: character " + id +
                 " not found at (" + x + "," + y + ")");
     }
 
@@ -132,7 +128,7 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
     public String write(GameState gameState) {
         if (gameState == null) {
             throw new IllegalArgumentException(
-                    "PersistentGameStateHandler.write: gameState cannot be null");
+                    "GameStateHandler.write: gameState cannot be null");
         }
         GameStateDTO dto = new GameStateDTO();
         dto.currentGameZoneId = gameState.getCurrentGameZone().id();
@@ -190,7 +186,7 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         return new Gson().toJson(dto);
     }
 
-    private class GameStateDTO {
+    private static class GameStateDTO {
         String currentGameZoneId;
         PcInGameZoneDTO[] pcsInCurrentGameZone;
         String[] pcsNotInCurrentGameZone;
@@ -202,14 +198,13 @@ public class PersistentGameStateHandler extends PersistentTypeHandler<GameState>
         String[] recurringTurnBasedTimers;
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class PcInGameZoneDTO {
+    private static class PcInGameZoneDTO {
         int x;
         int y;
         String id;
     }
 
-    private class CharacterInRoundDTO extends PcInGameZoneDTO {
+    private static class CharacterInRoundDTO extends PcInGameZoneDTO {
         String data;
     }
 }
