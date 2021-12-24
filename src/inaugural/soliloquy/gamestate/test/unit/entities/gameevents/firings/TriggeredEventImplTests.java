@@ -51,13 +51,13 @@ class TriggeredEventImplTests {
     // NB: This test case requires parallelization, since it must be tested whether the block
     //     placed on the GameSaveBlocker _ONLY_ occurs _AFTER_ the conclusion of firing
     @Test
-    void testFireAndPlacingBlocksOnGameSaveBlocker() {
+    void testRunAndPlacingBlocksOnGameSaveBlocker() {
         assertEquals(1, GAME_SAVE_BLOCKER.PlaceTriggeredEventBlockInputs.size());
         assertSame(_triggeredEvent, GAME_SAVE_BLOCKER.PlaceTriggeredEventBlockInputs.get(0));
         assertEquals(0, GAME_SAVE_BLOCKER.ReleaseTriggeredEventBlockInputs.size());
         assertFalse(_runnableFired);
 
-        new Thread(_triggeredEvent::fire).start();
+        new Thread(_triggeredEvent).start();
         CheckedExceptionWrapper.sleep(5);
 
         assertEquals(1, GAME_SAVE_BLOCKER.PlaceTriggeredEventBlockInputs.size());

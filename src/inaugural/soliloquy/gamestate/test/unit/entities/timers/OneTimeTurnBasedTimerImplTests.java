@@ -55,8 +55,8 @@ class OneTimeTurnBasedTimerImplTests {
     }
 
     @Test
-    void testFire() {
-        _oneTimeTurnBasedTimer.fire();
+    void testRun() {
+        _oneTimeTurnBasedTimer.run();
         //noinspection rawtypes
         assertTrue(((FakeAction)ACTION)._actionRun);
     }
@@ -85,7 +85,7 @@ class OneTimeTurnBasedTimerImplTests {
         _oneTimeTurnBasedTimer.delete();
 
         assertThrows(EntityDeletedException.class, () -> _oneTimeTurnBasedTimer.id());
-        assertThrows(EntityDeletedException.class, () -> _oneTimeTurnBasedTimer.fire());
+        assertThrows(EntityDeletedException.class, () -> _oneTimeTurnBasedTimer.run());
         assertThrows(EntityDeletedException.class, () -> _oneTimeTurnBasedTimer.priority());
         assertThrows(EntityDeletedException.class, () -> _oneTimeTurnBasedTimer.roundWhenGoesOff());
     }

@@ -9,7 +9,7 @@ public class FakeTriggeredEvent implements TriggeredEvent {
     }
 
     @Override
-    public void fire() {
+    public void run() {
 
     }
 

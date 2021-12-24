@@ -30,8 +30,8 @@ public class OneTimeTurnBasedTimerImpl extends AbstractTurnBasedTimer
     }
 
     @Override
-    public void fire() {
-        super.fire();
+    public void run() {
+        super.run();
         delete();
     }
 

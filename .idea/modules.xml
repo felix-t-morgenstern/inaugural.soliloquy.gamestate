@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/inaugural.soliloquy.gamestate.iml" filepath="$PROJECT_DIR$/.idea/inaugural.soliloquy.gamestate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/inaugural.soliloquy.gamestate.iml" filepath="$PROJECT_DIR$/inaugural.soliloquy.gamestate.iml" />
     </modules>
   </component>
 </project>

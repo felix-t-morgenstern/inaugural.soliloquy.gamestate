@@ -16,7 +16,7 @@ public class OneTimeTurnBasedTimerArchetype implements OneTimeTurnBasedTimer {
     }
 
     @Override
-    public void fire() {
+    public void run() {
 
     }
 

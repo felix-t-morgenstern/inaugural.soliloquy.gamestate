@@ -29,7 +29,7 @@ public abstract class FakeTurnBasedTimer implements TurnBasedTimer {
     }
 
     @Override
-    public void fire() {
+    public void run() {
         _fired = true;
     }
 

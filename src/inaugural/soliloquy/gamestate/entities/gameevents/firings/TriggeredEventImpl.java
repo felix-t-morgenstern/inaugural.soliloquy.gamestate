@@ -9,7 +9,9 @@ public class TriggeredEventImpl implements TriggeredEvent {
     private final Runnable FIRE;
     private final GameSaveBlocker GAME_SAVE_BLOCKER;
 
-    public TriggeredEventImpl(int priority, Runnable fire, GameSaveBlocker gameSaveBlocker) {
+    public TriggeredEventImpl(int priority, Runnable fire,
+                              @SuppressWarnings("ConstantConditions")
+                                      GameSaveBlocker gameSaveBlocker) {
         PRIORITY = priority;
         FIRE = Check.ifNull(fire, "fire");
         GAME_SAVE_BLOCKER = Check.ifNull(gameSaveBlocker, "gameSaveBlocker");
@@ -22,7 +24,7 @@ public class TriggeredEventImpl implements TriggeredEvent {
     }
 
     @Override
-    public void fire() {
+    public void run() {
         FIRE.run();
         GAME_SAVE_BLOCKER.releaseTriggeredEventBlock(this);
     }

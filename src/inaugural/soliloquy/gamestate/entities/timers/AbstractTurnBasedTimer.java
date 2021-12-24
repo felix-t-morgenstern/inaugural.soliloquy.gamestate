@@ -28,7 +28,7 @@ public abstract class AbstractTurnBasedTimer extends HasDeletionInvariants imple
 
     @SuppressWarnings("unchecked")
     @Override
-    public void fire() {
+    public void run() {
         enforceDeletionInvariants();
         ACTION.run(null);
     }

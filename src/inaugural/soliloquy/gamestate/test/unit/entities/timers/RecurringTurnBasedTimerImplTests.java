@@ -61,8 +61,8 @@ class RecurringTurnBasedTimerImplTests {
     }
 
     @Test
-    void testFire() {
-        _recurringTurnBasedTimer.fire();
+    void testRun() {
+        _recurringTurnBasedTimer.run();
         //noinspection rawtypes
         assertTrue(((FakeAction)TIMER_ACTION)._actionRun);
     }
@@ -91,7 +91,7 @@ class RecurringTurnBasedTimerImplTests {
         _recurringTurnBasedTimer.delete();
 
         assertThrows(EntityDeletedException.class, () -> _recurringTurnBasedTimer.id());
-        assertThrows(EntityDeletedException.class, () -> _recurringTurnBasedTimer.fire());
+        assertThrows(EntityDeletedException.class, () -> _recurringTurnBasedTimer.run());
         assertThrows(EntityDeletedException.class, () -> _recurringTurnBasedTimer.priority());
         assertThrows(EntityDeletedException.class, () -> _recurringTurnBasedTimer.roundModulo());
         assertThrows(EntityDeletedException.class, () -> _recurringTurnBasedTimer.roundOffset());

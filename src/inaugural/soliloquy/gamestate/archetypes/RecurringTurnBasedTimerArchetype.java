@@ -16,7 +16,7 @@ public class RecurringTurnBasedTimerArchetype implements RecurringTurnBasedTimer
     }
 
     @Override
-    public void fire() {
+    public void run() {
 
     }
 
