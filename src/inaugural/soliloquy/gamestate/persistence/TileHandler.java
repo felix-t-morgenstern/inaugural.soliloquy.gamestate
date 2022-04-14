@@ -1,4 +1,4 @@
-package inaugural.soliloquy.gamestate.persistentvaluetypehandlers;
+package inaugural.soliloquy.gamestate.persistence;
 
 import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.TileArchetype;

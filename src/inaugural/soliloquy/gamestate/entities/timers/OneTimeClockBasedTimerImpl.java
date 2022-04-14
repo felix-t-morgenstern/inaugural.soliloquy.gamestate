@@ -7,11 +7,13 @@ import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
 public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
         implements OneTimeClockBasedTimer {
+    private final String ID;
     private final Action<Long> FIRING_ACTION;
 
-    public OneTimeClockBasedTimerImpl(long firingTime, Action<Long> firingAction,
+    public OneTimeClockBasedTimerImpl(String id, long firingTime, Action<Long> firingAction,
                                       Long pausedTimestamp, Long mostRecentTimestamp) {
         super(firingTime, pausedTimestamp, mostRecentTimestamp);
+        ID = Check.ifNullOrEmpty(id, "id");
         if (pausedTimestamp != null && pausedTimestamp >= firingTime) {
             throw new IllegalArgumentException("OneTimeClockBasedTimerImpl: pausedTimestamp (" +
                     pausedTimestamp + ") cannot be greater than or equal to firingTime (" +
@@ -49,5 +51,10 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
     @Override
     public Long mostRecentTimestamp() {
         return TIMESTAMP_VALIDATOR.mostRecentTimestamp();
+    }
+
+    @Override
+    public String id() throws IllegalStateException {
+        return ID;
     }
 }

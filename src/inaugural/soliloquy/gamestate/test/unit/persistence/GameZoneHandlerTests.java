@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.GameZoneHandler;
+import inaugural.soliloquy.gamestate.persistence.GameZoneHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentTileHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentVariableCacheHandler;

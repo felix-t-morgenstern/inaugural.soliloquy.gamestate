@@ -68,4 +68,9 @@ public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
     public Long mostRecentTimestamp() {
         return null;
     }
+
+    @Override
+    public String id() throws IllegalStateException {
+        return null;
+    }
 }

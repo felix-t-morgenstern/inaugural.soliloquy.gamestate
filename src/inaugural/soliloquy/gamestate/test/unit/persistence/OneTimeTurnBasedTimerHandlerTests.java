@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.OneTimeTurnBasedTimerHandler;
+import inaugural.soliloquy.gamestate.persistence.OneTimeTurnBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeTurnBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;

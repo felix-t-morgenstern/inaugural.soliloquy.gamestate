@@ -8,17 +8,19 @@ import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 // TODO: Consider abstracting out shared functionality between Recurring and OneTime ClockBasedTimers
 public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
         implements RecurringClockBasedTimer {
+    private final String ID;
     private final Action<Long> FIRING_ACTION;
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED;
 
     private long _lastFiringTimestamp;
 
-    public RecurringClockBasedTimerImpl(int periodDuration, int periodModuloOffset,
+    public RecurringClockBasedTimerImpl(String id, int periodDuration, int periodModuloOffset,
                                         Action<Long> firingAction,
                                         boolean fireMultipleTimesForMultiplePeriodsElapsed,
                                         Long pausedTimestamp, long lastFiringTimestamp,
                                         Long mostRecentTimestamp) {
         super(periodDuration, periodModuloOffset, pausedTimestamp, mostRecentTimestamp);
+        ID = Check.ifNullOrEmpty(id, "id");
         if (pausedTimestamp != null && lastFiringTimestamp > pausedTimestamp) {
             throw new IllegalArgumentException("RecurringClockBasedTimerImpl: " +
                     "lastFiringTimestamp (" + lastFiringTimestamp + ") cannot be after " +
@@ -69,5 +71,10 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
     @Override
     public Long mostRecentTimestamp() {
         return TIMESTAMP_VALIDATOR.mostRecentTimestamp();
+    }
+
+    @Override
+    public String id() throws IllegalStateException {
+        return ID;
     }
 }

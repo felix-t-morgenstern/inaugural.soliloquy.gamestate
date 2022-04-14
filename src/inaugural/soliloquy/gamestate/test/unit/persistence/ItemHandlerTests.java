@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.ItemHandler;
+import inaugural.soliloquy.gamestate.persistence.ItemHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeItemFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;

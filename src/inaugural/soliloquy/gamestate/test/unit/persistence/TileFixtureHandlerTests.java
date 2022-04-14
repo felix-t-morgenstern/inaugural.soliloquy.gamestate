@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.TileFixtureHandler;
+import inaugural.soliloquy.gamestate.persistence.TileFixtureHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentEntityUuidHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentItemHandler;

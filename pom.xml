@@ -92,12 +92,12 @@
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>soliloquy.specs</artifactId>
-            <version>0.0.263</version>
+            <version>0.0.265</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>inaugural.soliloquy.tools</artifactId>
-            <version>0.0.68</version>
+            <version>0.0.70</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>

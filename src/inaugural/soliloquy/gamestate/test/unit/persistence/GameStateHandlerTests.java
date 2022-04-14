@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.GameStateHandler;
+import inaugural.soliloquy.gamestate.persistence.GameStateHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentCharacterHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentOneTimeTurnBasedTimerHandler;

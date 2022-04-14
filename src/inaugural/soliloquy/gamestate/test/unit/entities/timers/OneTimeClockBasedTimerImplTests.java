@@ -9,6 +9,7 @@ import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OneTimeClockBasedTimerImplTests {
+    private final String ID = "ID";
     private final long FIRING_TIME = 789789L;
     private final long PAUSE_TIME = 345345L;
     @SuppressWarnings("FieldCanBeLocal")
@@ -21,23 +22,29 @@ class OneTimeClockBasedTimerImplTests {
 
     @BeforeEach
     void setUp() {
-        _oneTimeClockBasedTimer = new OneTimeClockBasedTimerImpl(FIRING_TIME, FIRING_ACTION, null,
-                MOST_RECENT_TIMESTAMP);
+        _oneTimeClockBasedTimer = new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, FIRING_ACTION,
+                null, MOST_RECENT_TIMESTAMP);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(FIRING_TIME, FIRING_ACTION, FIRING_TIME,
+                new OneTimeClockBasedTimerImpl(null, FIRING_TIME, FIRING_ACTION,
+                        null, MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class, () ->
+                new OneTimeClockBasedTimerImpl("", FIRING_TIME, FIRING_ACTION,
+                        null, MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class, () ->
+                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, FIRING_ACTION, FIRING_TIME,
                         MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(FIRING_TIME, null, FIRING_TIME - 1,
+                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, null, FIRING_TIME - 1,
                         MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
+                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
                         null));
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(FIRING_TIME, FIRING_ACTION,
+                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, FIRING_ACTION,
                         MOST_RECENT_TIMESTAMP + 1, MOST_RECENT_TIMESTAMP));
     }
 
@@ -45,6 +52,11 @@ class OneTimeClockBasedTimerImplTests {
     void testGetInterfaceName() {
         assertEquals(OneTimeClockBasedTimer.class.getCanonicalName(),
                 _oneTimeClockBasedTimer.getInterfaceName());
+    }
+
+    @Test
+    void testId() {
+        assertEquals(ID, _oneTimeClockBasedTimer.id());
     }
 
     @Test

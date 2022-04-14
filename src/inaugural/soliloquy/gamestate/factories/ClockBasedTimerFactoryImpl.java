@@ -9,23 +9,23 @@ import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
 public class ClockBasedTimerFactoryImpl implements ClockBasedTimerFactory {
     @Override
-    public OneTimeClockBasedTimer make(long firingTimestamp, Action<Long> firingAction,
+    public OneTimeClockBasedTimer make(String id, long firingTimestamp, Action<Long> firingAction,
                                        Long pausedTimestamp, Long mostRecentTimestamp)
             throws IllegalArgumentException {
-        return new OneTimeClockBasedTimerImpl(firingTimestamp, firingAction, pausedTimestamp,
+        return new OneTimeClockBasedTimerImpl(id, firingTimestamp, firingAction, pausedTimestamp,
                 mostRecentTimestamp);
     }
 
     @Override
-    public RecurringClockBasedTimer make(int periodDuration, int periodModuloOffset,
+    public RecurringClockBasedTimer make(String id, int periodDuration, int periodModuloOffset,
                                          Action<Long> firingAction,
                                          boolean fireMultipleTimesForMultiplePeriodsElapsed,
                                          Long pausedTimestamp, long lastFiringTimestamp,
                                          Long mostRecentTimestamp)
             throws IllegalArgumentException {
-        return new RecurringClockBasedTimerImpl(periodDuration, periodModuloOffset, firingAction,
-                fireMultipleTimesForMultiplePeriodsElapsed, pausedTimestamp, lastFiringTimestamp,
-                mostRecentTimestamp);
+        return new RecurringClockBasedTimerImpl(id, periodDuration, periodModuloOffset,
+                firingAction, fireMultipleTimesForMultiplePeriodsElapsed, pausedTimestamp,
+                lastFiringTimestamp, mostRecentTimestamp);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.TileHandler;
+import inaugural.soliloquy.gamestate.persistence.TileHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.*;
 import inaugural.soliloquy.gamestate.test.stubs.SpriteStub;

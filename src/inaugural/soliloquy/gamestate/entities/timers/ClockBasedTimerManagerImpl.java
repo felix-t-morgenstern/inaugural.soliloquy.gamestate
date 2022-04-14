@@ -162,6 +162,11 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
         public Long mostRecentTimestamp() {
             return null;
         }
+
+        @Override
+        public String id() throws IllegalStateException {
+            return null;
+        }
     }
 
     private static class RecurringClockBasedTimerArchetype implements RecurringClockBasedTimer {
@@ -218,6 +223,11 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
 
         @Override
         public Long mostRecentTimestamp() {
+            return null;
+        }
+
+        @Override
+        public String id() throws IllegalStateException {
             return null;
         }
     }

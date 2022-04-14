@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import inaugural.soliloquy.gamestate.entities.GameZonesRepoImpl;
 import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import inaugural.soliloquy.gamestate.factories.*;
-import inaugural.soliloquy.gamestate.persistentvaluetypehandlers.*;
+import inaugural.soliloquy.gamestate.persistence.*;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.*;
 import soliloquy.specs.common.infrastructure.Registry;
