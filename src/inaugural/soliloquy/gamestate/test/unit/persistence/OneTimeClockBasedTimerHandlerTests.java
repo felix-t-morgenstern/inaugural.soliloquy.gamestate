@@ -93,4 +93,11 @@ class OneTimeClockBasedTimerHandlerTests {
         assertEquals(OneTimeClockBasedTimer.class.getCanonicalName(),
                 _oneTimeClockBasedTimerHandler.getArchetype().getInterfaceName());
     }
+
+    @Test
+    void testGetInterfaceName() {
+        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
+                OneTimeClockBasedTimer.class.getCanonicalName() + ">",
+                _oneTimeClockBasedTimerHandler.getInterfaceName());
+    }
 }
