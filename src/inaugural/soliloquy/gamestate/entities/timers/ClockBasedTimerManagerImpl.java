@@ -9,12 +9,13 @@ import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 import soliloquy.specs.graphics.rendering.FrameExecutor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
     private final FrameExecutor FRAME_EXECUTOR;
     private final ListFactory LIST_FACTORY;
-    private final ArrayList<OneTimeClockBasedTimer> ONE_TIME_CLOCK_BASED_TIMERS;
-    private final ArrayList<RecurringClockBasedTimer> RECURRING_CLOCK_BASED_TIMERS;
+    private final HashMap<String, OneTimeClockBasedTimer> ONE_TIME_CLOCK_BASED_TIMERS;
+    private final HashMap<String, RecurringClockBasedTimer> RECURRING_CLOCK_BASED_TIMERS;
 
     private static final OneTimeClockBasedTimerArchetype ONE_TIME_CLOCK_BASED_TIMER_ARCHETYPE =
             new OneTimeClockBasedTimerArchetype();
@@ -26,15 +27,15 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
     public ClockBasedTimerManagerImpl(FrameExecutor frameExecutor, ListFactory listFactory) {
         FRAME_EXECUTOR = Check.ifNull(frameExecutor, "frameExecutor");
         LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
-        ONE_TIME_CLOCK_BASED_TIMERS = new ArrayList<>();
-        RECURRING_CLOCK_BASED_TIMERS = new ArrayList<>();
+        ONE_TIME_CLOCK_BASED_TIMERS = new HashMap<>();
+        RECURRING_CLOCK_BASED_TIMERS = new HashMap<>();
     }
 
     @Override
     public void registerOneTimeTimer(OneTimeClockBasedTimer oneTimeClockBasedTimer)
             throws IllegalArgumentException {
-        ONE_TIME_CLOCK_BASED_TIMERS.add(
-                Check.ifNull(oneTimeClockBasedTimer, "oneTimeClockBasedTimer"));
+        Check.ifNull(oneTimeClockBasedTimer, "oneTimeClockBasedTimer");
+        ONE_TIME_CLOCK_BASED_TIMERS.put(oneTimeClockBasedTimer.id(), oneTimeClockBasedTimer);
     }
 
     @Override
@@ -47,21 +48,20 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
                     "ClockBasedTimerManagerImpl.registerRecurringTimer: firingTimeModuloOffset " +
                             "cannot be greater than or equal to firingTimePeriod");
         }
-        RECURRING_CLOCK_BASED_TIMERS.add(recurringClockBasedTimer);
+        RECURRING_CLOCK_BASED_TIMERS.put(recurringClockBasedTimer.id(), recurringClockBasedTimer);
     }
 
     @Override
-    public void deregisterOneTimeTimer(OneTimeClockBasedTimer oneTimeClockBasedTimer)
+    public void deregisterOneTimeTimer(String id)
             throws IllegalArgumentException {
         ONE_TIME_CLOCK_BASED_TIMERS.remove(
-                Check.ifNull(oneTimeClockBasedTimer, "oneTimeClockBasedTimer"));
+                Check.ifNull(id, "id"));
     }
 
     @Override
-    public void deregisterRecurringTimer(RecurringClockBasedTimer recurringClockBasedTimer)
+    public void deregisterRecurringTimer(String id)
             throws IllegalArgumentException {
-        RECURRING_CLOCK_BASED_TIMERS.remove(
-                Check.ifNull(recurringClockBasedTimer, "recurringClockBasedTimer"));
+        RECURRING_CLOCK_BASED_TIMERS.remove(Check.ifNull(id, "id"));
     }
 
     @Override
@@ -75,15 +75,15 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
         _mostRecentFireTimersTimestamp = timestamp;
 
         // NB: This list is created to avoid a ConcurrentModificationException
-        ArrayList<OneTimeClockBasedTimer> oneTimeTurnBasedTimersToRemove = new ArrayList<>();
-        ONE_TIME_CLOCK_BASED_TIMERS.forEach(oneTimeClockBasedTimer -> {
+        ArrayList<String> oneTimeTurnBasedTimersToRemove = new ArrayList<>();
+        ONE_TIME_CLOCK_BASED_TIMERS.values().forEach(oneTimeClockBasedTimer -> {
             if (oneTimeClockBasedTimer.firingTime() <= timestamp) {
                 FRAME_EXECUTOR.registerFrameBlockingEvent(oneTimeClockBasedTimer::fire);
-                oneTimeTurnBasedTimersToRemove.add(oneTimeClockBasedTimer);
+                oneTimeTurnBasedTimersToRemove.add(oneTimeClockBasedTimer.id());
             }
         });
-        ONE_TIME_CLOCK_BASED_TIMERS.removeAll(oneTimeTurnBasedTimersToRemove);
-        RECURRING_CLOCK_BASED_TIMERS.forEach(recurringClockBasedTimer -> {
+        oneTimeTurnBasedTimersToRemove.forEach(ONE_TIME_CLOCK_BASED_TIMERS::remove);
+        RECURRING_CLOCK_BASED_TIMERS.values().forEach(recurringClockBasedTimer -> {
             long offsetAdjustedTimestamp =
                     timestamp - recurringClockBasedTimer.periodModuloOffset();
             long offsetAdjustedLastFiringTime = recurringClockBasedTimer.lastFiringTimestamp()
@@ -107,13 +107,13 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
 
     @Override
     public List<OneTimeClockBasedTimer> oneTimeTimersRepresentation() {
-        return LIST_FACTORY.make(ONE_TIME_CLOCK_BASED_TIMERS,
+        return LIST_FACTORY.make(ONE_TIME_CLOCK_BASED_TIMERS.values(),
                 ONE_TIME_CLOCK_BASED_TIMER_ARCHETYPE);
     }
 
     @Override
     public List<RecurringClockBasedTimer> recurringTimersRepresentation() {
-        return LIST_FACTORY.make(RECURRING_CLOCK_BASED_TIMERS,
+        return LIST_FACTORY.make(RECURRING_CLOCK_BASED_TIMERS.values(),
                 RECURRING_CLOCK_BASED_TIMER_ARCHETYPE);
     }
 

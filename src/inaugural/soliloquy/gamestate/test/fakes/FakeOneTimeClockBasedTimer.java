@@ -4,9 +4,12 @@ import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
 import java.util.ArrayList;
 
+import static inaugural.soliloquy.tools.random.Random.randomString;
+
 public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
     public long FiringTime;
     public ArrayList<Long> FiredTimes = new ArrayList<>();
+    public String Id = randomString();
 
     public FakeOneTimeClockBasedTimer() {
     }
@@ -53,6 +56,6 @@ public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return Id;
     }
 }

@@ -145,7 +145,7 @@ class ClockBasedTimerManagerImplTests {
         _clockBasedTimerManager.registerOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
         ONE_TIME_CLOCK_BASED_TIMER.FiringTime = GLOBAL_CLOCK_GLOBAL_TIMESTAMP;
 
-        _clockBasedTimerManager.deregisterOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
+        _clockBasedTimerManager.deregisterOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER.id());
 
         _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
         FRAME_EXECUTOR.execute();
@@ -162,7 +162,7 @@ class ClockBasedTimerManagerImplTests {
         RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset = 0;
         _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
-        _clockBasedTimerManager.deregisterRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
+        _clockBasedTimerManager.deregisterRecurringTimer(RECURRING_CLOCK_BASED_TIMER.id());
 
         _clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp);
         FRAME_EXECUTOR.execute();
@@ -225,7 +225,7 @@ class ClockBasedTimerManagerImplTests {
         List<OneTimeClockBasedTimer> oneTimeTimersRepresentation2 =
                 _clockBasedTimerManager.oneTimeTimersRepresentation();
 
-        _clockBasedTimerManager.deregisterOneTimeTimer(oneTimeClockBasedTimer1);
+        _clockBasedTimerManager.deregisterOneTimeTimer(oneTimeClockBasedTimer1.id());
 
         assertNotNull(oneTimeTimersRepresentation);
         assertNotSame(oneTimeTimersRepresentation, oneTimeTimersRepresentation2);
@@ -258,7 +258,7 @@ class ClockBasedTimerManagerImplTests {
         List<RecurringClockBasedTimer> recurringTimersRepresentation2 =
                 _clockBasedTimerManager.recurringTimersRepresentation();
 
-        _clockBasedTimerManager.deregisterRecurringTimer(recurringClockBasedTimer1);
+        _clockBasedTimerManager.deregisterRecurringTimer(recurringClockBasedTimer1.id());
 
         assertNotNull(recurringTimersRepresentation);
         assertNotSame(recurringTimersRepresentation, recurringTimersRepresentation2);

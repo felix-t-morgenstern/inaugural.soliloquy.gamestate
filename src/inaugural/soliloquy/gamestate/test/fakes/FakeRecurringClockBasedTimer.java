@@ -4,12 +4,15 @@ import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
 import java.util.ArrayList;
 
+import static inaugural.soliloquy.tools.random.Random.randomString;
+
 public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
     public int PeriodDuration;
     public int PeriodModuloOffset;
     public long LastFiringTimestamp;
     public boolean FireMultipleTimesForMultiplePeriodsElapsed;
     public ArrayList<Long> FiredTimes = new ArrayList<>();
+    public String Id = randomString();
 
     public FakeRecurringClockBasedTimer() {
     }
@@ -71,6 +74,6 @@ public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
 
     @Override
     public String id() throws IllegalStateException {
-        return null;
+        return Id;
     }
 }
