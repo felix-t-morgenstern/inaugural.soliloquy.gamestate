@@ -1,8 +1,6 @@
 package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
@@ -10,23 +8,17 @@ import soliloquy.specs.graphics.rendering.FrameExecutor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
     private final FrameExecutor FRAME_EXECUTOR;
-    private final ListFactory LIST_FACTORY;
     private final HashMap<String, OneTimeClockBasedTimer> ONE_TIME_CLOCK_BASED_TIMERS;
     private final HashMap<String, RecurringClockBasedTimer> RECURRING_CLOCK_BASED_TIMERS;
 
-    private static final OneTimeClockBasedTimerArchetype ONE_TIME_CLOCK_BASED_TIMER_ARCHETYPE =
-            new OneTimeClockBasedTimerArchetype();
-    private static final RecurringClockBasedTimerArchetype RECURRING_CLOCK_BASED_TIMER_ARCHETYPE =
-            new RecurringClockBasedTimerArchetype();
-
     private Long _mostRecentFireTimersTimestamp;
 
-    public ClockBasedTimerManagerImpl(FrameExecutor frameExecutor, ListFactory listFactory) {
+    public ClockBasedTimerManagerImpl(FrameExecutor frameExecutor) {
         FRAME_EXECUTOR = Check.ifNull(frameExecutor, "frameExecutor");
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         ONE_TIME_CLOCK_BASED_TIMERS = new HashMap<>();
         RECURRING_CLOCK_BASED_TIMERS = new HashMap<>();
     }
@@ -62,6 +54,12 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
     public void deregisterRecurringTimer(String id)
             throws IllegalArgumentException {
         RECURRING_CLOCK_BASED_TIMERS.remove(Check.ifNull(id, "id"));
+    }
+
+    @Override
+    public void clear() {
+        ONE_TIME_CLOCK_BASED_TIMERS.clear();
+        RECURRING_CLOCK_BASED_TIMERS.clear();
     }
 
     @Override
@@ -107,128 +105,16 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
 
     @Override
     public List<OneTimeClockBasedTimer> oneTimeTimersRepresentation() {
-        return LIST_FACTORY.make(ONE_TIME_CLOCK_BASED_TIMERS.values(),
-                ONE_TIME_CLOCK_BASED_TIMER_ARCHETYPE);
+        return new ArrayList<>(ONE_TIME_CLOCK_BASED_TIMERS.values());
     }
 
     @Override
     public List<RecurringClockBasedTimer> recurringTimersRepresentation() {
-        return LIST_FACTORY.make(RECURRING_CLOCK_BASED_TIMERS.values(),
-                RECURRING_CLOCK_BASED_TIMER_ARCHETYPE);
+        return new ArrayList<>(RECURRING_CLOCK_BASED_TIMERS.values());
     }
 
     @Override
     public String getInterfaceName() {
         return ClockBasedTimerManager.class.getCanonicalName();
-    }
-
-    private static class OneTimeClockBasedTimerArchetype implements OneTimeClockBasedTimer {
-        @Override
-        public long firingTime() {
-            return 0;
-        }
-
-        @Override
-        public String actionId() {
-            return null;
-        }
-
-        @Override
-        public void fire(long l) throws UnsupportedOperationException {
-
-        }
-
-        @Override
-        public void reportPause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void reportUnpause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public Long pausedTimestamp() {
-            return null;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return OneTimeClockBasedTimer.class.getCanonicalName();
-        }
-
-        @Override
-        public Long mostRecentTimestamp() {
-            return null;
-        }
-
-        @Override
-        public String id() throws IllegalStateException {
-            return null;
-        }
-    }
-
-    private static class RecurringClockBasedTimerArchetype implements RecurringClockBasedTimer {
-
-        @Override
-        public long lastFiringTimestamp() {
-            return 0;
-        }
-
-        @Override
-        public boolean fireMultipleTimesForMultiplePeriodsElapsed() {
-            return false;
-        }
-
-        @Override
-        public int periodDuration() {
-            return 0;
-        }
-
-        @Override
-        public int periodModuloOffset() {
-            return 0;
-        }
-
-        @Override
-        public String actionId() {
-            return null;
-        }
-
-        @Override
-        public void fire(long l) throws UnsupportedOperationException {
-
-        }
-
-        @Override
-        public void reportPause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void reportUnpause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public Long pausedTimestamp() {
-            return null;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return RecurringClockBasedTimer.class.getCanonicalName();
-        }
-
-        @Override
-        public Long mostRecentTimestamp() {
-            return null;
-        }
-
-        @Override
-        public String id() throws IllegalStateException {
-            return null;
-        }
     }
 }
