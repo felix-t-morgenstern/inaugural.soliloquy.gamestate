@@ -77,7 +77,12 @@ class RoundManagerImplTests {
 
     @Test
     void testConstructorWithInvalidParams() {
-        // TODO: fail("fill in at end");
+        assertThrows(IllegalStateException.class, () -> new RoundManagerImpl(
+                null, _mockPairFactory, _mockRoundBasedTimerManager));
+        assertThrows(IllegalStateException.class, () -> new RoundManagerImpl(
+                _mockVariableCacheFactory, null, _mockRoundBasedTimerManager));
+        assertThrows(IllegalStateException.class, () -> new RoundManagerImpl(
+                _mockVariableCacheFactory, _mockPairFactory, null));
     }
 
     @Test
