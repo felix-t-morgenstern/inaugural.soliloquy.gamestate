@@ -6,6 +6,7 @@
       <w>gamestate</w>
       <w>ruleset</w>
       <w>stackable</w>
+      <w>unadded</w>
       <w>unassign</w>
       <w>unequip</w>
       <w>unpause</w>

@@ -9,14 +9,15 @@ import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.*;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.persistence.PersistentValuesHandler;
+import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.graphics.assets.Sprite;
@@ -28,7 +29,6 @@ import soliloquy.specs.ruleset.gameconcepts.*;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.nio.file.Path;
-import java.util.function.Function;
 
 public class GameStateModule extends AbstractModule {
     private GameStateFactory _gameStateFactory;
@@ -46,7 +46,6 @@ public class GameStateModule extends AbstractModule {
                            TileVisibility tileVisibility,
                            ActiveCharactersProvider activeCharactersProvider,
                            TurnHandling turnHandling,
-                           RoundEndHandling roundEndHandling,
                            Registry<CharacterType> characterTypes,
                            Registry<CharacterClassification> characterClassifications,
                            Registry<ItemType> itemTypes,
@@ -148,8 +147,11 @@ public class GameStateModule extends AbstractModule {
                 spriteHandler, dataHandler, wallSegmentTypes::get, gameMovementEvents::get,
                 gameAbilityEvents::get, groundTypes::get);
 
-        RoundManagerImpl roundManager = new RoundManagerImpl(listFactory, pairFactory,
-                variableCacheFactory, activeCharactersProvider, turnHandling, roundEndHandling);
+        // TODO: Populate this!
+        RoundBasedTimerManager roundBasedTimerManager = null;
+
+        // TODO: Populate this!
+        RoundManagerImpl roundManager = null;
 
         GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(coordinateFactory,
                 listFactory,
@@ -165,10 +167,8 @@ public class GameStateModule extends AbstractModule {
         CameraFactory cameraFactory = new CameraFactoryImpl(coordinateFactory, listFactory,
                 mapFactory, tileVisibility);
 
-        Function<RoundManager, TurnBasedTimerFactory> turnBasedTimerFactoryFactory = r ->
-                new TurnBasedTimerFactoryImpl(roundManager::addOneTimeTurnBasedTimer,
-                        roundManager::removeOneTimeTurnBasedTimer, roundManager::addRecurringTurnBasedTimer,
-                        roundManager::removeRecurringTurnBasedTimer);
+        RoundBasedTimerFactory roundBasedTimerFactory =
+                new RoundBasedTimerFactoryImpl(roundBasedTimerManager);
 
         KeyBindingFactory keyBindingFactory = new KeyBindingFactoryImpl(listFactory);
 
@@ -179,8 +179,8 @@ public class GameStateModule extends AbstractModule {
                 new KeyEventListenerFactoryImpl(listFactory, mapFactory);
 
         _gameStateFactory = new GameStateFactoryImpl(mapFactory, registryFactory, gameZonesRepo,
-                cameraFactory, roundManager, itemFactory, characterFactory,
-                turnBasedTimerFactoryFactory, keyBindingFactory, keyBindingContextFactory,
+                cameraFactory, roundManager, roundBasedTimerManager, itemFactory, characterFactory,
+                roundBasedTimerFactory, keyBindingFactory, keyBindingContextFactory,
                 keyEventListenerFactory);
     }
 

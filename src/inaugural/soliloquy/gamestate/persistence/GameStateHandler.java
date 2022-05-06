@@ -1,22 +1,26 @@
 package inaugural.soliloquy.gamestate.persistence;
 
 import com.google.gson.Gson;
-import inaugural.soliloquy.gamestate.archetypes.GameStateArchetype;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.GameState;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
-import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
-import soliloquy.specs.gamestate.factories.GameStateFactory;
-import soliloquy.specs.gamestate.factories.PartyFactory;
+import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
+import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
+import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.ruleset.entities.CharacterAIType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class GameStateHandler extends AbstractTypeHandler<GameState> {
     private final GameStateFactory GAME_STATE_FACTORY;
@@ -24,10 +28,10 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
     private final GameZonesRepo GAME_ZONES_REPO;
     private final TypeHandler<VariableCache> VARIABLE_CACHE_HANDLER;
     private final TypeHandler<Character> CHARACTER_HANDLER;
-    private final TypeHandler<OneTimeTurnBasedTimer>
-            ONE_TIME_TURN_BASED_TIMER_HANDLER;
-    private final TypeHandler<RecurringTurnBasedTimer>
-            RECURRING_TURN_BASED_TIMER_HANDLER;
+    private final TypeHandler<OneTimeRoundBasedTimer>
+            ONE_TIME_ROUND_BASED_TIMER_HANDLER;
+    private final TypeHandler<RecurringRoundBasedTimer>
+            RECURRING_ROUND_BASED_TIMER_HANDLER;
 
     private static final GameState ARCHETYPE = new GameStateArchetype();
 
@@ -38,10 +42,10 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
                             TypeHandler<VariableCache>
                                               variableCacheHandler,
                             TypeHandler<Character> characterHandler,
-                            TypeHandler<OneTimeTurnBasedTimer>
-                                                  oneTimeTurnBasedTimerHandler,
-                            TypeHandler<RecurringTurnBasedTimer>
-                                                  recurringTurnBasedTimerHandler) {
+                            TypeHandler<OneTimeRoundBasedTimer>
+                                                  oneTimeRoundBasedTimerHandler,
+                            TypeHandler<RecurringRoundBasedTimer>
+                                                  recurringRoundBasedTimerHandler) {
         super(ARCHETYPE);
         if (gameStateFactory == null) {
             throw new IllegalArgumentException(
@@ -68,16 +72,16 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
                     "GameStateHandler: characterHandler cannot be null");
         }
         CHARACTER_HANDLER = characterHandler;
-        if (oneTimeTurnBasedTimerHandler == null) {
+        if (oneTimeRoundBasedTimerHandler == null) {
             throw new IllegalArgumentException(
-                    "GameStateHandler: oneTimeTurnBasedTimerHandler cannot be null");
+                    "GameStateHandler: oneTimeRoundBasedTimerHandler cannot be null");
         }
-        ONE_TIME_TURN_BASED_TIMER_HANDLER = oneTimeTurnBasedTimerHandler;
-        if (recurringTurnBasedTimerHandler == null) {
+        ONE_TIME_ROUND_BASED_TIMER_HANDLER = oneTimeRoundBasedTimerHandler;
+        if (recurringRoundBasedTimerHandler == null) {
             throw new IllegalArgumentException(
-                    "GameStateHandler: recurringTurnBasedTimerHandler cannot be null");
+                    "GameStateHandler: recurringRoundBasedTimerHandler cannot be null");
         }
-        RECURRING_TURN_BASED_TIMER_HANDLER = recurringTurnBasedTimerHandler;
+        RECURRING_ROUND_BASED_TIMER_HANDLER = recurringRoundBasedTimerHandler;
     }
 
     @Override
@@ -90,25 +94,37 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
             throw new IllegalArgumentException(
                     "GameStateHandler.read: writtenData cannot be empty");
         }
+
         GameStateDTO dto = new Gson().fromJson(writtenData, GameStateDTO.class);
+
         Party party = PARTY_FACTORY.make(VARIABLE_CACHE_HANDLER.read(dto.partyAttributes));
+
         GameState gameState = GAME_STATE_FACTORY.make(party,
                 VARIABLE_CACHE_HANDLER.read(dto.data));
+
         GameZone currentGameZone = GAME_ZONES_REPO.getGameZone(dto.currentGameZoneId);
         gameState.setCurrentGameZone(currentGameZone);
+
         Arrays.stream(dto.pcsInCurrentGameZone).forEach(pcDto ->
                 party.characters().add(findInTile(currentGameZone, pcDto.id, pcDto.x, pcDto.y)));
+
         Arrays.stream(dto.pcsNotInCurrentGameZone).forEach(pc ->
                 party.characters().add(CHARACTER_HANDLER.read(pc)));
+
         gameState.roundManager().setRoundNumber(dto.roundNumber);
         for (CharacterInRoundDTO charDto : dto.charsInRound) {
-            gameState.roundManager().setCharacterPositionInQueue(
-                    findInTile(currentGameZone, charDto.id, charDto.x, charDto.y),
-                    Integer.MAX_VALUE, VARIABLE_CACHE_HANDLER.read(charDto.data)
-            );
+            Character character = findInTile(currentGameZone, charDto.id, charDto.x, charDto.y);
+            gameState.roundManager()
+                    .setCharacterPositionInQueue(character, Integer.MAX_VALUE);
+            gameState.roundManager()
+                    .setCharacterRoundData(character, VARIABLE_CACHE_HANDLER.read(charDto.data));
         }
-        Arrays.stream(dto.oneTimeTurnBasedTimers).forEach(ONE_TIME_TURN_BASED_TIMER_HANDLER::read);
-        Arrays.stream(dto.recurringTurnBasedTimers).forEach(RECURRING_TURN_BASED_TIMER_HANDLER::read);
+
+        Arrays.stream(dto.oneTimeRoundBasedTimers)
+                .forEach(ONE_TIME_ROUND_BASED_TIMER_HANDLER::read);
+        Arrays.stream(dto.recurringRoundBasedTimers)
+                .forEach(RECURRING_ROUND_BASED_TIMER_HANDLER::read);
+
         return gameState;
     }
 
@@ -157,7 +173,8 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         dto.roundNumber = gameState.roundManager().getRoundNumber();
         dto.charsInRound = new CharacterInRoundDTO[gameState.roundManager().queueSize()];
         int index = 0;
-        for(Pair<Character, VariableCache> charWithData : gameState.roundManager()) {
+        for(Pair<Character, VariableCache> charWithData :
+                gameState.roundManager().characterQueueRepresentation()) {
             dto.charsInRound[index] = new CharacterInRoundDTO();
             dto.charsInRound[index].id = charWithData.getItem1().uuid().toString();
             dto.charsInRound[index].x = charWithData.getItem1().tile().location().getX();
@@ -166,22 +183,22 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
             index++;
         }
 
-        List<OneTimeTurnBasedTimer> oneTimeTurnBasedTimers =
-                gameState.roundManager().oneTimeTurnBasedTimersRepresentation();
-        dto.oneTimeTurnBasedTimers = new String[oneTimeTurnBasedTimers.size()];
+        List<OneTimeRoundBasedTimer> oneTimeRoundBasedTimers =
+                gameState.roundBasedTimerManager().oneTimeRoundBasedTimersRepresentation();
+        dto.oneTimeRoundBasedTimers = new String[oneTimeRoundBasedTimers.size()];
         index = 0;
-        for(OneTimeTurnBasedTimer oneTimeTurnBasedTimer : oneTimeTurnBasedTimers) {
-            dto.oneTimeTurnBasedTimers[index++] =
-                    ONE_TIME_TURN_BASED_TIMER_HANDLER.write(oneTimeTurnBasedTimer);
+        for(OneTimeRoundBasedTimer oneTimeRoundBasedTimer : oneTimeRoundBasedTimers) {
+            dto.oneTimeRoundBasedTimers[index++] =
+                    ONE_TIME_ROUND_BASED_TIMER_HANDLER.write(oneTimeRoundBasedTimer);
         }
 
-        List<RecurringTurnBasedTimer> recurringTurnBasedTimers =
-                gameState.roundManager().recurringTurnBasedTimersRepresentation();
-        dto.recurringTurnBasedTimers = new String[recurringTurnBasedTimers.size()];
+        List<RecurringRoundBasedTimer> recurringRoundBasedTimers =
+                gameState.roundBasedTimerManager().recurringRoundBasedTimersRepresentation();
+        dto.recurringRoundBasedTimers = new String[recurringRoundBasedTimers.size()];
         index = 0;
-        for(RecurringTurnBasedTimer recurringTurnBasedTimer : recurringTurnBasedTimers) {
-            dto.recurringTurnBasedTimers[index++] =
-                    RECURRING_TURN_BASED_TIMER_HANDLER.write(recurringTurnBasedTimer);
+        for(RecurringRoundBasedTimer recurringRoundBasedTimer : recurringRoundBasedTimers) {
+            dto.recurringRoundBasedTimers[index++] =
+                    RECURRING_ROUND_BASED_TIMER_HANDLER.write(recurringRoundBasedTimer);
         }
         return new Gson().toJson(dto);
     }
@@ -194,8 +211,8 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         String partyAttributes;
         int roundNumber;
         CharacterInRoundDTO[] charsInRound;
-        String[] oneTimeTurnBasedTimers;
-        String[] recurringTurnBasedTimers;
+        String[] oneTimeRoundBasedTimers;
+        String[] recurringRoundBasedTimers;
     }
 
     private static class PcInGameZoneDTO {
@@ -206,5 +223,102 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
 
     private static class CharacterInRoundDTO extends PcInGameZoneDTO {
         String data;
+    }
+    
+    private static class GameStateArchetype implements GameState {
+        @Override
+        public Party party() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public VariableCache variableCache() {
+            return null;
+        }
+
+        @Override
+        public Map<String, CharacterAIType> characterAIs() {
+            return null;
+        }
+
+        @Override
+        public GameZonesRepo gameZonesRepo() {
+            return null;
+        }
+
+        @Override
+        public GameZone getCurrentGameZone() {
+            return null;
+        }
+
+        @Override
+        public void setCurrentGameZone(GameZone gameZone) {
+
+        }
+
+        @Override
+        public Camera camera() {
+            return null;
+        }
+
+        @Override
+        public Registry<GameMovementEvent> movementEvents() {
+            return null;
+        }
+
+        @Override
+        public Registry<GameAbilityEvent> abilityEvents() {
+            return null;
+        }
+
+        @Override
+        public RoundManager roundManager() {
+            return null;
+        }
+
+        @Override
+        public RoundBasedTimerManager roundBasedTimerManager() {
+            return null;
+        }
+
+        @Override
+        public Map<Integer, KeyBindingContext> keyBindingContexts() throws IllegalStateException {
+            return null;
+        }
+
+        @Override
+        public ItemFactory itemFactory() {
+            return null;
+        }
+
+        @Override
+        public CharacterFactory characterFactory() {
+            return null;
+        }
+
+        @Override
+        public RoundBasedTimerFactory roundBasedTimerFactory() {
+            return null;
+        }
+
+        @Override
+        public KeyBindingFactory keyBindingFactory() {
+            return null;
+        }
+
+        @Override
+        public KeyBindingContextFactory keyBindingContextFactory() {
+            return null;
+        }
+
+        @Override
+        public KeyEventListener keyEventListener() {
+            return null;
+        }
+
+        @Override
+        public String getInterfaceName() {
+            return GameState.class.getCanonicalName();
+        }
     }
 }

@@ -1,31 +1,30 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 
 import java.util.function.Consumer;
 
-public class FakeOneTimeTurnBasedTimer extends FakeTurnBasedTimer
-        implements OneTimeTurnBasedTimer {
-    private final Consumer<OneTimeTurnBasedTimer> ON_DELETE;
+public class FakeOneTimeRoundBasedTimer extends FakeRoundBasedTimer
+        implements OneTimeRoundBasedTimer {
+    private final Consumer<OneTimeRoundBasedTimer> ON_DELETE;
 
     private long _roundWhenGoesOff;
 
-    public FakeOneTimeTurnBasedTimer() {
+    public FakeOneTimeRoundBasedTimer() {
         ON_DELETE = null;
     }
 
-    public FakeOneTimeTurnBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
+    public FakeOneTimeRoundBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
                                      long roundWhenGoesOff, int priority) {
         super(id, action, priority);
         _roundWhenGoesOff = roundWhenGoesOff;
         ON_DELETE = null;
     }
 
-    public FakeOneTimeTurnBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
+    public FakeOneTimeRoundBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
                                      long roundWhenGoesOff, int priority,
-                                     Consumer<OneTimeTurnBasedTimer> onDelete) {
+                                     Consumer<OneTimeRoundBasedTimer> onDelete) {
         super(id, action, priority);
         _roundWhenGoesOff = roundWhenGoesOff;
         ON_DELETE = onDelete;

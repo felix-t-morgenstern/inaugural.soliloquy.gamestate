@@ -7,17 +7,17 @@ import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
-import java.util.function.Function;
+import java.util.Map;
 
 public class GameStateImpl implements GameState {
     private final Party PARTY;
@@ -28,10 +28,11 @@ public class GameStateImpl implements GameState {
     private final Registry<GameAbilityEvent> ABILITY_EVENTS;
     private final Camera CAMERA;
     private final RoundManager ROUND_MANAGER;
+    private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
     private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
-    private final TurnBasedTimerFactory TIMER_FACTORY;
+    private final RoundBasedTimerFactory ROUND_BASED_TIMER_FACTORY;
     private final KeyBindingFactory KEY_BINDING_FACTORY;
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyEventListener KEY_EVENT_LISTENER;
@@ -55,9 +56,10 @@ public class GameStateImpl implements GameState {
                          GameZonesRepo gameZonesRepo,
                          CameraFactory cameraFactory,
                          RoundManager roundManager,
+                         RoundBasedTimerManager roundBasedTimerManager,
                          ItemFactory itemFactory,
                          CharacterFactory characterFactory,
-                         Function<RoundManager,TurnBasedTimerFactory> turnBasedTimerFactoryFactory,
+                         RoundBasedTimerFactory roundBasedTimerFactory,
                          KeyBindingFactory keyBindingFactory,
                          KeyBindingContextFactory keyBindingContextFactory,
                          KeyEventListenerFactory keyEventListenerFactory) {
@@ -71,11 +73,11 @@ public class GameStateImpl implements GameState {
         MOVEMENT_EVENTS = registryFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
         ABILITY_EVENTS = registryFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
+        ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
         KEY_BINDING_CONTEXTS = mapFactory.make(0, KEY_BINDING_CONTEXT_ARCHETYPE);
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
-        TIMER_FACTORY = Check.ifNull(turnBasedTimerFactoryFactory, "turnBasedTimerFactoryFactory")
-                .apply(roundManager);
+        ROUND_BASED_TIMER_FACTORY = Check.ifNull(roundBasedTimerFactory, "roundBasedTimerFactory");
         KEY_BINDING_FACTORY = Check.ifNull(keyBindingFactory, "keyBindingFactory");
         KEY_BINDING_CONTEXT_FACTORY = Check.ifNull(keyBindingContextFactory,
                 "keyBindingContextFactory");
@@ -135,6 +137,11 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
+    public RoundBasedTimerManager roundBasedTimerManager() {
+        return ROUND_BASED_TIMER_MANAGER;
+    }
+
+    @Override
     public Map<Integer, KeyBindingContext> keyBindingContexts() throws IllegalStateException {
         return KEY_BINDING_CONTEXTS;
     }
@@ -150,8 +157,8 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public TurnBasedTimerFactory turnBasedTimerFactory() {
-        return TIMER_FACTORY;
+    public RoundBasedTimerFactory roundBasedTimerFactory() {
+        return ROUND_BASED_TIMER_FACTORY;
     }
 
     @Override

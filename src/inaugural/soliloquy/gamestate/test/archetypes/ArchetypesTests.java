@@ -7,14 +7,11 @@ import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
-import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
-import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
@@ -94,12 +91,6 @@ class ArchetypesTests {
     }
 
     @Test
-    void testGameStateArchetype() {
-        assertEquals(GameState.class.getCanonicalName(),
-                new GameStateArchetype().getInterfaceName());
-    }
-
-    @Test
     void testGameZoneArchetype() {
         assertEquals(GameZone.class.getCanonicalName(),
                 new GameZoneArchetype().getInterfaceName());
@@ -120,18 +111,6 @@ class ArchetypesTests {
     void testKeyBindingContextArchetype() {
         assertEquals(KeyBindingContext.class.getCanonicalName(),
                 new KeyBindingContextArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testOneTimeTurnBasedTimerArchetype() {
-        assertEquals(OneTimeTurnBasedTimer.class.getCanonicalName(),
-                new OneTimeTurnBasedTimerArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testRecurringTurnBasedTimerArchetype() {
-        assertEquals(RecurringTurnBasedTimer.class.getCanonicalName(),
-                new RecurringTurnBasedTimerArchetype().getInterfaceName());
     }
 
     @Test

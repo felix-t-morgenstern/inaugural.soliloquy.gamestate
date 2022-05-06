@@ -1,21 +1,21 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
+import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 
-public class FakeRecurringTurnBasedTimer extends FakeTurnBasedTimer
-        implements RecurringTurnBasedTimer {
+public class FakeRecurringRoundBasedTimer extends FakeRoundBasedTimer
+        implements RecurringRoundBasedTimer {
     private int _roundModulo;
     private int _roundOffset;
 
-    public FakeRecurringTurnBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
-                                       int roundModulo, int roundOffset, int priority) {
+    public FakeRecurringRoundBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
+                                        int roundModulo, int roundOffset, int priority) {
         super(id, action, priority);
         _roundModulo = roundModulo;
         _roundOffset = roundOffset;
     }
 
-    public FakeRecurringTurnBasedTimer() {
+    public FakeRecurringRoundBasedTimer() {
 
     }
 

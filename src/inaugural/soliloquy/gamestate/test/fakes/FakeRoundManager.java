@@ -6,19 +6,14 @@ import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.RoundManager;
-import soliloquy.specs.gamestate.entities.timers.OneTimeTurnBasedTimer;
-import soliloquy.specs.gamestate.entities.timers.RecurringTurnBasedTimer;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.function.Supplier;
 
 public class FakeRoundManager implements RoundManager {
     private final java.util.List<Character> QUEUE = new LinkedList<>();
     private final HashMap<Character, VariableCache> CHARACTERS_DATA = new HashMap<>();
-
-    public final List<OneTimeTurnBasedTimer> OneTimeTurnBasedTimers = new FakeList<>();
-    public final List<RecurringTurnBasedTimer> RecurringTurnBasedTimers = new FakeList<>();
 
     private int _roundNumber;
 
@@ -62,10 +57,7 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public void setCharacterPositionInQueue(Character character, int position,
-                                            VariableCache roundData)
-            throws IllegalArgumentException {
-        QUEUE.add(Math.min(position,QUEUE.size()), character);
+    public void setCharacterRoundData(Character character, VariableCache roundData) throws IllegalArgumentException {
         CHARACTERS_DATA.put(character, roundData);
     }
 
@@ -105,35 +97,12 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public List<OneTimeTurnBasedTimer> oneTimeTurnBasedTimersRepresentation() {
-        return OneTimeTurnBasedTimers;
-    }
+    public void setActiveCharactersProvider(Supplier<java.util.List<Pair<Character, VariableCache>>> supplier) throws IllegalArgumentException {
 
-    @Override
-    public List<RecurringTurnBasedTimer> recurringTurnBasedTimersRepresentation() {
-        return RecurringTurnBasedTimers;
     }
 
     @Override
     public String getInterfaceName() {
         return null;
-    }
-
-    @Override
-    public Iterator<Pair<Character, VariableCache>> iterator() {
-        return new Iterator<>() {
-            private final Iterator<Character> iterator = QUEUE.iterator();
-
-            @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            @Override
-            public Pair<Character, VariableCache> next() {
-                Character next = iterator.next();
-                return new FakePair<>(next, CHARACTERS_DATA.get(next));
-            }
-        };
     }
 }

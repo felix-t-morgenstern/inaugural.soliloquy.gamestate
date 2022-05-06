@@ -7,6 +7,7 @@ import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
@@ -15,6 +16,7 @@ public class FakeGameState implements GameState {
     public final VariableCache Data;
     public final FakeRoundManager RoundManager;
 
+    public RoundBasedTimerManager RoundBasedTimerManager;
     public GameZone GameZone;
 
     public FakeGameState(Party party, VariableCache data) {
@@ -74,6 +76,11 @@ public class FakeGameState implements GameState {
     }
 
     @Override
+    public RoundBasedTimerManager roundBasedTimerManager() {
+        return RoundBasedTimerManager;
+    }
+
+    @Override
     public Map<Integer, KeyBindingContext> keyBindingContexts() throws IllegalStateException {
         return null;
     }
@@ -89,7 +96,7 @@ public class FakeGameState implements GameState {
     }
 
     @Override
-    public TurnBasedTimerFactory turnBasedTimerFactory() {
+    public RoundBasedTimerFactory roundBasedTimerFactory() {
         return null;
     }
 
