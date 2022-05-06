@@ -3,31 +3,38 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
+import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.RoundManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
-import static inaugural.soliloquy.tools.random.Random.randomIntWithInclusiveFloor;
+import java.util.ArrayList;
+import java.util.List;
+
+import static inaugural.soliloquy.tools.random.Random.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class RoundManagerImplTests {
-    @Mock
-    private Character _mockCharacter1;
-    @Mock
-    private Character _mockCharacter2;
-    @Mock
-    private VariableCache _mockVariableCacheFromFactory;
-    @Mock
-    private VariableCache _mockVariableCache2;
-    @Mock
-    private VariableCacheFactory _mockVariableCacheFactory;
-    @Mock
-    private RoundBasedTimerManager _mockRoundBasedTimerManager;
+    @Mock private Character _mockCharacter1;
+    @Mock private Character _mockCharacter2;
+    @Mock private Character _mockCharacter3;
+    @Mock private VariableCache _mockVariableCacheFromFactory;
+    @Mock private VariableCache _mockVariableCache2;
+    @Mock private VariableCache _mockVariableCache3;
+    @Mock private Pair<Character, VariableCache> _mockPair1;
+    @Mock private Pair<Character, VariableCache> _mockPair2;
+    @Mock private Pair<Character, VariableCache> _mockPair3;
+    @Mock private VariableCacheFactory _mockVariableCacheFactory;
+    @Mock private PairFactory _mockPairFactory;
+    @Mock private RoundBasedTimerManager _mockRoundBasedTimerManager;
+    private List<Pair<Character, VariableCache>> _activeCharactersToProvide;
 
     private RoundManager _roundManager;
 
@@ -35,15 +42,37 @@ class RoundManagerImplTests {
     void setUp() {
         _mockCharacter1 = mock(Character.class);
         _mockCharacter2 = mock(Character.class);
+        _mockCharacter3 = mock(Character.class);
 
         _mockVariableCacheFromFactory = mock(VariableCache.class);
         _mockVariableCache2 = mock(VariableCache.class);
+        _mockVariableCache3 = mock(VariableCache.class);
         _mockVariableCacheFactory = mock(VariableCacheFactory.class);
         when(_mockVariableCacheFactory.make()).thenReturn(_mockVariableCacheFromFactory);
 
+        _mockPairFactory = mock(PairFactory.class);
+
+        //noinspection unchecked
+        _mockPair1 = mock(Pair.class);
+        //noinspection unchecked
+        _mockPair2 = mock(Pair.class);
+        //noinspection unchecked
+        _mockPair3 = mock(Pair.class);
+
+        when(_mockPair2.getItem1()).thenReturn(_mockCharacter2);
+        when(_mockPair2.getItem2()).thenReturn(_mockVariableCache2);
+        when(_mockPair3.getItem1()).thenReturn(_mockCharacter3);
+        when(_mockPair3.getItem2()).thenReturn(_mockVariableCache3);
+
+        _activeCharactersToProvide = new ArrayList<>() {{
+            add(_mockPair2);
+            add(_mockPair3);
+        }};
+
         _mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
 
-        _roundManager = new RoundManagerImpl(_mockVariableCacheFactory);
+        _roundManager = new RoundManagerImpl(_mockVariableCacheFactory, _mockPairFactory,
+                _mockRoundBasedTimerManager);
     }
 
     @Test
@@ -71,6 +100,16 @@ class RoundManagerImplTests {
 
         assertEquals(0, _roundManager.getCharacterPositionInQueue(_mockCharacter2));
         assertEquals(1, _roundManager.getCharacterPositionInQueue(_mockCharacter1));
+    }
+
+    @Test
+    void testSetCharacterPositionInQueueDoesNotOverwriteDataForCharactersAlreadyInQueue() {
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
+        _roundManager.setCharacterRoundData(_mockCharacter1, _mockVariableCache2);
+
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
+
+        assertSame(_mockVariableCache2, _roundManager.characterRoundData(_mockCharacter1));
     }
 
     @Test
@@ -162,6 +201,165 @@ class RoundManagerImplTests {
         assertNull(_roundManager.characterRoundData(_mockCharacter1));
         assertFalse(_roundManager.characterIsInQueue(_mockCharacter2));
         assertNull(_roundManager.characterRoundData(_mockCharacter2));
+    }
+
+    @Test
+    void testCharacterQueueRepresentation() {
+        //noinspection unchecked,rawtypes
+        when(_mockPairFactory.make(any(), any()))
+                .thenReturn((Pair) _mockPair1)
+                .thenReturn(_mockPair2);
+
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
+        _roundManager.setCharacterPositionInQueue(_mockCharacter2, randomIntWithInclusiveFloor(0));
+        _roundManager.setCharacterRoundData(_mockCharacter2, _mockVariableCache2);
+
+        List<Pair<Character, VariableCache>> expectedOutput = new ArrayList<>() {{
+            add(_mockPair1);
+            add(_mockPair2);
+        }};
+
+        List<Pair<Character, VariableCache>> characterQueueRepresentation =
+                _roundManager.characterQueueRepresentation();
+        List<Pair<Character, VariableCache>> characterQueueRepresentation2 =
+                _roundManager.characterQueueRepresentation();
+
+        assertNotNull(characterQueueRepresentation);
+        assertEquals(expectedOutput, characterQueueRepresentation);
+        assertNotSame(characterQueueRepresentation, characterQueueRepresentation2);
+        InOrder inOrder = inOrder(_mockPairFactory);
+        inOrder.verify(_mockPairFactory).make(_mockCharacter1, _mockVariableCacheFromFactory);
+        inOrder.verify(_mockPairFactory).make(_mockCharacter2, _mockVariableCache2);
+    }
+
+    @Test
+    void testActiveCharacterDefaultsToNull() {
+        assertNull(_roundManager.activeCharacter());
+    }
+
+    @Test
+    void testEndActiveCharacterTurnDoesNotThrowExceptionWhenQueueIsEmpty() {
+        _roundManager.setActiveCharactersProvider(() -> _activeCharactersToProvide);
+
+        _roundManager.endActiveCharacterTurn();
+    }
+
+    @Test
+    void testActiveCharacterReturnsFirstCharacterInQueue() {
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, 0);
+        _roundManager.setCharacterPositionInQueue(_mockCharacter2, 1);
+
+        assertSame(_mockCharacter1, _roundManager.activeCharacter());
+    }
+
+    @Test
+    void testEndActiveCharacterTurnWithCharactersRemainingInRoundAndActiveCharacter() {
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, 0);
+        _roundManager.setCharacterPositionInQueue(_mockCharacter2, 1);
+        _roundManager.setActiveCharactersProvider(() -> _activeCharactersToProvide);
+
+        _roundManager.endActiveCharacterTurn();
+
+        assertSame(_mockCharacter2, _roundManager.activeCharacter());
+    }
+
+    @Test
+    void testSetAndGetRoundNumber() {
+        int newRoundNumber = randomInt();
+
+        _roundManager.setRoundNumber(newRoundNumber);
+
+        assertEquals(newRoundNumber, _roundManager.getRoundNumber());
+    }
+
+    // Round end tests
+    @Test
+    void testSetActiveCharactersProviderAndAdvanceSingleRound() {
+        int initialRound = randomInt();
+        _roundManager.setRoundNumber(initialRound);
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
+
+        _roundManager.setActiveCharactersProvider(() -> _activeCharactersToProvide);
+        _roundManager.advanceRounds(1);
+
+        assertRoundsAdvanced(initialRound, 1);
+    }
+
+    @Test
+    void testAdvanceMultipleRounds() {
+        int initialRound = randomInt();
+        int roundsToAdvance = randomIntInRange(2, 200);
+        _roundManager.setRoundNumber(initialRound);
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
+
+        _roundManager.setActiveCharactersProvider(() -> _activeCharactersToProvide);
+        _roundManager.advanceRounds(roundsToAdvance);
+
+        assertRoundsAdvanced(initialRound, roundsToAdvance);
+    }
+
+    @Test
+    void testSetActiveCharactersProviderWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () ->
+                _roundManager.setActiveCharactersProvider(null));
+    }
+
+    @Test
+    void testAdvanceRoundsWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> _roundManager.advanceRounds(0));
+    }
+
+    @Test
+    void testAdvanceRoundWithoutActiveCharactersProvided() {
+        assertThrows(IllegalStateException.class, () -> _roundManager.advanceRounds(1));
+    }
+
+    // Ensure that ending active character turn advances round when one or zero characters remain
+    // Ensure that active characters provided is defined in those scenarios
+
+    @Test
+    void testEndActiveCharacterTurnAdvancesRoundWhenQueueIsEmpty() {
+        int initialRound = randomInt();
+        _roundManager.setRoundNumber(initialRound);
+        _roundManager.setActiveCharactersProvider(() -> _activeCharactersToProvide);
+
+        _roundManager.endActiveCharacterTurn();
+
+        assertRoundsAdvanced(initialRound, 1);
+    }
+
+    @Test
+    void testEndActiveCharacterTurnAdvancesWhenOneCharacterLeftInQueue() {
+        int initialRound = randomInt();
+        _roundManager.setRoundNumber(initialRound);
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
+        _roundManager.setActiveCharactersProvider(() -> _activeCharactersToProvide);
+
+        _roundManager.endActiveCharacterTurn();
+
+        assertRoundsAdvanced(initialRound, 1);
+    }
+
+    @Test
+    void testEndActiveCharacterTurnWithoutActiveCharactersProvided() {
+        // NB: Characters are added to ensure that exception is thrown even when round does not advance
+        _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
+        _roundManager.setCharacterPositionInQueue(_mockCharacter2, randomIntWithInclusiveFloor(0));
+
+        assertThrows(IllegalStateException.class, () -> _roundManager.endActiveCharacterTurn());
+    }
+
+    private void assertRoundsAdvanced(int initialRound, int roundsToAdvance) {
+        assertEquals(initialRound + roundsToAdvance, _roundManager.getRoundNumber());
+        assertEquals(2, _roundManager.queueSize());
+        assertFalse(_roundManager.characterIsInQueue(_mockCharacter1));
+        assertNull(_roundManager.characterRoundData(_mockCharacter1));
+        assertEquals(0, _roundManager.getCharacterPositionInQueue(_mockCharacter2));
+        assertEquals(1, _roundManager.getCharacterPositionInQueue(_mockCharacter3));
+        assertSame(_mockVariableCache2, _roundManager.characterRoundData(_mockCharacter2));
+        assertSame(_mockVariableCache3, _roundManager.characterRoundData(_mockCharacter3));
+        verify(_mockRoundBasedTimerManager)
+                .fireTimersForRoundsElapsed(initialRound, initialRound + roundsToAdvance);
     }
 
     @Test

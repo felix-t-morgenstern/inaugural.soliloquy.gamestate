@@ -64,12 +64,12 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
                     ONE_TIME_CLOCK_BASED_TIMER_HANDLER.write(oneTimeClockBasedTimers.get(i));
         }
 
-        List<RecurringClockBasedTimer> recurringTurnBasedTimers =
+        List<RecurringClockBasedTimer> recurringClockBasedTimers =
                 CLOCK_BASED_TIMER_MANAGER.recurringTimersRepresentation();
-        dto.recurringClockBasedTimers = new String[recurringTurnBasedTimers.size()];
-        for (int i = 0; i < recurringTurnBasedTimers.size(); i++) {
+        dto.recurringClockBasedTimers = new String[recurringClockBasedTimers.size()];
+        for (int i = 0; i < recurringClockBasedTimers.size(); i++) {
             dto.recurringClockBasedTimers[i] =
-                    RECURRING_CLOCK_BASED_TIMER_HANDLER.write(recurringTurnBasedTimers.get(i));
+                    RECURRING_CLOCK_BASED_TIMER_HANDLER.write(recurringClockBasedTimers.get(i));
         }
 
         return GSON.toJson(dto);

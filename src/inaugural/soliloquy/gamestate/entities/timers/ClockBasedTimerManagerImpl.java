@@ -73,14 +73,14 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
         _mostRecentFireTimersTimestamp = timestamp;
 
         // NB: This list is created to avoid a ConcurrentModificationException
-        ArrayList<String> oneTimeTurnBasedTimersToRemove = new ArrayList<>();
+        ArrayList<String> oneTimeClockBasedTimersToRemove = new ArrayList<>();
         ONE_TIME_CLOCK_BASED_TIMERS.values().forEach(oneTimeClockBasedTimer -> {
             if (oneTimeClockBasedTimer.firingTime() <= timestamp) {
                 FRAME_EXECUTOR.registerFrameBlockingEvent(oneTimeClockBasedTimer::fire);
-                oneTimeTurnBasedTimersToRemove.add(oneTimeClockBasedTimer.id());
+                oneTimeClockBasedTimersToRemove.add(oneTimeClockBasedTimer.id());
             }
         });
-        oneTimeTurnBasedTimersToRemove.forEach(ONE_TIME_CLOCK_BASED_TIMERS::remove);
+        oneTimeClockBasedTimersToRemove.forEach(ONE_TIME_CLOCK_BASED_TIMERS::remove);
         RECURRING_CLOCK_BASED_TIMERS.values().forEach(recurringClockBasedTimer -> {
             long offsetAdjustedTimestamp =
                     timestamp - recurringClockBasedTimer.periodModuloOffset();
