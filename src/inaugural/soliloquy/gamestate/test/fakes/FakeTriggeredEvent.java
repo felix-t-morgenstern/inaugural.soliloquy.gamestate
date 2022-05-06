@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.gamestate.entities.gameevents.firings.TriggeredEvent;
+import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 
 public class FakeTriggeredEvent implements TriggeredEvent {
     @Override

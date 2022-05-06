@@ -1,11 +1,11 @@
-package inaugural.soliloquy.gamestate.test.unit.entities.gameevents.firings;
+package inaugural.soliloquy.gamestate.test.unit.entities.gameevents;
 
-import inaugural.soliloquy.gamestate.entities.gameevents.firings.TriggeredEventImpl;
+import inaugural.soliloquy.gamestate.entities.gameevents.TriggeredEventImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameSaveBlocker;
 import inaugural.soliloquy.tools.CheckedExceptionWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.gamestate.entities.gameevents.firings.TriggeredEvent;
+import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 
 import static org.junit.jupiter.api.Assertions.*;
 

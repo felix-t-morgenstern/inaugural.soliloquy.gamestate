@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.gamestate.entities.gameevents.firings.TriggeredEvent;
+import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
 import java.util.ArrayList;

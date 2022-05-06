@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.infrastructure;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.gamestate.entities.gameevents.firings.TriggeredEvent;
+import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
 import java.util.HashSet;

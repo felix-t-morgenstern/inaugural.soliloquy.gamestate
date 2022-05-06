@@ -1,11 +1,11 @@
-package inaugural.soliloquy.gamestate.test.unit.entities.gameevents.firings;
+package inaugural.soliloquy.gamestate.test.unit.entities.gameevents;
 
-import inaugural.soliloquy.gamestate.entities.gameevents.firings.TriggeredEventImpl;
+import inaugural.soliloquy.gamestate.entities.gameevents.TriggeredEventImpl;
 import inaugural.soliloquy.gamestate.factories.TriggeredEventFactoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import soliloquy.specs.gamestate.entities.gameevents.firings.TriggeredEvent;
+import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 import soliloquy.specs.gamestate.factories.TriggeredEventFactory;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.factories;
 
-import inaugural.soliloquy.gamestate.entities.gameevents.firings.TriggeredEventImpl;
+import inaugural.soliloquy.gamestate.entities.gameevents.TriggeredEventImpl;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.gamestate.entities.gameevents.firings.TriggeredEvent;
+import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 import soliloquy.specs.gamestate.factories.TriggeredEventFactory;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
