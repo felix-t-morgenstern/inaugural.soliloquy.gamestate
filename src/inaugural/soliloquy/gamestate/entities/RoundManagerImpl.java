@@ -26,9 +26,9 @@ public class RoundManagerImpl implements RoundManager {
 
     public RoundManagerImpl(VariableCacheFactory variableCacheFactory, PairFactory pairFactory,
                             RoundBasedTimerManager roundBasedTimerManager) {
-        VARIABLE_CACHE_FACTORY = variableCacheFactory;
-        PAIR_FACTORY = pairFactory;
-        ROUND_BASED_TIMER_MANAGER = roundBasedTimerManager;
+        VARIABLE_CACHE_FACTORY = Check.ifNull(variableCacheFactory, "variableCacheFactory");
+        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
+        ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
     }
 
     @Override
