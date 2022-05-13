@@ -55,14 +55,14 @@ public class OneTimeRoundBasedTimerHandler extends AbstractTypeHandler<OneTimeRo
     private static class OneTimeTimerDTO {
         String id;
         String actionId;
-        long round;
+        int round;
         int priority;
     }
 
     private static class OneTimeRoundBasedTimerArchetype implements OneTimeRoundBasedTimer {
 
         @Override
-        public long roundWhenGoesOff() {
+        public int roundWhenGoesOff() {
             return 0;
         }
 

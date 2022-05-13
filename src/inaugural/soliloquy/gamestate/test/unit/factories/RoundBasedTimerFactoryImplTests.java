@@ -52,7 +52,7 @@ class RoundBasedTimerFactoryImplTests {
 
     @Test
     void testMakeOneTimeTimer() {
-        long roundWhenGoesOff = randomLong();
+        int roundWhenGoesOff = randomInt();
 
         OneTimeRoundBasedTimer oneTimeRoundBasedTimer = _roundBasedTimerFactory.makeOneTimeTimer(
                 TIMER_ID, _mockAction, roundWhenGoesOff, PRIORITY);

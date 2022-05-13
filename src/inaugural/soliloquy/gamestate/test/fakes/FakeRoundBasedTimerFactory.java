@@ -7,8 +7,8 @@ import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
 
 public class FakeRoundBasedTimerFactory implements RoundBasedTimerFactory {
     @Override
-    public OneTimeRoundBasedTimer makeOneTimeTimer(String id, Action action, long roundWhenGoesOff,
-                                                  int priority)
+    public OneTimeRoundBasedTimer makeOneTimeTimer(String id, Action action, int roundWhenGoesOff,
+                                                   int priority)
             throws IllegalArgumentException {
         return new FakeOneTimeRoundBasedTimer(id, action, roundWhenGoesOff, priority);
     }

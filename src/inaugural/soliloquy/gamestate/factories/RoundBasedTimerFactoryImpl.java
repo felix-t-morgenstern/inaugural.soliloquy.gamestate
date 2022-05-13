@@ -18,7 +18,7 @@ public class RoundBasedTimerFactoryImpl implements RoundBasedTimerFactory {
 
     @Override
     public OneTimeRoundBasedTimer makeOneTimeTimer(String timerId, Action action,
-                                                  long roundWhenGoesOff, int priority)
+                                                   int roundWhenGoesOff, int priority)
             throws IllegalArgumentException {
         return new OneTimeRoundBasedTimerImpl(timerId, action, roundWhenGoesOff, priority,
                 ROUND_BASED_TIMER_MANAGER::registerOneTimeRoundBasedTimer,

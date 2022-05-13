@@ -27,7 +27,7 @@ class OneTimeRoundBasedTimerHandlerTests {
     @SuppressWarnings("rawtypes")
     private final Registry<Action> ACTIONS = new FakeRegistry<>();
 
-    private final long ROUND_WHEN_GOES_OFF = 123123123;
+    private final int ROUND_WHEN_GOES_OFF = 123123123;
     private final int PRIORITY = 456;
 
     private final String WRITTEN_VALUE = "{\"id\":\"oneTimeRoundBasedTimerId\",\"actionId\":\"actionId\",\"round\":123123123,\"priority\":456}";

@@ -10,8 +10,7 @@ import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RecurringRoundBasedTimerImplTests {
@@ -124,6 +123,9 @@ class RecurringRoundBasedTimerImplTests {
         _recurringRoundBasedTimer.run();
 
         verify(_mockAction).run(null);
+        verify(_mockRoundBasedTimerManager, never())
+                .deregisterRecurringRoundBasedTimer(_recurringRoundBasedTimer);
+        assertFalse(_recurringRoundBasedTimer.isDeleted());
     }
 
     @Test

@@ -7,10 +7,10 @@ import java.util.function.Consumer;
 
 public class OneTimeRoundBasedTimerImpl extends AbstractRoundBasedTimer<OneTimeRoundBasedTimer>
         implements OneTimeRoundBasedTimer {
-    private final long ROUND_WHEN_GOES_OFF;
+    private final int ROUND_WHEN_GOES_OFF;
 
     public OneTimeRoundBasedTimerImpl(String timerId, @SuppressWarnings("rawtypes") Action action,
-                                      long roundWhenGoesOff, int priority,
+                                      int roundWhenGoesOff, int priority,
                                       Consumer<OneTimeRoundBasedTimer>
                                              addRecurringTimerToRoundManager,
                                       Consumer<OneTimeRoundBasedTimer>
@@ -21,7 +21,7 @@ public class OneTimeRoundBasedTimerImpl extends AbstractRoundBasedTimer<OneTimeR
     }
 
     @Override
-    public long roundWhenGoesOff() {
+    public int roundWhenGoesOff() {
         enforceDeletionInvariants();
         return ROUND_WHEN_GOES_OFF;
     }

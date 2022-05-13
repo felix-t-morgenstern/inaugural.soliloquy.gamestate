@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 class OneTimeRoundBasedTimerImplTests {
     private final String TIMER_ID = randomString();
     private final String ACTION_ID = randomString();
-    private final long ROUND_WHEN_GOES_OFF = randomLong();
+    private final int ROUND_WHEN_GOES_OFF = randomInt();
     private final int PRIORITY = randomInt();
 
     @Mock
@@ -57,7 +57,6 @@ class OneTimeRoundBasedTimerImplTests {
                 _mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
                 _mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
         ));
-        //noinspection ConstantConditions
         assertThrows(IllegalArgumentException.class, () -> new OneTimeRoundBasedTimerImpl(
                 TIMER_ID, _mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
                 null,

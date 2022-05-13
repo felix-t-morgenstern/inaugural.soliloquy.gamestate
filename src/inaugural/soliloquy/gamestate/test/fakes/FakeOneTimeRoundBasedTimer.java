@@ -9,29 +9,21 @@ public class FakeOneTimeRoundBasedTimer extends FakeRoundBasedTimer
         implements OneTimeRoundBasedTimer {
     private final Consumer<OneTimeRoundBasedTimer> ON_DELETE;
 
-    private long _roundWhenGoesOff;
+    private int _roundWhenGoesOff;
 
     public FakeOneTimeRoundBasedTimer() {
         ON_DELETE = null;
     }
 
     public FakeOneTimeRoundBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
-                                     long roundWhenGoesOff, int priority) {
+                                     int roundWhenGoesOff, int priority) {
         super(id, action, priority);
         _roundWhenGoesOff = roundWhenGoesOff;
         ON_DELETE = null;
     }
 
-    public FakeOneTimeRoundBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
-                                     long roundWhenGoesOff, int priority,
-                                     Consumer<OneTimeRoundBasedTimer> onDelete) {
-        super(id, action, priority);
-        _roundWhenGoesOff = roundWhenGoesOff;
-        ON_DELETE = onDelete;
-    }
-
     @Override
-    public long roundWhenGoesOff() {
+    public int roundWhenGoesOff() {
         return _roundWhenGoesOff;
     }
 
