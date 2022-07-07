@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -32,7 +31,7 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
             throw new IllegalArgumentException(
                     "RecurringRoundBasedTimerHandler.read: data cannot be empty");
         }
-        RecurringTimerDTO dto = new Gson().fromJson(data, RecurringTimerDTO.class);
+        RecurringTimerDTO dto = JSON.fromJson(data, RecurringTimerDTO.class);
         return TURN_BASED_TIMER_FACTORY.makeRecurringTimer(dto.id, GET_ACTION.apply(dto.actionId),
                 dto.roundModulo, dto.roundOffset, dto.priority);
     }
@@ -46,7 +45,7 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
         dto.roundModulo = recurringRoundBasedTimer.roundModulo();
         dto.roundOffset = recurringRoundBasedTimer.roundOffset();
         dto.priority = recurringRoundBasedTimer.priority();
-        return new Gson().toJson(dto, RecurringTimerDTO.class);
+        return JSON.toJson(dto, RecurringTimerDTO.class);
     }
 
     private static class RecurringTimerDTO {

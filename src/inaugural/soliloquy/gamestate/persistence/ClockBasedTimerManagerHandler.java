@@ -31,7 +31,7 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
     public ClockBasedTimerManager read(String data) throws IllegalArgumentException {
         CLOCK_BASED_TIMER_MANAGER.clear();
 
-        ClockBasedTimerManagerDTO dto = GSON.fromJson(Check.ifNullOrEmpty(data, "data"),
+        ClockBasedTimerManagerDTO dto = JSON.fromJson(Check.ifNullOrEmpty(data, "data"),
                 ClockBasedTimerManagerDTO.class);
 
         for (String oneTimeClockBasedTimerDTO : dto.oneTimeClockBasedTimers) {
@@ -72,7 +72,7 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
                     RECURRING_CLOCK_BASED_TIMER_HANDLER.write(recurringClockBasedTimers.get(i));
         }
 
-        return GSON.toJson(dto);
+        return JSON.toJson(dto);
     }
 
     private static class ClockBasedTimerManagerDTO {

@@ -26,7 +26,7 @@ public class RecurringClockBasedTimerHandler
     public RecurringClockBasedTimer read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
 
-        RecurringClockBasedTimerDTO dto = GSON.fromJson(data, RecurringClockBasedTimerDTO.class);
+        RecurringClockBasedTimerDTO dto = JSON.fromJson(data, RecurringClockBasedTimerDTO.class);
 
         //noinspection rawtypes
         Action firingAction = GET_ACTION.apply(dto.actionId);
@@ -53,7 +53,7 @@ public class RecurringClockBasedTimerHandler
         dto.lastFiredTimestamp = recurringClockBasedTimer.lastFiringTimestamp();
         dto.mostRecentTimestamp = recurringClockBasedTimer.mostRecentTimestamp();
 
-        return GSON.toJson(dto);
+        return JSON.toJson(dto);
     }
 
     private static class RecurringClockBasedTimerDTO {

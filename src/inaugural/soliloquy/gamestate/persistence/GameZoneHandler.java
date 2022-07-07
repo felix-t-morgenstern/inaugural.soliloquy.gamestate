@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.GameZoneArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
@@ -37,7 +36,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
 
     @Override
     public GameZone read(String writtenData) throws IllegalArgumentException {
-        GameZoneDTO dto = new Gson().fromJson(writtenData, GameZoneDTO.class);
+        GameZoneDTO dto = JSON.fromJson(writtenData, GameZoneDTO.class);
 
         Tile[][] tiles = new Tile[dto.maxX+1][dto.maxY+1];
         for(int x = 0; x <= dto.maxX; x++) {
@@ -90,7 +89,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
                 dto.tiles[x][y] = TILE_HANDLER.write(gameZone.tile(x,y));
             }
         }
-        return new Gson().toJson(dto);
+        return JSON.toJson(dto);
     }
 
     private static class GameZoneDTO {

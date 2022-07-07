@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
@@ -36,7 +35,7 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
     @Override
     public Item read(String input) throws IllegalArgumentException {
         Check.ifNullOrEmpty(input, "input");
-        ItemDTO itemDTO = new Gson().fromJson(input, ItemDTO.class);
+        ItemDTO itemDTO = JSON.fromJson(input, ItemDTO.class);
         UUID uuid = UUID_HANDLER.read(itemDTO.uuid);
         ItemType itemType = GET_ITEM_TYPE.apply(itemDTO.typeId);
         VariableCache data = DATA_HANDLER.read(itemDTO.data);
@@ -65,7 +64,7 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
             itemDTO.numberInStack = item.getNumberInStack();
         }
         itemDTO.data = DATA_HANDLER.write(item.data());
-        return new Gson().toJson(itemDTO);
+        return JSON.toJson(itemDTO);
     }
 
     private static class ItemDTO {

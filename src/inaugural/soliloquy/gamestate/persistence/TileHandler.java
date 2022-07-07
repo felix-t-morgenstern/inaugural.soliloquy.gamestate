@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.TileArchetype;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.Pair;
@@ -114,7 +113,7 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
             throw new IllegalArgumentException("TileHandler.read: data cannot be empty");
         }
 
-        TileDTO dto = new Gson().fromJson(data, TileDTO.class);
+        TileDTO dto = JSON.fromJson(data, TileDTO.class);
 
         Tile tile = TILE_FACTORY.make(dto.x, dto.y, DATA_HANDLER.read(dto.data));
         tile.setHeight(dto.height);
@@ -227,7 +226,7 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
 
         dto.data = DATA_HANDLER.write(tile.data());
 
-        return new Gson().toJson(dto, TileDTO.class);
+        return JSON.toJson(dto, TileDTO.class);
     }
 
     private static class TileDTO {

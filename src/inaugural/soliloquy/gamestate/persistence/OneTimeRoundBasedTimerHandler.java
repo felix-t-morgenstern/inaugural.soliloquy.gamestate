@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -33,7 +32,7 @@ public class OneTimeRoundBasedTimerHandler extends AbstractTypeHandler<OneTimeRo
             throw new IllegalArgumentException(
                     "OneTimeRoundBasedTimerHandler.read: data cannot be empty");
         }
-        OneTimeTimerDTO dto = new Gson().fromJson(data, OneTimeTimerDTO.class);
+        OneTimeTimerDTO dto = JSON.fromJson(data, OneTimeTimerDTO.class);
         return TURN_BASED_TIMER_FACTORY.makeOneTimeTimer(dto.id, GET_ACTION.apply(dto.actionId),
                 dto.round, dto.priority);
     }
@@ -49,7 +48,7 @@ public class OneTimeRoundBasedTimerHandler extends AbstractTypeHandler<OneTimeRo
         dto.actionId = oneTimeTimer.actionId();
         dto.round = oneTimeTimer.roundWhenGoesOff();
         dto.priority = oneTimeTimer.priority();
-        return new Gson().toJson(dto, OneTimeTimerDTO.class);
+        return JSON.toJson(dto, OneTimeTimerDTO.class);
     }
 
     private static class OneTimeTimerDTO {

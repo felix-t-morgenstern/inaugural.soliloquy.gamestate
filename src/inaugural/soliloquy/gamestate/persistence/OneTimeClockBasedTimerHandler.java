@@ -25,7 +25,7 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
     public OneTimeClockBasedTimer read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
 
-        OneTimeClockBasedTimerDTO dto = GSON.fromJson(data, OneTimeClockBasedTimerDTO.class);
+        OneTimeClockBasedTimerDTO dto = JSON.fromJson(data, OneTimeClockBasedTimerDTO.class);
 
         @SuppressWarnings("rawtypes") Action firingAction = GET_ACTION.apply(dto.actionId);
 
@@ -46,7 +46,7 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
         dto.pausedTime = oneTimeClockBasedTimer.pausedTimestamp();
         dto.mostRecentTimestamp = oneTimeClockBasedTimer.mostRecentTimestamp();
 
-        return GSON.toJson(dto);
+        return JSON.toJson(dto);
     }
 
     private static class OneTimeClockBasedTimerDTO {

@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
@@ -47,7 +46,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
             throw new IllegalArgumentException(
                     "TileFixtureHandler.read: data cannot be empty");
         }
-        TileFixtureDTO dto = new Gson().fromJson(data, TileFixtureDTO.class);
+        TileFixtureDTO dto = JSON.fromJson(data, TileFixtureDTO.class);
         TileFixture tileFixture = TILE_FIXTURE_FACTORY.make(
                 GET_FIXTURE_TYPE.apply(dto.fixtureTypeId),
                 DATA_HANDLER.read(dto.data), UUID_HANDLER.read(dto.uuid));
@@ -78,7 +77,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
         }
         dto.data = DATA_HANDLER.write(tileFixture.data());
         dto.name = tileFixture.getName();
-        return new Gson().toJson(dto);
+        return JSON.toJson(dto);
     }
 
     private static class TileFixtureDTO {

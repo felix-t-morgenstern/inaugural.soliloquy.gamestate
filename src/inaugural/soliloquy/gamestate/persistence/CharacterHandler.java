@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
@@ -80,7 +79,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
 
     @Override
     public Character read(String data) throws IllegalArgumentException {
-        CharacterDTO dto = new Gson().fromJson(data, CharacterDTO.class);
+        CharacterDTO dto = JSON.fromJson(data, CharacterDTO.class);
         Character readCharacter =
                 CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
                         UUID_HANDLER.read(dto.uuid), DATA_HANDLER.read(dto.data));
@@ -274,7 +273,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         dto.data = DATA_HANDLER.write(character.data());
         dto.name = character.getName();
 
-        return new Gson().toJson(dto);
+        return JSON.toJson(dto);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import com.google.gson.Gson;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.Registry;
@@ -95,7 +94,7 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
                     "GameStateHandler.read: writtenData cannot be empty");
         }
 
-        GameStateDTO dto = new Gson().fromJson(writtenData, GameStateDTO.class);
+        GameStateDTO dto = JSON.fromJson(writtenData, GameStateDTO.class);
 
         Party party = PARTY_FACTORY.make(VARIABLE_CACHE_HANDLER.read(dto.partyAttributes));
 
@@ -200,7 +199,7 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
             dto.recurringRoundBasedTimers[index++] =
                     RECURRING_ROUND_BASED_TIMER_HANDLER.write(recurringRoundBasedTimer);
         }
-        return new Gson().toJson(dto);
+        return JSON.toJson(dto);
     }
 
     private static class GameStateDTO {
