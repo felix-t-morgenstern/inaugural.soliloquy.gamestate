@@ -6,7 +6,6 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -15,12 +14,14 @@ import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 import soliloquy.specs.ruleset.entities.CharacterType;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterImplTests {
     private Character _character;
 
-    private final EntityUuid UUID = new FakeEntityUuid("a94fad3f-483c-4bdb-b29a-72d36a489721");
+    private final UUID UUID = java.util.UUID.randomUUID();
     private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
     private final CharacterAIType AI_TYPE = new FakeCharacterAIType();
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new FakeCharacterEventsFactory();

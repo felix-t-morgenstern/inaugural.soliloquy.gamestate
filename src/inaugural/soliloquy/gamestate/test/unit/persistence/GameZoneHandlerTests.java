@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.GameZoneHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentTileHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentVariableCacheHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeTileHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
 import inaugural.soliloquy.gamestate.test.spydoubles.GameZoneFactorySpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameZoneHandlerTests {
     private final GameZoneFactorySpyDouble GAME_ZONE_FACTORY = new GameZoneFactorySpyDouble();
-    private final FakePersistentTileHandler TILE_HANDLER = new FakePersistentTileHandler();
-    private final FakePersistentVariableCacheHandler DATA_HANDLER =
-            new FakePersistentVariableCacheHandler();
+    private final FakeTileHandler TILE_HANDLER = new FakeTileHandler();
+    private final FakeVariableCacheHandler DATA_HANDLER =
+            new FakeVariableCacheHandler();
     @SuppressWarnings("rawtypes")
     private final HashMap<String, Action> ACTIONS = new HashMap<>();
     private final String ON_ENTRY_ACTION_ID = "onEntryActionId";

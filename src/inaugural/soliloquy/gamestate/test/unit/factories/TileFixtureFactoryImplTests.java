@@ -2,34 +2,35 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.TileFixtureFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.stubs.EntityUuidFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.factories.TileFixtureFactory;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureFactoryImplTests {
-    private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
+    private final UUID UUID = java.util.UUID.randomUUID();
+    private final UUID GENERATED_UUID = java.util.UUID.randomUUID();
+    private final Supplier<UUID> UUID_FACTORY = () -> GENERATED_UUID;
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new FakeTileFixtureItemsFactory();
     private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeFixtureType FIXTURE_TYPE = new FakeFixtureType();
     private final VariableCache DATA = new VariableCacheStub();
-    private final EntityUuid ID = new FakeEntityUuid();
 
     private TileFixtureFactory _tileFixtureFactory;
 
     @BeforeEach
     void setUp() {
-        _tileFixtureFactory = new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY,
+        _tileFixtureFactory = new TileFixtureFactoryImpl(UUID_FACTORY,
                 TILE_FIXTURE_ITEMS_FACTORY, DATA_FACTORY);
     }
 
@@ -39,10 +40,10 @@ class TileFixtureFactoryImplTests {
                 () -> new TileFixtureFactoryImpl(null, TILE_FIXTURE_ITEMS_FACTORY,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, null,
+                () -> new TileFixtureFactoryImpl(UUID_FACTORY, null,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureFactoryImpl(ENTITY_UUID_FACTORY, TILE_FIXTURE_ITEMS_FACTORY,
+                () -> new TileFixtureFactoryImpl(UUID_FACTORY, TILE_FIXTURE_ITEMS_FACTORY,
                         null));
     }
 
@@ -57,7 +58,7 @@ class TileFixtureFactoryImplTests {
         TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, null);
 
         assertNotNull(tileFixture);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.uuid());
+        assertSame(GENERATED_UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
@@ -74,7 +75,7 @@ class TileFixtureFactoryImplTests {
         TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, DATA);
 
         assertNotNull(tileFixture);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, tileFixture.uuid());
+        assertSame(GENERATED_UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(DATA, tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
@@ -88,10 +89,10 @@ class TileFixtureFactoryImplTests {
 
     @Test
     void testMakeWithId() {
-        TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, null, ID);
+        TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, null, UUID);
 
         assertNotNull(tileFixture);
-        assertSame(ID, tileFixture.uuid());
+        assertSame(UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
@@ -105,10 +106,10 @@ class TileFixtureFactoryImplTests {
 
     @Test
     void testMakeWithIdAndData() {
-        TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, DATA, ID);
+        TileFixture tileFixture = _tileFixtureFactory.make(FIXTURE_TYPE, DATA, UUID);
 
         assertNotNull(tileFixture);
-        assertSame(ID, tileFixture.uuid());
+        assertSame(UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
         assertSame(DATA, tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
@@ -126,7 +127,7 @@ class TileFixtureFactoryImplTests {
                 () -> _tileFixtureFactory.make(null, null));
 
         assertThrows(IllegalArgumentException.class,
-                () -> _tileFixtureFactory.make(null, null, ID));
+                () -> _tileFixtureFactory.make(null, null, UUID));
         assertThrows(IllegalArgumentException.class,
                 () -> _tileFixtureFactory.make(FIXTURE_TYPE, null, null));
     }

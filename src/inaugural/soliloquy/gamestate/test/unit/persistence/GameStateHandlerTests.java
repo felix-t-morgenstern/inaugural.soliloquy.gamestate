@@ -2,10 +2,10 @@ package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.GameStateHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentCharacterHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentOneTimeRoundBasedTimerHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentRecurringRoundBasedTimerHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentVariableCacheHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeCharacterHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeOneTimeRoundBasedTimerHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeRecurringRoundBasedTimerHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
 import inaugural.soliloquy.gamestate.test.stubs.GameZonesRepoStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +21,7 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -30,14 +31,13 @@ class GameStateHandlerTests {
     private final FakeGameStateFactory GAME_STATE_FACTORY = new FakeGameStateFactory();
     private final PartyFactory PARTY_FACTORY = new FakePartyFactory();
     private final GameZonesRepoStub GAME_ZONES_REPO = new GameZonesRepoStub();
-    private final FakePersistentVariableCacheHandler VARIABLE_CACHE_HANDLER =
-            new FakePersistentVariableCacheHandler();
-    private final FakePersistentCharacterHandler CHARACTER_HANDLER =
-            new FakePersistentCharacterHandler();
-    private final FakePersistentOneTimeRoundBasedTimerHandler ONE_TIME_TIMER_HANDLER =
-            new FakePersistentOneTimeRoundBasedTimerHandler();
-    private final FakePersistentRecurringRoundBasedTimerHandler RECURRING_TIMER_HANDLER =
-            new FakePersistentRecurringRoundBasedTimerHandler();
+    private final FakeVariableCacheHandler VARIABLE_CACHE_HANDLER =
+            new FakeVariableCacheHandler();
+    private final FakeCharacterHandler CHARACTER_HANDLER = new FakeCharacterHandler();
+    private final FakeOneTimeRoundBasedTimerHandler ONE_TIME_TIMER_HANDLER =
+            new FakeOneTimeRoundBasedTimerHandler();
+    private final FakeRecurringRoundBasedTimerHandler RECURRING_TIMER_HANDLER =
+            new FakeRecurringRoundBasedTimerHandler();
     private final String GAME_ZONE_ID = "gameZoneId";
     private final VariableCache DATA = new VariableCacheStub();
     private final String PC_IN_GAME_ZONE_ID = "b37594cf-5cd5-441d-9dff-adc7392c221e";
@@ -97,11 +97,11 @@ class GameStateHandlerTests {
         FakeGameState gameState = new FakeGameState(party, DATA);
         String pcNotInGameZoneId = "8642a24b-97a7-40de-bb27-ea502c435381";
         FakeCharacter pcNotInGameZone =
-                new FakeCharacter(new FakeEntityUuid(pcNotInGameZoneId), null, null);
+                new FakeCharacter(UUID.fromString(pcNotInGameZoneId), null, null);
         FakeCharacter pcInGameZone =
-                new FakeCharacter(new FakeEntityUuid(PC_IN_GAME_ZONE_ID), null, null);
+                new FakeCharacter(UUID.fromString(PC_IN_GAME_ZONE_ID), null, null);
         VariableCache pcInGameZoneRoundData = new VariableCacheStub();
-        FakeCharacter npcInGameZone = new FakeCharacter(new FakeEntityUuid(NPC_ID), null, null);
+        FakeCharacter npcInGameZone = new FakeCharacter(UUID.fromString(NPC_ID), null, null);
         VariableCache nonPcInGameZoneRoundData = new VariableCacheStub();
         party.characters().add(pcNotInGameZone);
         party.characters().add(pcInGameZone);
@@ -140,8 +140,8 @@ class GameStateHandlerTests {
     @Test
     void testRead(){
         Character pcInGameZone =
-                new FakeCharacter(new FakeEntityUuid(PC_IN_GAME_ZONE_ID), null, null);
-        Character npcInGameZone = new FakeCharacter(new FakeEntityUuid(NPC_ID), null, null);
+                new FakeCharacter(UUID.fromString(PC_IN_GAME_ZONE_ID), null, null);
+        Character npcInGameZone = new FakeCharacter(UUID.fromString(NPC_ID), null, null);
         FakeGameZone gameZone = new FakeGameZone();
         gameZone.RETURN_ACTUAL_TILE_AT_LOCATION = true;
         gameZone.TILES[PC_X][PC_Y].characters().add(pcInGameZone);
@@ -191,9 +191,9 @@ class GameStateHandlerTests {
     @Test
     void testReadWhenPartyMemberInGameZoneIsNotAtSpecifiedLocation() {
         Character pcInGameZone =
-                new FakeCharacter(new FakeEntityUuid(PC_IN_GAME_ZONE_ID), null, null);
+                new FakeCharacter(UUID.fromString(PC_IN_GAME_ZONE_ID), null, null);
         Character nonPcInGameZone =
-                new FakeCharacter(new FakeEntityUuid(NPC_ID), null, null);
+                new FakeCharacter(UUID.fromString(NPC_ID), null, null);
         FakeGameZone gameZone = new FakeGameZone();
         gameZone.RETURN_ACTUAL_TILE_AT_LOCATION = true;
         gameZone.TILES[PC_X +1][PC_Y].characters().add(pcInGameZone);
@@ -207,9 +207,9 @@ class GameStateHandlerTests {
     @Test
     void testReadWhenCharacterInRoundQueueIsNotAtSpecifiedLocation() {
         Character pcInGameZone =
-                new FakeCharacter(new FakeEntityUuid(PC_IN_GAME_ZONE_ID), null, null);
+                new FakeCharacter(UUID.fromString(PC_IN_GAME_ZONE_ID), null, null);
         Character nonPcInGameZone =
-                new FakeCharacter(new FakeEntityUuid(NPC_ID), null, null);
+                new FakeCharacter(UUID.fromString(NPC_ID), null, null);
         FakeGameZone gameZone = new FakeGameZone();
         gameZone.RETURN_ACTUAL_TILE_AT_LOCATION = true;
         gameZone.TILES[PC_X][PC_Y].characters().add(pcInGameZone);

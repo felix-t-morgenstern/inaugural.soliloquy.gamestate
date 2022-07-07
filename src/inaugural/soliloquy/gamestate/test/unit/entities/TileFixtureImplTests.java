@@ -6,7 +6,6 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -15,13 +14,14 @@ import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureImplTests {
     private TileFixture _tileFixture;
 
-    private final EntityUuid UUID = new FakeEntityUuid();
+    private final UUID UUID = java.util.UUID.randomUUID();
     private final FakeFixtureType TYPE = new FakeFixtureType();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new FakeTileFixtureItemsFactory();

@@ -2,23 +2,23 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.CharacterFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterEquipmentSlotsFactory;
-import inaugural.soliloquy.gamestate.test.stubs.EntityUuidFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterType;
 
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterFactoryImplTests {
-    private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
+    private final UUID UUID = new UUID(123L, 456L);
+    private final Supplier<UUID> UUID_FACTORY = () -> UUID;
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY =
             new FakeCharacterEventsFactory();
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOT_FACTORY =
@@ -34,13 +34,12 @@ class CharacterFactoryImplTests {
     private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final VariableCache DATA = new VariableCacheStub();
     private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
-    private final EntityUuid ENTITY_UUID = new FakeEntityUuid();
 
     private CharacterFactory _characterFactory;
 
     @BeforeEach
     void setUp() {
-        _characterFactory = new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+        _characterFactory = new CharacterFactoryImpl(UUID_FACTORY,
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOT_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
@@ -62,7 +61,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                () -> new CharacterFactoryImpl(UUID_FACTORY,
                         null,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -71,7 +70,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                () -> new CharacterFactoryImpl(UUID_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         null,
                         CHARACTER_INVENTORY_FACTORY,
@@ -80,7 +79,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                () -> new CharacterFactoryImpl(UUID_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         null,
@@ -89,7 +88,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                () -> new CharacterFactoryImpl(UUID_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -98,7 +97,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                () -> new CharacterFactoryImpl(UUID_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -107,7 +106,7 @@ class CharacterFactoryImplTests {
                         CHARACTER_STATUS_EFFECTS_FACTORY,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                () -> new CharacterFactoryImpl(UUID_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -116,7 +115,7 @@ class CharacterFactoryImplTests {
                         null,
                         DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CharacterFactoryImpl(ENTITY_UUID_FACTORY,
+                () -> new CharacterFactoryImpl(UUID_FACTORY,
                         CHARACTER_EVENTS_FACTORY,
                         CHARACTER_EQUIPMENT_SLOT_FACTORY,
                         CHARACTER_INVENTORY_FACTORY,
@@ -137,15 +136,15 @@ class CharacterFactoryImplTests {
         Character character = _characterFactory.make(CHARACTER_TYPE);
 
         assertNotNull(character);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, character.uuid());
+        assertSame(UUID, character.uuid());
     }
 
     @Test
     void testMakeWithEntityUuid() {
-        Character character = _characterFactory.make(CHARACTER_TYPE, ENTITY_UUID, DATA);
+        Character character = _characterFactory.make(CHARACTER_TYPE, UUID, DATA);
 
         assertNotNull(character);
-        assertSame(ENTITY_UUID, character.uuid());
+        assertSame(UUID, character.uuid());
         assertSame(DATA, character.data());
     }
 
@@ -153,10 +152,10 @@ class CharacterFactoryImplTests {
     void testMakeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> _characterFactory.make(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterFactory.make(null, ENTITY_UUID, DATA));
+                () -> _characterFactory.make(null, UUID, DATA));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterFactory.make(CHARACTER_TYPE, null, DATA));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterFactory.make(CHARACTER_TYPE, ENTITY_UUID, null));
+                () -> _characterFactory.make(CHARACTER_TYPE, UUID, null));
     }
 }

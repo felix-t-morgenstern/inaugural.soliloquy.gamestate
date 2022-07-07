@@ -11,7 +11,6 @@ import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.PersistentValuesHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -29,13 +28,14 @@ import soliloquy.specs.ruleset.gameconcepts.*;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.nio.file.Path;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 public class GameStateModule extends AbstractModule {
     private GameStateFactory _gameStateFactory;
 
     public GameStateModule(ListFactory listFactory,
                            CoordinateFactory coordinateFactory,
-                           EntityUuidFactory entityUuidFactory,
                            MapFactory mapFactory,
                            PairFactory pairFactory,
                            RegistryFactory registryFactory,
@@ -66,9 +66,10 @@ public class GameStateModule extends AbstractModule {
                            Registry<ReactiveAbility> reactiveAbilities,
                            @SuppressWarnings("rawtypes") Registry<Action> actions,
                            java.util.Map<String, Path> fileLocations) {
-        TypeHandler<EntityUuid> uuidHandler =
-                persistentValuesHandler.getTypeHandler(
-                        EntityUuid.class.getCanonicalName());
+        Supplier<UUID> uuidFactory = UUID::randomUUID;
+
+        TypeHandler<UUID> uuidHandler =
+                persistentValuesHandler.getTypeHandler(UUID.class.getCanonicalName());
 
         TypeHandler<VariableCache> dataHandler =
                 persistentValuesHandler.getTypeHandler(
@@ -78,7 +79,7 @@ public class GameStateModule extends AbstractModule {
                 persistentValuesHandler.getTypeHandler(
                         Sprite.class.getCanonicalName());
 
-                ItemFactory itemFactory = new ItemFactoryImpl(entityUuidFactory, variableCacheFactory,
+                ItemFactory itemFactory = new ItemFactoryImpl(uuidFactory, variableCacheFactory,
                 pairFactory);
 
         TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get,
@@ -108,7 +109,7 @@ public class GameStateModule extends AbstractModule {
         CharacterStatusEffectsFactory characterStatusEffectsFactory =
                 new CharacterStatusEffectsFactoryImpl(mapFactory, resistanceCalculation);
 
-        CharacterFactory characterFactory = new CharacterFactoryImpl(entityUuidFactory,
+        CharacterFactory characterFactory = new CharacterFactoryImpl(uuidFactory,
                 characterEventsFactory, characterEquipmentSlotsFactory, characterInventoryFactory,
                 variableStatsFactory, entitiesOfTypeFactory, characterStatusEffectsFactory,
                 variableCacheFactory);
@@ -124,7 +125,7 @@ public class GameStateModule extends AbstractModule {
         TileFixtureItemsFactory tileFixtureItemsFactory =
                 new TileFixtureItemsFactoryImpl(listFactory);
 
-        TileFixtureFactory tileFixtureFactory = new TileFixtureFactoryImpl(entityUuidFactory,
+        TileFixtureFactory tileFixtureFactory = new TileFixtureFactoryImpl(uuidFactory,
                 tileFixtureItemsFactory, variableCacheFactory);
 
         TypeHandler<TileFixture> tileFixturesHandler =

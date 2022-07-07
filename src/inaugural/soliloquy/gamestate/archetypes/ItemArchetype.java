@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -12,6 +11,7 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ItemArchetype implements Item {
 
@@ -41,7 +41,7 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public EntityUuid uuid() {
+    public UUID uuid() {
         return null;
     }
 

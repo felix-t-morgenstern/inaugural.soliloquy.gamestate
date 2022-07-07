@@ -5,34 +5,34 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeItemFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentEntityUuidHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakePersistentVariableCacheHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeUuidHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
 import soliloquy.specs.ruleset.entities.ItemType;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ItemHandlerTests {
     private final Registry<ItemType> ITEM_TYPES_REGISTRY = new FakeRegistry<>();
-    private final TypeHandler<EntityUuid> UUID_HANDLER =
-            new FakePersistentEntityUuidHandler();
+    private final TypeHandler<UUID> UUID_HANDLER = new FakeUuidHandler();
     private final TypeHandler<VariableCache> DATA_HANDLER =
-            new FakePersistentVariableCacheHandler();
+            new FakeVariableCacheHandler();
     private final ItemFactory ITEM_FACTORY = new FakeItemFactory();
     private final int NUM_CHARGES = 123;
     private final int NUM_IN_STACK = 456;
     private final float X_TILE_WIDTH_OFFSET = 0.546f;
     private final float Y_TILE_HEIGHT_OFFSET = 0.213f;
 
-    private final String DATA_WITH_CHARGES = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"charges\":123,\"data\":\"VariableCache0\"}";
-    private final String DATA_STACKABLE = "{\"id\":\"EntityUuid0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"numberInStack\":456,\"data\":\"VariableCache0\"}";
+    private final String DATA_WITH_CHARGES = "{\"uuid\":\"UUID0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"charges\":123,\"data\":\"VariableCache0\"}";
+    private final String DATA_STACKABLE = "{\"uuid\":\"UUID0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"numberInStack\":456,\"data\":\"VariableCache0\"}";
 
     private FakeItem _item;
     private ItemTypeStub _itemType;
@@ -112,12 +112,12 @@ class ItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_WITH_CHARGES);
 
         assertNotNull(readItem);
-        assertSame(((FakePersistentEntityUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakeUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.uuid());
         assertSame(_itemType, readItem.type());
         assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
         assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
-        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER)
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
         assertEquals(NUM_CHARGES, readItem.getCharges());
@@ -129,12 +129,12 @@ class ItemHandlerTests {
         Item readItem = _persistentItemHandler.read(DATA_STACKABLE);
 
         assertNotNull(readItem);
-        assertSame(((FakePersistentEntityUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakeUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.uuid());
         assertSame(_itemType, readItem.type());
         assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
         assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
-        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER)
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER)
                 .READ_OUTPUTS.get(0),
                     readItem.data());
         assertEquals(NUM_IN_STACK, readItem.getNumberInStack());

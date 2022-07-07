@@ -1,11 +1,9 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -16,14 +14,16 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 // TODO: Consider extending HasDeletionInvariants
 public class ItemImpl implements Item {
-    private final EntityUuid UUID;
+    private final UUID UUID;
     private final ItemType ITEM_TYPE;
     private final VariableCache DATA;
     private final PairFactory PAIR_FACTORY;
-    private final EntityUuidFactory ENTITY_UUID_FACTORY;
+    private final Supplier<UUID> UUID_FACTORY;
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
     private final List<ReactiveAbility> REACTIVE_ABILITIES;
@@ -42,15 +42,15 @@ public class ItemImpl implements Item {
     private float _yTileHeightOffset;
 
     @SuppressWarnings("ConstantConditions")
-    public ItemImpl(EntityUuid uuid, ItemType itemType, VariableCache data, PairFactory pairFactory,
-                    EntityUuidFactory entityUuidFactory) {
+    public ItemImpl(UUID uuid, ItemType itemType, VariableCache data, PairFactory pairFactory,
+                    Supplier<UUID> uuidFactory) {
         UUID = Check.ifNull(uuid, "uuid");
         ITEM_TYPE = Check.ifNull(itemType, "itemType");
         _xTileWidthOffset = ITEM_TYPE.defaultXTileWidthOffset();
         _yTileHeightOffset = ITEM_TYPE.defaultYTileHeightOffset();
         DATA = Check.ifNull(data, "data");
         PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
-        ENTITY_UUID_FACTORY = Check.ifNull(entityUuidFactory, "entityUuidFactory");
+        UUID_FACTORY = Check.ifNull(uuidFactory, "uuidFactory");
         PASSIVE_ABILITIES = new ArrayList<>();
         ACTIVE_ABILITIES = new ArrayList<>();
         REACTIVE_ABILITIES = new ArrayList<>();
@@ -128,8 +128,8 @@ public class ItemImpl implements Item {
                     "ItemImpl.takeFromStack: numberToTake must be less than the number in the stack");
         }
         _numberInStack -= numberToTake;
-        Item takenFromStack = new ItemImpl(ENTITY_UUID_FACTORY.createRandomEntityUuid(),
-                ITEM_TYPE, DATA.makeClone(), PAIR_FACTORY, ENTITY_UUID_FACTORY);
+        Item takenFromStack = new ItemImpl(UUID_FACTORY.get(),
+                ITEM_TYPE, DATA.makeClone(), PAIR_FACTORY, UUID_FACTORY);
         takenFromStack.setNumberInStack(numberToTake);
         return takenFromStack;
     }
@@ -245,7 +245,7 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public EntityUuid uuid() {
+    public UUID uuid() {
         return UUID;
     }
 

@@ -2,16 +2,17 @@ package inaugural.soliloquy.gamestate.factories;
 
 import inaugural.soliloquy.gamestate.entities.CharacterImpl;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterType;
 
+import java.util.UUID;
+import java.util.function.Supplier;
+
 public class CharacterFactoryImpl implements CharacterFactory {
-    private final EntityUuidFactory ENTITY_UUID_FACTORY;
+    private final Supplier<UUID> UUID_FACTORY;
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY;
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOTS_FACTORY;
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY;
@@ -20,7 +21,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
-    public CharacterFactoryImpl(EntityUuidFactory entityUuidFactory,
+    public CharacterFactoryImpl(Supplier<UUID> uuidFactory,
                                 CharacterEventsFactory characterEventsFactory,
                                 CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory,
                                 CharacterInventoryFactory characterInventoryFactory,
@@ -28,7 +29,7 @@ public class CharacterFactoryImpl implements CharacterFactory {
                                 EntityMembersOfTypeFactory entityMembersOfTypeFactory,
                                 CharacterStatusEffectsFactory characterStatusEffectsFactory,
                                 VariableCacheFactory dataFactory) {
-        ENTITY_UUID_FACTORY = Check.ifNull(entityUuidFactory, "entityUuidFactory");
+        UUID_FACTORY = Check.ifNull(uuidFactory, "uuidFactory");
         CHARACTER_EVENTS_FACTORY = Check.ifNull(characterEventsFactory, "characterEventsFactory");
         CHARACTER_EQUIPMENT_SLOTS_FACTORY = Check.ifNull(characterEquipmentSlotsFactory,
                 "characterEquipmentSlotsFactory");
@@ -44,22 +45,21 @@ public class CharacterFactoryImpl implements CharacterFactory {
 
     @Override
     public Character make(CharacterType characterType) throws IllegalArgumentException {
-        return make(characterType, ENTITY_UUID_FACTORY.createRandomEntityUuid(),
-                DATA_FACTORY.make());
+        return make(characterType, UUID_FACTORY.get(), DATA_FACTORY.make());
     }
 
     @Override
-    public Character make(CharacterType characterType, EntityUuid entityUuid, VariableCache data)
+    public Character make(CharacterType characterType, UUID uuid, VariableCache data)
             throws IllegalArgumentException {
         if (characterType == null) {
             throw new IllegalArgumentException(
                     "CharacterFactory.make: characterType must be non-null");
         }
-        if (entityUuid == null) {
-            throw new IllegalArgumentException(
-                    "CharacterFactory.make: entityUuid must be non-null");
+        if (uuid == null) {
+            throw new IllegalArgumentException("CharacterFactory.make: uuid must be non-null");
         }
-        return new CharacterImpl(entityUuid,
+        return new CharacterImpl(
+                uuid,
                 characterType,
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOTS_FACTORY,

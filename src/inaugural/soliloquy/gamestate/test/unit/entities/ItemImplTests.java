@@ -2,27 +2,28 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.ItemImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.stubs.EntityUuidFactoryStub;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.EntityUuidFactory;
 import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ItemImplTests {
-    private final EntityUuid UUID = new FakeEntityUuid("64fd6bf1-4e57-492a-a8fb-5f1494f7ddf0");
+    private final UUID UUID = java.util.UUID.randomUUID();
     private final VariableCache DATA = new VariableCacheStub();
     private final PairFactory PAIR_FACTORY = new FakePairFactory();
-    private final EntityUuidFactory ENTITY_UUID_FACTORY = new EntityUuidFactoryStub();
+    private final UUID GENERATED_UUID = java.util.UUID.randomUUID();
+    private final Supplier<UUID> UUID_FACTORY = () -> GENERATED_UUID;
 
     private final Character CHARACTER = new FakeCharacter();
     private final CharacterEquipmentSlots CHARACTER_EQUIPMENT_SLOTS =
@@ -41,19 +42,19 @@ class ItemImplTests {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = null;
         FakeCharacterInventory.OVERRIDE_CONTAINS = null;
         _itemType = new ItemTypeStub();
-        _item = new ItemImpl(UUID, _itemType, DATA, PAIR_FACTORY, ENTITY_UUID_FACTORY);
+        _item = new ItemImpl(UUID, _itemType, DATA, PAIR_FACTORY, UUID_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, _itemType, DATA,
-                PAIR_FACTORY, ENTITY_UUID_FACTORY));
+                PAIR_FACTORY, UUID_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, null, DATA,
-                PAIR_FACTORY, ENTITY_UUID_FACTORY));
+                PAIR_FACTORY, UUID_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, null,
-                PAIR_FACTORY, ENTITY_UUID_FACTORY));
+                PAIR_FACTORY, UUID_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, DATA,
-                null, ENTITY_UUID_FACTORY));
+                null, UUID_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, DATA,
                 PAIR_FACTORY, null));
     }
@@ -65,7 +66,7 @@ class ItemImplTests {
 
     @Test
     void testEquals() {
-        Item item2 = new ItemImpl(UUID, _itemType, DATA, PAIR_FACTORY, ENTITY_UUID_FACTORY);
+        Item item2 = new ItemImpl(UUID, _itemType, DATA, PAIR_FACTORY, UUID_FACTORY);
 
         assertEquals(_item, item2);
     }
@@ -145,7 +146,7 @@ class ItemImplTests {
         Item takenFromStack = _item.takeFromStack(7);
 
         assertNotNull(takenFromStack);
-        assertSame(EntityUuidFactoryStub.RANDOM_ENTITY_UUID, takenFromStack.uuid());
+        assertSame(GENERATED_UUID, takenFromStack.uuid());
         assertSame(((VariableCacheStub)DATA)._cloneResult, takenFromStack.data());
         assertEquals((Integer) 7, takenFromStack.getNumberInStack());
         assertEquals((Integer) 3, _item.getNumberInStack());

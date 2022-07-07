@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.entities;
 import inaugural.soliloquy.gamestate.archetypes.CharacterStaticStatisticArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -17,13 +16,10 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CharacterImpl implements Character {
-    private final EntityUuid UUID;
+    private final UUID UUID;
     private final CharacterType CHARACTER_TYPE;
     private final List<CharacterClassification> CHARACTER_CLASSIFICATIONS;
     private final Map<String,String> PRONOUNS;
@@ -54,7 +50,7 @@ public class CharacterImpl implements Character {
     private CharacterAIType _aiType;
 
     @SuppressWarnings("ConstantConditions")
-    public CharacterImpl(EntityUuid uuid,
+    public CharacterImpl(UUID uuid,
                          CharacterType characterType,
                          CharacterEventsFactory characterEventsFactory,
                          CharacterEquipmentSlotsFactory equipmentSlotsFactory,
@@ -278,7 +274,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public EntityUuid uuid() {
+    public UUID uuid() {
         return UUID;
     }
 

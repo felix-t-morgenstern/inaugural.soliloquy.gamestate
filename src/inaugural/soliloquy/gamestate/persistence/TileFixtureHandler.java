@@ -7,18 +7,18 @@ import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.factories.TileFixtureFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
     private final Function<String, FixtureType> GET_FIXTURE_TYPE;
     private final TileFixtureFactory TILE_FIXTURE_FACTORY;
-    private final TypeHandler<EntityUuid> ID_HANDLER;
+    private final TypeHandler<UUID> UUID_HANDLER;
     private final TypeHandler<VariableCache> DATA_HANDLER;
     private final TypeHandler<Item> ITEMS_HANDLER;
 
@@ -26,13 +26,13 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
 
     public TileFixtureHandler(Function<String, FixtureType> getFixtureType,
                               TileFixtureFactory tileFixtureFactory,
-                              TypeHandler<EntityUuid> idHandler,
+                              TypeHandler<UUID> uuidHandler,
                               TypeHandler<VariableCache> dataHandler,
                               TypeHandler<Item> itemsHandler) {
         super(ARCHETYPE);
         GET_FIXTURE_TYPE = Check.ifNull(getFixtureType, "getFixtureType");
         TILE_FIXTURE_FACTORY = Check.ifNull(tileFixtureFactory, "tileFixtureFactory");
-        ID_HANDLER = Check.ifNull(idHandler, "idHandler");
+        UUID_HANDLER = Check.ifNull(uuidHandler, "uuidHandler");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
         ITEMS_HANDLER = Check.ifNull(itemsHandler, "itemsHandler");
     }
@@ -50,7 +50,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
         TileFixtureDTO dto = new Gson().fromJson(data, TileFixtureDTO.class);
         TileFixture tileFixture = TILE_FIXTURE_FACTORY.make(
                 GET_FIXTURE_TYPE.apply(dto.fixtureTypeId),
-                DATA_HANDLER.read(dto.data), ID_HANDLER.read(dto.id));
+                DATA_HANDLER.read(dto.data), UUID_HANDLER.read(dto.uuid));
         tileFixture.setXTileWidthOffset(dto.tileWidthOffset);
         tileFixture.setYTileHeightOffset(dto.tileHeightOffset);
         for(int i = 0; i < dto.items.length; i++) {
@@ -67,7 +67,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
                     "TileFixtureHandler.write: tileFixture cannot be null");
         }
         TileFixtureDTO dto = new TileFixtureDTO();
-        dto.id = ID_HANDLER.write(tileFixture.uuid());
+        dto.uuid = UUID_HANDLER.write(tileFixture.uuid());
         dto.fixtureTypeId = tileFixture.type().id();
         dto.tileWidthOffset = tileFixture.getXTileWidthOffset();
         dto.tileHeightOffset = tileFixture.getYTileHeightOffset();
@@ -82,7 +82,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
     }
 
     private static class TileFixtureDTO {
-        String id;
+        String uuid;
         String fixtureTypeId;
         float tileWidthOffset;
         float tileHeightOffset;

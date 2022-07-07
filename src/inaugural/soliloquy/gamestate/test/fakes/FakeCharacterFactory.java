@@ -1,10 +1,11 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
 import soliloquy.specs.ruleset.entities.CharacterType;
+
+import java.util.UUID;
 
 public class FakeCharacterFactory implements CharacterFactory {
     @Override
@@ -13,8 +14,9 @@ public class FakeCharacterFactory implements CharacterFactory {
     }
 
     @Override
-    public Character make(CharacterType characterType, EntityUuid entityUuid, VariableCache data) throws IllegalArgumentException {
-        return new FakeCharacter(entityUuid, characterType, data);
+    public Character make(CharacterType characterType, UUID uuid, VariableCache data)
+            throws IllegalArgumentException {
+        return new FakeCharacter(uuid, characterType, data);
     }
 
     @Override

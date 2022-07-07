@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.test.fakes.persistence;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import soliloquy.specs.common.infrastructure.VariableCache;
 
-public class FakePersistentVariableCacheHandler
+public class FakeVariableCacheHandler
         extends FakeTypeHandler<VariableCache> {
     @Override
     public String typeName() {

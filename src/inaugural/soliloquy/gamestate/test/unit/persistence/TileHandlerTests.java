@@ -29,15 +29,15 @@ class TileHandlerTests {
             new FakeTileWallSegmentFactory();
 
     private final FakeTypeHandler<Character> CHAR_HANDLER =
-            new FakePersistentCharacterHandler();
+            new FakeCharacterHandler();
     private final FakeTypeHandler<Item> ITEM_HANDLER =
-            new FakePersistentItemHandler();
+            new FakeItemHandler();
     private final FakeTypeHandler<TileFixture> FIXTURE_HANDLER =
-            new FakePersistentTileFixtureHandler();
+            new FakeTileFixtureHandler();
     private final FakeTypeHandler<Sprite> SPRITE_HANDLER =
-            new FakePersistentSpriteHandler();
+            new FakeSpriteHandler();
     private final TypeHandler<VariableCache> DATA_HANDLER =
-            new FakePersistentVariableCacheHandler();
+            new FakeVariableCacheHandler();
 
     private final int X = 123;
     private final int Y = 456;
@@ -168,32 +168,32 @@ class TileHandlerTests {
         assertNotNull(readTile);
         assertEquals(X, readTile.location().getX());
         assertEquals(Y, readTile.location().getY());
-        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
                 readTile.data());
         assertEquals(HEIGHT, readTile.getHeight());
         assertSame(GROUND_TYPE, readTile.getGroundType());
 
         assertEquals(1, readTile.characters().size());
-        Character characterFromHandler = ((FakePersistentCharacterHandler) CHAR_HANDLER)
+        Character characterFromHandler = ((FakeCharacterHandler) CHAR_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.characters().contains(characterFromHandler));
-        assertEquals("Character0", ((FakePersistentCharacterHandler) CHAR_HANDLER)
+        assertEquals("Character0", ((FakeCharacterHandler) CHAR_HANDLER)
                 .READ_INPUTS.get(0));
         assertEquals(111, readTile.characters().getZIndex(characterFromHandler));
 
         assertEquals(1, readTile.items().size());
-        Item itemFromHandler = ((FakePersistentItemHandler) ITEM_HANDLER)
+        Item itemFromHandler = ((FakeItemHandler) ITEM_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.items().contains(itemFromHandler));
-        assertEquals("Item0", ((FakePersistentItemHandler) ITEM_HANDLER)
+        assertEquals("Item0", ((FakeItemHandler) ITEM_HANDLER)
                 .READ_INPUTS.get(0));
         assertEquals(222, readTile.items().getZIndex(itemFromHandler));
 
         assertEquals(1, readTile.fixtures().size());
-        TileFixture fixtureFromHandler = ((FakePersistentTileFixtureHandler) FIXTURE_HANDLER)
+        TileFixture fixtureFromHandler = ((FakeTileFixtureHandler) FIXTURE_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.fixtures().contains(fixtureFromHandler));
-        assertEquals("TileFixture0", ((FakePersistentTileFixtureHandler) FIXTURE_HANDLER)
+        assertEquals("TileFixture0", ((FakeTileFixtureHandler) FIXTURE_HANDLER)
                 .READ_INPUTS.get(0));
         assertEquals(333, readTile.fixtures().getZIndex(fixtureFromHandler));
 
@@ -206,7 +206,7 @@ class TileHandlerTests {
                 readTile.wallSegments().getDirection(segmentFromFactory));
         assertEquals(444, readTile.wallSegments().getHeight(segmentFromFactory));
         assertEquals(555, readTile.wallSegments().getZIndex(segmentFromFactory));
-        assertSame(((FakePersistentVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(1),
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(1),
                 segmentFromFactory.data());
 
         assertEquals(1, readTile.movementEvents().size());
@@ -216,11 +216,11 @@ class TileHandlerTests {
         assertTrue(readTile.abilityEvents().contains(ABILITY_EVENT));
 
         assertEquals(1, readTile.sprites().size());
-        Sprite spriteFromHandler = ((FakePersistentSpriteHandler) SPRITE_HANDLER)
+        Sprite spriteFromHandler = ((FakeSpriteHandler) SPRITE_HANDLER)
                 .READ_OUTPUTS.get(0);
         assertTrue(readTile.sprites().containsKey(spriteFromHandler));
         assertEquals(666, readTile.sprites().get(spriteFromHandler));
-        assertEquals("Sprite0", ((FakePersistentSpriteHandler) SPRITE_HANDLER)
+        assertEquals("Sprite0", ((FakeSpriteHandler) SPRITE_HANDLER)
                 .READ_INPUTS.get(0));
     }
 

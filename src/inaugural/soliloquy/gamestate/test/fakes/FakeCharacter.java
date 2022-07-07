@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -17,6 +16,7 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class FakeCharacter implements Character {
     private boolean _isDeleted;
@@ -28,7 +28,7 @@ public class FakeCharacter implements Character {
     private String _name;
     private VariableCache _data;
 
-    private final EntityUuid UUID;
+    private final UUID UUID;
     private final CharacterType TYPE;
     private final List<CharacterClassification> CLASSIFICATIONS = new FakeList<>();
     private final Map<String,String> PRONOUNS = new FakeMap<>();
@@ -54,7 +54,7 @@ public class FakeCharacter implements Character {
         VARIABLE_STATS = new FakeCharacterVariableStatistics(this);
     }
 
-    public FakeCharacter(EntityUuid uuid, CharacterType type, VariableCache data) {
+    public FakeCharacter(UUID uuid, CharacterType type, VariableCache data) {
         UUID = uuid;
         TYPE = type;
         _data = data;
@@ -199,7 +199,7 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public EntityUuid uuid() {
+    public UUID uuid() {
         return UUID;
     }
 

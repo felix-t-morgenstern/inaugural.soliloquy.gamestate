@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -11,6 +10,8 @@ import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.FixtureType;
+
+import java.util.UUID;
 
 public class TileFixtureArchetype implements TileFixture {
     @Override
@@ -79,7 +80,7 @@ public class TileFixtureArchetype implements TileFixture {
     }
 
     @Override
-    public EntityUuid uuid() {
+    public UUID uuid() {
         return null;
     }
 

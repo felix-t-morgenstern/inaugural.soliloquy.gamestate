@@ -2,15 +2,16 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
+import java.util.UUID;
+
 public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements TileFixture {
-    private final EntityUuid UUID;
+    private final UUID UUID;
     private final FixtureType TYPE;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final VariableCache DATA;
@@ -20,7 +21,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     private float _yTileHeightOffset;
 
     @SuppressWarnings("ConstantConditions")
-    public TileFixtureImpl(EntityUuid uuid,
+    public TileFixtureImpl(UUID uuid,
                            FixtureType fixtureType,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
                            VariableCache data) {
@@ -35,7 +36,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     }
 
     @Override
-    public EntityUuid uuid() {
+    public UUID uuid() {
         return UUID;
     }
 

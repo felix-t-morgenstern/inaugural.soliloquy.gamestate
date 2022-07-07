@@ -9,15 +9,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: disorg.soliloquy:soliloquy.specs:0.0.248" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject:guice:4.0" level="project" />
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
-    <orderEntry type="library" name="Maven: disorg.soliloquy:soliloquy.specs:0.0.290" level="project" />
-    <orderEntry type="library" name="Maven: disorg.soliloquy:inaugural.soliloquy.tools:0.0.74" level="project" />
-    <orderEntry type="library" name="Maven: disorg.soliloquy:inaugural.soliloquy.common:0.0.13" level="project" />
+    <orderEntry type="library" name="Maven: disorg.soliloquy:soliloquy.specs:0.0.293" level="project" />
+    <orderEntry type="library" name="Maven: disorg.soliloquy:inaugural.soliloquy.tools:0.0.83" level="project" />
+    <orderEntry type="library" name="Maven: disorg.soliloquy:inaugural.soliloquy.common:0.0.14" level="project" />
     <orderEntry type="library" name="Maven: org.mockito:mockito-core:2.19.0" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.8.10" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy-agent:1.8.10" level="project" />

@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -16,6 +15,7 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class CharacterArchetype implements Character {
     @Override
@@ -159,7 +159,7 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public EntityUuid uuid() {
+    public UUID uuid() {
         return null;
     }
 

@@ -8,7 +8,6 @@ import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.EntityUuid;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
@@ -20,12 +19,13 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final CharacterFactory CHARACTER_FACTORY;
-    private final TypeHandler<EntityUuid> ID_HANDLER;
+    private final TypeHandler<UUID> UUID_HANDLER;
     private final Function<String, CharacterType> GET_CHARACTER_TYPE;
     private final Function<String, CharacterClassification> GET_CHARACTER_CLASSIFICATION;
     private final Function<String, ImageAssetSet> GET_IMAGE_ASSET_SET;
@@ -43,7 +43,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     private static final Character ARCHETYPE = new CharacterArchetype();
 
     public CharacterHandler(CharacterFactory characterFactory,
-                            TypeHandler<EntityUuid> idHandler,
+                            TypeHandler<UUID> uuidHandler,
                             Function<String, CharacterType> getCharacterType,
                             Function<String, CharacterClassification>
                                               getCharacterClassification,
@@ -61,7 +61,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                             TypeHandler<Item> itemHandler) {
         super(ARCHETYPE);
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
-        ID_HANDLER = Check.ifNull(idHandler, "idHandler");
+        UUID_HANDLER = Check.ifNull(uuidHandler, "uuidHandler");
         GET_CHARACTER_TYPE = Check.ifNull(getCharacterType, "getCharacterType");
         GET_CHARACTER_CLASSIFICATION = Check.ifNull(getCharacterClassification,
                 "getCharacterClassification");
@@ -83,7 +83,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         CharacterDTO dto = new Gson().fromJson(data, CharacterDTO.class);
         Character readCharacter =
                 CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
-                        ID_HANDLER.read(dto.id), DATA_HANDLER.read(dto.data));
+                        UUID_HANDLER.read(dto.uuid), DATA_HANDLER.read(dto.data));
 
         for(String classificationId : dto.classifications) {
             readCharacter.classifications().add(
@@ -163,7 +163,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                     "CharacterHandler.write: character cannot be null");
         }
         CharacterDTO dto = new CharacterDTO();
-        dto.id = ID_HANDLER.write(character.uuid());
+        dto.uuid = UUID_HANDLER.write(character.uuid());
         dto.characterTypeId = character.type().id();
 
         dto.classifications = new String[character.classifications().size()];
@@ -283,7 +283,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     }
 
     private class CharacterDTO {
-        String id;
+        String uuid;
         String characterTypeId;
         String[] classifications;
         CharacterPairedDataDTO[] pronouns;
