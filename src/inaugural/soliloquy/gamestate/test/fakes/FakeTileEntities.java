@@ -109,7 +109,7 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
             @Override
             public Pair<TEntity, Integer> next() {
                 TEntity entity = entities.next();
-                return new FakePair<>(entity, ENTITIES.get(entity));
+                return new Pair<>(entity, ENTITIES.get(entity));
             }
         };
     }

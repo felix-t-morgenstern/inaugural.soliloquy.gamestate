@@ -92,7 +92,7 @@ public class FakeItem implements Item {
             return null;
         }
         else {
-            return new FakePair<>(_equipmentCharacter, _equipmentSlotType);
+            return new Pair<>(_equipmentCharacter, _equipmentSlotType);
         }
     }
 

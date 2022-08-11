@@ -1,29 +1,17 @@
 package inaugural.soliloquy.gamestate.factories;
 
 import inaugural.soliloquy.gamestate.entities.TileWallSegmentsImpl;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegments;
 import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 
 public class TileWallSegmentsFactoryImpl implements TileWallSegmentsFactory {
-    private final PairFactory PAIR_FACTORY;
     private final MapFactory MAP_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
-    public TileWallSegmentsFactoryImpl(PairFactory pairFactory,
-                                       MapFactory mapFactory) {
-        if (pairFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileWallSegmentsFactory: pairFactory must be non-null");
-        }
-        PAIR_FACTORY = pairFactory;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileWallSegmentsFactory: mapFactory must be non-null");
-        }
-        MAP_FACTORY = mapFactory;
+    public TileWallSegmentsFactoryImpl(MapFactory mapFactory) {
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
     }
 
     @Override
@@ -32,7 +20,7 @@ public class TileWallSegmentsFactoryImpl implements TileWallSegmentsFactory {
             throw new IllegalArgumentException(
                     "TileWallSegmentsFactory.make: tile must be non-null");
         }
-        return new TileWallSegmentsImpl(tile, PAIR_FACTORY, MAP_FACTORY);
+        return new TileWallSegmentsImpl(tile, MAP_FACTORY);
     }
 
     @Override

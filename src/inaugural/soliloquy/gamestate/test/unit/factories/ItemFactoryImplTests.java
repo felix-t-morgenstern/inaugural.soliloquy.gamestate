@@ -6,7 +6,6 @@ import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -22,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ItemFactoryImplTests {
     private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
-    private final PairFactory PAIR_FACTORY = new FakePairFactory();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final UUID UUID = java.util.UUID.randomUUID();
     private final UUID GENERATED_UUID = java.util.UUID.randomUUID();
@@ -33,18 +31,15 @@ class ItemFactoryImplTests {
 
     @BeforeEach
     void setUp() {
-        _itemFactory = new ItemFactoryImpl(UUID_FACTORY, DATA_FACTORY,
-                PAIR_FACTORY);
+        _itemFactory = new ItemFactoryImpl(UUID_FACTORY, DATA_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new ItemFactoryImpl(null,
-                DATA_FACTORY, PAIR_FACTORY));
+                DATA_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemFactoryImpl(UUID_FACTORY,
-                null, PAIR_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new ItemFactoryImpl(UUID_FACTORY,
-                DATA_FACTORY, null));
+                null));
     }
 
     @Test

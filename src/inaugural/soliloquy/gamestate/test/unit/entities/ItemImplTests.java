@@ -6,7 +6,6 @@ import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
@@ -21,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final VariableCache DATA = new VariableCacheStub();
-    private final PairFactory PAIR_FACTORY = new FakePairFactory();
     private final UUID GENERATED_UUID = java.util.UUID.randomUUID();
     private final Supplier<UUID> UUID_FACTORY = () -> GENERATED_UUID;
 
@@ -42,21 +40,19 @@ class ItemImplTests {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = null;
         FakeCharacterInventory.OVERRIDE_CONTAINS = null;
         _itemType = new ItemTypeStub();
-        _item = new ItemImpl(UUID, _itemType, DATA, PAIR_FACTORY, UUID_FACTORY);
+        _item = new ItemImpl(UUID, _itemType, DATA, UUID_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, _itemType, DATA,
-                PAIR_FACTORY, UUID_FACTORY));
+                UUID_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, null, DATA,
-                PAIR_FACTORY, UUID_FACTORY));
+                UUID_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, null,
-                PAIR_FACTORY, UUID_FACTORY));
+                UUID_FACTORY));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, DATA,
-                null, UUID_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, DATA,
-                PAIR_FACTORY, null));
+                null));
     }
 
     @Test
@@ -66,7 +62,7 @@ class ItemImplTests {
 
     @Test
     void testEquals() {
-        Item item2 = new ItemImpl(UUID, _itemType, DATA, PAIR_FACTORY, UUID_FACTORY);
+        Item item2 = new ItemImpl(UUID, _itemType, DATA, UUID_FACTORY);
 
         assertEquals(_item, item2);
     }

@@ -3,9 +3,7 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
 import org.mockito.Mock;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -18,7 +16,6 @@ import java.util.List;
 
 import static inaugural.soliloquy.tools.random.Random.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class RoundManagerImplTests {
@@ -28,11 +25,7 @@ class RoundManagerImplTests {
     @Mock private VariableCache _mockVariableCacheFromFactory;
     @Mock private VariableCache _mockVariableCache2;
     @Mock private VariableCache _mockVariableCache3;
-    @Mock private Pair<Character, VariableCache> _mockPair1;
-    @Mock private Pair<Character, VariableCache> _mockPair2;
-    @Mock private Pair<Character, VariableCache> _mockPair3;
     @Mock private VariableCacheFactory _mockVariableCacheFactory;
-    @Mock private PairFactory _mockPairFactory;
     @Mock private RoundBasedTimerManager _mockRoundBasedTimerManager;
     private List<Pair<Character, VariableCache>> _activeCharactersToProvide;
 
@@ -50,39 +43,23 @@ class RoundManagerImplTests {
         _mockVariableCacheFactory = mock(VariableCacheFactory.class);
         when(_mockVariableCacheFactory.make()).thenReturn(_mockVariableCacheFromFactory);
 
-        _mockPairFactory = mock(PairFactory.class);
-
-        //noinspection unchecked
-        _mockPair1 = mock(Pair.class);
-        //noinspection unchecked
-        _mockPair2 = mock(Pair.class);
-        //noinspection unchecked
-        _mockPair3 = mock(Pair.class);
-
-        when(_mockPair2.getItem1()).thenReturn(_mockCharacter2);
-        when(_mockPair2.getItem2()).thenReturn(_mockVariableCache2);
-        when(_mockPair3.getItem1()).thenReturn(_mockCharacter3);
-        when(_mockPair3.getItem2()).thenReturn(_mockVariableCache3);
-
         _activeCharactersToProvide = new ArrayList<>() {{
-            add(_mockPair2);
-            add(_mockPair3);
+            add(new Pair<>(_mockCharacter2, _mockVariableCache2));
+            add(new Pair<>(_mockCharacter3, _mockVariableCache3));
         }};
 
         _mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
 
-        _roundManager = new RoundManagerImpl(_mockVariableCacheFactory, _mockPairFactory,
+        _roundManager = new RoundManagerImpl(_mockVariableCacheFactory,
                 _mockRoundBasedTimerManager);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new RoundManagerImpl(
-                null, _mockPairFactory, _mockRoundBasedTimerManager));
+                null, _mockRoundBasedTimerManager));
         assertThrows(IllegalArgumentException.class, () -> new RoundManagerImpl(
-                _mockVariableCacheFactory, null, _mockRoundBasedTimerManager));
-        assertThrows(IllegalArgumentException.class, () -> new RoundManagerImpl(
-                _mockVariableCacheFactory, _mockPairFactory, null));
+                _mockVariableCacheFactory, null));
     }
 
     @Test
@@ -210,18 +187,13 @@ class RoundManagerImplTests {
 
     @Test
     void testCharacterQueueRepresentation() {
-        //noinspection unchecked,rawtypes
-        when(_mockPairFactory.make(any(), any()))
-                .thenReturn((Pair) _mockPair1)
-                .thenReturn(_mockPair2);
-
         _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
         _roundManager.setCharacterPositionInQueue(_mockCharacter2, randomIntWithInclusiveFloor(0));
         _roundManager.setCharacterRoundData(_mockCharacter2, _mockVariableCache2);
 
         List<Pair<Character, VariableCache>> expectedOutput = new ArrayList<>() {{
-            add(_mockPair1);
-            add(_mockPair2);
+            add(new Pair<>(_mockCharacter1, _mockVariableCacheFromFactory));
+            add(new Pair<>(_mockCharacter2, _mockVariableCache2));
         }};
 
         List<Pair<Character, VariableCache>> characterQueueRepresentation =
@@ -232,9 +204,6 @@ class RoundManagerImplTests {
         assertNotNull(characterQueueRepresentation);
         assertEquals(expectedOutput, characterQueueRepresentation);
         assertNotSame(characterQueueRepresentation, characterQueueRepresentation2);
-        InOrder inOrder = inOrder(_mockPairFactory);
-        inOrder.verify(_mockPairFactory).make(_mockCharacter1, _mockVariableCacheFromFactory);
-        inOrder.verify(_mockPairFactory).make(_mockCharacter2, _mockVariableCache2);
     }
 
     @Test

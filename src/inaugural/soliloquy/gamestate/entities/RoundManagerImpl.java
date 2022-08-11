@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -16,7 +15,6 @@ import java.util.function.Supplier;
 
 public class RoundManagerImpl implements RoundManager {
     private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
-    private final PairFactory PAIR_FACTORY;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
     private final ArrayList<Character> QUEUE = new ArrayList<>();
     private final HashMap<Character, VariableCache> CHARACTER_ROUND_DATA = new HashMap<>();
@@ -24,10 +22,9 @@ public class RoundManagerImpl implements RoundManager {
     private int _roundNumber;
     private Supplier<List<Pair<Character, VariableCache>>> _activeCharactersProvider;
 
-    public RoundManagerImpl(VariableCacheFactory variableCacheFactory, PairFactory pairFactory,
+    public RoundManagerImpl(VariableCacheFactory variableCacheFactory,
                             RoundBasedTimerManager roundBasedTimerManager) {
         VARIABLE_CACHE_FACTORY = Check.ifNull(variableCacheFactory, "variableCacheFactory");
-        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
     }
 
@@ -93,7 +90,7 @@ public class RoundManagerImpl implements RoundManager {
         ArrayList<Pair<Character, VariableCache>> output = new ArrayList<>();
 
         QUEUE.forEach(character ->
-                output.add(PAIR_FACTORY.make(character, CHARACTER_ROUND_DATA.get(character))));
+                output.add(new Pair<>(character, CHARACTER_ROUND_DATA.get(character))));
 
         return output;
     }

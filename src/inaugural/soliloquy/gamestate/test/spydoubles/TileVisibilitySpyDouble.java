@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.spydoubles;
 
 import inaugural.soliloquy.gamestate.test.fakes.FakeList;
-import inaugural.soliloquy.gamestate.test.fakes.FakePair;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.valueobjects.Coordinate;
@@ -17,7 +16,7 @@ public class TileVisibilitySpyDouble implements TileVisibility {
 
     @Override
     public boolean canSeeTile(Tile origin, Tile target) throws IllegalArgumentException {
-        _tilesChecked.add(new FakePair<>(origin.location(),target.location()));
+        _tilesChecked.add(new Pair<>(origin.location(),target.location()));
         return true;
     }
 

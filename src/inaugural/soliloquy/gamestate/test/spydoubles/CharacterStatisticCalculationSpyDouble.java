@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.spydoubles;
 
 import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
-import inaugural.soliloquy.gamestate.test.fakes.FakePair;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Character;
@@ -21,7 +20,7 @@ public class CharacterStatisticCalculationSpyDouble implements CharacterStatisti
             throws IllegalArgumentException, IllegalStateException {
         _character = character;
         _statisticType = statisticType;
-        return new FakePair<>(VALUE, MODIFIERS);
+        return new Pair<>(VALUE, MODIFIERS);
     }
 
     @Override

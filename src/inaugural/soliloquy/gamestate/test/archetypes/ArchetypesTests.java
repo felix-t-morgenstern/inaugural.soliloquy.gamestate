@@ -4,8 +4,6 @@ import inaugural.soliloquy.gamestate.archetypes.*;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -31,13 +29,6 @@ class ArchetypesTests {
     void testCharacterArchetype() {
         assertEquals(Character.class.getCanonicalName(),
                 new CharacterArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testCharacterQueueEntryArchetype() {
-        assertEquals(Pair.class.getCanonicalName() + "<" + Character.class.getCanonicalName() +
-                "," + VariableCache.class.getCanonicalName() + ">",
-                    new CharacterQueueEntryArchetype().getInterfaceName());
     }
 
     @Test

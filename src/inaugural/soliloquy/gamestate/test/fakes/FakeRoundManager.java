@@ -20,7 +20,7 @@ public class FakeRoundManager implements RoundManager {
     @Override
     public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
         List<Pair<Character, VariableCache>> collection = new FakeList<>();
-        QUEUE.forEach(c -> collection.add(new FakePair<>(c, CHARACTERS_DATA.get(c))));
+        QUEUE.forEach(c -> collection.add(new Pair<>(c, CHARACTERS_DATA.get(c))));
         return collection;
     }
 

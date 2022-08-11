@@ -6,7 +6,6 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Item;
@@ -24,27 +23,23 @@ class TileEntitiesImplTests {
     private final Item ITEM = new FakeItem();
     private final Item ITEM_2 = new FakeItem();
     private final Item ITEM_3 = new FakeItem();
-    private final PairFactory PAIR_FACTORY = new FakePairFactory();
     private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private TileEntitiesImpl<Item> _tileEntities;
 
     @BeforeEach
     void setUp() {
-        _tileEntities = new TileEntitiesImpl<>(TILE, ARCHETYPE, PAIR_FACTORY, MAP_FACTORY);
+        _tileEntities = new TileEntitiesImpl<>(TILE, ARCHETYPE, MAP_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileEntitiesImpl<>(null, ARCHETYPE, PAIR_FACTORY, MAP_FACTORY));
+                () -> new TileEntitiesImpl<>(null, ARCHETYPE, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileEntitiesImpl<>(TILE, null, PAIR_FACTORY, MAP_FACTORY));
+                () -> new TileEntitiesImpl<>(TILE, null, MAP_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileEntitiesImpl<>(TILE, ARCHETYPE, null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileEntitiesImpl<>(TILE, ARCHETYPE, PAIR_FACTORY, null));
+                () -> new TileEntitiesImpl<>(TILE, ARCHETYPE, null));
     }
 
     @Test

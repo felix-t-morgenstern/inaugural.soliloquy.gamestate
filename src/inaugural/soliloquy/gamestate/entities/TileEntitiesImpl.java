@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.entities;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.*;
@@ -16,7 +15,6 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         implements TileEntities<TEntity> {
     private final Tile TILE;
     private final TEntity ARCHETYPE;
-    private final PairFactory PAIR_FACTORY;
     private final MapFactory MAP_FACTORY;
     final HashMap<TEntity,Integer> ENTITIES;
 
@@ -25,28 +23,12 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     private Consumer<TEntity> _actionAfterAdding;
     private Consumer<TEntity> _actionAfterRemoving;
 
-    @SuppressWarnings("ConstantConditions")
-    public TileEntitiesImpl(Tile tile, TEntity archetype, PairFactory pairFactory,
+    public TileEntitiesImpl(Tile tile,
+                            TEntity archetype,
                             MapFactory mapFactory) {
-        if (tile == null) {
-            throw new IllegalArgumentException("TileEntitiesImpl: tile must be non-null");
-        }
-        TILE = tile;
-        if (archetype == null) {
-            throw new IllegalArgumentException(
-                    "TileEntitiesImpl: archetype must be non-null");
-        }
-        ARCHETYPE = archetype;
-        if (pairFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileEntitiesImpl: pairFactory must be non-null");
-        }
-        PAIR_FACTORY = pairFactory;
-        if (mapFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileEntitiesImpl: mapFactory must be non-null");
-        }
-        MAP_FACTORY = mapFactory;
+        TILE = Check.ifNull(tile, "tile");
+        ARCHETYPE = Check.ifNull(archetype, "archetype");
+        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
 
         ENTITIES = new HashMap<>();
     }
@@ -217,7 +199,8 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
             @Override
             public Pair<TEntity, Integer> next() {
-                return PAIR_FACTORY.make(entities.next(), zIndices.next());
+                return new Pair<>(entities.next(), zIndices.next(),
+                        ARCHETYPE, 0);
             }
         };
     }

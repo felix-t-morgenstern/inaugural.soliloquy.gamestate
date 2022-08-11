@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.entities;
 import inaugural.soliloquy.gamestate.archetypes.TileWallSegmentArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.*;
@@ -14,7 +13,6 @@ import java.util.Iterator;
 
 public class TileWallSegmentsImpl implements TileWallSegments {
     private final Tile TILE;
-    private final PairFactory PAIR_FACTORY;
     private final MapFactory MAP_FACTORY;
     private final HashMap<TileWallSegmentDirection,
             HashMap<TileWallSegment, TileWallSegmentDimensions>> SEGMENTS;
@@ -25,9 +23,8 @@ public class TileWallSegmentsImpl implements TileWallSegments {
 
     private boolean _isDeleted;
 
-    public TileWallSegmentsImpl(Tile tile, PairFactory pairFactory, MapFactory mapFactory) {
+    public TileWallSegmentsImpl(Tile tile, MapFactory mapFactory) {
         TILE = Check.ifNull(tile, "tile");
-        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
         MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
 
         SEGMENTS = new HashMap<>();
@@ -79,10 +76,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     public void add(TileWallSegmentDirection direction, TileWallSegment segment, int height, int z)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants("add");
-        if (direction == null) {
-            throw new IllegalArgumentException(
-                    "TileWallSegmentsImpl.add: direction must be non-null");
-        }
+        Check.ifNull(direction, "direction");
         if (direction == TileWallSegmentDirection.UNKNOWN) {
             throw new IllegalArgumentException(
                     "TileWallSegmentsImpl.add: direction cannot be UNKNOWN");
@@ -91,10 +85,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
             throw new IllegalArgumentException(
                     "TileWallSegmentsImpl.add: direction cannot be NOT_FOUND");
         }
-        if (segment == null) {
-            throw new IllegalArgumentException(
-                    "TileWallSegmentsImpl.add: segment must be non-null");
-        }
+        Check.ifNull(segment, "segment");
         if (segment.tile() != null) {
             throw new IllegalArgumentException(
                     "TileWallSegmentsImpl.add: segment is already present on a Tile");
@@ -314,16 +305,16 @@ public class TileWallSegmentsImpl implements TileWallSegments {
                 next() {
                 TileWallSegment segment;
                 return northSegments.hasNext() ?
-                        PAIR_FACTORY.make(TileWallSegmentDirection.NORTH,
-                                PAIR_FACTORY.make(segment = northSegments.next(),
+                        new Pair<>(TileWallSegmentDirection.NORTH,
+                                new Pair<>(segment = northSegments.next(),
                                         SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment)))
                         : northwestSegments.hasNext() ?
-                        PAIR_FACTORY.make(TileWallSegmentDirection.NORTHWEST,
-                                PAIR_FACTORY.make(segment = northwestSegments.next(),
+                        new Pair<>(TileWallSegmentDirection.NORTHWEST,
+                                new Pair<>(segment = northwestSegments.next(),
                                         SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
                                                 .get(segment)))
-                        : PAIR_FACTORY.make(TileWallSegmentDirection.WEST,
-                                PAIR_FACTORY.make(segment = westSegments.next(),
+                        : new Pair<>(TileWallSegmentDirection.WEST,
+                                new Pair<>(segment = westSegments.next(),
                                         SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment)));
             }
         };

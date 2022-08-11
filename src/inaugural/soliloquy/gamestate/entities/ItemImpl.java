@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.entities;
 
+import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
@@ -22,7 +22,6 @@ public class ItemImpl implements Item {
     private final UUID UUID;
     private final ItemType ITEM_TYPE;
     private final VariableCache DATA;
-    private final PairFactory PAIR_FACTORY;
     private final Supplier<UUID> UUID_FACTORY;
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
@@ -42,15 +41,17 @@ public class ItemImpl implements Item {
     private float _yTileHeightOffset;
 
     @SuppressWarnings("ConstantConditions")
-    public ItemImpl(UUID uuid, ItemType itemType, VariableCache data, PairFactory pairFactory,
+    public ItemImpl(UUID uuid,
+                    ItemType itemType,
+                    VariableCache data,
                     Supplier<UUID> uuidFactory) {
         UUID = Check.ifNull(uuid, "uuid");
         ITEM_TYPE = Check.ifNull(itemType, "itemType");
         _xTileWidthOffset = ITEM_TYPE.defaultXTileWidthOffset();
         _yTileHeightOffset = ITEM_TYPE.defaultYTileHeightOffset();
         DATA = Check.ifNull(data, "data");
-        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
         UUID_FACTORY = Check.ifNull(uuidFactory, "uuidFactory");
+
         PASSIVE_ABILITIES = new ArrayList<>();
         ACTIVE_ABILITIES = new ArrayList<>();
         REACTIVE_ABILITIES = new ArrayList<>();
@@ -129,7 +130,7 @@ public class ItemImpl implements Item {
         }
         _numberInStack -= numberToTake;
         Item takenFromStack = new ItemImpl(UUID_FACTORY.get(),
-                ITEM_TYPE, DATA.makeClone(), PAIR_FACTORY, UUID_FACTORY);
+                ITEM_TYPE, DATA.makeClone(), UUID_FACTORY);
         takenFromStack.setNumberInStack(numberToTake);
         return takenFromStack;
     }
@@ -141,7 +142,8 @@ public class ItemImpl implements Item {
         enforceAssignmentInvariant("equipmentSlot");
         return _characterEquipmentSlotsCharacter == null ?
                 null :
-                PAIR_FACTORY.make(_characterEquipmentSlotsCharacter, _characterEquipmentSlotType);
+                new Pair<>(_characterEquipmentSlotsCharacter, _characterEquipmentSlotType,
+                        new CharacterArchetype(), "");
     }
 
     @Override

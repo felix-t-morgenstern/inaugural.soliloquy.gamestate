@@ -37,7 +37,6 @@ public class GameStateModule extends AbstractModule {
     public GameStateModule(ListFactory listFactory,
                            CoordinateFactory coordinateFactory,
                            MapFactory mapFactory,
-                           PairFactory pairFactory,
                            RegistryFactory registryFactory,
                            VariableCacheFactory variableCacheFactory,
                            PersistentValuesHandler persistentValuesHandler,
@@ -79,8 +78,7 @@ public class GameStateModule extends AbstractModule {
                 persistentValuesHandler.getTypeHandler(
                         Sprite.class.getCanonicalName());
 
-                ItemFactory itemFactory = new ItemFactoryImpl(uuidFactory, variableCacheFactory,
-                pairFactory);
+                ItemFactory itemFactory = new ItemFactoryImpl(uuidFactory, variableCacheFactory);
 
         TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get,
                 uuidHandler, dataHandler, itemFactory);
@@ -89,7 +87,7 @@ public class GameStateModule extends AbstractModule {
                 new CharacterEventsFactoryImpl(listFactory, mapFactory);
 
         CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory =
-                new CharacterEquipmentSlotsFactoryImpl(pairFactory, mapFactory);
+                new CharacterEquipmentSlotsFactoryImpl(mapFactory);
 
         CharacterInventoryFactory characterInventoryFactory =
                 new CharacterInventoryFactoryImpl(listFactory);
@@ -132,10 +130,9 @@ public class GameStateModule extends AbstractModule {
                 new TileFixtureHandler(fixtureTypes::get, tileFixtureFactory,
                         uuidHandler, dataHandler, itemHandler);
 
-        TileEntitiesFactory tileEntitiesFactory = new TileEntitiesFactoryImpl(pairFactory,
-                mapFactory);
+        TileEntitiesFactory tileEntitiesFactory = new TileEntitiesFactoryImpl(mapFactory);
         TileWallSegmentsFactory tileWallSegmentsFactory =
-                new TileWallSegmentsFactoryImpl(pairFactory, mapFactory);
+                new TileWallSegmentsFactoryImpl(mapFactory);
 
         TileFactory tileFactory = new TileFactoryImpl(coordinateFactory, tileEntitiesFactory,
                 tileWallSegmentsFactory);

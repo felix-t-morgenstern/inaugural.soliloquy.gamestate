@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.entities;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.factories.PairFactory;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.gamestate.entities.Character;
@@ -16,16 +15,13 @@ import java.util.HashMap;
 public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         implements CharacterEquipmentSlots {
     private final Character CHARACTER;
-    private final PairFactory PAIR_FACTORY;
     private final MapFactory MAP_FACTORY;
     private final HashMap<String, Pair<Item, Boolean>> EQUIPMENT_SLOTS;
 
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
-    public CharacterEquipmentSlotsImpl(Character character, PairFactory pairFactory,
-                                       MapFactory mapFactory) {
+    public CharacterEquipmentSlotsImpl(Character character, MapFactory mapFactory) {
         CHARACTER = Check.ifNull(character, "character");
-        PAIR_FACTORY = Check.ifNull(pairFactory, "pairFactory");
         MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
         EQUIPMENT_SLOTS = new HashMap<>();
     }
@@ -66,7 +62,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
             EQUIPMENT_SLOTS.putIfAbsent(equipmentSlotType,
-                    PAIR_FACTORY.make(null, true, ITEM_ARCHETYPE, true));
+                    new Pair<>(null, true, ITEM_ARCHETYPE, true));
         }
     }
 
@@ -138,7 +134,10 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         enforceItemReferencesCorrectSlotInvariant("equipItemToSlot",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
-        if (!EQUIPMENT_SLOTS.get(equipmentSlotType).getItem2()) {
+
+        Pair<Item, Boolean> equipmentSlot = EQUIPMENT_SLOTS.get(equipmentSlotType);
+
+        if (!equipmentSlot.getItem2()) {
             throw new UnsupportedOperationException(
                     "CharacterEquipmentSlots.equipItemToSlot: item in equipmentSlotType is set to prohibit alteration");
         }
@@ -147,7 +146,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipItemToSlot: item cannot be equipped to slot of provided type");
         }
-        Item previousItem = EQUIPMENT_SLOTS.get(equipmentSlotType).getItem1();
+        Item previousItem = equipmentSlot.getItem1();
         if (previousItem != null) {
             previousItem.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
         }
@@ -155,7 +154,10 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipItemToSlot: item is already present elsewhere");
         }
-        EQUIPMENT_SLOTS.get(equipmentSlotType).setItem1(item);
+        EQUIPMENT_SLOTS.put(equipmentSlotType,
+                new Pair<>(item, equipmentSlot.getItem2(),
+                        equipmentSlot.getFirstArchetype(), equipmentSlot.getSecondArchetype())
+        );
         if (item != null) {
             item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(CHARACTER,
                     equipmentSlotType);
@@ -191,7 +193,11 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.setCanAlterEquipmentInSlot: no equipment slot of specified type");
         }
-        EQUIPMENT_SLOTS.get(equipmentSlotType).setItem2(canAlterEquipmentInSlot);
+        Pair<Item, Boolean> equipmentSlot = EQUIPMENT_SLOTS.get(equipmentSlotType);
+        EQUIPMENT_SLOTS.put(equipmentSlotType, new Pair<>(
+                equipmentSlot.getItem1(), canAlterEquipmentInSlot,
+                equipmentSlot.getFirstArchetype(), equipmentSlot.getSecondArchetype()
+        ));
     }
 
     @Override
