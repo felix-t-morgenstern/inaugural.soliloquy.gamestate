@@ -88,9 +88,9 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
                     - recurringClockBasedTimer.periodModuloOffset();
             if (recurringClockBasedTimer.fireMultipleTimesForMultiplePeriodsElapsed()) {
                 int numberOfTimesToFire =
-                        (int)(offsetAdjustedTimestamp - offsetAdjustedLastFiringTime)
+                        (int) (offsetAdjustedTimestamp - offsetAdjustedLastFiringTime)
                                 / recurringClockBasedTimer.periodDuration();
-                while(numberOfTimesToFire-- > 0) {
+                while (numberOfTimesToFire-- > 0) {
                     FRAME_EXECUTOR.registerFrameBlockingEvent(recurringClockBasedTimer::fire);
                 }
             }

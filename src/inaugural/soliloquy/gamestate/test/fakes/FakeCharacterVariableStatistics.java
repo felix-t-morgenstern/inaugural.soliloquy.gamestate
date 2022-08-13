@@ -30,14 +30,14 @@ public class FakeCharacterVariableStatistics implements CharacterVariableStatist
     @Override
     public Map<CharacterVariableStatisticType, Integer> currentValues() {
         FakeMap<CharacterVariableStatisticType, Integer> currentValues = new FakeMap<>();
-        STATS.forEach((t,s) -> currentValues.put(t, s.getCurrentValue()));
+        STATS.forEach((t, s) -> currentValues.put(t, s.getCurrentValue()));
         return currentValues;
     }
 
     @Override
     public Map<CharacterVariableStatisticType, Integer> maxValues() {
         FakeMap<CharacterVariableStatisticType, Integer> maxValues = new FakeMap<>();
-        STATS.forEach((t,s) -> maxValues.put(t, s.totalValue()));
+        STATS.forEach((t, s) -> maxValues.put(t, s.totalValue()));
         return maxValues;
     }
 
@@ -49,14 +49,16 @@ public class FakeCharacterVariableStatistics implements CharacterVariableStatist
     }
 
     @Override
-    public void add(CharacterVariableStatisticType type, VariableCache variableCache) throws IllegalArgumentException {
+    public void add(CharacterVariableStatisticType type, VariableCache variableCache)
+            throws IllegalArgumentException {
         if (!STATS.containsKey(type)) {
             STATS.put(type, new FakeCharacterVariableStatistic(type, _character, variableCache));
         }
     }
 
     @Override
-    public CharacterVariableStatistic get(CharacterVariableStatisticType type) throws IllegalArgumentException {
+    public CharacterVariableStatistic get(CharacterVariableStatisticType type)
+            throws IllegalArgumentException {
         return STATS.get(type);
     }
 

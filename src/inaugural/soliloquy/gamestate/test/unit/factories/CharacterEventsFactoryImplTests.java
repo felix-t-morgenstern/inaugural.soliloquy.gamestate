@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.CharacterEventsFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameCharacterEvent;
+import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

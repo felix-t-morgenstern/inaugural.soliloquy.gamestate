@@ -53,17 +53,17 @@ class TileFixtureItemsImplTests {
     void testAddCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
 
-        assertSame(TILE_FIXTURE, ((FakeItem)ITEM)._tileFixture);
+        assertSame(TILE_FIXTURE, ((FakeItem) ITEM)._tileFixture);
     }
 
     @Test
     void testRemoveCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
-        assertSame(TILE_FIXTURE, ((FakeItem)ITEM)._tileFixture);
+        assertSame(TILE_FIXTURE, ((FakeItem) ITEM)._tileFixture);
 
         _tileFixtureItems.remove(ITEM);
 
-        assertNull(((FakeItem)ITEM)._tileFixture);
+        assertNull(((FakeItem) ITEM)._tileFixture);
     }
 
     @Test

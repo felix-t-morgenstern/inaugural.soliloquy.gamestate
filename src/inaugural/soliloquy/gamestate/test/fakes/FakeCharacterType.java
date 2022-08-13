@@ -20,7 +20,8 @@ public class FakeCharacterType implements CharacterType {
     }
 
     @Override
-    public Character generate(Tile tile, VariableCache variableCache) throws IllegalArgumentException {
+    public Character generate(Tile tile, VariableCache variableCache)
+            throws IllegalArgumentException {
         return null;
     }
 

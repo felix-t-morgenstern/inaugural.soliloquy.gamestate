@@ -15,7 +15,7 @@ public class CharacterVariableStatisticImpl
                                           CharacterVariableStatisticType type,
                                           VariableCache data,
                                           CharacterStatisticCalculation
-                                                    vitalAttributeCalculation) {
+                                                  vitalAttributeCalculation) {
         super(character, type, data, vitalAttributeCalculation);
     }
 

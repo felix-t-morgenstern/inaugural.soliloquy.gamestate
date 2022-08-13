@@ -48,7 +48,8 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         enforceDeletionInvariants();
         Map<String, Item> characterEquipmentSlots =
                 MAP_FACTORY.make("", ITEM_ARCHETYPE);
-        for (java.util.Map.Entry<String, Pair<Item, Boolean>> equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
+        for (java.util.Map.Entry<String, Pair<Item, Boolean>> equipmentSlot : EQUIPMENT_SLOTS
+                .entrySet()) {
             characterEquipmentSlots.put(equipmentSlot.getKey(),
                     equipmentSlot.getValue().getItem1());
         }
@@ -139,12 +140,14 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
 
         if (!equipmentSlot.getItem2()) {
             throw new UnsupportedOperationException(
-                    "CharacterEquipmentSlots.equipItemToSlot: item in equipmentSlotType is set to prohibit alteration");
+                    "CharacterEquipmentSlots.equipItemToSlot: item in equipmentSlotType is set to" +
+                            " prohibit alteration");
         }
         if (item != null &&
                 !item.type().equipmentType().canEquipToSlotType(equipmentSlotType)) {
             throw new IllegalArgumentException(
-                    "CharacterEquipmentSlots.equipItemToSlot: item cannot be equipped to slot of provided type");
+                    "CharacterEquipmentSlots.equipItemToSlot: item cannot be equipped to slot of " +
+                            "provided type");
         }
         Item previousItem = equipmentSlot.getItem1();
         if (previousItem != null) {
@@ -176,7 +179,8 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
             throw new IllegalArgumentException(
-                    "CharacterEquipmentSlots.getCanAlterEquipmentInSlot: no equipment slot of specified type");
+                    "CharacterEquipmentSlots.getCanAlterEquipmentInSlot: no equipment slot of " +
+                            "specified type");
         }
         enforceItemReferencesCorrectSlotInvariant("getCanAlterEquipmentInSlot",
                 equipmentSlotType);
@@ -191,7 +195,8 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
             throw new IllegalArgumentException(
-                    "CharacterEquipmentSlots.setCanAlterEquipmentInSlot: no equipment slot of specified type");
+                    "CharacterEquipmentSlots.setCanAlterEquipmentInSlot: no equipment slot of " +
+                            "specified type");
         }
         Pair<Item, Boolean> equipmentSlot = EQUIPMENT_SLOTS.get(equipmentSlotType);
         EQUIPMENT_SLOTS.put(equipmentSlotType, new Pair<>(
@@ -212,23 +217,21 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
 
     private void enforceItemReferencesCorrectSlotInvariant(String methodName,
                                                            String equipmentSlotType) {
-        Pair<Item,Boolean> slot = EQUIPMENT_SLOTS.get(equipmentSlotType);
+        Pair<Item, Boolean> slot = EQUIPMENT_SLOTS.get(equipmentSlotType);
         if (slot != null) {
             Item itemInSlot = slot.getItem1();
             if (itemInSlot != null) {
-                Pair<Character,String> itemEquipmentSlot = itemInSlot.equipmentSlot();
+                Pair<Character, String> itemEquipmentSlot = itemInSlot.equipmentSlot();
                 if (itemEquipmentSlot == null) {
                     throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
                             ": Item in equipment slot (" + equipmentSlotType +
                             ") is not assigned to that slot");
                 }
-                if (itemEquipmentSlot.getItem1() != CHARACTER)
-                {
+                if (itemEquipmentSlot.getItem1() != CHARACTER) {
                     throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
                             ": Item is assigned to wrong Character");
                 }
-                if (!itemEquipmentSlot.getItem2().equals(equipmentSlotType))
-                {
+                if (!itemEquipmentSlot.getItem2().equals(equipmentSlotType)) {
                     throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
                             ": Item is assigned to wrong Character");
                 }

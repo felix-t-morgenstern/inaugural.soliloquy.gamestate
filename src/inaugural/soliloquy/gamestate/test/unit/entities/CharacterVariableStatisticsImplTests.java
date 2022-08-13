@@ -181,7 +181,7 @@ class CharacterVariableStatisticsImplTests {
         _variableStats.get(type2).setCurrentValue(456);
         _variableStats.get(type3).setCurrentValue(789);
 
-        Map<CharacterVariableStatisticType,Integer> currentValues = _variableStats.currentValues();
+        Map<CharacterVariableStatisticType, Integer> currentValues = _variableStats.currentValues();
 
         assertNotNull(currentValues);
         assertEquals(3, currentValues.size());
@@ -207,7 +207,7 @@ class CharacterVariableStatisticsImplTests {
         ((FakeCharacterVariableStatistic) _variableStats.get(type2))._maxValue = 456;
         ((FakeCharacterVariableStatistic) _variableStats.get(type3))._maxValue = 789;
 
-        Map<CharacterVariableStatisticType,Integer> maxValues = _variableStats.maxValues();
+        Map<CharacterVariableStatisticType, Integer> maxValues = _variableStats.maxValues();
 
         assertNotNull(maxValues);
         assertEquals(3, maxValues.size());
@@ -236,15 +236,15 @@ class CharacterVariableStatisticsImplTests {
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        Arrays.stream(new CharacterVariableStatisticType[] { type1, type2, type3 })
-            .forEach(t -> {
-                for(CharacterVariableStatistic variableStat : representation) {
-                    if (variableStat.type() == t) {
-                        return;
+        Arrays.stream(new CharacterVariableStatisticType[]{type1, type2, type3})
+                .forEach(t -> {
+                    for (CharacterVariableStatistic variableStat : representation) {
+                        if (variableStat.type() == t) {
+                            return;
+                        }
                     }
-                }
-                fail();
-            });
+                    fail();
+                });
     }
 
     @Test

@@ -27,7 +27,7 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        for(Item item : CONTAINED_ITEMS) {
+        for (Item item : CONTAINED_ITEMS) {
             if (!item.isDeleted()) {
                 item.delete();
             }

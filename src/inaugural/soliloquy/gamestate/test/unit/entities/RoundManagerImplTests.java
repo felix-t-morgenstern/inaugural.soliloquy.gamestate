@@ -67,7 +67,8 @@ class RoundManagerImplTests {
         _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
 
         assertTrue(_roundManager.characterIsInQueue(_mockCharacter1));
-        assertSame(_mockVariableCacheFromFactory, _roundManager.characterRoundData(_mockCharacter1));
+        assertSame(_mockVariableCacheFromFactory,
+                _roundManager.characterRoundData(_mockCharacter1));
     }
 
     @Test
@@ -316,7 +317,8 @@ class RoundManagerImplTests {
 
     @Test
     void testEndActiveCharacterTurnWithoutActiveCharactersProvided() {
-        // NB: Characters are added to ensure that exception is thrown even when round does not advance
+        // NB: Characters are added to ensure that exception is thrown even when round does not
+        // advance
         _roundManager.setCharacterPositionInQueue(_mockCharacter1, randomIntWithInclusiveFloor(0));
         _roundManager.setCharacterPositionInQueue(_mockCharacter2, randomIntWithInclusiveFloor(0));
 

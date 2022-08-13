@@ -39,7 +39,11 @@ class RecurringClockBasedTimerHandlerTests {
 
     private TypeHandler<RecurringClockBasedTimer> _recurringClockBasedTimerHandler;
 
-    private final String WRITTEN_VALUE = "{\"id\":\"id\",\"actionId\":\"actionId\",\"periodDuration\":123,\"periodModuloOffset\":456,\"fireMultipleTimesPerPeriodElapsed\":true,\"pausedTimestamp\":123123,\"lastFiredTimestamp\":456456,\"mostRecentTimestamp\":789789}";
+    private final String WRITTEN_VALUE =
+            "{\"id\":\"id\",\"actionId\":\"actionId\",\"periodDuration\":123," +
+                    "\"periodModuloOffset\":456,\"fireMultipleTimesPerPeriodElapsed\":true," +
+                    "\"pausedTimestamp\":123123,\"lastFiredTimestamp\":456456," +
+                    "\"mostRecentTimestamp\":789789}";
 
     @BeforeEach
     void setUp() {

@@ -16,7 +16,7 @@ public class TileVisibilitySpyDouble implements TileVisibility {
 
     @Override
     public boolean canSeeTile(Tile origin, Tile target) throws IllegalArgumentException {
-        _tilesChecked.add(new Pair<>(origin.location(),target.location()));
+        _tilesChecked.add(new Pair<>(origin.location(), target.location()));
         return true;
     }
 

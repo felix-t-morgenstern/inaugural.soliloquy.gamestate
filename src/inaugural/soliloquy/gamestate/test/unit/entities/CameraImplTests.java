@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
-import inaugural.soliloquy.gamestate.entities.CameraImpl;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
+import inaugural.soliloquy.gamestate.entities.CameraImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.spydoubles.TileVisibilitySpyDouble;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,20 +50,20 @@ class CameraImplTests {
 
     @Test
     void testGetAndSetTileLocation() {
-        _camera.setTileLocation(123,456);
+        _camera.setTileLocation(123, 456);
         assertEquals(123, _camera.getTileLocation().getX());
         assertEquals(456, _camera.getTileLocation().getY());
     }
 
     @Test
     void testSetInvalidTileLocation() {
-        assertThrows(IllegalArgumentException.class, () -> _camera.setTileLocation(-1,0));
-        assertThrows(IllegalArgumentException.class, () -> _camera.setTileLocation(0,-1));
+        assertThrows(IllegalArgumentException.class, () -> _camera.setTileLocation(-1, 0));
+        assertThrows(IllegalArgumentException.class, () -> _camera.setTileLocation(0, -1));
     }
 
     @Test
     void testGetTileLocationProducesClone() {
-        _camera.setTileLocation(123,456);
+        _camera.setTileLocation(123, 456);
         Coordinate tileLocation = _camera.getTileLocation();
         tileLocation.setX(789);
         assertSame(123, _camera.getTileLocation().getX());
@@ -112,7 +112,7 @@ class CameraImplTests {
         assertNotNull(_camera.charactersProvidingVisibility());
 
         Character character = new CharacterArchetype();
-        _camera.charactersProvidingVisibility().put(character,123);
+        _camera.charactersProvidingVisibility().put(character, 123);
         assertSame(123, _camera.charactersProvidingVisibility().get(character));
     }
 
@@ -120,8 +120,8 @@ class CameraImplTests {
     void testCoordinatesProvidingVisibility() {
         assertNotNull(_camera.coordinatesProvidingVisibility());
 
-        Coordinate coordinate = new FakeCoordinate(123,456);
-        _camera.coordinatesProvidingVisibility().put(coordinate,789);
+        Coordinate coordinate = new FakeCoordinate(123, 456);
+        _camera.coordinatesProvidingVisibility().put(coordinate, 789);
         assertEquals(789, (int) _camera.coordinatesProvidingVisibility().get(coordinate));
     }
 
@@ -129,7 +129,7 @@ class CameraImplTests {
     void testVisibleTiles() {
         assertNotNull(_camera.visibleTiles());
 
-        Coordinate coordinate = new FakeCoordinate(123,456);
+        Coordinate coordinate = new FakeCoordinate(123, 456);
         _camera.visibleTiles().add(coordinate);
         assertEquals(123, _camera.visibleTiles().get(0).getX());
         assertEquals(456, _camera.visibleTiles().get(0).getY());
@@ -138,7 +138,7 @@ class CameraImplTests {
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMinimumCoordinateBoundaries() {
         _camera.setAllTilesVisible(true);
-        _camera.setTileLocation(2,2);
+        _camera.setTileLocation(2, 2);
         _camera.setTileRenderingRadius(5);
         _camera.calculateVisibleTiles();
         assertSame(49, _camera.visibleTiles().size());
@@ -146,9 +146,9 @@ class CameraImplTests {
 
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
-        GAME_ZONE.FAKE_MAX_COORDINATES = new FakeCoordinate(4,4);
+        GAME_ZONE.FAKE_MAX_COORDINATES = new FakeCoordinate(4, 4);
         _camera.setAllTilesVisible(true);
-        _camera.setTileLocation(2,2);
+        _camera.setTileLocation(2, 2);
         _camera.setTileRenderingRadius(5);
         _camera.calculateVisibleTiles();
         assertSame(25, _camera.visibleTiles().size());
@@ -165,16 +165,16 @@ class CameraImplTests {
     @Test
     void testCalculateVisibleTiles() {
         _camera.setAllTilesVisible(false);
-        _camera.setTileLocation(10,10);
+        _camera.setTileLocation(10, 10);
         _camera.setTileRenderingRadius(8);
 
-        Tile tile = new FakeTile(new FakeCoordinate(4,4));
+        Tile tile = new FakeTile(new FakeCoordinate(4, 4));
         Character character1 = new FakeCharacter();
         tile.characters().add(character1);
         //character1.setTile(new FakeTile(new FakeCoordinate(4,4)));
 
-        _camera.charactersProvidingVisibility().put(character1,3);
-        _camera.coordinatesProvidingVisibility().put(new FakeCoordinate(17,13),2);
+        _camera.charactersProvidingVisibility().put(character1, 3);
+        _camera.coordinatesProvidingVisibility().put(new FakeCoordinate(17, 13), 2);
 
         _camera.calculateVisibleTiles();
         assertEquals(22, _camera.visibleTiles().size());

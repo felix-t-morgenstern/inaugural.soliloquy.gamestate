@@ -5,7 +5,8 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
 
-public class FakeCharacterStaticStatistic implements CharacterStatistic<CharacterStaticStatisticType> {
+public class FakeCharacterStaticStatistic
+        implements CharacterStatistic<CharacterStaticStatisticType> {
     public boolean _isDeleted;
     private CharacterStaticStatisticType _type;
     private VariableCache _data;

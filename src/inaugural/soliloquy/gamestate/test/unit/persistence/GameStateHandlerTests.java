@@ -11,10 +11,10 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Pair;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.GameState;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
@@ -50,7 +50,17 @@ class GameStateHandlerTests {
 
     private TypeHandler<GameState> _gameStateHandler;
 
-    private final String WRITTEN_DATA = "{\"currentGameZoneId\":\"gameZoneId\",\"pcsInCurrentGameZone\":[{\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"}],\"pcsNotInCurrentGameZone\":[\"Character0\"],\"data\":\"VariableCache0\",\"partyAttributes\":\"VariableCache1\",\"roundNumber\":123456,\"charsInRound\":[{\"data\":\"VariableCache2\",\"x\":12,\"y\":34,\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"},{\"data\":\"VariableCache3\",\"x\":56,\"y\":78,\"id\":\"740390c6-6956-4f21-8dea-98f2c8ef3cbb\"}],\"oneTimeRoundBasedTimers\":[\"OneTimeTimer0\"],\"recurringRoundBasedTimers\":[\"RecurringTimer0\"]}";
+    private final String WRITTEN_DATA =
+            "{\"currentGameZoneId\":\"gameZoneId\",\"pcsInCurrentGameZone\":[{\"x\":12,\"y\":34," +
+                    "\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"}]," +
+                    "\"pcsNotInCurrentGameZone\":[\"Character0\"],\"data\":\"VariableCache0\"," +
+                    "\"partyAttributes\":\"VariableCache1\",\"roundNumber\":123456," +
+                    "\"charsInRound\":[{\"data\":\"VariableCache2\",\"x\":12,\"y\":34," +
+                    "\"id\":\"b37594cf-5cd5-441d-9dff-adc7392c221e\"}," +
+                    "{\"data\":\"VariableCache3\",\"x\":56,\"y\":78," +
+                    "\"id\":\"740390c6-6956-4f21-8dea-98f2c8ef3cbb\"}]," +
+                    "\"oneTimeRoundBasedTimers\":[\"OneTimeTimer0\"]," +
+                    "\"recurringRoundBasedTimers\":[\"RecurringTimer0\"]}";
 
     @BeforeEach
     void setUp() {
@@ -121,10 +131,14 @@ class GameStateHandlerTests {
         gameState.RoundBasedTimerManager = mock(RoundBasedTimerManager.class);
         OneTimeRoundBasedTimer oneTimeRoundBasedTimer = new FakeOneTimeRoundBasedTimer();
         when(gameState.RoundBasedTimerManager.oneTimeRoundBasedTimersRepresentation())
-                .thenReturn(new ArrayList<>() {{ add(oneTimeRoundBasedTimer); }});
+                .thenReturn(new ArrayList<>() {{
+                    add(oneTimeRoundBasedTimer);
+                }});
         RecurringRoundBasedTimer recurringRoundBasedTimer = new FakeRecurringRoundBasedTimer();
         when(gameState.RoundBasedTimerManager.recurringRoundBasedTimersRepresentation())
-                .thenReturn(new ArrayList<>() {{ add(recurringRoundBasedTimer); }});
+                .thenReturn(new ArrayList<>() {{
+                    add(recurringRoundBasedTimer);
+                }});
 
         String writtenData = _gameStateHandler.write(gameState);
 
@@ -138,7 +152,7 @@ class GameStateHandlerTests {
     }
 
     @Test
-    void testRead(){
+    void testRead() {
         Character pcInGameZone =
                 new FakeCharacter(UUID.fromString(PC_IN_GAME_ZONE_ID), null, null);
         Character npcInGameZone = new FakeCharacter(UUID.fromString(NPC_ID), null, null);
@@ -196,7 +210,7 @@ class GameStateHandlerTests {
                 new FakeCharacter(UUID.fromString(NPC_ID), null, null);
         FakeGameZone gameZone = new FakeGameZone();
         gameZone.RETURN_ACTUAL_TILE_AT_LOCATION = true;
-        gameZone.TILES[PC_X +1][PC_Y].characters().add(pcInGameZone);
+        gameZone.TILES[PC_X + 1][PC_Y].characters().add(pcInGameZone);
         gameZone.TILES[NPC_X][NPC_Y].characters().add(nonPcInGameZone);
         gameZone._customId = GAME_ZONE_ID;
         GAME_ZONES_REPO.REPO.put(GAME_ZONE_ID, gameZone);
@@ -213,7 +227,7 @@ class GameStateHandlerTests {
         FakeGameZone gameZone = new FakeGameZone();
         gameZone.RETURN_ACTUAL_TILE_AT_LOCATION = true;
         gameZone.TILES[PC_X][PC_Y].characters().add(pcInGameZone);
-        gameZone.TILES[NPC_X+1][NPC_Y].characters().add(nonPcInGameZone);
+        gameZone.TILES[NPC_X + 1][NPC_Y].characters().add(nonPcInGameZone);
         gameZone._customId = GAME_ZONE_ID;
         GAME_ZONES_REPO.REPO.put(GAME_ZONE_ID, gameZone);
 
@@ -230,7 +244,7 @@ class GameStateHandlerTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                GameState.class.getCanonicalName() + ">",
+                        GameState.class.getCanonicalName() + ">",
                 _gameStateHandler.getInterfaceName());
     }
 }

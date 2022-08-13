@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 public class FakeEntityMembersOfTypeFactory extends CanGetInterfaceName
         implements EntityMembersOfTypeFactory {
-    private HashMap<String,Object> FACTORIES = new HashMap<>();
+    private HashMap<String, Object> FACTORIES = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -35,8 +35,8 @@ public class FakeEntityMembersOfTypeFactory extends CanGetInterfaceName
     public <TEntityMemberType extends HasId,
             TEntityMember extends EntityMemberOfType<TEntityMemberType>,
             TEntity extends Deletable>
-    void registerFactory(Function<TEntity,Function<TEntityMemberType,Function<VariableCache,
-                                 TEntityMember>>> factory,
+    void registerFactory(Function<TEntity, Function<TEntityMemberType, Function<VariableCache,
+            TEntityMember>>> factory,
                          TEntityMemberType entityMemberTypeArchetype,
                          TEntityMember entityMemberArchetype,
                          TEntity entityArchetype)

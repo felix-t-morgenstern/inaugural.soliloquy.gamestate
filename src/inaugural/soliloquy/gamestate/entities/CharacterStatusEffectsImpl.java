@@ -18,14 +18,14 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     private final Character CHARACTER;
     private final MapFactory MAP_FACTORY;
     private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION;
-    private final HashMap<StatusEffectType,Integer> STATUS_EFFECT_LEVELS;
+    private final HashMap<StatusEffectType, Integer> STATUS_EFFECT_LEVELS;
 
     private final static StatusEffectType STATUS_EFFECT_TYPE_ARCHETYPE =
             new StatusEffectTypeArchetype();
 
     public CharacterStatusEffectsImpl(Character character,
                                       MapFactory mapFactory,
-                                      StatusEffectResistanceCalculation resistanceCalculation){
+                                      StatusEffectResistanceCalculation resistanceCalculation) {
         CHARACTER = character;
         MAP_FACTORY = mapFactory;
         RESISTANCE_CALCULATION = resistanceCalculation;
@@ -89,7 +89,8 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
         }
         if (level == 0) {
             STATUS_EFFECT_LEVELS.remove(type);
-        } else {
+        }
+        else {
             STATUS_EFFECT_LEVELS.put(type, level);
         }
     }

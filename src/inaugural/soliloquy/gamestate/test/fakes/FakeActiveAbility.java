@@ -26,7 +26,8 @@ public class FakeActiveAbility implements ActiveAbility {
     }
 
     @Override
-    public void use(Character character, List<Pair<Character, Tile>> list, VariableCache variableCache) {
+    public void use(Character character, List<Pair<Character, Tile>> list,
+                    VariableCache variableCache) {
 
     }
 

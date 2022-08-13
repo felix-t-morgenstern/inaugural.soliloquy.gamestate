@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileWallSegmentImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileWallSegments;
+import inaugural.soliloquy.gamestate.test.fakes.FakeWallSegmentType;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +56,7 @@ class TileWallSegmentImplTests {
     @Test
     void testAssignTileWallSegmentsToTileAfterAddingToTileWallSegmentsAndGetTile() {
         Tile tile = new FakeTile();
-        ((FakeTileWallSegments)tile.wallSegments()).SEGMENTS
+        ((FakeTileWallSegments) tile.wallSegments()).SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).put(_tileWallSegment,
                 new TileWallSegmentDimensions() {
                     @Override
@@ -144,7 +146,7 @@ class TileWallSegmentImplTests {
         Tile tile = new FakeTile();
         tile.wallSegments().add(TileWallSegmentDirection.NORTH, _tileWallSegment, 0);
 
-        ((FakeTileWallSegments)tile.wallSegments()).SEGMENTS
+        ((FakeTileWallSegments) tile.wallSegments()).SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).remove(_tileWallSegment);
 
         assertThrows(IllegalStateException.class, () -> _tileWallSegment.getType());

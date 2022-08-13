@@ -4,8 +4,8 @@ import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
@@ -84,7 +84,8 @@ public class TileArchetype implements Tile {
     }
 
     @Override
-    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone) throws IllegalArgumentException, IllegalStateException {
+    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 

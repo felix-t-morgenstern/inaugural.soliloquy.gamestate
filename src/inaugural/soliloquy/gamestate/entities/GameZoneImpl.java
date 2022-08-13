@@ -51,8 +51,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         Check.ifNull(removeFromRoundManager, "removeFromRoundManager");
 
         TILES = new Tile[tiles.length][tiles[0].length];
-        for(int x = 0; x < tiles.length; x++) {
-            for(int y = 0; y < tiles[0].length; y++) {
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[0].length; y++) {
                 if (tiles[x][y] == null) {
                     throw new IllegalArgumentException("GameZoneImpl: tiles has null tile at (" +
                             x + "," + y + ")");
@@ -82,7 +82,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         if (coordinateFactory == null) {
             throw new IllegalArgumentException("GameZoneImpl: coordinateFactory cannot be null");
         }
-        MAX_COORDINATES = coordinateFactory.make(tiles.length - 1,tiles[0].length - 1);
+        MAX_COORDINATES = coordinateFactory.make(tiles.length - 1, tiles[0].length - 1);
         ENTRY_ACTIONS = listFactory.make(ACTION_ARCHETYPE);
         EXIT_ACTIONS = listFactory.make(ACTION_ARCHETYPE);
         DATA = Check.ifNull(data, "data");
@@ -179,8 +179,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        for(int x = 0; x <= MAX_COORDINATES.getX(); x++) {
-            for(int y = 0; y <= MAX_COORDINATES.getY(); y++) {
+        for (int x = 0; x <= MAX_COORDINATES.getX(); x++) {
+            for (int y = 0; y <= MAX_COORDINATES.getY(); y++) {
                 TILES[x][y].delete();
             }
         }

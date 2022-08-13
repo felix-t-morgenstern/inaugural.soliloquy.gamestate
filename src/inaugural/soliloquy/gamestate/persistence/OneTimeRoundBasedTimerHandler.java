@@ -15,7 +15,7 @@ public class OneTimeRoundBasedTimerHandler extends AbstractTypeHandler<OneTimeRo
     private final Function<String, Action> GET_ACTION;
 
     public OneTimeRoundBasedTimerHandler(RoundBasedTimerFactory RoundBasedTimerFactory,
-                                        @SuppressWarnings("rawtypes") Function<String, Action>
+                                         @SuppressWarnings("rawtypes") Function<String, Action>
                                                  getAction) {
         super(new OneTimeRoundBasedTimerArchetype());
         TURN_BASED_TIMER_FACTORY = Check.ifNull(RoundBasedTimerFactory, "RoundBasedTimerFactory");

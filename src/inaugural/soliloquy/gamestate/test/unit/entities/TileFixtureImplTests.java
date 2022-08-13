@@ -55,7 +55,7 @@ class TileFixtureImplTests {
     }
 
     @Test
-    void testType () {
+    void testType() {
         assertSame(TYPE, _tileFixture.type());
     }
 
@@ -83,7 +83,7 @@ class TileFixtureImplTests {
     @Test
     void testTileFixtureItems() {
         assertNotNull(_tileFixture.items());
-        assertSame(_tileFixture, ((FakeTileFixtureItems)_tileFixture.items()).TILE_FIXTURE);
+        assertSame(_tileFixture, ((FakeTileFixtureItems) _tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
@@ -109,8 +109,8 @@ class TileFixtureImplTests {
         Tile tile = new FakeTile();
         tile.fixtures().add(_tileFixture);
         TileFixtureItems containedItems = _tileFixture.items();
-        HashMap<TileFixture,Integer> entities =
-                ((FakeTileEntities<TileFixture>)tile.fixtures()).ENTITIES;
+        HashMap<TileFixture, Integer> entities =
+                ((FakeTileEntities<TileFixture>) tile.fixtures()).ENTITIES;
         int originalNumberOfContainedItems = entities.size();
 
         _tileFixture.delete();
@@ -169,7 +169,8 @@ class TileFixtureImplTests {
         assertThrows(EntityDeletedException.class, () -> _tileFixture.setYTileHeightOffset(0f));
         assertThrows(EntityDeletedException.class, () -> _tileFixture.movementEvents());
         assertThrows(EntityDeletedException.class, () -> _tileFixture.items());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(EntityDeletedException.class,
+                () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(EntityDeletedException.class, () -> _tileFixture.data());
         assertThrows(EntityDeletedException.class, () -> _tileFixture.getName());
         assertThrows(EntityDeletedException.class, () -> _tileFixture.setName(""));
@@ -179,7 +180,7 @@ class TileFixtureImplTests {
     void testContainingTileInvariant() {
         Tile tile = new FakeTile();
         tile.fixtures().add(_tileFixture);
-        ((FakeTileEntities<TileFixture>)tile.fixtures()).ENTITIES.remove(_tileFixture);
+        ((FakeTileEntities<TileFixture>) tile.fixtures()).ENTITIES.remove(_tileFixture);
 
         assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> _tileFixture.type());
@@ -189,7 +190,8 @@ class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> _tileFixture.setYTileHeightOffset(0f));
         assertThrows(IllegalStateException.class, () -> _tileFixture.movementEvents());
         assertThrows(IllegalStateException.class, () -> _tileFixture.items());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(IllegalStateException.class,
+                () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _tileFixture.data());
         assertThrows(IllegalStateException.class, () -> _tileFixture.delete());
         assertThrows(IllegalStateException.class, () -> _tileFixture.getName());

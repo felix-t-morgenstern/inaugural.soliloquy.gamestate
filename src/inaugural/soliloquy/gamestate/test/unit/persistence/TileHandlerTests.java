@@ -56,7 +56,7 @@ class TileHandlerTests {
     private final String MOVEMENT_EVENT_ID = "movementEventId";
     private final GameMovementEvent MOVEMENT_EVENT =
             new FakeGameMovementEvent(MOVEMENT_EVENT_ID);
-    private final HashMap<String,GameMovementEvent> MOVEMENT_EVENTS = new HashMap<>();
+    private final HashMap<String, GameMovementEvent> MOVEMENT_EVENTS = new HashMap<>();
 
     private final String ABILITY_EVENT_ID = "abilityEventId";
     private final GameAbilityEvent ABILITY_EVENT =
@@ -67,7 +67,15 @@ class TileHandlerTests {
     private final GroundType GROUND_TYPE = new FakeGroundType(GROUND_TYPE_ID);
     private final HashMap<String, GroundType> GROUND_TYPES = new HashMap<>();
 
-    private final String WRITTEN_DATA = "{\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\",\"characters\":[{\"z\":111,\"entity\":\"Character0\"}],\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333,\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\",\"direction\":1,\"height\":444,\"z\":555,\"data\":\"VariableCache0\"}],\"movementEvents\":[\"movementEventId\"],\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666,\"entity\":\"Sprite0\"}],\"data\":\"VariableCache1\"}";
+    private final String WRITTEN_DATA =
+            "{\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\"," +
+                    "\"characters\":[{\"z\":111,\"entity\":\"Character0\"}]," +
+                    "\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333," +
+                    "\"entity\":\"TileFixture0\"}],\"wallSegments\":[{\"type\":\"segmentTypeId\"," +
+                    "\"direction\":1,\"height\":444,\"z\":555,\"data\":\"VariableCache0\"}]," +
+                    "\"movementEvents\":[\"movementEventId\"]," +
+                    "\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666," +
+                    "\"entity\":\"Sprite0\"}],\"data\":\"VariableCache1\"}";
 
     private TypeHandler<Tile> _tileHandler;
 
@@ -91,7 +99,8 @@ class TileHandlerTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new TileHandler(null, TILE_WALL_SEGMENT_FACTORY, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
-                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get));
+                        SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
+                        GROUND_TYPES::get));
         assertThrows(IllegalArgumentException.class, () ->
                 new TileHandler(TILE_FACTORY, null, CHAR_HANDLER,
                         ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
@@ -233,7 +242,7 @@ class TileHandlerTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                Tile.class.getCanonicalName() + ">",
+                        Tile.class.getCanonicalName() + ">",
                 _tileHandler.getInterfaceName());
     }
 }

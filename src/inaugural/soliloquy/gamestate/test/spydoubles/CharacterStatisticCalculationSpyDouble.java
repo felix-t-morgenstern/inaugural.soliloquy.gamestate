@@ -9,7 +9,7 @@ import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 public class CharacterStatisticCalculationSpyDouble implements CharacterStatisticCalculation {
     public static final int VALUE = 123123;
-    public static final Map<String,Integer> MODIFIERS = new FakeMapFactory().make("",0);
+    public static final Map<String, Integer> MODIFIERS = new FakeMapFactory().make("", 0);
 
     public Character _character;
     public CharacterStatisticType _statisticType;

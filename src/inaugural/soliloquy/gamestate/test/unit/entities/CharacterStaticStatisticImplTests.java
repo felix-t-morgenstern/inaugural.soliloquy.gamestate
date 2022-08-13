@@ -36,12 +36,15 @@ class CharacterStaticStatisticImplTests {
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(null,
                 TYPE, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
-                null, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
-                TYPE, DATA, null));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterStaticStatisticImpl(CHARACTER,
-                TYPE, null, CHARACTER_ATTRIBUTE_CALCULATION));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterStaticStatisticImpl(CHARACTER,
+                        null, DATA, CHARACTER_ATTRIBUTE_CALCULATION));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterStaticStatisticImpl(CHARACTER,
+                        TYPE, DATA, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterStaticStatisticImpl(CHARACTER,
+                        TYPE, null, CHARACTER_ATTRIBUTE_CALCULATION));
     }
 
     @Test
@@ -67,10 +70,12 @@ class CharacterStaticStatisticImplTests {
 
         assertSame(CHARACTER, CHARACTER_ATTRIBUTE_CALCULATION._character);
         assertSame(TYPE, CHARACTER_ATTRIBUTE_CALCULATION._statisticType);
-        assertEquals(CharacterStatisticCalculationSpyDouble.VALUE, _characterStatistic.totalValue());
-        Map<String,Integer> representation = _characterStatistic.representation();
+        assertEquals(CharacterStatisticCalculationSpyDouble.VALUE,
+                _characterStatistic.totalValue());
+        Map<String, Integer> representation = _characterStatistic.representation();
         assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS, representation);
-        assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS.size(), representation.size());
+        assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS.size(),
+                representation.size());
         CharacterStatisticCalculationSpyDouble.MODIFIERS.forEach((modifierType, value) ->
                 assertEquals(value, representation.get(modifierType)));
     }

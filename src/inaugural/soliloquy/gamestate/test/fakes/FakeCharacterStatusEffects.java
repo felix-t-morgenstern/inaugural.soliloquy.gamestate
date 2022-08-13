@@ -24,7 +24,8 @@ public class FakeCharacterStatusEffects implements CharacterStatusEffects {
     }
 
     @Override
-    public Integer getStatusEffectLevel(StatusEffectType statusEffectType) throws IllegalStateException, IllegalArgumentException {
+    public Integer getStatusEffectLevel(StatusEffectType statusEffectType)
+            throws IllegalStateException, IllegalArgumentException {
         return _representation.get(statusEffectType);
     }
 
@@ -34,12 +35,15 @@ public class FakeCharacterStatusEffects implements CharacterStatusEffects {
     }
 
     @Override
-    public void alterStatusEffect(StatusEffectType statusEffectType, int i, boolean b, Element element, AbilitySource abilitySource) throws IllegalStateException, IllegalArgumentException {
+    public void alterStatusEffect(StatusEffectType statusEffectType, int i, boolean b,
+                                  Element element, AbilitySource abilitySource)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void setStatusEffectLevel(StatusEffectType statusEffectType, int i) throws IllegalStateException, IllegalArgumentException {
+    public void setStatusEffectLevel(StatusEffectType statusEffectType, int i)
+            throws IllegalStateException, IllegalArgumentException {
         _representation.put(statusEffectType, i);
     }
 

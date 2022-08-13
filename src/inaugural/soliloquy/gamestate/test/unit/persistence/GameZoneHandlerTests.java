@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.GameZoneHandler;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeGameZone;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVoidAction;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeTileHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
 import inaugural.soliloquy.gamestate.test.spydoubles.GameZoneFactorySpyDouble;
@@ -36,7 +38,11 @@ class GameZoneHandlerTests {
 
     private TypeHandler<GameZone> _gameZoneHandler;
 
-    private final String WRITTEN_DATA = "{\"id\":\"id\",\"type\":\"type\",\"name\":\"name\",\"data\":\"VariableCache0\",\"onEntry\":[\"onEntryActionId\"],\"onExit\":[\"onExitActionId\"],\"maxX\":2,\"maxY\":2,\"tiles\":[[\"Tile0\",\"Tile1\",\"Tile2\"],[\"Tile3\",\"Tile4\",\"Tile5\"],[\"Tile6\",\"Tile7\",\"Tile8\"]]}";
+    private final String WRITTEN_DATA =
+            "{\"id\":\"id\",\"type\":\"type\",\"name\":\"name\",\"data\":\"VariableCache0\"," +
+                    "\"onEntry\":[\"onEntryActionId\"],\"onExit\":[\"onExitActionId\"]," +
+                    "\"maxX\":2,\"maxY\":2,\"tiles\":[[\"Tile0\",\"Tile1\",\"Tile2\"],[\"Tile3\"," +
+                    "\"Tile4\",\"Tile5\"],[\"Tile6\",\"Tile7\",\"Tile8\"]]}";
 
     @BeforeEach
     void setUp() {
@@ -65,8 +71,8 @@ class GameZoneHandlerTests {
     @Test
     void testWrite() {
         Tile[][] tiles = new Tile[3][3];
-        for(int x = 0; x < tiles.length; x++) {
-            for(int y = 0; y < tiles[0].length; y++){
+        for (int x = 0; x < tiles.length; x++) {
+            for (int y = 0; y < tiles[0].length; y++) {
                 tiles[x][y] = new FakeTile();
             }
         }
@@ -94,8 +100,8 @@ class GameZoneHandlerTests {
         assertEquals(TYPE, GAME_ZONE_FACTORY._inputZoneType);
         assertEquals(NAME, gameZone.getName());
         int index = 0;
-        for(int x = 0; x < GAME_ZONE_FACTORY._inputTiles.length; x++) {
-            for(int y = 0; y < GAME_ZONE_FACTORY._inputTiles[0].length; y++) {
+        for (int x = 0; x < GAME_ZONE_FACTORY._inputTiles.length; x++) {
+            for (int y = 0; y < GAME_ZONE_FACTORY._inputTiles[0].length; y++) {
                 assertEquals(TILE_HANDLER.READ_INPUTS.get(index), "Tile" + index);
                 assertSame(TILE_HANDLER.READ_OUTPUTS.get(index++),
                         GAME_ZONE_FACTORY._inputTiles[x][y]);

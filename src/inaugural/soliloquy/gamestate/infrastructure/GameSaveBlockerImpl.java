@@ -16,12 +16,14 @@ public class GameSaveBlockerImpl implements GameSaveBlocker {
     }
 
     @Override
-    public void placeTriggeredEventBlock(TriggeredEvent triggeredEvent) throws IllegalArgumentException {
+    public void placeTriggeredEventBlock(TriggeredEvent triggeredEvent)
+            throws IllegalArgumentException {
         SAVE_BLOCKING_EVENTS.add(Check.ifNull(triggeredEvent, "triggeredEvent"));
     }
 
     @Override
-    public void releaseTriggeredEventBlock(TriggeredEvent triggeredEvent) throws IllegalArgumentException {
+    public void releaseTriggeredEventBlock(TriggeredEvent triggeredEvent)
+            throws IllegalArgumentException {
         SAVE_BLOCKING_EVENTS.remove(Check.ifNull(triggeredEvent, "triggeredEvent"));
     }
 

@@ -9,8 +9,10 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
-import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static inaugural.soliloquy.tools.random.Random.randomInt;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class OneTimeRoundBasedTimerImplTests {
@@ -128,6 +130,7 @@ class OneTimeRoundBasedTimerImplTests {
         assertThrows(EntityDeletedException.class, () -> _oneTimeRoundBasedTimer.id());
         assertThrows(EntityDeletedException.class, () -> _oneTimeRoundBasedTimer.run());
         assertThrows(EntityDeletedException.class, () -> _oneTimeRoundBasedTimer.priority());
-        assertThrows(EntityDeletedException.class, () -> _oneTimeRoundBasedTimer.roundWhenGoesOff());
+        assertThrows(EntityDeletedException.class,
+                () -> _oneTimeRoundBasedTimer.roundWhenGoesOff());
     }
 }

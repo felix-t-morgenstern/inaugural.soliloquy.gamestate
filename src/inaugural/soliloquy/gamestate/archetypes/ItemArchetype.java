@@ -2,8 +2,10 @@ package inaugural.soliloquy.gamestate.archetypes;
 
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -71,7 +73,8 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public void setCharges(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+    public void setCharges(int i)
+            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
 
     }
 
@@ -81,12 +84,14 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public void setNumberInStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+    public void setNumberInStack(int i)
+            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public Item takeFromStack(int i) throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
+    public Item takeFromStack(int i)
+            throws UnsupportedOperationException, IllegalArgumentException, IllegalStateException {
         return null;
     }
 
@@ -106,17 +111,20 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public void assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(Character character, String s) throws IllegalStateException, IllegalArgumentException {
+    public void assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(Character character, String s)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignInventoryCharacterAfterAddedToCharacterInventory(Character character) throws IllegalStateException, IllegalArgumentException {
+    public void assignInventoryCharacterAfterAddedToCharacterInventory(Character character)
+            throws IllegalStateException, IllegalArgumentException {
 
     }
 
     @Override
-    public void assignTileFixtureAfterAddedItemToTileFixtureItems(TileFixture tileFixture) throws IllegalArgumentException, IllegalStateException {
+    public void assignTileFixtureAfterAddedItemToTileFixtureItems(TileFixture tileFixture)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 
@@ -141,7 +149,8 @@ public class ItemArchetype implements Item {
     }
 
     @Override
-    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 

@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.TileFixtureFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeFixtureType;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixtureItems;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixtureItemsFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,14 +63,14 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(GENERATED_UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
+        assertSame(((FakeVariableCacheFactory) DATA_FACTORY).Created.get(0), tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
                 tileFixture.getXTileWidthOffset());
         assertEquals(FakeFixtureType.DEFAULT_Y_TILE_HEIGHT_OFFSET,
                 tileFixture.getYTileHeightOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems) tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
@@ -84,7 +87,7 @@ class TileFixtureFactoryImplTests {
                 tileFixture.getYTileHeightOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems) tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
@@ -94,14 +97,14 @@ class TileFixtureFactoryImplTests {
         assertNotNull(tileFixture);
         assertSame(UUID, tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), tileFixture.data());
+        assertSame(((FakeVariableCacheFactory) DATA_FACTORY).Created.get(0), tileFixture.data());
         assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
                 tileFixture.getXTileWidthOffset());
         assertEquals(FakeFixtureType.DEFAULT_Y_TILE_HEIGHT_OFFSET,
                 tileFixture.getYTileHeightOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems) tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
@@ -118,7 +121,7 @@ class TileFixtureFactoryImplTests {
                 tileFixture.getYTileHeightOffset());
         assertNotNull(tileFixture.movementEvents());
         assertNotNull(tileFixture.abilityEvents());
-        assertSame(tileFixture, ((FakeTileFixtureItems)tileFixture.items()).TILE_FIXTURE);
+        assertSame(tileFixture, ((FakeTileFixtureItems) tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test

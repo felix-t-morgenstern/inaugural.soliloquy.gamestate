@@ -121,7 +121,8 @@ public class FakeTile implements Tile {
     }
 
     @Override
-    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone) throws IllegalArgumentException, IllegalStateException {
+    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone)
+            throws IllegalArgumentException, IllegalStateException {
         _gameZone = gameZone;
     }
 

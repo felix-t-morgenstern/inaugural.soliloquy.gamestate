@@ -65,9 +65,9 @@ class CharacterVariableStatisticsFactoryImplTests {
 
         assertNotNull(characterVariableStatistic);
         assertSame(character,
-                ((FakeCharacterVariableStatistic)characterVariableStatistic)._character);
+                ((FakeCharacterVariableStatistic) characterVariableStatistic)._character);
         assertEquals(type,
-                ((FakeCharacterVariableStatistic)characterVariableStatistic)._type);
+                ((FakeCharacterVariableStatistic) characterVariableStatistic)._type);
     }
 
     @Test

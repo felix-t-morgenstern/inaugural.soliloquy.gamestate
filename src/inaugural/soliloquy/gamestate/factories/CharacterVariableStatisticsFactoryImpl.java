@@ -18,15 +18,15 @@ public class CharacterVariableStatisticsFactoryImpl
     private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
     private final EntityMemberOfTypeFactory<CharacterVariableStatisticType,
-                    CharacterVariableStatistic, Character> FACTORY;
+            CharacterVariableStatistic, Character> FACTORY;
 
     public CharacterVariableStatisticsFactoryImpl(MapFactory mapFactory,
                                                   ListFactory listFactory,
                                                   VariableCacheFactory dataFactory,
                                                   EntityMemberOfTypeFactory<
-                                                            CharacterVariableStatisticType,
-                                                            CharacterVariableStatistic, Character>
-                                                            factory) {
+                                                          CharacterVariableStatisticType,
+                                                          CharacterVariableStatistic, Character>
+                                                          factory) {
         MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
         LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");

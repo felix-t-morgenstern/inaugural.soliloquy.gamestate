@@ -49,7 +49,7 @@ public class FakeTileFixtureItems implements TileFixtureItems {
 
     @Override
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
-        if(_items.contains(item)) {
+        if (_items.contains(item)) {
             item.assignTileFixtureAfterAddedItemToTileFixtureItems(null);
         }
         return _items.remove(item);

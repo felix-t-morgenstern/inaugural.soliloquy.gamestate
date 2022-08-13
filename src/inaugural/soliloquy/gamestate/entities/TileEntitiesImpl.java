@@ -16,7 +16,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     private final Tile TILE;
     private final TEntity ARCHETYPE;
     private final MapFactory MAP_FACTORY;
-    final HashMap<TEntity,Integer> ENTITIES;
+    final HashMap<TEntity, Integer> ENTITIES;
 
     private final static CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
 
@@ -44,8 +44,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         if (entity == null) {
             throw new IllegalArgumentException("TileEntitiesImpl.add: entity must be non-null");
         }
-        if (entityIsPresentElsewhere(entity))
-        {
+        if (entityIsPresentElsewhere(entity)) {
             throw new IllegalArgumentException(
                     "TileEntitiesImpl.add: entity is present elsewhere");
         }
@@ -181,7 +180,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        for(java.util.Map.Entry<TEntity,Integer> entry : ENTITIES.entrySet()) {
+        for (java.util.Map.Entry<TEntity, Integer> entry : ENTITIES.entrySet()) {
             entry.getKey().delete();
         }
     }

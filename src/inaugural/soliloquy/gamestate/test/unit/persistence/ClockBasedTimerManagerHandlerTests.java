@@ -42,7 +42,9 @@ class ClockBasedTimerManagerHandlerTests {
 
     private TypeHandler<ClockBasedTimerManager> _clockBasedTimerManagerHandler;
 
-    private final String WRITTEN_DATA = "{\"oneTimeClockBasedTimers\":[\"oneTimeClockBasedTimerMockWrittenData\"],\"recurringClockBasedTimers\":[\"recurringClockBasedTimerMockWrittenData\"]}";
+    private final String WRITTEN_DATA =
+            "{\"oneTimeClockBasedTimers\":[\"oneTimeClockBasedTimerMockWrittenData\"]," +
+                    "\"recurringClockBasedTimers\":[\"recurringClockBasedTimerMockWrittenData\"]}";
 
     @BeforeEach
     void setUp() {
@@ -92,9 +94,13 @@ class ClockBasedTimerManagerHandlerTests {
     @Test
     void testWrite() {
         when(_mockClockBasedTimerManager.oneTimeTimersRepresentation())
-                .thenReturn(new ArrayList<>() {{ add(_mockOneTimeClockBasedTimer); }});
+                .thenReturn(new ArrayList<>() {{
+                    add(_mockOneTimeClockBasedTimer);
+                }});
         when(_mockClockBasedTimerManager.recurringTimersRepresentation())
-                .thenReturn(new ArrayList<>() {{ add(_mockRecurringClockBasedTimer); }});
+                .thenReturn(new ArrayList<>() {{
+                    add(_mockRecurringClockBasedTimer);
+                }});
 
         String writtenValue = _clockBasedTimerManagerHandler.write(null);
 
@@ -145,7 +151,7 @@ class ClockBasedTimerManagerHandlerTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                ClockBasedTimerManager.class.getCanonicalName() + ">",
+                        ClockBasedTimerManager.class.getCanonicalName() + ">",
                 _clockBasedTimerManagerHandler.getInterfaceName());
     }
 }

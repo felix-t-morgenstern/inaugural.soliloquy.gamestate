@@ -1,10 +1,12 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterStatusEffectsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeStatusEffectType;
+import inaugural.soliloquy.gamestate.test.spydoubles.StatusEffectResistanceCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.AbilitySourceStub;
 import inaugural.soliloquy.gamestate.test.stubs.ElementStub;
-import inaugural.soliloquy.gamestate.test.spydoubles.StatusEffectResistanceCalculationSpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Map;
@@ -52,7 +54,7 @@ class CharacterStatusEffectsImplTests {
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 123);
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2, 456);
 
-        Map<StatusEffectType,Integer> statusEffectLevels =
+        Map<StatusEffectType, Integer> statusEffectLevels =
                 _characterStatusEffects.representation();
 
         assertEquals(2, statusEffectLevels.size());
@@ -64,7 +66,7 @@ class CharacterStatusEffectsImplTests {
     void testClearStatusEffects() {
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 123);
         _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2, 456);
-        Map<StatusEffectType,Integer> statusEffectLevels =
+        Map<StatusEffectType, Integer> statusEffectLevels =
                 _characterStatusEffects.representation();
         assertEquals(2, statusEffectLevels.size());
 
@@ -105,8 +107,9 @@ class CharacterStatusEffectsImplTests {
     void testAlterStatusEffect() {
         final int amountAltered = 111;
 
-        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, amountAltered, true, ELEMENT,
-                ABILITY_SOURCE);
+        _characterStatusEffects
+                .alterStatusEffect(STATUS_EFFECT_TYPE_1, amountAltered, true, ELEMENT,
+                        ABILITY_SOURCE);
 
         assertEquals((int) _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1),
                 STATUS_EFFECT_RESISTANCE_CALCULATION.StatusEffectTypeResult);

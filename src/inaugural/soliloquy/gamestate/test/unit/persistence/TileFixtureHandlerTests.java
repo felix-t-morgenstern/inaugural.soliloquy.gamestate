@@ -1,10 +1,13 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.TileFixtureHandler;
-import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeUuidHandler;
+import inaugural.soliloquy.gamestate.test.fakes.FakeFixtureType;
+import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixtureFactory;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeItemHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeTypeHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeUuidHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +39,10 @@ class TileFixtureHandlerTests {
     private final float Y_TILE_HEIGHT_OFFSET = 0.456f;
     private final String NAME = "fixtureName";
 
-    private final String WRITTEN_VALUE = "{\"uuid\":\"UUID0\",\"fixtureTypeId\":\"fixtureTypeId\",\"tileWidthOffset\":0.123,\"tileHeightOffset\":0.456,\"items\":[\"Item0\",\"Item1\",\"Item2\"],\"data\":\"VariableCache0\",\"name\":\"fixtureName\"}";
+    private final String WRITTEN_VALUE =
+            "{\"uuid\":\"UUID0\",\"fixtureTypeId\":\"fixtureTypeId\",\"tileWidthOffset\":0.123," +
+                    "\"tileHeightOffset\":0.456,\"items\":[\"Item0\",\"Item1\",\"Item2\"]," +
+                    "\"data\":\"VariableCache0\",\"name\":\"fixtureName\"}";
 
     private TypeHandler<TileFixture> _tileFixtureHandler;
 
@@ -115,7 +121,7 @@ class TileFixtureHandlerTests {
         assertSame(((FakeUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.uuid());
         assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((FakeVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(0),
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
                 tileFixture.data());
         assertEquals(X_TILE_WIDTH_OFFSET, tileFixture.getXTileWidthOffset());
         assertEquals(Y_TILE_HEIGHT_OFFSET, tileFixture.getYTileHeightOffset());

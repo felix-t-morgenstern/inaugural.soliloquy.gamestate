@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.TileWallSegmentsFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.MapFactory;

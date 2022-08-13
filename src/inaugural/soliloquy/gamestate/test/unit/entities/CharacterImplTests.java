@@ -24,12 +24,17 @@ class CharacterImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
     private final CharacterAIType AI_TYPE = new FakeCharacterAIType();
-    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY = new FakeCharacterEventsFactory();
-    private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY = new FakeCharacterEquipmentSlotsFactory();
+    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY =
+            new FakeCharacterEventsFactory();
+    private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY =
+            new FakeCharacterEquipmentSlotsFactory();
     private final CharacterInventoryFactory INVENTORY_FACTORY = new FakeCharacterInventoryFactory();
-    private final EntityMembersOfTypeFactory ENTITIES_OF_TYPE_FACTORY = new FakeEntityMembersOfTypeFactory();
-    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY = new FakeCharacterVariableStatisticsFactory();
-    private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY = new FakeCharacterStatusEffectsFactory();
+    private final EntityMembersOfTypeFactory ENTITIES_OF_TYPE_FACTORY =
+            new FakeEntityMembersOfTypeFactory();
+    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY =
+            new FakeCharacterVariableStatisticsFactory();
+    private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY =
+            new FakeCharacterStatusEffectsFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
     @BeforeEach
@@ -147,7 +152,6 @@ class CharacterImplTests {
     }
 
     @Test
-
     void testEquals() {
         Character character2 = new CharacterImpl(
                 UUID,
@@ -323,14 +327,14 @@ class CharacterImplTests {
         CharacterStatusEffects statusEffects = _character.statusEffects();
 
         assertFalse(_character.isDeleted());
-        assertFalse(((FakeTileEntities)tile.characters()).REMOVED_ENTITIES
+        assertFalse(((FakeTileEntities) tile.characters()).REMOVED_ENTITIES
                 .contains(_character));
 
         _character.delete();
 
         assertTrue(_character.isDeleted());
         Character removedCharacter =
-                (Character) ((FakeTileEntities)tile.characters()).REMOVED_ENTITIES.get(0);
+                (Character) ((FakeTileEntities) tile.characters()).REMOVED_ENTITIES.get(0);
         assertSame(_character, removedCharacter);
         assertTrue(equipmentSlots._isDeleted);
         assertTrue(inventory._isDeleted);
@@ -352,7 +356,8 @@ class CharacterImplTests {
         assertThrows(EntityDeletedException.class, () -> _character.getDirection());
         assertThrows(EntityDeletedException.class, () -> _character.setDirection(""));
         assertThrows(EntityDeletedException.class, () -> _character.getImageAssetSet());
-        assertThrows(EntityDeletedException.class, () -> _character.setImageAssetSet(new FakeImageAssetSet()));
+        assertThrows(EntityDeletedException.class,
+                () -> _character.setImageAssetSet(new FakeImageAssetSet()));
         assertThrows(EntityDeletedException.class, () -> _character.getAIType());
         assertThrows(EntityDeletedException.class, () -> _character.setAIType(null));
         assertThrows(EntityDeletedException.class, () -> _character.events());
@@ -367,7 +372,8 @@ class CharacterImplTests {
         assertThrows(EntityDeletedException.class, () -> _character.getPlayerControlled());
         assertThrows(EntityDeletedException.class, () -> _character.setPlayerControlled(true));
         assertThrows(EntityDeletedException.class, () -> _character.data());
-        assertThrows(EntityDeletedException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(EntityDeletedException.class,
+                () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(EntityDeletedException.class, () -> _character.getName());
         assertThrows(EntityDeletedException.class, () -> _character.setName(""));
         assertThrows(EntityDeletedException.class, () -> _character.getInterfaceName());
@@ -378,7 +384,7 @@ class CharacterImplTests {
     void testEnforceTileInvariant() {
         FakeTile tile = new FakeTile();
         tile.characters().add(_character);
-        ((FakeTileEntities)tile.characters()).ENTITIES.remove(_character);
+        ((FakeTileEntities) tile.characters()).ENTITIES.remove(_character);
 
         assertThrows(IllegalStateException.class, () -> _character.type());
         assertThrows(IllegalStateException.class, () -> _character.classifications());
@@ -389,7 +395,8 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.getDirection());
         assertThrows(IllegalStateException.class, () -> _character.setDirection(""));
         assertThrows(IllegalStateException.class, () -> _character.getImageAssetSet());
-        assertThrows(IllegalStateException.class, () -> _character.setImageAssetSet(new FakeImageAssetSet()));
+        assertThrows(IllegalStateException.class,
+                () -> _character.setImageAssetSet(new FakeImageAssetSet()));
         assertThrows(IllegalStateException.class, () -> _character.getAIType());
         assertThrows(IllegalStateException.class, () -> _character.setAIType(null));
         assertThrows(IllegalStateException.class, () -> _character.events());
@@ -406,7 +413,8 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> _character.data());
         assertThrows(IllegalStateException.class, () -> _character.delete());
         assertThrows(IllegalStateException.class, () -> _character.isDeleted());
-        assertThrows(IllegalStateException.class, () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(IllegalStateException.class,
+                () -> _character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> _character.getName());
         assertThrows(IllegalStateException.class, () -> _character.setName(""));
         assertThrows(IllegalStateException.class, () -> _character.getInterfaceName());

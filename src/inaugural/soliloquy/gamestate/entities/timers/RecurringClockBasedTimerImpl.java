@@ -5,7 +5,8 @@ import inaugural.soliloquy.tools.timing.AbstractLoopingPausableAtTime;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
-// TODO: Consider abstracting out shared functionality between Recurring and OneTime ClockBasedTimers
+// TODO: Consider abstracting out shared functionality between Recurring and OneTime
+//  ClockBasedTimers
 public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
         implements RecurringClockBasedTimer {
     private final String ID;

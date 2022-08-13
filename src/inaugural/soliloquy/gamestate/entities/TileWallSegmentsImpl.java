@@ -40,13 +40,13 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     }
 
     @Override
-    public Map<TileWallSegmentDirection, Map<TileWallSegment,TileWallSegmentDimensions>>
+    public Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>>
     representation()
             throws IllegalStateException {
         enforceDeletionInvariants("representation");
         Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>>
                 map = MAP_FACTORY.make(TileWallSegmentDirection.UNKNOWN,
-                        MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE));
+                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE));
 
         Map<TileWallSegment, TileWallSegmentDimensions> north =
                 MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE);
@@ -125,15 +125,18 @@ public class TileWallSegmentsImpl implements TileWallSegments {
                 != null) {
             SEGMENTS.get(TileWallSegmentDirection.NORTH).put(segment,
                     makeDimensions(dimens.getHeight(), z));
-        } else if ((dimens = SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
+        }
+        else if ((dimens = SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
                 != null) {
             SEGMENTS.get(TileWallSegmentDirection.NORTH).put(segment,
                     makeDimensions(dimens.getHeight(), z));
-        } else if ((dimens = SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
+        }
+        else if ((dimens = SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment))
                 != null) {
             SEGMENTS.get(TileWallSegmentDirection.NORTH).put(segment,
                     makeDimensions(dimens.getHeight(), z));
-        } else {
+        }
+        else {
             throw new IllegalArgumentException(
                     "TileWallSegmentsImpl.setZIndex: segment is not present in this class");
         }
@@ -161,11 +164,11 @@ public class TileWallSegmentsImpl implements TileWallSegments {
                     "TileWallSegmentsImpl.add: tileWallSegment must be non-null");
         }
         return SEGMENTS.get(TileWallSegmentDirection.NORTH).remove(tileWallSegment)
-                    != null ||
+                != null ||
                 SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).remove(tileWallSegment)
-                    != null ||
+                        != null ||
                 SEGMENTS.get(TileWallSegmentDirection.WEST).remove(tileWallSegment)
-                    != null;
+                        != null;
     }
 
     @Override
@@ -179,9 +182,9 @@ public class TileWallSegmentsImpl implements TileWallSegments {
         }
         return SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(tileWallSegment)
                 ||
-            SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(tileWallSegment)
+                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(tileWallSegment)
                 ||
-            SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(tileWallSegment);
+                SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(tileWallSegment);
     }
 
     @Override
@@ -256,7 +259,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
                 SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
                         .containsKey(tileWallSegment) ||
                 SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(tileWallSegment))
-                    && tileWallSegment.tile() != TILE) {
+                && tileWallSegment.tile() != TILE) {
             throw new IllegalStateException("TileWallSegmentsImpl." + methodName +
                     ": tileWallSegment was expected in this object's Tile, but instead has no " +
                     "Tile");
@@ -284,8 +287,8 @@ public class TileWallSegmentsImpl implements TileWallSegments {
 
     @Override
     public Iterator<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
-                TileWallSegmentDimensions>>>
-        iterator() {
+            TileWallSegmentDimensions>>>
+    iterator() {
         Iterator<TileWallSegment> northSegments =
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).keySet().iterator();
         Iterator<TileWallSegment> northwestSegments =
@@ -302,7 +305,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
 
             @Override
             public Pair<TileWallSegmentDirection, Pair<TileWallSegment, TileWallSegmentDimensions>>
-                next() {
+            next() {
                 TileWallSegment segment;
                 return northSegments.hasNext() ?
                         new Pair<>(TileWallSegmentDirection.NORTH,
@@ -314,8 +317,8 @@ public class TileWallSegmentsImpl implements TileWallSegments {
                                         SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
                                                 .get(segment)))
                         : new Pair<>(TileWallSegmentDirection.WEST,
-                                new Pair<>(segment = westSegments.next(),
-                                        SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment)));
+                        new Pair<>(segment = westSegments.next(),
+                                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment)));
             }
         };
     }

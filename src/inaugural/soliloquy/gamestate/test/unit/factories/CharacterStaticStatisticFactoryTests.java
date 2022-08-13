@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.CharacterStaticStatisticFactory;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterStaticStatisticType;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +25,8 @@ class CharacterStaticStatisticFactoryTests {
             new CharacterStatisticCalculationSpyDouble();
 
     private EntityMemberOfTypeFactory<CharacterStaticStatisticType,
-                CharacterStatistic<CharacterStaticStatisticType>, Character>
-        _characterStaticStatisticFactory;
+            CharacterStatistic<CharacterStaticStatisticType>, Character>
+            _characterStaticStatisticFactory;
 
     @BeforeEach
     void setUp() {
@@ -72,9 +74,9 @@ class CharacterStaticStatisticFactoryTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(EntityMemberOfTypeFactory.class.getCanonicalName() + "<" +
-                CharacterStaticStatisticType.class.getCanonicalName() + "," +
-                CharacterStatistic.class.getCanonicalName() + "<" +
-                CharacterStaticStatisticType.class.getCanonicalName() + ">>",
+                        CharacterStaticStatisticType.class.getCanonicalName() + "," +
+                        CharacterStatistic.class.getCanonicalName() + "<" +
+                        CharacterStaticStatisticType.class.getCanonicalName() + ">>",
                 _characterStaticStatisticFactory.getInterfaceName());
     }
 }

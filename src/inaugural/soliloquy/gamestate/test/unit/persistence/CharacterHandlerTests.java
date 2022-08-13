@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.CharacterHandler;
 import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeUuidHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeItemHandler;
+import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeUuidHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,7 +108,25 @@ class CharacterHandlerTests {
             new FakeVariableCacheHandler();
     private final TypeHandler<Item> ITEM_HANDLER = new FakeItemHandler();
 
-    private final String WRITTEN_VALUE = "{\"uuid\":\"UUID0\",\"characterTypeId\":\"characterTypeId\",\"classifications\":[\"classificationId\"],\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"reflexive\",\"val\":\"themselves\"},{\"key\":\"genitive\",\"val\":\"theirs\"},{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\",\"direction\":\"direction\",\"assetSetId\":\"imageAssetSetId\",\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\",\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"},{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}],\"inventoryItems\":[\"Item1\"],\"variableStats\":[{\"current\":135,\"type\":\"variableStatTypeId\",\"data\":\"VariableCache0\"}],\"staticStats\":[{\"type\":\"staticStatTypeId\",\"data\":\"VariableCache1\"}],\"statusEffects\":[{\"type\":\"statEffectTypeId\",\"value\":246}],\"passiveAbilityIds\":[\"passiveAbilityId\"],\"activeAbilityIds\":[\"activeAbilityId\"],\"reactiveAbilityIds\":[\"reactiveAbilityId\"],\"isPlayerControlled\":true,\"data\":\"VariableCache2\",\"name\":\"charName\"}";
+    private final String WRITTEN_VALUE =
+            "{\"uuid\":\"UUID0\",\"characterTypeId\":\"characterTypeId\"," +
+                    "\"classifications\":[\"classificationId\"]," +
+                    "\"pronouns\":[{\"key\":\"oblique\",\"val\":\"them\"},{\"key\":\"reflexive\"," +
+                    "\"val\":\"themselves\"},{\"key\":\"genitive\",\"val\":\"theirs\"}," +
+                    "{\"key\":\"nominative\",\"val\":\"they\"}],\"stance\":\"stance\"," +
+                    "\"direction\":\"direction\",\"assetSetId\":\"imageAssetSetId\"," +
+                    "\"aiTypeId\":\"aiTypeId\",\"events\":[{\"trigger\":\"trigger\"," +
+                    "\"events\":[\"eventId\"]}],\"equipmentSlots\":[{\"key\":\"equipmentSlot2\"}," +
+                    "{\"key\":\"equipmentSlot1\",\"val\":\"Item0\"}]," +
+                    "\"inventoryItems\":[\"Item1\"],\"variableStats\":[{\"current\":135," +
+                    "\"type\":\"variableStatTypeId\",\"data\":\"VariableCache0\"}]," +
+                    "\"staticStats\":[{\"type\":\"staticStatTypeId\"," +
+                    "\"data\":\"VariableCache1\"}]," +
+                    "\"statusEffects\":[{\"type\":\"statEffectTypeId\",\"value\":246}]," +
+                    "\"passiveAbilityIds\":[\"passiveAbilityId\"]," +
+                    "\"activeAbilityIds\":[\"activeAbilityId\"]," +
+                    "\"reactiveAbilityIds\":[\"reactiveAbilityId\"],\"isPlayerControlled\":true," +
+                    "\"data\":\"VariableCache2\",\"name\":\"charName\"}";
 
     private TypeHandler<Character> _characterHandler;
 
@@ -253,8 +271,8 @@ class CharacterHandlerTests {
                 character.variableStatistics().get(VARIABLE_STAT_TYPE);
         variableStat.setCurrentValue(135);
         character.staticStatistics().add(STATIC_STAT_TYPE);
-        ((FakeCharacterStatusEffects)character.statusEffects())._representation.clear();
-        ((FakeCharacterStatusEffects)character.statusEffects())._representation
+        ((FakeCharacterStatusEffects) character.statusEffects())._representation.clear();
+        ((FakeCharacterStatusEffects) character.statusEffects())._representation
                 .put(STAT_EFFECT_TYPE, 246);
         character.passiveAbilities().add(PASSIVE_ABILITY);
         character.activeAbilities().add(ACTIVE_ABILITY);
@@ -267,11 +285,11 @@ class CharacterHandlerTests {
         assertEquals(WRITTEN_VALUE, writtenValue);
         assertSame(uuid, ((FakeUuidHandler) UUID_HANDLER).WRITE_INPUTS.get(0));
         assertSame(character.variableStatistics().get(VARIABLE_STAT_TYPE).data(),
-                ((FakeVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(0));
+                ((FakeVariableCacheHandler) DATA_HANDLER).WRITE_INPUTS.get(0));
         assertSame(character.staticStatistics().get(STATIC_STAT_TYPE).data(),
-                ((FakeVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(1));
+                ((FakeVariableCacheHandler) DATA_HANDLER).WRITE_INPUTS.get(1));
         assertSame(character.data(),
-                ((FakeVariableCacheHandler)DATA_HANDLER).WRITE_INPUTS.get(2));
+                ((FakeVariableCacheHandler) DATA_HANDLER).WRITE_INPUTS.get(2));
     }
 
     @Test
@@ -306,27 +324,27 @@ class CharacterHandlerTests {
         assertSame(EVENT, readCharacter.events().representation().get(TRIGGER).get(0));
 
         assertEquals(2, readCharacter.equipmentSlots().representation().size());
-        assertTrue(((FakeItemHandler)ITEM_HANDLER).READ_OUTPUTS.contains(
+        assertTrue(((FakeItemHandler) ITEM_HANDLER).READ_OUTPUTS.contains(
                 readCharacter.equipmentSlots().itemInSlot(EQUIPMENT_SLOT_1)));
         assertNull(readCharacter.equipmentSlots().itemInSlot(EQUIPMENT_SLOT_2));
         assertEquals(1, readCharacter.inventory().representation().size());
-        assertTrue(((FakeItemHandler)ITEM_HANDLER).READ_OUTPUTS.contains(
+        assertTrue(((FakeItemHandler) ITEM_HANDLER).READ_OUTPUTS.contains(
                 readCharacter.inventory().representation().get(0)));
 
         assertEquals(1, readCharacter.variableStatistics().representation().size());
         assertEquals(135,
                 readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).getCurrentValue());
         assertEquals("VariableCache0",
-                ((FakeVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(1));
-        assertSame(((FakeVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(1),
+                ((FakeVariableCacheHandler) DATA_HANDLER).READ_INPUTS.get(1));
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(1),
                 readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).data());
 
         assertEquals(1, readCharacter.staticStatistics().representation().size());
         assertSame(STATIC_STAT_TYPE,
                 readCharacter.staticStatistics().representation().get(0).type());
         assertEquals("VariableCache1",
-                ((FakeVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(2));
-        assertSame(((FakeVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(2),
+                ((FakeVariableCacheHandler) DATA_HANDLER).READ_INPUTS.get(2));
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(2),
                 readCharacter.staticStatistics().get(STATIC_STAT_TYPE).data());
 
         assertEquals(1, readCharacter.statusEffects().representation().size());
@@ -344,8 +362,8 @@ class CharacterHandlerTests {
 
         assertTrue(readCharacter.getPlayerControlled());
         assertEquals("VariableCache2",
-                ((FakeVariableCacheHandler)DATA_HANDLER).READ_INPUTS.get(0));
-        assertSame(((FakeVariableCacheHandler)DATA_HANDLER).READ_OUTPUTS.get(0),
+                ((FakeVariableCacheHandler) DATA_HANDLER).READ_INPUTS.get(0));
+        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
                 readCharacter.data());
         assertEquals(NAME, readCharacter.getName());
     }

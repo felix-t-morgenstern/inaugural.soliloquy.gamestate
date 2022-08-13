@@ -71,7 +71,7 @@ class ArchetypesTests {
     @Test
     void testGameCharacterEventReadableCollectionArchetype() {
         assertEquals(List.class.getCanonicalName() + "<" +
-                GameCharacterEvent.class.getCanonicalName() + ">",
+                        GameCharacterEvent.class.getCanonicalName() + ">",
                 new GameCharacterEventReadableCollectionArchetype().getInterfaceName());
     }
 

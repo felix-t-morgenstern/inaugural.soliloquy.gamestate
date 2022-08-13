@@ -6,7 +6,8 @@ import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
-public class StatusEffectResistanceCalculationSpyDouble implements StatusEffectResistanceCalculation {
+public class StatusEffectResistanceCalculationSpyDouble
+        implements StatusEffectResistanceCalculation {
     public Character _character;
     public StatusEffectType _statusEffectType;
     public int _baseAmount;

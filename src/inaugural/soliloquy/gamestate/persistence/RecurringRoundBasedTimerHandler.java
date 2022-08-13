@@ -15,7 +15,7 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
 
     public RecurringRoundBasedTimerHandler(RoundBasedTimerFactory RoundBasedTimerFactory,
                                            @SuppressWarnings("rawtypes")
-                                                            Function<String, Action> getAction) {
+                                                   Function<String, Action> getAction) {
         super(new RecurringRoundBasedTimerArchetype());
         TURN_BASED_TIMER_FACTORY = Check.ifNull(RoundBasedTimerFactory, "RoundBasedTimerFactory");
         GET_ACTION = Check.ifNull(getAction, "getAction");

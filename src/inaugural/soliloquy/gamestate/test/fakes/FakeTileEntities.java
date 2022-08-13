@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 public class FakeTileEntities<TEntity extends TileEntity> implements TileEntities<TEntity> {
-    public final HashMap<TEntity,Integer> ENTITIES = new HashMap<>();
+    public final HashMap<TEntity, Integer> ENTITIES = new HashMap<>();
     public final Tile TILE;
     public final List<TEntity> REMOVED_ENTITIES = new FakeList<>();
 
@@ -41,7 +41,7 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
 
     @Override
     public void add(TEntity entity) throws IllegalArgumentException {
-        add(entity,0);
+        add(entity, 0);
         if (_actionAfterAdding != null) {
             _actionAfterAdding.accept(entity);
         }
@@ -49,7 +49,7 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
 
     @Override
     public void add(TEntity entity, int z) throws IllegalArgumentException {
-        ENTITIES.put(entity,z);
+        ENTITIES.put(entity, z);
         entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
     }
 

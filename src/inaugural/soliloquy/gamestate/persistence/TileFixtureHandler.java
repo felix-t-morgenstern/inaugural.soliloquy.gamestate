@@ -52,7 +52,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
                 DATA_HANDLER.read(dto.data), UUID_HANDLER.read(dto.uuid));
         tileFixture.setXTileWidthOffset(dto.tileWidthOffset);
         tileFixture.setYTileHeightOffset(dto.tileHeightOffset);
-        for(int i = 0; i < dto.items.length; i++) {
+        for (int i = 0; i < dto.items.length; i++) {
             tileFixture.items().add(ITEMS_HANDLER.read(dto.items[i]));
         }
         tileFixture.setName(dto.name);
@@ -72,7 +72,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
         dto.tileHeightOffset = tileFixture.getYTileHeightOffset();
         List<Item> items = tileFixture.items().representation();
         dto.items = new String[items.size()];
-        for(int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < items.size(); i++) {
             dto.items[i] = ITEMS_HANDLER.write(items.get(i));
         }
         dto.data = DATA_HANDLER.write(tileFixture.data());

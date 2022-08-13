@@ -53,7 +53,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
     }
 
     @Override
-    public GameState make(Party party, VariableCache variableCache) throws IllegalArgumentException {
+    public GameState make(Party party, VariableCache variableCache)
+            throws IllegalArgumentException {
         return new GameStateImpl(party, variableCache, MAP_FACTORY, REGISTRY_FACTORY,
                 GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER,
                 ITEM_FACTORY, CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY,

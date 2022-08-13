@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterVariableStatisticImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterVariableStatisticType;
+import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,9 +66,10 @@ class CharacterVariableStatisticImplTests {
                 CHARACTER_STATISTIC_CALCULATION._statisticType);
         assertEquals(CharacterStatisticCalculationSpyDouble.VALUE,
                 _characterVariableStatistic.totalValue());
-        Map<String,Integer> representation =
+        Map<String, Integer> representation =
                 _characterVariableStatistic.representation();
-        assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS.size(), representation.size());
+        assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS.size(),
+                representation.size());
         CharacterStatisticCalculationSpyDouble.MODIFIERS.forEach((modifierType, value) ->
                 assertEquals(value, representation.get(modifierType)));
     }
@@ -77,13 +78,17 @@ class CharacterVariableStatisticImplTests {
     void testThrowsIllegalStateExceptionForDeadCharacter() {
         CHARACTER.delete();
 
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.getCurrentValue());
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.setCurrentValue(0));
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.setCurrentValue(0));
+        assertThrows(IllegalStateException.class,
+                () -> _characterVariableStatistic.getCurrentValue());
+        assertThrows(IllegalStateException.class,
+                () -> _characterVariableStatistic.setCurrentValue(0));
+        assertThrows(IllegalStateException.class,
+                () -> _characterVariableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.type());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.data());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.calculate());
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.representation());
+        assertThrows(IllegalStateException.class,
+                () -> _characterVariableStatistic.representation());
         assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.totalValue());
     }
 
@@ -91,13 +96,17 @@ class CharacterVariableStatisticImplTests {
     void testEnforceDeletionInvariant() {
         _characterVariableStatistic.delete();
 
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.getCurrentValue());
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.setCurrentValue(0));
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.setCurrentValue(0));
+        assertThrows(EntityDeletedException.class,
+                () -> _characterVariableStatistic.getCurrentValue());
+        assertThrows(EntityDeletedException.class,
+                () -> _characterVariableStatistic.setCurrentValue(0));
+        assertThrows(EntityDeletedException.class,
+                () -> _characterVariableStatistic.setCurrentValue(0));
         assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.type());
         assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.data());
         assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.calculate());
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.representation());
+        assertThrows(EntityDeletedException.class,
+                () -> _characterVariableStatistic.representation());
         assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.totalValue());
     }
 }

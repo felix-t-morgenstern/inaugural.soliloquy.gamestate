@@ -27,13 +27,14 @@ class EntityMembersOfTypeImplTests {
     private final FakeDeletable CONTAINING_ENTITY = new FakeDeletable();
     private final ArrayList<HasId> TYPES_ADDED = new ArrayList<>();
     private final ArrayList<FakeEntityMemberOfType> ENTITIES_ADDED = new ArrayList<>();
-    private final Function<Deletable,Function<HasId,Function<VariableCache, FakeEntityMemberOfType>>>
+    private final Function<Deletable, Function<HasId, Function<VariableCache,
+            FakeEntityMemberOfType>>>
             FACTORY = e -> t -> d -> {
         _entityPassedIntoFactory = e;
         _typePassedIntoFactory = t;
         _dataPassedIntoFactory = d;
         TYPES_ADDED.add(t);
-        FakeEntityMemberOfType entity = new FakeEntityMemberOfType(e,t);
+        FakeEntityMemberOfType entity = new FakeEntityMemberOfType(e, t);
         ENTITIES_ADDED.add(entity);
         return entity;
     };

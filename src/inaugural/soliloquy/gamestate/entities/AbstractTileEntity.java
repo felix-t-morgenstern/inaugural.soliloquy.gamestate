@@ -54,7 +54,7 @@ public abstract class AbstractTileEntity<TEntity extends TileEntity>
 
     @SuppressWarnings("unchecked")
     void enforceCorrectTileInvariant(String methodName) {
-        if (_tile != null && !getTileAggregation().contains((TEntity)this)) {
+        if (_tile != null && !getTileAggregation().contains((TEntity) this)) {
             throw new IllegalStateException(className() + methodName +
                     ": this is not present on its specified Tile");
         }

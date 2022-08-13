@@ -83,12 +83,14 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
     private static class ClockBasedTimerManagerArchetype implements ClockBasedTimerManager {
 
         @Override
-        public void registerOneTimeTimer(OneTimeClockBasedTimer oneTimeClockBasedTimer) throws IllegalArgumentException {
+        public void registerOneTimeTimer(OneTimeClockBasedTimer oneTimeClockBasedTimer)
+                throws IllegalArgumentException {
 
         }
 
         @Override
-        public void registerRecurringTimer(RecurringClockBasedTimer recurringClockBasedTimer) throws IllegalArgumentException {
+        public void registerRecurringTimer(RecurringClockBasedTimer recurringClockBasedTimer)
+                throws IllegalArgumentException {
 
         }
 

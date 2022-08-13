@@ -1,7 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.CharacterVariableStatisticFactory;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterVariableStatisticType;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,8 +83,8 @@ class CharacterVariableStatisticFactoryTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(EntityMemberOfTypeFactory.class.getCanonicalName() + "<" +
-                CharacterVariableStatisticType.class.getCanonicalName() + "," +
-                CharacterVariableStatistic.class.getCanonicalName() + ">",
+                        CharacterVariableStatisticType.class.getCanonicalName() + "," +
+                        CharacterVariableStatistic.class.getCanonicalName() + ">",
                 _characterVariableStatisticFactory.getInterfaceName());
     }
 }

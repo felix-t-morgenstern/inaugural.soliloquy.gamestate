@@ -12,7 +12,6 @@ import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
 import java.util.HashMap;
 
-import static inaugural.soliloquy.tools.random.Random.randomLong;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -35,7 +34,9 @@ class OneTimeClockBasedTimerHandlerTests {
 
     private TypeHandler<OneTimeClockBasedTimer> _oneTimeClockBasedTimerHandler;
 
-    private final String WRITTEN_VALUE = "{\"id\":\"oneTimeClockBasedTimerId\",\"actionId\":\"actionId\",\"firingTime\":123123,\"pausedTime\":456456,\"mostRecentTimestamp\":789789}";
+    private final String WRITTEN_VALUE =
+            "{\"id\":\"oneTimeClockBasedTimerId\",\"actionId\":\"actionId\"," +
+                    "\"firingTime\":123123,\"pausedTime\":456456,\"mostRecentTimestamp\":789789}";
 
     @BeforeEach
     void setUp() {
@@ -97,7 +98,7 @@ class OneTimeClockBasedTimerHandlerTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                OneTimeClockBasedTimer.class.getCanonicalName() + ">",
+                        OneTimeClockBasedTimer.class.getCanonicalName() + ">",
                 _oneTimeClockBasedTimerHandler.getInterfaceName());
     }
 }

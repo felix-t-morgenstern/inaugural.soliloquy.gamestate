@@ -5,8 +5,8 @@ import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileFactory;
@@ -119,22 +119,22 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
         tile.setHeight(dto.height);
         tile.setGroundType(GET_GROUND_TYPE.apply(dto.groundTypeId));
 
-        for(int i = 0; i < dto.characters.length; i++) {
+        for (int i = 0; i < dto.characters.length; i++) {
             tile.characters().add(CHARACTERS_HANDLER.read(dto.characters[i].entity),
                     dto.characters[i].z);
         }
 
-        for(int i = 0; i < dto.items.length; i++) {
+        for (int i = 0; i < dto.items.length; i++) {
             tile.items().add(ITEMS_HANDLER.read(dto.items[i].entity),
                     dto.items[i].z);
         }
 
-        for(int i = 0; i < dto.fixtures.length; i++) {
+        for (int i = 0; i < dto.fixtures.length; i++) {
             tile.fixtures().add(FIXTURES_HANDLER.read(dto.fixtures[i].entity),
                     dto.fixtures[i].z);
         }
 
-        for(int i = 0; i < dto.wallSegments.length; i++) {
+        for (int i = 0; i < dto.wallSegments.length; i++) {
             TileWallSegment segment =
                     TILE_WALL_SEGMENT_FACTORY.make(DATA_HANDLER.read(dto.wallSegments[i].data));
             segment.setType(GET_SEGMENT_TYPE.apply(dto.wallSegments[i].type));
@@ -143,15 +143,15 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
                     dto.wallSegments[i].height, dto.wallSegments[i].z);
         }
 
-        for(int i = 0; i < dto.movementEvents.length; i++) {
+        for (int i = 0; i < dto.movementEvents.length; i++) {
             tile.movementEvents().add(GET_MOVEMENT_EVENT.apply(dto.movementEvents[i]));
         }
 
-        for(int i = 0; i < dto.abilityEvents.length; i++) {
+        for (int i = 0; i < dto.abilityEvents.length; i++) {
             tile.abilityEvents().add(GET_ABILITY_EVENT.apply(dto.abilityEvents[i]));
         }
 
-        for(int i = 0; i < dto.sprites.length; i++) {
+        for (int i = 0; i < dto.sprites.length; i++) {
             tile.sprites().put(SPRITE_HANDLER.read(dto.sprites[i].entity),
                     dto.sprites[i].z);
         }
@@ -207,19 +207,19 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
 
         dto.movementEvents = new String[tile.movementEvents().size()];
         index = 0;
-        for(GameMovementEvent movementEvent : tile.movementEvents()) {
+        for (GameMovementEvent movementEvent : tile.movementEvents()) {
             dto.movementEvents[index++] = movementEvent.id();
         }
 
         dto.abilityEvents = new String[tile.abilityEvents().size()];
         index = 0;
-        for(GameAbilityEvent abilityEvent : tile.abilityEvents()) {
+        for (GameAbilityEvent abilityEvent : tile.abilityEvents()) {
             dto.abilityEvents[index++] = abilityEvent.id();
         }
 
         dto.sprites = new TileEntityDTO[tile.sprites().size()];
         index = 0;
-        for(Sprite sprite : tile.sprites().keySet()) {
+        for (Sprite sprite : tile.sprites().keySet()) {
             dto.sprites[index++] =
                     new TileEntityDTO(tile.sprites().get(sprite), SPRITE_HANDLER.write(sprite));
         }

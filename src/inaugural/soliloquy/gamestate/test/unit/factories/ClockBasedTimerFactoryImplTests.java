@@ -137,13 +137,16 @@ class ClockBasedTimerFactoryImplTests {
                         MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
-                        FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSE_TIME,
-                        LAST_FIRING_TIMESTAMP, null));
+                _clockBasedTimerFactory
+                        .make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
+                                FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSE_TIME,
+                                LAST_FIRING_TIMESTAMP, null));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
-                        FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
-                        MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+                _clockBasedTimerFactory
+                        .make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
+                                FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
+                                MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP,
+                                MOST_RECENT_TIMESTAMP));
     }
 }

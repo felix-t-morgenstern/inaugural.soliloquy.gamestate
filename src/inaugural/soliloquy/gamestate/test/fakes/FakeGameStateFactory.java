@@ -7,7 +7,8 @@ import soliloquy.specs.gamestate.factories.GameStateFactory;
 
 public class FakeGameStateFactory implements GameStateFactory {
     @Override
-    public GameState make(Party party, VariableCache variableCache) throws IllegalArgumentException {
+    public GameState make(Party party, VariableCache variableCache)
+            throws IllegalArgumentException {
         return new FakeGameState(party, variableCache);
     }
 

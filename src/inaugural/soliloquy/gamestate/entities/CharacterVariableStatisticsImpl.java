@@ -15,7 +15,7 @@ import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 public class CharacterVariableStatisticsImpl
         extends EntityMembersOfTypeImpl<CharacterVariableStatisticType,
-                    CharacterVariableStatistic, Character>
+        CharacterVariableStatistic, Character>
         implements CharacterVariableStatistics {
     private static final CharacterVariableStatisticType ENTITY_MEMBER_TYPE_ARCHETYPE =
             new CharacterVariableStatisticTypeArchetype();
@@ -43,7 +43,7 @@ public class CharacterVariableStatisticsImpl
         enforceDeletionInvariants();
         Map<CharacterVariableStatisticType, Integer> currentValues =
                 MAP_FACTORY.make(ENTITY_MEMBER_TYPE_ARCHETYPE, 0);
-        ENTITIES.forEach((t,s) -> currentValues.put(t, s.getCurrentValue()));
+        ENTITIES.forEach((t, s) -> currentValues.put(t, s.getCurrentValue()));
         return currentValues;
     }
 
@@ -52,7 +52,7 @@ public class CharacterVariableStatisticsImpl
         enforceDeletionInvariants();
         Map<CharacterVariableStatisticType, Integer> maxValues =
                 MAP_FACTORY.make(ENTITY_MEMBER_TYPE_ARCHETYPE, 0);
-        ENTITIES.forEach((t,s) -> {
+        ENTITIES.forEach((t, s) -> {
             s.calculate();
             maxValues.put(t, s.totalValue());
         });

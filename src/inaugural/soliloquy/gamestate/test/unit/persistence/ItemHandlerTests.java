@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.ItemHandler;
-import inaugural.soliloquy.gamestate.test.fakes.FakeItemFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
-import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeItemFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeUuidHandler;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
+import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Registry;
@@ -31,8 +31,12 @@ class ItemHandlerTests {
     private final float X_TILE_WIDTH_OFFSET = 0.546f;
     private final float Y_TILE_HEIGHT_OFFSET = 0.213f;
 
-    private final String DATA_WITH_CHARGES = "{\"uuid\":\"UUID0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"charges\":123,\"data\":\"VariableCache0\"}";
-    private final String DATA_STACKABLE = "{\"uuid\":\"UUID0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0.213,\"numberInStack\":456,\"data\":\"VariableCache0\"}";
+    private final String DATA_WITH_CHARGES =
+            "{\"uuid\":\"UUID0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0" +
+                    ".213,\"charges\":123,\"data\":\"VariableCache0\"}";
+    private final String DATA_STACKABLE =
+            "{\"uuid\":\"UUID0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0" +
+                    ".213,\"numberInStack\":456,\"data\":\"VariableCache0\"}";
 
     private FakeItem _item;
     private ItemTypeStub _itemType;
@@ -77,7 +81,7 @@ class ItemHandlerTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                Item.class.getCanonicalName() + ">",
+                        Item.class.getCanonicalName() + ">",
                 _persistentItemHandler.getInterfaceName());
     }
 
@@ -118,8 +122,8 @@ class ItemHandlerTests {
         assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
         assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
         assertSame(((FakeVariableCacheHandler) DATA_HANDLER)
-                .READ_OUTPUTS.get(0),
-                    readItem.data());
+                        .READ_OUTPUTS.get(0),
+                readItem.data());
         assertEquals(NUM_CHARGES, readItem.getCharges());
     }
 
@@ -135,8 +139,8 @@ class ItemHandlerTests {
         assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
         assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
         assertSame(((FakeVariableCacheHandler) DATA_HANDLER)
-                .READ_OUTPUTS.get(0),
-                    readItem.data());
+                        .READ_OUTPUTS.get(0),
+                readItem.data());
         assertEquals(NUM_IN_STACK, readItem.getNumberInStack());
     }
 

@@ -23,12 +23,14 @@ public class FakeCharacterVariableStatistic implements CharacterVariableStatisti
         _type = type;
     }
 
-    public FakeCharacterVariableStatistic(CharacterVariableStatisticType type, Character character) {
+    public FakeCharacterVariableStatistic(CharacterVariableStatisticType type,
+                                          Character character) {
         _type = type;
         _character = character;
     }
 
-    public FakeCharacterVariableStatistic(CharacterVariableStatisticType type, Character character, VariableCache data) {
+    public FakeCharacterVariableStatistic(CharacterVariableStatisticType type, Character character,
+                                          VariableCache data) {
         this(type, character);
         _data = data;
     }

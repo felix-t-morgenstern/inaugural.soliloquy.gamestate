@@ -2,7 +2,10 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.factories.EntityMembersOfTypeFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeDeletable;
+import inaugural.soliloquy.gamestate.test.fakes.FakeEntityMemberOfType;
+import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.ListFactory;
@@ -19,14 +22,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class EntityMembersOfTypeFactoryImplTests {
     private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
-    private final FakeEntityMemberOfType FACTORY_OUTPUT = new FakeEntityMemberOfType(null, null); // TODO: Determine whether and where factory output should be checked
-    private final Function<Deletable,Function<HasId,Function<VariableCache, FakeEntityMemberOfType>>>
+    private final FakeEntityMemberOfType FACTORY_OUTPUT = new FakeEntityMemberOfType(null, null);
+            // TODO: Determine whether and where factory output should be checked
+    private final Function<Deletable, Function<HasId, Function<VariableCache,
+                    FakeEntityMemberOfType>>>
             FACTORY = e -> t -> d -> {
-                _entityPassedIntoFactory = e;
-                _typePassedIntoFactory = t;
-                _dataPassedIntoFactory = d;
-                return FACTORY_OUTPUT;
-            };
+        _entityPassedIntoFactory = e;
+        _typePassedIntoFactory = t;
+        _dataPassedIntoFactory = d;
+        return FACTORY_OUTPUT;
+    };
     private final FakeDeletable CONTAINING_ENTITY = new FakeDeletable();
 
     private final DeletableArchetype ENTITY_ARCHETYPE = new DeletableArchetype();

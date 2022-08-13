@@ -69,7 +69,8 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public void setImageAssetSet(ImageAssetSet imageAssetSet) throws IllegalArgumentException, EntityDeletedException {
+    public void setImageAssetSet(ImageAssetSet imageAssetSet)
+            throws IllegalArgumentException, EntityDeletedException {
 
     }
 
@@ -79,7 +80,8 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public void setAIType(CharacterAIType characterAIType) throws IllegalArgumentException, EntityDeletedException {
+    public void setAIType(CharacterAIType characterAIType)
+            throws IllegalArgumentException, EntityDeletedException {
 
     }
 
@@ -104,7 +106,9 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public EntityMembersOfType<CharacterStaticStatisticType, CharacterStatistic<CharacterStaticStatisticType>, Character> staticStatistics() throws EntityDeletedException {
+    public EntityMembersOfType<CharacterStaticStatisticType,
+            CharacterStatistic<CharacterStaticStatisticType>, Character> staticStatistics()
+            throws EntityDeletedException {
         return null;
     }
 
@@ -169,7 +173,8 @@ public class CharacterArchetype implements Character {
     }
 
     @Override
-    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, EntityDeletedException {
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
+            throws IllegalArgumentException, EntityDeletedException {
 
     }
 }

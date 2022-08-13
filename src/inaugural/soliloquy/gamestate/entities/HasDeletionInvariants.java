@@ -11,6 +11,7 @@ public abstract class HasDeletionInvariants implements Deletable {
     private boolean _isDeleted;
 
     protected abstract String containingClassName();
+
     protected abstract Deletable getContainingObject();
 
     protected void enforceDeletionInvariants() {

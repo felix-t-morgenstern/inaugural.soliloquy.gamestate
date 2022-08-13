@@ -128,7 +128,7 @@ public class RoundManagerImpl implements RoundManager {
 
     @Override
     public void setActiveCharactersProvider(Supplier<List<Pair<Character, VariableCache>>>
-                                                        activeCharactersProvider)
+                                                    activeCharactersProvider)
             throws IllegalArgumentException {
         _activeCharactersProvider =
                 Check.ifNull(activeCharactersProvider, "activeCharactersProvider");

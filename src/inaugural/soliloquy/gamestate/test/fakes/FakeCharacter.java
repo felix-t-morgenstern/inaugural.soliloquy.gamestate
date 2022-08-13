@@ -31,7 +31,7 @@ public class FakeCharacter implements Character {
     private final UUID UUID;
     private final CharacterType TYPE;
     private final List<CharacterClassification> CLASSIFICATIONS = new FakeList<>();
-    private final Map<String,String> PRONOUNS = new FakeMap<>();
+    private final Map<String, String> PRONOUNS = new FakeMap<>();
     private final CharacterEvents EVENTS = new FakeCharacterEvents(this);
     private final CharacterVariableStatistics VARIABLE_STATS;
     private final EntityMembersOfType<CharacterStaticStatisticType,
@@ -97,7 +97,8 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public void setDirection(String direction) throws IllegalArgumentException, IllegalStateException {
+    public void setDirection(String direction)
+            throws IllegalArgumentException, IllegalStateException {
         _direction = direction;
     }
 
@@ -107,7 +108,8 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public void setImageAssetSet(ImageAssetSet imageAssetSet) throws IllegalArgumentException, IllegalStateException {
+    public void setImageAssetSet(ImageAssetSet imageAssetSet)
+            throws IllegalArgumentException, IllegalStateException {
         _imageAssetSet = imageAssetSet;
     }
 
@@ -117,7 +119,8 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public void setAIType(CharacterAIType aiType) throws IllegalArgumentException, IllegalStateException {
+    public void setAIType(CharacterAIType aiType)
+            throws IllegalArgumentException, IllegalStateException {
         _aiType = aiType;
     }
 
@@ -144,7 +147,7 @@ public class FakeCharacter implements Character {
     @Override
     public EntityMembersOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>, Character>
-        staticStatistics() throws IllegalStateException {
+    staticStatistics() throws IllegalStateException {
         return STATIC_STATS;
     }
 
@@ -189,7 +192,8 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
+            throws IllegalArgumentException, IllegalStateException {
         _tile = tile;
     }
 

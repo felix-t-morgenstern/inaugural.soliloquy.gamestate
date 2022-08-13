@@ -29,7 +29,8 @@ public class GameAbilityEventArchetype implements GameAbilityEvent {
     }
 
     @Override
-    public void fire(AbilitySource abilitySource, Ability ability, GameEventTarget gameEventTarget) throws IllegalArgumentException {
+    public void fire(AbilitySource abilitySource, Ability ability, GameEventTarget gameEventTarget)
+            throws IllegalArgumentException {
 
     }
 }

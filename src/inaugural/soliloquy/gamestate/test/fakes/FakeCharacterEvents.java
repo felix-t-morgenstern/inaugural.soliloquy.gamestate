@@ -18,7 +18,8 @@ public class FakeCharacterEvents implements CharacterEvents {
     }
 
     @Override
-    public void addEvent(String trigger, GameCharacterEvent event) throws IllegalArgumentException, IllegalStateException {
+    public void addEvent(String trigger, GameCharacterEvent event)
+            throws IllegalArgumentException, IllegalStateException {
         if (!EVENTS.containsKey(trigger)) {
             EVENTS.put(trigger, new ArrayList<>());
         }
@@ -36,17 +37,20 @@ public class FakeCharacterEvents implements CharacterEvents {
     }
 
     @Override
-    public List<String> getTriggersForEvent(GameCharacterEvent gameCharacterEvent) throws IllegalArgumentException, IllegalStateException {
+    public List<String> getTriggersForEvent(GameCharacterEvent gameCharacterEvent)
+            throws IllegalArgumentException, IllegalStateException {
         return null;
     }
 
     @Override
-    public boolean removeEvent(String s, GameCharacterEvent gameCharacterEvent) throws IllegalArgumentException, IllegalStateException {
+    public boolean removeEvent(String s, GameCharacterEvent gameCharacterEvent)
+            throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public boolean containsEvent(String s, GameCharacterEvent gameCharacterEvent) throws IllegalArgumentException, IllegalStateException {
+    public boolean containsEvent(String s, GameCharacterEvent gameCharacterEvent)
+            throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
@@ -57,11 +61,11 @@ public class FakeCharacterEvents implements CharacterEvents {
 
     @Override
     public Map<String, List<GameCharacterEvent>> representation() throws IllegalStateException {
-        Map<String,List<GameCharacterEvent>> representation = new FakeMap<>();
-        EVENTS.forEach((t,e) -> {
+        Map<String, List<GameCharacterEvent>> representation = new FakeMap<>();
+        EVENTS.forEach((t, e) -> {
             List<GameCharacterEvent> events = new FakeList<>();
             events.addAll(e);
-            representation.put(t,events);
+            representation.put(t, events);
         });
         return representation;
     }

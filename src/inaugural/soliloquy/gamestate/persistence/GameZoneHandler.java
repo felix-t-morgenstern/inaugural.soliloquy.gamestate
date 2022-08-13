@@ -38,9 +38,9 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     public GameZone read(String writtenData) throws IllegalArgumentException {
         GameZoneDTO dto = JSON.fromJson(writtenData, GameZoneDTO.class);
 
-        Tile[][] tiles = new Tile[dto.maxX+1][dto.maxY+1];
-        for(int x = 0; x <= dto.maxX; x++) {
-            for(int y = 0; y <= dto.maxY; y++) {
+        Tile[][] tiles = new Tile[dto.maxX + 1][dto.maxY + 1];
+        for (int x = 0; x <= dto.maxX; x++) {
+            for (int y = 0; y <= dto.maxY; y++) {
                 tiles[x][y] = TILE_HANDLER.read(dto.tiles[x][y]);
             }
         }
@@ -72,21 +72,21 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         dto.data = DATA_HANDLER.write(gameZone.data());
         dto.onEntry = new String[gameZone.onEntry().size()];
         int index = 0;
-        for(Action action : gameZone.onEntry()) {
+        for (Action action : gameZone.onEntry()) {
             dto.onEntry[index++] = action.id();
         }
         dto.onExit = new String[gameZone.onExit().size()];
         index = 0;
-        for(Action action : gameZone.onExit()) {
+        for (Action action : gameZone.onExit()) {
             dto.onExit[index++] = action.id();
         }
         Coordinate maxCoordinates = gameZone.maxCoordinates();
         dto.maxX = maxCoordinates.getX();
         dto.maxY = maxCoordinates.getY();
-        dto.tiles = new String[maxCoordinates.getX()+1][maxCoordinates.getY()+1];
-        for(int x = 0; x <= maxCoordinates.getX(); x++) {
-            for(int y = 0; y <= maxCoordinates.getY(); y++) {
-                dto.tiles[x][y] = TILE_HANDLER.write(gameZone.tile(x,y));
+        dto.tiles = new String[maxCoordinates.getX() + 1][maxCoordinates.getY() + 1];
+        for (int x = 0; x <= maxCoordinates.getX(); x++) {
+            for (int y = 0; y <= maxCoordinates.getY(); y++) {
+                dto.tiles[x][y] = TILE_HANDLER.write(gameZone.tile(x, y));
             }
         }
         return JSON.toJson(dto);

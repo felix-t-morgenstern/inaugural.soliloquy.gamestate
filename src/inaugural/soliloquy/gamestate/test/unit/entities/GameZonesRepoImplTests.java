@@ -87,8 +87,9 @@ class GameZonesRepoImplTests {
                 ((FakeGameZoneHandler) GAME_ZONE_HANDLER).WRITE_INPUTS.get(0));
         try {
             assertEquals(((FakeGameZoneHandler) GAME_ZONE_HANDLER).WRITE_OUTPUTS.get(0),
-                new String(Files.readAllBytes(sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOC))));
-        } catch (Exception e) {
+                    new String(Files.readAllBytes(sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOC))));
+        }
+        catch (Exception e) {
             fail();
         }
     }

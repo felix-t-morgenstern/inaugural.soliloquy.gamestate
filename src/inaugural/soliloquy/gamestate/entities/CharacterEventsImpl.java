@@ -37,7 +37,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     public void addEvent(String trigger, GameCharacterEvent event)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants();
-        if(!EVENTS.containsKey(trigger)) {
+        if (!EVENTS.containsKey(trigger)) {
             EVENTS.put(trigger, new ArrayList<>());
         }
         if (!EVENTS.get(trigger).contains(event)) {
@@ -63,7 +63,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants();
         List<String> triggersForEvent = LIST_FACTORY.make("");
-        EVENTS.forEach((trigger,events) -> {
+        EVENTS.forEach((trigger, events) -> {
             if (events.contains(event)) {
                 triggersForEvent.add(trigger);
             }
@@ -106,9 +106,9 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     public Map<String, List<GameCharacterEvent>> representation()
             throws IllegalStateException {
         enforceDeletionInvariants();
-        Map<String,List<GameCharacterEvent>> representation =
+        Map<String, List<GameCharacterEvent>> representation =
                 MAP_FACTORY.make("", EVENTS_ARCHETYPE);
-        EVENTS.forEach((t,e) -> {
+        EVENTS.forEach((t, e) -> {
             List<GameCharacterEvent> events = LIST_FACTORY.make(EVENT_ARCHETYPE);
             events.addAll(e);
             representation.put(t, events);

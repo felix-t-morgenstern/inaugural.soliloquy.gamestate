@@ -31,7 +31,9 @@ class RecurringRoundBasedTimerHandlerTests {
     private final int ROUND_OFFSET = 123;
     private final int PRIORITY = 789;
 
-    private final String WRITTEN_VALUE = "{\"id\":\"recurringRoundBasedTimerId\",\"actionId\":\"actionId\",\"roundModulo\":456,\"roundOffset\":123,\"priority\":789}";
+    private final String WRITTEN_VALUE =
+            "{\"id\":\"recurringRoundBasedTimerId\",\"actionId\":\"actionId\"," +
+                    "\"roundModulo\":456,\"roundOffset\":123,\"priority\":789}";
 
     private TypeHandler<RecurringRoundBasedTimer> _recurringRoundBasedTimerHandler;
 

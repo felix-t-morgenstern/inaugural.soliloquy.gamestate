@@ -56,7 +56,8 @@ public class TileWallSegmentArchetype implements TileWallSegment {
     }
 
     @Override
-    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile) throws IllegalArgumentException, IllegalStateException {
+    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 

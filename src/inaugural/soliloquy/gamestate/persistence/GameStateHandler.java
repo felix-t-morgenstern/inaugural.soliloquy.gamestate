@@ -39,12 +39,12 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
                             PartyFactory partyFactory,
                             GameZonesRepo gameZonesRepo,
                             TypeHandler<VariableCache>
-                                              variableCacheHandler,
+                                    variableCacheHandler,
                             TypeHandler<Character> characterHandler,
                             TypeHandler<OneTimeRoundBasedTimer>
-                                                  oneTimeRoundBasedTimerHandler,
+                                    oneTimeRoundBasedTimerHandler,
                             TypeHandler<RecurringRoundBasedTimer>
-                                                  recurringRoundBasedTimerHandler) {
+                                    recurringRoundBasedTimerHandler) {
         super(ARCHETYPE);
         if (gameStateFactory == null) {
             throw new IllegalArgumentException(
@@ -151,10 +151,11 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         dto.partyAttributes = VARIABLE_CACHE_HANDLER.write(gameState.party().attributes());
         ArrayList<Character> pcsInGameZone = new ArrayList<>();
         ArrayList<Character> pcsNotInGameZone = new ArrayList<>();
-        for(Character pc : gameState.party().characters()) {
+        for (Character pc : gameState.party().characters()) {
             if (pc.tile() == null) {
                 pcsNotInGameZone.add(pc);
-            } else {
+            }
+            else {
                 pcsInGameZone.add(pc);
             }
         }
@@ -172,7 +173,7 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         dto.roundNumber = gameState.roundManager().getRoundNumber();
         dto.charsInRound = new CharacterInRoundDTO[gameState.roundManager().queueSize()];
         int index = 0;
-        for(Pair<Character, VariableCache> charWithData :
+        for (Pair<Character, VariableCache> charWithData :
                 gameState.roundManager().characterQueueRepresentation()) {
             dto.charsInRound[index] = new CharacterInRoundDTO();
             dto.charsInRound[index].id = charWithData.getItem1().uuid().toString();
@@ -186,7 +187,7 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
                 gameState.roundBasedTimerManager().oneTimeRoundBasedTimersRepresentation();
         dto.oneTimeRoundBasedTimers = new String[oneTimeRoundBasedTimers.size()];
         index = 0;
-        for(OneTimeRoundBasedTimer oneTimeRoundBasedTimer : oneTimeRoundBasedTimers) {
+        for (OneTimeRoundBasedTimer oneTimeRoundBasedTimer : oneTimeRoundBasedTimers) {
             dto.oneTimeRoundBasedTimers[index++] =
                     ONE_TIME_ROUND_BASED_TIMER_HANDLER.write(oneTimeRoundBasedTimer);
         }
@@ -195,7 +196,7 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
                 gameState.roundBasedTimerManager().recurringRoundBasedTimersRepresentation();
         dto.recurringRoundBasedTimers = new String[recurringRoundBasedTimers.size()];
         index = 0;
-        for(RecurringRoundBasedTimer recurringRoundBasedTimer : recurringRoundBasedTimers) {
+        for (RecurringRoundBasedTimer recurringRoundBasedTimer : recurringRoundBasedTimers) {
             dto.recurringRoundBasedTimers[index++] =
                     RECURRING_ROUND_BASED_TIMER_HANDLER.write(recurringRoundBasedTimer);
         }
@@ -223,7 +224,7 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
     private static class CharacterInRoundDTO extends PcInGameZoneDTO {
         String data;
     }
-    
+
     private static class GameStateArchetype implements GameState {
         @Override
         public Party party() throws IllegalStateException {

@@ -9,7 +9,8 @@ import java.util.UUID;
 
 public class FakeTileFixtureFactory implements TileFixtureFactory {
     @Override
-    public TileFixture make(FixtureType fixtureType, VariableCache data) throws IllegalArgumentException {
+    public TileFixture make(FixtureType fixtureType, VariableCache data)
+            throws IllegalArgumentException {
         return null;
     }
 

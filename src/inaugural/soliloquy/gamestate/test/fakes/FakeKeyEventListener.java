@@ -8,7 +8,8 @@ import java.util.List;
 
 public class FakeKeyEventListener implements KeyEventListener {
     @Override
-    public void addContext(KeyBindingContext keyBindingContext, int i) throws IllegalArgumentException {
+    public void addContext(KeyBindingContext keyBindingContext, int i)
+            throws IllegalArgumentException {
 
     }
 

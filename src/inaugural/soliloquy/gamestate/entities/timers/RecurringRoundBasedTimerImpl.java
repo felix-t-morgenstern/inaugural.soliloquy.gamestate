@@ -15,10 +15,9 @@ public class RecurringRoundBasedTimerImpl extends AbstractRoundBasedTimer<Recurr
     public RecurringRoundBasedTimerImpl(String timerId, Action action, int roundModulo,
                                         int roundOffset, int priority,
                                         Consumer<RecurringRoundBasedTimer>
-                                                   addRecurringRoundBasedTimerToRoundManager,
+                                                addRecurringRoundBasedTimerToRoundManager,
                                         Consumer<RecurringRoundBasedTimer>
-                                                   removeRecurringRoundBasedTimerFromRoundManager)
-    {
+                                                removeRecurringRoundBasedTimerFromRoundManager) {
         super(timerId, action, priority, addRecurringRoundBasedTimerToRoundManager,
                 removeRecurringRoundBasedTimerFromRoundManager);
         ROUND_MODULO = Check.throwOnLteZero(roundModulo, "roundModulo");

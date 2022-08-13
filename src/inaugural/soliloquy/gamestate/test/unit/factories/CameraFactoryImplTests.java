@@ -52,9 +52,9 @@ class CameraFactoryImplTests {
 
         assertNotNull(camera);
 
-        camera.setTileLocation(1,1);
+        camera.setTileLocation(1, 1);
         camera.setTileRenderingRadius(1);
-        camera.coordinatesProvidingVisibility().put(new FakeCoordinate(1,1), 1);
+        camera.coordinatesProvidingVisibility().put(new FakeCoordinate(1, 1), 1);
         camera.calculateVisibleTiles();
 
         assertEquals(1, camera.visibleTiles().size());

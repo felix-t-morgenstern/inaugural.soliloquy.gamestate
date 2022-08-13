@@ -35,7 +35,7 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
 
     @Override
     public void deregisterRecurringRoundBasedTimer(RecurringRoundBasedTimer
-                                                               recurringRoundBasedTimer)
+                                                           recurringRoundBasedTimer)
             throws IllegalArgumentException {
         RECURRING_ROUND_BASED_TIMERS.remove(
                 Check.ifNull(recurringRoundBasedTimer, "recurringRoundBasedTimer"));
@@ -46,7 +46,7 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
             throws IllegalArgumentException {
         Check.throwOnSecondLte(previousRound, newRound, "previousRound", "newRound");
 
-        HashMap<Integer,List<RoundBasedTimer>> timersFiredByRound = new HashMap<>();
+        HashMap<Integer, List<RoundBasedTimer>> timersFiredByRound = new HashMap<>();
 
         ONE_TIME_ROUND_BASED_TIMERS.forEach(oneTimeRoundBasedTimer -> {
             if (newRound > oneTimeRoundBasedTimer.roundWhenGoesOff()) {

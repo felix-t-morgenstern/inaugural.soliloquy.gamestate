@@ -8,14 +8,16 @@ import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 public class FakeCharacterVariableStatisticFactory
         implements EntityMemberOfTypeFactory<CharacterVariableStatisticType,
-                CharacterVariableStatistic, Character> {
+        CharacterVariableStatistic, Character> {
     @Override
-    public CharacterVariableStatistic make(Character character, CharacterVariableStatisticType type) throws IllegalArgumentException {
+    public CharacterVariableStatistic make(Character character, CharacterVariableStatisticType type)
+            throws IllegalArgumentException {
         return new FakeCharacterVariableStatistic(type, character);
     }
 
     @Override
-    public CharacterVariableStatistic make(Character character, CharacterVariableStatisticType type, VariableCache data) throws IllegalArgumentException {
+    public CharacterVariableStatistic make(Character character, CharacterVariableStatisticType type,
+                                           VariableCache data) throws IllegalArgumentException {
         return new FakeCharacterVariableStatistic(type, character, data);
     }
 

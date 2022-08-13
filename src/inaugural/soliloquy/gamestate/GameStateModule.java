@@ -78,7 +78,7 @@ public class GameStateModule extends AbstractModule {
                 persistentValuesHandler.getTypeHandler(
                         Sprite.class.getCanonicalName());
 
-                ItemFactory itemFactory = new ItemFactoryImpl(uuidFactory, variableCacheFactory);
+        ItemFactory itemFactory = new ItemFactoryImpl(uuidFactory, variableCacheFactory);
 
         TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get,
                 uuidHandler, dataHandler, itemFactory);

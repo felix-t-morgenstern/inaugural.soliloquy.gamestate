@@ -14,7 +14,8 @@ public class FakeGameMovementEvent implements GameMovementEvent {
     }
 
     @Override
-    public Boolean fire(Character character, GameEventTarget gameEventTarget) throws IllegalArgumentException {
+    public Boolean fire(Character character, GameEventTarget gameEventTarget)
+            throws IllegalArgumentException {
         return null;
     }
 

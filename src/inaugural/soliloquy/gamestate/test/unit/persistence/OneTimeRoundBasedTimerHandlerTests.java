@@ -30,7 +30,9 @@ class OneTimeRoundBasedTimerHandlerTests {
     private final int ROUND_WHEN_GOES_OFF = 123123123;
     private final int PRIORITY = 456;
 
-    private final String WRITTEN_VALUE = "{\"id\":\"oneTimeRoundBasedTimerId\",\"actionId\":\"actionId\",\"round\":123123123,\"priority\":456}";
+    private final String WRITTEN_VALUE =
+            "{\"id\":\"oneTimeRoundBasedTimerId\",\"actionId\":\"actionId\",\"round\":123123123," +
+                    "\"priority\":456}";
 
     private TypeHandler<OneTimeRoundBasedTimer> _oneTimeRoundBasedTimerHandler;
 
@@ -60,7 +62,7 @@ class OneTimeRoundBasedTimerHandlerTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                OneTimeRoundBasedTimer.class.getCanonicalName() + ">",
+                        OneTimeRoundBasedTimer.class.getCanonicalName() + ">",
                 _oneTimeRoundBasedTimerHandler.getInterfaceName());
     }
 

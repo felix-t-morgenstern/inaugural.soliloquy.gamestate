@@ -13,7 +13,8 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class ItemHandler extends AbstractTypeHandler<Item> {
-    // TODO: Shift from Registry to ReadableRegistry; generate "Registry.readOnlyAccess", also refactor into other infrastructure classes
+    // TODO: Shift from Registry to ReadableRegistry; generate "Registry.readOnlyAccess", also
+    //  refactor into other infrastructure classes
     private final Function<String, ItemType> GET_ITEM_TYPE;
     private final TypeHandler<UUID> UUID_HANDLER;
     private final TypeHandler<VariableCache> DATA_HANDLER;
@@ -44,7 +45,8 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
         readItem.setYTileHeightOffset(itemDTO.yOffset);
         if (itemType.hasCharges()) {
             readItem.setCharges(itemDTO.charges);
-        } else if (itemType.isStackable()) {
+        }
+        else if (itemType.isStackable()) {
             readItem.setNumberInStack(itemDTO.numberInStack);
         }
         return readItem;
@@ -60,7 +62,8 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
         itemDTO.yOffset = item.getYTileHeightOffset();
         if (item.type().hasCharges()) {
             itemDTO.charges = item.getCharges();
-        } else if (item.type().isStackable()) {
+        }
+        else if (item.type().isStackable()) {
             itemDTO.numberInStack = item.getNumberInStack();
         }
         itemDTO.data = DATA_HANDLER.write(item.data());

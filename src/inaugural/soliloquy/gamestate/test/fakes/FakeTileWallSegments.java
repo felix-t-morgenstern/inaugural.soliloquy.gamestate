@@ -22,7 +22,8 @@ public class FakeTileWallSegments implements TileWallSegments {
     }
 
     @Override
-    public Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>> representation() throws IllegalStateException {
+    public Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>> representation()
+            throws IllegalStateException {
         return null;
     }
 
@@ -61,45 +62,53 @@ public class FakeTileWallSegments implements TileWallSegments {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public Integer getZIndex(TileWallSegment segment) throws IllegalArgumentException, IllegalStateException {
+    public Integer getZIndex(TileWallSegment segment)
+            throws IllegalArgumentException, IllegalStateException {
         return SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(segment) ?
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment).getZIndex() :
                 SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(segment) ?
-                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).get(segment).getZIndex() :
-                SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(segment) ?
-                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment).getZIndex() :
-                null;
+                        SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).get(segment).getZIndex() :
+                        SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(segment) ?
+                                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment)
+                                        .getZIndex() :
+                                null;
     }
 
     @Override
-    public void setZIndex(TileWallSegment segment, int i) throws IllegalArgumentException, IllegalStateException {
+    public void setZIndex(TileWallSegment segment, int i)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public Integer getHeight(TileWallSegment segment) throws IllegalArgumentException, IllegalStateException {
+    public Integer getHeight(TileWallSegment segment)
+            throws IllegalArgumentException, IllegalStateException {
         return SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(segment) ?
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).get(segment).getHeight() :
                 SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(segment) ?
-                SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).get(segment).getHeight() :
-                SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(segment) ?
-                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment).getHeight() :
-                null;
+                        SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).get(segment).getHeight() :
+                        SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(segment) ?
+                                SEGMENTS.get(TileWallSegmentDirection.WEST).get(segment)
+                                        .getHeight() :
+                                null;
     }
 
     @Override
-    public void setHeight(TileWallSegment segment, int i) throws IllegalArgumentException, IllegalStateException {
+    public void setHeight(TileWallSegment segment, int i)
+            throws IllegalArgumentException, IllegalStateException {
 
     }
 
     @Override
-    public boolean remove(TileWallSegment tileWallSegment) throws IllegalArgumentException, IllegalStateException {
+    public boolean remove(TileWallSegment tileWallSegment)
+            throws IllegalArgumentException, IllegalStateException {
         return false;
     }
 
     @Override
-    public boolean contains(TileWallSegment segment) throws IllegalArgumentException, IllegalStateException {
+    public boolean contains(TileWallSegment segment)
+            throws IllegalArgumentException, IllegalStateException {
         return SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(segment) ||
                 SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).containsKey(segment) ||
                 SEGMENTS.get(TileWallSegmentDirection.WEST).containsKey(segment);
@@ -113,21 +122,26 @@ public class FakeTileWallSegments implements TileWallSegments {
     }
 
     @Override
-    public int size(TileWallSegmentDirection tileWallSegmentDirection) throws IllegalStateException {
+    public int size(TileWallSegmentDirection tileWallSegmentDirection)
+            throws IllegalStateException {
         return 0;
     }
 
     @Override
-    public TileWallSegmentDirection getDirection(TileWallSegment segment) throws IllegalArgumentException, IllegalStateException {
+    public TileWallSegmentDirection getDirection(TileWallSegment segment)
+            throws IllegalArgumentException, IllegalStateException {
         if (SEGMENTS.get(TileWallSegmentDirection.NORTH).containsKey(segment)) {
             return TileWallSegmentDirection.NORTH;
-        } else if (SEGMENTS.get(TileWallSegmentDirection.WEST)
+        }
+        else if (SEGMENTS.get(TileWallSegmentDirection.WEST)
                 .containsKey(segment)) {
             return TileWallSegmentDirection.WEST;
-        } else if (SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
+        }
+        else if (SEGMENTS.get(TileWallSegmentDirection.NORTHWEST)
                 .containsKey(segment)) {
             return TileWallSegmentDirection.NORTHWEST;
-        } else {
+        }
+        else {
             return TileWallSegmentDirection.NOT_FOUND;
         }
     }
@@ -149,7 +163,7 @@ public class FakeTileWallSegments implements TileWallSegments {
 
     @Override
     public Iterator<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
-                TileWallSegmentDimensions>>>
+            TileWallSegmentDimensions>>>
     iterator() {
         Iterator<TileWallSegment> northSegments =
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).keySet().iterator();

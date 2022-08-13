@@ -20,7 +20,7 @@ public class EntityMembersOfTypeFactoryImpl extends CanGetInterfaceName
     private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
-    private final HashMap<String,Object> ENTITY_FACTORIES = new HashMap<>();
+    private final HashMap<String, Object> ENTITY_FACTORIES = new HashMap<>();
 
     public EntityMembersOfTypeFactoryImpl(ListFactory listFactory,
                                           VariableCacheFactory dataFactory) {
@@ -46,7 +46,8 @@ public class EntityMembersOfTypeFactoryImpl extends CanGetInterfaceName
         }
         return new EntityMembersOfTypeImpl<>(
                 containingEntity,
-                ((Function<TEntity, Function<TEntityMemberType, Function<VariableCache, TEntityMember>>>)
+                ((Function<TEntity, Function<TEntityMemberType, Function<VariableCache,
+                        TEntityMember>>>)
                         ENTITY_FACTORIES.get(getProperTypeName(entityMemberArchetype))),
                 LIST_FACTORY,
                 DATA_FACTORY,
@@ -58,11 +59,11 @@ public class EntityMembersOfTypeFactoryImpl extends CanGetInterfaceName
     public <TEntityMemberType extends HasId,
             TEntityMember extends EntityMemberOfType<TEntityMemberType>,
             TEntity extends Deletable> void registerFactory(
-                    Function<TEntity,Function<TEntityMemberType,Function<VariableCache,
-                            TEntityMember>>> factory,
-                    TEntityMemberType entityMemberTypeArchetype,
-                    TEntityMember entityMemberArchetype,
-                    TEntity entityArchetype)
+            Function<TEntity, Function<TEntityMemberType, Function<VariableCache,
+                    TEntityMember>>> factory,
+            TEntityMemberType entityMemberTypeArchetype,
+            TEntityMember entityMemberArchetype,
+            TEntity entityArchetype)
             throws IllegalArgumentException {
         Check.ifNull(entityMemberTypeArchetype, "entityMemberTypeArchetype");
         Check.ifNull(entityArchetype, "entityArchetype");

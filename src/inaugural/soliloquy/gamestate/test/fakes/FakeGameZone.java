@@ -15,7 +15,7 @@ public class FakeGameZone implements GameZone {
     public Coordinate FAKE_MAX_COORDINATES = null;
 
     public String ID = "GameZoneStubId";
-    public Tile[][] TILES = new Tile[_maxX+1][_maxY+1];
+    public Tile[][] TILES = new Tile[_maxX + 1][_maxY + 1];
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 
     @SuppressWarnings("rawtypes")
@@ -33,8 +33,8 @@ public class FakeGameZone implements GameZone {
 
     public FakeGameZone() {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
-        for(int x = 0; x <= _maxX; x++) {
-            for(int y = 0; y <= _maxY; y++) {
+        for (int x = 0; x <= _maxX; x++) {
+            for (int y = 0; y <= _maxY; y++) {
                 TILES[x][y] = new FakeTile(this, x, y);
             }
         }
@@ -72,14 +72,15 @@ public class FakeGameZone implements GameZone {
         if (FAKE_MAX_COORDINATES != null) {
             return FAKE_MAX_COORDINATES;
         }
-        return new FakeCoordinate(TILES.length-1,TILES[0].length-1);
+        return new FakeCoordinate(TILES.length - 1, TILES[0].length - 1);
     }
 
     @Override
     public Tile tile(int x, int y) throws IllegalArgumentException {
         if (RETURN_ACTUAL_TILE_AT_LOCATION) {
             return TILES[x][y];
-        } else {
+        }
+        else {
             return new FakeTile(x, y, null);
         }
     }

@@ -59,7 +59,8 @@ class RecurringClockBasedTimerImplTests {
 
         assertThrows(IllegalArgumentException.class, () ->
                 new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        FIRING_ACTION, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+                        FIRING_ACTION, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP,
+                        MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
                 new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,

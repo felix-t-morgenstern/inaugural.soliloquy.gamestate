@@ -45,13 +45,13 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                             TypeHandler<UUID> uuidHandler,
                             Function<String, CharacterType> getCharacterType,
                             Function<String, CharacterClassification>
-                                              getCharacterClassification,
+                                    getCharacterClassification,
                             Function<String, ImageAssetSet> getImageAssetSet,
                             Function<String, CharacterAIType> getAIType,
                             Function<String, GameCharacterEvent> getEvent,
                             Function<String, CharacterStaticStatisticType> getStaticStatType,
                             Function<String, CharacterVariableStatisticType>
-                                              getVariableStatType,
+                                    getVariableStatType,
                             Function<String, StatusEffectType> getStatusType,
                             Function<String, PassiveAbility> getPassiveAbility,
                             Function<String, ActiveAbility> getActiveAbility,
@@ -84,12 +84,12 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                 CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
                         UUID_HANDLER.read(dto.uuid), DATA_HANDLER.read(dto.data));
 
-        for(String classificationId : dto.classifications) {
+        for (String classificationId : dto.classifications) {
             readCharacter.classifications().add(
                     GET_CHARACTER_CLASSIFICATION.apply(classificationId));
         }
 
-        for(CharacterPairedDataDTO pronounDTO : dto.pronouns) {
+        for (CharacterPairedDataDTO pronounDTO : dto.pronouns) {
             readCharacter.pronouns().put(pronounDTO.key, pronounDTO.val);
         }
         readCharacter.setStance(dto.stance);
@@ -98,7 +98,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         readCharacter.setAIType(GET_AI_TYPE.apply(dto.aiTypeId));
 
         for (CharacterEventDTO eventDTO : dto.events) {
-            for(String event : eventDTO.events) {
+            for (String event : eventDTO.events) {
                 readCharacter.events().addEvent(eventDTO.trigger, GET_EVENT.apply(event));
             }
         }
@@ -111,39 +111,38 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
             }
         }
 
-        for(String item : dto.inventoryItems) {
+        for (String item : dto.inventoryItems) {
             readCharacter.inventory().add(ITEM_HANDLER.read(item));
         }
 
-        for(CharacterVariableStatisticDTO variableStat : dto.variableStats) {
+        for (CharacterVariableStatisticDTO variableStat : dto.variableStats) {
             CharacterVariableStatisticType type =
                     GET_VARIABLE_STAT_TYPE.apply(variableStat.type);
             readCharacter.variableStatistics().add(type, DATA_HANDLER.read(variableStat.data));
             readCharacter.variableStatistics().get(type).setCurrentValue(variableStat.current);
         }
 
-        for(CharacterEntityDTO staticStat : dto.staticStats)
-        {
+        for (CharacterEntityDTO staticStat : dto.staticStats) {
             readCharacter.staticStatistics().add(GET_STATIC_STAT_TYPE.apply(staticStat.type),
                     DATA_HANDLER.read(staticStat.data));
         }
 
-        for(CharacterStatusEffectDTO statusEffect : dto.statusEffects) {
+        for (CharacterStatusEffectDTO statusEffect : dto.statusEffects) {
             readCharacter.statusEffects().setStatusEffectLevel(
                     GET_STATUS_TYPE.apply(statusEffect.type), statusEffect.value);
         }
 
-        for(String passiveAbilityId : dto.passiveAbilityIds) {
+        for (String passiveAbilityId : dto.passiveAbilityIds) {
             PassiveAbility passiveAbility = GET_PASSIVE_ABILITY.apply(passiveAbilityId);
             readCharacter.passiveAbilities().add(passiveAbility);
         }
 
-        for(String activeAbilityId : dto.activeAbilityIds) {
+        for (String activeAbilityId : dto.activeAbilityIds) {
             ActiveAbility activeAbility = GET_ACTIVE_ABILITY.apply(activeAbilityId);
             readCharacter.activeAbilities().add(activeAbility);
         }
 
-        for(String reactiveAbilityId : dto.reactiveAbilityIds) {
+        for (String reactiveAbilityId : dto.reactiveAbilityIds) {
             ReactiveAbility reactiveAbility = GET_REACTIVE_ABILITY.apply(reactiveAbilityId);
             readCharacter.reactiveAbilities().add(reactiveAbility);
         }
@@ -168,7 +167,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         dto.classifications = new String[character.classifications().size()];
 
         AtomicInteger classificationIndex = new AtomicInteger(0);
-        for(CharacterClassification classification : character.classifications()) {
+        for (CharacterClassification classification : character.classifications()) {
             dto.classifications[classificationIndex.getAndIncrement()] = classification.id();
         }
 
@@ -202,14 +201,13 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         });
 
         AtomicInteger equipmentSlotsIndex = new AtomicInteger(0);
-        Map<String,Item> equipmentSlotsRepresentation =
+        Map<String, Item> equipmentSlotsRepresentation =
                 character.equipmentSlots().representation();
         dto.equipmentSlots = new CharacterPairedDataDTO[equipmentSlotsRepresentation.size()];
         equipmentSlotsRepresentation.forEach((slotType, item) -> {
             CharacterPairedDataDTO equipmentSlotDTO = new CharacterPairedDataDTO();
             equipmentSlotDTO.key = slotType;
-            if (item != null)
-            {
+            if (item != null) {
                 equipmentSlotDTO.val = ITEM_HANDLER.write(item);
             }
             dto.equipmentSlots[equipmentSlotsIndex.getAndIncrement()] = equipmentSlotDTO;
@@ -309,21 +307,25 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         String key;
         String val;
     }
+
     @SuppressWarnings("InnerClassMayBeStatic")
     private class CharacterEventDTO {
         String trigger;
         String[] events;
     }
+
     @SuppressWarnings("InnerClassMayBeStatic")
     private class CharacterStatusEffectDTO {
         String type;
         int value;
     }
+
     @SuppressWarnings("InnerClassMayBeStatic")
     private class CharacterEntityDTO {
         String type;
         String data;
     }
+
     private class CharacterVariableStatisticDTO extends CharacterEntityDTO {
         int current;
     }

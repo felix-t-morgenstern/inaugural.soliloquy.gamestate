@@ -14,18 +14,18 @@ import java.util.function.Function;
 
 public class FakeEntityMembersOfType<TEntityType extends HasId,
         TCharacterEntity extends EntityMemberOfType<TEntityType>, TEntity extends Deletable>
-            implements EntityMembersOfType<TEntityType, TCharacterEntity, TEntity> {
+        implements EntityMembersOfType<TEntityType, TCharacterEntity, TEntity> {
     public TEntity CONTAINING_ENTITY;
     public HashMap<TEntityType, TCharacterEntity> ENTITIES;
-    public Function<TEntity,Function<TEntityType,Function<VariableCache,TCharacterEntity>>>
+    public Function<TEntity, Function<TEntityType, Function<VariableCache, TCharacterEntity>>>
             FACTORY;
 
     public boolean _isDeleted;
 
     public FakeEntityMembersOfType(TEntity containingEntity,
-                                   Function<TEntity,Function<TEntityType,
-                                               Function<VariableCache,TCharacterEntity>>>
-                                               factory) {
+                                   Function<TEntity, Function<TEntityType,
+                                           Function<VariableCache, TCharacterEntity>>>
+                                           factory) {
         CONTAINING_ENTITY = containingEntity;
         FACTORY = factory;
         ENTITIES = new HashMap<>();
@@ -39,7 +39,8 @@ public class FakeEntityMembersOfType<TEntityType extends HasId,
     @Override
     public void add(TEntityType entityType, VariableCache data) throws IllegalArgumentException {
         if (!ENTITIES.containsKey(entityType)) {
-            ENTITIES.put(entityType, FACTORY.apply(CONTAINING_ENTITY).apply(entityType).apply(data));
+            ENTITIES.put(entityType,
+                    FACTORY.apply(CONTAINING_ENTITY).apply(entityType).apply(data));
         }
     }
 

@@ -34,7 +34,7 @@ class TileWallSegmentFactoryImplTests {
         TileWallSegment segment = _tileWallSegmentFactory.make();
 
         assertNotNull(segment);
-        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), segment.data());
+        assertSame(((FakeVariableCacheFactory) DATA_FACTORY).Created.get(0), segment.data());
     }
 
     @Test

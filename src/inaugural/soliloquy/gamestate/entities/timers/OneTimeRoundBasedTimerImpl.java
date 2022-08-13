@@ -12,9 +12,9 @@ public class OneTimeRoundBasedTimerImpl extends AbstractRoundBasedTimer<OneTimeR
     public OneTimeRoundBasedTimerImpl(String timerId, @SuppressWarnings("rawtypes") Action action,
                                       int roundWhenGoesOff, int priority,
                                       Consumer<OneTimeRoundBasedTimer>
-                                             addRecurringTimerToRoundManager,
+                                              addRecurringTimerToRoundManager,
                                       Consumer<OneTimeRoundBasedTimer>
-                                             removeOneTimeTimerFromRoundManager) {
+                                              removeOneTimeTimerFromRoundManager) {
         super(timerId, action, priority, addRecurringTimerToRoundManager,
                 removeOneTimeTimerFromRoundManager);
         ROUND_WHEN_GOES_OFF = roundWhenGoesOff;

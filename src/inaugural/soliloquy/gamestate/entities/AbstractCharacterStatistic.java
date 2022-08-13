@@ -18,7 +18,7 @@ abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatistic
     private final CharacterStatisticCalculation CHARACTER_STATISTIC_CALCULATION;
 
     private int _totalValue;
-    private Map<String,Integer> _modifiers;
+    private Map<String, Integer> _modifiers;
 
     AbstractCharacterStatistic(Character character, TEntityType entityType, VariableCache data,
                                CharacterStatisticCalculation characterStatisticCalculation) {
@@ -56,7 +56,7 @@ abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatistic
     @Override
     public void calculate() throws IllegalStateException {
         enforceDeletionInvariants();
-        Pair<Integer,Map<String,Integer>> calculatedValueAndModifiers =
+        Pair<Integer, Map<String, Integer>> calculatedValueAndModifiers =
                 CHARACTER_STATISTIC_CALCULATION
                         .calculate(CHARACTER, ENTITY_TYPE);
         _totalValue = calculatedValueAndModifiers.getItem1();

@@ -5,7 +5,7 @@ import soliloquy.specs.common.infrastructure.Map;
 
 import java.util.HashMap;
 
-public class FakeMap<K,V> extends HashMap<K,V> implements Map<K,V> {
+public class FakeMap<K, V> extends HashMap<K, V> implements Map<K, V> {
     public K KeyArchetype;
     public V ValueArchetype;
 
@@ -18,7 +18,7 @@ public class FakeMap<K,V> extends HashMap<K,V> implements Map<K,V> {
         ValueArchetype = valueArchetype;
     }
 
-    public FakeMap(java.util.Map<K,V> map, K keyArchetype, V valueArchetype) {
+    public FakeMap(java.util.Map<K, V> map, K keyArchetype, V valueArchetype) {
         super(map);
         KeyArchetype = keyArchetype;
         ValueArchetype = valueArchetype;

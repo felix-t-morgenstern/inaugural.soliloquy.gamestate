@@ -17,10 +17,11 @@ import java.util.function.Function;
 
 public class EntityMembersOfTypeImpl<TEntityMemberType extends HasId,
         TEntityMember extends EntityMemberOfType<TEntityMemberType>, TEntity extends Deletable>
-            extends HasDeletionInvariants
+        extends HasDeletionInvariants
         implements EntityMembersOfType<TEntityMemberType, TEntityMember, TEntity> {
     private final TEntity CONTAINING_ENTITY;
-    private final Function<TEntity,Function<TEntityMemberType,Function<VariableCache, TEntityMember>>>
+    private final Function<TEntity, Function<TEntityMemberType, Function<VariableCache,
+            TEntityMember>>>
             ENTITY_FACTORY;
     private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
@@ -32,7 +33,8 @@ public class EntityMembersOfTypeImpl<TEntityMemberType extends HasId,
     final HashMap<TEntityMemberType, TEntityMember> ENTITIES = new HashMap<>();
 
     public EntityMembersOfTypeImpl(TEntity containingEntity,
-                                   Function<TEntity,Function<TEntityMemberType,Function<VariableCache,
+                                   Function<TEntity, Function<TEntityMemberType,
+                                           Function<VariableCache,
                                            TEntityMember>>> entityFactory,
                                    ListFactory listFactory,
                                    VariableCacheFactory dataFactory,
@@ -57,7 +59,8 @@ public class EntityMembersOfTypeImpl<TEntityMemberType extends HasId,
         enforceDeletionInvariants();
         if (!ENTITIES.containsKey(type)) {
             ENTITIES.put(Check.ifNull(type, "type"),
-                    ENTITY_FACTORY.apply(CONTAINING_ENTITY).apply(type).apply(Check.ifNull(data, "data")));
+                    ENTITY_FACTORY.apply(CONTAINING_ENTITY).apply(type)
+                            .apply(Check.ifNull(data, "data")));
         }
     }
 

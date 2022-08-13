@@ -50,7 +50,8 @@ public class GameZonesRepoImpl implements GameZonesRepo {
         try {
             String fileContents = new String(Files.readAllBytes(FILE_LOCATIONS.get(id)));
             return GAME_ZONE_HANDLER.read(fileContents);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new SoliloquyIOException(e);
         }
     }
@@ -77,7 +78,8 @@ public class GameZonesRepoImpl implements GameZonesRepo {
             Files.write(filePath,
                     GAME_ZONE_HANDLER.write(gameZone).getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.APPEND);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new SoliloquyIOException(e);
         }
     }

@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.ItemFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,14 +55,14 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, null);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
+        Pair<Character, String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 
         assertNotNull(item);
         assertSame(GENERATED_UUID, item.uuid());
         assertSame(ITEM_TYPE, item.type());
-        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), item.data());
+        assertSame(((FakeVariableCacheFactory) DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
@@ -77,7 +78,7 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, DATA);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
+        Pair<Character, String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 
@@ -100,14 +101,14 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, null, UUID);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
+        Pair<Character, String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 
         assertNotNull(item);
         assertSame(UUID, item.uuid());
         assertSame(ITEM_TYPE, item.type());
-        assertSame(((FakeVariableCacheFactory)DATA_FACTORY).Created.get(0), item.data());
+        assertSame(((FakeVariableCacheFactory) DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
         assertSame(character, characterEquipmentSlot.getItem1());
         assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
@@ -123,7 +124,7 @@ class ItemFactoryImplTests {
         Item item = _itemFactory.make(ITEM_TYPE, DATA, UUID);
         character.equipmentSlots().addCharacterEquipmentSlot(equipmentSlotType);
         character.equipmentSlots().equipItemToSlot(equipmentSlotType, item);
-        Pair<Character,String> characterEquipmentSlot = item.equipmentSlot();
+        Pair<Character, String> characterEquipmentSlot = item.equipmentSlot();
         item.setNumberInStack(10);
         Item takenFromStack = item.takeFromStack(5);
 

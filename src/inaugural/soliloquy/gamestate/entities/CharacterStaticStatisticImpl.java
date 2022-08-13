@@ -20,7 +20,7 @@ public class CharacterStaticStatisticImpl
     @Override
     public String getInterfaceName() {
         enforceDeletionInvariants();
-        return CharacterStatistic.class.getCanonicalName() +  "<" +
+        return CharacterStatistic.class.getCanonicalName() + "<" +
                 CharacterStaticStatisticType.class.getCanonicalName() + ">";
     }
 }

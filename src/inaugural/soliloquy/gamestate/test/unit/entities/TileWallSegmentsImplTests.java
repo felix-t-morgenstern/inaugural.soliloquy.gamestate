@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileWallSegmentsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTileWallSegment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -191,7 +191,7 @@ class TileWallSegmentsImplTests {
         _tileWallSegments.add(TileWallSegmentDirection.WEST, TILE_WALL_SEGMENT_3, 90, 123456);
 
         ArrayList<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
-                        TileWallSegmentDimensions>>> fromIterator = new ArrayList<>();
+                TileWallSegmentDimensions>>> fromIterator = new ArrayList<>();
 
         _tileWallSegments.forEach(fromIterator::add);
 

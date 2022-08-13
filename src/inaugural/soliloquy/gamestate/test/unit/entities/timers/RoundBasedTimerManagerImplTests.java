@@ -33,7 +33,9 @@ class RoundBasedTimerManagerImplTests {
     void testRegisterOneTimeRoundBasedTimerAndOneTimeRoundBasedTimersRepresentation() {
         _roundBasedTimerManager.registerOneTimeRoundBasedTimer(_mockOneTimeRoundBasedTimer);
 
-        assertEquals(new ArrayList<>(){{ add(_mockOneTimeRoundBasedTimer); }},
+        assertEquals(new ArrayList<>() {{
+                         add(_mockOneTimeRoundBasedTimer);
+                     }},
                 _roundBasedTimerManager.oneTimeRoundBasedTimersRepresentation());
     }
 
@@ -42,7 +44,9 @@ class RoundBasedTimerManagerImplTests {
         _roundBasedTimerManager.registerOneTimeRoundBasedTimer(_mockOneTimeRoundBasedTimer);
         _roundBasedTimerManager.registerOneTimeRoundBasedTimer(_mockOneTimeRoundBasedTimer);
 
-        assertEquals(new ArrayList<>(){{ add(_mockOneTimeRoundBasedTimer); }},
+        assertEquals(new ArrayList<>() {{
+                         add(_mockOneTimeRoundBasedTimer);
+                     }},
                 _roundBasedTimerManager.oneTimeRoundBasedTimersRepresentation());
     }
 
@@ -59,7 +63,9 @@ class RoundBasedTimerManagerImplTests {
     void testRegisterRecurringRoundBasedTimerAndOneTimeRoundBasedTimersRepresentation() {
         _roundBasedTimerManager.registerRecurringRoundBasedTimer(_mockRecurringRoundBasedTimer);
 
-        assertEquals(new ArrayList<>(){{ add(_mockRecurringRoundBasedTimer); }},
+        assertEquals(new ArrayList<>() {{
+                         add(_mockRecurringRoundBasedTimer);
+                     }},
                 _roundBasedTimerManager.recurringRoundBasedTimersRepresentation());
     }
 
@@ -68,7 +74,9 @@ class RoundBasedTimerManagerImplTests {
         _roundBasedTimerManager.registerRecurringRoundBasedTimer(_mockRecurringRoundBasedTimer);
         _roundBasedTimerManager.registerRecurringRoundBasedTimer(_mockRecurringRoundBasedTimer);
 
-        assertEquals(new ArrayList<>(){{ add(_mockRecurringRoundBasedTimer); }},
+        assertEquals(new ArrayList<>() {{
+                         add(_mockRecurringRoundBasedTimer);
+                     }},
                 _roundBasedTimerManager.recurringRoundBasedTimersRepresentation());
     }
 

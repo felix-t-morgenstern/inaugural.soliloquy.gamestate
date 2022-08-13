@@ -104,10 +104,10 @@ public class KeyEventListenerImpl implements KeyEventListener {
 
     private void loopOverBindings(Character c, Consumer<KeyBinding> handleEvent,
                                   Consumer<Character> handleCharacter) {
-        for(List<KeyBindingContext> contexts : CONTEXTS.values()) {
-            for(KeyBindingContext context : contexts) {
+        for (List<KeyBindingContext> contexts : CONTEXTS.values()) {
+            for (KeyBindingContext context : contexts) {
                 List<KeyBinding> bindings = context.bindings();
-                for(KeyBinding binding : bindings) {
+                for (KeyBinding binding : bindings) {
                     if (handleCharacter != null) {
                         binding.boundCharacters().forEach(handleCharacter);
                     }

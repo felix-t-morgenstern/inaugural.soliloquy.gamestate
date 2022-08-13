@@ -22,7 +22,7 @@ public class CharacterImpl implements Character {
     private final UUID UUID;
     private final CharacterType CHARACTER_TYPE;
     private final List<CharacterClassification> CHARACTER_CLASSIFICATIONS;
-    private final Map<String,String> PRONOUNS;
+    private final Map<String, String> PRONOUNS;
     private final CharacterEvents EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
@@ -293,8 +293,7 @@ public class CharacterImpl implements Character {
             return false;
         }
         Character character = (Character) o;
-        if (character.isDeleted())
-        {
+        if (character.isDeleted()) {
             return false;
         }
         return character.uuid().equals(UUID);

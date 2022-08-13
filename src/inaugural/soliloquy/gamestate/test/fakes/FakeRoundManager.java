@@ -30,7 +30,8 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public Integer getCharacterPositionInQueue(Character character) throws IllegalArgumentException {
+    public Integer getCharacterPositionInQueue(Character character)
+            throws IllegalArgumentException {
         return null;
     }
 
@@ -45,19 +46,22 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public void setCharacterPositionInQueue(Character character, int position) throws IllegalArgumentException {
-        QUEUE.add(Math.min(position,QUEUE.size()), character);
+    public void setCharacterPositionInQueue(Character character, int position)
+            throws IllegalArgumentException {
+        QUEUE.add(Math.min(position, QUEUE.size()), character);
         VariableCache roundData;
         if (QUEUE.contains(character)) {
             roundData = CHARACTERS_DATA.get(character);
-        } else {
+        }
+        else {
             roundData = new VariableCacheStub();
         }
         CHARACTERS_DATA.put(character, roundData);
     }
 
     @Override
-    public void setCharacterRoundData(Character character, VariableCache roundData) throws IllegalArgumentException {
+    public void setCharacterRoundData(Character character, VariableCache roundData)
+            throws IllegalArgumentException {
         CHARACTERS_DATA.put(character, roundData);
     }
 
@@ -97,7 +101,9 @@ public class FakeRoundManager implements RoundManager {
     }
 
     @Override
-    public void setActiveCharactersProvider(Supplier<java.util.List<Pair<Character, VariableCache>>> supplier) throws IllegalArgumentException {
+    public void setActiveCharactersProvider(
+            Supplier<java.util.List<Pair<Character, VariableCache>>> supplier)
+            throws IllegalArgumentException {
 
     }
 

@@ -10,12 +10,14 @@ public class FakeGameSaveBlocker implements GameSaveBlocker {
     public ArrayList<TriggeredEvent> ReleaseTriggeredEventBlockInputs = new ArrayList<>();
 
     @Override
-    public void placeTriggeredEventBlock(TriggeredEvent triggeredEvent) throws IllegalArgumentException {
+    public void placeTriggeredEventBlock(TriggeredEvent triggeredEvent)
+            throws IllegalArgumentException {
         PlaceTriggeredEventBlockInputs.add(triggeredEvent);
     }
 
     @Override
-    public void releaseTriggeredEventBlock(TriggeredEvent triggeredEvent) throws IllegalArgumentException {
+    public void releaseTriggeredEventBlock(TriggeredEvent triggeredEvent)
+            throws IllegalArgumentException {
         ReleaseTriggeredEventBlockInputs.add(triggeredEvent);
     }
 

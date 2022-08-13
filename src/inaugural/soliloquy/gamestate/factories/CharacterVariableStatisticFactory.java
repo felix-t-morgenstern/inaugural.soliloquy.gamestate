@@ -12,7 +12,7 @@ import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 public class CharacterVariableStatisticFactory
         implements EntityMemberOfTypeFactory<CharacterVariableStatisticType,
-                        CharacterVariableStatistic, Character> {
+        CharacterVariableStatistic, Character> {
     private final CharacterStatisticCalculation CALCULATION;
     private final VariableCacheFactory DATA_FACTORY;
 
@@ -25,7 +25,7 @@ public class CharacterVariableStatisticFactory
     // TODO: Test throws on invalid params
     @Override
     public CharacterVariableStatistic make(Character character,
-                                             CharacterVariableStatisticType type)
+                                           CharacterVariableStatisticType type)
             throws IllegalArgumentException {
         return make(character, type, DATA_FACTORY.make());
     }

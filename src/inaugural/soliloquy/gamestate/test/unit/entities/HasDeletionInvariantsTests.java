@@ -31,7 +31,7 @@ class HasDeletionInvariantsTests {
         }
         catch (EntityDeletedException e) {
             assertEquals(FakeHasDeletionInvariants.class.getCanonicalName() +
-                    ".callEnforceInvariants: object is deleted",
+                            ".callEnforceInvariants: object is deleted",
                     e.getMessage());
         }
         catch (Exception e) {

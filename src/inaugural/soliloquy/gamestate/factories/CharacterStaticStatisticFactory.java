@@ -12,7 +12,7 @@ import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
 public class CharacterStaticStatisticFactory
         implements EntityMemberOfTypeFactory<CharacterStaticStatisticType,
-                CharacterStatistic<CharacterStaticStatisticType>, Character> {
+        CharacterStatistic<CharacterStaticStatisticType>, Character> {
     private final VariableCacheFactory DATA_FACTORY;
     private final CharacterStatisticCalculation CALCULATION;
 

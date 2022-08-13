@@ -1,7 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.GameZoneFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCoordinateFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeGameZone;
+import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

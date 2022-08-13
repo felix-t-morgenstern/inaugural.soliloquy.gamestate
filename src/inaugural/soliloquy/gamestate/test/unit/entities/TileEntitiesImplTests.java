@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
-import inaugural.soliloquy.gamestate.entities.TileEntitiesImpl;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
+import inaugural.soliloquy.gamestate.entities.TileEntitiesImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,8 +45,8 @@ class TileEntitiesImplTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(TileEntities.class.getCanonicalName() + "<" + Item.class.getCanonicalName() +
-                ">",
-                    _tileEntities.getInterfaceName());
+                        ">",
+                _tileEntities.getInterfaceName());
     }
 
     @Test
@@ -108,7 +108,7 @@ class TileEntitiesImplTests {
         _tileEntities.add(ITEM_2);
         _tileEntities.add(ITEM_3);
 
-        Map<Item,Integer> representation = _tileEntities.representation();
+        Map<Item, Integer> representation = _tileEntities.representation();
 
         assertNotNull(representation);
         assertNotNull(representation.getFirstArchetype());
@@ -127,7 +127,7 @@ class TileEntitiesImplTests {
     void testAddAtZIndex() {
         final int zIndex = 123;
         _tileEntities.add(ITEM, zIndex);
-        Map<Item,Integer> representation = _tileEntities.representation();
+        Map<Item, Integer> representation = _tileEntities.representation();
 
         assertEquals((Integer) zIndex, representation.get(ITEM));
     }
@@ -138,7 +138,7 @@ class TileEntitiesImplTests {
         _tileEntities.add(ITEM_2, 456);
         _tileEntities.add(ITEM_3, 789);
 
-        ArrayList<Pair<Item,Integer>> fromIterator = new ArrayList<>();
+        ArrayList<Pair<Item, Integer>> fromIterator = new ArrayList<>();
 
         _tileEntities.forEach(fromIterator::add);
 
@@ -233,7 +233,7 @@ class TileEntitiesImplTests {
         assertThrows(EntityDeletedException.class, () -> _tileEntities.getInterfaceName());
         assertThrows(EntityDeletedException.class, () -> _tileEntities.representation());
         assertThrows(EntityDeletedException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.add(ITEM,0));
+        assertThrows(EntityDeletedException.class, () -> _tileEntities.add(ITEM, 0));
         assertThrows(EntityDeletedException.class, () -> _tileEntities.contains(ITEM));
         assertThrows(EntityDeletedException.class, () -> _tileEntities.remove(ITEM));
         assertThrows(EntityDeletedException.class, () -> _tileEntities.iterator());
@@ -246,7 +246,7 @@ class TileEntitiesImplTests {
         assertThrows(IllegalStateException.class, () -> _tileEntities.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> _tileEntities.representation());
         assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM,0));
+        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM, 0));
         assertThrows(IllegalStateException.class, () -> _tileEntities.contains(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileEntities.remove(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileEntities.iterator());
@@ -255,10 +255,10 @@ class TileEntitiesImplTests {
     @Test
     void testItemAssignmentInvariant() {
         _tileEntities.add(ITEM);
-        ((FakeItem)ITEM)._tile = null;
+        ((FakeItem) ITEM)._tile = null;
 
         assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM,0));
+        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM, 0));
         assertThrows(IllegalStateException.class, () -> _tileEntities.contains(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileEntities.remove(ITEM));
     }

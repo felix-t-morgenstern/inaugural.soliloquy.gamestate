@@ -4,8 +4,8 @@ import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.Pair;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.ItemType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
@@ -70,7 +70,8 @@ public class ItemImpl implements Item {
         enforceAssignmentInvariant("getCharges");
         if (!ITEM_TYPE.hasCharges()) {
             return null;
-        } else {
+        }
+        else {
             return _charges;
         }
     }
@@ -93,7 +94,8 @@ public class ItemImpl implements Item {
         enforceAssignmentInvariant("getNumberInStack");
         if (!ITEM_TYPE.isStackable()) {
             return null;
-        } else {
+        }
+        else {
             return _numberInStack;
         }
     }
@@ -126,7 +128,8 @@ public class ItemImpl implements Item {
         }
         if (numberToTake >= _numberInStack) {
             throw new IllegalArgumentException(
-                    "ItemImpl.takeFromStack: numberToTake must be less than the number in the stack");
+                    "ItemImpl.takeFromStack: numberToTake must be less than the number in the " +
+                            "stack");
         }
         _numberInStack -= numberToTake;
         Item takenFromStack = new ItemImpl(UUID_FACTORY.get(),
@@ -176,7 +179,8 @@ public class ItemImpl implements Item {
         if (character == null || slotType == null || slotType.equals("")) {
             _characterEquipmentSlotsCharacter = null;
             _characterEquipmentSlotType = null;
-        } else {
+        }
+        else {
             _characterEquipmentSlotsCharacter = character;
             _characterEquipmentSlotType = slotType;
         }
@@ -297,7 +301,8 @@ public class ItemImpl implements Item {
         enforceAssignmentInvariant("getName");
         if (_name == null || _name.equals("")) {
             return ITEM_TYPE.getName();
-        } else {
+        }
+        else {
             return _name;
         }
     }
@@ -315,7 +320,8 @@ public class ItemImpl implements Item {
         enforceAssignmentInvariant("getPluralName");
         if (_pluralName == null || _pluralName.equals("")) {
             return ITEM_TYPE.getPluralName();
-        } else {
+        }
+        else {
             return _pluralName;
         }
     }
@@ -343,8 +349,7 @@ public class ItemImpl implements Item {
             return false;
         }
         Item item = (Item) o;
-        if (_isDeleted || item.isDeleted())
-        {
+        if (_isDeleted || item.isDeleted()) {
             return false;
         }
         return item.uuid().equals(UUID);
@@ -368,13 +373,11 @@ public class ItemImpl implements Item {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned CharacterInventory does not contain this Item");
         }
-        if (_containingTile != null && !_containingTile.items().contains(this))
-        {
+        if (_containingTile != null && !_containingTile.items().contains(this)) {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned TileItems does not contain this Item");
         }
-        if (_containingTileFixture != null && !_containingTileFixture.items().contains(this))
-        {
+        if (_containingTileFixture != null && !_containingTileFixture.items().contains(this)) {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned TileItems does not contain this Item");
         }

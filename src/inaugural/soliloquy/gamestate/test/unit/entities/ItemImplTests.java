@@ -143,7 +143,7 @@ class ItemImplTests {
 
         assertNotNull(takenFromStack);
         assertSame(GENERATED_UUID, takenFromStack.uuid());
-        assertSame(((VariableCacheStub)DATA)._cloneResult, takenFromStack.data());
+        assertSame(((VariableCacheStub) DATA)._cloneResult, takenFromStack.data());
         assertEquals((Integer) 7, takenFromStack.getNumberInStack());
         assertEquals((Integer) 3, _item.getNumberInStack());
     }
@@ -410,28 +410,28 @@ class ItemImplTests {
         CHARACTER_INVENTORY.add(_item);
         assertTrue(CHARACTER_INVENTORY.contains(_item));
         int originalCharacterInventorySize =
-                ((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.size();
+                ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.size();
 
         _item.delete();
 
         assertFalse(CHARACTER_INVENTORY.contains(_item));
-        assertFalse(((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.contains(_item));
+        assertFalse(((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.contains(_item));
         assertEquals(originalCharacterInventorySize - 1,
-                ((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.size());
+                ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.size());
     }
 
     @Test
     void testDeleteRemovesItemFromTileFixtureItems() {
         TILE_FIXTURE.items().add(_item);
         assertTrue(TILE_FIXTURE.items().contains(_item));
-        int originalTileFixtureSize = ((FakeTileFixtureItems)TILE_FIXTURE.items())._items.size();
+        int originalTileFixtureSize = ((FakeTileFixtureItems) TILE_FIXTURE.items())._items.size();
 
         _item.delete();
 
         assertFalse(TILE_FIXTURE.items().contains(_item));
-        assertFalse(((FakeTileFixtureItems)TILE_FIXTURE.items())._items.contains(_item));
+        assertFalse(((FakeTileFixtureItems) TILE_FIXTURE.items())._items.contains(_item));
         assertEquals(originalTileFixtureSize - 1,
-                ((FakeTileFixtureItems)TILE_FIXTURE.items())._items.size());
+                ((FakeTileFixtureItems) TILE_FIXTURE.items())._items.size());
     }
 
     @SuppressWarnings("rawtypes")
@@ -527,7 +527,7 @@ class ItemImplTests {
     @Test
     void testItemNotFoundInCharacterInventoryInvariant() {
         CHARACTER_INVENTORY.add(_item);
-        ((FakeCharacterInventory)CHARACTER_INVENTORY).ITEMS.remove(_item);
+        ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.remove(_item);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());
@@ -605,7 +605,7 @@ class ItemImplTests {
     void testItemNotFoundInTileFixtureItemsInvariant() {
         FakeTileFixture tileFixture = new FakeTileFixture();
         tileFixture.items().add(_item);
-        ((FakeTileFixtureItems)tileFixture.items())._items.remove(_item);
+        ((FakeTileFixtureItems) tileFixture.items())._items.remove(_item);
 
         assertThrows(IllegalStateException.class, () -> _item.type());
         assertThrows(IllegalStateException.class, () -> _item.getCharges());

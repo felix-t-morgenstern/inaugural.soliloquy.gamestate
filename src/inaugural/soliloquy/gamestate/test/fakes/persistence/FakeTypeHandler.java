@@ -18,8 +18,7 @@ public abstract class FakeTypeHandler<T> implements TypeHandler<T> {
 
     @Override
     public T read(String readValue) throws IllegalArgumentException {
-        if (readValue == null || readValue.equals(""))
-        {
+        if (readValue == null || readValue.equals("")) {
             throw new IllegalArgumentException();
         }
         READ_INPUTS.add(readValue);

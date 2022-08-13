@@ -81,25 +81,25 @@ class TileImplTests {
     @Test
     void testCharacters() {
         assertNotNull(_tile.characters());
-        assertSame(_tile, ((FakeTileEntities)_tile.characters()).TILE);
+        assertSame(_tile, ((FakeTileEntities) _tile.characters()).TILE);
     }
 
     @Test
     void testItems() {
         assertNotNull(_tile.items());
-        assertSame(_tile, ((FakeTileEntities<Item>)_tile.items()).TILE);
+        assertSame(_tile, ((FakeTileEntities<Item>) _tile.items()).TILE);
     }
 
     @Test
     void testFixtures() {
         assertNotNull(_tile.fixtures());
-        assertSame(_tile, ((FakeTileEntities<TileFixture>)_tile.fixtures()).TILE);
+        assertSame(_tile, ((FakeTileEntities<TileFixture>) _tile.fixtures()).TILE);
     }
 
     @Test
     void testWallSegments() {
         assertNotNull(_tile.wallSegments());
-        assertSame(_tile, ((FakeTileWallSegments)_tile.wallSegments()).TILE);
+        assertSame(_tile, ((FakeTileWallSegments) _tile.wallSegments()).TILE);
     }
 
     @Test
@@ -135,7 +135,7 @@ class TileImplTests {
 
     @Test
     void testAssignGameZoneAfterAddedToGameZone() {
-        ((FakeGameZone)GAME_ZONE).TILES[X][Y] = _tile;
+        ((FakeGameZone) GAME_ZONE).TILES[X][Y] = _tile;
         _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
 
         assertSame(GAME_ZONE, _tile.gameZone());
@@ -169,7 +169,7 @@ class TileImplTests {
 
     @Test
     void testDeletedInvariant() {
-        ((FakeGameZone)GAME_ZONE).TILES[X][Y] = _tile;
+        ((FakeGameZone) GAME_ZONE).TILES[X][Y] = _tile;
         _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
 
         GAME_ZONE.delete();
@@ -194,8 +194,8 @@ class TileImplTests {
     void testGameZoneLocationCorrespondenceInvariant() {
         _tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
 
-        ((FakeGameZone)GAME_ZONE).TILES[X][Y] = null;
-        ((FakeGameZone)GAME_ZONE).TILES[X][Y+1] = _tile;
+        ((FakeGameZone) GAME_ZONE).TILES[X][Y] = null;
+        ((FakeGameZone) GAME_ZONE).TILES[X][Y + 1] = _tile;
 
         assertThrows(IllegalStateException.class, () -> _tile.gameZone());
         assertThrows(IllegalStateException.class, () -> _tile.location());
