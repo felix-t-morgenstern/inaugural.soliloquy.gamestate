@@ -1,30 +1,30 @@
 package inaugural.soliloquy.gamestate.infrastructure;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 public class GameSaveBlockerImpl implements GameSaveBlocker {
-    private final HashSet<TriggeredEvent> SAVE_BLOCKING_EVENTS;
+    private final HashSet<UUID> SAVE_BLOCKING_EVENT_SERIES;
 
     private boolean _manuallyBlocked;
 
     public GameSaveBlockerImpl() {
-        SAVE_BLOCKING_EVENTS = new HashSet<>();
+        SAVE_BLOCKING_EVENT_SERIES = new HashSet<>();
     }
 
     @Override
-    public void placeTriggeredEventBlock(TriggeredEvent triggeredEvent)
+    public void placeEventFiringBlock(UUID blockId)
             throws IllegalArgumentException {
-        SAVE_BLOCKING_EVENTS.add(Check.ifNull(triggeredEvent, "triggeredEvent"));
+        SAVE_BLOCKING_EVENT_SERIES.add(Check.ifNull(blockId, "blockId"));
     }
 
     @Override
-    public void releaseTriggeredEventBlock(TriggeredEvent triggeredEvent)
+    public void releaseEventFiringBlock(UUID blockId)
             throws IllegalArgumentException {
-        SAVE_BLOCKING_EVENTS.remove(Check.ifNull(triggeredEvent, "triggeredEvent"));
+        SAVE_BLOCKING_EVENT_SERIES.remove(Check.ifNull(blockId, "blockId"));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class GameSaveBlockerImpl implements GameSaveBlocker {
 
     @Override
     public boolean canSaveGame() {
-        return SAVE_BLOCKING_EVENTS.isEmpty() && !_manuallyBlocked;
+        return SAVE_BLOCKING_EVENT_SERIES.isEmpty() && !_manuallyBlocked;
     }
 
     @Override

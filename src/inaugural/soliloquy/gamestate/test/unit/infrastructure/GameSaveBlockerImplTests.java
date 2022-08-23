@@ -1,10 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.infrastructure;
 
 import inaugural.soliloquy.gamestate.infrastructure.GameSaveBlockerImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTriggeredEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,21 +25,21 @@ class GameSaveBlockerImplTests {
 
     @Test
     void testPlaceAndReleaseTriggeredEventBlockAndCanSaveGame() {
-        FakeTriggeredEvent triggeredEvent1 = new FakeTriggeredEvent();
-        FakeTriggeredEvent triggeredEvent2 = new FakeTriggeredEvent();
+        UUID block1 = UUID.randomUUID();
+        UUID block2 = UUID.randomUUID();
 
         assertTrue(_gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeTriggeredEventBlock(triggeredEvent1);
+        _gameSaveBlocker.placeEventFiringBlock(block1);
 
         assertFalse(_gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeTriggeredEventBlock(triggeredEvent2);
-        _gameSaveBlocker.releaseTriggeredEventBlock(triggeredEvent1);
+        _gameSaveBlocker.placeEventFiringBlock(block2);
+        _gameSaveBlocker.releaseEventFiringBlock(block1);
 
         assertFalse(_gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.releaseTriggeredEventBlock(triggeredEvent2);
+        _gameSaveBlocker.releaseEventFiringBlock(block2);
 
         assertTrue(_gameSaveBlocker.canSaveGame());
     }
@@ -46,9 +47,9 @@ class GameSaveBlockerImplTests {
     @Test
     void testPlaceAndReleaseTriggeredEventBlockWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _gameSaveBlocker.placeTriggeredEventBlock(null));
+                _gameSaveBlocker.placeEventFiringBlock(null));
         assertThrows(IllegalArgumentException.class, () ->
-                _gameSaveBlocker.releaseTriggeredEventBlock(null));
+                _gameSaveBlocker.releaseEventFiringBlock(null));
     }
 
     @Test
@@ -66,11 +67,11 @@ class GameSaveBlockerImplTests {
 
     @Test
     void testPlaceAndReleaseManualAndTriggeredEventBlocksAndCanSaveGame() {
-        FakeTriggeredEvent triggeredEvent = new FakeTriggeredEvent();
+        UUID block = UUID.randomUUID();
 
         assertTrue(_gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeTriggeredEventBlock(triggeredEvent);
+        _gameSaveBlocker.placeEventFiringBlock(block);
 
         assertFalse(_gameSaveBlocker.canSaveGame());
 
@@ -78,7 +79,7 @@ class GameSaveBlockerImplTests {
 
         assertFalse(_gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.releaseTriggeredEventBlock(triggeredEvent);
+        _gameSaveBlocker.releaseEventFiringBlock(block);
 
         assertFalse(_gameSaveBlocker.canSaveGame());
 

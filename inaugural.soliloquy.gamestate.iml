@@ -14,7 +14,7 @@
     <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
-    <orderEntry type="library" name="Maven: disorg.soliloquy:soliloquy.specs:0.0.319" level="project" />
+    <orderEntry type="library" name="Maven: disorg.soliloquy:soliloquy.specs:0.0.338" level="project" />
     <orderEntry type="library" name="Maven: disorg.soliloquy:inaugural.soliloquy.tools:0.0.88" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
     <orderEntry type="library" name="Maven: disorg.soliloquy:inaugural.soliloquy.common:0.0.15" level="project" />

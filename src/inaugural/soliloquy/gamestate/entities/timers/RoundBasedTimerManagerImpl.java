@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.tools.Check;
+import soliloquy.specs.gamestate.entities.gameevents.GameEventFiring;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimer;
@@ -9,8 +10,13 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import java.util.*;
 
 public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
+    private final GameEventFiring GAME_EVENT_FIRING;
     private final HashSet<OneTimeRoundBasedTimer> ONE_TIME_ROUND_BASED_TIMERS = new HashSet<>();
     private final HashSet<RecurringRoundBasedTimer> RECURRING_ROUND_BASED_TIMERS = new HashSet<>();
+
+    public RoundBasedTimerManagerImpl(GameEventFiring gameEventFiring) {
+        GAME_EVENT_FIRING = Check.ifNull(gameEventFiring, "gameEventFiring");
+    }
 
     @Override
     public void registerOneTimeRoundBasedTimer(OneTimeRoundBasedTimer oneTimeRoundBasedTimer)
@@ -50,21 +56,36 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
 
         ONE_TIME_ROUND_BASED_TIMERS.forEach(oneTimeRoundBasedTimer -> {
             if (newRound > oneTimeRoundBasedTimer.roundWhenGoesOff()) {
-                if (!timersFiredByRound.containsKey(oneTimeRoundBasedTimer.roundWhenGoesOff())) {
-                    timersFiredByRound.put(oneTimeRoundBasedTimer.roundWhenGoesOff(),
-                            new ArrayList<>());
-                }
-
-                timersFiredByRound.get(oneTimeRoundBasedTimer.roundWhenGoesOff())
-                        .add(oneTimeRoundBasedTimer);
+                addRoundBasedTimerToFire(oneTimeRoundBasedTimer,
+                        oneTimeRoundBasedTimer.roundWhenGoesOff(), timersFiredByRound);
             }
         });
+
+        for (int i = previousRound; i < newRound; i++) {
+            int round = i;
+            RECURRING_ROUND_BASED_TIMERS.forEach(recurringRoundBasedTimer -> {
+                if ((round - recurringRoundBasedTimer.roundOffset()) %
+                        recurringRoundBasedTimer.roundModulo() == 0) {
+                    addRoundBasedTimerToFire(recurringRoundBasedTimer, round, timersFiredByRound);
+                }
+            });
+        }
 
         ArrayList<Integer> roundsToFire = new ArrayList<>(timersFiredByRound.keySet());
         Collections.sort(roundsToFire);
         for (int roundToFire : roundsToFire) {
-            timersFiredByRound.get(roundToFire).forEach(RoundBasedTimer::run);
+            timersFiredByRound.get(roundToFire)
+                    .forEach(timer -> GAME_EVENT_FIRING.registerEvent(timer, timer.priority()));
         }
+    }
+
+    private void addRoundBasedTimerToFire(RoundBasedTimer roundBasedTimer, int round,
+                                          HashMap<Integer, List<RoundBasedTimer>> timersFiredByRound) {
+        if (!timersFiredByRound.containsKey(round)) {
+            timersFiredByRound.put(round, new ArrayList<>());
+        }
+
+        timersFiredByRound.get(round).add(roundBasedTimer);
     }
 
     @Override

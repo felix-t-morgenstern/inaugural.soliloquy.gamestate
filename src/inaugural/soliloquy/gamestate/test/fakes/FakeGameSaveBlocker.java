@@ -1,24 +1,24 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.gamestate.entities.gameevents.TriggeredEvent;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class FakeGameSaveBlocker implements GameSaveBlocker {
-    public ArrayList<TriggeredEvent> PlaceTriggeredEventBlockInputs = new ArrayList<>();
-    public ArrayList<TriggeredEvent> ReleaseTriggeredEventBlockInputs = new ArrayList<>();
+    public ArrayList<UUID> PlaceTriggeredEventBlockInputs = new ArrayList<>();
+    public ArrayList<UUID> ReleaseTriggeredEventBlockInputs = new ArrayList<>();
 
     @Override
-    public void placeTriggeredEventBlock(TriggeredEvent triggeredEvent)
+    public void placeEventFiringBlock(UUID blockId)
             throws IllegalArgumentException {
-        PlaceTriggeredEventBlockInputs.add(triggeredEvent);
+        PlaceTriggeredEventBlockInputs.add(blockId);
     }
 
     @Override
-    public void releaseTriggeredEventBlock(TriggeredEvent triggeredEvent)
+    public void releaseEventFiringBlock(UUID blockId)
             throws IllegalArgumentException {
-        ReleaseTriggeredEventBlockInputs.add(triggeredEvent);
+        ReleaseTriggeredEventBlockInputs.add(blockId);
     }
 
     @Override
