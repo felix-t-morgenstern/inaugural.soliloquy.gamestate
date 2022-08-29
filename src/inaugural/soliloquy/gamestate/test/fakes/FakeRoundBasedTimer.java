@@ -9,8 +9,6 @@ public abstract class FakeRoundBasedTimer implements RoundBasedTimer {
     @SuppressWarnings("rawtypes")
     private Action _action;
 
-    public boolean _fired;
-
     @SuppressWarnings("rawtypes")
     FakeRoundBasedTimer(String id, Action action, int priority) {
         _id = id;
@@ -29,7 +27,6 @@ public abstract class FakeRoundBasedTimer implements RoundBasedTimer {
 
     @Override
     public void run() {
-        _fired = true;
     }
 
     @Override

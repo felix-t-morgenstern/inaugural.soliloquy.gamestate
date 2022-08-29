@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EntityMembersOfTypeFactoryImplTests {
     private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
-    private final FakeEntityMemberOfType FACTORY_OUTPUT = new FakeEntityMemberOfType(null, null);
+    private final FakeEntityMemberOfType FACTORY_OUTPUT = new FakeEntityMemberOfType(null);
             // TODO: Determine whether and where factory output should be checked
     private final Function<Deletable, Function<HasId, Function<VariableCache,
                     FakeEntityMemberOfType>>>
@@ -36,7 +36,7 @@ class EntityMembersOfTypeFactoryImplTests {
 
     private final DeletableArchetype ENTITY_ARCHETYPE = new DeletableArchetype();
     private final HasIdArchetype ENTITY_MEMBER_TYPE_ARCHETYPE = new HasIdArchetype();
-    private final FakeEntityMemberOfType ENTITY_MEMBER_ARCHETYPE = new FakeEntityMemberOfType(null,
+    private final FakeEntityMemberOfType ENTITY_MEMBER_ARCHETYPE = new FakeEntityMemberOfType(
             new FakeHasIdAndName("", ""));
 
     private Deletable _entityPassedIntoFactory;

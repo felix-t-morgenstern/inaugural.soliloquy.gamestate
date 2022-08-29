@@ -9,19 +9,7 @@ import soliloquy.specs.ruleset.entities.StatusEffectType;
 public class FakeCharacterStatusEffects implements CharacterStatusEffects {
     public boolean _isDeleted;
 
-    public final StatusEffectType _type1 = new FakeStatusEffectType("statusEffectType1");
-    public final StatusEffectType _type2 = new FakeStatusEffectType("statusEffectType2");
-    public final StatusEffectType _type3 = new FakeStatusEffectType("statusEffectType3");
     public Map<StatusEffectType, Integer> _representation = new FakeMap<>();
-
-    public FakeCharacterStatusEffects() {
-    }
-
-    public FakeCharacterStatusEffects(boolean addStuff) {
-        _representation.put(_type1, 123);
-        _representation.put(_type2, 456);
-        _representation.put(_type3, 789);
-    }
 
     @Override
     public Integer getStatusEffectLevel(StatusEffectType statusEffectType)

@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.test.spydoubles;
 
 import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;

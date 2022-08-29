@@ -15,10 +15,6 @@ public class FakeCharacterVariableStatistic implements CharacterVariableStatisti
     public int _maxValue;
     private int _currentValue;
 
-    public FakeCharacterVariableStatistic() {
-
-    }
-
     FakeCharacterVariableStatistic(CharacterVariableStatisticType type) {
         _type = type;
     }

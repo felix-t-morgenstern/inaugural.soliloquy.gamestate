@@ -32,7 +32,7 @@ public class FakeCharacter implements Character {
     private final CharacterType TYPE;
     private final List<CharacterClassification> CLASSIFICATIONS = new FakeList<>();
     private final Map<String, String> PRONOUNS = new FakeMap<>();
-    private final CharacterEvents EVENTS = new FakeCharacterEvents(this);
+    private final CharacterEvents EVENTS = new FakeCharacterEvents();
     private final CharacterVariableStatistics VARIABLE_STATS;
     private final EntityMembersOfType<CharacterStaticStatisticType,
             CharacterStatistic<CharacterStaticStatisticType>, Character>

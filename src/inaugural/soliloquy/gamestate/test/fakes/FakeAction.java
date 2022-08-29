@@ -12,11 +12,8 @@ public class FakeAction<T> implements Action<T> {
     public boolean _actionRun;
     public T _mostRecentInput;
 
-    public static final List<FakeAction> ACTIONS_FIRED = new ArrayList<>();
-
-    public FakeAction() {
-        _id = null;
-    }
+    @SuppressWarnings("rawtypes") public static final List<FakeAction> ACTIONS_FIRED =
+            new ArrayList<>();
 
     public FakeAction(String id) {
         _id = id;

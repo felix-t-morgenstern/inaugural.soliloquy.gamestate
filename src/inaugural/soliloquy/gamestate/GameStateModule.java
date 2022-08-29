@@ -31,8 +31,9 @@ import java.nio.file.Path;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class GameStateModule extends AbstractModule {
-    private GameStateFactory _gameStateFactory;
+    @SuppressWarnings("FieldCanBeLocal") private GameStateFactory _gameStateFactory;
 
     public GameStateModule(ListFactory listFactory,
                            CoordinateFactory coordinateFactory,

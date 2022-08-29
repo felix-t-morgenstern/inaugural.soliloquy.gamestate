@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 
 import java.util.HashMap;
@@ -163,7 +163,7 @@ public class FakeTileWallSegments implements TileWallSegments {
 
     @Override
     public Iterator<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
-            TileWallSegmentDimensions>>>
+                TileWallSegmentDimensions>>>
     iterator() {
         Iterator<TileWallSegment> northSegments =
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).keySet().iterator();

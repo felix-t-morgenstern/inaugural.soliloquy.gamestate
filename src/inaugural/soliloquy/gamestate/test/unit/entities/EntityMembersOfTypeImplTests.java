@@ -34,16 +34,15 @@ class EntityMembersOfTypeImplTests {
         _typePassedIntoFactory = t;
         _dataPassedIntoFactory = d;
         TYPES_ADDED.add(t);
-        FakeEntityMemberOfType entity = new FakeEntityMemberOfType(e, t);
+        FakeEntityMemberOfType entity = new FakeEntityMemberOfType(t);
         ENTITIES_ADDED.add(entity);
         return entity;
     };
     private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
 
-    private final DeletableArchetype ENTITY_ARCHETYPE = new DeletableArchetype();
     private final HasIdArchetype ENTITY_MEMBER_TYPE_ARCHETYPE = new HasIdArchetype();
-    private final FakeEntityMemberOfType ENTITY_MEMBER_ARCHETYPE = new FakeEntityMemberOfType(null,
+    private final FakeEntityMemberOfType ENTITY_MEMBER_ARCHETYPE = new FakeEntityMemberOfType(
             new FakeHasIdAndName("id", "name"));
 
     private Deletable _entityPassedIntoFactory;
@@ -286,24 +285,6 @@ class EntityMembersOfTypeImplTests {
         @Override
         public String getInterfaceName() {
             return HasId.class.getCanonicalName();
-        }
-    }
-
-    private static class DeletableArchetype implements Deletable {
-
-        @Override
-        public void delete() throws IllegalStateException {
-
-        }
-
-        @Override
-        public boolean isDeleted() {
-            return false;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return Deletable.class.getCanonicalName();
         }
     }
 }

@@ -2,17 +2,14 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
-import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.EntityMemberOfType;
 
 public class FakeEntityMemberOfType implements EntityMemberOfType<HasId> {
-    private final Deletable CONTAINING_ENTITY;
     private final HasId TYPE;
 
     private boolean _isDeleted;
 
-    public FakeEntityMemberOfType(Deletable containingEntity, HasId type) {
-        CONTAINING_ENTITY = containingEntity;
+    public FakeEntityMemberOfType(HasId type) {
         TYPE = type;
     }
 

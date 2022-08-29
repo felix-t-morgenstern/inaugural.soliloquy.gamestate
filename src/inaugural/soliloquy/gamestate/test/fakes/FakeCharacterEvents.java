@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 
@@ -10,12 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FakeCharacterEvents implements CharacterEvents {
-    private final Character CHARACTER;
     private final HashMap<String, ArrayList<GameCharacterEvent>> EVENTS = new HashMap<>();
-
-    public FakeCharacterEvents(Character character) {
-        CHARACTER = character;
-    }
 
     @Override
     public void addEvent(String trigger, GameCharacterEvent event)

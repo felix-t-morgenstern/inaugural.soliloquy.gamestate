@@ -40,9 +40,6 @@ public class FakeGameZone implements GameZone {
         }
     }
 
-    public FakeGameZone(boolean throwExceptionOnGetMaxCoordinates) {
-        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = throwExceptionOnGetMaxCoordinates;
-    }
 
     public FakeGameZone(String customId) {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
@@ -67,7 +64,7 @@ public class FakeGameZone implements GameZone {
     @Override
     public Coordinate maxCoordinates() {
         if (THROW_EXCEPTION_ON_GET_MAX_COORDINATES) {
-            throw new GameZoneStubException(this);
+            throw new GameZoneStubException();
         }
         if (FAKE_MAX_COORDINATES != null) {
             return FAKE_MAX_COORDINATES;
@@ -146,10 +143,5 @@ public class FakeGameZone implements GameZone {
 
     @SuppressWarnings("InnerClassMayBeStatic")
     public class GameZoneStubException extends RuntimeException {
-        final GameZone GAME_ZONE;
-
-        GameZoneStubException(GameZone gameZone) {
-            GAME_ZONE = gameZone;
-        }
     }
 }

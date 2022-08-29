@@ -4,7 +4,7 @@ import inaugural.soliloquy.gamestate.archetypes.TileWallSegmentArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.infrastructure.Map;
-import soliloquy.specs.common.infrastructure.Pair;
+import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
@@ -287,7 +287,7 @@ public class TileWallSegmentsImpl implements TileWallSegments {
 
     @Override
     public Iterator<Pair<TileWallSegmentDirection, Pair<TileWallSegment,
-            TileWallSegmentDimensions>>>
+                TileWallSegmentDimensions>>>
     iterator() {
         Iterator<TileWallSegment> northSegments =
                 SEGMENTS.get(TileWallSegmentDirection.NORTH).keySet().iterator();

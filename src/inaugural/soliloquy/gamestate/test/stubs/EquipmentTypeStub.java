@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EquipmentTypeStub implements EquipmentType {
-    public final static String ID = "EquipmentTypeStub";
-
     public final static List<String> VALID_EQUIPMENT_SLOTS = new ArrayList<>();
 
     @Override
