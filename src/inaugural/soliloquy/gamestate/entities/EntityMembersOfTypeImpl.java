@@ -2,17 +2,17 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.EntityMemberOfType;
 import soliloquy.specs.gamestate.entities.EntityMembersOfType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Function;
 
 public class EntityMembersOfTypeImpl<TEntityMemberType extends HasId,
@@ -23,7 +23,6 @@ public class EntityMembersOfTypeImpl<TEntityMemberType extends HasId,
     private final Function<TEntity, Function<TEntityMemberType, Function<VariableCache,
             TEntityMember>>>
             ENTITY_FACTORY;
-    private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
     private final TEntityMemberType ENTITY_MEMBER_TYPE_ARCHETYPE;
     private final TEntityMember ENTITY_MEMBER_ARCHETYPE;
@@ -32,17 +31,16 @@ public class EntityMembersOfTypeImpl<TEntityMemberType extends HasId,
 
     final HashMap<TEntityMemberType, TEntityMember> ENTITIES = new HashMap<>();
 
+    @SuppressWarnings("ConstantConditions")
     public EntityMembersOfTypeImpl(TEntity containingEntity,
                                    Function<TEntity, Function<TEntityMemberType,
                                            Function<VariableCache,
                                            TEntityMember>>> entityFactory,
-                                   ListFactory listFactory,
                                    VariableCacheFactory dataFactory,
                                    TEntityMemberType entityMemberTypeArchetype,
                                    TEntityMember entityMemberArchetype) {
         CONTAINING_ENTITY = Check.ifNull(containingEntity, "containingEntity");
         ENTITY_FACTORY = Check.ifNull(entityFactory, "entityFactory");
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
         ENTITY_MEMBER_TYPE_ARCHETYPE = Check.ifNull(entityMemberTypeArchetype,
                 "entityMemberTypeArchetype");
@@ -109,9 +107,7 @@ public class EntityMembersOfTypeImpl<TEntityMemberType extends HasId,
     @Override
     public List<TEntityMember> representation() {
         enforceDeletionInvariants();
-        List<TEntityMember> entities = LIST_FACTORY.make(ENTITY_MEMBER_ARCHETYPE);
-        entities.addAll(ENTITIES.values());
-        return entities;
+        return new ArrayList<>(ENTITIES.values());
     }
 
     @Override

@@ -1,12 +1,8 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
-import inaugural.soliloquy.gamestate.archetypes.VoidActionArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
@@ -14,6 +10,8 @@ import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
@@ -28,21 +26,16 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final VariableCache DATA;
     public final List<Character> CHARACTERS_IN_GAME_ZONE;
 
-    @SuppressWarnings("rawtypes")
-    private final static Action ACTION_ARCHETYPE = new VoidActionArchetype();
-    private final static Character CHARACTER_ARCHETYPE = new CharacterArchetype();
-
     private String _name;
 
     @SuppressWarnings("ConstantConditions")
     public GameZoneImpl(String id, String type, Tile[][] tiles,
-                        CoordinateFactory coordinateFactory, ListFactory listFactory,
-                        VariableCache data, Consumer<Character> addToEndOfRoundManager,
+                        CoordinateFactory coordinateFactory, VariableCache data,
+                        Consumer<Character> addToEndOfRoundManager,
                         Consumer<Character> removeFromRoundManager) {
         ID = Check.ifNullOrEmpty(id, "id");
         TYPE = Check.ifNullOrEmpty(type, "type");
-        CHARACTERS_IN_GAME_ZONE = Check.ifNull(listFactory, "listFactory")
-                .make(CHARACTER_ARCHETYPE);
+        CHARACTERS_IN_GAME_ZONE = new ArrayList<>();
 
         Check.ifNull(tiles, "tiles");
         Check.throwOnLteZero(tiles.length, "tiles.length");
@@ -83,8 +76,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
             throw new IllegalArgumentException("GameZoneImpl: coordinateFactory cannot be null");
         }
         MAX_COORDINATES = coordinateFactory.make(tiles.length - 1, tiles[0].length - 1);
-        ENTRY_ACTIONS = listFactory.make(ACTION_ARCHETYPE);
-        EXIT_ACTIONS = listFactory.make(ACTION_ARCHETYPE);
+        ENTRY_ACTIONS = new ArrayList<>();
+        EXIT_ACTIONS = new ArrayList<>();
         DATA = Check.ifNull(data, "data");
     }
 
@@ -120,20 +113,20 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     @SuppressWarnings("rawtypes")
     @Override
     public List<Action> onEntry() {
-        return ENTRY_ACTIONS.makeClone();
+        return new ArrayList<>(ENTRY_ACTIONS);
     }
 
     // TODO: Ensure this object is a clone
     @SuppressWarnings("rawtypes")
     @Override
     public List<Action> onExit() {
-        return EXIT_ACTIONS.makeClone();
+        return new ArrayList<>(EXIT_ACTIONS);
     }
 
     // TODO: Ensure this object is a clone
     @Override
     public List<Character> charactersRepresentation() {
-        return CHARACTERS_IN_GAME_ZONE.makeClone();
+        return new ArrayList<>(CHARACTERS_IN_GAME_ZONE);
     }
 
     @Override

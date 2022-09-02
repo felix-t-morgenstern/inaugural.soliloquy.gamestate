@@ -5,18 +5,17 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.EquipmentTypeStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEquipmentSlotsImplTests {
     private final Character CHARACTER = new FakeCharacter();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final Item ITEM = new FakeItem();
     private final String EQUIPMENT_SLOT_TYPE = "armor";
 
@@ -25,16 +24,13 @@ class CharacterEquipmentSlotsImplTests {
     @BeforeEach
     void setUp() {
         ((FakeItem) ITEM)._equipmentCharacter = null;
-        _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER, MAP_FACTORY);
+        _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new CharacterEquipmentSlotsImpl(CHARACTER, null));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterEquipmentSlotsImpl(null));
     }
 
     @Test

@@ -1,23 +1,20 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileWallSegmentsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTileWallSegment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileWallSegmentsImplTests {
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final Tile TILE = new FakeTile();
     private final TileWallSegment TILE_WALL_SEGMENT = new FakeTileWallSegment();
     private final TileWallSegment TILE_WALL_SEGMENT_2 = new FakeTileWallSegment();
@@ -27,15 +24,12 @@ class TileWallSegmentsImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileWallSegments = new TileWallSegmentsImpl(TILE, MAP_FACTORY);
+        _tileWallSegments = new TileWallSegmentsImpl(TILE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileWallSegmentsImpl(TILE, null));
+        assertThrows(IllegalArgumentException.class, () -> new TileWallSegmentsImpl(null));
     }
 
     @Test
@@ -103,8 +97,7 @@ class TileWallSegmentsImplTests {
 
     @Test
     void testAddTileWallSegmentInAnotherTileWallSegments() {
-        TileWallSegments previousTileWallSegments = new TileWallSegmentsImpl(new FakeTile(),
-                MAP_FACTORY);
+        TileWallSegments previousTileWallSegments = new TileWallSegmentsImpl(new FakeTile());
         TileWallSegment tileWallSegment = new FakeTileWallSegment();
         previousTileWallSegments.add(TileWallSegmentDirection.NORTH, tileWallSegment, 0);
 
@@ -232,7 +225,6 @@ class TileWallSegmentsImplTests {
                 representation = _tileWallSegments.representation();
 
         assertNotNull(representation);
-        assertNotNull(representation.getFirstArchetype());
         assertEquals(3, representation.size());
         assertTrue(representation.get(TileWallSegmentDirection.NORTH)
                 .containsKey(TILE_WALL_SEGMENT));

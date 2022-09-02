@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Function;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
@@ -11,11 +10,13 @@ import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
+import java.util.List;
+
 public class ItemTypeStub implements ItemType {
     public boolean HasCharges = true;
     public boolean IsStackable = true;
 
-    private static EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
+    private static final EquipmentType EQUIPMENT_TYPE = new EquipmentTypeStub();
 
     public static String ITEM_TYPE_ID = "ItemTypeStubId";
     public static String ITEM_TYPE_NAME = "ItemTypeStubName";
@@ -30,13 +31,8 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public Function<Character, String> getDescriptionFunction() {
+    public Function<Character, String> descriptionFunction() {
         return null;
-    }
-
-    @Override
-    public void setDescriptionFunction(Function<Character, String> function) {
-
     }
 
     @Override

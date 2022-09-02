@@ -2,20 +2,20 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterStatusEffectsImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeStatusEffectType;
 import inaugural.soliloquy.gamestate.test.spydoubles.StatusEffectResistanceCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.AbilitySourceStub;
 import inaugural.soliloquy.gamestate.test.stubs.ElementStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,8 +32,7 @@ class CharacterStatusEffectsImplTests {
 
     @BeforeEach
     void setUp() {
-        _characterStatusEffects = new CharacterStatusEffectsImpl(CHARACTER,
-                new FakeMapFactory(), STATUS_EFFECT_RESISTANCE_CALCULATION);
+        _characterStatusEffects = new CharacterStatusEffectsImpl(CHARACTER, STATUS_EFFECT_RESISTANCE_CALCULATION);
     }
 
     @Test
@@ -94,8 +93,7 @@ class CharacterStatusEffectsImplTests {
         assertThrows(IllegalStateException.class, _characterStatusEffects::clearStatusEffects);
 
         CharacterStatusEffects characterStatusEffects =
-                new CharacterStatusEffectsImpl(null, new FakeMapFactory(),
-                        STATUS_EFFECT_RESISTANCE_CALCULATION);
+                new CharacterStatusEffectsImpl(null, STATUS_EFFECT_RESISTANCE_CALCULATION);
         assertThrows(IllegalStateException.class,
                 () -> characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
         assertThrows(IllegalStateException.class,

@@ -1,38 +1,36 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterInventoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterInventoryImplTests {
     private final Character CHARACTER = new FakeCharacter();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final Item ITEM = new FakeItem();
 
     private CharacterInventory _characterInventory;
 
     @BeforeEach
     void setUp() {
-        _characterInventory = new CharacterInventoryImpl(CHARACTER, LIST_FACTORY);
+        _characterInventory = new CharacterInventoryImpl(CHARACTER);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(null,
-                LIST_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(CHARACTER,
-                null));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(null));
     }
 
     @Test
@@ -84,9 +82,6 @@ class CharacterInventoryImplTests {
         List<Item> representation = _characterInventory.representation();
 
         assertNotNull(representation);
-        assertNotNull(representation.getArchetype());
-        assertEquals(Item.class.getCanonicalName(),
-                representation.getArchetype().getInterfaceName());
         assertEquals(3, representation.size());
         assertTrue(representation.contains(item1));
         assertTrue(representation.contains(item2));

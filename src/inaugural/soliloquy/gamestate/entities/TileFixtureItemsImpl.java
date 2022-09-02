@@ -1,27 +1,22 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
         implements TileFixtureItems {
     private final TileFixture TILE_FIXTURE;
-    private final ListFactory LIST_FACTORY;
     private final ArrayList<Item> CONTAINED_ITEMS;
 
-    private static final Item ITEM_ARCHETYPE = new ItemArchetype();
-
-    public TileFixtureItemsImpl(TileFixture tileFixture, ListFactory listFactory) {
+    @SuppressWarnings("ConstantConditions")
+    public TileFixtureItemsImpl(TileFixture tileFixture) {
         TILE_FIXTURE = Check.ifNull(tileFixture, "tileFixture");
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
         CONTAINED_ITEMS = new ArrayList<>();
     }
 
@@ -43,9 +38,7 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public List<Item> representation() throws UnsupportedOperationException, IllegalStateException {
         enforceDeletionInvariants();
-        List<Item> items = LIST_FACTORY.make(ITEM_ARCHETYPE);
-        items.addAll(CONTAINED_ITEMS);
-        return items;
+        return new ArrayList<>(CONTAINED_ITEMS);
     }
 
     @Override

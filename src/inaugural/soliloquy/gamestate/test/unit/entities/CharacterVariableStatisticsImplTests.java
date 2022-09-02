@@ -5,10 +5,6 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -18,13 +14,13 @@ import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterVariableStatisticsImplTests {
     private final Character CHARACTER = new FakeCharacter();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeCharacterVariableStatisticFactory FACTORY =
             new FakeCharacterVariableStatisticFactory();
@@ -33,27 +29,17 @@ class CharacterVariableStatisticsImplTests {
 
     @BeforeEach
     void setUp() {
-        _variableStats = new CharacterVariableStatisticsImpl(CHARACTER, FACTORY,
-                LIST_FACTORY, DATA_FACTORY, MAP_FACTORY);
+        _variableStats = new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, DATA_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(null, FACTORY, LIST_FACTORY,
-                        DATA_FACTORY, MAP_FACTORY));
+                new CharacterVariableStatisticsImpl(null, FACTORY, DATA_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, null, LIST_FACTORY,
-                        DATA_FACTORY, MAP_FACTORY));
+                new CharacterVariableStatisticsImpl(CHARACTER, null, DATA_FACTORY));
         assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, null,
-                        DATA_FACTORY, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, LIST_FACTORY,
-                        null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, LIST_FACTORY,
-                        DATA_FACTORY, null));
+                new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, null));
     }
 
     @Test

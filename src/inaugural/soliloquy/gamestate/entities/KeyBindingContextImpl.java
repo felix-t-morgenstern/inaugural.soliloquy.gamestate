@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.gamestate.archetypes.KeyBindingArchetype;
-import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KeyBindingContextImpl implements KeyBindingContext {
     private final List<KeyBinding> BINDINGS;
@@ -13,14 +13,14 @@ public class KeyBindingContextImpl implements KeyBindingContext {
 
     private boolean _blocksAllLowerBindings;
 
-    public KeyBindingContextImpl(ListFactory listFactory) {
-        BINDINGS = Check.ifNull(listFactory, "listFactory").make(ARCHETYPE);
+    public KeyBindingContextImpl() {
+        BINDINGS = new ArrayList<>();
     }
 
     // TODO: Ensure that this is a clone
     @Override
     public List<KeyBinding> bindings() {
-        return BINDINGS.makeClone();
+        return new ArrayList<>(BINDINGS);
     }
 
     @Override

@@ -6,8 +6,6 @@ import inaugural.soliloquy.gamestate.test.spydoubles.TileVisibilitySpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.factories.CameraFactory;
@@ -17,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CameraFactoryImplTests {
     private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
     private final TileVisibility TILE_VISIBILITY = new TileVisibilitySpyDouble();
     private final FakeGameZone GAME_ZONE = new FakeGameZone();
 
@@ -26,24 +22,16 @@ class CameraFactoryImplTests {
 
     @BeforeEach
     void setUp() {
-        _cameraFactory = new CameraFactoryImpl(COORDINATE_FACTORY, LIST_FACTORY, MAP_FACTORY,
+        _cameraFactory = new CameraFactoryImpl(COORDINATE_FACTORY,
                 TILE_VISIBILITY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new CameraFactoryImpl(null, LIST_FACTORY, MAP_FACTORY,
-                        TILE_VISIBILITY));
+                () -> new CameraFactoryImpl(null, TILE_VISIBILITY));
         assertThrows(IllegalArgumentException.class,
-                () -> new CameraFactoryImpl(COORDINATE_FACTORY, null, MAP_FACTORY,
-                        TILE_VISIBILITY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new CameraFactoryImpl(COORDINATE_FACTORY, LIST_FACTORY, null,
-                        TILE_VISIBILITY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new CameraFactoryImpl(COORDINATE_FACTORY, LIST_FACTORY, MAP_FACTORY,
-                        null));
+                () -> new CameraFactoryImpl(COORDINATE_FACTORY, null));
     }
 
     @Test

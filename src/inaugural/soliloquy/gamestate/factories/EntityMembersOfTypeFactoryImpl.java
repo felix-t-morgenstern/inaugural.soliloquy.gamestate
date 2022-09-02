@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.factories;
 import inaugural.soliloquy.gamestate.entities.EntityMembersOfTypeImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
@@ -17,14 +16,12 @@ import java.util.function.Function;
 
 public class EntityMembersOfTypeFactoryImpl extends CanGetInterfaceName
         implements EntityMembersOfTypeFactory {
-    private final ListFactory LIST_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
     private final HashMap<String, Object> ENTITY_FACTORIES = new HashMap<>();
 
-    public EntityMembersOfTypeFactoryImpl(ListFactory listFactory,
-                                          VariableCacheFactory dataFactory) {
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
+    @SuppressWarnings("ConstantConditions")
+    public EntityMembersOfTypeFactoryImpl(VariableCacheFactory dataFactory) {
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
     }
 
@@ -49,7 +46,6 @@ public class EntityMembersOfTypeFactoryImpl extends CanGetInterfaceName
                 ((Function<TEntity, Function<TEntityMemberType, Function<VariableCache,
                         TEntityMember>>>)
                         ENTITY_FACTORIES.get(getProperTypeName(entityMemberArchetype))),
-                LIST_FACTORY,
                 DATA_FACTORY,
                 entityMemberTypeArchetype,
                 entityMemberArchetype);

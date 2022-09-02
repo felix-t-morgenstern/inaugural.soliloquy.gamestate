@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
@@ -9,6 +8,9 @@ import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatisticType>
         extends HasDeletionInvariants implements CharacterStatistic<TEntityType> {
@@ -50,7 +52,7 @@ abstract class AbstractCharacterStatistic<TEntityType extends CharacterStatistic
     @Override
     public Map<String, Integer> representation() throws IllegalStateException {
         enforceDeletionInvariants();
-        return _modifiers.makeClone();
+        return new HashMap<>(_modifiers);
     }
 
     @Override

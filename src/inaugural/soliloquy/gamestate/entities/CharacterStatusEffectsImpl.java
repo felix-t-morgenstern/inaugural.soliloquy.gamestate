@@ -1,8 +1,5 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.StatusEffectTypeArchetype;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -12,22 +9,17 @@ import soliloquy.specs.ruleset.entities.StatusEffectType;
 import soliloquy.specs.ruleset.gameconcepts.StatusEffectResistanceCalculation;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CharacterStatusEffectsImpl extends HasDeletionInvariants
         implements CharacterStatusEffects {
     private final Character CHARACTER;
-    private final MapFactory MAP_FACTORY;
     private final StatusEffectResistanceCalculation RESISTANCE_CALCULATION;
     private final HashMap<StatusEffectType, Integer> STATUS_EFFECT_LEVELS;
 
-    private final static StatusEffectType STATUS_EFFECT_TYPE_ARCHETYPE =
-            new StatusEffectTypeArchetype();
-
     public CharacterStatusEffectsImpl(Character character,
-                                      MapFactory mapFactory,
                                       StatusEffectResistanceCalculation resistanceCalculation) {
         CHARACTER = character;
-        MAP_FACTORY = mapFactory;
         RESISTANCE_CALCULATION = resistanceCalculation;
         STATUS_EFFECT_LEVELS = new HashMap<>();
     }
@@ -46,13 +38,7 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     @Override
     public Map<StatusEffectType, Integer> representation() {
         enforceInvariants("getAllStatusEffects");
-        Map<StatusEffectType, Integer> statusEffectLevels =
-                MAP_FACTORY.make(STATUS_EFFECT_TYPE_ARCHETYPE, 0);
-        for (java.util.Map.Entry<StatusEffectType, Integer> statusEffectLevel :
-                STATUS_EFFECT_LEVELS.entrySet()) {
-            statusEffectLevels.put(statusEffectLevel.getKey(), statusEffectLevel.getValue());
-        }
-        return statusEffectLevels;
+        return new HashMap<>(STATUS_EFFECT_LEVELS);
     }
 
     @Override

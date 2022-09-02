@@ -1,11 +1,8 @@
 package inaugural.soliloquy.gamestate;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterAITypeArchetype;
 import inaugural.soliloquy.gamestate.archetypes.GameAbilityEventArchetype;
 import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
-import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -17,6 +14,7 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GameStateImpl implements GameState {
@@ -37,10 +35,6 @@ public class GameStateImpl implements GameState {
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyEventListener KEY_EVENT_LISTENER;
 
-    private final static KeyBindingContext KEY_BINDING_CONTEXT_ARCHETYPE =
-            new KeyBindingContextArchetype();
-    private final static CharacterAIType CHARACTER_AI_TYPE_ARCHETYPE =
-            new CharacterAITypeArchetype();
     private final static GameMovementEvent GAME_MOVEMENT_EVENT_ARCHETYPE =
             new GameMovementEventArchetype();
     private final static GameAbilityEvent GAME_ABILITY_EVENT_ARCHETYPE =
@@ -51,7 +45,6 @@ public class GameStateImpl implements GameState {
     @SuppressWarnings("ConstantConditions")
     public GameStateImpl(Party party,
                          VariableCache data,
-                         MapFactory mapFactory,
                          RegistryFactory registryFactory,
                          GameZonesRepo gameZonesRepo,
                          CameraFactory cameraFactory,
@@ -65,8 +58,7 @@ public class GameStateImpl implements GameState {
                          KeyEventListenerFactory keyEventListenerFactory) {
         PARTY = Check.ifNull(party, "party");
         DATA = Check.ifNull(data, "data");
-        Check.ifNull(mapFactory, "mapFactory");
-        CHARACTER_AI_TYPES = mapFactory.make("", CHARACTER_AI_TYPE_ARCHETYPE);
+        CHARACTER_AI_TYPES = new HashMap<>();
         GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
         CAMERA = Check.ifNull(cameraFactory, "cameraFactory").make(this::getCurrentGameZone);
         Check.ifNull(registryFactory, "registryFactory");
@@ -74,7 +66,7 @@ public class GameStateImpl implements GameState {
         ABILITY_EVENTS = registryFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
-        KEY_BINDING_CONTEXTS = mapFactory.make(0, KEY_BINDING_CONTEXT_ARCHETYPE);
+        KEY_BINDING_CONTEXTS = new HashMap<>();
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
         ROUND_BASED_TIMER_FACTORY = Check.ifNull(roundBasedTimerFactory, "roundBasedTimerFactory");

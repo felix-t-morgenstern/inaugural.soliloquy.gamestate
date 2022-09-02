@@ -18,7 +18,6 @@ import static org.mockito.Mockito.mock;
 class GameStateFactoryImplTests {
     private final Party PARTY = new FakeParty();
     private final VariableCache DATA = new VariableCacheStub();
-    private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
     private final FakeRegistryFactory REGISTRY_FACTORY = new FakeRegistryFactory();
     private final GameZonesRepoStub GAME_ZONES_REPO = new GameZonesRepoStub();
     private final FakeCameraFactory CAMERA_FACTORY = new FakeCameraFactory();
@@ -42,98 +41,80 @@ class GameStateFactoryImplTests {
     void setUp() {
         _mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
 
-        _gameStateFactory = new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER, _mockRoundBasedTimerManager,
-                ITEM_FACTORY, CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY);
+        _gameStateFactory =
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(null, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
+                new GameStateFactoryImpl(null, GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
                         _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, null,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
+                new GameStateFactoryImpl(REGISTRY_FACTORY, null, CAMERA_FACTORY, ROUND_MANAGER,
                         _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        null, CAMERA_FACTORY, ROUND_MANAGER,
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, null, ROUND_MANAGER,
                         _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, null, ROUND_MANAGER,
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY, null,
                         _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, null,
-                        _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, null, ITEM_FACTORY, CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
-                        null, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, _mockRoundBasedTimerManager, null, CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager, null, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, _mockRoundBasedTimerManager, ITEM_FACTORY, null,
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager, ITEM_FACTORY, null,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
+                        null, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        null, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY, null, KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, null,
-                        KEY_BINDING_CONTEXT_FACTORY, KEY_PRESS_LISTENER_FACTORY
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, null,
+                        KEY_PRESS_LISTENER_FACTORY
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        null, KEY_PRESS_LISTENER_FACTORY
-                ));
-        assertThrows(IllegalArgumentException.class, () ->
-                new GameStateFactoryImpl(MAP_FACTORY, REGISTRY_FACTORY,
-                        GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY, null
+                new GameStateFactoryImpl(REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                        ROUND_MANAGER, _mockRoundBasedTimerManager, ITEM_FACTORY, CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY,
+                        null
                 ));
     }
 

@@ -2,8 +2,6 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
@@ -11,18 +9,18 @@ import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         implements CharacterEquipmentSlots {
     private final Character CHARACTER;
-    private final MapFactory MAP_FACTORY;
     private final HashMap<String, Pair<Item, Boolean>> EQUIPMENT_SLOTS;
 
     private static final Item ITEM_ARCHETYPE = new ItemArchetype();
 
-    public CharacterEquipmentSlotsImpl(Character character, MapFactory mapFactory) {
+    @SuppressWarnings("ConstantConditions")
+    public CharacterEquipmentSlotsImpl(Character character) {
         CHARACTER = Check.ifNull(character, "character");
-        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
         EQUIPMENT_SLOTS = new HashMap<>();
     }
 
@@ -46,10 +44,8 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     public Map<String, Item> representation()
             throws IllegalStateException {
         enforceDeletionInvariants();
-        Map<String, Item> characterEquipmentSlots =
-                MAP_FACTORY.make("", ITEM_ARCHETYPE);
-        for (java.util.Map.Entry<String, Pair<Item, Boolean>> equipmentSlot : EQUIPMENT_SLOTS
-                .entrySet()) {
+        HashMap<String, Item> characterEquipmentSlots = new HashMap<>();
+        for (Map.Entry<String, Pair<Item, Boolean>> equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
             characterEquipmentSlots.put(equipmentSlot.getKey(),
                     equipmentSlot.getValue().getItem1());
         }

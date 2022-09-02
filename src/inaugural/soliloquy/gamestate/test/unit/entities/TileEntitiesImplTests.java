@@ -2,11 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.gamestate.entities.TileEntitiesImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -14,6 +15,7 @@ import soliloquy.specs.gamestate.entities.TileEntities;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,23 +25,18 @@ class TileEntitiesImplTests {
     private final Item ITEM = new FakeItem();
     private final Item ITEM_2 = new FakeItem();
     private final Item ITEM_3 = new FakeItem();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private TileEntitiesImpl<Item> _tileEntities;
 
     @BeforeEach
     void setUp() {
-        _tileEntities = new TileEntitiesImpl<>(TILE, ARCHETYPE, MAP_FACTORY);
+        _tileEntities = new TileEntitiesImpl<>(TILE, ARCHETYPE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileEntitiesImpl<>(null, ARCHETYPE, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileEntitiesImpl<>(TILE, null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileEntitiesImpl<>(TILE, ARCHETYPE, null));
+        assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(null, ARCHETYPE));
+        assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(TILE, null));
     }
 
     @Test
@@ -111,12 +108,6 @@ class TileEntitiesImplTests {
         Map<Item, Integer> representation = _tileEntities.representation();
 
         assertNotNull(representation);
-        assertNotNull(representation.getFirstArchetype());
-        assertEquals(Item.class.getCanonicalName(),
-                representation.getFirstArchetype().getInterfaceName());
-        assertNotNull(representation.getSecondArchetype());
-        assertEquals(Integer.class.getCanonicalName(),
-                representation.getSecondArchetype().getClass().getCanonicalName());
         assertEquals(3, representation.size());
         assertTrue(representation.containsKey(ITEM));
         assertTrue(representation.containsKey(ITEM_2));

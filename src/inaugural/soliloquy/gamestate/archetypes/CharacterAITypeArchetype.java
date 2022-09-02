@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.archetypes;
 
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
@@ -7,6 +8,11 @@ import soliloquy.specs.ruleset.entities.CharacterAIType;
 public class CharacterAITypeArchetype implements CharacterAIType {
     @Override
     public void act() {
+
+    }
+
+    @Override
+    public void fireEvent(String s, VariableCache variableCache) throws IllegalArgumentException {
 
     }
 

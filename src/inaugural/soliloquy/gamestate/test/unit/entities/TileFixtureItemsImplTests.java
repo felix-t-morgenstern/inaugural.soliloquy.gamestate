@@ -1,21 +1,23 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileFixtureItemsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureItemsImplTests {
     private final TileFixture TILE_FIXTURE = new FakeTileFixture();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final Item ITEM = new FakeItem();
     private final Item ITEM_2 = new FakeItem();
     private final Item ITEM_3 = new FakeItem();
@@ -24,15 +26,12 @@ class TileFixtureItemsImplTests {
 
     @BeforeEach
     void setUp() {
-        _tileFixtureItems = new TileFixtureItemsImpl(TILE_FIXTURE, LIST_FACTORY);
+        _tileFixtureItems = new TileFixtureItemsImpl(TILE_FIXTURE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureItemsImpl(null, LIST_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureItemsImpl(TILE_FIXTURE, null));
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureItemsImpl(null));
     }
 
     @Test
@@ -121,9 +120,6 @@ class TileFixtureItemsImplTests {
         List<Item> representation = _tileFixtureItems.representation();
 
         assertNotNull(representation);
-        assertNotNull(representation.getArchetype());
-        assertEquals(Item.class.getCanonicalName(),
-                representation.getArchetype().getInterfaceName());
         assertEquals(3, representation.size());
         assertTrue(representation.contains(ITEM));
         assertTrue(representation.contains(ITEM_2));

@@ -18,29 +18,22 @@ class CameraImplTests {
     private Camera _camera;
 
     private final FakeCoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
-    private final FakeListFactory COLLECTION_FACTORY = new FakeListFactory();
-    private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
     private final TileVisibility TILE_VISIBILITY = new TileVisibilitySpyDouble();
     private final FakeGameZone GAME_ZONE = new FakeGameZone();
 
     @BeforeEach
     void setUp() {
-        _camera = new CameraImpl(COORDINATE_FACTORY, COLLECTION_FACTORY, MAP_FACTORY,
-                TILE_VISIBILITY, () -> GAME_ZONE);
+        _camera = new CameraImpl(COORDINATE_FACTORY, TILE_VISIBILITY, () -> GAME_ZONE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(null,
-                COLLECTION_FACTORY, MAP_FACTORY, TILE_VISIBILITY, () -> GAME_ZONE));
-        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
-                null, MAP_FACTORY, TILE_VISIBILITY, () -> GAME_ZONE));
-        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
-                COLLECTION_FACTORY, null, TILE_VISIBILITY, () -> GAME_ZONE));
-        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
-                COLLECTION_FACTORY, MAP_FACTORY, null, () -> GAME_ZONE));
-        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(COORDINATE_FACTORY,
-                COLLECTION_FACTORY, MAP_FACTORY, TILE_VISIBILITY, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CameraImpl(null, TILE_VISIBILITY, () -> GAME_ZONE));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CameraImpl(COORDINATE_FACTORY, null, () -> GAME_ZONE));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CameraImpl(COORDINATE_FACTORY, TILE_VISIBILITY, null));
     }
 
     @Test
@@ -171,7 +164,6 @@ class CameraImplTests {
         Tile tile = new FakeTile(new FakeCoordinate(4, 4));
         Character character1 = new FakeCharacter();
         tile.characters().add(character1);
-        //character1.setTile(new FakeTile(new FakeCoordinate(4,4)));
 
         _camera.charactersProvidingVisibility().put(character1, 3);
         _camera.coordinatesProvidingVisibility().put(new FakeCoordinate(17, 13), 2);

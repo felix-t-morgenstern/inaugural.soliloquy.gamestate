@@ -27,6 +27,8 @@ public class ItemImpl implements Item {
     private final List<ActiveAbility> ACTIVE_ABILITIES;
     private final List<ReactiveAbility> REACTIVE_ABILITIES;
 
+    private final CharacterArchetype CHARACTER_ARCHETYPE = new CharacterArchetype();
+
     private int _charges;
     private int _numberInStack;
     private Character _characterInventoryCharacter;
@@ -146,7 +148,7 @@ public class ItemImpl implements Item {
         return _characterEquipmentSlotsCharacter == null ?
                 null :
                 new Pair<>(_characterEquipmentSlotsCharacter, _characterEquipmentSlotType,
-                        new CharacterArchetype(), "");
+                        CHARACTER_ARCHETYPE, "");
     }
 
     @Override

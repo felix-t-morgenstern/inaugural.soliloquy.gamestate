@@ -4,13 +4,10 @@ import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.entities.EntityMembersOfTypeImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeDeletable;
 import inaugural.soliloquy.gamestate.test.fakes.FakeEntityMemberOfType;
-import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -19,6 +16,7 @@ import soliloquy.specs.gamestate.entities.EntityMembersOfType;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +36,6 @@ class EntityMembersOfTypeImplTests {
         ENTITIES_ADDED.add(entity);
         return entity;
     };
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
 
     private final HasIdArchetype ENTITY_MEMBER_TYPE_ARCHETYPE = new HasIdArchetype();
@@ -53,29 +50,25 @@ class EntityMembersOfTypeImplTests {
     @BeforeEach
     void setUp() {
         _entityPassedIntoFactory = null;
-        _entityMembersOfType = new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY,
-                LIST_FACTORY, DATA_FACTORY, ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE);
+        _entityMembersOfType = new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY, DATA_FACTORY, ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new EntityMembersOfTypeImpl<>(null, FACTORY, LIST_FACTORY,
+                () -> new EntityMembersOfTypeImpl<>(null, FACTORY,
                         DATA_FACTORY, ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, null, LIST_FACTORY,
+                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, null,
                         DATA_FACTORY, ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY, null,
-                        DATA_FACTORY, ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE));
-        assertThrows(IllegalArgumentException.class,
-                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY, LIST_FACTORY,
+                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY,
                         null, ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY, LIST_FACTORY,
+                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY,
                         DATA_FACTORY, null, ENTITY_MEMBER_ARCHETYPE));
         assertThrows(IllegalArgumentException.class,
-                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY, LIST_FACTORY,
+                () -> new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY,
                         DATA_FACTORY, ENTITY_MEMBER_TYPE_ARCHETYPE, null));
     }
 

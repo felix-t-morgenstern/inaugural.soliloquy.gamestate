@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.factories;
 
 import inaugural.soliloquy.gamestate.GameStateImpl;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.GameState;
@@ -13,7 +12,6 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 
 public class GameStateFactoryImpl implements GameStateFactory {
-    private final MapFactory MAP_FACTORY;
     private final RegistryFactory REGISTRY_FACTORY;
     private final GameZonesRepo GAME_ZONES_REPO;
     private final CameraFactory CAMERA_FACTORY;
@@ -26,7 +24,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY;
 
-    public GameStateFactoryImpl(MapFactory mapFactory, RegistryFactory registryFactory,
+    @SuppressWarnings("ConstantConditions")
+    public GameStateFactoryImpl(RegistryFactory registryFactory,
                                 GameZonesRepo gameZonesRepo, CameraFactory cameraFactory,
                                 RoundManager roundManager,
                                 RoundBasedTimerManager roundBasedTimerManager,
@@ -36,7 +35,6 @@ public class GameStateFactoryImpl implements GameStateFactory {
                                 KeyBindingFactory keyBindingFactory,
                                 KeyBindingContextFactory keyBindingContextFactory,
                                 KeyEventListenerFactory keyEventListenerFactory) {
-        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
         REGISTRY_FACTORY = Check.ifNull(registryFactory, "registryFactory");
         GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
         CAMERA_FACTORY = Check.ifNull(cameraFactory, "cameraFactory");
@@ -55,10 +53,10 @@ public class GameStateFactoryImpl implements GameStateFactory {
     @Override
     public GameState make(Party party, VariableCache variableCache)
             throws IllegalArgumentException {
-        return new GameStateImpl(party, variableCache, MAP_FACTORY, REGISTRY_FACTORY,
-                GAME_ZONES_REPO, CAMERA_FACTORY, ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER,
-                ITEM_FACTORY, CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY,
-                KEY_BINDING_FACTORY, KEY_BINDING_CONTEXT_FACTORY, KEY_EVENT_LISTENER_FACTORY);
+        return new GameStateImpl(party, variableCache, REGISTRY_FACTORY, GAME_ZONES_REPO,
+                CAMERA_FACTORY, ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER, ITEM_FACTORY,
+                CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
+                KEY_BINDING_CONTEXT_FACTORY, KEY_EVENT_LISTENER_FACTORY);
     }
 
     @Override

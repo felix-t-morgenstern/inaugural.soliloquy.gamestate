@@ -2,16 +2,13 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.KeyBindingImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingImplTests {
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final String KEY_PRESS_ACTION_ID = "keyPressActionId";
     private final String KEY_RELEASE_ACTION_ID = "keyReleaseActionId";
     private final FakeAction<Long> KEY_PRESS_ACTION = new FakeAction<>(KEY_PRESS_ACTION_ID);
@@ -22,12 +19,7 @@ class KeyBindingImplTests {
 
     @BeforeEach
     void setUp() {
-        _keyBinding = new KeyBindingImpl(LIST_FACTORY);
-    }
-
-    @Test
-    void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new KeyBindingImpl(null));
+        _keyBinding = new KeyBindingImpl();
     }
 
     @Test

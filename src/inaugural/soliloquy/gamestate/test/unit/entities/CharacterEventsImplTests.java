@@ -3,41 +3,31 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.CharacterEventsImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameCharacterEvent;
-import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
-import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CharacterEventsImplTests {
     private final Character CHARACTER = new FakeCharacter();
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
 
     private CharacterEvents _characterEvents;
 
     @BeforeEach
     void setUp() {
-        _characterEvents = new CharacterEventsImpl(CHARACTER, LIST_FACTORY, MAP_FACTORY);
+        _characterEvents = new CharacterEventsImpl(CHARACTER);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterEventsImpl(null, LIST_FACTORY, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterEventsImpl(CHARACTER, null, MAP_FACTORY));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterEventsImpl(CHARACTER, LIST_FACTORY, null));
+        assertThrows(IllegalArgumentException.class, () -> new CharacterEventsImpl(null));
     }
 
     @Test

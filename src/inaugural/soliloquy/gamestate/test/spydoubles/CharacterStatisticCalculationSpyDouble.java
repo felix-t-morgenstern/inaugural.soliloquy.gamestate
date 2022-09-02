@@ -1,15 +1,16 @@
 package inaugural.soliloquy.gamestate.test.spydoubles;
 
-import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.ruleset.entities.CharacterStatisticType;
 import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CharacterStatisticCalculationSpyDouble implements CharacterStatisticCalculation {
     public static final int VALUE = 123123;
-    public static final Map<String, Integer> MODIFIERS = new FakeMapFactory().make("", 0);
+    public static final Map<String, Integer> MODIFIERS = new HashMap<>();
 
     public Character _character;
     public CharacterStatisticType _statisticType;

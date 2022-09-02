@@ -1,31 +1,26 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.TileWallSegmentArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class TileWallSegmentsImpl implements TileWallSegments {
     private final Tile TILE;
-    private final MapFactory MAP_FACTORY;
     private final HashMap<TileWallSegmentDirection,
             HashMap<TileWallSegment, TileWallSegmentDimensions>> SEGMENTS;
-    private static final TileWallSegment SEGMENT_ARCHETYPE = new TileWallSegmentArchetype();
-    private static final TileWallSegmentDimensions DIMENSIONS_ARCHETYPE = makeDimensions(0, 0);
     @SuppressWarnings("FieldCanBeLocal")
     private final int DEFAULT_Z = 0;
 
     private boolean _isDeleted;
 
-    public TileWallSegmentsImpl(Tile tile, MapFactory mapFactory) {
+    @SuppressWarnings("ConstantConditions")
+    public TileWallSegmentsImpl(Tile tile) {
         TILE = Check.ifNull(tile, "tile");
-        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
 
         SEGMENTS = new HashMap<>();
         SEGMENTS.put(TileWallSegmentDirection.NORTH, new HashMap<>());
@@ -44,20 +39,16 @@ public class TileWallSegmentsImpl implements TileWallSegments {
     representation()
             throws IllegalStateException {
         enforceDeletionInvariants("representation");
-        Map<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>>
-                map = MAP_FACTORY.make(TileWallSegmentDirection.UNKNOWN,
-                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE));
 
-        Map<TileWallSegment, TileWallSegmentDimensions> north =
-                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE);
-        Map<TileWallSegment, TileWallSegmentDimensions> northwest =
-                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE);
-        Map<TileWallSegment, TileWallSegmentDimensions> west =
-                MAP_FACTORY.make(SEGMENT_ARCHETYPE, DIMENSIONS_ARCHETYPE);
+        HashMap<TileWallSegmentDirection, Map<TileWallSegment, TileWallSegmentDimensions>> map =
+                new HashMap<>();
 
-        SEGMENTS.get(TileWallSegmentDirection.NORTH).forEach(north::put);
-        SEGMENTS.get(TileWallSegmentDirection.NORTHWEST).forEach(northwest::put);
-        SEGMENTS.get(TileWallSegmentDirection.WEST).forEach(west::put);
+        HashMap<TileWallSegment, TileWallSegmentDimensions> north =
+                new HashMap<>(SEGMENTS.get(TileWallSegmentDirection.NORTH));
+        HashMap<TileWallSegment, TileWallSegmentDimensions> northwest =
+                new HashMap<>(SEGMENTS.get(TileWallSegmentDirection.NORTHWEST));
+        HashMap<TileWallSegment, TileWallSegmentDimensions> west =
+                new HashMap<>(SEGMENTS.get(TileWallSegmentDirection.WEST));
 
         map.put(TileWallSegmentDirection.NORTH, north);
         map.put(TileWallSegmentDirection.NORTHWEST, northwest);

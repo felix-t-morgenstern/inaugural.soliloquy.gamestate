@@ -1,12 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.GameCharacterEventArchetype;
-import inaugural.soliloquy.gamestate.archetypes.GameCharacterEventReadableCollectionArchetype;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -14,22 +8,16 @@ import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CharacterEventsImpl extends HasDeletionInvariants implements CharacterEvents {
     private final Character CHARACTER;
-    private final ListFactory LIST_FACTORY;
-    private final MapFactory MAP_FACTORY;
     private final HashMap<String, ArrayList<GameCharacterEvent>> EVENTS;
 
-    private final GameCharacterEvent EVENT_ARCHETYPE = new GameCharacterEventArchetype();
-    private final List<GameCharacterEvent> EVENTS_ARCHETYPE =
-            new GameCharacterEventReadableCollectionArchetype();
-
-    public CharacterEventsImpl(Character character, ListFactory listFactory,
-                               MapFactory mapFactory) {
+    @SuppressWarnings("ConstantConditions")
+    public CharacterEventsImpl(Character character) {
         CHARACTER = Check.ifNull(character, "character");
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
-        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
         EVENTS = new HashMap<>();
     }
 
@@ -62,7 +50,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     public List<String> getTriggersForEvent(GameCharacterEvent event)
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants();
-        List<String> triggersForEvent = LIST_FACTORY.make("");
+        ArrayList<String> triggersForEvent = new ArrayList<>();
         EVENTS.forEach((trigger, events) -> {
             if (events.contains(event)) {
                 triggersForEvent.add(trigger);
@@ -106,13 +94,8 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     public Map<String, List<GameCharacterEvent>> representation()
             throws IllegalStateException {
         enforceDeletionInvariants();
-        Map<String, List<GameCharacterEvent>> representation =
-                MAP_FACTORY.make("", EVENTS_ARCHETYPE);
-        EVENTS.forEach((t, e) -> {
-            List<GameCharacterEvent> events = LIST_FACTORY.make(EVENT_ARCHETYPE);
-            events.addAll(e);
-            representation.put(t, events);
-        });
+        HashMap<String, List<GameCharacterEvent>> representation = new HashMap<>();
+        EVENTS.forEach((t, e) -> representation.put(t, new ArrayList<>(e)));
         return representation;
     }
 

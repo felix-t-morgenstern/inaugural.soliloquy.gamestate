@@ -1,12 +1,13 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
+
+import java.util.List;
 
 public class FakeActiveAbility implements ActiveAbility {
     private final String ID;

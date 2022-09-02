@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.KeyEventListener;
 
 import java.util.List;
+import java.util.Map;
 
 public class FakeKeyEventListener implements KeyEventListener {
     @Override
@@ -34,7 +34,7 @@ public class FakeKeyEventListener implements KeyEventListener {
     }
 
     @Override
-    public Map<Integer, soliloquy.specs.common.infrastructure.List<KeyBindingContext>> contextsRepresentation() {
+    public Map<Integer, List<KeyBindingContext>> contextsRepresentation() {
         return null;
     }
 

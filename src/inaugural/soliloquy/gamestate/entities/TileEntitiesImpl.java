@@ -2,20 +2,18 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemIsPresentElsewhere
         implements TileEntities<TEntity> {
     private final Tile TILE;
     private final TEntity ARCHETYPE;
-    private final MapFactory MAP_FACTORY;
     final HashMap<TEntity, Integer> ENTITIES;
 
     private final static CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
@@ -23,12 +21,10 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     private Consumer<TEntity> _actionAfterAdding;
     private Consumer<TEntity> _actionAfterRemoving;
 
-    public TileEntitiesImpl(Tile tile,
-                            TEntity archetype,
-                            MapFactory mapFactory) {
+    @SuppressWarnings("ConstantConditions")
+    public TileEntitiesImpl(Tile tile, TEntity archetype) {
         TILE = Check.ifNull(tile, "tile");
         ARCHETYPE = Check.ifNull(archetype, "archetype");
-        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
 
         ENTITIES = new HashMap<>();
     }
@@ -89,6 +85,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         ENTITIES.put(entity, z);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public boolean remove(TEntity entity) {
         enforceDeletionInvariants();
         enforceAssignmentInvariant(entity, "remove");
@@ -122,9 +119,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     @Override
     public Map<TEntity, Integer> representation() throws IllegalStateException {
         enforceDeletionInvariants();
-        Map<TEntity, Integer> entities = MAP_FACTORY.make(ARCHETYPE, 0);
-        ENTITIES.forEach(entities::put);
-        return entities;
+        return new HashMap<>(ENTITIES);
     }
 
     @Override

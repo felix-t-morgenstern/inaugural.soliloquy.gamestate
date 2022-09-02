@@ -3,8 +3,6 @@ package inaugural.soliloquy.gamestate.persistence;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
@@ -18,6 +16,8 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -41,6 +41,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
 
     private static final Character ARCHETYPE = new CharacterArchetype();
 
+    @SuppressWarnings("ConstantConditions")
     public CharacterHandler(CharacterFactory characterFactory,
                             TypeHandler<UUID> uuidHandler,
                             Function<String, CharacterType> getCharacterType,

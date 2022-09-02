@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class FakeTileWallSegments implements TileWallSegments {
     public final HashMap<TileWallSegmentDirection, HashMap<TileWallSegment,

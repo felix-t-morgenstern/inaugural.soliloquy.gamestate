@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.persistence;
 import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Item;
@@ -11,6 +10,7 @@ import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.factories.TileFixtureFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -23,6 +23,7 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
 
     private static final TileFixture ARCHETYPE = new TileFixtureArchetype();
 
+    @SuppressWarnings("ConstantConditions")
     public TileFixtureHandler(Function<String, FixtureType> getFixtureType,
                               TileFixtureFactory tileFixtureFactory,
                               TypeHandler<UUID> uuidHandler,

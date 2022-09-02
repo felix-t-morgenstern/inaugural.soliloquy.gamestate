@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
+import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
@@ -17,6 +18,11 @@ public class FakeCharacterAIType implements CharacterAIType {
 
     @Override
     public void act() {
+
+    }
+
+    @Override
+    public void fireEvent(String s, VariableCache variableCache) throws IllegalArgumentException {
 
     }
 

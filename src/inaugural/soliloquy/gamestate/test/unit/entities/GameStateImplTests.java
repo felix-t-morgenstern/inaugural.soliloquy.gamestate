@@ -9,7 +9,6 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import soliloquy.specs.common.factories.MapFactory;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.GameState;
@@ -28,9 +27,7 @@ import static org.mockito.Mockito.mock;
 
 class GameStateImplTests {
     private final Party PARTY = new FakeParty();
-    private final VariableCache PERSISTENT_VARIABLE_CACHE =
-            new VariableCacheStub();
-    private final MapFactory MAP_FACTORY = new FakeMapFactory();
+    private final VariableCache PERSISTENT_VARIABLE_CACHE = new VariableCacheStub();
     private final RegistryFactory REGISTRY_FACTORY = new FakeRegistryFactory();
     private final GameZonesRepo GAME_ZONES_REPO = new GameZonesRepoStub();
     private final FakeCameraFactory CAMERA_FACTORY = new FakeCameraFactory();
@@ -56,7 +53,6 @@ class GameStateImplTests {
 
         _gameState = new GameStateImpl(PARTY,
                 PERSISTENT_VARIABLE_CACHE,
-                MAP_FACTORY,
                 REGISTRY_FACTORY,
                 GAME_ZONES_REPO,
                 CAMERA_FACTORY,
@@ -75,7 +71,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(null,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
@@ -90,7 +85,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         null,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
@@ -105,7 +99,6 @@ class GameStateImplTests {
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         null,
-                        REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
                         _mockRoundBasedTimerManager,
@@ -118,21 +111,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
-                        null,
-                        GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
-                        ITEM_FACTORY,
-                        CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY,
-                        KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_EVENT_LISTENER_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
-                        PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         null,
                         CAMERA_FACTORY, ROUND_MANAGER,
@@ -146,7 +124,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         null, ROUND_MANAGER,
@@ -160,7 +137,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
@@ -175,7 +151,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
@@ -190,7 +165,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
@@ -205,7 +179,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
@@ -219,7 +192,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
@@ -233,7 +205,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
@@ -247,7 +218,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
@@ -261,7 +231,6 @@ class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> _gameState = new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
-                        MAP_FACTORY,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,

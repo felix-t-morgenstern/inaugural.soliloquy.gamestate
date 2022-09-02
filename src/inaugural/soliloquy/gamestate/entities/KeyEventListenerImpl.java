@@ -1,34 +1,20 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.KeyBindingContextArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.timing.TimestampValidator;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.KeyEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class KeyEventListenerImpl implements KeyEventListener {
-    private final ListFactory LIST_FACTORY;
-    private final MapFactory MAP_FACTORY;
     private final TreeMap<Integer, List<KeyBindingContext>> CONTEXTS;
     private final TimestampValidator TIMESTAMP_VALIDATOR;
     private final HashMap<KeyBindingContext, Integer> PRIORITIES_BY_CONTEXTS;
 
-    private static final KeyBindingContext ARCHETYPE = new KeyBindingContextArchetype();
-
-    public KeyEventListenerImpl(ListFactory listFactory, MapFactory mapFactory,
-                                Long mostRecentTimestamp) {
-        LIST_FACTORY = Check.ifNull(listFactory, "listFactory");
-        MAP_FACTORY = Check.ifNull(mapFactory, "mapFactory");
+    public KeyEventListenerImpl(Long mostRecentTimestamp) {
         CONTEXTS = new TreeMap<>();
         TIMESTAMP_VALIDATOR = new TimestampValidator(mostRecentTimestamp);
         PRIORITIES_BY_CONTEXTS = new HashMap<>();
@@ -45,7 +31,7 @@ public class KeyEventListenerImpl implements KeyEventListener {
         Check.ifNull(keyBindingContext, "keyBindingContext");
         removeContext(keyBindingContext);
         if (!CONTEXTS.containsKey(priority)) {
-            List<KeyBindingContext> contextsAtPriority = LIST_FACTORY.make(ARCHETYPE);
+            ArrayList<KeyBindingContext> contextsAtPriority = new ArrayList<>();
             contextsAtPriority.add(keyBindingContext);
             CONTEXTS.put(priority, contextsAtPriority);
         }
@@ -93,9 +79,10 @@ public class KeyEventListenerImpl implements KeyEventListener {
         handleKeyEvent(c, binding -> binding.release(timestamp));
     }
 
+    // TODO: Ensure that the values in CONTEXT are also deeply cloned in KeyEventListenerImpl.contextsRepresentation
     @Override
     public Map<Integer, List<KeyBindingContext>> contextsRepresentation() {
-        return MAP_FACTORY.make(CONTEXTS, 0, LIST_FACTORY.make(ARCHETYPE));
+        return new HashMap<>(CONTEXTS);
     }
 
     private void handleKeyEvent(char c, Consumer<KeyBinding> onEvent) {

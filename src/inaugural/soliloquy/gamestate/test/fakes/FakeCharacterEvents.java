@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FakeCharacterEvents implements CharacterEvents {
     private final HashMap<String, ArrayList<GameCharacterEvent>> EVENTS = new HashMap<>();
@@ -55,12 +55,8 @@ public class FakeCharacterEvents implements CharacterEvents {
 
     @Override
     public Map<String, List<GameCharacterEvent>> representation() throws IllegalStateException {
-        Map<String, List<GameCharacterEvent>> representation = new FakeMap<>();
-        EVENTS.forEach((t, e) -> {
-            List<GameCharacterEvent> events = new FakeList<>();
-            events.addAll(e);
-            representation.put(t, events);
-        });
+        HashMap<String, List<GameCharacterEvent>> representation = new HashMap<>();
+        EVENTS.forEach((t, e) -> representation.put(t, new ArrayList<>(e)));
         return representation;
     }
 

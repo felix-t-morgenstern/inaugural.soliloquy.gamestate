@@ -4,11 +4,9 @@ import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.factories.EntityMembersOfTypeFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeDeletable;
 import inaugural.soliloquy.gamestate.test.fakes.FakeEntityMemberOfType;
-import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.ListFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Deletable;
@@ -20,12 +18,11 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EntityMembersOfTypeFactoryImplTests {
-    private final ListFactory LIST_FACTORY = new FakeListFactory();
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeEntityMemberOfType FACTORY_OUTPUT = new FakeEntityMemberOfType(null);
-            // TODO: Determine whether and where factory output should be checked
+    // TODO: Determine whether and where factory output should be checked
     private final Function<Deletable, Function<HasId, Function<VariableCache,
-                    FakeEntityMemberOfType>>>
+            FakeEntityMemberOfType>>>
             FACTORY = e -> t -> d -> {
         _entityPassedIntoFactory = e;
         _typePassedIntoFactory = t;
@@ -47,15 +44,13 @@ class EntityMembersOfTypeFactoryImplTests {
     @BeforeEach
     void setUp() {
         _entityPassedIntoFactory = null;
-        _factory = new EntityMembersOfTypeFactoryImpl(LIST_FACTORY, DATA_FACTORY);
+        _factory = new EntityMembersOfTypeFactoryImpl(DATA_FACTORY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new EntityMembersOfTypeFactoryImpl(null, DATA_FACTORY));
-        assertThrows(IllegalArgumentException.class, () ->
-                new EntityMembersOfTypeFactoryImpl(LIST_FACTORY, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new EntityMembersOfTypeFactoryImpl(null));
     }
 
     @Test

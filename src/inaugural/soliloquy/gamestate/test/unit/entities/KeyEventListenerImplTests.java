@@ -3,20 +3,17 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.KeyEventListenerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeKeyBinding;
 import inaugural.soliloquy.gamestate.test.fakes.FakeKeyBindingContext;
-import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
-import inaugural.soliloquy.gamestate.test.fakes.FakeMapFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.KeyEventListener;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyEventListenerImplTests {
-    private final FakeListFactory LIST_FACTORY = new FakeListFactory();
-    private final FakeMapFactory MAP_FACTORY = new FakeMapFactory();
     private final long MOST_RECENT_TIMESTAMP = 123123L;
     private final char CHAR = 'a';
 
@@ -25,15 +22,7 @@ class KeyEventListenerImplTests {
     @BeforeEach
     void setUp() {
         _keyEventListener =
-                new KeyEventListenerImpl(LIST_FACTORY, MAP_FACTORY, MOST_RECENT_TIMESTAMP);
-    }
-
-    @Test
-    void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new KeyEventListenerImpl(null, MAP_FACTORY, MOST_RECENT_TIMESTAMP));
-        assertThrows(IllegalArgumentException.class, () ->
-                new KeyEventListenerImpl(LIST_FACTORY, null, MOST_RECENT_TIMESTAMP));
+                new KeyEventListenerImpl(MOST_RECENT_TIMESTAMP);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.PartyImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeListFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,12 @@ class PartyImplTests {
 
     @BeforeEach
     void setUp() {
-        _party = new PartyImpl(new FakeListFactory(), DATA);
+        _party = new PartyImpl(DATA);
+    }
+
+    @Test
+    void testConstructorWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> new PartyImpl(null));
     }
 
     @Test

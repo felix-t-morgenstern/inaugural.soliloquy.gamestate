@@ -22,6 +22,7 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
 
     private static final Item ARCHETYPE = new ItemArchetype();
 
+    @SuppressWarnings("ConstantConditions")
     public ItemHandler(Function<String, ItemType> getItemType,
                        TypeHandler<UUID> uuidHandler,
                        TypeHandler<VariableCache> dataHandler,

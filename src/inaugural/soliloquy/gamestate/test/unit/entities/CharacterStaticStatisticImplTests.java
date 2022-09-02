@@ -7,12 +7,13 @@ import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculati
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatistic;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,13 +1,7 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
-import inaugural.soliloquy.gamestate.archetypes.CoordinateArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.CoordinateFactory;
-import soliloquy.specs.common.factories.ListFactory;
-import soliloquy.specs.common.factories.MapFactory;
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
@@ -15,7 +9,10 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class CameraImpl implements Camera {
@@ -34,16 +31,13 @@ public class CameraImpl implements Camera {
     private boolean _allTilesVisible;
 
     @SuppressWarnings("ConstantConditions")
-    public CameraImpl(CoordinateFactory coordinateFactory, ListFactory listFactory,
-                      MapFactory mapFactory, TileVisibility tileVisibility,
+    public CameraImpl(CoordinateFactory coordinateFactory, TileVisibility tileVisibility,
                       Supplier<GameZone> getCurrentGameZone) {
         COORDINATE_FACTORY = Check.ifNull(coordinateFactory, "coordinateFactory");
-        Check.ifNull(mapFactory, "mapFactory");
-        CHARACTERS_PROVIDING_VISIBILITY = mapFactory.make(new CharacterArchetype(), 0);
-        COORDINATES_PROVIDING_VISIBILITY = mapFactory.make(new CoordinateArchetype(), 0);
+        CHARACTERS_PROVIDING_VISIBILITY = new HashMap<>();
+        COORDINATES_PROVIDING_VISIBILITY = new HashMap<>();
         TILE_VISIBILITY = Check.ifNull(tileVisibility, "tileVisibility");
-        Check.ifNull(listFactory, "listFactory");
-        VISIBLE_TILES = listFactory.make(new CoordinateArchetype());
+        VISIBLE_TILES = new ArrayList<>();
         GET_CURRENT_GAME_ZONE = Check.ifNull(getCurrentGameZone, "getCurrentGameZone");
     }
 
