@@ -87,11 +87,6 @@ class ArchetypesTests {
     }
 
     @Test
-    void testTileArchetype() {
-        assertEquals(Tile.class.getCanonicalName(), new TileArchetype().getInterfaceName());
-    }
-
-    @Test
     void testTileFixtureArchetype() {
         assertEquals(TileFixture.class.getCanonicalName(),
                 new TileFixtureArchetype().getInterfaceName());

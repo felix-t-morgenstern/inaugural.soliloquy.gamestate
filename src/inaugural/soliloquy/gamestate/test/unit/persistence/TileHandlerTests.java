@@ -93,7 +93,6 @@ class TileHandlerTests {
                 SEGMENT_TYPES::get, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get, GROUND_TYPES::get);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->

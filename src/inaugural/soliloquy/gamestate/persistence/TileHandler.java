@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.archetypes.TileArchetype;
-import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
+import inaugural.soliloquy.tools.Check;
+import inaugural.soliloquy.tools.persistence.AbstractSoliloquyTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.Pair;
@@ -17,7 +17,7 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 import java.util.function.Function;
 
-public class TileHandler extends AbstractTypeHandler<Tile> {
+public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
     private final TileFactory TILE_FACTORY;
     private final TileWallSegmentFactory TILE_WALL_SEGMENT_FACTORY;
 
@@ -32,8 +32,6 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
     private final Function<String, GameAbilityEvent> GET_ABILITY_EVENT;
     private final Function<String, GroundType> GET_GROUND_TYPE;
 
-    private static final Tile ARCHETYPE = new TileArchetype();
-
     @SuppressWarnings("ConstantConditions")
     public TileHandler(TileFactory tileFactory,
                        TileWallSegmentFactory tileWallSegmentFactory,
@@ -46,72 +44,23 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
                        Function<String, GameMovementEvent> getMovementEvent,
                        Function<String, GameAbilityEvent> getAbilityEvent,
                        Function<String, GroundType> getGroundType) {
-        super(ARCHETYPE);
-        if (tileFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: tileFactory cannot be null");
-        }
-        TILE_FACTORY = tileFactory;
-        if (tileWallSegmentFactory == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: tileWallSegmentFactory cannot be null");
-        }
-        TILE_WALL_SEGMENT_FACTORY = tileWallSegmentFactory;
-        if (charactersHandler == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: charactersHandler cannot be null");
-        }
-        CHARACTERS_HANDLER = charactersHandler;
-        if (itemsHandler == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: itemsHandler cannot be null");
-        }
-        ITEMS_HANDLER = itemsHandler;
-        if (fixturesHandler == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: fixturesHandler cannot be null");
-        }
-        FIXTURES_HANDLER = fixturesHandler;
-        if (spriteHandler == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: spriteHandler cannot be null");
-        }
-        SPRITE_HANDLER = spriteHandler;
-        if (dataHandler == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: dataHandler cannot be null");
-        }
-        DATA_HANDLER = dataHandler;
-        if (getSegmentType == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: getSegmentType cannot be null");
-        }
-        GET_SEGMENT_TYPE = getSegmentType;
-        if (getMovementEvent == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: getMovementEvent cannot be null");
-        }
-        GET_MOVEMENT_EVENT = getMovementEvent;
-        if (getAbilityEvent == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: getAbilityEvent cannot be null");
-        }
-        GET_ABILITY_EVENT = getAbilityEvent;
-        if (getGroundType == null) {
-            throw new IllegalArgumentException(
-                    "TileHandler: getGroundType cannot be null");
-        }
-        GET_GROUND_TYPE = getGroundType;
+        super(Tile.class);
+        TILE_FACTORY = Check.ifNull(tileFactory, "tileFactory");
+        TILE_WALL_SEGMENT_FACTORY = Check.ifNull(tileWallSegmentFactory, "tileWallSegmentFactory");
+        CHARACTERS_HANDLER = Check.ifNull(charactersHandler, "charactersHandler");
+        ITEMS_HANDLER = Check.ifNull(itemsHandler, "itemsHandler");
+        FIXTURES_HANDLER = Check.ifNull(fixturesHandler, "fixturesHandler");
+        SPRITE_HANDLER = Check.ifNull(spriteHandler, "spriteHandler");
+        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        GET_SEGMENT_TYPE = Check.ifNull(getSegmentType, "getSegmentType");
+        GET_MOVEMENT_EVENT = Check.ifNull(getMovementEvent, "getMovementEvent");
+        GET_ABILITY_EVENT = Check.ifNull(getAbilityEvent, "getAbilityEvent");
+        GET_GROUND_TYPE = Check.ifNull(getGroundType, "getGroundType");
     }
 
     @Override
     public Tile read(String data) throws IllegalArgumentException {
-        if (data == null) {
-            throw new IllegalArgumentException("TileHandler.read: data cannot be null");
-        }
-        if (data.equals("")) {
-            throw new IllegalArgumentException("TileHandler.read: data cannot be empty");
-        }
+        Check.ifNullOrEmpty(data, "data");
 
         TileDTO dto = JSON.fromJson(data, TileDTO.class);
 
