@@ -1,13 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.GameZoneFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCoordinateFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameZone;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -19,9 +17,10 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameZoneFactoryImplTests {
-    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
-    private final ArrayList<Character> ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
-    private final ArrayList<Character> REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") private final ArrayList<Character>
+            ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") private final ArrayList<Character>
+            REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
     private final String ID = "GameZoneId";
     private final String TYPE = "GameZoneType";
     private final Tile[][] TILES = new Tile[1][2];
@@ -31,21 +30,16 @@ class GameZoneFactoryImplTests {
 
     @BeforeEach
     void setUp() {
-        _gameZoneFactory = new GameZoneFactoryImpl(COORDINATE_FACTORY,
-                ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add);
+        _gameZoneFactory = new GameZoneFactoryImpl(ADDED_TO_END_OF_ROUND_MANAGER::add,
+                REMOVED_FROM_ROUND_MANAGER::add);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(null,
-                        ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+                () -> new GameZoneFactoryImpl(null, REMOVED_FROM_ROUND_MANAGER::add));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(COORDINATE_FACTORY,
-                        null, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneFactoryImpl(COORDINATE_FACTORY,
-                        ADDED_TO_END_OF_ROUND_MANAGER::add, null));
+                () -> new GameZoneFactoryImpl(ADDED_TO_END_OF_ROUND_MANAGER::add, null));
     }
 
     @Test
@@ -63,8 +57,8 @@ class GameZoneFactoryImplTests {
 
         assertEquals(ID, gameZone.id());
         assertEquals(TYPE, gameZone.type());
-        assertEquals(0, gameZone.maxCoordinates().getX());
-        assertEquals(1, gameZone.maxCoordinates().getY());
+        assertEquals(0, gameZone.maxCoordinates().x());
+        assertEquals(1, gameZone.maxCoordinates().y());
         assertSame(TILES[0][0], gameZone.tile(0, 0));
         assertSame(TILES[0][1], gameZone.tile(0, 1));
         assertSame(DATA, gameZone.data());

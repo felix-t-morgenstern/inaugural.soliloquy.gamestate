@@ -6,8 +6,10 @@ import soliloquy.specs.gamestate.factories.CameraFactory;
 
 import java.util.function.Supplier;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class FakeCameraFactory implements CameraFactory {
-    public final static Camera CAMERA = new FakeCamera();
+    public static final Camera CAMERA = generateSimpleArchetype(Camera.class);
     public Supplier<GameZone> GET_CURRENT_GAME_ZONE;
 
     @Override

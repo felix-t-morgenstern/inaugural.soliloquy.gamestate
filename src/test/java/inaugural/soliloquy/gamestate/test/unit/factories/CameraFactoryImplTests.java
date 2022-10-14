@@ -5,7 +5,6 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.spydoubles.TileVisibilitySpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.factories.CameraFactory;
@@ -14,7 +13,6 @@ import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CameraFactoryImplTests {
-    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
     private final TileVisibility TILE_VISIBILITY = new TileVisibilitySpyDouble();
     private final FakeGameZone GAME_ZONE = new FakeGameZone();
 
@@ -22,16 +20,12 @@ class CameraFactoryImplTests {
 
     @BeforeEach
     void setUp() {
-        _cameraFactory = new CameraFactoryImpl(COORDINATE_FACTORY,
-                TILE_VISIBILITY);
+        _cameraFactory = new CameraFactoryImpl(TILE_VISIBILITY);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new CameraFactoryImpl(null, TILE_VISIBILITY));
-        assertThrows(IllegalArgumentException.class,
-                () -> new CameraFactoryImpl(COORDINATE_FACTORY, null));
+        assertThrows(IllegalArgumentException.class, () -> new CameraFactoryImpl(null));
     }
 
     @Test
@@ -40,15 +34,15 @@ class CameraFactoryImplTests {
 
         assertNotNull(camera);
 
-        camera.setTileLocation(1, 1);
+        camera.setTileLocation(Coordinate.of(1, 1));
         camera.setTileRenderingRadius(1);
-        camera.coordinatesProvidingVisibility().put(new FakeCoordinate(1, 1), 1);
+        camera.coordinatesProvidingVisibility().put(Coordinate.of(1, 1), 1);
         camera.calculateVisibleTiles();
 
         assertEquals(1, camera.visibleTiles().size());
         Coordinate visibleTileLocation = camera.visibleTiles().get(0);
         assertSame(GAME_ZONE.TILES[1][1],
-                GAME_ZONE.TILES[visibleTileLocation.getX()][visibleTileLocation.getY()]);
+                GAME_ZONE.TILES[visibleTileLocation.x()][visibleTileLocation.y()]);
     }
 
     @Test

@@ -81,11 +81,11 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
             dto.onExit[index++] = action.id();
         }
         Coordinate maxCoordinates = gameZone.maxCoordinates();
-        dto.maxX = maxCoordinates.getX();
-        dto.maxY = maxCoordinates.getY();
-        dto.tiles = new String[maxCoordinates.getX() + 1][maxCoordinates.getY() + 1];
-        for (int x = 0; x <= maxCoordinates.getX(); x++) {
-            for (int y = 0; y <= maxCoordinates.getY(); y++) {
+        dto.maxX = maxCoordinates.x();
+        dto.maxY = maxCoordinates.y();
+        dto.tiles = new String[maxCoordinates.x() + 1][maxCoordinates.y() + 1];
+        for (int x = 0; x <= maxCoordinates.x(); x++) {
+            for (int y = 0; y <= maxCoordinates.y(); y++) {
                 dto.tiles[x][y] = TILE_HANDLER.write(gameZone.tile(x, y));
             }
         }

@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
-import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.factories.EntityMembersOfTypeFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeDeletable;
 import inaugural.soliloquy.gamestate.test.fakes.FakeEntityMemberOfType;
+import inaugural.soliloquy.gamestate.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

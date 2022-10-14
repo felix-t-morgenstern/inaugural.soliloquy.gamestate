@@ -32,7 +32,6 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
     private final Function<String, GameAbilityEvent> GET_ABILITY_EVENT;
     private final Function<String, GroundType> GET_GROUND_TYPE;
 
-    @SuppressWarnings("ConstantConditions")
     public TileHandler(TileFactory tileFactory,
                        TileWallSegmentFactory tileWallSegmentFactory,
                        TypeHandler<Character> charactersHandler,
@@ -115,8 +114,8 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
         }
 
         TileDTO dto = new TileDTO();
-        dto.x = tile.location().getX();
-        dto.y = tile.location().getY();
+        dto.x = tile.location().x();
+        dto.y = tile.location().y();
         dto.height = tile.getHeight();
         dto.groundTypeId = tile.getGroundType().id();
 

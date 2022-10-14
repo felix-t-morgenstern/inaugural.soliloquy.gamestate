@@ -5,7 +5,6 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -25,7 +24,6 @@ class TileImplTests {
     private final int Y = 456;
 
     private final GameZone GAME_ZONE = new FakeGameZone();
-    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
     private final TileEntitiesFactory TILE_ENTITIES_FACTORY = new FakeTileEntitiesFactory();
     private final TileWallSegmentsFactory TILE_WALL_SEGMENTS_FACTORY =
             new FakeTileWallSegmentsFactory();
@@ -35,22 +33,19 @@ class TileImplTests {
 
     @BeforeEach
     void setUp() {
-        _tile = new TileImpl(X, Y, COORDINATE_FACTORY, TILE_ENTITIES_FACTORY,
-                TILE_WALL_SEGMENTS_FACTORY, DATA);
+        _tile = new TileImpl(X, Y, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, DATA);
         ((FakeGameZone) GAME_ZONE).TILES = new Tile[999][999];
         ((FakeGameZone) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                null, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, null, TILE_WALL_SEGMENTS_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, null, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new TileImpl(X, Y,
-                COORDINATE_FACTORY, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileImpl(X, Y, null, TILE_WALL_SEGMENTS_FACTORY, DATA));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileImpl(X, Y, TILE_ENTITIES_FACTORY, null, DATA));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileImpl(X, Y, TILE_ENTITIES_FACTORY, TILE_WALL_SEGMENTS_FACTORY, null));
     }
 
     @Test
@@ -58,8 +53,8 @@ class TileImplTests {
         Coordinate location = _tile.location();
 
         assertNotNull(location);
-        assertEquals(X, location.getX());
-        assertEquals(Y, location.getY());
+        assertEquals(X, location.x());
+        assertEquals(Y, location.y());
     }
 
     @Test
@@ -81,6 +76,7 @@ class TileImplTests {
     @Test
     void testCharacters() {
         assertNotNull(_tile.characters());
+        //noinspection rawtypes
         assertSame(_tile, ((FakeTileEntities) _tile.characters()).TILE);
     }
 

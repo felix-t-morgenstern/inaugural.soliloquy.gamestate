@@ -35,8 +35,7 @@ import java.util.function.Supplier;
 public class GameStateModule extends AbstractModule {
     @SuppressWarnings("FieldCanBeLocal") private GameStateFactory _gameStateFactory;
 
-    public GameStateModule(CoordinateFactory coordinateFactory,
-                           RegistryFactory registryFactory,
+    public GameStateModule(RegistryFactory registryFactory,
                            VariableCacheFactory variableCacheFactory,
                            PersistentValuesHandler persistentValuesHandler,
                            CharacterStatisticCalculation characterStatisticCalculation,
@@ -127,8 +126,7 @@ public class GameStateModule extends AbstractModule {
         TileEntitiesFactory tileEntitiesFactory = new TileEntitiesFactoryImpl();
         TileWallSegmentsFactory tileWallSegmentsFactory = new TileWallSegmentsFactoryImpl();
 
-        TileFactory tileFactory = new TileFactoryImpl(coordinateFactory, tileEntitiesFactory,
-                tileWallSegmentsFactory);
+        TileFactory tileFactory = new TileFactoryImpl(tileEntitiesFactory, tileWallSegmentsFactory);
 
         TileWallSegmentFactory tileWallSegmentFactory =
                 new TileWallSegmentFactoryImpl(variableCacheFactory);
@@ -144,7 +142,7 @@ public class GameStateModule extends AbstractModule {
         // TODO: Populate this!
         RoundManagerImpl roundManager = null;
 
-        GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(coordinateFactory, c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE), roundManager::removeCharacterFromQueue);
+        GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE), roundManager::removeCharacterFromQueue);
 
         TypeHandler<GameZone> gameZoneHandler =
                 new GameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
@@ -152,7 +150,7 @@ public class GameStateModule extends AbstractModule {
 
         GameZonesRepo gameZonesRepo = new GameZonesRepoImpl(gameZoneHandler, fileLocations);
 
-        CameraFactory cameraFactory = new CameraFactoryImpl(coordinateFactory, tileVisibility);
+        CameraFactory cameraFactory = new CameraFactoryImpl(tileVisibility);
 
         RoundBasedTimerFactory roundBasedTimerFactory =
                 new RoundBasedTimerFactoryImpl(roundBasedTimerManager);

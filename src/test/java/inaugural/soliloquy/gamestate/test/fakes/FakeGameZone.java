@@ -69,7 +69,7 @@ public class FakeGameZone implements GameZone {
         if (FAKE_MAX_COORDINATES != null) {
             return FAKE_MAX_COORDINATES;
         }
-        return new FakeCoordinate(TILES.length - 1, TILES[0].length - 1);
+        return Coordinate.of(TILES.length - 1, TILES[0].length - 1);
     }
 
     @Override

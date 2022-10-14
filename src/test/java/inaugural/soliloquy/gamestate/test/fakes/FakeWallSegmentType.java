@@ -43,4 +43,14 @@ public class FakeWallSegmentType implements WallSegmentType {
     public String getInterfaceName() {
         return null;
     }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setName(String s) {
+
+    }
 }

@@ -12,6 +12,9 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class FakeTile implements Tile {
     private GameZone _gameZone;
 
@@ -37,7 +40,10 @@ public class FakeTile implements Tile {
 
     public FakeTile(GameZone gameZone, int x, int y) {
         _gameZone = gameZone;
-        _tileLocation = new FakeCoordinate(x, y);
+        Coordinate coordinate = mock(Coordinate.class);
+        when(coordinate.x()).thenReturn(x);
+        when(coordinate.y()).thenReturn(y);
+        _tileLocation = coordinate;
     }
 
     public FakeTile(Coordinate tileLocation) {
@@ -46,7 +52,7 @@ public class FakeTile implements Tile {
     }
 
     public FakeTile(int x, int y, VariableCache data) {
-        _tileLocation = new FakeCoordinate(x, y);
+        _tileLocation = Coordinate.of(x, y);
         _data = data;
     }
 

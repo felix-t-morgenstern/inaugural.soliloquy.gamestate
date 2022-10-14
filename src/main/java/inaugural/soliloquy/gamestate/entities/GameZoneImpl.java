@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
@@ -28,9 +27,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     private String _name;
 
-    @SuppressWarnings("ConstantConditions")
     public GameZoneImpl(String id, String type, Tile[][] tiles,
-                        CoordinateFactory coordinateFactory, VariableCache data,
+                        VariableCache data,
                         Consumer<Character> addToEndOfRoundManager,
                         Consumer<Character> removeFromRoundManager) {
         ID = Check.ifNullOrEmpty(id, "id");
@@ -54,7 +52,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                     throw new IllegalArgumentException("GameZoneImpl: tiles has assigned " +
                             "GameZone at (" + x + "," + y + ")");
                 }
-                if (tiles[x][y].location().getX() != x || tiles[x][y].location().getY() != y) {
+                if (tiles[x][y].location().x() != x || tiles[x][y].location().y() != y) {
                     throw new IllegalArgumentException("GameZoneImpl: tile at coordinate (" + x +
                             "," + y + ") found at different coordinate on insertion, (" + x +
                             "," + y + ")");
@@ -72,10 +70,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                 tiles[x][y].characters().forEach(c -> CHARACTERS_IN_GAME_ZONE.add(c.getItem1()));
             }
         }
-        if (coordinateFactory == null) {
-            throw new IllegalArgumentException("GameZoneImpl: coordinateFactory cannot be null");
-        }
-        MAX_COORDINATES = coordinateFactory.make(tiles.length - 1, tiles[0].length - 1);
+        MAX_COORDINATES = Coordinate.of(tiles.length - 1, tiles[0].length - 1);
         ENTRY_ACTIONS = new ArrayList<>();
         EXIT_ACTIONS = new ArrayList<>();
         DATA = Check.ifNull(data, "data");
@@ -89,7 +84,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     // TODO: Ensure that this is a clone
     @Override
     public Coordinate maxCoordinates() {
-        return MAX_COORDINATES.makeClone();
+        return MAX_COORDINATES;
     }
 
     @Override
@@ -100,10 +95,10 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         if (y < 0) {
             throw new IllegalArgumentException("GameZoneImpl.tile: y cannot be negative");
         }
-        if (x > MAX_COORDINATES.getX()) {
+        if (x > MAX_COORDINATES.x()) {
             throw new IllegalArgumentException("GameZoneImpl.tile: x is beyond max x coordinate");
         }
-        if (y > MAX_COORDINATES.getY()) {
+        if (y > MAX_COORDINATES.y()) {
             throw new IllegalArgumentException("GameZoneImpl.tile: y is beyond max y coordinate");
         }
         return TILES[x][y];
@@ -172,8 +167,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        for (int x = 0; x <= MAX_COORDINATES.getX(); x++) {
-            for (int y = 0; y <= MAX_COORDINATES.getY(); y++) {
+        for (int x = 0; x <= MAX_COORDINATES.x(); x++) {
+            for (int y = 0; y <= MAX_COORDINATES.y(); y++) {
                 TILES[x][y].delete();
             }
         }

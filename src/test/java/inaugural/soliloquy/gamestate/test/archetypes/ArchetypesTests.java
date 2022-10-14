@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.test.archetypes;
 
 import inaugural.soliloquy.gamestate.archetypes.*;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -44,12 +43,6 @@ class ArchetypesTests {
     void testCharacterVariableStatisticTypeArchetype() {
         assertEquals(CharacterVariableStatisticType.class.getCanonicalName(),
                 new CharacterVariableStatisticTypeArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testCoordinateArchetype() {
-        assertEquals(Coordinate.class.getCanonicalName(),
-                new CoordinateArchetype().getInterfaceName());
     }
 
     @Test

@@ -34,7 +34,6 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
 
     private static final GameState ARCHETYPE = new GameStateArchetype();
 
-    @SuppressWarnings("ConstantConditions")
     public GameStateHandler(GameStateFactory gameStateFactory,
                             PartyFactory partyFactory,
                             GameZonesRepo gameZonesRepo,
@@ -163,8 +162,8 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         dto.pcsNotInCurrentGameZone = new String[pcsNotInGameZone.size()];
         for (int i = 0; i < pcsInGameZone.size(); i++) {
             dto.pcsInCurrentGameZone[i] = new PcInGameZoneDTO();
-            dto.pcsInCurrentGameZone[i].x = pcsInGameZone.get(i).tile().location().getX();
-            dto.pcsInCurrentGameZone[i].y = pcsInGameZone.get(i).tile().location().getY();
+            dto.pcsInCurrentGameZone[i].x = pcsInGameZone.get(i).tile().location().x();
+            dto.pcsInCurrentGameZone[i].y = pcsInGameZone.get(i).tile().location().y();
             dto.pcsInCurrentGameZone[i].id = pcsInGameZone.get(i).uuid().toString();
         }
         for (int i = 0; i < pcsNotInGameZone.size(); i++) {
@@ -177,8 +176,8 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
                 gameState.roundManager().characterQueueRepresentation()) {
             dto.charsInRound[index] = new CharacterInRoundDTO();
             dto.charsInRound[index].id = charWithData.getItem1().uuid().toString();
-            dto.charsInRound[index].x = charWithData.getItem1().tile().location().getX();
-            dto.charsInRound[index].y = charWithData.getItem1().tile().location().getY();
+            dto.charsInRound[index].x = charWithData.getItem1().tile().location().x();
+            dto.charsInRound[index].y = charWithData.getItem1().tile().location().y();
             dto.charsInRound[index].data = VARIABLE_CACHE_HANDLER.write(charWithData.getItem2());
             index++;
         }

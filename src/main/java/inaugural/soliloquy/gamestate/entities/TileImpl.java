@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.entities;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
-import soliloquy.specs.common.factories.CoordinateFactory;
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
@@ -34,20 +34,13 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final static Item ITEM_ARCHETYPE = new ItemArchetype();
     private final static TileFixture TILE_FIXTURE_ARCHETYPE = new TileFixtureArchetype();
 
-    @SuppressWarnings("ConstantConditions")
     public TileImpl(int x, int y,
-                    CoordinateFactory coordinateFactory,
                     TileEntitiesFactory tileEntitiesFactory,
                     TileWallSegmentsFactory tileWallSegmentsFactory,
                     VariableCache data) {
         super();
-        if (coordinateFactory == null) {
-            throw new IllegalArgumentException("TileImpl: coordinateFactory cannot be null");
-        }
-        LOCATION = coordinateFactory.make(x, y);
-        if (tileEntitiesFactory == null) {
-            throw new IllegalArgumentException("TileImpl: tileEntitiesFactory cannot be null");
-        }
+        LOCATION = Coordinate.of(x, y);
+        Check.ifNull(tileEntitiesFactory, "tileEntitiesFactory");
         // TODO: Test and implement whether add and remove from gameZone works
         TILE_CHARACTERS = tileEntitiesFactory.make(this, CHARACTER_ARCHETYPE);
         TILE_ITEMS = tileEntitiesFactory.make(this, ITEM_ARCHETYPE);
@@ -75,7 +68,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     public Coordinate location() throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("location");
-        return LOCATION.makeClone();
+        return LOCATION;
     }
 
     @Override
@@ -226,9 +219,9 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     }
 
     private void enforceLocationCorrespondenceInvariant(String methodName) {
-        if (_gameZone != null && _gameZone.tile(LOCATION.getX(), LOCATION.getY()) != this) {
+        if (_gameZone != null && _gameZone.tile(LOCATION.x(), LOCATION.y()) != this) {
             throw new IllegalStateException("TileImpl." + methodName + ": This Tile is not " +
-                    "present at its stated location (" + LOCATION.getX() + "," + LOCATION.getY() +
+                    "present at its stated location (" + LOCATION.x() + "," + LOCATION.y() +
                     ") in its containing GameZone");
         }
     }

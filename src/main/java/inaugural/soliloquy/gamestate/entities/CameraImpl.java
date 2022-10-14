@@ -1,12 +1,13 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.graphics.renderables.providers.ProviderAtTime;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 
 import java.util.ArrayList;
@@ -16,24 +17,19 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class CameraImpl implements Camera {
-    private final CoordinateFactory COORDINATE_FACTORY;
     private final Map<Character, Integer> CHARACTERS_PROVIDING_VISIBILITY;
     private final Map<Coordinate, Integer> COORDINATES_PROVIDING_VISIBILITY;
     private final TileVisibility TILE_VISIBILITY;
     private final List<Coordinate> VISIBLE_TILES;
     private final Supplier<GameZone> GET_CURRENT_GAME_ZONE;
 
-    private int _tileLocationX;
-    private int _tileLocationY;
-    private float _xTileWidthOffset;
-    private float _yTileWidthOffset;
-    private int _tileRenderingRadius;
-    private boolean _allTilesVisible;
+    private Coordinate tileLocation;
+    private ProviderAtTime<Vertex> tileCenterOffsetProvider;
+    private int tileRenderingRadius;
+    private float zoom;
+    private boolean allTilesVisible;
 
-    @SuppressWarnings("ConstantConditions")
-    public CameraImpl(CoordinateFactory coordinateFactory, TileVisibility tileVisibility,
-                      Supplier<GameZone> getCurrentGameZone) {
-        COORDINATE_FACTORY = Check.ifNull(coordinateFactory, "coordinateFactory");
+    public CameraImpl(TileVisibility tileVisibility, Supplier<GameZone> getCurrentGameZone) {
         CHARACTERS_PROVIDING_VISIBILITY = new HashMap<>();
         COORDINATES_PROVIDING_VISIBILITY = new HashMap<>();
         TILE_VISIBILITY = Check.ifNull(tileVisibility, "tileVisibility");
@@ -43,54 +39,54 @@ public class CameraImpl implements Camera {
 
     @Override
     public Coordinate getTileLocation() {
-        return COORDINATE_FACTORY.make(_tileLocationX, _tileLocationY);
+        return tileLocation;
     }
 
     @Override
-    public void setTileLocation(int x, int y) throws IllegalArgumentException {
-        _tileLocationX = Check.ifNonNegative(x, "x");
-        _tileLocationY = Check.ifNonNegative(y, "y");
-    }
-
-    // TODO: Test and implement
-    @Override
-    public float getXTileWidthOffset() {
-        return _xTileWidthOffset;
+    public void setTileLocation(Coordinate tileLocation) throws IllegalArgumentException {
+        this.tileLocation = Check.ifNull(tileLocation, "tileLocation");
     }
 
     @Override
-    public float getYTileHeightOffset() {
-        return _yTileWidthOffset;
+    public ProviderAtTime<Vertex> tileCenterOffsetProvider() {
+        return tileCenterOffsetProvider;
     }
 
     @Override
-    public void setXTileWidthOffset(float xTileWidthOffset) {
-        _xTileWidthOffset = xTileWidthOffset;
+    public void setTileCenterOffsetProvider(ProviderAtTime<Vertex> tileCenterOffsetProvider)
+            throws IllegalArgumentException {
+        this.tileCenterOffsetProvider =
+                Check.ifNull(tileCenterOffsetProvider, "tileCenterOffsetProvider");
     }
 
     @Override
-    public void setYTileHeightOffset(float yTileHeightOffset) {
-        _yTileWidthOffset = yTileHeightOffset;
+    public float getZoom() {
+        return zoom;
+    }
+
+    @Override
+    public void setZoom(float zoom) throws IllegalArgumentException {
+        this.zoom = Check.throwOnLteZero(zoom, "zoom");
     }
 
     @Override
     public int getTileRenderingRadius() {
-        return _tileRenderingRadius;
+        return tileRenderingRadius;
     }
 
     @Override
     public void setTileRenderingRadius(int tileRenderingRadius) throws IllegalArgumentException {
-        _tileRenderingRadius = Check.ifNonNegative(tileRenderingRadius, "tileRenderingRadius");
+        this.tileRenderingRadius = Check.ifNonNegative(tileRenderingRadius, "tileRenderingRadius");
     }
 
     @Override
     public boolean getAllTilesVisible() {
-        return _allTilesVisible;
+        return allTilesVisible;
     }
 
     @Override
     public void setAllTilesVisible(boolean allTilesVisible) {
-        _allTilesVisible = allTilesVisible;
+        this.allTilesVisible = allTilesVisible;
     }
 
     @Override
@@ -107,23 +103,23 @@ public class CameraImpl implements Camera {
     public void calculateVisibleTiles() throws IllegalStateException {
         // TODO: Revisit whether this method truly needs to be this long
         VISIBLE_TILES.clear();
-        if (_tileRenderingRadius == 0) {
+        if (tileRenderingRadius == 0) {
             return;
         }
 
         GameZone gameZone = GET_CURRENT_GAME_ZONE.get();
 
-        int minRenderingX = Math.max(0, _tileLocationX - (_tileRenderingRadius - 1));
-        int maxRenderingX = Math.min(gameZone.maxCoordinates().getX(),
-                _tileLocationX + (_tileRenderingRadius - 1));
-        int minRenderingY = Math.max(0, _tileLocationY - (_tileRenderingRadius - 1));
-        int maxRenderingY = Math.min(gameZone.maxCoordinates().getY(),
-                _tileLocationY + (_tileRenderingRadius - 1));
+        int minRenderingX = Math.max(0, tileLocation.x() - (tileRenderingRadius - 1));
+        int maxRenderingX = Math.min(gameZone.maxCoordinates().x(),
+                tileLocation.x() + (tileRenderingRadius - 1));
+        int minRenderingY = Math.max(0, tileLocation.y() - (tileRenderingRadius - 1));
+        int maxRenderingY = Math.min(gameZone.maxCoordinates().y(),
+                tileLocation.y() + (tileRenderingRadius - 1));
 
-        if (_allTilesVisible) {
+        if (allTilesVisible) {
             for (int x = minRenderingX; x <= maxRenderingX; x++) {
                 for (int y = minRenderingY; y <= maxRenderingY; y++) {
-                    VISIBLE_TILES.add(COORDINATE_FACTORY.make(x, y));
+                    VISIBLE_TILES.add(Coordinate.of(x, y));
                 }
             }
         }
@@ -138,15 +134,13 @@ public class CameraImpl implements Camera {
                     coordinatesProvidingVisibility.put(coordinateProvidingVisibility,
                             COORDINATES_PROVIDING_VISIBILITY.get(coordinateProvidingVisibility)));
             coordinatesProvidingVisibility.forEach((coordinate, coordinateVisibilityRadius) -> {
-                Tile originTile = gameZone.tile(coordinate.getX(), coordinate.getY());
-                int minVisibleX = Math.max(0,
-                        coordinate.getX() - (coordinateVisibilityRadius - 1));
-                int maxVisibleX = Math.min(gameZone.maxCoordinates().getX(),
-                        coordinate.getX() + (coordinateVisibilityRadius - 1));
-                int minVisibleY = Math.max(0,
-                        coordinate.getY() - (coordinateVisibilityRadius - 1));
-                int maxVisibleY = Math.min(gameZone.maxCoordinates().getY(),
-                        coordinate.getY() + (coordinateVisibilityRadius - 1));
+                Tile originTile = gameZone.tile(coordinate.x(), coordinate.y());
+                int minVisibleX = Math.max(0, coordinate.x() - (coordinateVisibilityRadius - 1));
+                int maxVisibleX = Math.min(gameZone.maxCoordinates().x(),
+                        coordinate.x() + (coordinateVisibilityRadius - 1));
+                int minVisibleY = Math.max(0, coordinate.y() - (coordinateVisibilityRadius - 1));
+                int maxVisibleY = Math.min(gameZone.maxCoordinates().y(),
+                        coordinate.y() + (coordinateVisibilityRadius - 1));
 
                 int minXToAdd = Math.max(minVisibleX, minRenderingX);
                 int maxXToAdd = Math.min(maxVisibleX, maxRenderingX);
@@ -158,7 +152,7 @@ public class CameraImpl implements Camera {
                         if (!visibleTilesContainsCoordinate(x, y)) {
                             Tile targetTile = gameZone.tile(x, y);
                             if (TILE_VISIBILITY.canSeeTile(originTile, targetTile)) {
-                                VISIBLE_TILES.add(COORDINATE_FACTORY.make(x, y));
+                                VISIBLE_TILES.add(Coordinate.of(x, y));
                             }
                         }
                     }
@@ -169,7 +163,7 @@ public class CameraImpl implements Camera {
 
     private boolean visibleTilesContainsCoordinate(int x, int y) {
         for (Coordinate coordinate : VISIBLE_TILES) {
-            if (coordinate.getX() == x && coordinate.getY() == y) {
+            if (coordinate.x() == x && coordinate.y() == y) {
                 return true;
             }
         }

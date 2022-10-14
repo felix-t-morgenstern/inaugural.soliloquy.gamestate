@@ -1,9 +1,9 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
-import inaugural.soliloquy.common.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.entities.EntityMembersOfTypeImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeDeletable;
 import inaugural.soliloquy.gamestate.test.fakes.FakeEntityMemberOfType;
+import inaugural.soliloquy.gamestate.test.fakes.FakeHasIdAndName;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +39,8 @@ class EntityMembersOfTypeImplTests {
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
 
     private final HasIdArchetype ENTITY_MEMBER_TYPE_ARCHETYPE = new HasIdArchetype();
-    private final FakeEntityMemberOfType ENTITY_MEMBER_ARCHETYPE = new FakeEntityMemberOfType(
-            new FakeHasIdAndName("id", "name"));
+    private final FakeEntityMemberOfType ENTITY_MEMBER_ARCHETYPE =
+            new FakeEntityMemberOfType(new FakeHasIdAndName("id", "name"));
 
     private Deletable _entityPassedIntoFactory;
     private HasId _typePassedIntoFactory;
@@ -50,7 +50,9 @@ class EntityMembersOfTypeImplTests {
     @BeforeEach
     void setUp() {
         _entityPassedIntoFactory = null;
-        _entityMembersOfType = new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY, DATA_FACTORY, ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE);
+        _entityMembersOfType =
+                new EntityMembersOfTypeImpl<>(CONTAINING_ENTITY, FACTORY, DATA_FACTORY,
+                        ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE);
     }
 
     @Test

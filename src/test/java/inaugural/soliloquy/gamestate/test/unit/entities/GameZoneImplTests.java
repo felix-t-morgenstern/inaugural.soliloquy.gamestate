@@ -2,13 +2,11 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.GameZoneImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCoordinateFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameZone;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.common.factories.CoordinateFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -27,7 +25,6 @@ class GameZoneImplTests {
     private final int MAX_Y_COORDINATE = 2;
     private final Character CHARACTER = new FakeCharacter();
     private final Tile[][] TILES = new Tile[MAX_X_COORDINATE + 1][MAX_Y_COORDINATE + 1];
-    private final CoordinateFactory COORDINATE_FACTORY = new FakeCoordinateFactory();
     private final VariableCache DATA = new VariableCacheStub();
     private final ArrayList<Character> ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
     private final ArrayList<Character> REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
@@ -42,36 +39,35 @@ class GameZoneImplTests {
             }
         }
         TILES[1][0].characters().add(CHARACTER);
-        _gameZone = new GameZoneImpl(ID, ZONE_TYPE, TILES, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add);
+        _gameZone = new GameZoneImpl(ID, ZONE_TYPE, TILES, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(null, ZONE_TYPE, TILES, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl("", ZONE_TYPE, TILES, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, null, TILES, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, "", TILES, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, null, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(null, ZONE_TYPE, TILES, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl("", ZONE_TYPE, TILES, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, null, TILES, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, "", TILES, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, null, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         Tile[][] tilesWithZeroXIndex = new Tile[0][1];
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithZeroXIndex, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithZeroXIndex, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         Tile[][] tilesWithZeroYIndex = new Tile[1][0];
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithZeroYIndex, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithZeroYIndex, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         Tile[][] tilesWithNullEntry = new Tile[1][1];
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithNullEntry, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithNullEntry, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         Tile[][] tilesWithAssignedTile = new Tile[1][1];
         tilesWithAssignedTile[0][0] = new FakeTile(0, 0, new VariableCacheStub());
         tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new FakeGameZone());
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithAssignedTile, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithAssignedTile, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         Tile[][] tilesWithMismatchedXCoordinate = new Tile[1][1];
         tilesWithMismatchedXCoordinate[0][0] = new FakeTile(1, 0, new VariableCacheStub());
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedXCoordinate, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedXCoordinate, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         Tile[][] tilesWithMismatchedYCoordinate = new Tile[1][1];
         tilesWithMismatchedYCoordinate[0][0] = new FakeTile(0, 1, new VariableCacheStub());
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedYCoordinate, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, null, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, COORDINATE_FACTORY, null, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, COORDINATE_FACTORY, DATA, null, REMOVED_FROM_ROUND_MANAGER::add));
-        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, COORDINATE_FACTORY, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, null));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedYCoordinate, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, null, ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, DATA, null, REMOVED_FROM_ROUND_MANAGER::add));
+        assertThrows(IllegalArgumentException.class, () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, DATA, ADDED_TO_END_OF_ROUND_MANAGER::add, null));
     }
 
     @Test
@@ -95,8 +91,8 @@ class GameZoneImplTests {
 
     @Test
     void testMaxCoordinates() {
-        assertEquals(MAX_X_COORDINATE, _gameZone.maxCoordinates().getX());
-        assertEquals(MAX_Y_COORDINATE, _gameZone.maxCoordinates().getY());
+        assertEquals(MAX_X_COORDINATE, _gameZone.maxCoordinates().x());
+        assertEquals(MAX_Y_COORDINATE, _gameZone.maxCoordinates().y());
     }
 
     @Test
@@ -106,8 +102,8 @@ class GameZoneImplTests {
                 Tile tile = _gameZone.tile(x, y);
                 assertNotNull(tile);
                 assertSame(_gameZone, tile.gameZone());
-                assertEquals(x, tile.location().getX());
-                assertEquals(y, tile.location().getY());
+                assertEquals(x, tile.location().x());
+                assertEquals(y, tile.location().y());
             }
         }
     }
