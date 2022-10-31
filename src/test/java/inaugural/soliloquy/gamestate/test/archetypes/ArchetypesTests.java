@@ -58,12 +58,6 @@ class ArchetypesTests {
     }
 
     @Test
-    void testGameZoneArchetype() {
-        assertEquals(GameZone.class.getCanonicalName(),
-                new GameZoneArchetype().getInterfaceName());
-    }
-
-    @Test
     void testItemArchetype() {
         assertEquals(Item.class.getCanonicalName(), new ItemArchetype().getInterfaceName());
     }

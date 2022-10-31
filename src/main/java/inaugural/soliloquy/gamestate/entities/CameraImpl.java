@@ -134,7 +134,7 @@ public class CameraImpl implements Camera {
                     coordinatesProvidingVisibility.put(coordinateProvidingVisibility,
                             COORDINATES_PROVIDING_VISIBILITY.get(coordinateProvidingVisibility)));
             coordinatesProvidingVisibility.forEach((coordinate, coordinateVisibilityRadius) -> {
-                Tile originTile = gameZone.tile(coordinate.x(), coordinate.y());
+                Tile originTile = gameZone.tile(coordinate);
                 int minVisibleX = Math.max(0, coordinate.x() - (coordinateVisibilityRadius - 1));
                 int maxVisibleX = Math.min(gameZone.maxCoordinates().x(),
                         coordinate.x() + (coordinateVisibilityRadius - 1));
@@ -150,7 +150,7 @@ public class CameraImpl implements Camera {
                 for (int x = minXToAdd; x <= maxXToAdd; x++) {
                     for (int y = minYToAdd; y <= maxYToAdd; y++) {
                         if (!visibleTilesContainsCoordinate(x, y)) {
-                            Tile targetTile = gameZone.tile(x, y);
+                            Tile targetTile = gameZone.tile(Coordinate.of(x, y));
                             if (TILE_VISIBILITY.canSeeTile(originTile, targetTile)) {
                                 VISIBLE_TILES.add(Coordinate.of(x, y));
                             }

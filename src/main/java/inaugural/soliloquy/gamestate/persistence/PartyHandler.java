@@ -9,8 +9,7 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -21,7 +20,6 @@ public class PartyHandler extends AbstractSoliloquyTypeHandler<Party>
     private final TypeHandler<VariableCache> ATTRIBUTES_HANDLER;
     private final TypeHandler<Character> CHARACTER_HANDLER;
 
-    @SuppressWarnings("ConstantConditions")
     public PartyHandler(PartyFactory partyFactory,
                         Supplier<GameZone> getCurrentGameZone,
                         TypeHandler<VariableCache> attributesHandler,
@@ -41,14 +39,13 @@ public class PartyHandler extends AbstractSoliloquyTypeHandler<Party>
 
         Party party = PARTY_FACTORY.make(ATTRIBUTES_HANDLER.read(partyDTO.attributes));
 
-        List<Character> charactersInZone = GET_CURRENT_GAME_ZONE.get().charactersRepresentation();
+        Map<UUID, Character> charactersInZone = GET_CURRENT_GAME_ZONE.get().charactersRepresentation();
         for(int i = 0; i < partyDTO.pcs.length; i++) {
             PcDTO pcDTO = partyDTO.pcs[i];
             UUID pcUuid = UUID.fromString(pcDTO.uuid);
-            Optional<Character> matchFromGameZone =
-                    charactersInZone.stream().filter(c -> c.uuid().equals(pcUuid)).findFirst();
-            if (matchFromGameZone.isPresent()) {
-                party.characters().add(matchFromGameZone.get());
+            Character matchFromGameZone = charactersInZone.get(pcUuid);
+            if (matchFromGameZone != null) {
+                party.characters().add(matchFromGameZone);
             }
             else {
                 party.characters().add(CHARACTER_HANDLER.read(pcDTO.character));

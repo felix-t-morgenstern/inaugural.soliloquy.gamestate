@@ -7,6 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -59,8 +60,8 @@ class GameZoneFactoryImplTests {
         assertEquals(TYPE, gameZone.type());
         assertEquals(0, gameZone.maxCoordinates().x());
         assertEquals(1, gameZone.maxCoordinates().y());
-        assertSame(TILES[0][0], gameZone.tile(0, 0));
-        assertSame(TILES[0][1], gameZone.tile(0, 1));
+        assertSame(TILES[0][0], gameZone.tile(Coordinate.of(0, 0)));
+        assertSame(TILES[0][1], gameZone.tile(Coordinate.of(0, 1)));
         assertSame(DATA, gameZone.data());
     }
 

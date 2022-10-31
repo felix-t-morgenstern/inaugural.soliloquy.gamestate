@@ -12,6 +12,7 @@ import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +41,7 @@ public class PartyHandlerTests {
     private final String PC_1_UUID = "1f04a671-e85e-427a-a806-1d754147def2";
     private final String PC_2_UUID = "2e123cf3-35c3-4a6d-b64b-47ebbe5cc1d4";
     private final String PC_3_UUID = "da157ca9-9ef9-4026-b7cd-5824b52f9323";
+    private final String NPC_UUID = "5a779eec-b9bf-4a4f-8983-7893b08b4851";
 
     private final String PC_2_CHARACTER = "pc2Character";
 
@@ -65,10 +67,10 @@ public class PartyHandlerTests {
         when(_npc.uuid()).thenReturn(UUID.randomUUID());
 
         _mockGameZone = mock(GameZone.class);
-        when(_mockGameZone.charactersRepresentation()).thenReturn(new ArrayList<>() {{
-            add(_pc1);
-            add(_pc3);
-            add(_npc);
+        when(_mockGameZone.charactersRepresentation()).thenReturn(new HashMap<>() {{
+            put(UUID.fromString(PC_1_UUID), _pc1);
+            put(UUID.fromString(PC_3_UUID), _pc3);
+            put(UUID.fromString(NPC_UUID), _npc);
         }});
 
         _mockTile = mock(Tile.class);

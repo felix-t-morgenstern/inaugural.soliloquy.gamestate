@@ -15,8 +15,7 @@ import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.graphics.renderables.providers.ProviderAtTime;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 
-import static inaugural.soliloquy.tools.random.Random.randomFloatWithInclusiveFloor;
-import static inaugural.soliloquy.tools.random.Random.randomInt;
+import static inaugural.soliloquy.tools.random.Random.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -97,7 +96,7 @@ class CameraImplTests {
 
     @Test
     void testGetAndSetTileRenderingRadius() {
-        int radius = randomInt();
+        int radius = randomIntWithInclusiveFloor(0);
 
         camera.setTileRenderingRadius(radius);
 

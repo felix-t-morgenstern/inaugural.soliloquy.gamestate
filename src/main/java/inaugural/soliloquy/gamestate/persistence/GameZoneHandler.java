@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.archetypes.GameZoneArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -13,6 +12,8 @@ import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
 import java.util.function.Function;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     private final GameZoneFactory GAME_ZONE_FACTORY;
     private final TypeHandler<Tile> TILE_HANDLER;
@@ -20,14 +21,12 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     @SuppressWarnings("rawtypes")
     private final Function<String, Action> GET_ACTION;
 
-    private static final GameZone ARCHETYPE = new GameZoneArchetype();
-
     @SuppressWarnings("rawtypes")
     public GameZoneHandler(GameZoneFactory gameZoneFactory,
                            TypeHandler<Tile> tileHandler,
                            TypeHandler<VariableCache> dataHandler,
                            Function<String, Action> getAction) {
-        super(ARCHETYPE);
+        super(generateSimpleArchetype(GameZone.class));
         GAME_ZONE_FACTORY = Check.ifNull(gameZoneFactory, "gameZoneFactory");
         TILE_HANDLER = Check.ifNull(tileHandler, "tileHandler");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
@@ -86,7 +85,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         dto.tiles = new String[maxCoordinates.x() + 1][maxCoordinates.y() + 1];
         for (int x = 0; x <= maxCoordinates.x(); x++) {
             for (int y = 0; y <= maxCoordinates.y(); y++) {
-                dto.tiles[x][y] = TILE_HANDLER.write(gameZone.tile(x, y));
+                dto.tiles[x][y] = TILE_HANDLER.write(gameZone.tile(Coordinate.of(x, y)));
             }
         }
         return JSON.toJson(dto);

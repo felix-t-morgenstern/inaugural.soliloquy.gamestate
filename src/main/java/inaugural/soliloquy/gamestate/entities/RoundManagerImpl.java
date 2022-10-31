@@ -19,8 +19,8 @@ public class RoundManagerImpl implements RoundManager {
     private final ArrayList<Character> QUEUE = new ArrayList<>();
     private final HashMap<Character, VariableCache> CHARACTER_ROUND_DATA = new HashMap<>();
 
-    private int _roundNumber;
-    private Supplier<List<Pair<Character, VariableCache>>> _activeCharactersProvider;
+    private int roundNumber;
+    private Supplier<List<Pair<Character, VariableCache>>> activeCharactersProvider;
 
     public RoundManagerImpl(VariableCacheFactory variableCacheFactory,
                             RoundBasedTimerManager roundBasedTimerManager) {
@@ -97,7 +97,7 @@ public class RoundManagerImpl implements RoundManager {
 
     @Override
     public void endActiveCharacterTurn() {
-        if (_activeCharactersProvider == null) {
+        if (activeCharactersProvider == null) {
             throw new IllegalStateException("RoundManagerImpl.endActiveCharacterTurn: " +
                     "active characters provider is undefined");
         }
@@ -118,19 +118,19 @@ public class RoundManagerImpl implements RoundManager {
 
     @Override
     public int getRoundNumber() {
-        return _roundNumber;
+        return roundNumber;
     }
 
     @Override
     public void setRoundNumber(int newRoundNumber) {
-        _roundNumber = newRoundNumber;
+        roundNumber = newRoundNumber;
     }
 
     @Override
     public void setActiveCharactersProvider(Supplier<List<Pair<Character, VariableCache>>>
                                                     activeCharactersProvider)
             throws IllegalArgumentException {
-        _activeCharactersProvider =
+        this.activeCharactersProvider =
                 Check.ifNull(activeCharactersProvider, "activeCharactersProvider");
     }
 
@@ -139,7 +139,7 @@ public class RoundManagerImpl implements RoundManager {
             throws IllegalArgumentException, IllegalStateException {
         Check.throwOnLteZero(numberOfRounds, "numberOfRounds");
 
-        if (_activeCharactersProvider == null) {
+        if (activeCharactersProvider == null) {
             throw new IllegalStateException(
                     "RoundManagerImpl.advanceRounds: active characters provider is undefined");
         }
@@ -147,16 +147,16 @@ public class RoundManagerImpl implements RoundManager {
         QUEUE.clear();
         CHARACTER_ROUND_DATA.clear();
 
-        _activeCharactersProvider.get().forEach(ac -> {
+        activeCharactersProvider.get().forEach(ac -> {
             QUEUE.add(ac.getItem1());
             CHARACTER_ROUND_DATA.put(ac.getItem1(), ac.getItem2());
         });
 
-        int newRoundNumber = _roundNumber + numberOfRounds;
+        int newRoundNumber = roundNumber + numberOfRounds;
 
-        ROUND_BASED_TIMER_MANAGER.fireTimersForRoundsElapsed(_roundNumber, newRoundNumber);
+        ROUND_BASED_TIMER_MANAGER.fireTimersForRoundsElapsed(roundNumber, newRoundNumber);
 
-        _roundNumber = newRoundNumber;
+        roundNumber = newRoundNumber;
     }
 
     @Override

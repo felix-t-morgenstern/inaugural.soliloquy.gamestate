@@ -219,7 +219,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     }
 
     private void enforceLocationCorrespondenceInvariant(String methodName) {
-        if (_gameZone != null && _gameZone.tile(LOCATION.x(), LOCATION.y()) != this) {
+        if (_gameZone != null && _gameZone.tile(LOCATION) != this) {
             throw new IllegalStateException("TileImpl." + methodName + ": This Tile is not " +
                     "present at its stated location (" + LOCATION.x() + "," + LOCATION.y() +
                     ") in its containing GameZone");

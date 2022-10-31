@@ -14,7 +14,6 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.factories.CameraFactory;
 import soliloquy.specs.graphics.renderables.providers.ProviderAtTime;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -26,6 +25,7 @@ import static org.mockito.Mockito.*;
 
 class CameraHandlerTests {
     private final String CHARACTER_1_UUID = "4b304158-fa99-44fd-a85a-572b3213c2ab";
+    private final String CHARACTER_2_UUID = "9497038a-2d3a-4073-923e-b59c73607baf";
     private final String CHARACTER_3_UUID = "30773bab-7015-4456-9235-cbdf5d7c5086";
     private final int TILE_LOCATION_X = 111;
     private final int TILE_LOCATION_Y = 222;
@@ -55,9 +55,9 @@ class CameraHandlerTests {
             "\"tileCenterOffsetProviderType\":\"tileCenterOffsetProviderType\"," +
             "\"tileCenterOffsetProvider\":\"tileCenterOffsetProvider\",\"zoom\":0.789," +
             "\"tileRenderingRadius\":333,\"allTilesVisible\":true," +
-            "\"charactersProvidingVisibility\":[{\"characterId\":\"4b304158-fa99-44fd-a85a" +
-            "-572b3213c2ab\",\"tiles\":444}," +
-            "{\"characterId\":\"30773bab-7015-4456-9235-cbdf5d7c5086\",\"tiles\":555}]," +
+            "\"charactersProvidingVisibility\":[{\"characterId\":\"30773bab-7015-4456-9235" +
+            "-cbdf5d7c5086\",\"tiles\":555}," +
+            "{\"characterId\":\"4b304158-fa99-44fd-a85a-572b3213c2ab\",\"tiles\":444}]," +
             "\"coordinatesProvidingVisibility\":[{\"x\":4,\"y\":5,\"tiles\":6},{\"x\":1,\"y\":2," +
             "\"tiles\":3}]}";
 
@@ -79,10 +79,10 @@ class CameraHandlerTests {
         }};
 
         mockGameZone = mock(GameZone.class);
-        when(mockGameZone.charactersRepresentation()).thenReturn(new ArrayList<>() {{
-            add(mockCharacter1);
-            add(mockCharacter2);
-            add(mockCharacter3);
+        when(mockGameZone.charactersRepresentation()).thenReturn(new HashMap<>() {{
+            put(UUID.fromString(CHARACTER_1_UUID), mockCharacter1);
+            put(UUID.fromString(CHARACTER_2_UUID), mockCharacter2);
+            put(UUID.fromString(CHARACTER_3_UUID), mockCharacter3);
         }});
 
         //noinspection unchecked
@@ -171,9 +171,9 @@ class CameraHandlerTests {
 
     @Test
     void testReadWhereCharacterProvidingVisibilityIsNotInGameZone() {
-        when(mockGameZone.charactersRepresentation()).thenReturn(new ArrayList<>() {{
-            add(mockCharacter1);
-            add(mockCharacter2);
+        when(mockGameZone.charactersRepresentation()).thenReturn(new HashMap<>() {{
+            put(UUID.fromString(CHARACTER_1_UUID), mockCharacter1);
+            put(UUID.fromString(CHARACTER_2_UUID), mockCharacter2);
         }});
 
         assertThrows(IllegalStateException.class, () -> cameraHandler.read(WRITTEN_VALUE));

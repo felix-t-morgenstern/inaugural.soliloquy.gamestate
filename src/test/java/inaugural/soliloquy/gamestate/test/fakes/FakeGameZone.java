@@ -8,6 +8,9 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
+import java.util.Map;
+import java.util.UUID;
+
 public class FakeGameZone implements GameZone {
     public int _maxX = 99;
     public int _maxY = 99;
@@ -73,12 +76,12 @@ public class FakeGameZone implements GameZone {
     }
 
     @Override
-    public Tile tile(int x, int y) throws IllegalArgumentException {
+    public Tile tile(Coordinate coordinate) throws IllegalArgumentException {
         if (RETURN_ACTUAL_TILE_AT_LOCATION) {
-            return TILES[x][y];
+            return TILES[coordinate.x()][coordinate.y()];
         }
         else {
-            return new FakeTile(x, y, null);
+            return new FakeTile(coordinate.x(), coordinate.y(), null);
         }
     }
 
@@ -95,7 +98,7 @@ public class FakeGameZone implements GameZone {
     }
 
     @Override
-    public List<Character> charactersRepresentation() {
+    public Map<UUID, Character> charactersRepresentation() {
         return null;
     }
 

@@ -12,9 +12,7 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.factories.CameraFactory;
 import soliloquy.specs.graphics.renderables.providers.ProviderAtTime;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -55,20 +53,17 @@ public class CameraHandler extends AbstractTypeHandler<Camera> {
 
         camera.setAllTilesVisible(dto.allTilesVisible);
 
-        List<Character> charactersInCurrentGameZone =
+        Map<UUID, Character> charactersInCurrentGameZone =
                 GET_CURRENT_GAME_ZONE.get().charactersRepresentation();
         for (CameraDTO.CharacterProvidingVisibilityDTO characterProvidingVisibilityDTO :
                 dto.charactersProvidingVisibility) {
             UUID characterId = UUID.fromString(characterProvidingVisibilityDTO.characterId);
-            Optional<Character> characterProvidingVisibilityFromGameZone =
-                    charactersInCurrentGameZone.stream().filter(c -> characterId.equals(c.uuid()))
-                            .findFirst();
-            if (!characterProvidingVisibilityFromGameZone.isPresent()) {
+            Character characterProvidingVisibility = charactersInCurrentGameZone.get(characterId);
+            if (characterProvidingVisibility == null) {
                 throw new IllegalStateException("CameraHandler.read: character with UUID = " +
                         characterProvidingVisibilityDTO.characterId +
                         " not present in current GameZone");
             }
-            Character characterProvidingVisibility = characterProvidingVisibilityFromGameZone.get();
             camera.charactersProvidingVisibility()
                     .put(characterProvidingVisibility, characterProvidingVisibilityDTO.tiles);
         }

@@ -4,6 +4,7 @@ import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
+import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.Character;
@@ -128,7 +129,7 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
 
     private Character findInTile(GameZone currentGameZone, String id, int x, int y) {
         for (Pair<Character, Integer> character :
-                currentGameZone.tile(x, y).characters()) {
+                currentGameZone.tile(Coordinate.of(x, y)).characters()) {
             if (character.getItem1().uuid().toString().equals(id)) {
                 return character.getItem1();
             }

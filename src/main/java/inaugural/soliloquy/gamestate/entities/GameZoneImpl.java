@@ -9,8 +9,7 @@ import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
@@ -23,7 +22,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     @SuppressWarnings("rawtypes")
     private final List<Action> EXIT_ACTIONS;
     private final VariableCache DATA;
-    public final List<Character> CHARACTERS_IN_GAME_ZONE;
+    public final HashMap<UUID, Character> CHARACTERS_IN_GAME_ZONE;
 
     private String _name;
 
@@ -33,7 +32,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                         Consumer<Character> removeFromRoundManager) {
         ID = Check.ifNullOrEmpty(id, "id");
         TYPE = Check.ifNullOrEmpty(type, "type");
-        CHARACTERS_IN_GAME_ZONE = new ArrayList<>();
+        CHARACTERS_IN_GAME_ZONE = new HashMap<>();
 
         Check.ifNull(tiles, "tiles");
         Check.throwOnLteZero(tiles.length, "tiles.length");
@@ -60,14 +59,15 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                 TILES[x][y] = tiles[x][y];
                 tiles[x][y].assignGameZoneAfterAddedToGameZone(this);
                 tiles[x][y].characters().initializeActionAfterAdding(c -> {
-                    CHARACTERS_IN_GAME_ZONE.add(c);
+                    CHARACTERS_IN_GAME_ZONE.put(c.uuid(), c);
                     addToEndOfRoundManager.accept(c);
                 });
                 tiles[x][y].characters().initializeActionAfterRemoving(c -> {
-                    CHARACTERS_IN_GAME_ZONE.remove(c);
+                    CHARACTERS_IN_GAME_ZONE.remove(c.uuid());
                     removeFromRoundManager.accept(c);
                 });
-                tiles[x][y].characters().forEach(c -> CHARACTERS_IN_GAME_ZONE.add(c.getItem1()));
+                tiles[x][y].characters().forEach(
+                        c -> CHARACTERS_IN_GAME_ZONE.put(c.getItem1().uuid(), c.getItem1()));
             }
         }
         MAX_COORDINATES = Coordinate.of(tiles.length - 1, tiles[0].length - 1);
@@ -88,7 +88,9 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public Tile tile(int x, int y) throws IllegalArgumentException {
+    public Tile tile(Coordinate coordinate) throws IllegalArgumentException {
+        int x = coordinate.x();
+        int y = coordinate.y();
         if (x < 0) {
             throw new IllegalArgumentException("GameZoneImpl.tile: x cannot be negative");
         }
@@ -120,8 +122,8 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     // TODO: Ensure this object is a clone
     @Override
-    public List<Character> charactersRepresentation() {
-        return new ArrayList<>(CHARACTERS_IN_GAME_ZONE);
+    public Map<UUID, Character> charactersRepresentation() {
+        return new HashMap<>(CHARACTERS_IN_GAME_ZONE);
     }
 
     @Override
