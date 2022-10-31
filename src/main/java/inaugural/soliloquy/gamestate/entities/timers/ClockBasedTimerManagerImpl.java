@@ -15,7 +15,7 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
     private final HashMap<String, OneTimeClockBasedTimer> ONE_TIME_CLOCK_BASED_TIMERS;
     private final HashMap<String, RecurringClockBasedTimer> RECURRING_CLOCK_BASED_TIMERS;
 
-    private Long _mostRecentFireTimersTimestamp;
+    private Long mostRecentFireTimersTimestamp;
 
     public ClockBasedTimerManagerImpl(FrameExecutor frameExecutor) {
         FRAME_EXECUTOR = Check.ifNull(frameExecutor, "frameExecutor");
@@ -64,13 +64,13 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
 
     @Override
     public void fireTimers(long timestamp) {
-        if (_mostRecentFireTimersTimestamp != null) {
-            if (timestamp <= _mostRecentFireTimersTimestamp) {
+        if (mostRecentFireTimersTimestamp != null) {
+            if (timestamp <= mostRecentFireTimersTimestamp) {
                 throw new IllegalArgumentException("ClockBasedTimerManagerImpl.fireTimers: " +
                         "this method cannot be invoked at the same or a prior timestamp");
             }
         }
-        _mostRecentFireTimersTimestamp = timestamp;
+        mostRecentFireTimersTimestamp = timestamp;
 
         // NB: This list is created to avoid a ConcurrentModificationException
         ArrayList<String> oneTimeClockBasedTimersToRemove = new ArrayList<>();

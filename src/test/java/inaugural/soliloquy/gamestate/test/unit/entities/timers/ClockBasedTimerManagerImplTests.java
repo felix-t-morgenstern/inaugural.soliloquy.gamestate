@@ -1,30 +1,32 @@
 package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.ClockBasedTimerManagerImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeFrameExecutor;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeClockBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRecurringClockBasedTimer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
+import soliloquy.specs.graphics.rendering.FrameExecutor;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class ClockBasedTimerManagerImplTests {
-    private final FakeFrameExecutor FRAME_EXECUTOR = new FakeFrameExecutor();
     private final FakeOneTimeClockBasedTimer ONE_TIME_CLOCK_BASED_TIMER =
             new FakeOneTimeClockBasedTimer();
     private final FakeRecurringClockBasedTimer RECURRING_CLOCK_BASED_TIMER =
             new FakeRecurringClockBasedTimer();
 
     private final long GLOBAL_CLOCK_GLOBAL_TIMESTAMP = 100L;
-    private final long FRAME_EXECUTOR_GLOBAL_TIMESTAMP = 123123L;
 
-    private ClockBasedTimerManager _clockBasedTimerManager;
+    @Mock private FrameExecutor mockFrameExecutor;
+
+    private ClockBasedTimerManager clockBasedTimerManager;
 
     @BeforeEach
     void setUp() {
@@ -33,9 +35,9 @@ class ClockBasedTimerManagerImplTests {
         RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 10;
         RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset = 0;
 
-        FRAME_EXECUTOR.GlobalTimestamp = FRAME_EXECUTOR_GLOBAL_TIMESTAMP;
+        mockFrameExecutor = mock(FrameExecutor.class);
 
-        _clockBasedTimerManager = new ClockBasedTimerManagerImpl(FRAME_EXECUTOR);
+        clockBasedTimerManager = new ClockBasedTimerManagerImpl(mockFrameExecutor);
     }
 
     @Test
@@ -47,33 +49,32 @@ class ClockBasedTimerManagerImplTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(ClockBasedTimerManager.class.getCanonicalName(),
-                _clockBasedTimerManager.getInterfaceName());
+                clockBasedTimerManager.getInterfaceName());
     }
 
+    // NB: Many of the following tests use 'any()' instead of 'eq
+    // (ONE_TIME_CLOCK_BASED_TIMER::run)' etc., since two references to the same function are
+    // neither the same reference, nor even equal, so there is no real argument matcher that can
+    // work here. Instead, simply having the firing behavior depend on the properties of the
+    // timer in question (one-time or recurring) is used as a proxy to ensure that the right type
+    // of timer is being fed to FRAME_EXECUTOR, but that's obviously no guarantee.
     @Test
     void testFiresOneTimeTimerOnceAndOnlyOnce() {
-        _clockBasedTimerManager.registerOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
+        clockBasedTimerManager.registerOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
 
         ONE_TIME_CLOCK_BASED_TIMER.FiringTime = GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 1;
 
-        _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
-        FRAME_EXECUTOR.execute();
+        clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
 
-        assertEquals(0, ONE_TIME_CLOCK_BASED_TIMER.FiredTimes.size());
+        verify(mockFrameExecutor, never()).registerFrameBlockingEvent(any());
 
-        _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 1);
-        FRAME_EXECUTOR.execute();
+        clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 1);
 
-        assertEquals(1, ONE_TIME_CLOCK_BASED_TIMER.FiredTimes.size());
-        assertEquals(FRAME_EXECUTOR_GLOBAL_TIMESTAMP,
-                ONE_TIME_CLOCK_BASED_TIMER.FiredTimes.get(0));
+        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
 
-        FRAME_EXECUTOR.RegisteredFrameBlockingEvents.clear();
+        clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 2);
 
-        _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 2);
-        FRAME_EXECUTOR.execute();
-
-        assertEquals(1, ONE_TIME_CLOCK_BASED_TIMER.FiredTimes.size());
+        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
     }
 
     @Test
@@ -84,29 +85,19 @@ class ClockBasedTimerManagerImplTests {
         RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 10;
         RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset = 1;
 
-        _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
+        clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
-        _clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp);
-        FRAME_EXECUTOR.execute();
+        clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp);
 
-        assertEquals(0, RECURRING_CLOCK_BASED_TIMER.FiredTimes.size());
+        verify(mockFrameExecutor, never()).registerFrameBlockingEvent(any());
 
-        _clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 1);
-        FRAME_EXECUTOR.execute();
+        clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 1);
 
-        assertEquals(1, RECURRING_CLOCK_BASED_TIMER.FiredTimes.size());
-        assertEquals(FRAME_EXECUTOR_GLOBAL_TIMESTAMP,
-                RECURRING_CLOCK_BASED_TIMER.FiredTimes.get(0));
+        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
 
-        RECURRING_CLOCK_BASED_TIMER.FiredTimes.clear();
-        FRAME_EXECUTOR.RegisteredFrameBlockingEvents.clear();
+        clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 51);
 
-        _clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 51);
-        FRAME_EXECUTOR.execute();
-
-        assertEquals(1, RECURRING_CLOCK_BASED_TIMER.FiredTimes.size());
-        assertEquals(FRAME_EXECUTOR_GLOBAL_TIMESTAMP,
-                RECURRING_CLOCK_BASED_TIMER.FiredTimes.get(0));
+        verify(mockFrameExecutor, times(2)).registerFrameBlockingEvent(any());
     }
 
     @Test
@@ -117,60 +108,46 @@ class ClockBasedTimerManagerImplTests {
         RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 10;
         RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset = 1;
 
-        _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
+        clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
-        _clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp);
-        FRAME_EXECUTOR.execute();
+        clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp);
 
-        assertEquals(0, RECURRING_CLOCK_BASED_TIMER.FiredTimes.size());
+        verify(mockFrameExecutor, never()).registerFrameBlockingEvent(any());
 
-        _clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 1);
-        FRAME_EXECUTOR.execute();
+        clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 1);
 
-        assertEquals(1, RECURRING_CLOCK_BASED_TIMER.FiredTimes.size());
-        assertEquals(FRAME_EXECUTOR_GLOBAL_TIMESTAMP,
-                RECURRING_CLOCK_BASED_TIMER.FiredTimes.get(0));
+        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
 
-        RECURRING_CLOCK_BASED_TIMER.FiredTimes.clear();
-        FRAME_EXECUTOR.RegisteredFrameBlockingEvents.clear();
+        clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 51);
 
-        _clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 51);
-        FRAME_EXECUTOR.execute();
-
-        assertEquals(6, RECURRING_CLOCK_BASED_TIMER.FiredTimes.size());
-        RECURRING_CLOCK_BASED_TIMER.FiredTimes.forEach(firedTime ->
-                assertEquals(FRAME_EXECUTOR_GLOBAL_TIMESTAMP, firedTime));
+        verify(mockFrameExecutor, times(7)).registerFrameBlockingEvent(any());
     }
 
     @Test
     void testDeregisterOneTimeTimer() {
-        _clockBasedTimerManager.registerOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
+        clockBasedTimerManager.registerOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
         ONE_TIME_CLOCK_BASED_TIMER.FiringTime = GLOBAL_CLOCK_GLOBAL_TIMESTAMP;
 
-        _clockBasedTimerManager.deregisterOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER.id());
+        clockBasedTimerManager.deregisterOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER.id());
+        clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
 
-        _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
-        FRAME_EXECUTOR.execute();
-
-        assertEquals(0, ONE_TIME_CLOCK_BASED_TIMER.FiredTimes.size());
+        verify(mockFrameExecutor, never()).registerFrameBlockingEvent(any());
     }
 
     @Test
     void testDeregisterRecurringTimer() {
-        _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
+        clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
-        _clockBasedTimerManager.deregisterRecurringTimer(RECURRING_CLOCK_BASED_TIMER.id());
+        clockBasedTimerManager.deregisterRecurringTimer(RECURRING_CLOCK_BASED_TIMER.id());
+        clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
 
-        _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
-        FRAME_EXECUTOR.execute();
-
-        assertEquals(0, RECURRING_CLOCK_BASED_TIMER.FiredTimes.size());
+        verify(mockFrameExecutor, never()).registerFrameBlockingEvent(any());
     }
 
     @Test
     void testRegisterOneTimeTimerWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _clockBasedTimerManager.registerOneTimeTimer(null));
+                () -> clockBasedTimerManager.registerOneTimeTimer(null));
     }
 
     @Test
@@ -179,44 +156,44 @@ class ClockBasedTimerManagerImplTests {
                 RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 123;
 
         assertThrows(IllegalArgumentException.class,
-                () -> _clockBasedTimerManager.registerRecurringTimer(null));
+                () -> clockBasedTimerManager.registerRecurringTimer(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER));
+                () -> clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER));
     }
 
     @Test
     void testDeregisterOneTimeTimerWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _clockBasedTimerManager.deregisterOneTimeTimer(null));
+                () -> clockBasedTimerManager.deregisterOneTimeTimer(null));
     }
 
     @Test
     void testDeregisterRecurringTimerWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _clockBasedTimerManager.deregisterRecurringTimer(null));
+                () -> clockBasedTimerManager.deregisterRecurringTimer(null));
     }
 
     @Test
     void testClear() {
-        _clockBasedTimerManager.registerOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
-        _clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
+        clockBasedTimerManager.registerOneTimeTimer(ONE_TIME_CLOCK_BASED_TIMER);
+        clockBasedTimerManager.registerRecurringTimer(RECURRING_CLOCK_BASED_TIMER);
 
-        _clockBasedTimerManager.clear();
+        clockBasedTimerManager.clear();
 
-        assertTrue(_clockBasedTimerManager.oneTimeTimersRepresentation().isEmpty());
-        assertTrue(_clockBasedTimerManager.recurringTimersRepresentation().isEmpty());
+        assertTrue(clockBasedTimerManager.oneTimeTimersRepresentation().isEmpty());
+        assertTrue(clockBasedTimerManager.recurringTimersRepresentation().isEmpty());
     }
 
     @Test
     void testFireTimersWithOutdatedTimestamp() {
-        _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
+        clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP);
 
         assertThrows(IllegalArgumentException.class,
-                () -> _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP - 1));
+                () -> clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP - 1));
         assertThrows(IllegalArgumentException.class,
-                () -> _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP));
+                () -> clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP));
 
-        _clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 1);
+        clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 1);
     }
 
     @Test
@@ -224,16 +201,16 @@ class ClockBasedTimerManagerImplTests {
         FakeOneTimeClockBasedTimer oneTimeClockBasedTimer1 = new FakeOneTimeClockBasedTimer();
         FakeOneTimeClockBasedTimer oneTimeClockBasedTimer2 = new FakeOneTimeClockBasedTimer();
         FakeOneTimeClockBasedTimer oneTimeClockBasedTimer3 = new FakeOneTimeClockBasedTimer();
-        _clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer1);
-        _clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer2);
-        _clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer3);
+        clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer1);
+        clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer2);
+        clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer3);
 
         List<OneTimeClockBasedTimer> oneTimeTimersRepresentation =
-                _clockBasedTimerManager.oneTimeTimersRepresentation();
+                clockBasedTimerManager.oneTimeTimersRepresentation();
         List<OneTimeClockBasedTimer> oneTimeTimersRepresentation2 =
-                _clockBasedTimerManager.oneTimeTimersRepresentation();
+                clockBasedTimerManager.oneTimeTimersRepresentation();
 
-        _clockBasedTimerManager.deregisterOneTimeTimer(oneTimeClockBasedTimer1.id());
+        clockBasedTimerManager.deregisterOneTimeTimer(oneTimeClockBasedTimer1.id());
 
         assertNotNull(oneTimeTimersRepresentation);
         assertNotSame(oneTimeTimersRepresentation, oneTimeTimersRepresentation2);
@@ -254,16 +231,16 @@ class ClockBasedTimerManagerImplTests {
         recurringClockBasedTimer1.PeriodDuration = 1;
         recurringClockBasedTimer2.PeriodDuration = 1;
         recurringClockBasedTimer3.PeriodDuration = 1;
-        _clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer1);
-        _clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer2);
-        _clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer3);
+        clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer1);
+        clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer2);
+        clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer3);
 
         List<RecurringClockBasedTimer> recurringTimersRepresentation =
-                _clockBasedTimerManager.recurringTimersRepresentation();
+                clockBasedTimerManager.recurringTimersRepresentation();
         List<RecurringClockBasedTimer> recurringTimersRepresentation2 =
-                _clockBasedTimerManager.recurringTimersRepresentation();
+                clockBasedTimerManager.recurringTimersRepresentation();
 
-        _clockBasedTimerManager.deregisterRecurringTimer(recurringClockBasedTimer1.id());
+        clockBasedTimerManager.deregisterRecurringTimer(recurringClockBasedTimer1.id());
 
         assertNotNull(recurringTimersRepresentation);
         assertNotSame(recurringTimersRepresentation, recurringTimersRepresentation2);
