@@ -110,6 +110,17 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
+    void testClear() {
+        roundBasedTimerManager.registerOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
+        roundBasedTimerManager.registerRecurringRoundBasedTimer(mockRecurringRoundBasedTimer);
+
+        roundBasedTimerManager.clear();
+
+        assertTrue(roundBasedTimerManager.oneTimeRoundBasedTimersRepresentation().isEmpty());
+        assertTrue(roundBasedTimerManager.recurringRoundBasedTimersRepresentation().isEmpty());
+    }
+
+    @Test
     void testFireTimersForRoundsElapsedFiresOneTimeTimers() {
         int roundWhenGoesOff = randomInt();
         int priority = randomInt();

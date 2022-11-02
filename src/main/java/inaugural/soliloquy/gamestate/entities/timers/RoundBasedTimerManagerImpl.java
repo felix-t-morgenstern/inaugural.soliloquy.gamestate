@@ -48,6 +48,12 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
     }
 
     @Override
+    public void clear() {
+        ONE_TIME_ROUND_BASED_TIMERS.clear();
+        RECURRING_ROUND_BASED_TIMERS.clear();
+    }
+
+    @Override
     public void fireTimersForRoundsElapsed(int previousRound, int newRound)
             throws IllegalArgumentException {
         Check.throwOnSecondLte(previousRound, newRound, "previousRound", "newRound");
