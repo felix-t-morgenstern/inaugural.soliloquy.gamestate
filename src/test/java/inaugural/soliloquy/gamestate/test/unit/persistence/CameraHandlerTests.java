@@ -55,11 +55,11 @@ class CameraHandlerTests {
             "\"tileCenterOffsetProviderType\":\"tileCenterOffsetProviderType\"," +
             "\"tileCenterOffsetProvider\":\"tileCenterOffsetProvider\",\"zoom\":0.789," +
             "\"tileRenderingRadius\":333,\"allTilesVisible\":true," +
-            "\"charactersProvidingVisibility\":[{\"characterId\":\"30773bab-7015-4456-9235" +
-            "-cbdf5d7c5086\",\"tiles\":555}," +
-            "{\"characterId\":\"4b304158-fa99-44fd-a85a-572b3213c2ab\",\"tiles\":444}]," +
-            "\"coordinatesProvidingVisibility\":[{\"x\":4,\"y\":5,\"tiles\":6},{\"x\":1,\"y\":2," +
-            "\"tiles\":3}]}";
+            "\"charactersProvidingVisibility\":[{\"characterId\":\"4b304158-fa99-44fd-a85a" +
+            "-572b3213c2ab\",\"tiles\":444}," +
+            "{\"characterId\":\"30773bab-7015-4456-9235-cbdf5d7c5086\",\"tiles\":555}]," +
+            "\"coordinatesProvidingVisibility\":[{\"x\":1,\"y\":2,\"tiles\":3},{\"x\":4,\"y\":5," +
+            "\"tiles\":6}]}";
 
     @BeforeEach
     void setUp() {

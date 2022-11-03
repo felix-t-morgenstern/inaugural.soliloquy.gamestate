@@ -8,6 +8,7 @@ import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.GameZonesRepo;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 
@@ -17,6 +18,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final CameraFactory CAMERA_FACTORY;
     private final RoundManager ROUND_MANAGER;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
+    private final ClockBasedTimerManager CLOCK_BASED_TIMER_MANAGER;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
     private final RoundBasedTimerFactory ROUND_BASED_TIMER_FACTORY;
@@ -24,11 +26,11 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY;
 
-    @SuppressWarnings("ConstantConditions")
     public GameStateFactoryImpl(RegistryFactory registryFactory,
                                 GameZonesRepo gameZonesRepo, CameraFactory cameraFactory,
                                 RoundManager roundManager,
                                 RoundBasedTimerManager roundBasedTimerManager,
+                                ClockBasedTimerManager clockBasedTimerManager,
                                 ItemFactory itemFactory,
                                 CharacterFactory characterFactory,
                                 RoundBasedTimerFactory roundBasedTimerFactory,
@@ -40,6 +42,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
         CAMERA_FACTORY = Check.ifNull(cameraFactory, "cameraFactory");
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
+        CLOCK_BASED_TIMER_MANAGER = Check.ifNull(clockBasedTimerManager, "clockBasedTimerManager");
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
         ROUND_BASED_TIMER_FACTORY = Check.ifNull(roundBasedTimerFactory, "roundBasedTimerFactory");
@@ -54,8 +57,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
     public GameState make(Party party, VariableCache variableCache)
             throws IllegalArgumentException {
         return new GameStateImpl(party, variableCache, REGISTRY_FACTORY, GAME_ZONES_REPO,
-                CAMERA_FACTORY, ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER, ITEM_FACTORY,
-                CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
+                CAMERA_FACTORY, ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER, CLOCK_BASED_TIMER_MANAGER,
+                ITEM_FACTORY, CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
                 KEY_BINDING_CONTEXT_FACTORY, KEY_EVENT_LISTENER_FACTORY);
     }
 

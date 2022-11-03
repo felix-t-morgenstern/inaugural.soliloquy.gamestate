@@ -6,7 +6,8 @@ import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import inaugural.soliloquy.gamestate.factories.*;
 import inaugural.soliloquy.gamestate.persistence.*;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.factories.*;
+import soliloquy.specs.common.factories.RegistryFactory;
+import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.PersistentValuesHandler;
@@ -16,6 +17,7 @@ import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
@@ -33,7 +35,7 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class GameStateModule extends AbstractModule {
-    @SuppressWarnings("FieldCanBeLocal") private GameStateFactory _gameStateFactory;
+    @SuppressWarnings("FieldCanBeLocal") private GameStateFactory gameStateFactory;
 
     public GameStateModule(RegistryFactory registryFactory,
                            VariableCacheFactory variableCacheFactory,
@@ -83,7 +85,8 @@ public class GameStateModule extends AbstractModule {
 
         CharacterEventsFactory characterEventsFactory = new CharacterEventsFactoryImpl();
 
-        CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory = new CharacterEquipmentSlotsFactoryImpl();
+        CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory =
+                new CharacterEquipmentSlotsFactoryImpl();
 
         CharacterInventoryFactory characterInventoryFactory = new CharacterInventoryFactoryImpl();
 
@@ -93,7 +96,8 @@ public class GameStateModule extends AbstractModule {
                         characterStatisticCalculation);
 
         CharacterVariableStatisticsFactory variableStatsFactory =
-                new CharacterVariableStatisticsFactoryImpl(variableCacheFactory, characterVariableStatisticFactory);
+                new CharacterVariableStatisticsFactoryImpl(variableCacheFactory,
+                        characterVariableStatisticFactory);
 
         EntityMembersOfTypeFactory entitiesOfTypeFactory =
                 new EntityMembersOfTypeFactoryImpl(variableCacheFactory);
@@ -140,9 +144,14 @@ public class GameStateModule extends AbstractModule {
         RoundBasedTimerManager roundBasedTimerManager = null;
 
         // TODO: Populate this!
+        ClockBasedTimerManager clockBasedTimerManager = null;
+
+        // TODO: Populate this!
         RoundManagerImpl roundManager = null;
 
-        GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE), roundManager::removeCharacterFromQueue);
+        GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(
+                c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
+                roundManager::removeCharacterFromQueue);
 
         TypeHandler<GameZone> gameZoneHandler =
                 new GameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
@@ -161,7 +170,10 @@ public class GameStateModule extends AbstractModule {
 
         KeyEventListenerFactory keyEventListenerFactory = new KeyEventListenerFactoryImpl();
 
-        _gameStateFactory = new GameStateFactoryImpl(registryFactory, gameZonesRepo, cameraFactory, roundManager, roundBasedTimerManager, itemFactory, characterFactory, roundBasedTimerFactory, keyBindingFactory, keyBindingContextFactory, keyEventListenerFactory);
+        gameStateFactory = new GameStateFactoryImpl(registryFactory, gameZonesRepo, cameraFactory,
+                roundManager, roundBasedTimerManager, clockBasedTimerManager, itemFactory,
+                characterFactory, roundBasedTimerFactory, keyBindingFactory,
+                keyBindingContextFactory, keyEventListenerFactory);
     }
 
     @Override

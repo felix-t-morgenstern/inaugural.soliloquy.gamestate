@@ -10,6 +10,7 @@ import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
+import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 public class GameStateImpl implements GameState {
     private final Party PARTY;
-    private final VariableCache DATA;
     private final Map<String, CharacterAIType> CHARACTER_AI_TYPES;
     private final GameZonesRepo GAME_ZONES_REPO;
     private final Registry<GameMovementEvent> MOVEMENT_EVENTS;
@@ -27,6 +27,7 @@ public class GameStateImpl implements GameState {
     private final Camera CAMERA;
     private final RoundManager ROUND_MANAGER;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
+    private final ClockBasedTimerManager CLOCK_BASED_TIMER_MANAGER;
     private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
@@ -40,9 +41,9 @@ public class GameStateImpl implements GameState {
     private final static GameAbilityEvent GAME_ABILITY_EVENT_ARCHETYPE =
             new GameAbilityEventArchetype();
 
-    private GameZone _currentGameZone;
+    private VariableCache data;
+    private GameZone currentGameZone;
 
-    @SuppressWarnings("ConstantConditions")
     public GameStateImpl(Party party,
                          VariableCache data,
                          RegistryFactory registryFactory,
@@ -50,6 +51,7 @@ public class GameStateImpl implements GameState {
                          CameraFactory cameraFactory,
                          RoundManager roundManager,
                          RoundBasedTimerManager roundBasedTimerManager,
+                         ClockBasedTimerManager clockBasedTimerManager,
                          ItemFactory itemFactory,
                          CharacterFactory characterFactory,
                          RoundBasedTimerFactory roundBasedTimerFactory,
@@ -57,7 +59,7 @@ public class GameStateImpl implements GameState {
                          KeyBindingContextFactory keyBindingContextFactory,
                          KeyEventListenerFactory keyEventListenerFactory) {
         PARTY = Check.ifNull(party, "party");
-        DATA = Check.ifNull(data, "data");
+        this.data = Check.ifNull(data, "data");
         CHARACTER_AI_TYPES = new HashMap<>();
         GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
         CAMERA = Check.ifNull(cameraFactory, "cameraFactory").make(this::getCurrentGameZone);
@@ -66,6 +68,7 @@ public class GameStateImpl implements GameState {
         ABILITY_EVENTS = registryFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
+        CLOCK_BASED_TIMER_MANAGER = Check.ifNull(clockBasedTimerManager, "clockBasedTimerManager");
         KEY_BINDING_CONTEXTS = new HashMap<>();
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
@@ -84,8 +87,13 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public VariableCache variableCache() {
-        return DATA;
+    public VariableCache getVariableCache() {
+        return data;
+    }
+
+    @Override
+    public void setVariableCache(VariableCache variableCache) throws IllegalArgumentException {
+        data = Check.ifNull(variableCache, "variableCache");
     }
 
     @Override
@@ -100,12 +108,12 @@ public class GameStateImpl implements GameState {
 
     @Override
     public GameZone getCurrentGameZone() {
-        return _currentGameZone;
+        return currentGameZone;
     }
 
     @Override
     public void setCurrentGameZone(GameZone gameZone) {
-        _currentGameZone = gameZone;
+        currentGameZone = gameZone;
     }
 
     @Override
@@ -131,6 +139,11 @@ public class GameStateImpl implements GameState {
     @Override
     public RoundBasedTimerManager roundBasedTimerManager() {
         return ROUND_BASED_TIMER_MANAGER;
+    }
+
+    @Override
+    public ClockBasedTimerManager clockBasedTimerManager() {
+        return CLOCK_BASED_TIMER_MANAGER;
     }
 
     @Override

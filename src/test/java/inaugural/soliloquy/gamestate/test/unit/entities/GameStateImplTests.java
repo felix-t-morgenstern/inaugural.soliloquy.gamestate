@@ -16,6 +16,7 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.GameZonesRepo;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
 import soliloquy.specs.gamestate.factories.ItemFactory;
@@ -42,22 +43,24 @@ class GameStateImplTests {
     private final FakeKeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY =
             new FakeKeyEventListenerFactory();
 
-    @Mock
-    private RoundBasedTimerManager _mockRoundBasedTimerManager;
+    @Mock private RoundBasedTimerManager mockRoundBasedTimerManager;
+    @Mock private ClockBasedTimerManager mockClockBasedTimerManager;
 
-    private GameState _gameState;
+    private GameState gameState;
 
     @BeforeEach
     void setUp() {
-        _mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
+        mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
+        mockClockBasedTimerManager = mock(ClockBasedTimerManager.class);
 
-        _gameState = new GameStateImpl(PARTY,
+        gameState = new GameStateImpl(PARTY,
                 PERSISTENT_VARIABLE_CACHE,
                 REGISTRY_FACTORY,
                 GAME_ZONES_REPO,
                 CAMERA_FACTORY,
                 ROUND_MANAGER,
-                _mockRoundBasedTimerManager,
+                mockRoundBasedTimerManager,
+                mockClockBasedTimerManager,
                 ITEM_FACTORY,
                 CHARACTER_FACTORY,
                 ROUND_BASED_TIMER_FACTORY,
@@ -69,13 +72,14 @@ class GameStateImplTests {
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(null,
+                () -> new GameStateImpl(null,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -83,12 +87,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         null,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -96,12 +101,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         null,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -109,12 +115,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         null,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -122,12 +129,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         null, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -135,13 +143,14 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
                         null,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -149,27 +158,44 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
-                        PERSISTENT_VARIABLE_CACHE,
-                        REGISTRY_FACTORY,
-                        GAME_ZONES_REPO,
-                        CAMERA_FACTORY,
-                        ROUND_MANAGER,
-                        null,
-                        ITEM_FACTORY,
-                        CHARACTER_FACTORY,
-                        ROUND_BASED_TIMER_FACTORY,
-                        KEY_BINDING_FACTORY,
-                        KEY_BINDING_CONTEXT_FACTORY,
-                        KEY_EVENT_LISTENER_FACTORY));
-        assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
                         ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        null,
+                        mockClockBasedTimerManager,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_EVENT_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA_FACTORY,
+                        ROUND_MANAGER,
+                        mockRoundBasedTimerManager,
+                        null,
+                        ITEM_FACTORY,
+                        CHARACTER_FACTORY,
+                        ROUND_BASED_TIMER_FACTORY,
+                        KEY_BINDING_FACTORY,
+                        KEY_BINDING_CONTEXT_FACTORY,
+                        KEY_EVENT_LISTENER_FACTORY));
+        assertThrows(IllegalArgumentException.class,
+                () -> new GameStateImpl(PARTY,
+                        PERSISTENT_VARIABLE_CACHE,
+                        REGISTRY_FACTORY,
+                        GAME_ZONES_REPO,
+                        CAMERA_FACTORY,
+                        ROUND_MANAGER,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         null,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -177,12 +203,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         null,
                         ROUND_BASED_TIMER_FACTORY,
@@ -190,12 +217,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         null,
@@ -203,12 +231,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -216,12 +245,13 @@ class GameStateImplTests {
                         KEY_BINDING_CONTEXT_FACTORY,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -229,12 +259,13 @@ class GameStateImplTests {
                         null,
                         KEY_EVENT_LISTENER_FACTORY));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameState = new GameStateImpl(PARTY,
+                () -> new GameStateImpl(PARTY,
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY, ROUND_MANAGER,
-                        _mockRoundBasedTimerManager,
+                        mockRoundBasedTimerManager,
+                        mockClockBasedTimerManager,
                         ITEM_FACTORY,
                         CHARACTER_FACTORY,
                         ROUND_BASED_TIMER_FACTORY,
@@ -245,100 +276,116 @@ class GameStateImplTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(GameState.class.getCanonicalName(), _gameState.getInterfaceName());
+        assertEquals(GameState.class.getCanonicalName(), gameState.getInterfaceName());
     }
 
     @Test
     void testParty() {
-        assertSame(PARTY, _gameState.party());
+        assertSame(PARTY, gameState.party());
     }
 
     @Test
-    void testPersistentVariables() {
-        assertSame(PERSISTENT_VARIABLE_CACHE, _gameState.variableCache());
+    void testSetAndGetVariableCache() {
+        assertSame(PERSISTENT_VARIABLE_CACHE, gameState.getVariableCache());
+
+        VariableCache newVariableCache = mock(VariableCache.class);
+
+        gameState.setVariableCache(newVariableCache);
+
+        assertSame(newVariableCache, gameState.getVariableCache());
+    }
+
+    @Test
+    void testSetVariableCacheWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> gameState.setVariableCache(null));
     }
 
     @Test
     void testCharacterAIs() {
-        assertNotNull(_gameState.characterAIs());
+        assertNotNull(gameState.characterAIs());
     }
 
     @Test
     void testGameZonesRepo() {
-        assertSame(GAME_ZONES_REPO, _gameState.gameZonesRepo());
+        assertSame(GAME_ZONES_REPO, gameState.gameZonesRepo());
     }
 
     @Test
     void testMovementEvents() {
-        assertNotNull(_gameState.movementEvents());
+        assertNotNull(gameState.movementEvents());
     }
 
     @Test
     void testAbilityEvents() {
-        assertNotNull(_gameState.abilityEvents());
+        assertNotNull(gameState.abilityEvents());
     }
 
     @Test
     void testGetAndSetGameZone() {
         final GameZone gameZone = new FakeGameZone();
 
-        assertNull(_gameState.getCurrentGameZone());
+        assertNull(gameState.getCurrentGameZone());
 
-        _gameState.setCurrentGameZone(gameZone);
+        gameState.setCurrentGameZone(gameZone);
 
-        assertSame(gameZone, _gameState.getCurrentGameZone());
+        assertSame(gameZone, gameState.getCurrentGameZone());
     }
 
     @Test
     void testCamera() {
-        _gameState.setCurrentGameZone(new FakeGameZone());
+        gameState.setCurrentGameZone(new FakeGameZone());
 
-        assertSame(FakeCameraFactory.CAMERA, _gameState.camera());
-        assertSame(CAMERA_FACTORY.GET_CURRENT_GAME_ZONE.get(), _gameState.getCurrentGameZone());
+        assertSame(FakeCameraFactory.CAMERA, gameState.camera());
+        assertSame(CAMERA_FACTORY.GET_CURRENT_GAME_ZONE.get(), gameState.getCurrentGameZone());
     }
 
     @Test
     void testRoundManager() {
-        assertSame(ROUND_MANAGER, _gameState.roundManager());
+        assertSame(ROUND_MANAGER, gameState.roundManager());
     }
 
     @Test
     void testKeyBindingContexts() {
-        assertNotNull(_gameState.keyBindingContexts());
+        assertNotNull(gameState.keyBindingContexts());
     }
 
     @Test
     void testItemFactory() {
-        assertNotNull(_gameState.itemFactory());
+        assertNotNull(gameState.itemFactory());
     }
 
     @Test
     void testCharacterFactory() {
-        assertNotNull(_gameState.characterFactory());
+        assertNotNull(gameState.characterFactory());
     }
 
     @Test
     void testRoundBasedTimerManager() {
-        assertSame(_mockRoundBasedTimerManager, _gameState.roundBasedTimerManager());
+        assertSame(mockRoundBasedTimerManager, gameState.roundBasedTimerManager());
+    }
+
+    @Test
+    void testClockBasedTimerManager() {
+        assertSame(mockClockBasedTimerManager, gameState.clockBasedTimerManager());
     }
 
     @Test
     void testRoundBasedTimerFactory() {
-        assertSame(ROUND_BASED_TIMER_FACTORY, _gameState.roundBasedTimerFactory());
+        assertSame(ROUND_BASED_TIMER_FACTORY, gameState.roundBasedTimerFactory());
     }
 
     @Test
     void testKeyBindingFactory() {
-        assertNotNull(_gameState.keyBindingFactory());
+        assertNotNull(gameState.keyBindingFactory());
     }
 
     @Test
     void testKeyBindingContextFactory() {
-        assertNotNull(_gameState.keyBindingContextFactory());
+        assertNotNull(gameState.keyBindingContextFactory());
     }
 
     @Test
     void testKeyPressListenerFactory() {
-        assertSame(KEY_EVENT_LISTENER_FACTORY.CREATED, _gameState.keyEventListener());
+        assertSame(KEY_EVENT_LISTENER_FACTORY.CREATED, gameState.keyEventListener());
     }
 }
