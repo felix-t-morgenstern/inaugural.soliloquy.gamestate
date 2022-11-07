@@ -51,13 +51,14 @@ class CameraHandlerTests {
 
     private TypeHandler<Camera> cameraHandler;
 
+    // TODO: Make this shit at least marginally less indeterminate!
     private final String WRITTEN_VALUE = "{\"tileLocationX\":111,\"tileLocationY\":222," +
             "\"tileCenterOffsetProviderType\":\"tileCenterOffsetProviderType\"," +
             "\"tileCenterOffsetProvider\":\"tileCenterOffsetProvider\",\"zoom\":0.789," +
             "\"tileRenderingRadius\":333,\"allTilesVisible\":true," +
-            "\"charactersProvidingVisibility\":[{\"characterId\":\"4b304158-fa99-44fd-a85a" +
-            "-572b3213c2ab\",\"tiles\":444}," +
-            "{\"characterId\":\"30773bab-7015-4456-9235-cbdf5d7c5086\",\"tiles\":555}]," +
+            "\"charactersProvidingVisibility\":[{\"characterId\":\"30773bab-7015-4456-9235" +
+            "-cbdf5d7c5086\",\"tiles\":555}," +
+            "{\"characterId\":\"4b304158-fa99-44fd-a85a-572b3213c2ab\",\"tiles\":444}]," +
             "\"coordinatesProvidingVisibility\":[{\"x\":1,\"y\":2,\"tiles\":3},{\"x\":4,\"y\":5," +
             "\"tiles\":6}]}";
 
@@ -158,7 +159,8 @@ class CameraHandlerTests {
         verify(mockCameraFactory, times(1)).make(mockGetCurrentGameZone);
         verify(mockCamera, times(1)).setTileLocation(
                 eq(Coordinate.of(TILE_LOCATION_X, TILE_LOCATION_Y)));
-        verify(mockPersistentValuesHandler, times(1)).getTypeHandler(TILE_CENTER_OFFSET_PROVIDER_TYPE);
+        verify(mockPersistentValuesHandler, times(1)).getTypeHandler(
+                TILE_CENTER_OFFSET_PROVIDER_TYPE);
         verify(mockTileCenterOffsetProviderHandler, times(1)).read(TILE_CENTER_OFFSET_PROVIDER);
         verify(mockCamera, times(1)).setTileCenterOffsetProvider(mockTileCenterOffsetProvider);
         verify(mockCamera, times(1)).setZoom(ZOOM);

@@ -1,14 +1,16 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
     public final Character CHARACTER;
 
-    public static FakeMap<String, Item> EQUIPMENT_SLOTS = new FakeMap<>();
+    public static Map<String, Item> EQUIPMENT_SLOTS = new HashMap<>();
     public static Item ITEM_IN_SLOT_RESULT_OVERRIDE = null;
 
     public boolean _isDeleted;
@@ -34,7 +36,7 @@ public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
 
     @Override
     public Map<String, Item> representation() throws IllegalStateException {
-        return EQUIPMENT_SLOTS.makeClone();
+        return new HashMap<>(EQUIPMENT_SLOTS);
     }
 
     @Override

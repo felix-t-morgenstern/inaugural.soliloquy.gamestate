@@ -1,15 +1,16 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.EntityMemberOfType;
 import soliloquy.specs.gamestate.entities.EntityMembersOfType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Function;
 
 public class FakeEntityMembersOfType<TEntityType extends HasId,
@@ -71,9 +72,7 @@ public class FakeEntityMembersOfType<TEntityType extends HasId,
 
     @Override
     public List<TCharacterEntity> representation() {
-        List<TCharacterEntity> representation = new FakeList<>();
-        representation.addAll(ENTITIES.values());
-        return representation;
+        return new ArrayList<>(ENTITIES.values());
     }
 
     @Override

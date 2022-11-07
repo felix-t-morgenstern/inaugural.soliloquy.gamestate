@@ -1,11 +1,11 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FakeTileFixtureItems implements TileFixtureItems {
     public final TileFixture TILE_FIXTURE;
@@ -34,11 +34,8 @@ public class FakeTileFixtureItems implements TileFixtureItems {
     }
 
     @Override
-    public List<Item> representation()
-            throws UnsupportedOperationException, IllegalStateException {
-        List<Item> items = new FakeList<>();
-        items.addAll(_items);
-        return items;
+    public List<Item> representation() throws UnsupportedOperationException, IllegalStateException {
+        return new ArrayList<>(_items);
     }
 
     @Override

@@ -1,25 +1,25 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.RoundManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class FakeRoundManager implements RoundManager {
-    private final java.util.List<Character> QUEUE = new LinkedList<>();
+    private final List<Character> QUEUE = new ArrayList<>();
     private final HashMap<Character, VariableCache> CHARACTERS_DATA = new HashMap<>();
 
     private int _roundNumber;
 
     @Override
     public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
-        List<Pair<Character, VariableCache>> collection = new FakeList<>();
+        List<Pair<Character, VariableCache>> collection = new ArrayList<>();
         QUEUE.forEach(c -> collection.add(new Pair<>(c, CHARACTERS_DATA.get(c))));
         return collection;
     }

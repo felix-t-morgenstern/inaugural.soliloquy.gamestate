@@ -1,13 +1,14 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,9 +23,9 @@ public class FakeGameZone implements GameZone {
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 
     @SuppressWarnings("rawtypes")
-    private final List<Action> ON_ENTRY = new FakeList<>();
+    private final List<Action> ON_ENTRY = new ArrayList<>();
     @SuppressWarnings("rawtypes")
-    private final List<Action> ON_EXIT = new FakeList<>();
+    private final List<Action> ON_EXIT = new ArrayList<>();
 
     private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
 

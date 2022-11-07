@@ -88,8 +88,8 @@ public class FakeCharacterVariableStatisticType implements CharacterVariableStat
     }
 
     @Override
-    public Pair<ImageAsset, Integer> getIcon(CharacterVariableStatisticType type, String s,
-                                             Character character) {
+    public Pair<ImageAsset, Integer> getIcon(String s, Character character)
+            throws IllegalArgumentException {
         return null;
     }
 }

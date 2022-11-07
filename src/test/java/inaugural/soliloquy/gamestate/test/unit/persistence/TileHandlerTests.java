@@ -7,6 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.SpriteStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
@@ -22,6 +23,8 @@ import soliloquy.specs.ruleset.entities.WallSegmentType;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class TileHandlerTests {
     private final TileFactory TILE_FACTORY = new FakeTileFactory();
@@ -50,7 +53,6 @@ class TileHandlerTests {
     private final VariableCache DATA = new VariableCacheStub();
 
     private final String SEGMENT_TYPE_ID = "segmentTypeId";
-    private final WallSegmentType SEGMENT_TYPE = new FakeWallSegmentType(SEGMENT_TYPE_ID);
     private final HashMap<String, WallSegmentType> SEGMENT_TYPES = new HashMap<>();
 
     private final String MOVEMENT_EVENT_ID = "movementEventId";
@@ -67,6 +69,8 @@ class TileHandlerTests {
     private final GroundType GROUND_TYPE = new FakeGroundType(GROUND_TYPE_ID);
     private final HashMap<String, GroundType> GROUND_TYPES = new HashMap<>();
 
+    @Mock private WallSegmentType mockWallSegmentType;
+
     private final String WRITTEN_DATA =
             "{\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\"," +
                     "\"characters\":[{\"z\":111,\"entity\":\"Character0\"}]," +
@@ -81,12 +85,15 @@ class TileHandlerTests {
 
     @BeforeEach
     void setUp() {
-        SEGMENT_TYPES.put(SEGMENT_TYPE_ID, SEGMENT_TYPE);
+        mockWallSegmentType = mock(WallSegmentType.class);
+        when(mockWallSegmentType.id()).thenReturn(SEGMENT_TYPE_ID);
+
+        SEGMENT_TYPES.put(SEGMENT_TYPE_ID, mockWallSegmentType);
         MOVEMENT_EVENTS.put(MOVEMENT_EVENT_ID, MOVEMENT_EVENT);
         ABILITY_EVENTS.put(ABILITY_EVENT_ID, ABILITY_EVENT);
         GROUND_TYPES.put(GROUND_TYPE_ID, GROUND_TYPE);
 
-        TILE_WALL_SEGMENT.setType(SEGMENT_TYPE);
+        TILE_WALL_SEGMENT.setType(mockWallSegmentType);
 
         _tileHandler = new TileHandler(TILE_FACTORY, TILE_WALL_SEGMENT_FACTORY,
                 CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER, DATA_HANDLER,
@@ -203,7 +210,7 @@ class TileHandlerTests {
         TileWallSegment segmentFromFactory =
                 ((FakeTileWallSegmentFactory) TILE_WALL_SEGMENT_FACTORY).FROM_FACTORY.get(0);
         assertTrue(readTile.wallSegments().contains(segmentFromFactory));
-        assertSame(SEGMENT_TYPE, segmentFromFactory.getType());
+        assertSame(mockWallSegmentType, segmentFromFactory.getType());
         assertSame(TileWallSegmentDirection.NORTH,
                 readTile.wallSegments().getDirection(segmentFromFactory));
         assertEquals(444, readTile.wallSegments().getHeight(segmentFromFactory));

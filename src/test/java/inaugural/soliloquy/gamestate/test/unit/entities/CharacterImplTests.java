@@ -17,13 +17,13 @@ import soliloquy.specs.ruleset.entities.CharacterType;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class CharacterImplTests {
     private Character _character;
 
     private final UUID UUID = java.util.UUID.randomUUID();
     private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
-    private final CharacterAIType AI_TYPE = new FakeCharacterAIType();
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY =
             new FakeCharacterEventsFactory();
     private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY =
@@ -207,11 +207,13 @@ class CharacterImplTests {
 
     @Test
     void testSetAndGetAIType() {
+        CharacterAIType mockCharacterAIType = mock(CharacterAIType.class);
+
         assertNull(_character.getAIType());
 
-        _character.setAIType(AI_TYPE);
+        _character.setAIType(mockCharacterAIType);
 
-        assertSame(AI_TYPE, _character.getAIType());
+        assertSame(mockCharacterAIType, _character.getAIType());
     }
 
     @Test

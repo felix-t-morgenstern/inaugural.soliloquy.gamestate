@@ -1,15 +1,17 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.ruleset.entities.Element;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FakeCharacterStatusEffects implements CharacterStatusEffects {
     public boolean _isDeleted;
 
-    public Map<StatusEffectType, Integer> _representation = new FakeMap<>();
+    public Map<StatusEffectType, Integer> _representation = new HashMap<>();
 
     @Override
     public Integer getStatusEffectLevel(StatusEffectType statusEffectType)
@@ -19,7 +21,7 @@ public class FakeCharacterStatusEffects implements CharacterStatusEffects {
 
     @Override
     public Map<StatusEffectType, Integer> representation() throws IllegalStateException {
-        return _representation.makeClone();
+        return new HashMap<>(_representation);
     }
 
     @Override

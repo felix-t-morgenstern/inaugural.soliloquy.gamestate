@@ -1,13 +1,9 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.valueobjects.Pair;
-import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.graphics.assets.Sprite;
-import soliloquy.specs.logger.Logger;
+import soliloquy.specs.graphics.assets.ImageAsset;
 import soliloquy.specs.ruleset.entities.StatusEffectType;
-
-import java.util.function.BiConsumer;
 
 public class FakeStatusEffectType implements StatusEffectType {
     private final String ID;
@@ -36,16 +32,6 @@ public class FakeStatusEffectType implements StatusEffectType {
     }
 
     @Override
-    public Game game() {
-        return null;
-    }
-
-    @Override
-    public Logger logger() {
-        return null;
-    }
-
-    @Override
     public String getInterfaceName() {
         return null;
     }
@@ -61,22 +47,8 @@ public class FakeStatusEffectType implements StatusEffectType {
     }
 
     @Override
-    public Pair<Sprite, Integer> getIcon(Object o, String s, Character character) {
-        return null;
-    }
-
-    @Override
-    public Pair<BiConsumer<Character, Integer>, Integer> onTurnStart() {
-        return null;
-    }
-
-    @Override
-    public Pair<BiConsumer<Character, Integer>, Integer> onTurnEnd() {
-        return null;
-    }
-
-    @Override
-    public Pair<BiConsumer<Character, Integer>, Integer> onRoundEnd() {
+    public Pair<ImageAsset, Integer> getIcon(String s, Character character)
+            throws IllegalArgumentException {
         return null;
     }
 }

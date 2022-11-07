@@ -1,15 +1,12 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistics;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 public class FakeCharacterVariableStatistics implements CharacterVariableStatistics {
     private final Character _character;
@@ -29,14 +26,14 @@ public class FakeCharacterVariableStatistics implements CharacterVariableStatist
 
     @Override
     public Map<CharacterVariableStatisticType, Integer> currentValues() {
-        FakeMap<CharacterVariableStatisticType, Integer> currentValues = new FakeMap<>();
+        Map<CharacterVariableStatisticType, Integer> currentValues = new HashMap<>();
         STATS.forEach((t, s) -> currentValues.put(t, s.getCurrentValue()));
         return currentValues;
     }
 
     @Override
     public Map<CharacterVariableStatisticType, Integer> maxValues() {
-        FakeMap<CharacterVariableStatisticType, Integer> maxValues = new FakeMap<>();
+        HashMap<CharacterVariableStatisticType, Integer> maxValues = new HashMap<>();
         STATS.forEach((t, s) -> maxValues.put(t, s.totalValue()));
         return maxValues;
     }
@@ -84,9 +81,7 @@ public class FakeCharacterVariableStatistics implements CharacterVariableStatist
 
     @Override
     public List<CharacterVariableStatistic> representation() {
-        List<CharacterVariableStatistic> representation = new FakeList<>();
-        representation.addAll(STATS.values());
-        return representation;
+        return new ArrayList<>(STATS.values());
     }
 
     @Override

@@ -8,6 +8,7 @@ import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHan
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
@@ -27,6 +28,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CharacterHandlerTests {
     private final CharacterFactory CHARACTER_FACTORY = new FakeCharacterFactory();
@@ -62,7 +65,6 @@ class CharacterHandlerTests {
 
     private final Map<String, CharacterAIType> AI_TYPES = new HashMap<>();
     private final String AI_TYPE_ID = "aiTypeId";
-    private final CharacterAIType AI_TYPE = new FakeCharacterAIType(AI_TYPE_ID);
 
     private final Map<String, GameCharacterEvent> EVENTS = new HashMap<>();
     private final String EVENT_ID = "eventId";
@@ -90,7 +92,6 @@ class CharacterHandlerTests {
 
     private final Map<String, PassiveAbility> PASSIVE_ABILITIES = new HashMap<>();
     private final String PASSIVE_ABILITY_ID = "passiveAbilityId";
-    private final PassiveAbility PASSIVE_ABILITY = new FakePassiveAbility(PASSIVE_ABILITY_ID);
 
     private final Map<String, ActiveAbility> ACTIVE_ABILITIES = new HashMap<>();
     private final String ACTIVE_ABILITY_ID = "activeAbilityId";
@@ -98,7 +99,6 @@ class CharacterHandlerTests {
 
     private final Map<String, ReactiveAbility> REACTIVE_ABILITIES = new HashMap<>();
     private final String REACTIVE_ABILITY_ID = "reactiveAbilityId";
-    private final ReactiveAbility REACTIVE_ABILITY = new FakeReactiveAbility(REACTIVE_ABILITY_ID);
 
     private final VariableCache DATA = new VariableCacheStub();
 
@@ -107,6 +107,10 @@ class CharacterHandlerTests {
     private final TypeHandler<VariableCache> DATA_HANDLER =
             new FakeVariableCacheHandler();
     private final TypeHandler<Item> ITEM_HANDLER = new FakeItemHandler();
+
+    private CharacterAIType mockCharacterAIType;
+    @Mock private PassiveAbility mockPassiveAbility;
+    @Mock private ReactiveAbility mockReactiveAbility;
 
     private final String WRITTEN_VALUE =
             "{\"uuid\":\"UUID0\",\"characterTypeId\":\"characterTypeId\"," +
@@ -128,23 +132,32 @@ class CharacterHandlerTests {
                     "\"reactiveAbilityIds\":[\"reactiveAbilityId\"],\"isPlayerControlled\":true," +
                     "\"data\":\"VariableCache2\",\"name\":\"charName\"}";
 
-    private TypeHandler<Character> _characterHandler;
+    private TypeHandler<Character> characterHandler;
 
     @BeforeEach
     void setUp() {
+        mockCharacterAIType = mock(CharacterAIType.class);
+        when(mockCharacterAIType.id()).thenReturn(AI_TYPE_ID);
+
+        mockPassiveAbility = mock(PassiveAbility.class);
+        when(mockPassiveAbility.id()).thenReturn(PASSIVE_ABILITY_ID);
+
+        mockReactiveAbility = mock(ReactiveAbility.class);
+        when(mockReactiveAbility.id()).thenReturn(REACTIVE_ABILITY_ID);
+
         CHARACTER_TYPES.put(CHARACTER_TYPE.id(), CHARACTER_TYPE);
         CLASSIFICATIONS.put(CLASSIFICATION.id(), CLASSIFICATION);
         IMAGE_ASSET_SETS.put(IMAGE_ASSET_SET.id(), IMAGE_ASSET_SET);
-        AI_TYPES.put(AI_TYPE.id(), AI_TYPE);
+        AI_TYPES.put(AI_TYPE_ID, mockCharacterAIType);
         EVENTS.put(EVENT_ID, EVENT);
         STATIC_STAT_TYPES.put(STATIC_STAT_TYPE.id(), STATIC_STAT_TYPE);
         VARIABLE_STAT_TYPES.put(VARIABLE_STAT_TYPE.id(), VARIABLE_STAT_TYPE);
         STAT_EFFECT_TYPES.put(STAT_EFFECT_TYPE.id(), STAT_EFFECT_TYPE);
-        PASSIVE_ABILITIES.put(PASSIVE_ABILITY.id(), PASSIVE_ABILITY);
+        PASSIVE_ABILITIES.put(PASSIVE_ABILITY_ID, mockPassiveAbility);
         ACTIVE_ABILITIES.put(ACTIVE_ABILITY.id(), ACTIVE_ABILITY);
-        REACTIVE_ABILITIES.put(REACTIVE_ABILITY.id(), REACTIVE_ABILITY);
+        REACTIVE_ABILITIES.put(REACTIVE_ABILITY_ID, mockReactiveAbility);
 
-        _characterHandler = new CharacterHandler(CHARACTER_FACTORY, UUID_HANDLER,
+        characterHandler = new CharacterHandler(CHARACTER_FACTORY, UUID_HANDLER,
                 CHARACTER_TYPES::get, CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get,
                 EVENTS::get, STATIC_STAT_TYPES::get, VARIABLE_STAT_TYPES::get,
                 STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get, ACTIVE_ABILITIES::get,
@@ -257,7 +270,7 @@ class CharacterHandlerTests {
         character.setStance(STANCE);
         character.setDirection(DIRECTION);
         character.setImageAssetSet(IMAGE_ASSET_SET);
-        character.setAIType(AI_TYPE);
+        character.setAIType(mockCharacterAIType);
         character.events().addEvent(TRIGGER, EVENT);
         FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.clear();
         Item equipmentSlotItem = new FakeItem();
@@ -274,13 +287,13 @@ class CharacterHandlerTests {
         ((FakeCharacterStatusEffects) character.statusEffects())._representation.clear();
         ((FakeCharacterStatusEffects) character.statusEffects())._representation
                 .put(STAT_EFFECT_TYPE, 246);
-        character.passiveAbilities().add(PASSIVE_ABILITY);
+        character.passiveAbilities().add(mockPassiveAbility);
         character.activeAbilities().add(ACTIVE_ABILITY);
-        character.reactiveAbilities().add(REACTIVE_ABILITY);
+        character.reactiveAbilities().add(mockReactiveAbility);
         character.setPlayerControlled(true);
         character.setName(NAME);
 
-        String writtenValue = _characterHandler.write(character);
+        String writtenValue = characterHandler.write(character);
 
         assertEquals(WRITTEN_VALUE, writtenValue);
         assertSame(uuid, ((FakeUuidHandler) UUID_HANDLER).WRITE_INPUTS.get(0));
@@ -294,13 +307,13 @@ class CharacterHandlerTests {
 
     @Test
     void testWriteWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> _characterHandler.write(null));
+        assertThrows(IllegalArgumentException.class, () -> characterHandler.write(null));
     }
 
     @Test
     void testRead() {
         FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.clear();
-        Character readCharacter = _characterHandler.read(WRITTEN_VALUE);
+        Character readCharacter = characterHandler.read(WRITTEN_VALUE);
 
         assertNotNull(readCharacter);
         assertEquals("UUID0",
@@ -318,7 +331,7 @@ class CharacterHandlerTests {
         assertEquals(STANCE, readCharacter.getStance());
         assertEquals(DIRECTION, readCharacter.getDirection());
         assertSame(IMAGE_ASSET_SET, readCharacter.getImageAssetSet());
-        assertSame(AI_TYPE, readCharacter.getAIType());
+        assertSame(mockCharacterAIType, readCharacter.getAIType());
         assertEquals(1, readCharacter.events().representation().size());
         assertEquals(1, readCharacter.events().representation().get(TRIGGER).size());
         assertSame(EVENT, readCharacter.events().representation().get(TRIGGER).get(0));
@@ -352,13 +365,13 @@ class CharacterHandlerTests {
                 readCharacter.statusEffects().getStatusEffectLevel(STAT_EFFECT_TYPE));
 
         assertEquals(1, readCharacter.passiveAbilities().size());
-        assertSame(PASSIVE_ABILITY, readCharacter.passiveAbilities().get(0));
+        assertSame(mockPassiveAbility, readCharacter.passiveAbilities().get(0));
 
         assertEquals(1, readCharacter.activeAbilities().size());
         assertSame(ACTIVE_ABILITY, readCharacter.activeAbilities().get(0));
 
         assertEquals(1, readCharacter.reactiveAbilities().size());
-        assertSame(REACTIVE_ABILITY, readCharacter.reactiveAbilities().get(0));
+        assertSame(mockReactiveAbility, readCharacter.reactiveAbilities().get(0));
 
         assertTrue(readCharacter.getPlayerControlled());
         assertEquals("VariableCache2",
@@ -370,15 +383,15 @@ class CharacterHandlerTests {
 
     @Test
     void testArchetype() {
-        assertNotNull(_characterHandler.getArchetype());
+        assertNotNull(characterHandler.getArchetype());
         assertEquals(Character.class.getCanonicalName(),
-                _characterHandler.getArchetype().getInterfaceName());
+                characterHandler.getArchetype().getInterfaceName());
     }
 
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         Character.class.getCanonicalName() + ">",
-                _characterHandler.getInterfaceName());
+                characterHandler.getInterfaceName());
     }
 }

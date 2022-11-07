@@ -1,20 +1,17 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileEntities;
 import soliloquy.specs.gamestate.entities.TileEntity;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class FakeTileEntities<TEntity extends TileEntity> implements TileEntities<TEntity> {
     public final HashMap<TEntity, Integer> ENTITIES = new HashMap<>();
     public final Tile TILE;
-    public final List<TEntity> REMOVED_ENTITIES = new FakeList<>();
+    public final List<TEntity> REMOVED_ENTITIES = new ArrayList<>();
 
     private boolean _isDeleted;
     private Consumer<TEntity> _actionAfterAdding;

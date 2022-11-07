@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.Map;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.gamestate.entities.Character;
@@ -11,6 +9,11 @@ import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,10 +25,10 @@ public class FakeTile implements Tile {
     private final TileEntities<TileFixture> FIXTURES = new FakeTileEntities<>(this);
     private final TileEntities<Item> TILE_ITEMS = new FakeTileEntities<>(this);
     private final TileWallSegments TILE_WALL_SEGMENTS = new FakeTileWallSegments(this);
-    private final List<GameMovementEvent> MOVEMENT_EVENTS = new FakeList<>();
-    private final List<GameAbilityEvent> ABILITY_EVENTS = new FakeList<>();
+    private final List<GameMovementEvent> MOVEMENT_EVENTS = new ArrayList<>();
+    private final List<GameAbilityEvent> ABILITY_EVENTS = new ArrayList<>();
 
-    private final Map<Sprite, Integer> SPRITES = new FakeMap<>();
+    private final Map<Sprite, Integer> SPRITES = new HashMap<>();
 
     private int _height;
     private GroundType _groundType;

@@ -13,10 +13,7 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FakeCharacter implements Character {
     private boolean _isDeleted;
@@ -30,8 +27,8 @@ public class FakeCharacter implements Character {
 
     private final UUID UUID;
     private final CharacterType TYPE;
-    private final List<CharacterClassification> CLASSIFICATIONS = new FakeList<>();
-    private final Map<String, String> PRONOUNS = new FakeMap<>();
+    private final List<CharacterClassification> CLASSIFICATIONS = new ArrayList<>();
+    private final Map<String, String> PRONOUNS = new HashMap<>();
     private final CharacterEvents EVENTS = new FakeCharacterEvents();
     private final CharacterVariableStatistics VARIABLE_STATS;
     private final EntityMembersOfType<CharacterStaticStatisticType,
