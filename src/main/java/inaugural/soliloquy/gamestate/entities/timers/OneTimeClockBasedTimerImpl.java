@@ -10,6 +10,8 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
     private final String ID;
     private final Action<Long> FIRING_ACTION;
 
+    private boolean hasFired = false;
+
     public OneTimeClockBasedTimerImpl(String id, long firingTime, Action<Long> firingAction,
                                       Long pausedTimestamp, Long mostRecentTimestamp) {
         super(firingTime, pausedTimestamp, mostRecentTimestamp);
@@ -24,7 +26,7 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
 
     @Override
     public long firingTime() {
-        return _anchorTime;
+        return anchorTime;
     }
 
     @Override
@@ -40,12 +42,33 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
     @Override
     public void fire(long timestamp) {
         TIMESTAMP_VALIDATOR.validateTimestamp(timestamp);
-        if (_pausedTimestamp != null && timestamp >= _pausedTimestamp) {
+        if (pausedTimestamp != null && timestamp >= pausedTimestamp) {
             throw new UnsupportedOperationException("OneTimeClockBasedTimerImpl.fire: timestamp " +
                     "(" + timestamp + ") cannot be greater than current pausedTimestamp (" +
-                    _pausedTimestamp + ")");
+                    pausedTimestamp + ")");
         }
         FIRING_ACTION.run(timestamp);
+        hasFired = true;
+    }
+
+    @Override
+    public void reportPause(long timestamp) {
+        if (hasFired) {
+            throw new UnsupportedOperationException(
+                    "OneTimeClockBasedTimerImpl.reportPause: Timer has already fired");
+        }
+
+        super.reportPause(timestamp);
+    }
+
+    @Override
+    public void reportUnpause(long timestamp) {
+        if (hasFired) {
+            throw new UnsupportedOperationException(
+                    "OneTimeClockBasedTimerImpl.reportUnpause: Timer has already fired");
+        }
+
+        super.reportUnpause(timestamp);
     }
 
     @Override

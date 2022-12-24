@@ -13,7 +13,7 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
     private final Action<Long> FIRING_ACTION;
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED;
 
-    private long _lastFiringTimestamp;
+    private long lastFiringTimestamp;
 
     public RecurringClockBasedTimerImpl(String id, int periodDuration, int periodModuloOffset,
                                         Action<Long> firingAction,
@@ -30,12 +30,12 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
         FIRING_ACTION = Check.ifNull(firingAction, "firingAction");
         FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED =
                 fireMultipleTimesForMultiplePeriodsElapsed;
-        _lastFiringTimestamp = lastFiringTimestamp;
+        this.lastFiringTimestamp = lastFiringTimestamp;
     }
 
     @Override
     public long lastFiringTimestamp() {
-        return _lastFiringTimestamp;
+        return lastFiringTimestamp;
     }
 
     @Override
@@ -61,12 +61,12 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
     @Override
     public void fire(long timestamp) {
         TIMESTAMP_VALIDATOR.validateTimestamp(timestamp);
-        if (_pausedTimestamp != null && timestamp >= _pausedTimestamp) {
+        if (pausedTimestamp != null && timestamp >= pausedTimestamp) {
             throw new UnsupportedOperationException("RecurringClockBasedTimerImpl.fire: " +
                     "timestamp (" + timestamp + ") cannot be greater than current " +
-                    "pausedTimestamp (" + _pausedTimestamp + ")");
+                    "pausedTimestamp (" + pausedTimestamp + ")");
         }
-        FIRING_ACTION.run(_lastFiringTimestamp = timestamp);
+        FIRING_ACTION.run(lastFiringTimestamp = timestamp);
     }
 
     @Override

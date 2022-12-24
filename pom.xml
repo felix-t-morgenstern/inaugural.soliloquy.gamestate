@@ -97,17 +97,17 @@
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>soliloquy.specs</artifactId>
-            <version>0.0.402</version>
+            <version>0.0.420</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>inaugural.soliloquy.tools</artifactId>
-            <version>0.0.98</version>
+            <version>0.0.102</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>inaugural.soliloquy.common</artifactId>
-            <version>0.0.17</version>
+            <version>0.0.18</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
