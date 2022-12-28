@@ -9,7 +9,6 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.CharacterAIType;
 import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
-import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,18 +30,6 @@ class ArchetypesTests {
         assertEquals(CharacterStatistic.class.getCanonicalName() + "<" +
                         CharacterStaticStatisticType.class.getCanonicalName() + ">",
                 new CharacterStaticStatisticArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testCharacterVariableStatisticArchetype() {
-        assertEquals(CharacterVariableStatistic.class.getCanonicalName(),
-                new CharacterVariableStatisticArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testCharacterVariableStatisticTypeArchetype() {
-        assertEquals(CharacterVariableStatisticType.class.getCanonicalName(),
-                new CharacterVariableStatisticTypeArchetype().getInterfaceName());
     }
 
     @Test

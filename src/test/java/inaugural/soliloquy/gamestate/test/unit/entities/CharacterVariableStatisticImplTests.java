@@ -2,11 +2,11 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterVariableStatisticImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterVariableStatisticType;
 import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -16,21 +16,24 @@ import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class CharacterVariableStatisticImplTests {
-    private CharacterVariableStatistic _characterVariableStatistic;
-
     private final Character CHARACTER = new FakeCharacter();
-    private final CharacterVariableStatisticType CHARACTER_VARIABLE_STATISTIC_TYPE =
-            new FakeCharacterVariableStatisticType("VariableStatisticType");
     private final VariableCache DATA = new VariableCacheStub();
     private final CharacterStatisticCalculationSpyDouble CHARACTER_STATISTIC_CALCULATION =
             new CharacterStatisticCalculationSpyDouble();
 
+    @Mock private CharacterVariableStatisticType mockStatType;
+
+    private CharacterVariableStatistic characterVariableStatistic;
+
     @BeforeEach
     void setUp() {
-        _characterVariableStatistic = new CharacterVariableStatisticImpl(CHARACTER,
-                CHARACTER_VARIABLE_STATISTIC_TYPE, DATA, CHARACTER_STATISTIC_CALCULATION);
+        mockStatType = mock(CharacterVariableStatisticType.class);
+
+        characterVariableStatistic = new CharacterVariableStatisticImpl(CHARACTER,
+                mockStatType, DATA, CHARACTER_STATISTIC_CALCULATION);
     }
 
     // TODO: Test constructor with invalid params
@@ -38,37 +41,37 @@ class CharacterVariableStatisticImplTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(CharacterVariableStatistic.class.getCanonicalName(),
-                _characterVariableStatistic.getInterfaceName());
+                characterVariableStatistic.getInterfaceName());
     }
 
     @Test
     void testType() {
-        assertSame(CHARACTER_VARIABLE_STATISTIC_TYPE, _characterVariableStatistic.type());
+        assertSame(mockStatType, characterVariableStatistic.type());
     }
 
     @Test
     void testData() {
-        assertSame(DATA, _characterVariableStatistic.data());
+        assertSame(DATA, characterVariableStatistic.data());
     }
 
     @Test
     void testSetAndGetCurrentValue() {
-        _characterVariableStatistic.setCurrentValue(123);
+        characterVariableStatistic.setCurrentValue(123);
 
-        assertEquals(123, _characterVariableStatistic.getCurrentValue());
+        assertEquals(123, characterVariableStatistic.getCurrentValue());
     }
 
     @Test
     void testCalculate() {
-        _characterVariableStatistic.calculate();
+        characterVariableStatistic.calculate();
 
         assertSame(CHARACTER, CHARACTER_STATISTIC_CALCULATION._character);
-        assertSame(CHARACTER_VARIABLE_STATISTIC_TYPE,
+        assertSame(mockStatType,
                 CHARACTER_STATISTIC_CALCULATION._statisticType);
         assertEquals(CharacterStatisticCalculationSpyDouble.VALUE,
-                _characterVariableStatistic.totalValue());
+                characterVariableStatistic.totalValue());
         Map<String, Integer> representation =
-                _characterVariableStatistic.representation();
+                characterVariableStatistic.representation();
         assertEquals(CharacterStatisticCalculationSpyDouble.MODIFIERS.size(),
                 representation.size());
         CharacterStatisticCalculationSpyDouble.MODIFIERS.forEach((modifierType, value) ->
@@ -80,34 +83,34 @@ class CharacterVariableStatisticImplTests {
         CHARACTER.delete();
 
         assertThrows(IllegalStateException.class,
-                () -> _characterVariableStatistic.getCurrentValue());
+                () -> characterVariableStatistic.getCurrentValue());
         assertThrows(IllegalStateException.class,
-                () -> _characterVariableStatistic.setCurrentValue(0));
+                () -> characterVariableStatistic.setCurrentValue(0));
         assertThrows(IllegalStateException.class,
-                () -> _characterVariableStatistic.setCurrentValue(0));
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.type());
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.data());
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.calculate());
+                () -> characterVariableStatistic.setCurrentValue(0));
+        assertThrows(IllegalStateException.class, () -> characterVariableStatistic.type());
+        assertThrows(IllegalStateException.class, () -> characterVariableStatistic.data());
+        assertThrows(IllegalStateException.class, () -> characterVariableStatistic.calculate());
         assertThrows(IllegalStateException.class,
-                () -> _characterVariableStatistic.representation());
-        assertThrows(IllegalStateException.class, () -> _characterVariableStatistic.totalValue());
+                () -> characterVariableStatistic.representation());
+        assertThrows(IllegalStateException.class, () -> characterVariableStatistic.totalValue());
     }
 
     @Test
     void testEnforceDeletionInvariant() {
-        _characterVariableStatistic.delete();
+        characterVariableStatistic.delete();
 
         assertThrows(EntityDeletedException.class,
-                () -> _characterVariableStatistic.getCurrentValue());
+                () -> characterVariableStatistic.getCurrentValue());
         assertThrows(EntityDeletedException.class,
-                () -> _characterVariableStatistic.setCurrentValue(0));
+                () -> characterVariableStatistic.setCurrentValue(0));
         assertThrows(EntityDeletedException.class,
-                () -> _characterVariableStatistic.setCurrentValue(0));
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.type());
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.data());
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.calculate());
+                () -> characterVariableStatistic.setCurrentValue(0));
+        assertThrows(EntityDeletedException.class, () -> characterVariableStatistic.type());
+        assertThrows(EntityDeletedException.class, () -> characterVariableStatistic.data());
+        assertThrows(EntityDeletedException.class, () -> characterVariableStatistic.calculate());
         assertThrows(EntityDeletedException.class,
-                () -> _characterVariableStatistic.representation());
-        assertThrows(EntityDeletedException.class, () -> _characterVariableStatistic.totalValue());
+                () -> characterVariableStatistic.representation());
+        assertThrows(EntityDeletedException.class, () -> characterVariableStatistic.totalValue());
     }
 }

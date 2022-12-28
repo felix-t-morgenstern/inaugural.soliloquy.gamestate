@@ -2,12 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.CharacterVariableStatisticFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacterVariableStatisticType;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.spydoubles.CharacterStatisticCalculationSpyDouble;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -15,21 +15,23 @@ import soliloquy.specs.gamestate.factories.EntityMemberOfTypeFactory;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class CharacterVariableStatisticFactoryTests {
     private final FakeVariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final CharacterStatisticCalculationSpyDouble CALCULATION =
             new CharacterStatisticCalculationSpyDouble();
     private final Character CHARACTER = new FakeCharacter();
-    private final CharacterVariableStatisticType TYPE =
-            new FakeCharacterVariableStatisticType("type");
 
-    private CharacterVariableStatisticFactory _characterVariableStatisticFactory;
+    @Mock private CharacterVariableStatisticType mockStatType;
+
+    private CharacterVariableStatisticFactory factory;
 
     @BeforeEach
     void setUp() {
-        _characterVariableStatisticFactory =
-                new CharacterVariableStatisticFactory(DATA_FACTORY, CALCULATION);
+        mockStatType = mock(CharacterVariableStatisticType.class);
+
+        factory = new CharacterVariableStatisticFactory(DATA_FACTORY, CALCULATION);
     }
 
     @Test
@@ -43,10 +45,10 @@ class CharacterVariableStatisticFactoryTests {
     @Test
     void testMake() {
         CharacterVariableStatistic characterVariableStat =
-                _characterVariableStatisticFactory.make(CHARACTER, TYPE);
+                factory.make(CHARACTER, mockStatType);
 
         assertNotNull(characterVariableStat);
-        assertSame(TYPE, characterVariableStat.type());
+        assertSame(mockStatType, characterVariableStat.type());
         assertSame(DATA_FACTORY.Created.get(0), characterVariableStat.data());
         // TODO: Consider some tests of Character assignment via FakeCharacter.delete
     }
@@ -55,25 +57,25 @@ class CharacterVariableStatisticFactoryTests {
     void testMakeWithData() {
         VariableCache data = new VariableCacheStub();
         CharacterVariableStatistic characterVariableStat =
-                _characterVariableStatisticFactory.make(CHARACTER, TYPE, data);
+                factory.make(CHARACTER, mockStatType, data);
 
         assertNotNull(characterVariableStat);
-        assertSame(TYPE, characterVariableStat.type());
+        assertSame(mockStatType, characterVariableStat.type());
         assertSame(data, characterVariableStat.data());
     }
 
     @Test
     void testMakeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _characterVariableStatisticFactory.make(null, TYPE));
+                () -> factory.make(null, mockStatType));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterVariableStatisticFactory.make(CHARACTER, null));
+                () -> factory.make(CHARACTER, null));
     }
 
     @Test
     void testCharacterAssignment() {
         CharacterVariableStatistic characterVariableStat =
-                _characterVariableStatisticFactory.make(CHARACTER, TYPE);
+                factory.make(CHARACTER, mockStatType);
 
         characterVariableStat.calculate();
 
@@ -85,6 +87,6 @@ class CharacterVariableStatisticFactoryTests {
         assertEquals(EntityMemberOfTypeFactory.class.getCanonicalName() + "<" +
                         CharacterVariableStatisticType.class.getCanonicalName() + "," +
                         CharacterVariableStatistic.class.getCanonicalName() + ">",
-                _characterVariableStatisticFactory.getInterfaceName());
+                factory.getInterfaceName());
     }
 }

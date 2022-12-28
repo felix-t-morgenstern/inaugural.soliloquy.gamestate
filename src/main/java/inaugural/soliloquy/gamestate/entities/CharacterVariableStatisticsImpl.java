@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterVariableStatisticArchetype;
-import inaugural.soliloquy.gamestate.archetypes.CharacterVariableStatisticTypeArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.gamestate.entities.Character;
@@ -13,16 +11,12 @@ import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 import java.util.HashMap;
 import java.util.Map;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class CharacterVariableStatisticsImpl
         extends EntityMembersOfTypeImpl<CharacterVariableStatisticType,
         CharacterVariableStatistic, Character>
         implements CharacterVariableStatistics {
-    private static final CharacterVariableStatisticType ENTITY_MEMBER_TYPE_ARCHETYPE =
-            new CharacterVariableStatisticTypeArchetype();
-    private static final CharacterVariableStatistic ENTITY_MEMBER_ARCHETYPE =
-            new CharacterVariableStatisticArchetype();
-
-    @SuppressWarnings("ConstantConditions")
     public CharacterVariableStatisticsImpl(Character character,
                                            EntityMemberOfTypeFactory<
                                                    CharacterVariableStatisticType,
@@ -30,7 +24,8 @@ public class CharacterVariableStatisticsImpl
                                                    factory,
                                            VariableCacheFactory dataFactory) {
         super(character, c -> t -> d -> factory.make(c, t, d), dataFactory,
-                ENTITY_MEMBER_TYPE_ARCHETYPE, ENTITY_MEMBER_ARCHETYPE);
+                generateSimpleArchetype(CharacterVariableStatisticType.class),
+                generateSimpleArchetype(CharacterVariableStatistic.class));
         Check.ifNull(factory, "factory");
     }
 

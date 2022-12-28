@@ -12,17 +12,18 @@ import soliloquy.specs.gamestate.factories.CharacterVariableStatisticsFactory;
 import soliloquy.specs.ruleset.entities.CharacterVariableStatisticType;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class CharacterVariableStatisticsFactoryImplTests {
     private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final FakeCharacterVariableStatisticFactory ENTITY_FACTORY =
             new FakeCharacterVariableStatisticFactory();
 
-    private CharacterVariableStatisticsFactory _characterVariableStatisticsFactory;
+    private CharacterVariableStatisticsFactory factory;
 
     @BeforeEach
     void setUp() {
-        _characterVariableStatisticsFactory = new CharacterVariableStatisticsFactoryImpl(DATA_FACTORY, ENTITY_FACTORY);
+        factory = new CharacterVariableStatisticsFactoryImpl(DATA_FACTORY, ENTITY_FACTORY);
     }
 
     @Test
@@ -37,13 +38,11 @@ class CharacterVariableStatisticsFactoryImplTests {
     void testMake() {
         Character character = new FakeCharacter();
 
-        CharacterVariableStatistics characterVariableStatistics =
-                _characterVariableStatisticsFactory.make(character);
+        CharacterVariableStatistics characterVariableStatistics = factory.make(character);
 
         assertNotNull(characterVariableStatistics);
 
-        String typeId = "typeId";
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType(typeId);
+        CharacterVariableStatisticType type = mock(CharacterVariableStatisticType.class);
         characterVariableStatistics.add(type);
 
         CharacterVariableStatistic characterVariableStatistic =
@@ -58,14 +57,13 @@ class CharacterVariableStatisticsFactoryImplTests {
 
     @Test
     void testMakeWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterVariableStatisticsFactory.make(null));
+        assertThrows(IllegalArgumentException.class, () -> factory.make(null));
         // TODO: Test with data null
     }
 
     @Test
     void testGetInterfaceName() {
         assertEquals(CharacterVariableStatisticsFactory.class.getCanonicalName(),
-                _characterVariableStatisticsFactory.getInterfaceName());
+                factory.getInterfaceName());
     }
 }

@@ -5,6 +5,7 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterVariableStatistic;
@@ -17,7 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class CharacterVariableStatisticsImplTests {
     private final Character CHARACTER = new FakeCharacter();
@@ -25,11 +28,19 @@ class CharacterVariableStatisticsImplTests {
     private final FakeCharacterVariableStatisticFactory FACTORY =
             new FakeCharacterVariableStatisticFactory();
 
-    private CharacterVariableStatistics _variableStats;
+    @Mock private CharacterVariableStatisticType mockStatType1;
+    @Mock private CharacterVariableStatisticType mockStatType2;
+    @Mock private CharacterVariableStatisticType mockStatType3;
+
+    private CharacterVariableStatistics variableStats;
 
     @BeforeEach
     void setUp() {
-        _variableStats = new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, DATA_FACTORY);
+        mockStatType1 = mock(CharacterVariableStatisticType.class);
+        mockStatType2 = mock(CharacterVariableStatisticType.class);
+        mockStatType3 = mock(CharacterVariableStatisticType.class);
+
+        variableStats = new CharacterVariableStatisticsImpl(CHARACTER, FACTORY, DATA_FACTORY);
     }
 
     @Test
@@ -45,184 +56,155 @@ class CharacterVariableStatisticsImplTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(CharacterVariableStatistics.class.getCanonicalName(),
-                _variableStats.getInterfaceName());
+                variableStats.getInterfaceName());
     }
 
     @Test
     void testAddAndGet() {
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
+        assertNull(variableStats.get(mockStatType1));
 
-        assertNull(_variableStats.get(type));
+        variableStats.add(mockStatType1);
 
-        _variableStats.add(type);
-
-        assertNotNull(_variableStats.get(type));
+        assertNotNull(variableStats.get(mockStatType1));
         assertSame(CHARACTER,
-                ((FakeCharacterVariableStatistic) _variableStats.get(type))._character);
-        assertSame(DATA_FACTORY.Created.get(0), _variableStats.get(type).data());
+                ((FakeCharacterVariableStatistic) variableStats.get(mockStatType1))._character);
+        assertSame(DATA_FACTORY.Created.get(0), variableStats.get(mockStatType1).data());
     }
 
     @Test
     void testAddWithData() {
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
         VariableCache data = new VariableCacheStub();
 
-        assertNull(_variableStats.get(type));
+        assertNull(variableStats.get(mockStatType1));
 
-        _variableStats.add(type, data);
+        variableStats.add(mockStatType1, data);
 
-        assertNotNull(_variableStats.get(type));
+        assertNotNull(variableStats.get(mockStatType1));
         assertSame(CHARACTER,
-                ((FakeCharacterVariableStatistic) _variableStats.get(type))._character);
-        assertSame(data, _variableStats.get(type).data());
+                ((FakeCharacterVariableStatistic) variableStats.get(mockStatType1))._character);
+        assertSame(data, variableStats.get(mockStatType1).data());
     }
 
     @Test
     void testAddExistingTypeIsNondestructive() {
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
+        variableStats.add(mockStatType1);
 
-        _variableStats.add(type);
+        CharacterVariableStatistic entity = variableStats.get(mockStatType1);
 
-        CharacterVariableStatistic entity = _variableStats.get(type);
+        variableStats.add(mockStatType1);
 
-        _variableStats.add(type);
-
-        CharacterVariableStatistic entityAfterSecondAdd = _variableStats.get(type);
+        CharacterVariableStatistic entityAfterSecondAdd = variableStats.get(mockStatType1);
 
         assertSame(entity, entityAfterSecondAdd);
     }
 
     @Test
     void testSize() {
-        _variableStats.add(new FakeCharacterVariableStatisticType("id1"));
-        _variableStats.add(new FakeCharacterVariableStatisticType("id2"));
-        _variableStats.add(new FakeCharacterVariableStatisticType("id3"));
+        variableStats.add(mockStatType1);
+        variableStats.add(mockStatType2);
+        variableStats.add(mockStatType3);
 
-        assertEquals(3, _variableStats.size());
+        assertEquals(3, variableStats.size());
     }
 
     @Test
     void testContains() {
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
+        assertFalse(variableStats.contains(mockStatType1));
 
-        assertFalse(_variableStats.contains(type));
+        variableStats.add(mockStatType1);
 
-        _variableStats.add(type);
-
-        assertTrue(_variableStats.contains(type));
+        assertTrue(variableStats.contains(mockStatType1));
     }
 
     @Test
     void testRemove() {
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
+        assertFalse(variableStats.remove(mockStatType1));
 
-        assertFalse(_variableStats.remove(type));
+        variableStats.add(mockStatType1);
 
-        _variableStats.add(type);
-
-        assertTrue(_variableStats.remove(type));
-        assertFalse(_variableStats.remove(type));
+        assertTrue(variableStats.remove(mockStatType1));
+        assertFalse(variableStats.remove(mockStatType1));
     }
 
     @Test
     void testMethodsWithNullType() {
-        assertThrows(IllegalArgumentException.class, () -> _variableStats.add(null));
-        assertThrows(IllegalArgumentException.class, () -> _variableStats.get(null));
-        assertThrows(IllegalArgumentException.class, () -> _variableStats.contains(null));
-        assertThrows(IllegalArgumentException.class, () -> _variableStats.remove(null));
+        assertThrows(IllegalArgumentException.class, () -> variableStats.add(null));
+        assertThrows(IllegalArgumentException.class, () -> variableStats.get(null));
+        assertThrows(IllegalArgumentException.class, () -> variableStats.contains(null));
+        assertThrows(IllegalArgumentException.class, () -> variableStats.remove(null));
     }
 
     @Test
     void testClear() {
-        CharacterVariableStatisticType type1 =
-                new FakeCharacterVariableStatisticType("id1");
-        CharacterVariableStatisticType type2 =
-                new FakeCharacterVariableStatisticType("id2");
-        CharacterVariableStatisticType type3 =
-                new FakeCharacterVariableStatisticType("id3");
+        variableStats.add(mockStatType1);
+        variableStats.add(mockStatType2);
+        variableStats.add(mockStatType3);
 
-        _variableStats.add(type1);
-        _variableStats.add(type2);
-        _variableStats.add(type3);
+        variableStats.clear();
 
-        _variableStats.clear();
-
-        assertEquals(0, _variableStats.size());
+        assertEquals(0, variableStats.size());
     }
 
     @Test
     void testGetCurrentValues() {
-        CharacterVariableStatisticType type1 =
-                new FakeCharacterVariableStatisticType("id1");
-        CharacterVariableStatisticType type2 =
-                new FakeCharacterVariableStatisticType("id2");
-        CharacterVariableStatisticType type3 =
-                new FakeCharacterVariableStatisticType("id3");
+        variableStats.add(mockStatType1);
+        variableStats.add(mockStatType2);
+        variableStats.add(mockStatType3);
 
-        _variableStats.add(type1);
-        _variableStats.add(type2);
-        _variableStats.add(type3);
+        variableStats.get(mockStatType1).setCurrentValue(123);
+        variableStats.get(mockStatType2).setCurrentValue(456);
+        variableStats.get(mockStatType3).setCurrentValue(789);
 
-        _variableStats.get(type1).setCurrentValue(123);
-        _variableStats.get(type2).setCurrentValue(456);
-        _variableStats.get(type3).setCurrentValue(789);
-
-        Map<CharacterVariableStatisticType, Integer> currentValues = _variableStats.currentValues();
+        Map<CharacterVariableStatisticType, Integer> currentValues = variableStats.currentValues();
 
         assertNotNull(currentValues);
         assertEquals(3, currentValues.size());
-        assertEquals(123, currentValues.get(type1));
-        assertEquals(456, currentValues.get(type2));
-        assertEquals(789, currentValues.get(type3));
+        assertEquals(123, currentValues.get(mockStatType1));
+        assertEquals(456, currentValues.get(mockStatType2));
+        assertEquals(789, currentValues.get(mockStatType3));
     }
 
     @Test
     void testGetMaxValues() {
-        CharacterVariableStatisticType type1 =
-                new FakeCharacterVariableStatisticType("id1");
-        CharacterVariableStatisticType type2 =
-                new FakeCharacterVariableStatisticType("id2");
-        CharacterVariableStatisticType type3 =
-                new FakeCharacterVariableStatisticType("id3");
+        int maxValue1 = randomInt();
+        int maxValue2 = randomInt();
+        int maxValue3 = randomInt();
 
-        _variableStats.add(type1);
-        _variableStats.add(type2);
-        _variableStats.add(type3);
+        variableStats.add(mockStatType1);
+        variableStats.add(mockStatType2);
+        variableStats.add(mockStatType3);
 
-        ((FakeCharacterVariableStatistic) _variableStats.get(type1))._maxValue = 123;
-        ((FakeCharacterVariableStatistic) _variableStats.get(type2))._maxValue = 456;
-        ((FakeCharacterVariableStatistic) _variableStats.get(type3))._maxValue = 789;
+        ((FakeCharacterVariableStatistic) variableStats.get(mockStatType1))._maxValue = maxValue1;
+        ((FakeCharacterVariableStatistic) variableStats.get(mockStatType2))._maxValue = maxValue2;
+        ((FakeCharacterVariableStatistic) variableStats.get(mockStatType3))._maxValue = maxValue3;
 
-        Map<CharacterVariableStatisticType, Integer> maxValues = _variableStats.maxValues();
+        Map<CharacterVariableStatisticType, Integer> maxValues = variableStats.maxValues();
 
         assertNotNull(maxValues);
         assertEquals(3, maxValues.size());
-        assertEquals(123, maxValues.get(type1));
-        assertEquals(456, maxValues.get(type2));
-        assertEquals(789, maxValues.get(type3));
-        assertTrue(((FakeCharacterVariableStatistic) _variableStats.get(type1))._isCalculated);
-        assertTrue(((FakeCharacterVariableStatistic) _variableStats.get(type2))._isCalculated);
-        assertTrue(((FakeCharacterVariableStatistic) _variableStats.get(type3))._isCalculated);
+        assertEquals(maxValue1, maxValues.get(mockStatType1));
+        assertEquals(maxValue2, maxValues.get(mockStatType2));
+        assertEquals(maxValue3, maxValues.get(mockStatType3));
+        assertTrue(
+                ((FakeCharacterVariableStatistic) variableStats.get(mockStatType1))._isCalculated);
+        assertTrue(
+                ((FakeCharacterVariableStatistic) variableStats.get(mockStatType2))._isCalculated);
+        assertTrue(
+                ((FakeCharacterVariableStatistic) variableStats.get(mockStatType3))._isCalculated);
     }
 
     @Test
     void testRepresentation() {
-        CharacterVariableStatisticType type1 =
-                new FakeCharacterVariableStatisticType("id1");
-        CharacterVariableStatisticType type2 =
-                new FakeCharacterVariableStatisticType("id2");
-        CharacterVariableStatisticType type3 =
-                new FakeCharacterVariableStatisticType("id3");
+        variableStats.add(mockStatType1);
+        variableStats.add(mockStatType2);
+        variableStats.add(mockStatType3);
 
-        _variableStats.add(type1);
-        _variableStats.add(type2);
-        _variableStats.add(type3);
-
-        List<CharacterVariableStatistic> representation = _variableStats.representation();
+        List<CharacterVariableStatistic> representation = variableStats.representation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        Arrays.stream(new CharacterVariableStatisticType[]{type1, type2, type3})
+        Arrays.stream(
+                new CharacterVariableStatisticType[]{mockStatType1, mockStatType2, mockStatType3})
                 .forEach(t -> {
                     for (CharacterVariableStatistic variableStat : representation) {
                         if (variableStat.type() == t) {
@@ -235,22 +217,15 @@ class CharacterVariableStatisticsImplTests {
 
     @Test
     void testIterator() {
-        CharacterVariableStatisticType type1 =
-                new FakeCharacterVariableStatisticType("id1");
-        CharacterVariableStatisticType type2 =
-                new FakeCharacterVariableStatisticType("id2");
-        CharacterVariableStatisticType type3 =
-                new FakeCharacterVariableStatisticType("id3");
+        variableStats.add(mockStatType1);
+        variableStats.add(mockStatType2);
+        variableStats.add(mockStatType3);
 
-        _variableStats.add(type1);
-        _variableStats.add(type2);
-        _variableStats.add(type3);
-
-        List<CharacterVariableStatistic> representation = _variableStats.representation();
+        List<CharacterVariableStatistic> representation = variableStats.representation();
 
         ArrayList<CharacterVariableStatistic> fromIterator = new ArrayList<>();
 
-        _variableStats.forEach(fromIterator::add);
+        variableStats.forEach(fromIterator::add);
 
         assertEquals(3, fromIterator.size());
         representation.forEach(e -> assertTrue(fromIterator.contains(e)));
@@ -258,58 +233,47 @@ class CharacterVariableStatisticsImplTests {
 
     @Test
     void testDelete() {
-        CharacterVariableStatisticType type1 =
-                new FakeCharacterVariableStatisticType("id1");
-        CharacterVariableStatisticType type2 =
-                new FakeCharacterVariableStatisticType("id2");
-        CharacterVariableStatisticType type3 =
-                new FakeCharacterVariableStatisticType("id3");
+        variableStats.add(mockStatType1);
+        variableStats.add(mockStatType2);
+        variableStats.add(mockStatType3);
 
-        _variableStats.add(type1);
-        _variableStats.add(type2);
-        _variableStats.add(type3);
+        List<CharacterVariableStatistic> representation = variableStats.representation();
 
-        List<CharacterVariableStatistic> representation = _variableStats.representation();
+        variableStats.delete();
 
-        _variableStats.delete();
-
-        assertTrue(_variableStats.isDeleted());
+        assertTrue(variableStats.isDeleted());
         representation.forEach(e -> assertTrue(e.isDeleted()));
     }
 
     @Test
     void testDeletionInvariant() {
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
+        variableStats.delete();
 
-        _variableStats.delete();
-
-        assertThrows(EntityDeletedException.class, () -> _variableStats.add(type));
-        assertThrows(EntityDeletedException.class, () -> _variableStats.get(type));
-        assertThrows(EntityDeletedException.class, () -> _variableStats.contains(type));
-        assertThrows(EntityDeletedException.class, () -> _variableStats.remove(type));
-        assertThrows(EntityDeletedException.class, () -> _variableStats.size());
-        assertThrows(EntityDeletedException.class, () -> _variableStats.clear());
-        assertThrows(EntityDeletedException.class, () -> _variableStats.representation());
-        assertThrows(EntityDeletedException.class, () -> _variableStats.iterator());
-        assertThrows(EntityDeletedException.class, () -> _variableStats.currentValues());
-        assertThrows(EntityDeletedException.class, () -> _variableStats.maxValues());
+        assertThrows(EntityDeletedException.class, () -> variableStats.add(mockStatType1));
+        assertThrows(EntityDeletedException.class, () -> variableStats.get(mockStatType1));
+        assertThrows(EntityDeletedException.class, () -> variableStats.contains(mockStatType1));
+        assertThrows(EntityDeletedException.class, () -> variableStats.remove(mockStatType1));
+        assertThrows(EntityDeletedException.class, () -> variableStats.size());
+        assertThrows(EntityDeletedException.class, () -> variableStats.clear());
+        assertThrows(EntityDeletedException.class, () -> variableStats.representation());
+        assertThrows(EntityDeletedException.class, () -> variableStats.iterator());
+        assertThrows(EntityDeletedException.class, () -> variableStats.currentValues());
+        assertThrows(EntityDeletedException.class, () -> variableStats.maxValues());
     }
 
     @Test
     void testCharacterDeletionInvariant() {
-        CharacterVariableStatisticType type = new FakeCharacterVariableStatisticType("");
-
         CHARACTER.delete();
 
-        assertThrows(IllegalStateException.class, () -> _variableStats.add(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.get(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.contains(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.remove(type));
-        assertThrows(IllegalStateException.class, () -> _variableStats.size());
-        assertThrows(IllegalStateException.class, () -> _variableStats.clear());
-        assertThrows(IllegalStateException.class, () -> _variableStats.representation());
-        assertThrows(IllegalStateException.class, () -> _variableStats.iterator());
-        assertThrows(IllegalStateException.class, () -> _variableStats.currentValues());
-        assertThrows(IllegalStateException.class, () -> _variableStats.maxValues());
+        assertThrows(IllegalStateException.class, () -> variableStats.add(mockStatType1));
+        assertThrows(IllegalStateException.class, () -> variableStats.get(mockStatType1));
+        assertThrows(IllegalStateException.class, () -> variableStats.contains(mockStatType1));
+        assertThrows(IllegalStateException.class, () -> variableStats.remove(mockStatType1));
+        assertThrows(IllegalStateException.class, () -> variableStats.size());
+        assertThrows(IllegalStateException.class, () -> variableStats.clear());
+        assertThrows(IllegalStateException.class, () -> variableStats.representation());
+        assertThrows(IllegalStateException.class, () -> variableStats.iterator());
+        assertThrows(IllegalStateException.class, () -> variableStats.currentValues());
+        assertThrows(IllegalStateException.class, () -> variableStats.maxValues());
     }
 }

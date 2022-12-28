@@ -18,6 +18,8 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class CharacterImpl implements Character {
     private final UUID UUID;
     private final CharacterType CHARACTER_TYPE;
@@ -37,19 +39,16 @@ public class CharacterImpl implements Character {
 
     private final static CharacterStatistic<CharacterStaticStatisticType> STATIC_STAT_ARCHETYPE =
             new CharacterStaticStatisticArchetype();
-    private final static CharacterStaticStatisticTypeArchetype STATIC_STAT_TYPE_ARCHETYPE =
-            new CharacterStaticStatisticTypeArchetype();
 
-    private Tile _tile;
-    private String _stance;
-    private String _direction;
-    private ImageAssetSet _imageAssetSet;
-    private boolean _playerControlled;
-    private boolean _deleted;
-    private String _name;
-    private CharacterAIType _aiType;
+    private Tile tile;
+    private String stance;
+    private String direction;
+    private ImageAssetSet imageAssetSet;
+    private boolean playerControlled;
+    private boolean deleted;
+    private String name;
+    private CharacterAIType aiType;
 
-    @SuppressWarnings("ConstantConditions")
     public CharacterImpl(UUID uuid,
                          CharacterType characterType,
                          CharacterEventsFactory characterEventsFactory,
@@ -69,7 +68,8 @@ public class CharacterImpl implements Character {
         VARIABLE_STATISTICS = Check.ifNull(variableStatsFactory, "variableStatsFactory")
                 .make(this);
         STATIC_STATISTICS = Check.ifNull(entityMembersOfTypeFactory, "entityMembersOfTypeFactory")
-                .make(this, STATIC_STAT_TYPE_ARCHETYPE, STATIC_STAT_ARCHETYPE);
+                .make(this, generateSimpleArchetype(CharacterStaticStatisticType.class),
+                        STATIC_STAT_ARCHETYPE);
         STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").make(this);
         PASSIVE_ABILITIES = new ArrayList<>();
         ACTIVE_ABILITIES = new ArrayList<>();
@@ -98,51 +98,51 @@ public class CharacterImpl implements Character {
     @Override
     public Tile tile() throws IllegalStateException {
         enforceInvariant("tile", true);
-        return _tile;
+        return tile;
     }
 
     @Override
     public String getStance() throws IllegalStateException {
         enforceInvariant("getStance", true);
-        return _stance;
+        return stance;
     }
 
     @Override
     public void setStance(String stance) throws IllegalStateException {
         enforceInvariant("setStance", true);
-        _stance = stance;
+        this.stance = stance;
     }
 
     @Override
     public String getDirection() throws IllegalStateException {
         enforceInvariant("getDirection", true);
-        return _direction;
+        return direction;
     }
 
     @Override
     public void setDirection(String direction)
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("setDirection", true);
-        _direction = direction;
+        this.direction = direction;
     }
 
     @Override
     public ImageAssetSet getImageAssetSet() throws IllegalStateException {
         enforceInvariant("getImageAssetSet", true);
-        return _imageAssetSet;
+        return imageAssetSet;
     }
 
     @Override
     public void setImageAssetSet(ImageAssetSet imageAssetSet)
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("setImageAssetSet", true);
-        _imageAssetSet = imageAssetSet;
+        this.imageAssetSet = imageAssetSet;
     }
 
     @Override
     public CharacterAIType getAIType() throws IllegalStateException {
         enforceInvariant("getAIType", true);
-        return _aiType;
+        return aiType;
     }
 
     @Override
@@ -153,7 +153,7 @@ public class CharacterImpl implements Character {
             throw new IllegalArgumentException(
                     "Character.setAIType: characterAIType cannot be null");
         }
-        _aiType = characterAIType;
+        aiType = characterAIType;
     }
 
     @Override
@@ -215,13 +215,13 @@ public class CharacterImpl implements Character {
     @Override
     public boolean getPlayerControlled() throws IllegalStateException {
         enforceInvariant("getPlayerControlled", true);
-        return _playerControlled;
+        return playerControlled;
     }
 
     @Override
     public void setPlayerControlled(boolean playerControlled) throws IllegalStateException {
         enforceInvariant("setPlayerControlled", true);
-        _playerControlled = playerControlled;
+        this.playerControlled = playerControlled;
     }
 
     @Override
@@ -235,11 +235,11 @@ public class CharacterImpl implements Character {
         enforceInvariant("characterType", false);
         // delete should remove the Character from its Tile, via its TileCharacters, which will
         // handle removal from the GameZone.
-        _deleted = true;
-        if (_tile != null) {
-            _tile.characters().remove(this);
+        deleted = true;
+        if (tile != null) {
+            tile.characters().remove(this);
         }
-        _tile = null;
+        tile = null;
         EQUIPMENT_SLOTS.delete();
         INVENTORY.delete();
         VARIABLE_STATISTICS.delete();
@@ -251,26 +251,26 @@ public class CharacterImpl implements Character {
     public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("assignTileAfterAddedToTileEntitiesOfType", true);
-        _tile = tile;
+        this.tile = tile;
         enforceInvariant("assignTileAfterAddedToTileEntitiesOfType", true);
     }
 
     @Override
     public boolean isDeleted() {
         enforceInvariant("characterType", false);
-        return _deleted;
+        return deleted;
     }
 
     @Override
     public String getName() {
         enforceInvariant("getName", true);
-        return _name;
+        return name;
     }
 
     @Override
     public void setName(String name) {
         enforceInvariant("setName", true);
-        _name = name;
+        this.name = name;
     }
 
     @Override
@@ -300,42 +300,13 @@ public class CharacterImpl implements Character {
     }
 
     private void enforceInvariant(String methodName, boolean cannotBeDeleted) {
-        if (cannotBeDeleted && _deleted) {
+        if (cannotBeDeleted && deleted) {
             throw new EntityDeletedException("CharacterImpl." + methodName +
                     ": Character is deleted");
         }
-        if (_tile != null && !_tile.characters().contains(this)) {
+        if (tile != null && !tile.characters().contains(this)) {
             throw new IllegalStateException("CharacterImpl." + methodName +
                     ": Character is not present on its specified Tile");
-        }
-    }
-
-    private static class CharacterStaticStatisticTypeArchetype
-            implements CharacterStaticStatisticType {
-
-        @Override
-        public String id() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public String getDescription() {
-            return null;
-        }
-
-        @Override
-        public void setDescription(String s) {
-
-        }
-
-        @Override
-        public ImageAssetSet imageAssetSet() {
-            return null;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return CharacterStaticStatisticType.class.getCanonicalName();
         }
     }
 }

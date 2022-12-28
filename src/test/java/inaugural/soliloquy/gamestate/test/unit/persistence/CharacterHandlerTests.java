@@ -76,14 +76,10 @@ class CharacterHandlerTests {
 
     private final Map<String, CharacterStaticStatisticType> STATIC_STAT_TYPES = new HashMap<>();
     private final String STATIC_STAT_TYPE_ID = "staticStatTypeId";
-    private final CharacterStaticStatisticType STATIC_STAT_TYPE =
-            new FakeCharacterStaticStatisticType(STATIC_STAT_TYPE_ID);
 
     private final Map<String, CharacterVariableStatisticType> VARIABLE_STAT_TYPES =
             new HashMap<>();
     private final String VARIABLE_STAT_TYPE_ID = "variableStatTypeId";
-    private final CharacterVariableStatisticType VARIABLE_STAT_TYPE =
-            new FakeCharacterVariableStatisticType(VARIABLE_STAT_TYPE_ID);
 
     private final Map<String, StatusEffectType> STAT_EFFECT_TYPES = new HashMap<>();
     private final String STAT_EFFECT_TYPE_ID = "statEffectTypeId";
@@ -108,7 +104,9 @@ class CharacterHandlerTests {
             new FakeVariableCacheHandler();
     private final TypeHandler<Item> ITEM_HANDLER = new FakeItemHandler();
 
-    private CharacterAIType mockCharacterAIType;
+    @Mock private CharacterAIType mockCharacterAIType;
+    @Mock private CharacterStaticStatisticType mockStaticStatType;
+    @Mock private CharacterVariableStatisticType mockVariableStatType;
     @Mock private PassiveAbility mockPassiveAbility;
     @Mock private ReactiveAbility mockReactiveAbility;
 
@@ -139,6 +137,12 @@ class CharacterHandlerTests {
         mockCharacterAIType = mock(CharacterAIType.class);
         when(mockCharacterAIType.id()).thenReturn(AI_TYPE_ID);
 
+        mockStaticStatType = mock(CharacterStaticStatisticType.class);
+        when(mockStaticStatType.id()).thenReturn(STATIC_STAT_TYPE_ID);
+
+        mockVariableStatType = mock(CharacterVariableStatisticType.class);
+        when(mockVariableStatType.id()).thenReturn(VARIABLE_STAT_TYPE_ID);
+
         mockPassiveAbility = mock(PassiveAbility.class);
         when(mockPassiveAbility.id()).thenReturn(PASSIVE_ABILITY_ID);
 
@@ -150,8 +154,8 @@ class CharacterHandlerTests {
         IMAGE_ASSET_SETS.put(IMAGE_ASSET_SET.id(), IMAGE_ASSET_SET);
         AI_TYPES.put(AI_TYPE_ID, mockCharacterAIType);
         EVENTS.put(EVENT_ID, EVENT);
-        STATIC_STAT_TYPES.put(STATIC_STAT_TYPE.id(), STATIC_STAT_TYPE);
-        VARIABLE_STAT_TYPES.put(VARIABLE_STAT_TYPE.id(), VARIABLE_STAT_TYPE);
+        STATIC_STAT_TYPES.put(mockStaticStatType.id(), mockStaticStatType);
+        VARIABLE_STAT_TYPES.put(mockVariableStatType.id(), mockVariableStatType);
         STAT_EFFECT_TYPES.put(STAT_EFFECT_TYPE.id(), STAT_EFFECT_TYPE);
         PASSIVE_ABILITIES.put(PASSIVE_ABILITY_ID, mockPassiveAbility);
         ACTIVE_ABILITIES.put(ACTIVE_ABILITY.id(), ACTIVE_ABILITY);
@@ -279,11 +283,11 @@ class CharacterHandlerTests {
         character.equipmentSlots().equipItemToSlot(EQUIPMENT_SLOT_1, equipmentSlotItem);
         Item inventoryItem = new FakeItem();
         character.inventory().add(inventoryItem);
-        character.variableStatistics().add(VARIABLE_STAT_TYPE);
+        character.variableStatistics().add(mockVariableStatType);
         CharacterVariableStatistic variableStat =
-                character.variableStatistics().get(VARIABLE_STAT_TYPE);
+                character.variableStatistics().get(mockVariableStatType);
         variableStat.setCurrentValue(135);
-        character.staticStatistics().add(STATIC_STAT_TYPE);
+        character.staticStatistics().add(mockStaticStatType);
         ((FakeCharacterStatusEffects) character.statusEffects())._representation.clear();
         ((FakeCharacterStatusEffects) character.statusEffects())._representation
                 .put(STAT_EFFECT_TYPE, 246);
@@ -297,9 +301,9 @@ class CharacterHandlerTests {
 
         assertEquals(WRITTEN_VALUE, writtenValue);
         assertSame(uuid, ((FakeUuidHandler) UUID_HANDLER).WRITE_INPUTS.get(0));
-        assertSame(character.variableStatistics().get(VARIABLE_STAT_TYPE).data(),
+        assertSame(character.variableStatistics().get(mockVariableStatType).data(),
                 ((FakeVariableCacheHandler) DATA_HANDLER).WRITE_INPUTS.get(0));
-        assertSame(character.staticStatistics().get(STATIC_STAT_TYPE).data(),
+        assertSame(character.staticStatistics().get(mockStaticStatType).data(),
                 ((FakeVariableCacheHandler) DATA_HANDLER).WRITE_INPUTS.get(1));
         assertSame(character.data(),
                 ((FakeVariableCacheHandler) DATA_HANDLER).WRITE_INPUTS.get(2));
@@ -346,19 +350,19 @@ class CharacterHandlerTests {
 
         assertEquals(1, readCharacter.variableStatistics().representation().size());
         assertEquals(135,
-                readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).getCurrentValue());
+                readCharacter.variableStatistics().get(mockVariableStatType).getCurrentValue());
         assertEquals("VariableCache0",
                 ((FakeVariableCacheHandler) DATA_HANDLER).READ_INPUTS.get(1));
         assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(1),
-                readCharacter.variableStatistics().get(VARIABLE_STAT_TYPE).data());
+                readCharacter.variableStatistics().get(mockVariableStatType).data());
 
         assertEquals(1, readCharacter.staticStatistics().representation().size());
-        assertSame(STATIC_STAT_TYPE,
+        assertSame(mockStaticStatType,
                 readCharacter.staticStatistics().representation().get(0).type());
         assertEquals("VariableCache1",
                 ((FakeVariableCacheHandler) DATA_HANDLER).READ_INPUTS.get(2));
         assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(2),
-                readCharacter.staticStatistics().get(STATIC_STAT_TYPE).data());
+                readCharacter.staticStatistics().get(mockStaticStatType).data());
 
         assertEquals(1, readCharacter.statusEffects().representation().size());
         assertEquals(246,
