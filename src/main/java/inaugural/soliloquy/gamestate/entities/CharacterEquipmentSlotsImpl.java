@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
@@ -11,14 +10,13 @@ import soliloquy.specs.gamestate.entities.Item;
 import java.util.HashMap;
 import java.util.Map;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         implements CharacterEquipmentSlots {
     private final Character CHARACTER;
     private final HashMap<String, Pair<Item, Boolean>> EQUIPMENT_SLOTS;
 
-    private static final Item ITEM_ARCHETYPE = new ItemArchetype();
-
-    @SuppressWarnings("ConstantConditions")
     public CharacterEquipmentSlotsImpl(Character character) {
         CHARACTER = Check.ifNull(character, "character");
         EQUIPMENT_SLOTS = new HashMap<>();
@@ -59,7 +57,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
             EQUIPMENT_SLOTS.putIfAbsent(equipmentSlotType,
-                    new Pair<>(null, true, ITEM_ARCHETYPE, true));
+                    new Pair<>(null, true, generateSimpleArchetype(Item.class), true));
         }
     }
 

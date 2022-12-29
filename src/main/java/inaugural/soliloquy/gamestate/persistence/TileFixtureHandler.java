@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.factories.TileFixtureFactory;
@@ -14,45 +14,33 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
     private final Function<String, FixtureType> GET_FIXTURE_TYPE;
     private final TileFixtureFactory TILE_FIXTURE_FACTORY;
-    private final TypeHandler<UUID> UUID_HANDLER;
     private final TypeHandler<VariableCache> DATA_HANDLER;
     private final TypeHandler<Item> ITEMS_HANDLER;
 
-    private static final TileFixture ARCHETYPE = new TileFixtureArchetype();
-
-    @SuppressWarnings("ConstantConditions")
     public TileFixtureHandler(Function<String, FixtureType> getFixtureType,
                               TileFixtureFactory tileFixtureFactory,
-                              TypeHandler<UUID> uuidHandler,
                               TypeHandler<VariableCache> dataHandler,
                               TypeHandler<Item> itemsHandler) {
-        super(ARCHETYPE);
+        super(generateSimpleArchetype(TileFixture.class));
         GET_FIXTURE_TYPE = Check.ifNull(getFixtureType, "getFixtureType");
         TILE_FIXTURE_FACTORY = Check.ifNull(tileFixtureFactory, "tileFixtureFactory");
-        UUID_HANDLER = Check.ifNull(uuidHandler, "uuidHandler");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
         ITEMS_HANDLER = Check.ifNull(itemsHandler, "itemsHandler");
     }
 
     @Override
     public TileFixture read(String data) throws IllegalArgumentException {
-        if (data == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureHandler.read: data cannot be null");
-        }
-        if (data.equals("")) {
-            throw new IllegalArgumentException(
-                    "TileFixtureHandler.read: data cannot be empty");
-        }
+        Check.ifNullOrEmpty(data, "data");
         TileFixtureDTO dto = JSON.fromJson(data, TileFixtureDTO.class);
         TileFixture tileFixture = TILE_FIXTURE_FACTORY.make(
                 GET_FIXTURE_TYPE.apply(dto.fixtureTypeId),
-                DATA_HANDLER.read(dto.data), UUID_HANDLER.read(dto.uuid));
-        tileFixture.setXTileWidthOffset(dto.tileWidthOffset);
-        tileFixture.setYTileHeightOffset(dto.tileHeightOffset);
+                DATA_HANDLER.read(dto.data), UUID.fromString(dto.uuid));
+        tileFixture.setTileOffset(Vertex.of(dto.tileWidthOffset, dto.tileHeightOffset));
         for (int i = 0; i < dto.items.length; i++) {
             tileFixture.items().add(ITEMS_HANDLER.read(dto.items[i]));
         }
@@ -62,15 +50,12 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
 
     @Override
     public String write(TileFixture tileFixture) {
-        if (tileFixture == null) {
-            throw new IllegalArgumentException(
-                    "TileFixtureHandler.write: tileFixture cannot be null");
-        }
+        Check.ifNull(tileFixture, "tileFixture");
         TileFixtureDTO dto = new TileFixtureDTO();
-        dto.uuid = UUID_HANDLER.write(tileFixture.uuid());
+        dto.uuid = tileFixture.uuid().toString();
         dto.fixtureTypeId = tileFixture.type().id();
-        dto.tileWidthOffset = tileFixture.getXTileWidthOffset();
-        dto.tileHeightOffset = tileFixture.getYTileHeightOffset();
+        dto.tileWidthOffset = tileFixture.getTileOffset().X;
+        dto.tileHeightOffset = tileFixture.getTileOffset().Y;
         List<Item> items = tileFixture.items().representation();
         dto.items = new String[items.size()];
         for (int i = 0; i < items.size(); i++) {

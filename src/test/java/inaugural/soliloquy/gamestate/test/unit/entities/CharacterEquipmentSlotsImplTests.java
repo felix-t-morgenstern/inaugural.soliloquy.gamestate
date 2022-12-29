@@ -23,7 +23,7 @@ class CharacterEquipmentSlotsImplTests {
 
     @BeforeEach
     void setUp() {
-        ((FakeItem) ITEM)._equipmentCharacter = null;
+        ((FakeItem) ITEM).equipmentCharacter = null;
         _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
     }
@@ -142,30 +142,30 @@ class CharacterEquipmentSlotsImplTests {
     void testEquipItemAndCanEquipItemElsewhereInOtherLocationTypes() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
-        ((FakeItem) ITEM)._equipmentCharacter = CHARACTER;
-        ((FakeItem) ITEM)._equipmentSlotType = EQUIPMENT_SLOT_TYPE;
+        ((FakeItem) ITEM).equipmentCharacter = CHARACTER;
+        ((FakeItem) ITEM).equipmentSlotType = EQUIPMENT_SLOT_TYPE;
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
-        ((FakeItem) ITEM)._equipmentCharacter = null;
-        ((FakeItem) ITEM)._equipmentSlotType = null;
-        ((FakeItem) ITEM)._inventoryCharacter = CHARACTER;
+        ((FakeItem) ITEM).equipmentCharacter = null;
+        ((FakeItem) ITEM).equipmentSlotType = null;
+        ((FakeItem) ITEM).inventoryCharacter = CHARACTER;
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
-        ((FakeItem) ITEM)._inventoryCharacter = null;
-        ((FakeItem) ITEM)._tile = new FakeTile();
+        ((FakeItem) ITEM).inventoryCharacter = null;
+        ((FakeItem) ITEM).tile = new FakeTile();
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
-        ((FakeItem) ITEM)._tile = null;
-        ((FakeItem) ITEM)._tileFixture = new FakeTileFixture();
+        ((FakeItem) ITEM).tile = null;
+        ((FakeItem) ITEM).tileFixture = new FakeTileFixture();
 
         assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
         assertThrows(IllegalArgumentException.class,
@@ -201,7 +201,7 @@ class CharacterEquipmentSlotsImplTests {
     void testItemReferencesCorrectSlotInvariant() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
-        ((FakeItem) ITEM)._equipmentCharacter = null;
+        ((FakeItem) ITEM).equipmentCharacter = null;
 
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
@@ -216,7 +216,7 @@ class CharacterEquipmentSlotsImplTests {
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
 
-        ((FakeItem) ITEM)._equipmentCharacter = new FakeCharacter();
+        ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
 
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
@@ -231,8 +231,8 @@ class CharacterEquipmentSlotsImplTests {
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
 
-        ((FakeItem) ITEM)._equipmentCharacter = CHARACTER;
-        ((FakeItem) ITEM)._equipmentSlotType = "NotAValidType";
+        ((FakeItem) ITEM).equipmentCharacter = CHARACTER;
+        ((FakeItem) ITEM).equipmentSlotType = "NotAValidType";
 
         assertThrows(IllegalStateException.class,
                 () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));

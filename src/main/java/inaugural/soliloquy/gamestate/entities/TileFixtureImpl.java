@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
@@ -16,11 +17,9 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
     private final VariableCache DATA;
 
-    private String _name;
-    private float _xTileWidthOffset;
-    private float _yTileHeightOffset;
+    private String name;
+    private Vertex tileOffset;
 
-    @SuppressWarnings("ConstantConditions")
     public TileFixtureImpl(UUID uuid,
                            FixtureType fixtureType,
                            TileFixtureItemsFactory tileFixtureItemsFactory,
@@ -28,8 +27,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
         super();
         UUID = Check.ifNull(uuid, "uuid");
         TYPE = Check.ifNull(fixtureType, "fixtureType");
-        _xTileWidthOffset = TYPE.defaultXTileWidthOffset();
-        _yTileHeightOffset = TYPE.defaultYTileHeightOffset();
+        tileOffset = TYPE.defaultTileOffset();
         TILE_FIXTURE_ITEMS = Check.ifNull(tileFixtureItemsFactory, "tileFixtureItemsFactory")
                 .make(this);
         DATA = Check.ifNull(data, "data");
@@ -117,13 +115,13 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     @Override
     public String getName() {
         enforceInvariants("getName");
-        return _name;
+        return name;
     }
 
     @Override
     public void setName(String name) {
         enforceInvariants("setName");
-        _name = name;
+        this.name = name;
     }
 
     @Override
@@ -142,28 +140,15 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     }
 
     @Override
-    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
-        enforceInvariants("getXTileWidthOffset");
-        return _xTileWidthOffset;
+    public Vertex getTileOffset() throws IllegalStateException, EntityDeletedException {
+        enforceInvariants("getTileOffset");
+        return tileOffset;
     }
 
     @Override
-    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
-        enforceInvariants("getYTileHeightOffset");
-        return _yTileHeightOffset;
-    }
-
-    @Override
-    public void setXTileWidthOffset(float xTileWidthOffset)
-            throws IllegalStateException, EntityDeletedException {
-        enforceInvariants("setXTileWidthOffset");
-        _xTileWidthOffset = xTileWidthOffset;
-    }
-
-    @Override
-    public void setYTileHeightOffset(float yTileHeightOffset)
-            throws IllegalStateException, EntityDeletedException {
-        enforceInvariants("setYTileHeightOffset");
-        _yTileHeightOffset = yTileHeightOffset;
+    public void setTileOffset(Vertex tileOffset)
+            throws IllegalArgumentException, IllegalStateException, EntityDeletedException {
+        enforceInvariants("setTileOffset");
+        this.tileOffset = Check.ifNull(tileOffset, "tileOffset");
     }
 }

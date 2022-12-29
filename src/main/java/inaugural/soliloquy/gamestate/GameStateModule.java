@@ -78,7 +78,7 @@ public class GameStateModule extends AbstractModule {
                 persistentValuesHandler.getTypeHandler(
                         Sprite.class.getCanonicalName());
 
-        ItemFactory itemFactory = new ItemFactoryImpl(uuidFactory, variableCacheFactory);
+        ItemFactory itemFactory = new ItemFactoryImpl(variableCacheFactory);
 
         TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get,
                 uuidHandler, dataHandler, itemFactory);
@@ -120,12 +120,12 @@ public class GameStateModule extends AbstractModule {
 
         TileFixtureItemsFactory tileFixtureItemsFactory = new TileFixtureItemsFactoryImpl();
 
-        TileFixtureFactory tileFixtureFactory = new TileFixtureFactoryImpl(uuidFactory,
-                tileFixtureItemsFactory, variableCacheFactory);
+        TileFixtureFactory tileFixtureFactory =
+                new TileFixtureFactoryImpl(tileFixtureItemsFactory, variableCacheFactory);
 
         TypeHandler<TileFixture> tileFixturesHandler =
-                new TileFixtureHandler(fixtureTypes::get, tileFixtureFactory,
-                        uuidHandler, dataHandler, itemHandler);
+                new TileFixtureHandler(fixtureTypes::get, tileFixtureFactory, dataHandler,
+                        itemHandler);
 
         TileEntitiesFactory tileEntitiesFactory = new TileEntitiesFactoryImpl();
         TileWallSegmentsFactory tileWallSegmentsFactory = new TileWallSegmentsFactoryImpl();

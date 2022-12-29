@@ -90,20 +90,20 @@ class CharacterInventoryImplTests {
 
     @Test
     void testThrowOnAddItemPresentElsewhere() {
-        ((FakeItem) ITEM)._inventoryCharacter = new FakeCharacter();
+        ((FakeItem) ITEM).inventoryCharacter = new FakeCharacter();
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
-        ((FakeItem) ITEM)._inventoryCharacter = null;
-        ((FakeItem) ITEM)._tileFixture = new FakeTileFixture();
+        ((FakeItem) ITEM).inventoryCharacter = null;
+        ((FakeItem) ITEM).tileFixture = new FakeTileFixture();
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
-        ((FakeItem) ITEM)._tileFixture = null;
-        ((FakeItem) ITEM)._tile = new FakeTile();
+        ((FakeItem) ITEM).tileFixture = null;
+        ((FakeItem) ITEM).tile = new FakeTile();
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
 
-        ((FakeItem) ITEM)._tile = null;
-        ((FakeItem) ITEM)._equipmentCharacter = new FakeCharacter();
-        ((FakeItem) ITEM)._equipmentSlotType = "slotType";
+        ((FakeItem) ITEM).tile = null;
+        ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
+        ((FakeItem) ITEM).equipmentSlotType = "slotType";
         assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
     }
 

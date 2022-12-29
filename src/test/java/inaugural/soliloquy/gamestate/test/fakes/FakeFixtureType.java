@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.graphics.assets.ImageAsset;
@@ -9,7 +10,7 @@ import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class FakeFixtureType implements FixtureType {
-    public String _id;
+    public String id;
 
     public final static float DEFAULT_X_TILE_WIDTH_OFFSET = 0.111f;
     public final static float DEFAULT_Y_TILE_HEIGHT_OFFSET = 0.222f;
@@ -19,7 +20,7 @@ public class FakeFixtureType implements FixtureType {
     }
 
     public FakeFixtureType(String id) {
-        _id = id;
+        this.id = id;
     }
 
     @Override
@@ -29,7 +30,7 @@ public class FakeFixtureType implements FixtureType {
 
     @Override
     public String id() throws IllegalStateException {
-        return _id;
+        return id;
     }
 
     @Override
@@ -63,16 +64,6 @@ public class FakeFixtureType implements FixtureType {
     }
 
     @Override
-    public float defaultXTileWidthOffset() {
-        return DEFAULT_X_TILE_WIDTH_OFFSET;
-    }
-
-    @Override
-    public float defaultYTileHeightOffset() {
-        return DEFAULT_Y_TILE_HEIGHT_OFFSET;
-    }
-
-    @Override
     public List<ColorShift> defaultColorShifts() {
         return null;
     }
@@ -85,5 +76,10 @@ public class FakeFixtureType implements FixtureType {
     @Override
     public void setName(String s) {
 
+    }
+
+    @Override
+    public Vertex defaultTileOffset() {
+        return Vertex.of(DEFAULT_X_TILE_WIDTH_OFFSET, DEFAULT_Y_TILE_HEIGHT_OFFSET);
     }
 }

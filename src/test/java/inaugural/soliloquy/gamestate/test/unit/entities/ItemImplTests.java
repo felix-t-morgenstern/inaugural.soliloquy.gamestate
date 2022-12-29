@@ -8,156 +8,156 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
+import static inaugural.soliloquy.tools.random.Random.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ItemImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final VariableCache DATA = new VariableCacheStub();
-    private final UUID GENERATED_UUID = java.util.UUID.randomUUID();
-    private final Supplier<UUID> UUID_FACTORY = () -> GENERATED_UUID;
 
     private final Character CHARACTER = new FakeCharacter();
     private final CharacterEquipmentSlots CHARACTER_EQUIPMENT_SLOTS =
             ((FakeCharacter) CHARACTER).EQUIPMENT;
-    private final String CHARACTER_EQUIPMENT_SLOT_TYPE = "slotType";
+    private final String CHARACTER_EQUIPMENT_SLOT_TYPE = randomString();
     private final CharacterInventory CHARACTER_INVENTORY = ((FakeCharacter) CHARACTER).INVENTORY;
     private final Tile TILE = new FakeTile();
     private final TileFixture TILE_FIXTURE = new FakeTileFixture();
 
-    private ItemTypeStub _itemType;
+    private ItemTypeStub itemTypeStub;
 
-    private Item _item;
+    private Item item;
 
     @BeforeEach
     void setUp() {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = null;
         FakeCharacterInventory.OVERRIDE_CONTAINS = null;
-        _itemType = new ItemTypeStub();
-        _item = new ItemImpl(UUID, _itemType, DATA, UUID_FACTORY);
+        itemTypeStub = new ItemTypeStub();
+        item = new ItemImpl(UUID, itemTypeStub, DATA);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, _itemType, DATA,
-                UUID_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, null, DATA,
-                UUID_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, null,
-                UUID_FACTORY));
-        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, _itemType, DATA,
-                null));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, itemTypeStub, DATA));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, null, DATA));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, itemTypeStub, null));
     }
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(Item.class.getCanonicalName(), _item.getInterfaceName());
+        assertEquals(Item.class.getCanonicalName(), item.getInterfaceName());
     }
 
     @Test
     void testEquals() {
-        Item item2 = new ItemImpl(UUID, _itemType, DATA, UUID_FACTORY);
+        Item item2 = new ItemImpl(UUID, itemTypeStub, DATA);
 
-        assertEquals(_item, item2);
+        assertEquals(item, item2);
     }
 
     @Test
     void testType() {
-        assertSame(_itemType, _item.type());
+        assertSame(itemTypeStub, item.type());
     }
 
     @Test
     void testSetAndGetCharges() {
-        _item.setCharges(123);
+        int charges = randomIntWithInclusiveFloor(1);
 
-        assertEquals(123, (int) _item.getCharges());
+        item.setCharges(charges);
+
+        assertEquals(charges, (int) item.getCharges());
     }
 
     @Test
     void testSetAndGetChargesWhenHasChargesIsFalse() {
-        _itemType.HasCharges = false;
+        itemTypeStub.HasCharges = false;
 
-        assertThrows(UnsupportedOperationException.class, () -> _item.setCharges(123));
-        assertNull(_item.getCharges());
+        assertThrows(UnsupportedOperationException.class, () ->
+                item.setCharges(randomIntWithInclusiveFloor(1)));
+        assertNull(item.getCharges());
     }
 
     @Test
     void testSetNegativeCharges() {
-        assertThrows(IllegalArgumentException.class, () -> _item.setCharges(-1));
+        assertThrows(IllegalArgumentException.class, () -> item.setCharges(-1));
     }
 
     @Test
     void testSetAndGetItemsInStack() {
-        _itemType.IsStackable = true;
-        _item.setNumberInStack(123);
+        itemTypeStub.IsStackable = true;
+        int itemsInStack = randomIntWithInclusiveFloor(1);
+        item.setNumberInStack(itemsInStack);
 
-        assertEquals(123, (int) _item.getNumberInStack());
+        assertEquals(itemsInStack, (int) item.getNumberInStack());
     }
 
     @Test
     void testSetAndGetNumberInStackWhenIsStackableIsFalse() {
-        _itemType.IsStackable = false;
+        itemTypeStub.IsStackable = false;
 
-        assertThrows(UnsupportedOperationException.class, () -> _item.setNumberInStack(123));
-        assertNull(_item.getNumberInStack());
+        assertThrows(UnsupportedOperationException.class, () -> item.setNumberInStack(123));
+        assertNull(item.getNumberInStack());
     }
 
     @Test
     void testUuid() {
-        assertEquals(UUID, _item.uuid());
+        assertEquals(UUID, item.uuid());
     }
 
     @Test
     void testData() {
-        assertSame(DATA, _item.data());
+        assertSame(DATA, item.data());
     }
 
     @Test
     void testInvalidNumberFromStack() {
-        _itemType.IsStackable = true;
-        _item.setNumberInStack(2);
+        itemTypeStub.IsStackable = true;
+        item.setNumberInStack(2);
 
-        assertThrows(IllegalArgumentException.class, () -> _item.takeFromStack(0));
-        assertThrows(IllegalArgumentException.class, () -> _item.takeFromStack(2));
+        assertThrows(IllegalArgumentException.class, () -> item.takeFromStack(0));
+        assertThrows(IllegalArgumentException.class, () -> item.takeFromStack(2));
     }
 
     @Test
     void testTakeFromStackWhenNotStackable() {
-        _itemType.IsStackable = false;
+        itemTypeStub.IsStackable = false;
 
-        assertThrows(UnsupportedOperationException.class, () -> _item.takeFromStack(1));
+        assertThrows(UnsupportedOperationException.class, () -> item.takeFromStack(1));
     }
 
     @Test
     void testTakeFromStack() {
-        _itemType.IsStackable = true;
-        _item.setNumberInStack(10);
+        itemTypeStub.IsStackable = true;
+        int numberInStack = randomIntWithInclusiveFloor(2);
+        int numberToTake = randomIntInRange(1, numberInStack - 1);
+        item.setNumberInStack(numberInStack);
 
-        Item takenFromStack = _item.takeFromStack(7);
+        Item takenFromStack = item.takeFromStack(numberToTake);
 
         assertNotNull(takenFromStack);
-        assertSame(GENERATED_UUID, takenFromStack.uuid());
+        assertNotEquals(item.uuid(), takenFromStack.uuid());
         assertSame(((VariableCacheStub) DATA)._cloneResult, takenFromStack.data());
-        assertEquals((Integer) 7, takenFromStack.getNumberInStack());
-        assertEquals((Integer) 3, _item.getNumberInStack());
+        assertEquals((Integer) numberToTake, takenFromStack.getNumberInStack());
+        assertEquals((Integer) (numberInStack - numberToTake), item.getNumberInStack());
     }
 
     @Test
     void testAssignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot() {
-        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
         Character character = new FakeCharacter();
 
-        _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+        item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 character, CHARACTER_EQUIPMENT_SLOT_TYPE);
 
-        Pair<Character, String> equipmentSlot = _item.equipmentSlot();
+        Pair<Character, String> equipmentSlot = item.equipmentSlot();
 
         assertNotNull(equipmentSlot);
         assertSame(character, equipmentSlot.getItem1());
@@ -168,268 +168,259 @@ class ItemImplTests {
     void testAssignCharacterInventoryToItemAfterAddingToCharacterInventory() {
         FakeCharacterInventory.OVERRIDE_CONTAINS = true;
 
-        _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER);
+        item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER);
 
-        assertSame(CHARACTER, _item.inventoryCharacter());
+        assertSame(CHARACTER, item.inventoryCharacter());
     }
 
     @Test
     void testAssignTileAfterAddedToTileEntitiesOfType() {
-        TILE.items().add(_item);
+        TILE.items().add(item);
 
-        _item.assignTileAfterAddedToTileEntitiesOfType(TILE);
+        item.assignTileAfterAddedToTileEntitiesOfType(TILE);
 
-        assertSame(TILE, _item.tile());
+        assertSame(TILE, item.tile());
     }
 
     @Test
     void testAssignTileFixtureAfterAddedItemToTileFixtureItems() {
         FakeTileFixtureItems tileFixtureItems = new FakeTileFixtureItems(null);
 
-        _item.assignTileFixtureAfterAddedItemToTileFixtureItems(
+        item.assignTileFixtureAfterAddedItemToTileFixtureItems(
                 tileFixtureItems.TILE_FIXTURE);
 
-        assertSame(tileFixtureItems.TILE_FIXTURE, _item.tileFixture());
+        assertSame(tileFixtureItems.TILE_FIXTURE, item.tileFixture());
     }
 
     @Test
     void testPassiveAbilities() {
-        assertNotNull(_item.passiveAbilities());
+        assertNotNull(item.passiveAbilities());
     }
 
     @Test
     void testActiveAbilities() {
-        assertNotNull(_item.activeAbilities());
+        assertNotNull(item.activeAbilities());
     }
 
     @Test
     void testReactiveAbilities() {
-        assertNotNull(_item.reactiveAbilities());
+        assertNotNull(item.reactiveAbilities());
     }
 
     @Test
     void testAssignEquipmentSlotToItemAfterAddedToEquipmentSlotNullifiesOtherAssignments() {
-        CHARACTER_INVENTORY.add(_item);
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
+        CHARACTER_INVENTORY.add(item);
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
 
-        assertNull(_item.inventoryCharacter());
+        assertNull(item.inventoryCharacter());
 
-        TILE_FIXTURE.items().add(_item);
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
+        TILE_FIXTURE.items().add(item);
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
 
-        assertNull(_item.tileFixture());
+        assertNull(item.tileFixture());
 
-        TILE.items().add(_item);
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
+        TILE.items().add(item);
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
 
-        assertNull(_item.tile());
+        assertNull(item.tile());
     }
 
     @Test
     void testAssignInventoryCharacterToItemAfterAddedToInventoryNullifiesOtherAssignments() {
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
-        CHARACTER_INVENTORY.add(_item);
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
+        CHARACTER_INVENTORY.add(item);
 
-        assertNull(_item.equipmentSlot());
+        assertNull(item.equipmentSlot());
 
-        TILE_FIXTURE.items().add(_item);
-        CHARACTER_INVENTORY.add(_item);
+        TILE_FIXTURE.items().add(item);
+        CHARACTER_INVENTORY.add(item);
 
-        assertNull(_item.equipmentSlot());
+        assertNull(item.equipmentSlot());
 
-        TILE.items().add(_item);
-        CHARACTER_INVENTORY.add(_item);
+        TILE.items().add(item);
+        CHARACTER_INVENTORY.add(item);
 
-        assertNull(_item.equipmentSlot());
+        assertNull(item.equipmentSlot());
     }
 
     @Test
     void testAssignTileFixtureToItemAfterAddingItemToTileFixtureItemsNullifiesOtherAssignments() {
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
-        TILE_FIXTURE.items().add(_item);
-        assertNull(_item.equipmentSlot());
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
+        TILE_FIXTURE.items().add(item);
+        assertNull(item.equipmentSlot());
 
-        CHARACTER_INVENTORY.add(_item);
-        TILE_FIXTURE.items().add(_item);
-        assertNull(_item.inventoryCharacter());
+        CHARACTER_INVENTORY.add(item);
+        TILE_FIXTURE.items().add(item);
+        assertNull(item.inventoryCharacter());
 
-        TILE.items().add(_item);
-        TILE_FIXTURE.items().add(_item);
-        assertNull(_item.tile());
+        TILE.items().add(item);
+        TILE_FIXTURE.items().add(item);
+        assertNull(item.tile());
     }
 
     @Test
     void testAssignTileToItemAfterAddedToTileEntitiesNullifiesOtherAssignments() {
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
-        TILE.items().add(_item);
-        assertNull(_item.equipmentSlot());
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
+        TILE.items().add(item);
+        assertNull(item.equipmentSlot());
 
-        CHARACTER_INVENTORY.add(_item);
-        TILE.items().add(_item);
-        assertNull(_item.inventoryCharacter());
+        CHARACTER_INVENTORY.add(item);
+        TILE.items().add(item);
+        assertNull(item.inventoryCharacter());
 
-        TILE_FIXTURE.items().add(_item);
-        TILE.items().add(_item);
-        assertNull(_item.tileFixture());
+        TILE_FIXTURE.items().add(item);
+        TILE.items().add(item);
+        assertNull(item.tileFixture());
     }
 
     @Test
     void testAssignToNullCharacterEquipmentSlotsNullifiesGetEquipmentSlot() {
-        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
-        _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+        item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE);
 
-        _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+        item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 null, CHARACTER_EQUIPMENT_SLOT_TYPE);
 
-        assertNull(_item.equipmentSlot());
+        assertNull(item.equipmentSlot());
     }
 
     @Test
     void testAssignToNullEquipmentSlotTypeNullifiesGetEquipmentSlot() {
-        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
-        _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+        item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE);
 
-        _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+        item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, null);
 
-        assertNull(_item.equipmentSlot());
+        assertNull(item.equipmentSlot());
     }
 
     @Test
     void testAssignToEmptyEquipmentSlotTypeNullifiesGetEquipmentSlot() {
-        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = _item;
+        FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
-        _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+        item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE);
 
-        _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+        item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                 CHARACTER, "");
 
-        assertNull(_item.equipmentSlot());
+        assertNull(item.equipmentSlot());
     }
 
     @Test
     void testCharacterEquipmentSlotAssignmentInvariant() {
         CHARACTER_EQUIPMENT_SLOTS.addCharacterEquipmentSlot(CHARACTER_EQUIPMENT_SLOT_TYPE);
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
     }
 
     @Test
     void testDelete() {
-        _item.delete();
+        item.delete();
 
-        assertTrue(_item.isDeleted());
+        assertTrue(item.isDeleted());
     }
 
     @Test
     void testSetAndGetName() {
-        String name = "ItemName";
+        String name = randomString();
 
-        _item.setName(name);
+        item.setName(name);
 
-        assertEquals(name, _item.getName());
+        assertEquals(name, item.getName());
     }
 
     @Test
     void testGetNameWithNullItemImplNameReturnsItemTypeName() {
-        _item.setName(null);
+        item.setName(null);
 
-        assertEquals(ItemTypeStub.ITEM_TYPE_NAME, _item.getName());
+        assertEquals(ItemTypeStub.ITEM_TYPE_NAME, item.getName());
     }
 
     @Test
     void testGetNameWithEmptyItemImplNameReturnsItemTypeName() {
-        _item.setName("");
+        item.setName("");
 
-        assertEquals(ItemTypeStub.ITEM_TYPE_NAME, _item.getName());
+        assertEquals(ItemTypeStub.ITEM_TYPE_NAME, item.getName());
     }
 
     @Test
     void testSetAndGetPluralName() {
-        String name = "ItemPluralName";
+        String pluralName = randomString();
 
-        _item.setPluralName(name);
+        item.setPluralName(pluralName);
 
-        assertEquals(name, _item.getPluralName());
+        assertEquals(pluralName, item.getPluralName());
     }
 
     @Test
     void testCreatedItemTakesDefaultOffsets() {
-        assertEquals(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET, _item.getXTileWidthOffset());
-        assertEquals(ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET, _item.getYTileHeightOffset());
+        assertEquals(Vertex.of(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
+                ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET), item.getTileOffset());
     }
 
     @Test
-    void testSetAndGetXTileWidthOffset() {
-        float offset = 0.123f;
+    void testSetAndGetTileOffset() {
+        Vertex tileOffset = Vertex.of(randomFloat(), randomFloat());
 
-        _item.setXTileWidthOffset(offset);
+        item.setTileOffset(tileOffset);
 
-        assertEquals(offset, _item.getXTileWidthOffset());
-    }
-
-    @Test
-    void testSetAndGetYTileHeightOffset() {
-        float offset = 0.123f;
-
-        _item.setYTileHeightOffset(offset);
-
-        assertEquals(offset, _item.getYTileHeightOffset());
+        assertSame(tileOffset, item.getTileOffset());
     }
 
     @Test
     void testGetNameWithNullItemImplPluralNameReturnsItemTypePluralName() {
-        _item.setPluralName(null);
+        item.setPluralName(null);
 
-        assertEquals(ItemTypeStub.ITEM_TYPE_PLURAL_NAME, _item.getPluralName());
+        assertEquals(ItemTypeStub.ITEM_TYPE_PLURAL_NAME, item.getPluralName());
     }
 
     @Test
     void testGetNameWithEmptyItemImplPluralNameReturnsItemTypePluralName() {
-        _item.setPluralName("");
+        item.setPluralName("");
 
-        assertEquals(ItemTypeStub.ITEM_TYPE_PLURAL_NAME, _item.getPluralName());
+        assertEquals(ItemTypeStub.ITEM_TYPE_PLURAL_NAME, item.getPluralName());
     }
 
     @Test
     void testDeleteRemovesItemFromCharacterEquipmentSlot() {
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
-        assertSame(_item, CHARACTER_EQUIPMENT_SLOTS.itemInSlot(CHARACTER_EQUIPMENT_SLOT_TYPE));
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
+        assertSame(item, CHARACTER_EQUIPMENT_SLOTS.itemInSlot(CHARACTER_EQUIPMENT_SLOT_TYPE));
 
-        _item.delete();
+        item.delete();
 
         assertNull(CHARACTER_EQUIPMENT_SLOTS.itemInSlot(CHARACTER_EQUIPMENT_SLOT_TYPE));
     }
 
     @Test
     void testDeleteRemovesItemFromCharacterInventory() {
-        CHARACTER_INVENTORY.add(_item);
-        assertTrue(CHARACTER_INVENTORY.contains(_item));
+        CHARACTER_INVENTORY.add(item);
+        assertTrue(CHARACTER_INVENTORY.contains(item));
         int originalCharacterInventorySize =
                 ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.size();
 
-        _item.delete();
+        item.delete();
 
-        assertFalse(CHARACTER_INVENTORY.contains(_item));
-        assertFalse(((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.contains(_item));
+        assertFalse(CHARACTER_INVENTORY.contains(item));
+        assertFalse(((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.contains(item));
         assertEquals(originalCharacterInventorySize - 1,
                 ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.size());
     }
 
     @Test
     void testDeleteRemovesItemFromTileFixtureItems() {
-        TILE_FIXTURE.items().add(_item);
-        assertTrue(TILE_FIXTURE.items().contains(_item));
+        TILE_FIXTURE.items().add(item);
+        assertTrue(TILE_FIXTURE.items().contains(item));
         int originalTileFixtureSize = ((FakeTileFixtureItems) TILE_FIXTURE.items())._items.size();
 
-        _item.delete();
+        item.delete();
 
-        assertFalse(TILE_FIXTURE.items().contains(_item));
-        assertFalse(((FakeTileFixtureItems) TILE_FIXTURE.items())._items.contains(_item));
+        assertFalse(TILE_FIXTURE.items().contains(item));
+        assertFalse(((FakeTileFixtureItems) TILE_FIXTURE.items())._items.contains(item));
         assertEquals(originalTileFixtureSize - 1,
                 ((FakeTileFixtureItems) TILE_FIXTURE.items())._items.size());
     }
@@ -437,206 +428,196 @@ class ItemImplTests {
     @SuppressWarnings("rawtypes")
     @Test
     void testDeleteRemovesItemFromTileItems() {
-        TILE.items().add(_item);
-        assertTrue(TILE.items().contains(_item));
+        TILE.items().add(item);
+        assertTrue(TILE.items().contains(item));
         int originalTileFixtureSize = ((FakeTileEntities) TILE.items()).ENTITIES.size();
 
-        _item.delete();
+        item.delete();
 
-        assertFalse(TILE.items().contains(_item));
-        assertFalse(((FakeTileEntities) TILE.items()).ENTITIES.containsKey(_item));
+        assertFalse(TILE.items().contains(item));
+        assertFalse(((FakeTileEntities) TILE.items()).ENTITIES.containsKey(item));
         assertEquals(originalTileFixtureSize - 1,
                 ((FakeTileEntities) TILE.items()).ENTITIES.size());
     }
 
     @Test
     void testDeletionInvariant() {
-        _item.delete();
+        item.delete();
 
-        assertThrows(EntityDeletedException.class, () -> _item.type());
-        assertThrows(EntityDeletedException.class, () -> _item.getCharges());
-        assertThrows(EntityDeletedException.class, () -> _item.setCharges(1));
-        assertThrows(EntityDeletedException.class, () -> _item.getNumberInStack());
-        assertThrows(EntityDeletedException.class, () -> _item.setNumberInStack(1));
-        assertThrows(EntityDeletedException.class, () -> _item.takeFromStack(1));
-        assertThrows(EntityDeletedException.class, () -> _item.equipmentSlot());
-        assertThrows(EntityDeletedException.class, () -> _item.inventoryCharacter());
-        assertThrows(EntityDeletedException.class, () -> _item.tile());
-        assertThrows(EntityDeletedException.class, () -> _item.tileFixture());
+        assertThrows(EntityDeletedException.class, () -> item.type());
+        assertThrows(EntityDeletedException.class, () -> item.getCharges());
+        assertThrows(EntityDeletedException.class, () -> item.setCharges(1));
+        assertThrows(EntityDeletedException.class, () -> item.getNumberInStack());
+        assertThrows(EntityDeletedException.class, () -> item.setNumberInStack(1));
+        assertThrows(EntityDeletedException.class, () -> item.takeFromStack(1));
+        assertThrows(EntityDeletedException.class, () -> item.equipmentSlot());
+        assertThrows(EntityDeletedException.class, () -> item.inventoryCharacter());
+        assertThrows(EntityDeletedException.class, () -> item.tile());
+        assertThrows(EntityDeletedException.class, () -> item.tileFixture());
         assertThrows(EntityDeletedException.class, () ->
-                _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+                item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                         CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE));
         assertThrows(EntityDeletedException.class, () ->
-                _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
+                item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
         assertThrows(EntityDeletedException.class, () ->
-                _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
+                item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(EntityDeletedException.class, () ->
-                _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
-        assertThrows(EntityDeletedException.class, () -> _item.passiveAbilities());
-        assertThrows(EntityDeletedException.class, () -> _item.activeAbilities());
-        assertThrows(EntityDeletedException.class, () -> _item.reactiveAbilities());
-        assertThrows(EntityDeletedException.class, () -> _item.getName());
-        assertThrows(EntityDeletedException.class, () -> _item.setName(""));
-        assertThrows(EntityDeletedException.class, () -> _item.getPluralName());
-        assertThrows(EntityDeletedException.class, () -> _item.setPluralName(""));
-        assertThrows(EntityDeletedException.class, () -> _item.getXTileWidthOffset());
-        assertThrows(EntityDeletedException.class, () -> _item.getYTileHeightOffset());
-        assertThrows(EntityDeletedException.class, () -> _item.setXTileWidthOffset(0f));
-        assertThrows(EntityDeletedException.class, () -> _item.setYTileHeightOffset(0f));
-        assertThrows(EntityDeletedException.class, () -> _item.delete());
+                item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(EntityDeletedException.class, () -> item.passiveAbilities());
+        assertThrows(EntityDeletedException.class, () -> item.activeAbilities());
+        assertThrows(EntityDeletedException.class, () -> item.reactiveAbilities());
+        assertThrows(EntityDeletedException.class, () -> item.getName());
+        assertThrows(EntityDeletedException.class, () -> item.setName(""));
+        assertThrows(EntityDeletedException.class, () -> item.getPluralName());
+        assertThrows(EntityDeletedException.class, () -> item.setPluralName(""));
+        assertThrows(EntityDeletedException.class, () -> item.getTileOffset());
+        assertThrows(EntityDeletedException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(EntityDeletedException.class, () -> item.delete());
     }
 
     @Test
     void testItemNotFoundInCharacterEquipmentSlotInvariant() {
-        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, _item);
+        CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
         FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.remove(CHARACTER_EQUIPMENT_SLOT_TYPE);
 
-        assertThrows(IllegalStateException.class, () -> _item.type());
-        assertThrows(IllegalStateException.class, () -> _item.getCharges());
-        assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
-        assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
-        assertThrows(IllegalStateException.class, () -> _item.setNumberInStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.takeFromStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.equipmentSlot());
-        assertThrows(IllegalStateException.class, () -> _item.inventoryCharacter());
-        assertThrows(IllegalStateException.class, () -> _item.tile());
-        assertThrows(IllegalStateException.class, () -> _item.tileFixture());
+        assertThrows(IllegalStateException.class, () -> item.type());
+        assertThrows(IllegalStateException.class, () -> item.getCharges());
+        assertThrows(IllegalStateException.class, () -> item.setCharges(1));
+        assertThrows(IllegalStateException.class, () -> item.getNumberInStack());
+        assertThrows(IllegalStateException.class, () -> item.setNumberInStack(1));
+        assertThrows(IllegalStateException.class, () -> item.takeFromStack(1));
+        assertThrows(IllegalStateException.class, () -> item.equipmentSlot());
+        assertThrows(IllegalStateException.class, () -> item.inventoryCharacter());
+        assertThrows(IllegalStateException.class, () -> item.tile());
+        assertThrows(IllegalStateException.class, () -> item.tileFixture());
         assertThrows(IllegalStateException.class, () ->
-                _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+                item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                         CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
+                item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
+                item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
-        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.getName());
-        assertThrows(IllegalStateException.class, () -> _item.setName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getPluralName());
-        assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
-        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
-        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.delete());
+                item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> item.reactiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.getName());
+        assertThrows(IllegalStateException.class, () -> item.setName(""));
+        assertThrows(IllegalStateException.class, () -> item.getPluralName());
+        assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> item.getTileOffset());
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.delete());
     }
 
     @Test
     void testItemNotFoundInCharacterInventoryInvariant() {
-        CHARACTER_INVENTORY.add(_item);
-        ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.remove(_item);
+        CHARACTER_INVENTORY.add(item);
+        ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.remove(item);
 
-        assertThrows(IllegalStateException.class, () -> _item.type());
-        assertThrows(IllegalStateException.class, () -> _item.getCharges());
-        assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
-        assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
-        assertThrows(IllegalStateException.class, () -> _item.setNumberInStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.takeFromStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.equipmentSlot());
-        assertThrows(IllegalStateException.class, () -> _item.inventoryCharacter());
-        assertThrows(IllegalStateException.class, () -> _item.tile());
-        assertThrows(IllegalStateException.class, () -> _item.tileFixture());
+        assertThrows(IllegalStateException.class, () -> item.type());
+        assertThrows(IllegalStateException.class, () -> item.getCharges());
+        assertThrows(IllegalStateException.class, () -> item.setCharges(1));
+        assertThrows(IllegalStateException.class, () -> item.getNumberInStack());
+        assertThrows(IllegalStateException.class, () -> item.setNumberInStack(1));
+        assertThrows(IllegalStateException.class, () -> item.takeFromStack(1));
+        assertThrows(IllegalStateException.class, () -> item.equipmentSlot());
+        assertThrows(IllegalStateException.class, () -> item.inventoryCharacter());
+        assertThrows(IllegalStateException.class, () -> item.tile());
+        assertThrows(IllegalStateException.class, () -> item.tileFixture());
         assertThrows(IllegalStateException.class, () ->
-                _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+                item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                         CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
+                item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
+                item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
-        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.getName());
-        assertThrows(IllegalStateException.class, () -> _item.setName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getPluralName());
-        assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
-        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
-        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.delete());
+                item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> item.reactiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.getName());
+        assertThrows(IllegalStateException.class, () -> item.setName(""));
+        assertThrows(IllegalStateException.class, () -> item.getPluralName());
+        assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> item.getTileOffset());
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.delete());
     }
 
     @SuppressWarnings("rawtypes")
     @Test
     void testItemNotFoundInTileItemsInvariant() {
-        TILE.items().add(_item);
-        ((FakeTileEntities) TILE.items()).ENTITIES.remove(_item);
+        TILE.items().add(item);
+        ((FakeTileEntities) TILE.items()).ENTITIES.remove(item);
 
-        assertThrows(IllegalStateException.class, () -> _item.type());
-        assertThrows(IllegalStateException.class, () -> _item.getCharges());
-        assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
-        assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
-        assertThrows(IllegalStateException.class, () -> _item.setNumberInStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.takeFromStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.equipmentSlot());
-        assertThrows(IllegalStateException.class, () -> _item.inventoryCharacter());
-        assertThrows(IllegalStateException.class, () -> _item.tile());
-        assertThrows(IllegalStateException.class, () -> _item.tileFixture());
+        assertThrows(IllegalStateException.class, () -> item.type());
+        assertThrows(IllegalStateException.class, () -> item.getCharges());
+        assertThrows(IllegalStateException.class, () -> item.setCharges(1));
+        assertThrows(IllegalStateException.class, () -> item.getNumberInStack());
+        assertThrows(IllegalStateException.class, () -> item.setNumberInStack(1));
+        assertThrows(IllegalStateException.class, () -> item.takeFromStack(1));
+        assertThrows(IllegalStateException.class, () -> item.equipmentSlot());
+        assertThrows(IllegalStateException.class, () -> item.inventoryCharacter());
+        assertThrows(IllegalStateException.class, () -> item.tile());
+        assertThrows(IllegalStateException.class, () -> item.tileFixture());
         assertThrows(IllegalStateException.class, () ->
-                _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+                item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                         CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
+                item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
+                item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
-        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.getName());
-        assertThrows(IllegalStateException.class, () -> _item.setName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getPluralName());
-        assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
-        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
-        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.delete());
+                item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> item.reactiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.getName());
+        assertThrows(IllegalStateException.class, () -> item.setName(""));
+        assertThrows(IllegalStateException.class, () -> item.getPluralName());
+        assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> item.getTileOffset());
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.delete());
     }
 
     @Test
     void testItemNotFoundInTileFixtureItemsInvariant() {
         FakeTileFixture tileFixture = new FakeTileFixture();
-        tileFixture.items().add(_item);
-        ((FakeTileFixtureItems) tileFixture.items())._items.remove(_item);
+        tileFixture.items().add(item);
+        ((FakeTileFixtureItems) tileFixture.items())._items.remove(item);
 
-        assertThrows(IllegalStateException.class, () -> _item.type());
-        assertThrows(IllegalStateException.class, () -> _item.getCharges());
-        assertThrows(IllegalStateException.class, () -> _item.setCharges(1));
-        assertThrows(IllegalStateException.class, () -> _item.getNumberInStack());
-        assertThrows(IllegalStateException.class, () -> _item.setNumberInStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.takeFromStack(1));
-        assertThrows(IllegalStateException.class, () -> _item.equipmentSlot());
-        assertThrows(IllegalStateException.class, () -> _item.inventoryCharacter());
-        assertThrows(IllegalStateException.class, () -> _item.tile());
-        assertThrows(IllegalStateException.class, () -> _item.tileFixture());
+        assertThrows(IllegalStateException.class, () -> item.type());
+        assertThrows(IllegalStateException.class, () -> item.getCharges());
+        assertThrows(IllegalStateException.class, () -> item.setCharges(1));
+        assertThrows(IllegalStateException.class, () -> item.getNumberInStack());
+        assertThrows(IllegalStateException.class, () -> item.setNumberInStack(1));
+        assertThrows(IllegalStateException.class, () -> item.takeFromStack(1));
+        assertThrows(IllegalStateException.class, () -> item.equipmentSlot());
+        assertThrows(IllegalStateException.class, () -> item.inventoryCharacter());
+        assertThrows(IllegalStateException.class, () -> item.tile());
+        assertThrows(IllegalStateException.class, () -> item.tileFixture());
         assertThrows(IllegalStateException.class, () ->
-                _item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
+                item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
                         CHARACTER, CHARACTER_EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
+                item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
+                item.assignTileFixtureAfterAddedItemToTileFixtureItems(TILE_FIXTURE));
         assertThrows(IllegalStateException.class, () ->
-                _item.assignTileAfterAddedToTileEntitiesOfType(TILE));
-        assertThrows(IllegalStateException.class, () -> _item.passiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.activeAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.reactiveAbilities());
-        assertThrows(IllegalStateException.class, () -> _item.getName());
-        assertThrows(IllegalStateException.class, () -> _item.setName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getPluralName());
-        assertThrows(IllegalStateException.class, () -> _item.setPluralName(""));
-        assertThrows(IllegalStateException.class, () -> _item.getXTileWidthOffset());
-        assertThrows(IllegalStateException.class, () -> _item.getYTileHeightOffset());
-        assertThrows(IllegalStateException.class, () -> _item.setXTileWidthOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.setYTileHeightOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _item.delete());
+                item.assignTileAfterAddedToTileEntitiesOfType(TILE));
+        assertThrows(IllegalStateException.class, () -> item.passiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.activeAbilities());
+        assertThrows(IllegalStateException.class, () -> item.reactiveAbilities());
+        assertThrows(IllegalStateException.class, () -> item.getName());
+        assertThrows(IllegalStateException.class, () -> item.setName(""));
+        assertThrows(IllegalStateException.class, () -> item.getPluralName());
+        assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
+        assertThrows(IllegalStateException.class, () -> item.getTileOffset());
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.delete());
     }
 }

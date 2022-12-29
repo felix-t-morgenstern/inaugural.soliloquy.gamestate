@@ -45,11 +45,6 @@ class ArchetypesTests {
     }
 
     @Test
-    void testItemArchetype() {
-        assertEquals(Item.class.getCanonicalName(), new ItemArchetype().getInterfaceName());
-    }
-
-    @Test
     void testKeyBindingArchetype() {
         assertEquals(KeyBinding.class.getCanonicalName(),
                 new KeyBindingArchetype().getInterfaceName());
@@ -58,11 +53,5 @@ class ArchetypesTests {
     @Test
     void testSpriteArchetype() {
         assertEquals(Sprite.class.getCanonicalName(), new SpriteArchetype().getInterfaceName());
-    }
-
-    @Test
-    void testTileFixtureArchetype() {
-        assertEquals(TileFixture.class.getCanonicalName(),
-                new TileFixtureArchetype().getInterfaceName());
     }
 }

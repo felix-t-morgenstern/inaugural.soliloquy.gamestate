@@ -1,16 +1,18 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 import java.util.UUID;
 import java.util.function.Function;
+
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class ItemHandler extends AbstractTypeHandler<Item> {
     // TODO: Shift from Registry to ReadableRegistry; generate "Registry.readOnlyAccess", also
@@ -20,14 +22,11 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
     private final TypeHandler<VariableCache> DATA_HANDLER;
     private final ItemFactory ITEM_FACTORY;
 
-    private static final Item ARCHETYPE = new ItemArchetype();
-
-    @SuppressWarnings("ConstantConditions")
     public ItemHandler(Function<String, ItemType> getItemType,
                        TypeHandler<UUID> uuidHandler,
                        TypeHandler<VariableCache> dataHandler,
                        ItemFactory itemFactory) {
-        super(ARCHETYPE);
+        super(generateSimpleArchetype(Item.class));
         GET_ITEM_TYPE = Check.ifNull(getItemType, "getItemType");
         UUID_HANDLER = Check.ifNull(uuidHandler, "uuidHandler");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
@@ -42,8 +41,7 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
         ItemType itemType = GET_ITEM_TYPE.apply(itemDTO.typeId);
         VariableCache data = DATA_HANDLER.read(itemDTO.data);
         Item readItem = ITEM_FACTORY.make(itemType, data, uuid);
-        readItem.setXTileWidthOffset(itemDTO.xOffset);
-        readItem.setYTileHeightOffset(itemDTO.yOffset);
+        readItem.setTileOffset(Vertex.of(itemDTO.xOffset, itemDTO.yOffset));
         if (itemType.hasCharges()) {
             readItem.setCharges(itemDTO.charges);
         }
@@ -59,8 +57,8 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
         ItemDTO itemDTO = new ItemDTO();
         itemDTO.uuid = UUID_HANDLER.write(item.uuid());
         itemDTO.typeId = item.type().id();
-        itemDTO.xOffset = item.getXTileWidthOffset();
-        itemDTO.yOffset = item.getYTileHeightOffset();
+        itemDTO.xOffset = item.getTileOffset().X;
+        itemDTO.yOffset = item.getTileOffset().Y;
         if (item.type().hasCharges()) {
             itemDTO.charges = item.getCharges();
         }

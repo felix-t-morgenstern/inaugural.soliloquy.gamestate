@@ -52,39 +52,39 @@ class TileFixtureItemsImplTests {
     void testAddCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
 
-        assertSame(TILE_FIXTURE, ((FakeItem) ITEM)._tileFixture);
+        assertSame(TILE_FIXTURE, ((FakeItem) ITEM).tileFixture);
     }
 
     @Test
     void testRemoveCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
-        assertSame(TILE_FIXTURE, ((FakeItem) ITEM)._tileFixture);
+        assertSame(TILE_FIXTURE, ((FakeItem) ITEM).tileFixture);
 
         _tileFixtureItems.remove(ITEM);
 
-        assertNull(((FakeItem) ITEM)._tileFixture);
+        assertNull(((FakeItem) ITEM).tileFixture);
     }
 
     @Test
     void testAddItemAlreadyPresentInOtherLocationTypes() {
-        ((FakeItem) ITEM)._equipmentCharacter = new FakeCharacter();
-        ((FakeItem) ITEM)._equipmentSlotType = "EquipmentSlotType";
+        ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
+        ((FakeItem) ITEM).equipmentSlotType = "EquipmentSlotType";
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
 
-        ((FakeItem) ITEM)._equipmentCharacter = null;
-        ((FakeItem) ITEM)._equipmentSlotType = null;
-        ((FakeItem) ITEM)._inventoryCharacter = new FakeCharacter();
+        ((FakeItem) ITEM).equipmentCharacter = null;
+        ((FakeItem) ITEM).equipmentSlotType = null;
+        ((FakeItem) ITEM).inventoryCharacter = new FakeCharacter();
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
 
-        ((FakeItem) ITEM)._inventoryCharacter = null;
-        ((FakeItem) ITEM)._tile = new FakeTile();
+        ((FakeItem) ITEM).inventoryCharacter = null;
+        ((FakeItem) ITEM).tile = new FakeTile();
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
 
-        ((FakeItem) ITEM)._tile = null;
-        ((FakeItem) ITEM)._tileFixture = new FakeTileFixture();
+        ((FakeItem) ITEM).tile = null;
+        ((FakeItem) ITEM).tileFixture = new FakeTileFixture();
 
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
     }
@@ -161,7 +161,7 @@ class TileFixtureItemsImplTests {
     @Test
     void testItemAssignmentInvariant() {
         _tileFixtureItems.add(ITEM);
-        ((FakeItem) ITEM)._tileFixture = null;
+        ((FakeItem) ITEM).tileFixture = null;
 
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));

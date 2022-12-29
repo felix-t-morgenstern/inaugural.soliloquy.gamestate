@@ -4,6 +4,7 @@ import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -15,44 +16,37 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 // TODO: Consider extending HasDeletionInvariants
 public class ItemImpl implements Item {
     private final UUID UUID;
     private final ItemType ITEM_TYPE;
     private final VariableCache DATA;
-    private final Supplier<UUID> UUID_FACTORY;
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
     private final List<ReactiveAbility> REACTIVE_ABILITIES;
 
     private final CharacterArchetype CHARACTER_ARCHETYPE = new CharacterArchetype();
 
-    private int _charges;
-    private int _numberInStack;
-    private Character _characterInventoryCharacter;
-    private Character _characterEquipmentSlotsCharacter;
-    private String _characterEquipmentSlotType;
-    private Tile _containingTile;
-    private TileFixture _containingTileFixture;
-    private boolean _isDeleted;
-    private String _name;
-    private String _pluralName;
-    private float _xTileWidthOffset;
-    private float _yTileHeightOffset;
+    private int charges;
+    private int numberInStack;
+    private Character characterInventoryCharacter;
+    private Character characterEquipmentSlotsCharacter;
+    private String characterEquipmentSlotType;
+    private Tile containingTile;
+    private TileFixture containingTileFixture;
+    private boolean isDeleted;
+    private String name;
+    private String pluralName;
+    private Vertex tileOffset;
 
-    @SuppressWarnings("ConstantConditions")
     public ItemImpl(UUID uuid,
                     ItemType itemType,
-                    VariableCache data,
-                    Supplier<UUID> uuidFactory) {
+                    VariableCache data) {
         UUID = Check.ifNull(uuid, "uuid");
         ITEM_TYPE = Check.ifNull(itemType, "itemType");
-        _xTileWidthOffset = ITEM_TYPE.defaultXTileWidthOffset();
-        _yTileHeightOffset = ITEM_TYPE.defaultYTileHeightOffset();
+        tileOffset = ITEM_TYPE.defaultTileOffset();
         DATA = Check.ifNull(data, "data");
-        UUID_FACTORY = Check.ifNull(uuidFactory, "uuidFactory");
 
         PASSIVE_ABILITIES = new ArrayList<>();
         ACTIVE_ABILITIES = new ArrayList<>();
@@ -74,7 +68,7 @@ public class ItemImpl implements Item {
             return null;
         }
         else {
-            return _charges;
+            return charges;
         }
     }
 
@@ -87,7 +81,7 @@ public class ItemImpl implements Item {
             throw new UnsupportedOperationException(
                     "ItemImpl.setCharges: ItemType doesn't have charges");
         }
-        _charges = Check.throwOnLtValue(charges, 0, "charges");
+        this.charges = Check.throwOnLtValue(charges, 0, "charges");
     }
 
     @Override
@@ -98,7 +92,7 @@ public class ItemImpl implements Item {
             return null;
         }
         else {
-            return _numberInStack;
+            return numberInStack;
         }
     }
 
@@ -112,7 +106,7 @@ public class ItemImpl implements Item {
             throw new UnsupportedOperationException(
                     "ItemImpl.setNumberInStack: ItemType isn't stackable");
         }
-        _numberInStack = numberInStack;
+        this.numberInStack = numberInStack;
     }
 
     @Override
@@ -128,14 +122,13 @@ public class ItemImpl implements Item {
             throw new IllegalArgumentException(
                     "ItemImpl.takeFromStack: numberToTake must be 1 or more");
         }
-        if (numberToTake >= _numberInStack) {
+        if (numberToTake >= numberInStack) {
             throw new IllegalArgumentException(
                     "ItemImpl.takeFromStack: numberToTake must be less than the number in the " +
                             "stack");
         }
-        _numberInStack -= numberToTake;
-        Item takenFromStack = new ItemImpl(UUID_FACTORY.get(),
-                ITEM_TYPE, DATA.makeClone(), UUID_FACTORY);
+        numberInStack -= numberToTake;
+        Item takenFromStack = new ItemImpl(java.util.UUID.randomUUID(), ITEM_TYPE, DATA.makeClone());
         takenFromStack.setNumberInStack(numberToTake);
         return takenFromStack;
     }
@@ -145,9 +138,9 @@ public class ItemImpl implements Item {
             throws IllegalStateException {
         enforceDeletionInvariant("equipmentSlot");
         enforceAssignmentInvariant("equipmentSlot");
-        return _characterEquipmentSlotsCharacter == null ?
+        return characterEquipmentSlotsCharacter == null ?
                 null :
-                new Pair<>(_characterEquipmentSlotsCharacter, _characterEquipmentSlotType,
+                new Pair<>(characterEquipmentSlotsCharacter, characterEquipmentSlotType,
                         CHARACTER_ARCHETYPE, "");
     }
 
@@ -155,21 +148,21 @@ public class ItemImpl implements Item {
     public Character inventoryCharacter() throws IllegalStateException {
         enforceDeletionInvariant("inventoryCharacter");
         enforceAssignmentInvariant("inventoryCharacter");
-        return _characterInventoryCharacter;
+        return characterInventoryCharacter;
     }
 
     @Override
     public Tile tile() throws IllegalStateException {
         enforceDeletionInvariant("tile");
         enforceAssignmentInvariant("tile");
-        return _containingTile;
+        return containingTile;
     }
 
     @Override
     public TileFixture tileFixture() throws IllegalStateException {
         enforceDeletionInvariant("tileFixture");
         enforceAssignmentInvariant("tileFixture");
-        return _containingTileFixture;
+        return containingTileFixture;
     }
 
     @Override
@@ -179,16 +172,16 @@ public class ItemImpl implements Item {
         enforceDeletionInvariant("assignEquipmentSlotAfterAddedToCharacterEquipmentSlot");
         enforceAssignmentInvariant("assignEquipmentSlotAfterAddedToCharacterEquipmentSlot");
         if (character == null || slotType == null || slotType.equals("")) {
-            _characterEquipmentSlotsCharacter = null;
-            _characterEquipmentSlotType = null;
+            characterEquipmentSlotsCharacter = null;
+            characterEquipmentSlotType = null;
         }
         else {
-            _characterEquipmentSlotsCharacter = character;
-            _characterEquipmentSlotType = slotType;
+            characterEquipmentSlotsCharacter = character;
+            characterEquipmentSlotType = slotType;
         }
-        _characterInventoryCharacter = null;
-        _containingTileFixture = null;
-        _containingTile = null;
+        characterInventoryCharacter = null;
+        containingTileFixture = null;
+        containingTile = null;
         enforceAssignmentInvariant("assignEquipmentSlotAfterAddedToCharacterEquipmentSlot");
     }
 
@@ -197,11 +190,11 @@ public class ItemImpl implements Item {
             throws IllegalStateException, IllegalArgumentException {
         enforceDeletionInvariant("assignInventoryCharacterAfterAddedToCharacterInventory");
         enforceAssignmentInvariant("assignInventoryCharacterAfterAddedToCharacterInventory");
-        _characterInventoryCharacter = character;
-        _characterEquipmentSlotsCharacter = null;
-        _characterEquipmentSlotType = null;
-        _containingTileFixture = null;
-        _containingTile = null;
+        characterInventoryCharacter = character;
+        characterEquipmentSlotsCharacter = null;
+        characterEquipmentSlotType = null;
+        containingTileFixture = null;
+        containingTile = null;
         enforceAssignmentInvariant("assignInventoryCharacterAfterAddedToCharacterInventory");
     }
 
@@ -210,11 +203,11 @@ public class ItemImpl implements Item {
             throws IllegalStateException, IllegalArgumentException {
         enforceDeletionInvariant("assignTileFixtureAfterAddedItemToTileFixtureItems");
         enforceAssignmentInvariant("assignTileFixtureAfterAddedItemToTileFixtureItems");
-        _containingTileFixture = tileFixture;
-        _characterEquipmentSlotsCharacter = null;
-        _characterEquipmentSlotType = null;
-        _characterInventoryCharacter = null;
-        _containingTile = null;
+        containingTileFixture = tileFixture;
+        characterEquipmentSlotsCharacter = null;
+        characterEquipmentSlotType = null;
+        characterInventoryCharacter = null;
+        containingTile = null;
         enforceAssignmentInvariant("assignTileFixtureAfterAddedItemToTileFixtureItems");
     }
 
@@ -244,11 +237,11 @@ public class ItemImpl implements Item {
             throws IllegalStateException, IllegalArgumentException {
         enforceDeletionInvariant("assignTileAfterAddedToTileEntitiesOfType");
         enforceAssignmentInvariant("assignTileAfterAddedToTileEntitiesOfType");
-        _containingTile = tile;
-        _characterEquipmentSlotsCharacter = null;
-        _characterEquipmentSlotType = null;
-        _characterInventoryCharacter = null;
-        _containingTileFixture = null;
+        containingTile = tile;
+        characterEquipmentSlotsCharacter = null;
+        characterEquipmentSlotType = null;
+        characterInventoryCharacter = null;
+        containingTileFixture = null;
         enforceAssignmentInvariant("assignTileAfterAddedToTileEntitiesOfType");
     }
 
@@ -268,44 +261,44 @@ public class ItemImpl implements Item {
     public void delete() throws IllegalStateException {
         enforceDeletionInvariant("delete");
         enforceAssignmentInvariant("delete");
-        if (_characterEquipmentSlotsCharacter != null) {
+        if (characterEquipmentSlotsCharacter != null) {
             // TODO: Attempt to test whether unassign-then-remove pattern is followed here
-            _characterEquipmentSlotsCharacter.equipmentSlots()
-                    .equipItemToSlot(_characterEquipmentSlotType, null);
+            characterEquipmentSlotsCharacter.equipmentSlots()
+                    .equipItemToSlot(characterEquipmentSlotType, null);
         }
-        if (_characterInventoryCharacter != null) {
+        if (characterInventoryCharacter != null) {
             // TODO: Attempt to test whether unassign-then-remove pattern is followed here
-            CharacterInventory characterInventory = _characterInventoryCharacter.inventory();
-            _characterInventoryCharacter = null;
+            CharacterInventory characterInventory = characterInventoryCharacter.inventory();
+            characterInventoryCharacter = null;
             characterInventory.remove(this);
         }
-        if (_containingTileFixture != null) {
-            TileFixtureItems tileFixtureItems = _containingTileFixture.items();
-            _containingTileFixture = null;
+        if (containingTileFixture != null) {
+            TileFixtureItems tileFixtureItems = containingTileFixture.items();
+            containingTileFixture = null;
             tileFixtureItems.remove(this);
         }
-        if (_containingTile != null) {
-            TileEntities<Item> tileItems = _containingTile.items();
-            _containingTile = null;
+        if (containingTile != null) {
+            TileEntities<Item> tileItems = containingTile.items();
+            containingTile = null;
             tileItems.remove(this);
         }
-        _isDeleted = true;
+        isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return _isDeleted;
+        return isDeleted;
     }
 
     @Override
     public String getName() {
         enforceDeletionInvariant("getName");
         enforceAssignmentInvariant("getName");
-        if (_name == null || _name.equals("")) {
+        if (name == null || name.equals("")) {
             return ITEM_TYPE.getName();
         }
         else {
-            return _name;
+            return name;
         }
     }
 
@@ -313,18 +306,18 @@ public class ItemImpl implements Item {
     public void setName(String name) {
         enforceDeletionInvariant("setName");
         enforceAssignmentInvariant("setName");
-        _name = name;
+        this.name = name;
     }
 
     @Override
     public String getPluralName() {
         enforceDeletionInvariant("getPluralName");
         enforceAssignmentInvariant("getPluralName");
-        if (_pluralName == null || _pluralName.equals("")) {
+        if (pluralName == null || pluralName.equals("")) {
             return ITEM_TYPE.getPluralName();
         }
         else {
-            return _pluralName;
+            return pluralName;
         }
     }
 
@@ -332,7 +325,7 @@ public class ItemImpl implements Item {
     public void setPluralName(String pluralName) throws IllegalArgumentException {
         enforceDeletionInvariant("setPluralName");
         enforceAssignmentInvariant("setPluralName");
-        _pluralName = pluralName;
+        this.pluralName = pluralName;
     }
 
     @Override
@@ -351,67 +344,52 @@ public class ItemImpl implements Item {
             return false;
         }
         Item item = (Item) o;
-        if (_isDeleted || item.isDeleted()) {
+        if (isDeleted || item.isDeleted()) {
             return false;
         }
         return item.uuid().equals(UUID);
     }
 
     private void enforceDeletionInvariant(String methodName) {
-        if (_isDeleted) {
+        if (isDeleted) {
             throw new EntityDeletedException("ItemImpl." + methodName + ": Item is deleted");
         }
     }
 
     private void enforceAssignmentInvariant(String methodName) {
-        if (_characterEquipmentSlotsCharacter != null &&
-                _characterEquipmentSlotsCharacter.equipmentSlots()
-                        .itemInSlot(_characterEquipmentSlotType) != this) {
+        if (characterEquipmentSlotsCharacter != null &&
+                characterEquipmentSlotsCharacter.equipmentSlots()
+                        .itemInSlot(characterEquipmentSlotType) != this) {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned CharacterEquipmentSlot does not contain this Item");
         }
-        if (_characterInventoryCharacter != null &&
-                !_characterInventoryCharacter.inventory().contains(this)) {
+        if (characterInventoryCharacter != null &&
+                !characterInventoryCharacter.inventory().contains(this)) {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned CharacterInventory does not contain this Item");
         }
-        if (_containingTile != null && !_containingTile.items().contains(this)) {
+        if (containingTile != null && !containingTile.items().contains(this)) {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned TileItems does not contain this Item");
         }
-        if (_containingTileFixture != null && !_containingTileFixture.items().contains(this)) {
+        if (containingTileFixture != null && !containingTileFixture.items().contains(this)) {
             throw new IllegalStateException("ItemImpl." + methodName +
                     ": assigned TileItems does not contain this Item");
         }
     }
 
     @Override
-    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
-        enforceDeletionInvariant("getXTileWidthOffset");
-        enforceAssignmentInvariant("getXTileWidthOffset");
-        return _xTileWidthOffset;
+    public Vertex getTileOffset() throws IllegalStateException, EntityDeletedException {
+        enforceDeletionInvariant("getTileOffset");
+        enforceAssignmentInvariant("getTileOffset");
+        return tileOffset;
     }
 
     @Override
-    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
-        enforceDeletionInvariant("getYTileHeightOffset");
-        enforceAssignmentInvariant("getYTileHeightOffset");
-        return _yTileHeightOffset;
-    }
-
-    @Override
-    public void setXTileWidthOffset(float xTileWidthOffset)
-            throws IllegalStateException, EntityDeletedException {
-        enforceDeletionInvariant("setXTileWidthOffset");
-        enforceAssignmentInvariant("setXTileWidthOffset");
-        _xTileWidthOffset = xTileWidthOffset;
-    }
-
-    @Override
-    public void setYTileHeightOffset(float yTileHeightOffset)
-            throws IllegalStateException, EntityDeletedException {
-        enforceDeletionInvariant("setYTileHeightOffset");
-        enforceAssignmentInvariant("setYTileHeightOffset");
-        _yTileHeightOffset = yTileHeightOffset;
+    public void setTileOffset(Vertex tileOffset)
+            throws IllegalArgumentException, IllegalStateException, EntityDeletedException {
+        enforceDeletionInvariant("setTileOffset");
+        enforceAssignmentInvariant("setTileOffset");
+        this.tileOffset = Check.ifNull(tileOffset, "tileOffset");
     }
 }

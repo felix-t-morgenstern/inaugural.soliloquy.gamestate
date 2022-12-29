@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -109,22 +110,14 @@ public class FakeTileFixture implements TileFixture {
     }
 
     @Override
-    public float getXTileWidthOffset() throws IllegalStateException, EntityDeletedException {
-        return _xTileWidthOffset;
+    public Vertex getTileOffset() throws IllegalStateException, EntityDeletedException {
+        return Vertex.of(_xTileWidthOffset, _yTileHeightOffset);
     }
 
     @Override
-    public float getYTileHeightOffset() throws IllegalStateException, EntityDeletedException {
-        return _yTileHeightOffset;
-    }
-
-    @Override
-    public void setXTileWidthOffset(float v) throws IllegalStateException, EntityDeletedException {
-        _xTileWidthOffset = v;
-    }
-
-    @Override
-    public void setYTileHeightOffset(float v) throws IllegalStateException, EntityDeletedException {
-        _yTileHeightOffset = v;
+    public void setTileOffset(Vertex vertex)
+            throws IllegalArgumentException, IllegalStateException, EntityDeletedException {
+        _xTileWidthOffset = vertex.X;
+        _yTileHeightOffset = vertex.Y;
     }
 }

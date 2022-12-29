@@ -1,8 +1,5 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
-import inaugural.soliloquy.gamestate.archetypes.ItemArchetype;
-import inaugural.soliloquy.gamestate.archetypes.TileFixtureArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
@@ -17,6 +14,8 @@ import soliloquy.specs.ruleset.entities.GroundType;
 import java.util.HashMap;
 import java.util.Map;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final Coordinate LOCATION;
     private final TileEntities<Character> TILE_CHARACTERS;
@@ -26,13 +25,9 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final Map<Sprite, Integer> SPRITES;
     private final VariableCache DATA;
 
-    private GameZone _gameZone;
-    private int _height;
-    private GroundType _groundType;
-
-    private final static Character CHARACTER_ARCHETYPE = new CharacterArchetype();
-    private final static Item ITEM_ARCHETYPE = new ItemArchetype();
-    private final static TileFixture TILE_FIXTURE_ARCHETYPE = new TileFixtureArchetype();
+    private GameZone gameZone;
+    private int height;
+    private GroundType groundType;
 
     public TileImpl(int x, int y,
                     TileEntitiesFactory tileEntitiesFactory,
@@ -42,9 +37,9 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
         LOCATION = Coordinate.of(x, y);
         Check.ifNull(tileEntitiesFactory, "tileEntitiesFactory");
         // TODO: Test and implement whether add and remove from gameZone works
-        TILE_CHARACTERS = tileEntitiesFactory.make(this, CHARACTER_ARCHETYPE);
-        TILE_ITEMS = tileEntitiesFactory.make(this, ITEM_ARCHETYPE);
-        TILE_FIXTURES = tileEntitiesFactory.make(this, TILE_FIXTURE_ARCHETYPE);
+        TILE_CHARACTERS = tileEntitiesFactory.make(this, generateSimpleArchetype(Character.class));
+        TILE_ITEMS = tileEntitiesFactory.make(this, generateSimpleArchetype(Item.class));
+        TILE_FIXTURES = tileEntitiesFactory.make(this, generateSimpleArchetype(TileFixture.class));
         if (tileWallSegmentsFactory == null) {
             throw new IllegalArgumentException("TileImpl: tileWallSegmentsFactory cannot be null");
         }
@@ -60,7 +55,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     public GameZone gameZone() throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("gameZone");
-        return _gameZone;
+        return gameZone;
     }
 
     // TODO: Ensure that clone is made
@@ -75,28 +70,28 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     public int getHeight() throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("getHeight");
-        return _height;
+        return height;
     }
 
     @Override
     public void setHeight(int height) throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("setHeight");
-        _height = height;
+        this.height = height;
     }
 
     @Override
     public GroundType getGroundType() throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("getGroundType");
-        return _groundType;
+        return groundType;
     }
 
     @Override
     public void setGroundType(GroundType groundType) throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("setGroundType");
-        _groundType = groundType;
+        this.groundType = groundType;
     }
 
     @Override
@@ -141,11 +136,11 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
             throw new IllegalArgumentException(
                     "TileImpl.assignGameZoneAfterAddedToGameZone: gameZone cannot be null");
         }
-        if (_gameZone != null) {
+        if (this.gameZone != null) {
             throw new IllegalArgumentException(
                     "TileImpl.assignGameZoneAfterAddedToGameZone: gameZone is already assigned");
         }
-        _gameZone = gameZone;
+        this.gameZone = gameZone;
     }
 
     @Override
@@ -162,12 +157,12 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
 
     @Override
     protected Deletable getContainingObject() {
-        return _gameZone;
+        return gameZone;
     }
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        if (!_gameZone.isDeleted()) {
+        if (!gameZone.isDeleted()) {
             throw new IllegalStateException("TileImpl.deleteAfterDeletingContainingGameZone: " +
                     "containing GameZone has not been deleted");
         }
@@ -179,7 +174,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
 
     @Override
     public void delete() {
-        if (!_gameZone.isDeleted()) {
+        if (!gameZone.isDeleted()) {
             throw new IllegalStateException(
                     "TileImpl.delete: cannot delete before deleting containing GameZone");
         }
@@ -219,7 +214,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     }
 
     private void enforceLocationCorrespondenceInvariant(String methodName) {
-        if (_gameZone != null && _gameZone.tile(LOCATION) != this) {
+        if (gameZone != null && gameZone.tile(LOCATION) != this) {
             throw new IllegalStateException("TileImpl." + methodName + ": This Tile is not " +
                     "present at its stated location (" + LOCATION.x() + "," + LOCATION.y() +
                     ") in its containing GameZone");

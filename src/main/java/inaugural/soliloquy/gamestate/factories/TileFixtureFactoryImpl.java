@@ -10,17 +10,13 @@ import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class TileFixtureFactoryImpl implements TileFixtureFactory {
-    private final Supplier<UUID> UUID_FACTORY;
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
-    public TileFixtureFactoryImpl(Supplier<UUID> uuidFactory,
-                                  TileFixtureItemsFactory tileFixtureItemsFactory,
+    public TileFixtureFactoryImpl(TileFixtureItemsFactory tileFixtureItemsFactory,
                                   VariableCacheFactory dataFactory) {
-        UUID_FACTORY = Check.ifNull(uuidFactory, "uuidFactory");
         TILE_FIXTURE_ITEMS_FACTORY = Check.ifNull(tileFixtureItemsFactory,
                 "tileFixtureItemsFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
@@ -29,7 +25,7 @@ public class TileFixtureFactoryImpl implements TileFixtureFactory {
     @Override
     public TileFixture make(FixtureType fixtureType, VariableCache data)
             throws IllegalArgumentException {
-        return make(fixtureType, data, UUID_FACTORY.get());
+        return make(fixtureType, data, UUID.randomUUID());
     }
 
     @Override

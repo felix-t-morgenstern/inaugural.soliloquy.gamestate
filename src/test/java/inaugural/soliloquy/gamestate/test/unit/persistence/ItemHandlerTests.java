@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
 import soliloquy.specs.ruleset.entities.ItemType;
@@ -38,20 +39,21 @@ class ItemHandlerTests {
             "{\"uuid\":\"UUID0\",\"typeId\":\"ItemTypeStubId\",\"xOffset\":0.546,\"yOffset\":0" +
                     ".213,\"numberInStack\":456,\"data\":\"VariableCache0\"}";
 
-    private FakeItem _item;
-    private ItemTypeStub _itemType;
-    private TypeHandler<Item> _persistentItemHandler;
+    private FakeItem item;
+    private ItemTypeStub itemType;
+
+    private TypeHandler<Item> persistentItemHandler;
 
     @BeforeEach
     void setUp() {
-        _itemType = new ItemTypeStub();
-        _itemType.HasCharges = false;
-        _itemType.IsStackable = false;
-        _item = new FakeItem(_itemType);
-        _item._xTileWidthOffset = X_TILE_WIDTH_OFFSET;
-        _item._yTileHeightOffset = Y_TILE_HEIGHT_OFFSET;
-        ITEM_TYPES_REGISTRY.add(_itemType);
-        _persistentItemHandler = new ItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
+        itemType = new ItemTypeStub();
+        itemType.HasCharges = false;
+        itemType.IsStackable = false;
+        item = new FakeItem(itemType);
+        item.xTileWidthOffset = X_TILE_WIDTH_OFFSET;
+        item.yTileHeightOffset = Y_TILE_HEIGHT_OFFSET;
+        ITEM_TYPES_REGISTRY.add(itemType);
+        persistentItemHandler = new ItemHandler(ITEM_TYPES_REGISTRY::get, UUID_HANDLER,
                 DATA_HANDLER, ITEM_FACTORY);
     }
 
@@ -73,54 +75,54 @@ class ItemHandlerTests {
 
     @Test
     void testArchetype() {
-        assertNotNull(_persistentItemHandler.getArchetype());
+        assertNotNull(persistentItemHandler.getArchetype());
         assertEquals(Item.class.getCanonicalName(),
-                _persistentItemHandler.getArchetype().getInterfaceName());
+                persistentItemHandler.getArchetype().getInterfaceName());
     }
 
     @Test
     void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         Item.class.getCanonicalName() + ">",
-                _persistentItemHandler.getInterfaceName());
+                persistentItemHandler.getInterfaceName());
     }
 
     @Test
     void testWriteWithCharges() {
-        _itemType.HasCharges = true;
-        _item.setCharges(NUM_CHARGES);
+        itemType.HasCharges = true;
+        item.setCharges(NUM_CHARGES);
 
-        String writtenValue = _persistentItemHandler.write(_item);
+        String writtenValue = persistentItemHandler.write(item);
 
         assertEquals(DATA_WITH_CHARGES, writtenValue);
     }
 
     @Test
     void testWriteStackable() {
-        _itemType.IsStackable = true;
-        _item.setNumberInStack(NUM_IN_STACK);
+        itemType.IsStackable = true;
+        item.setNumberInStack(NUM_IN_STACK);
 
-        String writtenValue = _persistentItemHandler.write(_item);
+        String writtenValue = persistentItemHandler.write(item);
 
         assertEquals(DATA_STACKABLE, writtenValue);
     }
 
     @Test
     void testWriteWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> _persistentItemHandler.write(null));
+        assertThrows(IllegalArgumentException.class, () -> persistentItemHandler.write(null));
     }
 
     @Test
     void testReadWithCharges() {
-        _itemType.HasCharges = true;
-        Item readItem = _persistentItemHandler.read(DATA_WITH_CHARGES);
+        itemType.HasCharges = true;
+        Item readItem = persistentItemHandler.read(DATA_WITH_CHARGES);
 
         assertNotNull(readItem);
         assertSame(((FakeUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.uuid());
-        assertSame(_itemType, readItem.type());
-        assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
-        assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
+        assertSame(itemType, readItem.type());
+        assertEquals(Vertex.of(X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET),
+                readItem.getTileOffset());
         assertSame(((FakeVariableCacheHandler) DATA_HANDLER)
                         .READ_OUTPUTS.get(0),
                 readItem.data());
@@ -129,15 +131,15 @@ class ItemHandlerTests {
 
     @Test
     void testReadStackable() {
-        _itemType.IsStackable = true;
-        Item readItem = _persistentItemHandler.read(DATA_STACKABLE);
+        itemType.IsStackable = true;
+        Item readItem = persistentItemHandler.read(DATA_STACKABLE);
 
         assertNotNull(readItem);
         assertSame(((FakeUuidHandler) UUID_HANDLER).READ_OUTPUTS.get(0),
                 readItem.uuid());
-        assertSame(_itemType, readItem.type());
-        assertEquals(X_TILE_WIDTH_OFFSET, readItem.getXTileWidthOffset());
-        assertEquals(Y_TILE_HEIGHT_OFFSET, readItem.getYTileHeightOffset());
+        assertSame(itemType, readItem.type());
+        assertEquals(Vertex.of(X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET),
+                readItem.getTileOffset());
         assertSame(((FakeVariableCacheHandler) DATA_HANDLER)
                         .READ_OUTPUTS.get(0),
                 readItem.data());
@@ -146,7 +148,7 @@ class ItemHandlerTests {
 
     @Test
     void testReadWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> _persistentItemHandler.read(null));
-        assertThrows(IllegalArgumentException.class, () -> _persistentItemHandler.read(""));
+        assertThrows(IllegalArgumentException.class, () -> persistentItemHandler.read(null));
+        assertThrows(IllegalArgumentException.class, () -> persistentItemHandler.read(""));
     }
 }

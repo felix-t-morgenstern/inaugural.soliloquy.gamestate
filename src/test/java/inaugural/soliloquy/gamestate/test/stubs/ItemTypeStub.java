@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Function;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.EquipmentType;
@@ -111,12 +112,7 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public float defaultXTileWidthOffset() {
-        return DEFAULT_X_TILE_WIDTH_OFFSET;
-    }
-
-    @Override
-    public float defaultYTileHeightOffset() {
-        return DEFAULT_Y_TILE_HEIGHT_OFFSET;
+    public Vertex defaultTileOffset() {
+        return Vertex.of(DEFAULT_X_TILE_WIDTH_OFFSET, DEFAULT_Y_TILE_HEIGHT_OFFSET);
     }
 }

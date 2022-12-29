@@ -6,6 +6,7 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -16,20 +17,22 @@ import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static inaugural.soliloquy.tools.random.Random.randomFloat;
+import static inaugural.soliloquy.tools.random.Random.randomString;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TileFixtureImplTests {
-    private TileFixture _tileFixture;
-
     private final UUID UUID = java.util.UUID.randomUUID();
     private final FakeFixtureType TYPE = new FakeFixtureType();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new FakeTileFixtureItemsFactory();
     private final VariableCache DATA = new VariableCacheStub();
 
+    private TileFixture tileFixture;
+
     @BeforeEach
     void setUp() {
-        _tileFixture = new TileFixtureImpl(UUID, TYPE, TILE_FIXTURE_ITEMS_FACTORY, DATA);
+        tileFixture = new TileFixtureImpl(UUID, TYPE, TILE_FIXTURE_ITEMS_FACTORY, DATA);
     }
 
     @Test
@@ -46,32 +49,32 @@ class TileFixtureImplTests {
 
     @Test
     void testGetInterfaceName() {
-        assertEquals(TileFixture.class.getCanonicalName(), _tileFixture.getInterfaceName());
+        assertEquals(TileFixture.class.getCanonicalName(), tileFixture.getInterfaceName());
     }
 
     @Test
     void testUuid() {
-        assertSame(UUID, _tileFixture.uuid());
+        assertSame(UUID, tileFixture.uuid());
     }
 
     @Test
     void testType() {
-        assertSame(TYPE, _tileFixture.type());
+        assertSame(TYPE, tileFixture.type());
     }
 
     @Test
     void testMovementEvents() {
-        assertNotNull(_tileFixture.movementEvents());
+        assertNotNull(tileFixture.movementEvents());
     }
 
     @Test
     void testAbilityEvents() {
-        assertNotNull(_tileFixture.abilityEvents());
+        assertNotNull(tileFixture.abilityEvents());
     }
 
     @Test
     void testMakeGameEventTarget() {
-        GameEventTarget gameEventTarget = _tileFixture.makeGameEventTarget();
+        GameEventTarget gameEventTarget = tileFixture.makeGameEventTarget();
 
         assertNotNull(gameEventTarget);
         assertNull(gameEventTarget.tile());
@@ -82,119 +85,108 @@ class TileFixtureImplTests {
 
     @Test
     void testTileFixtureItems() {
-        assertNotNull(_tileFixture.items());
-        assertSame(_tileFixture, ((FakeTileFixtureItems) _tileFixture.items()).TILE_FIXTURE);
+        assertNotNull(tileFixture.items());
+        assertSame(tileFixture, ((FakeTileFixtureItems) tileFixture.items()).TILE_FIXTURE);
     }
 
     @Test
     void testAssignTileFixtureToTile() {
         Tile tile = new FakeTile();
-        assertNull(_tileFixture.tile());
+        assertNull(tileFixture.tile());
 
         // NB: TileFixture.TILE should NOT be exposed, and calling TileFixture.assignCharacterToTile
         // violates the invariant condition; therefore, TileFixturesStub calls
         // TileFixture.assignCharacterToTile indirectly, as it should be in production code
-        tile.fixtures().add(_tileFixture);
+        tile.fixtures().add(tileFixture);
 
-        assertSame(tile, _tileFixture.tile());
+        assertSame(tile, tileFixture.tile());
     }
 
     @Test
     void testData() {
-        assertSame(DATA, _tileFixture.data());
+        assertSame(DATA, tileFixture.data());
     }
 
     @Test
     void testDelete() {
         Tile tile = new FakeTile();
-        tile.fixtures().add(_tileFixture);
-        TileFixtureItems containedItems = _tileFixture.items();
+        tile.fixtures().add(tileFixture);
+        TileFixtureItems containedItems = tileFixture.items();
         HashMap<TileFixture, Integer> entities =
                 ((FakeTileEntities<TileFixture>) tile.fixtures()).ENTITIES;
         int originalNumberOfContainedItems = entities.size();
 
-        _tileFixture.delete();
+        tileFixture.delete();
 
         // The test is simply asking the TileFixtureItems to handle deletion of its Items
-        assertTrue(_tileFixture.isDeleted());
+        assertTrue(tileFixture.isDeleted());
         assertTrue(containedItems.isDeleted());
 
-        assertFalse(tile.fixtures().contains(_tileFixture));
-        assertFalse(entities.containsKey(_tileFixture));
+        assertFalse(tile.fixtures().contains(tileFixture));
+        assertFalse(entities.containsKey(tileFixture));
         assertEquals(originalNumberOfContainedItems - 1, entities.size());
     }
 
     @Test
     void testSetAndGetName() {
-        _tileFixture.setName("Name");
+        String name = randomString();
 
-        assertEquals("Name", _tileFixture.getName());
+        tileFixture.setName(name);
+
+        assertEquals(name, tileFixture.getName());
     }
 
     @Test
-    void testSetAndGetXTileWidthOffset() {
-        float offset = 0.369f;
+    void testSetAndGetTileOffset() {
+        Vertex tileOffset = Vertex.of(randomFloat(), randomFloat());
 
-        _tileFixture.setXTileWidthOffset(offset);
+        tileFixture.setTileOffset(tileOffset);
 
-        assertEquals(offset, _tileFixture.getXTileWidthOffset());
-    }
-
-    @Test
-    void testSetAndGetYTileHeightOffset() {
-        float offset = 0.369f;
-
-        _tileFixture.setYTileHeightOffset(offset);
-
-        assertEquals(offset, _tileFixture.getYTileHeightOffset());
+        assertSame(tileOffset, tileFixture.getTileOffset());
     }
 
     @Test
     void testCreatedWithDefaultOffsets() {
-        assertEquals(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
-                _tileFixture.getXTileWidthOffset());
-        assertEquals(FakeFixtureType.DEFAULT_Y_TILE_HEIGHT_OFFSET,
-                _tileFixture.getYTileHeightOffset());
+        assertEquals(Vertex.of(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
+                FakeFixtureType.DEFAULT_Y_TILE_HEIGHT_OFFSET), tileFixture.getTileOffset());
     }
 
     @Test
     void testDeletedInvariant() {
-        _tileFixture.delete();
+        tileFixture.delete();
 
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.tile());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.type());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.getXTileWidthOffset());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.getYTileHeightOffset());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.setXTileWidthOffset(0f));
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.setYTileHeightOffset(0f));
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.movementEvents());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.items());
+        assertThrows(EntityDeletedException.class, () -> tileFixture.tile());
+        assertThrows(EntityDeletedException.class, () -> tileFixture.type());
+        assertThrows(EntityDeletedException.class, () -> tileFixture.getTileOffset());
         assertThrows(EntityDeletedException.class,
-                () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.data());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.getName());
-        assertThrows(EntityDeletedException.class, () -> _tileFixture.setName(""));
+                () -> tileFixture.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(EntityDeletedException.class, () -> tileFixture.movementEvents());
+        assertThrows(EntityDeletedException.class, () -> tileFixture.items());
+        assertThrows(EntityDeletedException.class,
+                () -> tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(EntityDeletedException.class, () -> tileFixture.data());
+        assertThrows(EntityDeletedException.class, () -> tileFixture.getName());
+        assertThrows(EntityDeletedException.class, () -> tileFixture.setName(""));
     }
 
     @Test
     void testContainingTileInvariant() {
         Tile tile = new FakeTile();
-        tile.fixtures().add(_tileFixture);
-        ((FakeTileEntities<TileFixture>) tile.fixtures()).ENTITIES.remove(_tileFixture);
+        tile.fixtures().add(tileFixture);
+        ((FakeTileEntities<TileFixture>) tile.fixtures()).ENTITIES.remove(tileFixture);
 
-        assertThrows(IllegalStateException.class, () -> _tileFixture.tile());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.type());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.getXTileWidthOffset());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.getYTileHeightOffset());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.setXTileWidthOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _tileFixture.setYTileHeightOffset(0f));
-        assertThrows(IllegalStateException.class, () -> _tileFixture.movementEvents());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.items());
+        assertThrows(IllegalStateException.class, () -> tileFixture.tile());
+        assertThrows(IllegalStateException.class, () -> tileFixture.type());
+        assertThrows(IllegalStateException.class, () -> tileFixture.getTileOffset());
         assertThrows(IllegalStateException.class,
-                () -> _tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
-        assertThrows(IllegalStateException.class, () -> _tileFixture.data());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.delete());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.getName());
-        assertThrows(IllegalStateException.class, () -> _tileFixture.setName(""));
+                () -> tileFixture.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> tileFixture.movementEvents());
+        assertThrows(IllegalStateException.class, () -> tileFixture.items());
+        assertThrows(IllegalStateException.class,
+                () -> tileFixture.assignTileAfterAddedToTileEntitiesOfType(null));
+        assertThrows(IllegalStateException.class, () -> tileFixture.data());
+        assertThrows(IllegalStateException.class, () -> tileFixture.delete());
+        assertThrows(IllegalStateException.class, () -> tileFixture.getName());
+        assertThrows(IllegalStateException.class, () -> tileFixture.setName(""));
     }
 }
