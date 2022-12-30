@@ -51,16 +51,13 @@ class CameraHandlerTests {
 
     private TypeHandler<Camera> cameraHandler;
 
-    // TODO: Make this shit at least marginally less indeterminate!
     private final String WRITTEN_VALUE = "{\"tileLocationX\":111,\"tileLocationY\":222," +
             "\"tileCenterOffsetProviderType\":\"tileCenterOffsetProviderType\"," +
             "\"tileCenterOffsetProvider\":\"tileCenterOffsetProvider\",\"zoom\":0.789," +
             "\"tileRenderingRadius\":333,\"allTilesVisible\":true," +
             "\"charactersProvidingVisibility\":[{\"characterId\":\"4b304158-fa99-44fd-a85a" +
-            "-572b3213c2ab\",\"tiles\":444}," +
-            "{\"characterId\":\"30773bab-7015-4456-9235-cbdf5d7c5086\",\"tiles\":555}]," +
-            "\"coordinatesProvidingVisibility\":[{\"x\":1,\"y\":2,\"tiles\":3},{\"x\":4,\"y\":5," +
-            "\"tiles\":6}]}";
+            "-572b3213c2ab\",\"tiles\":444}],\"coordinatesProvidingVisibility\":[{\"x\":1," +
+            "\"y\":2,\"tiles\":3}]}";
 
     @BeforeEach
     void setUp() {
@@ -68,15 +65,12 @@ class CameraHandlerTests {
         when(mockCharacter1.uuid()).thenReturn(UUID.fromString(CHARACTER_1_UUID));
         mockCharacter2 = mock(Character.class);
         mockCharacter3 = mock(Character.class);
-        when(mockCharacter3.uuid()).thenReturn(UUID.fromString(CHARACTER_3_UUID));
         charactersProvidingVisibility = new HashMap<>() {{
             put(mockCharacter1, 444);
-            put(mockCharacter3, 555);
         }};
 
         coordinatesProvidingVisibility = new HashMap<>() {{
             put(Coordinate.of(1, 2), 3);
-            put(Coordinate.of(4, 5), 6);
         }};
 
         mockGameZone = mock(GameZone.class);
@@ -172,10 +166,16 @@ class CameraHandlerTests {
     }
 
     @Test
+    void testReadWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> cameraHandler.read(null));
+        assertThrows(IllegalArgumentException.class, () -> cameraHandler.read(""));
+    }
+
+    @Test
     void testReadWhereCharacterProvidingVisibilityIsNotInGameZone() {
         when(mockGameZone.charactersRepresentation()).thenReturn(new HashMap<>() {{
-            put(UUID.fromString(CHARACTER_1_UUID), mockCharacter1);
             put(UUID.fromString(CHARACTER_2_UUID), mockCharacter2);
+            put(UUID.fromString(CHARACTER_3_UUID), mockCharacter3);
         }});
 
         assertThrows(IllegalStateException.class, () -> cameraHandler.read(WRITTEN_VALUE));

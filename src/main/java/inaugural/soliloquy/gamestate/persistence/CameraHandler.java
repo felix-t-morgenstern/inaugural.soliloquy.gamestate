@@ -35,6 +35,8 @@ public class CameraHandler extends AbstractTypeHandler<Camera> {
 
     @Override
     public Camera read(String data) throws IllegalArgumentException {
+        Check.ifNullOrEmpty(data, "data");
+
         CameraDTO dto = JSON.fromJson(data, CameraDTO.class);
 
         Camera camera = FACTORY.make(GET_CURRENT_GAME_ZONE);
