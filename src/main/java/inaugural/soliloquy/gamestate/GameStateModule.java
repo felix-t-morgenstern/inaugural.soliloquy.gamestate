@@ -153,9 +153,10 @@ public class GameStateModule extends AbstractModule {
                 c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
                 roundManager::removeCharacterFromQueue);
 
+        // TODO: Populate tilesPerBatch and threadPoolSize from configs somewhere
         TypeHandler<GameZone> gameZoneHandler =
                 new GameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
-                        actions::get);
+                        actions::get, 5, 5);
 
         GameZonesRepo gameZonesRepo = new GameZonesRepoImpl(gameZoneHandler, fileLocations);
 

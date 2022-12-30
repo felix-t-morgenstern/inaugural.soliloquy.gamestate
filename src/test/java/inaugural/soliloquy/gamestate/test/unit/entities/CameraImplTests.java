@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.entities.CameraImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.spydoubles.TileVisibilitySpyDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -11,38 +10,48 @@ import soliloquy.specs.common.valueobjects.Coordinate;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.graphics.renderables.providers.ProviderAtTime;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 
 import static inaugural.soliloquy.tools.random.Random.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CameraImplTests {
     private final int TILE_LOCATION_X = randomInt();
     private final int TILE_LOCATION_Y = randomInt();
-    private final TileVisibility TILE_VISIBILITY = new TileVisibilitySpyDouble();
-    private final FakeGameZone GAME_ZONE = new FakeGameZone();
 
+    @Mock private Tile mockTile;
+    @Mock private TileVisibility mockTileVisibility;
+    @Mock private GameZone mockGameZone;
     @Mock private Coordinate tileLocation;
 
     private Camera camera;
 
     @BeforeEach
     void setUp() {
+        mockTile = mock(Tile.class);
+
+        mockGameZone = mock(GameZone.class);
+        when(mockGameZone.maxCoordinates()).thenReturn(Coordinate.of(99, 99));
+        when(mockGameZone.tile(any())).thenReturn(mockTile);
+
         tileLocation = mock(Coordinate.class);
         when(tileLocation.x()).thenReturn(TILE_LOCATION_X);
         when(tileLocation.y()).thenReturn(TILE_LOCATION_Y);
 
-        camera = new CameraImpl(TILE_VISIBILITY, () -> GAME_ZONE);
+        mockTileVisibility = mock(TileVisibility.class);
+        when(mockTileVisibility.canSeeTile(any(), any())).thenReturn(true);
+
+        camera = new CameraImpl(mockTileVisibility, () -> mockGameZone);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(null, () -> GAME_ZONE));
-        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(TILE_VISIBILITY, null));
+        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(null, () -> mockGameZone));
+        assertThrows(IllegalArgumentException.class, () -> new CameraImpl(mockTileVisibility, null));
     }
 
     @Test
@@ -164,10 +173,8 @@ class CameraImplTests {
 
     @Test
     void testCalculateVisibleTilesWithAllTilesVisibleAndMaximumCoordinateBoundaries() {
-        Coordinate gameZoneMaxCoordinates = mock(Coordinate.class);
-        when(gameZoneMaxCoordinates.x()).thenReturn(4);
-        when(gameZoneMaxCoordinates.y()).thenReturn(4);
-        GAME_ZONE.FAKE_MAX_COORDINATES = gameZoneMaxCoordinates;
+        Coordinate gameZoneMaxCoordinates = Coordinate.of(4, 4);
+        when(mockGameZone.maxCoordinates()).thenReturn(gameZoneMaxCoordinates);
         when(tileLocation.x()).thenReturn(2);
         when(tileLocation.y()).thenReturn(2);
         camera.setAllTilesVisible(true);
@@ -203,6 +210,6 @@ class CameraImplTests {
         camera.calculateVisibleTiles();
 
         assertEquals(22, camera.visibleTiles().size());
-        assertEquals(22, ((TileVisibilitySpyDouble) TILE_VISIBILITY)._tilesChecked.size());
+        verify(mockTileVisibility, times(22)).canSeeTile(any(), any());
     }
 }

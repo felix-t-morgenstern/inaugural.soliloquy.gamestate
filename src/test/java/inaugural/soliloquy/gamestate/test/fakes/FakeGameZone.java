@@ -31,8 +31,6 @@ public class FakeGameZone implements GameZone {
 
     private boolean _isDeleted;
     public String _customId;
-    private String _type;
-    private VariableCache _data;
     private String _name;
 
     public FakeGameZone() {
@@ -50,18 +48,9 @@ public class FakeGameZone implements GameZone {
         _customId = customId;
     }
 
-    public FakeGameZone(String id, String type, Tile[][] tiles, VariableCache data) {
-        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
-        RETURN_ACTUAL_TILE_AT_LOCATION = true;
-        _customId = id;
-        _type = type;
-        TILES = tiles;
-        _data = data;
-    }
-
     @Override
     public String type() {
-        return _type;
+        return null;
     }
 
     @SuppressWarnings("ReplaceNullCheck")
@@ -142,7 +131,7 @@ public class FakeGameZone implements GameZone {
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        return _data;
+        return null;
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
