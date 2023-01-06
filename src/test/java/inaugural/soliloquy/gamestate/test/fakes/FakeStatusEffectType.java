@@ -51,4 +51,19 @@ public class FakeStatusEffectType implements StatusEffectType {
             throws IllegalArgumentException {
         return null;
     }
+
+    @Override
+    public EffectsOnCharacter onRoundEnd() {
+        return null;
+    }
+
+    @Override
+    public EffectsOnCharacter onTurnStart() {
+        return null;
+    }
+
+    @Override
+    public EffectsOnCharacter onTurnEnd() {
+        return null;
+    }
 }
