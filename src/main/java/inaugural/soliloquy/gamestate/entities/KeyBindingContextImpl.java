@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.KeyBindingArchetype;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 
@@ -9,7 +8,6 @@ import java.util.List;
 
 public class KeyBindingContextImpl implements KeyBindingContext {
     private final List<KeyBinding> BINDINGS;
-    private static final KeyBinding ARCHETYPE = new KeyBindingArchetype();
 
     private boolean _blocksAllLowerBindings;
 

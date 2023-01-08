@@ -53,7 +53,7 @@ class OneTimeRoundBasedTimerHandlerTests {
     }
 
     @Test
-    void testArchetype() {
+    void testGetArchetype() {
         assertNotNull(_oneTimeRoundBasedTimerHandler.getArchetype());
         assertEquals(OneTimeRoundBasedTimer.class.getCanonicalName(),
                 _oneTimeRoundBasedTimerHandler.getArchetype().getInterfaceName());

@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
@@ -25,8 +24,6 @@ public class ItemImpl implements Item {
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
     private final List<ReactiveAbility> REACTIVE_ABILITIES;
-
-    private final CharacterArchetype CHARACTER_ARCHETYPE = new CharacterArchetype();
 
     private int charges;
     private int numberInStack;
@@ -128,7 +125,8 @@ public class ItemImpl implements Item {
                             "stack");
         }
         numberInStack -= numberToTake;
-        Item takenFromStack = new ItemImpl(java.util.UUID.randomUUID(), ITEM_TYPE, DATA.makeClone());
+        Item takenFromStack =
+                new ItemImpl(java.util.UUID.randomUUID(), ITEM_TYPE, DATA.makeClone());
         takenFromStack.setNumberInStack(numberToTake);
         return takenFromStack;
     }
@@ -138,10 +136,8 @@ public class ItemImpl implements Item {
             throws IllegalStateException {
         enforceDeletionInvariant("equipmentSlot");
         enforceAssignmentInvariant("equipmentSlot");
-        return characterEquipmentSlotsCharacter == null ?
-                null :
-                new Pair<>(characterEquipmentSlotsCharacter, characterEquipmentSlotType,
-                        CHARACTER_ARCHETYPE, "");
+        return characterEquipmentSlotsCharacter != null ?
+                Pair.of(characterEquipmentSlotsCharacter, characterEquipmentSlotType) : null;
     }
 
     @Override

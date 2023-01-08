@@ -15,20 +15,15 @@ import java.util.function.Function;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class ItemHandler extends AbstractTypeHandler<Item> {
-    // TODO: Shift from Registry to ReadableRegistry; generate "Registry.readOnlyAccess", also
-    //  refactor into other infrastructure classes
     private final Function<String, ItemType> GET_ITEM_TYPE;
-    private final TypeHandler<UUID> UUID_HANDLER;
     private final TypeHandler<VariableCache> DATA_HANDLER;
     private final ItemFactory ITEM_FACTORY;
 
     public ItemHandler(Function<String, ItemType> getItemType,
-                       TypeHandler<UUID> uuidHandler,
                        TypeHandler<VariableCache> dataHandler,
                        ItemFactory itemFactory) {
         super(generateSimpleArchetype(Item.class));
         GET_ITEM_TYPE = Check.ifNull(getItemType, "getItemType");
-        UUID_HANDLER = Check.ifNull(uuidHandler, "uuidHandler");
         DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
     }
@@ -37,7 +32,7 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
     public Item read(String input) throws IllegalArgumentException {
         Check.ifNullOrEmpty(input, "input");
         ItemDTO itemDTO = JSON.fromJson(input, ItemDTO.class);
-        UUID uuid = UUID_HANDLER.read(itemDTO.uuid);
+        UUID uuid = UUID.fromString(itemDTO.uuid);
         ItemType itemType = GET_ITEM_TYPE.apply(itemDTO.typeId);
         VariableCache data = DATA_HANDLER.read(itemDTO.data);
         Item readItem = ITEM_FACTORY.make(itemType, data, uuid);
@@ -55,7 +50,7 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
     public String write(Item item) {
         Check.ifNull(item, "item");
         ItemDTO itemDTO = new ItemDTO();
-        itemDTO.uuid = UUID_HANDLER.write(item.uuid());
+        itemDTO.uuid = item.uuid().toString();
         itemDTO.typeId = item.type().id();
         itemDTO.xOffset = item.getTileOffset().X;
         itemDTO.yOffset = item.getTileOffset().Y;
@@ -72,8 +67,8 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
     private static class ItemDTO {
         String uuid;
         String typeId;
-        Float xOffset;
-        Float yOffset;
+        float xOffset;
+        float yOffset;
         Integer charges;
         Integer numberInStack;
         String data;

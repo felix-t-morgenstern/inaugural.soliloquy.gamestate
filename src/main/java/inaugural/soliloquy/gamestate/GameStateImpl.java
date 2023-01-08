@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate;
 
-import inaugural.soliloquy.gamestate.archetypes.GameAbilityEventArchetype;
-import inaugural.soliloquy.gamestate.archetypes.GameMovementEventArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.Registry;
@@ -17,6 +15,8 @@ import soliloquy.specs.ruleset.entities.CharacterAIType;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class GameStateImpl implements GameState {
     private final Party PARTY;
@@ -37,9 +37,9 @@ public class GameStateImpl implements GameState {
     private final KeyEventListener KEY_EVENT_LISTENER;
 
     private final static GameMovementEvent GAME_MOVEMENT_EVENT_ARCHETYPE =
-            new GameMovementEventArchetype();
+            generateSimpleArchetype(GameMovementEvent.class);
     private final static GameAbilityEvent GAME_ABILITY_EVENT_ARCHETYPE =
-            new GameAbilityEventArchetype();
+            generateSimpleArchetype(GameAbilityEvent.class);
 
     private VariableCache data;
     private GameZone currentGameZone;

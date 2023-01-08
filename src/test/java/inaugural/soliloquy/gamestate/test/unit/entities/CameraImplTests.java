@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.gamestate.entities.CameraImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
+import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
+import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -132,7 +132,7 @@ class CameraImplTests {
 
         assertNotNull(camera.charactersProvidingVisibility());
 
-        Character character = new CharacterArchetype();
+        Character character = mock(Character.class);
         camera.charactersProvidingVisibility().put(character, characterVisibilityProvided);
         assertEquals(characterVisibilityProvided,
                 camera.charactersProvidingVisibility().get(character));

@@ -31,6 +31,11 @@ public class FakeCharacterEvents implements CharacterEvents {
     }
 
     @Override
+    public void copyAllTriggers(CharacterEvents characterEvents) throws IllegalArgumentException {
+
+    }
+
+    @Override
     public List<String> getTriggersForEvent(GameCharacterEvent gameCharacterEvent)
             throws IllegalArgumentException, IllegalStateException {
         return null;

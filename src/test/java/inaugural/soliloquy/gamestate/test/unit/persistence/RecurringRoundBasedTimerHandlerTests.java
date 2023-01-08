@@ -54,7 +54,7 @@ class RecurringRoundBasedTimerHandlerTests {
     }
 
     @Test
-    void testArchetype() {
+    void testGetArchetype() {
         assertNotNull(_recurringRoundBasedTimerHandler.getArchetype());
         assertEquals(RecurringRoundBasedTimer.class.getCanonicalName(),
                 _recurringRoundBasedTimerHandler.getArchetype().getInterfaceName());

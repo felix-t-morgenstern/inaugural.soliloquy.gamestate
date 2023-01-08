@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.entities;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterStaticStatisticArchetype;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
@@ -18,6 +17,7 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateArchetypeWithInterfaceNameOverride;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class CharacterImpl implements Character {
@@ -36,9 +36,6 @@ public class CharacterImpl implements Character {
     private final List<ActiveAbility> ACTIVE_ABILITIES;
     private final List<ReactiveAbility> REACTIVE_ABILITIES;
     private final VariableCache DATA;
-
-    private final static CharacterStatistic<CharacterStaticStatisticType> STATIC_STAT_ARCHETYPE =
-            new CharacterStaticStatisticArchetype();
 
     private Tile tile;
     private String stance;
@@ -67,9 +64,14 @@ public class CharacterImpl implements Character {
         INVENTORY = Check.ifNull(inventoryFactory, "inventoryFactory").make(this);
         VARIABLE_STATISTICS = Check.ifNull(variableStatsFactory, "variableStatsFactory")
                 .make(this);
+        //noinspection unchecked
         STATIC_STATISTICS = Check.ifNull(entityMembersOfTypeFactory, "entityMembersOfTypeFactory")
                 .make(this, generateSimpleArchetype(CharacterStaticStatisticType.class),
-                        STATIC_STAT_ARCHETYPE);
+                        (CharacterStatistic<CharacterStaticStatisticType>) generateArchetypeWithInterfaceNameOverride(
+                                CharacterStatistic.class,
+                                CharacterStatistic.class.getCanonicalName() + "<" +
+                                        CharacterStaticStatisticType.class.getCanonicalName() +
+                                        ">"));
         STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").make(this);
         PASSIVE_ABILITIES = new ArrayList<>();
         ACTIVE_ABILITIES = new ArrayList<>();

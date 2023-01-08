@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterEventsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeGameCharacterEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -13,16 +13,36 @@ import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import java.util.List;
 import java.util.Map;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.random.Random.randomString;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class CharacterEventsImplTests {
-    private final Character CHARACTER = new FakeCharacter();
+    private final String event1Id = randomString();
+    private final String event2Id = randomString();
+    private final String event3Id = randomString();
+    private final String event4Id = randomString();
 
-    private CharacterEvents _characterEvents;
+    private final GameCharacterEvent event1 = generateMockCharacterEvent(event1Id);
+    private final GameCharacterEvent event2 = generateMockCharacterEvent(event2Id);
+    private final GameCharacterEvent event3 = generateMockCharacterEvent(event3Id);
+    private final GameCharacterEvent event4 = generateMockCharacterEvent(event4Id);
+
+    private final String trigger1 = randomString();
+    private final String trigger2 = randomString();
+    private final String trigger3 = randomString();
+
+    @Mock private Character character;
+
+    private CharacterEvents characterEvents;
 
     @BeforeEach
     void setUp() {
-        _characterEvents = new CharacterEventsImpl(CHARACTER);
+        character = mock(Character.class);
+
+        characterEvents = new CharacterEventsImpl(character);
     }
 
     @Test
@@ -33,30 +53,17 @@ class CharacterEventsImplTests {
     @Test
     void testGetInterfaceName() {
         assertEquals(CharacterEvents.class.getCanonicalName(),
-                _characterEvents.getInterfaceName());
+                characterEvents.getInterfaceName());
     }
 
     @Test
     void testAddEventAndRepresentation() {
-        String event1Id = "event1Id";
-        String event2Id = "event2Id";
-        String event3Id = "event3Id";
-        String event4Id = "event4Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger1, event2);
+        characterEvents.addEvent(trigger1, event3);
+        characterEvents.addEvent(trigger2, event4);
 
-        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
-        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
-        GameCharacterEvent event4 = new FakeGameCharacterEvent(event4Id);
-
-        String trigger1 = "trigger1";
-        String trigger2 = "trigger2";
-
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger1, event2);
-        _characterEvents.addEvent(trigger1, event3);
-        _characterEvents.addEvent(trigger2, event4);
-
-        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(2, representation.size());
@@ -70,16 +77,10 @@ class CharacterEventsImplTests {
 
     @Test
     void testAddEventTwice() {
-        String event1Id = "event1Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger1, event1);
 
-        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-
-        String trigger1 = "trigger1";
-
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger1, event1);
-
-        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(1, representation.size());
@@ -89,29 +90,18 @@ class CharacterEventsImplTests {
 
     @Test
     void testRemoveEvent() {
-        String event1Id = "event1Id";
-        String event2Id = "event2Id";
-        String event3Id = "event3Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger2, event2);
+        characterEvents.addEvent(trigger1, event3);
 
-        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
-        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
+        assertFalse(characterEvents.removeEvent(trigger1, event2));
+        assertFalse(characterEvents.removeEvent(trigger2, event1));
+        assertTrue(characterEvents.removeEvent(trigger2, event2));
+        assertFalse(characterEvents.removeEvent(trigger2, event2));
+        assertTrue(characterEvents.removeEvent(trigger1, event3));
+        assertFalse(characterEvents.removeEvent(trigger1, event3));
 
-        String trigger1 = "trigger1";
-        String trigger2 = "trigger2";
-
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger2, event2);
-        _characterEvents.addEvent(trigger1, event3);
-
-        assertFalse(_characterEvents.removeEvent(trigger1, event2));
-        assertFalse(_characterEvents.removeEvent(trigger2, event1));
-        assertTrue(_characterEvents.removeEvent(trigger2, event2));
-        assertFalse(_characterEvents.removeEvent(trigger2, event2));
-        assertTrue(_characterEvents.removeEvent(trigger1, event3));
-        assertFalse(_characterEvents.removeEvent(trigger1, event3));
-
-        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(1, representation.size());
@@ -121,49 +111,26 @@ class CharacterEventsImplTests {
 
     @Test
     void testContainsEvent() {
-        String event1Id = "event1Id";
-        String event2Id = "event2Id";
-        String event3Id = "event3Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger2, event2);
 
-        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
-        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
-
-        String trigger1 = "trigger1";
-        String trigger2 = "trigger2";
-        String trigger3 = "trigger3";
-
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger2, event2);
-
-        assertTrue(_characterEvents.containsEvent(trigger1, event1));
-        assertFalse(_characterEvents.containsEvent(trigger1, event2));
-        assertFalse(_characterEvents.containsEvent(trigger2, event1));
-        assertTrue(_characterEvents.containsEvent(trigger2, event2));
-        assertFalse(_characterEvents.containsEvent(trigger1, event3));
-        assertFalse(_characterEvents.containsEvent(trigger3, event1));
+        assertTrue(characterEvents.containsEvent(trigger1, event1));
+        assertFalse(characterEvents.containsEvent(trigger1, event2));
+        assertFalse(characterEvents.containsEvent(trigger2, event1));
+        assertTrue(characterEvents.containsEvent(trigger2, event2));
+        assertFalse(characterEvents.containsEvent(trigger1, event3));
+        assertFalse(characterEvents.containsEvent(trigger3, event1));
     }
 
     @Test
     void testClearTrigger() {
-        String event1Id = "event1Id";
-        String event2Id = "event2Id";
-        String event3Id = "event3Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger2, event2);
+        characterEvents.addEvent(trigger1, event3);
 
-        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
-        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
+        characterEvents.clearTrigger(trigger1);
 
-        String trigger1 = "trigger1";
-        String trigger2 = "trigger2";
-
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger2, event2);
-        _characterEvents.addEvent(trigger1, event3);
-
-        _characterEvents.clearTrigger(trigger1);
-
-        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(1, representation.size());
@@ -173,24 +140,13 @@ class CharacterEventsImplTests {
 
     @Test
     void testClearAllTriggers() {
-        String event1Id = "event1Id";
-        String event2Id = "event2Id";
-        String event3Id = "event3Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger2, event2);
+        characterEvents.addEvent(trigger1, event3);
 
-        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
-        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
+        characterEvents.clearAllTriggers();
 
-        String trigger1 = "trigger1";
-        String trigger2 = "trigger2";
-
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger2, event2);
-        _characterEvents.addEvent(trigger1, event3);
-
-        _characterEvents.clearAllTriggers();
-
-        Map<String, List<GameCharacterEvent>> representation = _characterEvents.representation();
+        Map<String, List<GameCharacterEvent>> representation = characterEvents.representation();
 
         assertNotNull(representation);
         assertEquals(0, representation.size());
@@ -198,25 +154,13 @@ class CharacterEventsImplTests {
 
     @Test
     void testGetTriggersForEvent() {
-        String event1Id = "event1Id";
-        String event2Id = "event2Id";
-        String event3Id = "event3Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger2, event2);
+        characterEvents.addEvent(trigger3, event1);
 
-        GameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-        GameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
-        GameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
-
-        String trigger1 = "trigger1";
-        String trigger2 = "trigger2";
-        String trigger3 = "trigger3";
-
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger2, event2);
-        _characterEvents.addEvent(trigger3, event1);
-
-        List<String> event1Triggers = _characterEvents.getTriggersForEvent(event1);
-        List<String> event2Triggers = _characterEvents.getTriggersForEvent(event2);
-        List<String> event3Triggers = _characterEvents.getTriggersForEvent(event3);
+        List<String> event1Triggers = characterEvents.getTriggersForEvent(event1);
+        List<String> event2Triggers = characterEvents.getTriggersForEvent(event2);
+        List<String> event3Triggers = characterEvents.getTriggersForEvent(event3);
 
         assertEquals(2, event1Triggers.size());
         assertTrue(event1Triggers.contains(trigger1));
@@ -230,66 +174,70 @@ class CharacterEventsImplTests {
 
     @Test
     void testFire() {
-        String event1Id = "event1Id";
-        String event2Id = "event2Id";
-        String event3Id = "event3Id";
+        characterEvents.addEvent(trigger1, event1);
+        characterEvents.addEvent(trigger2, event2);
+        characterEvents.addEvent(trigger1, event3);
 
-        FakeGameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-        FakeGameCharacterEvent event2 = new FakeGameCharacterEvent(event2Id);
-        FakeGameCharacterEvent event3 = new FakeGameCharacterEvent(event3Id);
+        characterEvents.fire(trigger1);
 
-        String trigger1 = "trigger1";
-        String trigger2 = "trigger2";
+        verify(event1, times(1)).fire(character);
+        verify(event2, never()).fire(character);
+        verify(event3, times(1)).fire(character);
+    }
 
-        _characterEvents.addEvent(trigger1, event1);
-        _characterEvents.addEvent(trigger2, event2);
-        _characterEvents.addEvent(trigger1, event3);
+    @Test
+    void testCopyAllTriggers() {
+        CharacterEvents copyFrom = mock(CharacterEvents.class);
+        Map<String, List<GameCharacterEvent>> toCopy =
+                mapOf(Pair.of(trigger1, listOf(event1, event3)), Pair.of(trigger2, listOf(event2)));
+        when(copyFrom.representation()).thenReturn(toCopy);
 
-        _characterEvents.fire(trigger1);
+        characterEvents.copyAllTriggers(copyFrom);
 
-        assertEquals(CHARACTER, event1._characterFired);
-        assertNull(event2._characterFired);
-        assertEquals(CHARACTER, event3._characterFired);
+        assertEquals(toCopy, characterEvents.representation());
+
+        // This ensures deep copying
+        toCopy.clear();
+
+        assertNotEquals(toCopy, characterEvents.representation());
     }
 
     @Test
     void testDelete() {
-        _characterEvents.delete();
+        characterEvents.delete();
 
-        assertTrue(_characterEvents.isDeleted());
+        assertTrue(characterEvents.isDeleted());
     }
 
     @Test
     void testDeletedInvariant() {
-        String event1Id = "event1Id";
-
-        FakeGameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-
-        String trigger1 = "trigger1";
-
-        _characterEvents.delete();
+        characterEvents.delete();
 
         assertThrows(EntityDeletedException.class,
-                () -> _characterEvents.addEvent(trigger1, event1));
+                () -> characterEvents.addEvent(trigger1, event1));
         assertThrows(EntityDeletedException.class,
-                () -> _characterEvents.clearTrigger(trigger1));
-        assertThrows(EntityDeletedException.class, () -> _characterEvents.clearAllTriggers());
+                () -> characterEvents.clearTrigger(trigger1));
+        assertThrows(EntityDeletedException.class, () -> characterEvents.clearAllTriggers());
+        assertThrows(EntityDeletedException.class,
+                () -> characterEvents.copyAllTriggers(characterEvents));
     }
 
     @Test
     void testCharacterDeletedInvariant() {
-        String event1Id = "event1Id";
-
-        FakeGameCharacterEvent event1 = new FakeGameCharacterEvent(event1Id);
-
-        String trigger1 = "trigger1";
-
-        CHARACTER.delete();
+        when(character.isDeleted()).thenReturn(true);
 
         assertThrows(IllegalStateException.class,
-                () -> _characterEvents.addEvent(trigger1, event1));
+                () -> characterEvents.addEvent(trigger1, event1));
         assertThrows(IllegalStateException.class,
-                () -> _characterEvents.clearTrigger(trigger1));
-        assertThrows(IllegalStateException.class, () -> _characterEvents.clearAllTriggers());
+                () -> characterEvents.clearTrigger(trigger1));
+        assertThrows(IllegalStateException.class, () -> characterEvents.clearAllTriggers());
+        assertThrows(IllegalStateException.class,
+                () -> characterEvents.copyAllTriggers(characterEvents));
+    }
+
+    private static GameCharacterEvent generateMockCharacterEvent(String eventId) {
+        GameCharacterEvent mockCharacterEvent = mock(GameCharacterEvent.class);
+        when(mockCharacterEvent.id()).thenReturn(eventId);
+        return mockCharacterEvent;
     }
 }

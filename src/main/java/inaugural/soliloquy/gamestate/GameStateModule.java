@@ -80,8 +80,7 @@ public class GameStateModule extends AbstractModule {
 
         ItemFactory itemFactory = new ItemFactoryImpl(variableCacheFactory);
 
-        TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get,
-                uuidHandler, dataHandler, itemFactory);
+        TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get, dataHandler, itemFactory);
 
         CharacterEventsFactory characterEventsFactory = new CharacterEventsFactoryImpl();
 
@@ -110,10 +109,11 @@ public class GameStateModule extends AbstractModule {
                 variableStatsFactory, entitiesOfTypeFactory, characterStatusEffectsFactory,
                 variableCacheFactory);
 
+        // TODO: Populate with characterEventsHandler
         TypeHandler<Character> characterHandler =
-                new CharacterHandler(characterFactory, uuidHandler, characterTypes::get,
+                new CharacterHandler(characterFactory, characterTypes::get,
                         characterClassifications::get, imageAssetSets::get, characterAITypes::get,
-                        gameCharacterEvents::get, characterStaticStatisticTypes::get,
+                        null, characterStaticStatisticTypes::get,
                         characterVariableStatisticTypes::get, statusEffectTypes::get,
                         passiveAbilities::get, activeAbilities::get, reactiveAbilities::get,
                         dataHandler, itemHandler);

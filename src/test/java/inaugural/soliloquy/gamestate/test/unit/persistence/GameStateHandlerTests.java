@@ -10,7 +10,7 @@ import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
-import inaugural.soliloquy.tools.testing.Mock.TypeAndHandler;
+import inaugural.soliloquy.tools.testing.Mock.HandlerAndEntity;
 
 import static inaugural.soliloquy.tools.testing.Mock.generateMockEntityAndHandler;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,29 +25,29 @@ class GameStateHandlerTests {
     private final String ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE = "roundBasedTimerManager";
     private final String CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE = "clockBasedTimerManager";
 
-    private final TypeAndHandler<Party> MOCK_PARTY_AND_HANDLER =
+    private final HandlerAndEntity<Party> MOCK_PARTY_AND_HANDLER =
             generateMockEntityAndHandler(Party.class, PARTY_WRITTEN_VALUE);
     private final Party PARTY = MOCK_PARTY_AND_HANDLER.entity;
     private final TypeHandler<Party> PARTY_HANDLER = MOCK_PARTY_AND_HANDLER.handler;
 
-    private final TypeAndHandler<VariableCache> MOCK_VARIABLE_CACHE_AND_HANDLER =
+    private final HandlerAndEntity<VariableCache> MOCK_VARIABLE_CACHE_AND_HANDLER =
             generateMockEntityAndHandler(VariableCache.class, VARIABLE_CACHE_WRITTEN_VALUE);
     private final VariableCache VARIABLE_CACHE = MOCK_VARIABLE_CACHE_AND_HANDLER.entity;
     private final TypeHandler<VariableCache> VARIABLE_CACHE_HANDLER =
             MOCK_VARIABLE_CACHE_AND_HANDLER.handler;
 
-    private final TypeAndHandler<Camera> MOCK_CAMERA_AND_HANDLER =
+    private final HandlerAndEntity<Camera> MOCK_CAMERA_AND_HANDLER =
             generateMockEntityAndHandler(Camera.class, CAMERA_WRITTEN_VALUE);
     private final Camera CAMERA = MOCK_CAMERA_AND_HANDLER.entity;
     private final TypeHandler<Camera> CAMERA_HANDLER = MOCK_CAMERA_AND_HANDLER.handler;
 
-    private final TypeAndHandler<RoundManager> MOCK_ROUND_MANAGER_AND_HANDLER =
+    private final HandlerAndEntity<RoundManager> MOCK_ROUND_MANAGER_AND_HANDLER =
             generateMockEntityAndHandler(RoundManager.class, ROUND_MANAGER_WRITTEN_VALUE);
     private final RoundManager ROUND_MANAGER = MOCK_ROUND_MANAGER_AND_HANDLER.entity;
     private final TypeHandler<RoundManager> ROUND_MANAGER_HANDLER =
             MOCK_ROUND_MANAGER_AND_HANDLER.handler;
 
-    private final TypeAndHandler<RoundBasedTimerManager>
+    private final HandlerAndEntity<RoundBasedTimerManager>
             MOCK_ROUND_BASED_TIMER_MANAGER_AND_HANDLER =
             generateMockEntityAndHandler(RoundBasedTimerManager.class,
                     ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE);
@@ -56,7 +56,7 @@ class GameStateHandlerTests {
     private final TypeHandler<RoundBasedTimerManager> ROUND_BASED_TIMER_MANAGER_HANDLER =
             MOCK_ROUND_BASED_TIMER_MANAGER_AND_HANDLER.handler;
 
-    private final TypeAndHandler<ClockBasedTimerManager>
+    private final HandlerAndEntity<ClockBasedTimerManager>
             MOCK_CLOCK_BASED_TIMER_MANAGER_AND_HANDLER =
             generateMockEntityAndHandler(ClockBasedTimerManager.class,
                     CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE);
@@ -175,7 +175,7 @@ class GameStateHandlerTests {
     }
 
     @Test
-    void testArchetype() {
+    void testGetArchetype() {
         assertNotNull(gameStateHandler.getArchetype());
         assertEquals(GameState.class.getCanonicalName(),
                 gameStateHandler.getArchetype().getInterfaceName());

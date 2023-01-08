@@ -1,13 +1,11 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.archetypes.CharacterArchetype;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.Item;
-import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.*;
@@ -22,14 +20,15 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+
 public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final CharacterFactory CHARACTER_FACTORY;
-    private final TypeHandler<UUID> UUID_HANDLER;
     private final Function<String, CharacterType> GET_CHARACTER_TYPE;
     private final Function<String, CharacterClassification> GET_CHARACTER_CLASSIFICATION;
     private final Function<String, ImageAssetSet> GET_IMAGE_ASSET_SET;
     private final Function<String, CharacterAIType> GET_AI_TYPE;
-    private final Function<String, GameCharacterEvent> GET_EVENT;
+    private final TypeHandler<CharacterEvents> CHARACTER_EVENTS_HANDLER;
     private final Function<String, CharacterStaticStatisticType> GET_STATIC_STAT_TYPE;
     private final Function<String, CharacterVariableStatisticType> GET_VARIABLE_STAT_TYPE;
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
@@ -39,17 +38,14 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final TypeHandler<VariableCache> DATA_HANDLER;
     private final TypeHandler<Item> ITEM_HANDLER;
 
-    private static final Character ARCHETYPE = new CharacterArchetype();
-
     @SuppressWarnings("ConstantConditions")
     public CharacterHandler(CharacterFactory characterFactory,
-                            TypeHandler<UUID> uuidHandler,
                             Function<String, CharacterType> getCharacterType,
                             Function<String, CharacterClassification>
                                     getCharacterClassification,
                             Function<String, ImageAssetSet> getImageAssetSet,
                             Function<String, CharacterAIType> getAIType,
-                            Function<String, GameCharacterEvent> getEvent,
+                            TypeHandler<CharacterEvents> characterEventsHandler,
                             Function<String, CharacterStaticStatisticType> getStaticStatType,
                             Function<String, CharacterVariableStatisticType>
                                     getVariableStatType,
@@ -59,15 +55,14 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                             Function<String, ReactiveAbility> getReactiveAbility,
                             TypeHandler<VariableCache> dataHandler,
                             TypeHandler<Item> itemHandler) {
-        super(ARCHETYPE);
+        super(generateSimpleArchetype(Character.class));
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
-        UUID_HANDLER = Check.ifNull(uuidHandler, "uuidHandler");
         GET_CHARACTER_TYPE = Check.ifNull(getCharacterType, "getCharacterType");
         GET_CHARACTER_CLASSIFICATION = Check.ifNull(getCharacterClassification,
                 "getCharacterClassification");
         GET_IMAGE_ASSET_SET = Check.ifNull(getImageAssetSet, "getImageAssetSet");
         GET_AI_TYPE = Check.ifNull(getAIType, "getAIType");
-        GET_EVENT = Check.ifNull(getEvent, "getEvent");
+        CHARACTER_EVENTS_HANDLER = Check.ifNull(characterEventsHandler, "characterEventsHandler");
         GET_STATIC_STAT_TYPE = Check.ifNull(getStaticStatType, "getStaticStatType");
         GET_VARIABLE_STAT_TYPE = Check.ifNull(getVariableStatType, "getVariableStatType");
         GET_STATUS_TYPE = Check.ifNull(getStatusType, "getStatusType");
@@ -80,10 +75,11 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
 
     @Override
     public Character read(String data) throws IllegalArgumentException {
+        Check.ifNullOrEmpty(data, "data");
         CharacterDTO dto = JSON.fromJson(data, CharacterDTO.class);
         Character readCharacter =
                 CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
-                        UUID_HANDLER.read(dto.uuid), DATA_HANDLER.read(dto.data));
+                        UUID.fromString(dto.uuid), DATA_HANDLER.read(dto.data));
 
         for (String classificationId : dto.classifications) {
             readCharacter.classifications().add(
@@ -93,16 +89,13 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         for (CharacterPairedDataDTO pronounDTO : dto.pronouns) {
             readCharacter.pronouns().put(pronounDTO.key, pronounDTO.val);
         }
+
         readCharacter.setStance(dto.stance);
         readCharacter.setDirection(dto.direction);
         readCharacter.setImageAssetSet(GET_IMAGE_ASSET_SET.apply(dto.assetSetId));
         readCharacter.setAIType(GET_AI_TYPE.apply(dto.aiTypeId));
 
-        for (CharacterEventDTO eventDTO : dto.events) {
-            for (String event : eventDTO.events) {
-                readCharacter.events().addEvent(eventDTO.trigger, GET_EVENT.apply(event));
-            }
-        }
+        readCharacter.events().copyAllTriggers(CHARACTER_EVENTS_HANDLER.read(dto.events));
 
         for (CharacterPairedDataDTO equipmentSlot : dto.equipmentSlots) {
             readCharacter.equipmentSlots().addCharacterEquipmentSlot(equipmentSlot.key);
@@ -157,28 +150,25 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
 
     @Override
     public String write(Character character) {
-        if (character == null) {
-            throw new IllegalArgumentException(
-                    "CharacterHandler.write: character cannot be null");
-        }
+        Check.ifNull(character, "character");
         CharacterDTO dto = new CharacterDTO();
-        dto.uuid = UUID_HANDLER.write(character.uuid());
+        dto.uuid = character.uuid().toString();
         dto.characterTypeId = character.type().id();
 
         dto.classifications = new String[character.classifications().size()];
 
         AtomicInteger classificationIndex = new AtomicInteger(0);
-        for (CharacterClassification classification : character.classifications()) {
+        character.classifications().forEach(classification -> {
             dto.classifications[classificationIndex.getAndIncrement()] = classification.id();
-        }
+        });
 
         dto.pronouns = new CharacterPairedDataDTO[character.pronouns().size()];
 
         AtomicInteger pronounsIndex = new AtomicInteger(0);
-        character.pronouns().forEach((pronounType, pronoun) -> {
+        character.pronouns().forEach((caze, article) -> {
             CharacterPairedDataDTO pronounDTO = new CharacterPairedDataDTO();
-            pronounDTO.key = pronounType;
-            pronounDTO.val = pronoun;
+            pronounDTO.key = caze;
+            pronounDTO.val = article;
             dto.pronouns[pronounsIndex.getAndIncrement()] = pronounDTO;
         });
 
@@ -186,20 +176,8 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         dto.direction = character.getDirection();
         dto.assetSetId = character.getImageAssetSet().id();
         dto.aiTypeId = character.getAIType().id();
-        Map<String, List<GameCharacterEvent>> eventsRepresentation =
-                character.events().representation();
 
-        AtomicInteger eventsIndex = new AtomicInteger(0);
-        dto.events = new CharacterEventDTO[eventsRepresentation.size()];
-        eventsRepresentation.forEach((trigger, events) -> {
-            CharacterEventDTO eventDTO = new CharacterEventDTO();
-            eventDTO.trigger = trigger;
-            eventDTO.events = new String[events.size()];
-            for (int i = 0; i < events.size(); i++) {
-                eventDTO.events[i] = events.get(i).id();
-            }
-            dto.events[eventsIndex.getAndIncrement()] = eventDTO;
-        });
+        dto.events = CHARACTER_EVENTS_HANDLER.write(character.events());
 
         AtomicInteger equipmentSlotsIndex = new AtomicInteger(0);
         Map<String, Item> equipmentSlotsRepresentation =
@@ -223,28 +201,30 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         AtomicInteger variableStatsIndex = new AtomicInteger(0);
         dto.variableStats =
                 new CharacterVariableStatisticDTO[character.variableStatistics().size()];
-        character.variableStatistics().forEach(variableStat -> {
+        for (CharacterVariableStatistic variableStat : character.variableStatistics()) {
             CharacterVariableStatisticDTO variableStatDTO =
                     new CharacterVariableStatisticDTO();
             variableStatDTO.type = variableStat.type().id();
             variableStatDTO.data = DATA_HANDLER.write(variableStat.data());
             variableStatDTO.current = variableStat.getCurrentValue();
             dto.variableStats[variableStatsIndex.getAndIncrement()] = variableStatDTO;
-        });
+        }
+        ;
 
         AtomicInteger staticStatsIndex = new AtomicInteger(0);
         dto.staticStats = new CharacterEntityDTO[character.staticStatistics().size()];
-        character.staticStatistics().forEach(staticStat -> {
+        for (CharacterStatistic<CharacterStaticStatisticType> staticStat :
+                character.staticStatistics()) {
             CharacterEntityDTO staticStatDTO = new CharacterEntityDTO();
             staticStatDTO.type = staticStat.type().id();
             staticStatDTO.data = DATA_HANDLER.write(staticStat.data());
             dto.staticStats[staticStatsIndex.getAndIncrement()] = staticStatDTO;
-        });
+        }
 
         AtomicInteger statusEffectsIndex = new AtomicInteger(0);
-        dto.statusEffects = new CharacterStatusEffectDTO[
-                character.statusEffects().representation().size()];
-        character.statusEffects().representation().forEach((type, value) -> {
+        Map<StatusEffectType, Integer> statEffects = character.statusEffects().representation();
+        dto.statusEffects = new CharacterStatusEffectDTO[statEffects.size()];
+        statEffects.forEach((type, value) -> {
             CharacterStatusEffectDTO statEffectDTO = new CharacterStatusEffectDTO();
             statEffectDTO.type = type.id();
             statEffectDTO.value = value;
@@ -289,7 +269,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         String direction;
         String assetSetId;
         String aiTypeId;
-        CharacterEventDTO[] events;
+        String events;
         CharacterPairedDataDTO[] equipmentSlots;
         String[] inventoryItems;
         CharacterVariableStatisticDTO[] variableStats;
@@ -307,12 +287,6 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     private class CharacterPairedDataDTO {
         String key;
         String val;
-    }
-
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class CharacterEventDTO {
-        String trigger;
-        String[] events;
     }
 
     @SuppressWarnings("InnerClassMayBeStatic")
