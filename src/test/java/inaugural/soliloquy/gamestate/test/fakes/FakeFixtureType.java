@@ -3,12 +3,10 @@ package inaugural.soliloquy.gamestate.test.fakes;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.common.valueobjects.Vertex;
-import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.graphics.assets.ImageAsset;
 import soliloquy.specs.graphics.renderables.colorshifting.ColorShift;
-import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
 public class FakeFixtureType implements FixtureType {
@@ -59,16 +57,6 @@ public class FakeFixtureType implements FixtureType {
     public int heightMovementPenaltyMitigation(Tile tile, Character character,
                                                Direction direction) {
         return 0;
-    }
-
-    @Override
-    public Game game() {
-        return null;
-    }
-
-    @Override
-    public Logger logger() {
-        return null;
     }
 
     @Override

@@ -1,8 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.game.Game;
-import soliloquy.specs.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,16 +22,6 @@ public class FakeAction<T> implements Action<T> {
         _actionRun = true;
         _mostRecentInput = t;
         ACTIONS_FIRED.add(this);
-    }
-
-    @Override
-    public Game game() {
-        return null;
-    }
-
-    @Override
-    public Logger logger() {
-        return null;
     }
 
     @Override

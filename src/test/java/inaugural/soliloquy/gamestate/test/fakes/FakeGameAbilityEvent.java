@@ -1,10 +1,8 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.logger.Logger;
 import soliloquy.specs.ruleset.entities.abilities.Ability;
 
 public class FakeGameAbilityEvent implements GameAbilityEvent {
@@ -12,16 +10,6 @@ public class FakeGameAbilityEvent implements GameAbilityEvent {
 
     public FakeGameAbilityEvent(String id) {
         _id = id;
-    }
-
-    @Override
-    public Game game() {
-        return null;
-    }
-
-    @Override
-    public Logger logger() {
-        return null;
     }
 
     @Override
