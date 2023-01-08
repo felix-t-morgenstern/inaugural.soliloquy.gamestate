@@ -4,8 +4,9 @@ import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.*;
@@ -14,8 +15,6 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -76,28 +75,27 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     @Override
     public Character read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
-        CharacterDTO dto = JSON.fromJson(data, CharacterDTO.class);
-        Character readCharacter =
-                CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
-                        UUID.fromString(dto.uuid), DATA_HANDLER.read(dto.data));
+        var dto = JSON.fromJson(data, CharacterDTO.class);
+        var readCharacter = CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
+                UUID.fromString(dto.uuid), DATA_HANDLER.read(dto.data));
 
-        for (String classificationId : dto.classifications) {
+        for (var classificationId : dto.classifications) {
             readCharacter.classifications().add(
                     GET_CHARACTER_CLASSIFICATION.apply(classificationId));
         }
 
-        for (CharacterPairedDataDTO pronounDTO : dto.pronouns) {
+        for (var pronounDTO : dto.pronouns) {
             readCharacter.pronouns().put(pronounDTO.key, pronounDTO.val);
         }
 
         readCharacter.setStance(dto.stance);
-        readCharacter.setDirection(dto.direction);
+        readCharacter.setDirection(Direction.fromValue(dto.direction));
         readCharacter.setImageAssetSet(GET_IMAGE_ASSET_SET.apply(dto.assetSetId));
         readCharacter.setAIType(GET_AI_TYPE.apply(dto.aiTypeId));
 
         readCharacter.events().copyAllTriggers(CHARACTER_EVENTS_HANDLER.read(dto.events));
 
-        for (CharacterPairedDataDTO equipmentSlot : dto.equipmentSlots) {
+        for (var equipmentSlot : dto.equipmentSlots) {
             readCharacter.equipmentSlots().addCharacterEquipmentSlot(equipmentSlot.key);
             if (equipmentSlot.val != null && !equipmentSlot.val.equals("")) {
                 readCharacter.equipmentSlots().equipItemToSlot(equipmentSlot.key,
@@ -105,39 +103,39 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
             }
         }
 
-        for (String item : dto.inventoryItems) {
+        for (var item : dto.inventoryItems) {
             readCharacter.inventory().add(ITEM_HANDLER.read(item));
         }
 
-        for (CharacterVariableStatisticDTO variableStat : dto.variableStats) {
+        for (var variableStat : dto.variableStats) {
             CharacterVariableStatisticType type =
                     GET_VARIABLE_STAT_TYPE.apply(variableStat.type);
             readCharacter.variableStatistics().add(type, DATA_HANDLER.read(variableStat.data));
             readCharacter.variableStatistics().get(type).setCurrentValue(variableStat.current);
         }
 
-        for (CharacterEntityDTO staticStat : dto.staticStats) {
+        for (var staticStat : dto.staticStats) {
             readCharacter.staticStatistics().add(GET_STATIC_STAT_TYPE.apply(staticStat.type),
                     DATA_HANDLER.read(staticStat.data));
         }
 
-        for (CharacterStatusEffectDTO statusEffect : dto.statusEffects) {
+        for (var statusEffect : dto.statusEffects) {
             readCharacter.statusEffects().setStatusEffectLevel(
                     GET_STATUS_TYPE.apply(statusEffect.type), statusEffect.value);
         }
 
-        for (String passiveAbilityId : dto.passiveAbilityIds) {
-            PassiveAbility passiveAbility = GET_PASSIVE_ABILITY.apply(passiveAbilityId);
+        for (var passiveAbilityId : dto.passiveAbilityIds) {
+            var passiveAbility = GET_PASSIVE_ABILITY.apply(passiveAbilityId);
             readCharacter.passiveAbilities().add(passiveAbility);
         }
 
-        for (String activeAbilityId : dto.activeAbilityIds) {
-            ActiveAbility activeAbility = GET_ACTIVE_ABILITY.apply(activeAbilityId);
+        for (var activeAbilityId : dto.activeAbilityIds) {
+            var activeAbility = GET_ACTIVE_ABILITY.apply(activeAbilityId);
             readCharacter.activeAbilities().add(activeAbility);
         }
 
-        for (String reactiveAbilityId : dto.reactiveAbilityIds) {
-            ReactiveAbility reactiveAbility = GET_REACTIVE_ABILITY.apply(reactiveAbilityId);
+        for (var reactiveAbilityId : dto.reactiveAbilityIds) {
+            var reactiveAbility = GET_REACTIVE_ABILITY.apply(reactiveAbilityId);
             readCharacter.reactiveAbilities().add(reactiveAbility);
         }
 
@@ -151,20 +149,20 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     @Override
     public String write(Character character) {
         Check.ifNull(character, "character");
-        CharacterDTO dto = new CharacterDTO();
+        var dto = new CharacterDTO();
         dto.uuid = character.uuid().toString();
         dto.characterTypeId = character.type().id();
 
         dto.classifications = new String[character.classifications().size()];
 
-        AtomicInteger classificationIndex = new AtomicInteger(0);
-        character.classifications().forEach(classification -> {
-            dto.classifications[classificationIndex.getAndIncrement()] = classification.id();
-        });
+        var classificationIndex = new AtomicInteger(0);
+        character.classifications().forEach(
+                classification -> dto.classifications[classificationIndex.getAndIncrement()] =
+                        classification.id());
 
         dto.pronouns = new CharacterPairedDataDTO[character.pronouns().size()];
 
-        AtomicInteger pronounsIndex = new AtomicInteger(0);
+        var pronounsIndex = new AtomicInteger(0);
         character.pronouns().forEach((caze, article) -> {
             CharacterPairedDataDTO pronounDTO = new CharacterPairedDataDTO();
             pronounDTO.key = caze;
@@ -173,18 +171,17 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         });
 
         dto.stance = character.getStance();
-        dto.direction = character.getDirection();
+        dto.direction = character.getDirection().getValue();
         dto.assetSetId = character.getImageAssetSet().id();
         dto.aiTypeId = character.getAIType().id();
 
         dto.events = CHARACTER_EVENTS_HANDLER.write(character.events());
 
-        AtomicInteger equipmentSlotsIndex = new AtomicInteger(0);
-        Map<String, Item> equipmentSlotsRepresentation =
-                character.equipmentSlots().representation();
+        var equipmentSlotsIndex = new AtomicInteger(0);
+        var equipmentSlotsRepresentation = character.equipmentSlots().representation();
         dto.equipmentSlots = new CharacterPairedDataDTO[equipmentSlotsRepresentation.size()];
         equipmentSlotsRepresentation.forEach((slotType, item) -> {
-            CharacterPairedDataDTO equipmentSlotDTO = new CharacterPairedDataDTO();
+            var equipmentSlotDTO = new CharacterPairedDataDTO();
             equipmentSlotDTO.key = slotType;
             if (item != null) {
                 equipmentSlotDTO.val = ITEM_HANDLER.write(item);
@@ -192,57 +189,55 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
             dto.equipmentSlots[equipmentSlotsIndex.getAndIncrement()] = equipmentSlotDTO;
         });
 
-        AtomicInteger inventoryIndex = new AtomicInteger(0);
-        List<Item> inventoryItems = character.inventory().representation();
+        var inventoryIndex = new AtomicInteger(0);
+        var inventoryItems = character.inventory().representation();
         dto.inventoryItems = new String[inventoryItems.size()];
         inventoryItems.forEach(item ->
                 dto.inventoryItems[inventoryIndex.getAndIncrement()] = ITEM_HANDLER.write(item));
 
-        AtomicInteger variableStatsIndex = new AtomicInteger(0);
+        var variableStatsIndex = new AtomicInteger(0);
         dto.variableStats =
                 new CharacterVariableStatisticDTO[character.variableStatistics().size()];
         for (CharacterVariableStatistic variableStat : character.variableStatistics()) {
-            CharacterVariableStatisticDTO variableStatDTO =
-                    new CharacterVariableStatisticDTO();
+            var variableStatDTO = new CharacterVariableStatisticDTO();
             variableStatDTO.type = variableStat.type().id();
             variableStatDTO.data = DATA_HANDLER.write(variableStat.data());
             variableStatDTO.current = variableStat.getCurrentValue();
             dto.variableStats[variableStatsIndex.getAndIncrement()] = variableStatDTO;
         }
-        ;
 
-        AtomicInteger staticStatsIndex = new AtomicInteger(0);
+        var staticStatsIndex = new AtomicInteger(0);
         dto.staticStats = new CharacterEntityDTO[character.staticStatistics().size()];
         for (CharacterStatistic<CharacterStaticStatisticType> staticStat :
                 character.staticStatistics()) {
-            CharacterEntityDTO staticStatDTO = new CharacterEntityDTO();
+            var staticStatDTO = new CharacterEntityDTO();
             staticStatDTO.type = staticStat.type().id();
             staticStatDTO.data = DATA_HANDLER.write(staticStat.data());
             dto.staticStats[staticStatsIndex.getAndIncrement()] = staticStatDTO;
         }
 
-        AtomicInteger statusEffectsIndex = new AtomicInteger(0);
-        Map<StatusEffectType, Integer> statEffects = character.statusEffects().representation();
+        var statusEffectsIndex = new AtomicInteger(0);
+        var statEffects = character.statusEffects().representation();
         dto.statusEffects = new CharacterStatusEffectDTO[statEffects.size()];
         statEffects.forEach((type, value) -> {
-            CharacterStatusEffectDTO statEffectDTO = new CharacterStatusEffectDTO();
+            var statEffectDTO = new CharacterStatusEffectDTO();
             statEffectDTO.type = type.id();
             statEffectDTO.value = value;
             dto.statusEffects[statusEffectsIndex.getAndIncrement()] = statEffectDTO;
         });
 
-        AtomicInteger passiveAbilitiesIndex = new AtomicInteger(0);
+        var passiveAbilitiesIndex = new AtomicInteger(0);
         dto.passiveAbilityIds = new String[character.passiveAbilities().size()];
         character.passiveAbilities().forEach(passiveAbility ->
                 dto.passiveAbilityIds[passiveAbilitiesIndex.getAndIncrement()] =
                         passiveAbility.id());
 
-        AtomicInteger activeAbilitiesIndex = new AtomicInteger(0);
+        var activeAbilitiesIndex = new AtomicInteger(0);
         dto.activeAbilityIds = new String[character.activeAbilities().size()];
         character.activeAbilities().forEach(activeAbility ->
                 dto.activeAbilityIds[activeAbilitiesIndex.getAndIncrement()] = activeAbility.id());
 
-        AtomicInteger reactiveAbilitiesIndex = new AtomicInteger(0);
+        var reactiveAbilitiesIndex = new AtomicInteger(0);
         dto.reactiveAbilityIds = new String[character.reactiveAbilities().size()];
         character.reactiveAbilities().forEach(reactiveAbility ->
                 dto.reactiveAbilityIds[reactiveAbilitiesIndex.getAndIncrement()] =
@@ -266,7 +261,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         String[] classifications;
         CharacterPairedDataDTO[] pronouns;
         String stance;
-        String direction;
+        Integer direction;
         String assetSetId;
         String aiTypeId;
         String events;

@@ -142,7 +142,7 @@ public class FakeTileWallSegments implements TileWallSegments {
             return TileWallSegmentDirection.NORTHWEST;
         }
         else {
-            return TileWallSegmentDirection.NOT_FOUND;
+            return null;
         }
     }
 

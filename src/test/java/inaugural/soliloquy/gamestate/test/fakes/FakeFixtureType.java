@@ -1,9 +1,11 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.List;
+import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.game.Game;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.graphics.assets.ImageAsset;
 import soliloquy.specs.graphics.renderables.colorshifting.ColorShift;
 import soliloquy.specs.logger.Logger;
@@ -46,6 +48,17 @@ public class FakeFixtureType implements FixtureType {
     @Override
     public boolean canStep(Character character) {
         return false;
+    }
+
+    @Override
+    public int additionalMovementCost() {
+        return 0;
+    }
+
+    @Override
+    public int heightMovementPenaltyMitigation(Tile tile, Character character,
+                                               Direction direction) {
+        return 0;
     }
 
     @Override

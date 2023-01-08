@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
+import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -31,6 +32,7 @@ import static inaugural.soliloquy.tools.testing.Mock.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.shared.Direction.SOUTHWEST;
 
 class CharacterHandlerTests {
     private final UUID UUID = java.util.UUID.randomUUID();
@@ -44,7 +46,7 @@ class CharacterHandlerTests {
 
     private final String STANCE = randomString();
 
-    private final String DIRECTION = randomString();
+    private final Direction DIRECTION = SOUTHWEST;
 
     private final Map<String, CharacterClassification> CLASSIFICATIONS = new HashMap<>();
     private final String CLASSIFICATION_ID = randomString();
@@ -143,7 +145,7 @@ class CharacterHandlerTests {
     private final String WRITTEN_VALUE = String.format(
             "{\"uuid\":\"%s\",\"characterTypeId\":\"%s\",\"classifications\":[\"%s\"]," +
                     "\"pronouns\":[{\"key\":\"%s\",\"val\":\"%s\"}],\"stance\":\"%s\"," +
-                    "\"direction\":\"%s\",\"assetSetId\":\"%s\",\"aiTypeId\":\"%s\"," +
+                    "\"direction\":%s,\"assetSetId\":\"%s\",\"aiTypeId\":\"%s\"," +
                     "\"events\":\"%s\",\"equipmentSlots\":[{\"key\":\"%s\",\"val\":\"%s\"}]," +
                     "\"inventoryItems\":[\"%s\"],\"variableStats\":[{\"current\":%d," +
                     "\"type\":\"%s\",\"data\":\"%s\"}],\"staticStats\":[{\"type\":\"%s\"," +
@@ -151,7 +153,7 @@ class CharacterHandlerTests {
                     "\"passiveAbilityIds\":[\"%s\"],\"activeAbilityIds\":[\"%s\"]," +
                     "\"reactiveAbilityIds\":[\"%s\"],\"isPlayerControlled\":true,\"data\":\"%s\"," +
                     "\"name\":\"%s\"}",
-            UUID, CHARACTER_TYPE_ID, CLASSIFICATION_ID, CASE, ARTICLE, STANCE, DIRECTION,
+            UUID, CHARACTER_TYPE_ID, CLASSIFICATION_ID, CASE, ARTICLE, STANCE, DIRECTION.getValue(),
             IMAGE_ASSET_SET_ID, AI_TYPE_ID, EVENTS_WRITTEN, EQUIPMENT_SLOT,
             EQUIPMENT_SLOT_ITEM_WRITTEN_VALUE, INVENTORY_ITEM_WRITTEN_VALUE,
             VARIABLE_STAT_CURRENT_LEVEL, VARIABLE_STAT_TYPE_ID, VARIABLE_STAT_DATA_WRITTEN,
@@ -439,7 +441,8 @@ class CharacterHandlerTests {
         verify(mockVariableStat, times(1)).setCurrentValue(VARIABLE_STAT_CURRENT_LEVEL);
         verify(DATA_HANDLER, times(1)).read(STATIC_STAT_DATA_WRITTEN);
         verify(mockStaticStats, times(1)).add(mockStaticStatType, STATIC_STAT_DATA);
-        verify(mockStatEffects, times(1)).setStatusEffectLevel(mockStatEffectType, STAT_EFFECT_LEVEL);
+        verify(mockStatEffects, times(1)).setStatusEffectLevel(mockStatEffectType,
+                STAT_EFFECT_LEVEL);
         verify(mockPassiveAbilities, times(1)).add(mockPassiveAbility);
         verify(mockActiveAbilities, times(1)).add(mockActiveAbility);
         verify(mockReactiveAbilities, times(1)).add(mockReactiveAbility);

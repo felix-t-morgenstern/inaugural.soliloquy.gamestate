@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -18,7 +19,7 @@ import java.util.*;
 public class FakeCharacter implements Character {
     private boolean _isDeleted;
     private String _stance;
-    private String _direction;
+    private Direction _direction;
     private ImageAssetSet _imageAssetSet;
     private CharacterAIType _aiType;
     private boolean _playerControlled;
@@ -89,12 +90,12 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public String getDirection() throws IllegalStateException {
+    public Direction getDirection() throws IllegalStateException {
         return _direction;
     }
 
     @Override
-    public void setDirection(String direction)
+    public void setDirection(Direction direction)
             throws IllegalArgumentException, IllegalStateException {
         _direction = direction;
     }

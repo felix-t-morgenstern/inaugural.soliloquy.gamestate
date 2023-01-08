@@ -17,7 +17,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <release>9</release>
+                    <release>18</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -97,12 +97,12 @@
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>soliloquy.specs</artifactId>
-            <version>0.0.433</version>
+            <version>0.0.440</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>inaugural.soliloquy.tools</artifactId>
-            <version>0.0.111</version>
+            <version>0.0.116</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>

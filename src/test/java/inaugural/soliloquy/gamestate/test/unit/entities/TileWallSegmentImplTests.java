@@ -3,12 +3,10 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.TileWallSegmentImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTileWallSegments;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileWallSegment;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDimensions;
 import soliloquy.specs.gamestate.entities.TileWallSegmentDirection;
@@ -20,17 +18,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class TileWallSegmentImplTests {
-    private final VariableCache DATA = new VariableCacheStub();
-
+    @Mock private VariableCache mockData;
     @Mock private WallSegmentType mockWallSegmentType;
 
     private TileWallSegment tileWallSegment;
 
     @BeforeEach
     void setUp() {
+        mockData = mock(VariableCache.class);
         mockWallSegmentType = mock(WallSegmentType.class);
 
-        tileWallSegment = new TileWallSegmentImpl(DATA);
+        tileWallSegment = new TileWallSegmentImpl(mockData);
     }
 
     @Test
@@ -46,7 +44,7 @@ class TileWallSegmentImplTests {
 
     @Test
     void testData() {
-        assertSame(DATA, tileWallSegment.data());
+        assertSame(mockData, tileWallSegment.data());
     }
 
     @Test
@@ -57,8 +55,13 @@ class TileWallSegmentImplTests {
     }
 
     @Test
+    void testSetTypeWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> tileWallSegment.setType(null));
+    }
+
+    @Test
     void testAssignTileWallSegmentsToTileAfterAddingToTileWallSegmentsAndGetTile() {
-        Tile tile = new FakeTile();
+        var tile = new FakeTile();
         ((FakeTileWallSegments) tile.wallSegments()).SEGMENTS
                 .get(TileWallSegmentDirection.NORTH).put(tileWallSegment,
                 new TileWallSegmentDimensions() {
@@ -87,7 +90,7 @@ class TileWallSegmentImplTests {
 
     @Test
     void testSetAndGetName() {
-        final String name = "name";
+        final var name = "name";
 
         tileWallSegment.setName(name);
 
@@ -117,7 +120,7 @@ class TileWallSegmentImplTests {
 
     @Test
     void testMakeGameEventTarget() {
-        GameEventTarget gameEventTarget = tileWallSegment.makeGameEventTarget();
+        var gameEventTarget = tileWallSegment.makeGameEventTarget();
 
         assertNotNull(gameEventTarget);
         assertNotNull(gameEventTarget.tileWallSegment());
@@ -146,7 +149,7 @@ class TileWallSegmentImplTests {
 
     @Test
     void testAggregateAssignmentInvariant() {
-        Tile tile = new FakeTile();
+        var tile = new FakeTile();
         tile.wallSegments().add(TileWallSegmentDirection.NORTH, tileWallSegment, 0);
 
         ((FakeTileWallSegments) tile.wallSegments()).SEGMENTS

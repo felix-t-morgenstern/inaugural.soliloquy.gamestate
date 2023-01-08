@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -39,7 +40,7 @@ public class CharacterImpl implements Character {
 
     private Tile tile;
     private String stance;
-    private String direction;
+    private Direction direction;
     private ImageAssetSet imageAssetSet;
     private boolean playerControlled;
     private boolean deleted;
@@ -116,13 +117,13 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public String getDirection() throws IllegalStateException {
+    public Direction getDirection() throws IllegalStateException {
         enforceInvariant("getDirection", true);
         return direction;
     }
 
     @Override
-    public void setDirection(String direction)
+    public void setDirection(Direction direction)
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("setDirection", true);
         this.direction = direction;
@@ -291,10 +292,9 @@ public class CharacterImpl implements Character {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof Character)) {
+        if (!(o instanceof Character character)) {
             return false;
         }
-        Character character = (Character) o;
         if (character.isDeleted()) {
             return false;
         }
@@ -303,8 +303,8 @@ public class CharacterImpl implements Character {
 
     private void enforceInvariant(String methodName, boolean cannotBeDeleted) {
         if (cannotBeDeleted && deleted) {
-            throw new EntityDeletedException("CharacterImpl." + methodName +
-                    ": Character is deleted");
+            throw new EntityDeletedException(
+                    "CharacterImpl." + methodName + ": Character is deleted");
         }
         if (tile != null && !tile.characters().contains(this)) {
             throw new IllegalStateException("CharacterImpl." + methodName +

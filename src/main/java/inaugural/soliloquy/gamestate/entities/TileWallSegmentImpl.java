@@ -1,45 +1,43 @@
 package inaugural.soliloquy.gamestate.entities;
 
+import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
 public class TileWallSegmentImpl extends AbstractGameEventTargetEntity implements TileWallSegment {
     private final VariableCache DATA;
 
-    private WallSegmentType _type;
-    private String _name;
-    private Tile _tile;
+    private WallSegmentType type;
+    private String name;
+    private Tile tile;
 
-    @SuppressWarnings("ConstantConditions")
     public TileWallSegmentImpl(VariableCache data) {
-        if (data == null) {
-            throw new IllegalArgumentException(
-                    "TileWallSegment: data must be non-null");
-        }
-        DATA = data;
+        DATA = Check.ifNull(data, "data");
     }
 
     @Override
-    public WallSegmentType getType() throws IllegalStateException {
+    public WallSegmentType getType() throws IllegalStateException, EntityDeletedException {
         enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("getType");
-        return _type;
+        return type;
     }
 
     @Override
-    public void setType(WallSegmentType wallSegmentType) throws IllegalStateException {
+    public void setType(WallSegmentType wallSegmentType)
+            throws IllegalArgumentException, IllegalStateException, EntityDeletedException {
         enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("setType");
-        _type = wallSegmentType;
+        type = Check.ifNull(wallSegmentType, "wallSegmentType");
     }
 
     @Override
     public Tile tile() {
         enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("tile");
-        return _tile;
+        return tile;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class TileWallSegmentImpl extends AbstractGameEventTargetEntity implement
         enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant(
                 "assignTileAfterAddedToTileEntitiesOfType");
-        _tile = tile;
+        this.tile = tile;
         enforceAggregateAssignmentInvariant("assignTileAfterAddedToTileEntitiesOfType");
     }
 
@@ -63,20 +61,20 @@ public class TileWallSegmentImpl extends AbstractGameEventTargetEntity implement
     public String getName() {
         enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("getName");
-        return _name;
+        return name;
     }
 
     @Override
     public void setName(String name) {
         enforceDeletionInvariants();
         enforceAggregateAssignmentInvariant("setName");
-        _name = name;
+        this.name = name;
     }
 
     @Override
     public GameEventTarget makeGameEventTarget() throws IllegalStateException {
         enforceInvariants("makeGameEventTarget");
-        TileWallSegment tileWallSegment = this;
+        var tileWallSegment = this;
         return new GameEventTarget() {
             @Override
             public Tile tile() {
@@ -106,10 +104,9 @@ public class TileWallSegmentImpl extends AbstractGameEventTargetEntity implement
     }
 
     private void enforceAggregateAssignmentInvariant(String methodName) {
-        if (_tile != null) {
-            TileWallSegmentDirection tileWallSegmentDirection =
-                    _tile.wallSegments().getDirection(this);
-            if (tileWallSegmentDirection == TileWallSegmentDirection.NOT_FOUND) {
+        if (tile != null) {
+            var tileWallSegmentDirection = tile.wallSegments().getDirection(this);
+            if (tileWallSegmentDirection == null) {
                 throw new IllegalStateException("TileWallSegmentImpl." + methodName +
                         ": This TileWallSegment not found in Tile to which it was assigned");
             }
@@ -129,6 +126,6 @@ public class TileWallSegmentImpl extends AbstractGameEventTargetEntity implement
 
     @Override
     protected Deletable getContainingObject() {
-        return _tile;
+        return tile;
     }
 }
