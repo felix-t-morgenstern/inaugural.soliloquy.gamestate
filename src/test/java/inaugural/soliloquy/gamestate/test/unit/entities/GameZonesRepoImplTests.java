@@ -11,7 +11,6 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.GameZonesRepo;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -38,17 +37,17 @@ class GameZonesRepoImplTests {
     @BeforeEach
     void setUp() throws Exception {
         Path sharedTempDirPath = sharedTempDir.resolve(DIRECTORY_NAME);
+        //noinspection ResultOfMethodCallIgnored
         new File(sharedTempDirPath.toString()).mkdir();
         Path sharedTempFilePath = sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOC);
         Files.write(sharedTempFilePath, new ArrayList<>());
-        Files.write(sharedTempFilePath, ORIGINAL_FILE_TEXT.getBytes(StandardCharsets.UTF_8),
+        Files.writeString(sharedTempFilePath, ORIGINAL_FILE_TEXT,
                 StandardOpenOption.APPEND);
         FILE_LOCATIONS.put(GAME_ZONE.id(), sharedTempFilePath);
 
         _gameZonesRepo = new GameZonesRepoImpl(GAME_ZONE_HANDLER, FILE_LOCATIONS);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
     void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,

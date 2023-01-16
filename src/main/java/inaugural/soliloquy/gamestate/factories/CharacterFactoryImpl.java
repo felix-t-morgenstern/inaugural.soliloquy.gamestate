@@ -51,13 +51,8 @@ public class CharacterFactoryImpl implements CharacterFactory {
     @Override
     public Character make(CharacterType characterType, UUID uuid, VariableCache data)
             throws IllegalArgumentException {
-        if (characterType == null) {
-            throw new IllegalArgumentException(
-                    "CharacterFactory.make: characterType must be non-null");
-        }
-        if (uuid == null) {
-            throw new IllegalArgumentException("CharacterFactory.make: uuid must be non-null");
-        }
+        Check.ifNull(characterType, "characterType");
+        Check.ifNull(uuid, "uuid");
         return new CharacterImpl(
                 uuid,
                 characterType,

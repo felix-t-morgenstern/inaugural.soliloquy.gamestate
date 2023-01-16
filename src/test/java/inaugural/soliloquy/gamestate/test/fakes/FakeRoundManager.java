@@ -9,7 +9,6 @@ import soliloquy.specs.gamestate.entities.RoundManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class FakeRoundManager implements RoundManager {
     private final List<Character> QUEUE = new ArrayList<>();
@@ -97,13 +96,6 @@ public class FakeRoundManager implements RoundManager {
 
     @Override
     public void advanceRounds(int i) throws IllegalArgumentException {
-
-    }
-
-    @Override
-    public void setActiveCharactersProvider(
-            Supplier<java.util.List<Pair<Character, VariableCache>>> supplier)
-            throws IllegalArgumentException {
 
     }
 

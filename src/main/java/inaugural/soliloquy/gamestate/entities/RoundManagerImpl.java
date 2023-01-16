@@ -5,8 +5,10 @@ import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.RoundManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
+import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,16 +18,21 @@ import java.util.function.Supplier;
 public class RoundManagerImpl implements RoundManager {
     private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
+    private final ActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER;
+    private final Supplier<GameZone> GET_CURRENT_GAME_ZONE;
     private final ArrayList<Character> QUEUE = new ArrayList<>();
     private final HashMap<Character, VariableCache> CHARACTER_ROUND_DATA = new HashMap<>();
 
     private int roundNumber;
-    private Supplier<List<Pair<Character, VariableCache>>> activeCharactersProvider;
 
     public RoundManagerImpl(VariableCacheFactory variableCacheFactory,
-                            RoundBasedTimerManager roundBasedTimerManager) {
+                            RoundBasedTimerManager roundBasedTimerManager,
+                            ActiveCharactersProvider activeCharactersProvider,
+                            Supplier<GameZone> getCurrentGameZone) {
         VARIABLE_CACHE_FACTORY = Check.ifNull(variableCacheFactory, "variableCacheFactory");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
+        ACTIVE_CHARACTERS_PROVIDER = Check.ifNull(activeCharactersProvider, "activeCharactersProvider");
+        GET_CURRENT_GAME_ZONE = Check.ifNull(getCurrentGameZone, "getCurrentGameZone");
     }
 
     @Override
@@ -87,7 +94,7 @@ public class RoundManagerImpl implements RoundManager {
 
     @Override
     public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
-        ArrayList<Pair<Character, VariableCache>> output = new ArrayList<>();
+        var output = new ArrayList<Pair<Character, VariableCache>>();
 
         QUEUE.forEach(character ->
                 output.add(new Pair<>(character, CHARACTER_ROUND_DATA.get(character))));
@@ -97,11 +104,6 @@ public class RoundManagerImpl implements RoundManager {
 
     @Override
     public void endActiveCharacterTurn() {
-        if (activeCharactersProvider == null) {
-            throw new IllegalStateException("RoundManagerImpl.endActiveCharacterTurn: " +
-                    "active characters provider is undefined");
-        }
-
         if (!QUEUE.isEmpty()) {
             CHARACTER_ROUND_DATA.remove(QUEUE.remove(0));
         }
@@ -127,32 +129,19 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public void setActiveCharactersProvider(Supplier<List<Pair<Character, VariableCache>>>
-                                                    activeCharactersProvider)
-            throws IllegalArgumentException {
-        this.activeCharactersProvider =
-                Check.ifNull(activeCharactersProvider, "activeCharactersProvider");
-    }
-
-    @Override
     public void advanceRounds(int numberOfRounds)
             throws IllegalArgumentException, IllegalStateException {
         Check.throwOnLteZero(numberOfRounds, "numberOfRounds");
 
-        if (activeCharactersProvider == null) {
-            throw new IllegalStateException(
-                    "RoundManagerImpl.advanceRounds: active characters provider is undefined");
-        }
-
         QUEUE.clear();
         CHARACTER_ROUND_DATA.clear();
 
-        activeCharactersProvider.get().forEach(ac -> {
+        ACTIVE_CHARACTERS_PROVIDER.generateInTurnOrder(GET_CURRENT_GAME_ZONE.get()).forEach(ac -> {
             QUEUE.add(ac.getItem1());
             CHARACTER_ROUND_DATA.put(ac.getItem1(), ac.getItem2());
         });
 
-        int newRoundNumber = roundNumber + numberOfRounds;
+        var newRoundNumber = roundNumber + numberOfRounds;
 
         ROUND_BASED_TIMER_MANAGER.fireTimersForRoundsElapsed(roundNumber, newRoundNumber);
 
