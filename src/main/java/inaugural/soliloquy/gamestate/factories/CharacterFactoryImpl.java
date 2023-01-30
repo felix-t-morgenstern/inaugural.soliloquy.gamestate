@@ -6,7 +6,7 @@ import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.*;
-import soliloquy.specs.ruleset.entities.CharacterType;
+import soliloquy.specs.ruleset.entities.character.CharacterType;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -16,8 +16,6 @@ public class CharacterFactoryImpl implements CharacterFactory {
     private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY;
     private final CharacterEquipmentSlotsFactory CHARACTER_EQUIPMENT_SLOTS_FACTORY;
     private final CharacterInventoryFactory CHARACTER_INVENTORY_FACTORY;
-    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY;
-    private final EntityMembersOfTypeFactory ENTITY_MEMBERS_OF_TYPE_FACTORY;
     private final CharacterStatusEffectsFactory CHARACTER_STATUS_EFFECTS_FACTORY;
     private final VariableCacheFactory DATA_FACTORY;
 
@@ -25,8 +23,6 @@ public class CharacterFactoryImpl implements CharacterFactory {
                                 CharacterEventsFactory characterEventsFactory,
                                 CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory,
                                 CharacterInventoryFactory characterInventoryFactory,
-                                CharacterVariableStatisticsFactory variableStatsFactory,
-                                EntityMembersOfTypeFactory entityMembersOfTypeFactory,
                                 CharacterStatusEffectsFactory characterStatusEffectsFactory,
                                 VariableCacheFactory dataFactory) {
         UUID_FACTORY = Check.ifNull(uuidFactory, "uuidFactory");
@@ -35,9 +31,6 @@ public class CharacterFactoryImpl implements CharacterFactory {
                 "characterEquipmentSlotsFactory");
         CHARACTER_INVENTORY_FACTORY = Check.ifNull(characterInventoryFactory,
                 "characterInventoryFactory");
-        VARIABLE_STATS_FACTORY = Check.ifNull(variableStatsFactory, "variableStatsFactory");
-        ENTITY_MEMBERS_OF_TYPE_FACTORY = Check.ifNull(entityMembersOfTypeFactory,
-                "entityMembersOfTypeFactory");
         CHARACTER_STATUS_EFFECTS_FACTORY = Check.ifNull(characterStatusEffectsFactory,
                 "characterStatusEffectsFactory");
         DATA_FACTORY = Check.ifNull(dataFactory, "dataFactory");
@@ -59,8 +52,6 @@ public class CharacterFactoryImpl implements CharacterFactory {
                 CHARACTER_EVENTS_FACTORY,
                 CHARACTER_EQUIPMENT_SLOTS_FACTORY,
                 CHARACTER_INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITY_MEMBERS_OF_TYPE_FACTORY,
                 CHARACTER_STATUS_EFFECTS_FACTORY,
                 data);
     }

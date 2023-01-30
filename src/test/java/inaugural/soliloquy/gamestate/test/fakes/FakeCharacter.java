@@ -6,12 +6,12 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
-import soliloquy.specs.ruleset.entities.CharacterAIType;
-import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
-import soliloquy.specs.ruleset.entities.CharacterType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+import soliloquy.specs.ruleset.entities.character.CharacterAIType;
+import soliloquy.specs.ruleset.entities.character.CharacterType;
+import soliloquy.specs.ruleset.entities.character.CharacterVariableStatisticType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
@@ -30,13 +30,6 @@ public class FakeCharacter implements Character {
     private final CharacterType TYPE;
     private final List<CharacterClassification> CLASSIFICATIONS = new ArrayList<>();
     private final Map<String, String> PRONOUNS = new HashMap<>();
-    private final CharacterEvents EVENTS = new FakeCharacterEvents();
-    private final CharacterVariableStatistics VARIABLE_STATS;
-    private final EntityMembersOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>, Character>
-            STATIC_STATS = new FakeEntityMembersOfType<>(this, c -> t -> d ->
-            new FakeCharacterStaticStatistic(t, d));
-    private final CharacterStatusEffects STATUS_EFFECTS = new FakeCharacterStatusEffects();
     private final List<PassiveAbility> PASSIVE_ABILITIES = new ArrayList<>();
     private final List<ActiveAbility> ACTIVE_ABILITIES = new ArrayList<>();
     private final List<ReactiveAbility> REACTIVE_ABILITIES = new ArrayList<>();
@@ -49,14 +42,12 @@ public class FakeCharacter implements Character {
     public FakeCharacter() {
         UUID = null;
         TYPE = null;
-        VARIABLE_STATS = new FakeCharacterVariableStatistics(this);
     }
 
     public FakeCharacter(UUID uuid, CharacterType type, VariableCache data) {
         UUID = uuid;
         TYPE = type;
         _data = data;
-        VARIABLE_STATS = new FakeCharacterVariableStatistics(this);
     }
 
     @Override
@@ -124,7 +115,7 @@ public class FakeCharacter implements Character {
 
     @Override
     public CharacterEvents events() {
-        return EVENTS;
+        return null;
     }
 
     @Override
@@ -138,20 +129,28 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public CharacterVariableStatistics variableStatistics() throws IllegalStateException {
-        return VARIABLE_STATS;
+    public int getVariableStatisticCurrentValue(
+            CharacterVariableStatisticType characterVariableStatisticType)
+            throws IllegalArgumentException, EntityDeletedException {
+        return 0;
     }
 
     @Override
-    public EntityMembersOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>, Character>
-    staticStatistics() throws IllegalStateException {
-        return STATIC_STATS;
+    public void setVariableStatisticCurrentValue(
+            CharacterVariableStatisticType characterVariableStatisticType, int i)
+            throws IllegalArgumentException, EntityDeletedException {
+
+    }
+
+    @Override
+    public Map<CharacterVariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
+            throws EntityDeletedException {
+        return null;
     }
 
     @Override
     public CharacterStatusEffects statusEffects() throws IllegalStateException {
-        return STATUS_EFFECTS;
+        return null;
     }
 
     @Override

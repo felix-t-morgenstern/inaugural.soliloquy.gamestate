@@ -16,10 +16,6 @@ public class FakeParty implements Party {
         ATTRIBUTES = new VariableCacheStub();
     }
 
-    public FakeParty(VariableCache attributes) {
-        ATTRIBUTES = attributes;
-    }
-
     @Override
     public List<Character> characters() {
         return CHARACTERS;

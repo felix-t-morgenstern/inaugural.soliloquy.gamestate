@@ -6,20 +6,20 @@ import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
+import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
+import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
-import soliloquy.specs.ruleset.entities.CharacterAIType;
-import soliloquy.specs.ruleset.entities.CharacterStaticStatisticType;
-import soliloquy.specs.ruleset.entities.CharacterType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+import soliloquy.specs.ruleset.entities.character.CharacterAIType;
+import soliloquy.specs.ruleset.entities.character.CharacterType;
+import soliloquy.specs.ruleset.entities.character.CharacterVariableStatisticType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
-
-import static inaugural.soliloquy.tools.generic.Archetypes.generateArchetypeWithInterfaceNameOverride;
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class CharacterImpl implements Character {
     private final UUID UUID;
@@ -29,9 +29,7 @@ public class CharacterImpl implements Character {
     private final CharacterEvents EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
-    private final CharacterVariableStatistics VARIABLE_STATISTICS;
-    private final EntityMembersOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>, Character> STATIC_STATISTICS;
+    private final Map<CharacterVariableStatisticType, Integer> VARIABLE_STATISTIC_CURRENT_VALUES;
     private final CharacterStatusEffects STATUS_EFFECTS;
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
@@ -52,8 +50,6 @@ public class CharacterImpl implements Character {
                          CharacterEventsFactory characterEventsFactory,
                          CharacterEquipmentSlotsFactory equipmentSlotsFactory,
                          CharacterInventoryFactory inventoryFactory,
-                         CharacterVariableStatisticsFactory variableStatsFactory,
-                         EntityMembersOfTypeFactory entityMembersOfTypeFactory,
                          CharacterStatusEffectsFactory statusEffectsFactory,
                          VariableCache data) {
         UUID = Check.ifNull(uuid, "uuid");
@@ -63,16 +59,7 @@ public class CharacterImpl implements Character {
         EVENTS = Check.ifNull(characterEventsFactory, "characterEventsFactory").make(this);
         EQUIPMENT_SLOTS = Check.ifNull(equipmentSlotsFactory, "equipmentSlotsFactory").make(this);
         INVENTORY = Check.ifNull(inventoryFactory, "inventoryFactory").make(this);
-        VARIABLE_STATISTICS = Check.ifNull(variableStatsFactory, "variableStatsFactory")
-                .make(this);
-        //noinspection unchecked
-        STATIC_STATISTICS = Check.ifNull(entityMembersOfTypeFactory, "entityMembersOfTypeFactory")
-                .make(this, generateSimpleArchetype(CharacterStaticStatisticType.class),
-                        (CharacterStatistic<CharacterStaticStatisticType>) generateArchetypeWithInterfaceNameOverride(
-                                CharacterStatistic.class,
-                                CharacterStatistic.class.getCanonicalName() + "<" +
-                                        CharacterStaticStatisticType.class.getCanonicalName() +
-                                        ">"));
+        VARIABLE_STATISTIC_CURRENT_VALUES = new HashMap<>();
         STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").make(this);
         PASSIVE_ABILITIES = new ArrayList<>();
         ACTIVE_ABILITIES = new ArrayList<>();
@@ -139,7 +126,7 @@ public class CharacterImpl implements Character {
     public void setImageAssetSet(ImageAssetSet imageAssetSet)
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("setImageAssetSet", true);
-        this.imageAssetSet = imageAssetSet;
+        this.imageAssetSet = Check.ifNull(imageAssetSet, "imageAssetSet");
     }
 
     @Override
@@ -149,14 +136,10 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public void setAIType(CharacterAIType characterAIType)
+    public void setAIType(CharacterAIType aiType)
             throws IllegalArgumentException, IllegalStateException {
         enforceInvariant("setAIType", true);
-        if (characterAIType == null) {
-            throw new IllegalArgumentException(
-                    "Character.setAIType: characterAIType cannot be null");
-        }
-        aiType = characterAIType;
+        this.aiType = Check.ifNull(aiType, "aiType");
     }
 
     @Override
@@ -178,17 +161,27 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public CharacterVariableStatistics variableStatistics() throws IllegalStateException {
-        enforceInvariant("variableStatistics", true);
-        return VARIABLE_STATISTICS;
+    public int getVariableStatisticCurrentValue(CharacterVariableStatisticType variableStatType)
+            throws IllegalArgumentException, EntityDeletedException {
+        enforceInvariant("getVariableStatisticCurrentValue", true);
+        Check.ifNull(variableStatType, "variableStatType");
+        return VARIABLE_STATISTIC_CURRENT_VALUES.getOrDefault(variableStatType, 0);
     }
 
     @Override
-    public EntityMembersOfType<CharacterStaticStatisticType,
-            CharacterStatistic<CharacterStaticStatisticType>, Character> staticStatistics()
-            throws IllegalStateException {
-        enforceInvariant("staticStatistics", true);
-        return STATIC_STATISTICS;
+    public void setVariableStatisticCurrentValue(CharacterVariableStatisticType variableStatType,
+                                                 int value)
+            throws IllegalArgumentException, EntityDeletedException {
+        enforceInvariant("setVariableStatisticCurrentValue", true);
+        Check.ifNull(variableStatType, "variableStatType");
+        VARIABLE_STATISTIC_CURRENT_VALUES.put(variableStatType, value);
+    }
+
+    @Override
+    public Map<CharacterVariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
+            throws EntityDeletedException {
+        enforceInvariant("variableStatisticCurrentValuesRepresentation", true);
+        return new HashMap<>(VARIABLE_STATISTIC_CURRENT_VALUES);
     }
 
     @Override
@@ -235,7 +228,7 @@ public class CharacterImpl implements Character {
 
     @Override
     public void delete() throws IllegalStateException {
-        enforceInvariant("characterType", false);
+        enforceInvariant("delete", false);
         // delete should remove the Character from its Tile, via its TileCharacters, which will
         // handle removal from the GameZone.
         deleted = true;
@@ -245,8 +238,6 @@ public class CharacterImpl implements Character {
         tile = null;
         EQUIPMENT_SLOTS.delete();
         INVENTORY.delete();
-        VARIABLE_STATISTICS.delete();
-        STATIC_STATISTICS.delete();
         STATUS_EFFECTS.delete();
     }
 
@@ -260,7 +251,7 @@ public class CharacterImpl implements Character {
 
     @Override
     public boolean isDeleted() {
-        enforceInvariant("characterType", false);
+        enforceInvariant("isDeleted", false);
         return deleted;
     }
 
@@ -273,7 +264,7 @@ public class CharacterImpl implements Character {
     @Override
     public void setName(String name) {
         enforceInvariant("setName", true);
-        this.name = name;
+        this.name = Check.ifNullOrEmpty(name, "name");
     }
 
     @Override

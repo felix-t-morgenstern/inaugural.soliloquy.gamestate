@@ -12,20 +12,22 @@ import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.PersistentValuesHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
-import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.gamestate.factories.GameStateFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.graphics.assets.Sprite;
-import soliloquy.specs.ruleset.entities.*;
+import soliloquy.specs.ruleset.entities.FixtureType;
+import soliloquy.specs.ruleset.entities.GroundType;
+import soliloquy.specs.ruleset.entities.ItemType;
+import soliloquy.specs.ruleset.entities.WallSegmentType;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+import soliloquy.specs.ruleset.entities.character.*;
 import soliloquy.specs.ruleset.gameconcepts.*;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
@@ -41,7 +43,6 @@ public class GameStateModule extends AbstractModule {
                            VariableCacheFactory variableCacheFactory,
                            PersistentValuesHandler persistentValuesHandler,
                            CharacterStatisticCalculation characterStatisticCalculation,
-                           StatusEffectResistanceCalculation resistanceCalculation,
                            TileVisibility tileVisibility,
                            ActiveCharactersProvider activeCharactersProvider,
                            TurnHandling turnHandling,
@@ -67,78 +68,59 @@ public class GameStateModule extends AbstractModule {
                            java.util.Map<String, Path> fileLocations) {
         Supplier<UUID> uuidFactory = UUID::randomUUID;
 
-        TypeHandler<UUID> uuidHandler =
-                persistentValuesHandler.getTypeHandler(UUID.class.getCanonicalName());
+        TypeHandler<UUID> uuidHandler = persistentValuesHandler
+                .getTypeHandler(UUID.class.getCanonicalName());
 
-        TypeHandler<VariableCache> dataHandler =
-                persistentValuesHandler.getTypeHandler(
-                        VariableCache.class.getCanonicalName());
+        TypeHandler<VariableCache> dataHandler = persistentValuesHandler
+                .getTypeHandler(VariableCache.class.getCanonicalName());
 
-        TypeHandler<Sprite> spriteHandler =
-                persistentValuesHandler.getTypeHandler(
-                        Sprite.class.getCanonicalName());
+        TypeHandler<Sprite> spriteHandler = persistentValuesHandler
+                .getTypeHandler(Sprite.class.getCanonicalName());
 
-        ItemFactory itemFactory = new ItemFactoryImpl(variableCacheFactory);
+        var itemFactory = new ItemFactoryImpl(variableCacheFactory);
 
-        TypeHandler<Item> itemHandler = new ItemHandler(itemTypes::get, dataHandler, itemFactory);
+        var itemHandler = new ItemHandler(itemTypes::get, dataHandler, itemFactory);
 
-        CharacterEventsFactory characterEventsFactory = new CharacterEventsFactoryImpl();
+        var characterEventsFactory = new CharacterEventsFactoryImpl();
 
-        CharacterEquipmentSlotsFactory characterEquipmentSlotsFactory =
-                new CharacterEquipmentSlotsFactoryImpl();
+        var characterEquipmentSlotsFactory = new CharacterEquipmentSlotsFactoryImpl();
 
-        CharacterInventoryFactory characterInventoryFactory = new CharacterInventoryFactoryImpl();
+        var characterInventoryFactory = new CharacterInventoryFactoryImpl();
 
-        EntityMemberOfTypeFactory<CharacterVariableStatisticType,
-                CharacterVariableStatistic, Character> characterVariableStatisticFactory =
-                new CharacterVariableStatisticFactory(variableCacheFactory,
-                        characterStatisticCalculation);
+        var entitiesOfTypeFactory = new EntityMembersOfTypeFactoryImpl(variableCacheFactory);
 
-        CharacterVariableStatisticsFactory variableStatsFactory =
-                new CharacterVariableStatisticsFactoryImpl(variableCacheFactory,
-                        characterVariableStatisticFactory);
+        var characterStatusEffectsFactory = new CharacterStatusEffectsFactoryImpl();
 
-        EntityMembersOfTypeFactory entitiesOfTypeFactory =
-                new EntityMembersOfTypeFactoryImpl(variableCacheFactory);
-
-        CharacterStatusEffectsFactory characterStatusEffectsFactory =
-                new CharacterStatusEffectsFactoryImpl(resistanceCalculation);
-
-        CharacterFactory characterFactory = new CharacterFactoryImpl(uuidFactory,
-                characterEventsFactory, characterEquipmentSlotsFactory, characterInventoryFactory,
-                variableStatsFactory, entitiesOfTypeFactory, characterStatusEffectsFactory,
-                variableCacheFactory);
+        var characterFactory = new CharacterFactoryImpl(uuidFactory, characterEventsFactory,
+                characterEquipmentSlotsFactory, characterInventoryFactory,
+                characterStatusEffectsFactory, variableCacheFactory);
 
         // TODO: Populate with characterEventsHandler
-        TypeHandler<Character> characterHandler =
-                new CharacterHandler(characterFactory, characterTypes::get,
-                        characterClassifications::get, imageAssetSets::get, characterAITypes::get,
-                        null, characterStaticStatisticTypes::get,
-                        characterVariableStatisticTypes::get, statusEffectTypes::get,
-                        passiveAbilities::get, activeAbilities::get, reactiveAbilities::get,
-                        dataHandler, itemHandler);
+        var characterHandler = new CharacterHandler(characterFactory, characterTypes::get,
+                characterClassifications::get, imageAssetSets::get, characterAITypes::get, null,
+                characterVariableStatisticTypes::get, statusEffectTypes::get, passiveAbilities::get,
+                activeAbilities::get, reactiveAbilities::get, dataHandler, itemHandler);
 
-        TileFixtureItemsFactory tileFixtureItemsFactory = new TileFixtureItemsFactoryImpl();
+        var tileFixtureItemsFactory = new TileFixtureItemsFactoryImpl();
 
-        TileFixtureFactory tileFixtureFactory =
+        var tileFixtureFactory =
                 new TileFixtureFactoryImpl(tileFixtureItemsFactory, variableCacheFactory);
 
-        TypeHandler<TileFixture> tileFixturesHandler =
+        var tileFixturesHandler =
                 new TileFixtureHandler(fixtureTypes::get, tileFixtureFactory, dataHandler,
                         itemHandler);
 
-        TileEntitiesFactory tileEntitiesFactory = new TileEntitiesFactoryImpl();
-        TileWallSegmentsFactory tileWallSegmentsFactory = new TileWallSegmentsFactoryImpl();
+        var tileEntitiesFactory = new TileEntitiesFactoryImpl();
+        var tileWallSegmentsFactory = new TileWallSegmentsFactoryImpl();
 
-        TileFactory tileFactory = new TileFactoryImpl(tileEntitiesFactory, tileWallSegmentsFactory);
+        var tileFactory = new TileFactoryImpl(tileEntitiesFactory, tileWallSegmentsFactory);
 
-        TileWallSegmentFactory tileWallSegmentFactory =
-                new TileWallSegmentFactoryImpl(variableCacheFactory);
+        var tileWallSegmentFactory = new TileWallSegmentFactoryImpl(variableCacheFactory);
 
-        TypeHandler<Tile> tileHandler = new TileHandler(tileFactory,
-                tileWallSegmentFactory, characterHandler, itemHandler, tileFixturesHandler,
-                spriteHandler, dataHandler, wallSegmentTypes::get, gameMovementEvents::get,
-                gameAbilityEvents::get, groundTypes::get);
+        var tileHandler =
+                new TileHandler(tileFactory, tileWallSegmentFactory, characterHandler, itemHandler,
+                        tileFixturesHandler, spriteHandler, dataHandler, wallSegmentTypes::get,
+                        gameMovementEvents::get, gameAbilityEvents::get, groundTypes::get);
 
         // TODO: Populate this!
         RoundBasedTimerManager roundBasedTimerManager = null;
@@ -149,32 +131,31 @@ public class GameStateModule extends AbstractModule {
         // TODO: Populate this!
         RoundManagerImpl roundManager = null;
 
-        GameZoneFactory gameZoneFactory = new GameZoneFactoryImpl(
+        var gameZoneFactory = new GameZoneFactoryImpl(
                 c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
                 roundManager::removeCharacterFromQueue);
 
         // TODO: Populate tilesPerBatch and threadPoolSize from configs somewhere
-        TypeHandler<GameZone> gameZoneHandler =
-                new GameZoneHandler(gameZoneFactory, tileHandler, dataHandler,
-                        actions::get, 5, 5);
+        var gameZoneHandler =
+                new GameZoneHandler(gameZoneFactory, tileHandler, dataHandler, actions::get, 5, 5);
 
-        GameZonesRepo gameZonesRepo = new GameZonesRepoImpl(gameZoneHandler, fileLocations);
+        var gameZonesRepo = new GameZonesRepoImpl(gameZoneHandler, fileLocations);
 
-        CameraFactory cameraFactory = new CameraFactoryImpl(tileVisibility);
+        var cameraFactory = new CameraFactoryImpl(tileVisibility);
 
-        RoundBasedTimerFactory roundBasedTimerFactory =
-                new RoundBasedTimerFactoryImpl(roundBasedTimerManager);
+        var roundBasedTimerFactory = new RoundBasedTimerFactoryImpl(roundBasedTimerManager);
 
-        KeyBindingFactory keyBindingFactory = new KeyBindingFactoryImpl();
+        var keyBindingFactory = new KeyBindingFactoryImpl();
 
-        KeyBindingContextFactory keyBindingContextFactory = new KeyBindingContextFactoryImpl();
+        var keyBindingContextFactory = new KeyBindingContextFactoryImpl();
 
-        KeyEventListenerFactory keyEventListenerFactory = new KeyEventListenerFactoryImpl();
+        var keyEventListenerFactory = new KeyEventListenerFactoryImpl();
 
-        gameStateFactory = new GameStateFactoryImpl(registryFactory, gameZonesRepo, cameraFactory,
-                roundManager, roundBasedTimerManager, clockBasedTimerManager, itemFactory,
-                characterFactory, roundBasedTimerFactory, keyBindingFactory,
-                keyBindingContextFactory, keyEventListenerFactory);
+        var gameStateFactory =
+                new GameStateFactoryImpl(registryFactory, gameZonesRepo, cameraFactory,
+                        roundManager, roundBasedTimerManager, clockBasedTimerManager, itemFactory,
+                        characterFactory, roundBasedTimerFactory, keyBindingFactory,
+                        keyBindingContextFactory, keyEventListenerFactory);
     }
 
     @Override

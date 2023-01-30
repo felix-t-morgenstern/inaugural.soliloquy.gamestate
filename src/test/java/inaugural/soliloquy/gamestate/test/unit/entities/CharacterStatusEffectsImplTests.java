@@ -1,76 +1,83 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterStatusEffectsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeStatusEffectType;
-import inaugural.soliloquy.gamestate.test.spydoubles.StatusEffectResistanceCalculationSpyDouble;
-import inaugural.soliloquy.gamestate.test.stubs.AbilitySourceStub;
-import inaugural.soliloquy.gamestate.test.stubs.ElementStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
-import soliloquy.specs.gamestate.entities.abilities.AbilitySource;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.ruleset.entities.Element;
-import soliloquy.specs.ruleset.entities.StatusEffectType;
+import soliloquy.specs.ruleset.entities.character.StatusEffectType;
 
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static inaugural.soliloquy.tools.random.Random.randomIntWithInclusiveFloor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CharacterStatusEffectsImplTests {
-    private CharacterStatusEffects _characterStatusEffects;
+    private final int EFFECT_1_LEVEL = randomIntWithInclusiveFloor(1);
+    private final int EFFECT_2_LEVEL = randomIntWithInclusiveFloor(1);
 
-    private final StatusEffectType STATUS_EFFECT_TYPE_1 = new FakeStatusEffectType();
-    private final StatusEffectType STATUS_EFFECT_TYPE_2 = new FakeStatusEffectType();
-    private final StatusEffectResistanceCalculationSpyDouble STATUS_EFFECT_RESISTANCE_CALCULATION =
-            new StatusEffectResistanceCalculationSpyDouble();
-    private final Character CHARACTER = new FakeCharacter();
-    private final Element ELEMENT = new ElementStub();
-    private final AbilitySource ABILITY_SOURCE = new AbilitySourceStub();
+    @Mock private StatusEffectType mockStatusEffectType2;
+    @Mock private StatusEffectType mockStatusEffectType1;
+    @Mock private Character mockCharacter;
+
+    private CharacterStatusEffects characterStatusEffects;
 
     @BeforeEach
     void setUp() {
-        _characterStatusEffects = new CharacterStatusEffectsImpl(CHARACTER, STATUS_EFFECT_RESISTANCE_CALCULATION);
+        mockStatusEffectType1 = mock(StatusEffectType.class);
+        mockStatusEffectType2 = mock(StatusEffectType.class);
+        mockCharacter = mock(Character.class);
+        when(mockCharacter.isDeleted()).thenReturn(false);
+
+        characterStatusEffects = new CharacterStatusEffectsImpl(mockCharacter);
+    }
+
+    @Test
+    void testConstructorWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> new CharacterStatusEffectsImpl(null));
     }
 
     @Test
     void testGetInterfaceName() {
         assertEquals(CharacterStatusEffects.class.getCanonicalName(),
-                _characterStatusEffects.getInterfaceName());
+                characterStatusEffects.getInterfaceName());
     }
 
     @Test
     void testGetAndSetStatusEffectLevel() {
-        assertEquals(0, (int) _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
-        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 10);
-        assertEquals(10, (int) _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
+        var statusEffectLevel = randomIntWithInclusiveFloor(1);
+
+        assertEquals(0, (int) characterStatusEffects.getStatusEffectLevel(mockStatusEffectType2));
+
+        characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, statusEffectLevel);
+
+        assertEquals(statusEffectLevel, (int) characterStatusEffects.getStatusEffectLevel(mockStatusEffectType2));
     }
 
     @Test
     void testGetAllStatusEffects() {
-        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 123);
-        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2, 456);
+        characterStatusEffects.setStatusEffectLevel(mockStatusEffectType1, EFFECT_1_LEVEL);
+        characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, EFFECT_2_LEVEL);
 
-        Map<StatusEffectType, Integer> statusEffectLevels =
-                _characterStatusEffects.representation();
+        var statusEffectLevels = characterStatusEffects.representation();
 
         assertEquals(2, statusEffectLevels.size());
-        assertEquals(123, (int) statusEffectLevels.get(STATUS_EFFECT_TYPE_1));
-        assertEquals(456, (int) statusEffectLevels.get(STATUS_EFFECT_TYPE_2));
+        assertEquals(EFFECT_1_LEVEL, (int) statusEffectLevels.get(mockStatusEffectType1));
+        assertEquals(EFFECT_2_LEVEL, (int) statusEffectLevels.get(mockStatusEffectType2));
     }
 
     @Test
     void testClearStatusEffects() {
-        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 123);
-        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_2, 456);
-        Map<StatusEffectType, Integer> statusEffectLevels =
-                _characterStatusEffects.representation();
+        characterStatusEffects.setStatusEffectLevel(mockStatusEffectType1, EFFECT_1_LEVEL);
+        characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, EFFECT_2_LEVEL);
+        var statusEffectLevels = characterStatusEffects.representation();
         assertEquals(2, statusEffectLevels.size());
 
-        _characterStatusEffects.clearStatusEffects();
-        statusEffectLevels = _characterStatusEffects.representation();
+        characterStatusEffects.clearStatusEffects();
+        statusEffectLevels = characterStatusEffects.representation();
 
         assertEquals(0, statusEffectLevels.size());
     }
@@ -78,104 +85,35 @@ class CharacterStatusEffectsImplTests {
     @Test
     void testGetAndSetInvalidStatusEffectType() {
         assertThrows(IllegalArgumentException.class,
-                () -> _characterStatusEffects.getStatusEffectLevel(null));
+                () -> characterStatusEffects.getStatusEffectLevel(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterStatusEffects.setStatusEffectLevel(null, 0));
-    }
-
-    @Test
-    void testClearGetAndSetNullOrDeletedCharacter() {
-        CHARACTER.delete();
-        assertThrows(IllegalStateException.class,
-                () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
-        assertThrows(IllegalStateException.class,
-                () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
-        assertThrows(IllegalStateException.class, _characterStatusEffects::clearStatusEffects);
-
-        CharacterStatusEffects characterStatusEffects =
-                new CharacterStatusEffectsImpl(null, STATUS_EFFECT_RESISTANCE_CALCULATION);
-        assertThrows(IllegalStateException.class,
-                () -> characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
-        assertThrows(IllegalStateException.class,
-                () -> characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
-        assertThrows(IllegalStateException.class, characterStatusEffects::clearStatusEffects);
-    }
-
-    @Test
-    void testAlterStatusEffect() {
-        final int amountAltered = 111;
-
-        _characterStatusEffects
-                .alterStatusEffect(STATUS_EFFECT_TYPE_1, amountAltered, true, ELEMENT,
-                        ABILITY_SOURCE);
-
-        assertEquals((int) _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1),
-                STATUS_EFFECT_RESISTANCE_CALCULATION.StatusEffectTypeResult);
-        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._statusEffectType, STATUS_EFFECT_TYPE_1);
-        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._character, CHARACTER);
-        assertEquals(amountAltered, STATUS_EFFECT_RESISTANCE_CALCULATION._baseAmount);
-        assertTrue(STATUS_EFFECT_RESISTANCE_CALCULATION._stopAtZero);
-        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._element, ELEMENT);
-        assertSame(STATUS_EFFECT_RESISTANCE_CALCULATION._abilitySource, ABILITY_SOURCE);
+                () -> characterStatusEffects.setStatusEffectLevel(null, 0));
     }
 
     @Test
     void testStatusEffectIsRemovedWhenSetToZero() {
-        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 1);
+        characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, 1);
 
-        assertEquals(1, _characterStatusEffects.representation().size());
+        assertEquals(1, characterStatusEffects.representation().size());
 
-        _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0);
+        characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, 0);
 
-        assertEquals(0, _characterStatusEffects.representation().size());
-    }
-
-    @Test
-    void testStatusEffectIsRemovedWhenAlteredToZero() {
-        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, true, ELEMENT,
-                ABILITY_SOURCE);
-
-        assertEquals(1, _characterStatusEffects.representation().size());
-
-        STATUS_EFFECT_RESISTANCE_CALCULATION.StatusEffectTypeResult =
-                -STATUS_EFFECT_RESISTANCE_CALCULATION.StatusEffectTypeResult;
-        _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, true, ELEMENT,
-                ABILITY_SOURCE);
-
-        assertEquals(0, _characterStatusEffects.representation().size());
-    }
-
-    @Test
-    void testAlterStatusEffectInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterStatusEffects.alterStatusEffect(null, 111, true, ELEMENT,
-                        ABILITY_SOURCE));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true,
-                        null, ABILITY_SOURCE));
-
-        CHARACTER.delete();
-        assertThrows(IllegalStateException.class,
-                () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 111, true,
-                        ELEMENT, ABILITY_SOURCE));
+        assertEquals(0, characterStatusEffects.representation().size());
     }
 
     @Test
     void testEnforceDeletionInvariant() {
-        _characterStatusEffects.delete();
+        characterStatusEffects.delete();
 
         assertThrows(EntityDeletedException.class,
-                () -> _characterStatusEffects.getStatusEffectLevel(STATUS_EFFECT_TYPE_1));
+                () -> characterStatusEffects.getStatusEffectLevel(mockStatusEffectType2));
         assertThrows(EntityDeletedException.class,
-                () -> _characterStatusEffects.representation());
+                () -> characterStatusEffects.representation());
         assertThrows(EntityDeletedException.class,
-                () -> _characterStatusEffects.alterStatusEffect(STATUS_EFFECT_TYPE_1, 0, false,
-                        ELEMENT, ABILITY_SOURCE));
+                () -> characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, 0));
         assertThrows(EntityDeletedException.class,
-                () -> _characterStatusEffects.setStatusEffectLevel(STATUS_EFFECT_TYPE_1, 0));
+                () -> characterStatusEffects.clearStatusEffects());
         assertThrows(EntityDeletedException.class,
-                () -> _characterStatusEffects.clearStatusEffects());
-        assertThrows(EntityDeletedException.class,
-                () -> _characterStatusEffects.getInterfaceName());
+                () -> characterStatusEffects.getInterfaceName());
     }
 }

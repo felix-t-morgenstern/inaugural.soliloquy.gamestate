@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.test.fakes;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
-import soliloquy.specs.ruleset.entities.CharacterType;
+import soliloquy.specs.ruleset.entities.character.CharacterType;
 
 import java.util.UUID;
 

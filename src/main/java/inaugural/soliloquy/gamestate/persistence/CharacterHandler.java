@@ -5,14 +5,15 @@ import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.shared.Direction;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.CharacterEvents;
+import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
-import soliloquy.specs.ruleset.entities.*;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
+import soliloquy.specs.ruleset.entities.character.*;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.UUID;
@@ -28,7 +29,6 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final Function<String, ImageAssetSet> GET_IMAGE_ASSET_SET;
     private final Function<String, CharacterAIType> GET_AI_TYPE;
     private final TypeHandler<CharacterEvents> CHARACTER_EVENTS_HANDLER;
-    private final Function<String, CharacterStaticStatisticType> GET_STATIC_STAT_TYPE;
     private final Function<String, CharacterVariableStatisticType> GET_VARIABLE_STAT_TYPE;
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
     private final Function<String, PassiveAbility> GET_PASSIVE_ABILITY;
@@ -45,7 +45,6 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                             Function<String, ImageAssetSet> getImageAssetSet,
                             Function<String, CharacterAIType> getAIType,
                             TypeHandler<CharacterEvents> characterEventsHandler,
-                            Function<String, CharacterStaticStatisticType> getStaticStatType,
                             Function<String, CharacterVariableStatisticType>
                                     getVariableStatType,
                             Function<String, StatusEffectType> getStatusType,
@@ -62,7 +61,6 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         GET_IMAGE_ASSET_SET = Check.ifNull(getImageAssetSet, "getImageAssetSet");
         GET_AI_TYPE = Check.ifNull(getAIType, "getAIType");
         CHARACTER_EVENTS_HANDLER = Check.ifNull(characterEventsHandler, "characterEventsHandler");
-        GET_STATIC_STAT_TYPE = Check.ifNull(getStaticStatType, "getStaticStatType");
         GET_VARIABLE_STAT_TYPE = Check.ifNull(getVariableStatType, "getVariableStatType");
         GET_STATUS_TYPE = Check.ifNull(getStatusType, "getStatusType");
         GET_PASSIVE_ABILITY = Check.ifNull(getPassiveAbility, "getPassiveAbility");
@@ -108,15 +106,8 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         }
 
         for (var variableStat : dto.variableStats) {
-            CharacterVariableStatisticType type =
-                    GET_VARIABLE_STAT_TYPE.apply(variableStat.type);
-            readCharacter.variableStatistics().add(type, DATA_HANDLER.read(variableStat.data));
-            readCharacter.variableStatistics().get(type).setCurrentValue(variableStat.current);
-        }
-
-        for (var staticStat : dto.staticStats) {
-            readCharacter.staticStatistics().add(GET_STATIC_STAT_TYPE.apply(staticStat.type),
-                    DATA_HANDLER.read(staticStat.data));
+            var type = GET_VARIABLE_STAT_TYPE.apply(variableStat.type);
+            readCharacter.setVariableStatisticCurrentValue(type, variableStat.current);
         }
 
         for (var statusEffect : dto.statusEffects) {
@@ -196,25 +187,14 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                 dto.inventoryItems[inventoryIndex.getAndIncrement()] = ITEM_HANDLER.write(item));
 
         var variableStatsIndex = new AtomicInteger(0);
-        dto.variableStats =
-                new CharacterVariableStatisticDTO[character.variableStatistics().size()];
-        for (CharacterVariableStatistic variableStat : character.variableStatistics()) {
+        var variableStatsCurrentValues = character.variableStatisticCurrentValuesRepresentation();
+        dto.variableStats = new CharacterVariableStatisticDTO[variableStatsCurrentValues.size()];
+        variableStatsCurrentValues.forEach((key, value) -> {
             var variableStatDTO = new CharacterVariableStatisticDTO();
-            variableStatDTO.type = variableStat.type().id();
-            variableStatDTO.data = DATA_HANDLER.write(variableStat.data());
-            variableStatDTO.current = variableStat.getCurrentValue();
+            variableStatDTO.type = key.id();
+            variableStatDTO.current = value;
             dto.variableStats[variableStatsIndex.getAndIncrement()] = variableStatDTO;
-        }
-
-        var staticStatsIndex = new AtomicInteger(0);
-        dto.staticStats = new CharacterEntityDTO[character.staticStatistics().size()];
-        for (CharacterStatistic<CharacterStaticStatisticType> staticStat :
-                character.staticStatistics()) {
-            var staticStatDTO = new CharacterEntityDTO();
-            staticStatDTO.type = staticStat.type().id();
-            staticStatDTO.data = DATA_HANDLER.write(staticStat.data());
-            dto.staticStats[staticStatsIndex.getAndIncrement()] = staticStatDTO;
-        }
+        });
 
         var statusEffectsIndex = new AtomicInteger(0);
         var statEffects = character.statusEffects().representation();
@@ -255,7 +235,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         return ARCHETYPE;
     }
 
-    private class CharacterDTO {
+    private static class CharacterDTO {
         String uuid;
         String characterTypeId;
         String[] classifications;
@@ -268,7 +248,6 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         CharacterPairedDataDTO[] equipmentSlots;
         String[] inventoryItems;
         CharacterVariableStatisticDTO[] variableStats;
-        CharacterEntityDTO[] staticStats;
         CharacterStatusEffectDTO[] statusEffects;
         String[] passiveAbilityIds;
         String[] activeAbilityIds;
@@ -278,25 +257,18 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         String name;
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class CharacterPairedDataDTO {
+    private static class CharacterPairedDataDTO {
         String key;
         String val;
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class CharacterStatusEffectDTO {
+    private static class CharacterStatusEffectDTO {
         String type;
         int value;
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    private class CharacterEntityDTO {
+    private static class CharacterVariableStatisticDTO {
         String type;
-        String data;
-    }
-
-    private class CharacterVariableStatisticDTO extends CharacterEntityDTO {
         int current;
     }
 }

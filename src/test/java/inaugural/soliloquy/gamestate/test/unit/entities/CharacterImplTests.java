@@ -1,151 +1,119 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.factories.*;
-import soliloquy.specs.ruleset.entities.CharacterAIType;
-import soliloquy.specs.ruleset.entities.CharacterType;
+import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
+import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
+import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
+import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
+import soliloquy.specs.graphics.assets.ImageAssetSet;
+import soliloquy.specs.ruleset.entities.character.CharacterAIType;
+import soliloquy.specs.ruleset.entities.character.CharacterType;
+import soliloquy.specs.ruleset.entities.character.CharacterVariableStatisticType;
 
 import java.util.UUID;
 
+import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static soliloquy.specs.common.shared.Direction.SOUTHWEST;
 
 class CharacterImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
-    private final CharacterType CHARACTER_TYPE = new FakeCharacterType();
-    private final CharacterEventsFactory CHARACTER_EVENTS_FACTORY =
-            new FakeCharacterEventsFactory();
-    private final CharacterEquipmentSlotsFactory EQUIPMENT_SLOTS_FACTORY =
-            new FakeCharacterEquipmentSlotsFactory();
-    private final CharacterInventoryFactory INVENTORY_FACTORY = new FakeCharacterInventoryFactory();
-    private final EntityMembersOfTypeFactory ENTITIES_OF_TYPE_FACTORY =
-            new FakeEntityMembersOfTypeFactory();
-    private final CharacterVariableStatisticsFactory VARIABLE_STATS_FACTORY =
-            new FakeCharacterVariableStatisticsFactory();
-    private final CharacterStatusEffectsFactory STATUS_EFFECTS_FACTORY =
-            new FakeCharacterStatusEffectsFactory();
 
+    @Mock private CharacterType mockCharacterType;
+    @Mock private TileEntities<Character> mockTileCharacters;
+    @Mock private Tile mockTile;
+    @Mock private CharacterEvents mockEvents;
+    @Mock private CharacterEventsFactory mockEventsFactory;
+    @Mock private CharacterStatusEffects mockStatusEffects;
+    @Mock private CharacterStatusEffectsFactory mockStatusEffectsFactory;
+    @Mock private CharacterInventory mockInventory;
+    @Mock private CharacterInventoryFactory mockInventoryFactory;
+    @Mock private CharacterEquipmentSlots mockEquipmentSlots;
+    @Mock private CharacterEquipmentSlotsFactory mockEquipmentSlotsFactory;
+    @Mock private CharacterVariableStatisticType mockVariableStatType;
     @Mock private VariableCache mockData;
+    @Mock private ImageAssetSet mockImageAssetSet;
 
     private Character character;
 
     @BeforeEach
     void setUp() {
+        mockCharacterType = mock(CharacterType.class);
+
+        //noinspection unchecked
+        mockTileCharacters = (TileEntities<Character>) mock(TileEntities.class);
+        when(mockTileCharacters.contains(any())).thenReturn(true);
+
+        mockTile = mock(Tile.class);
+        when(mockTile.characters()).thenReturn(mockTileCharacters);
+
+        mockEvents = mock(CharacterEvents.class);
+
+        mockEventsFactory = mock(CharacterEventsFactory.class);
+        when(mockEventsFactory.make(any())).thenReturn(mockEvents);
+
+        mockStatusEffects = mock(CharacterStatusEffects.class);
+
+        mockStatusEffectsFactory = mock(CharacterStatusEffectsFactory.class);
+        when(mockStatusEffectsFactory.make(any())).thenReturn(mockStatusEffects);
+
+        mockInventory = mock(CharacterInventory.class);
+
+        mockInventoryFactory = mock(CharacterInventoryFactory.class);
+        when(mockInventoryFactory.make(any())).thenReturn(mockInventory);
+
+        mockEquipmentSlots = mock(CharacterEquipmentSlots.class);
+
+        mockEquipmentSlotsFactory = mock(CharacterEquipmentSlotsFactory.class);
+        when(mockEquipmentSlotsFactory.make(any())).thenReturn(mockEquipmentSlots);
+
+        mockVariableStatType = mock(CharacterVariableStatisticType.class);
+
         mockData = mock(VariableCache.class);
 
-        character = new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
+        mockImageAssetSet = mock(ImageAssetSet.class);
+
+        character = new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
+                mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
                 mockData);
     }
 
     @Test
     void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                null,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                null,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                null,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                null,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                null,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                null,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                null,
-                STATUS_EFFECTS_FACTORY,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                null,
-                mockData));
-        assertThrows(IllegalArgumentException.class, () -> new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
-                null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterImpl(null, mockCharacterType, mockEventsFactory,
+                        mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
+                        mockData));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterImpl(UUID, null, mockEventsFactory,
+                        mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
+                        mockData));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterImpl(UUID, mockCharacterType, null, mockEquipmentSlotsFactory,
+                        mockInventoryFactory, mockStatusEffectsFactory, mockData));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterImpl(UUID, mockCharacterType, mockEventsFactory, null,
+                        mockInventoryFactory, mockStatusEffectsFactory, mockData));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
+                        mockEquipmentSlotsFactory, null, mockStatusEffectsFactory, mockData));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
+                        mockEquipmentSlotsFactory, mockInventoryFactory, null, mockData));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
+                        mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
+                        null));
     }
 
     @Test
@@ -155,15 +123,8 @@ class CharacterImplTests {
 
     @Test
     void testEquals() {
-        var character2 = new CharacterImpl(
-                UUID,
-                CHARACTER_TYPE,
-                CHARACTER_EVENTS_FACTORY,
-                EQUIPMENT_SLOTS_FACTORY,
-                INVENTORY_FACTORY,
-                VARIABLE_STATS_FACTORY,
-                ENTITIES_OF_TYPE_FACTORY,
-                STATUS_EFFECTS_FACTORY,
+        var character2 = new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
+                mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
                 mockData);
 
         assertEquals(character, character2);
@@ -171,7 +132,7 @@ class CharacterImplTests {
 
     @Test
     void testCharacterType() {
-        assertSame(CHARACTER_TYPE, character.type());
+        assertSame(mockCharacterType, character.type());
     }
 
     @Test
@@ -186,7 +147,7 @@ class CharacterImplTests {
 
     @Test
     void testSetAndGetStance() {
-        final var stance = randomString();
+        var stance = randomString();
 
         character.setStance(stance);
 
@@ -203,12 +164,15 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetAndGetSpriteSet() {
-        var imageAssetSet = new FakeImageAssetSet();
+    void testSetAndGetImageAssetSet() {
+        character.setImageAssetSet(mockImageAssetSet);
 
-        character.setImageAssetSet(imageAssetSet);
+        assertSame(mockImageAssetSet, character.getImageAssetSet());
+    }
 
-        assertEquals(imageAssetSet, character.getImageAssetSet());
+    @Test
+    void testSetImageAssetSetWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> character.setImageAssetSet(null));
     }
 
     @Test
@@ -223,7 +187,7 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetNullAIType() {
+    void testSetAITypeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> character.setAIType(null));
     }
 
@@ -234,8 +198,7 @@ class CharacterImplTests {
 
     @Test
     void testEquipment() {
-        assertSame(FakeCharacterEquipmentSlotsFactory.CHARACTER_EQUIPMENT_SLOTS,
-                character.equipmentSlots());
+        assertSame(mockEquipmentSlots, character.equipmentSlots());
     }
 
     @Test
@@ -244,13 +207,40 @@ class CharacterImplTests {
     }
 
     @Test
-    void testVariableStatistics() {
-        assertNotNull(character.variableStatistics());
+    void testSetAndGetVariableStatisticCurrentValue() {
+        assertEquals(0, character.getVariableStatisticCurrentValue(mockVariableStatType));
+
+        var variableStatCurrentLevel = randomInt();
+
+        character.setVariableStatisticCurrentValue(mockVariableStatType, variableStatCurrentLevel);
+
+        assertEquals(variableStatCurrentLevel,
+                character.getVariableStatisticCurrentValue(mockVariableStatType));
     }
 
     @Test
-    void testStaticStatistics() {
-        assertNotNull(character.staticStatistics());
+    void testSetAndGetVariableStatisticCurrentValueWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class,
+                () -> character.setVariableStatisticCurrentValue(null, randomInt()));
+        assertThrows(IllegalArgumentException.class,
+                () -> character.getVariableStatisticCurrentValue(null));
+    }
+
+    @Test
+    void testVariableStatisticCurrentValuesRepresentation() {
+        var variableStatCurrentLevel = randomInt();
+
+        assertNotNull(character.variableStatisticCurrentValuesRepresentation());
+        assertTrue(character.variableStatisticCurrentValuesRepresentation().isEmpty());
+
+        character.setVariableStatisticCurrentValue(mockVariableStatType, variableStatCurrentLevel);
+
+        var variableStatCurrentLevels = character.variableStatisticCurrentValuesRepresentation();
+
+        assertNotNull(variableStatCurrentLevels);
+        assertEquals(1, variableStatCurrentLevels.size());
+        assertEquals(variableStatCurrentLevel, variableStatCurrentLevels.get(mockVariableStatType));
+        assertNotSame(variableStatCurrentLevels, character.variableStatisticCurrentValuesRepresentation());
     }
 
     @Test
@@ -258,7 +248,6 @@ class CharacterImplTests {
         assertNotNull(character.statusEffects());
     }
 
-    // TODO: Consider testing the ability methods a touch more robustly
     @Test
     void testPassiveAbilities() {
         assertNotNull(character.passiveAbilities());
@@ -298,53 +287,35 @@ class CharacterImplTests {
     }
 
     @Test
+    void testSetNameWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> character.setName(null));
+        assertThrows(IllegalArgumentException.class, () -> character.setName(""));
+    }
+
+    @Test
     void testUuid() {
         assertSame(UUID, character.uuid());
     }
 
     @Test
-    void testAssignCharacterToTile() {
-        var tile = new FakeTile();
-        assertNull(character.tile());
+    void testAssignTileAfterAddedToTileEntitiesOfTypeAndTile() {
+        character.assignTileAfterAddedToTileEntitiesOfType(mockTile);
 
-        // NB: Character.TILE should NOT be exposed, and calling Character.assignCharacterToTile
-        // violates the invariant condition; therefore, FakeTileEntities calls
-        // Character.assignCharacterToTile indirectly, as it should be in production code
-        tile.characters().add(character);
-
-        assertSame(tile, character.tile());
+        assertSame(mockTile, character.tile());
     }
 
-    @SuppressWarnings({"rawtypes"})
     @Test
     void testDelete() {
-        var tile = new FakeTile();
-
-        tile.characters().add(character);
-
-        var equipmentSlots = (FakeCharacterEquipmentSlots) character.equipmentSlots();
-
-        var inventory = (FakeCharacterInventory) character.inventory();
-
-        var variableStats = character.variableStatistics();
-
-        var staticStats = character.staticStatistics();
-
-        var statusEffects = character.statusEffects();
-
-        assertFalse(character.isDeleted());
-        assertFalse(((FakeTileEntities) tile.characters()).REMOVED_ENTITIES.contains(character));
+        character.assignTileAfterAddedToTileEntitiesOfType(mockTile);
 
         character.delete();
 
         assertTrue(character.isDeleted());
-        var removedCharacter = (Character) ((FakeTileEntities) tile.characters()).REMOVED_ENTITIES.get(0);
-        assertSame(character, removedCharacter);
-        assertTrue(equipmentSlots._isDeleted);
-        assertTrue(inventory._isDeleted);
-        assertTrue(variableStats.isDeleted());
-        assertTrue(staticStats.isDeleted());
-        assertTrue(statusEffects.isDeleted());
+        verify(mockTile, atLeast(1)).characters();
+        verify(mockTileCharacters).remove(character);
+        verify(mockEquipmentSlots).delete();
+        verify(mockInventory).delete();
+        verify(mockStatusEffects).delete();
     }
 
     @Test
@@ -361,14 +332,18 @@ class CharacterImplTests {
         assertThrows(EntityDeletedException.class, () -> character.setDirection(SOUTHWEST));
         assertThrows(EntityDeletedException.class, () -> character.getImageAssetSet());
         assertThrows(EntityDeletedException.class,
-                () -> character.setImageAssetSet(new FakeImageAssetSet()));
+                () -> character.setImageAssetSet(mockImageAssetSet));
         assertThrows(EntityDeletedException.class, () -> character.getAIType());
         assertThrows(EntityDeletedException.class, () -> character.setAIType(null));
         assertThrows(EntityDeletedException.class, () -> character.events());
         assertThrows(EntityDeletedException.class, () -> character.equipmentSlots());
         assertThrows(EntityDeletedException.class, () -> character.inventory());
-        assertThrows(EntityDeletedException.class, () -> character.variableStatistics());
-        assertThrows(EntityDeletedException.class, () -> character.staticStatistics());
+        assertThrows(EntityDeletedException.class,
+                () -> character.getVariableStatisticCurrentValue(mockVariableStatType));
+        assertThrows(EntityDeletedException.class,
+                () -> character.setVariableStatisticCurrentValue(mockVariableStatType, 0));
+        assertThrows(EntityDeletedException.class,
+                () -> character.variableStatisticCurrentValuesRepresentation());
         assertThrows(EntityDeletedException.class, () -> character.statusEffects());
         assertThrows(EntityDeletedException.class, () -> character.passiveAbilities());
         assertThrows(EntityDeletedException.class, () -> character.activeAbilities());
@@ -379,16 +354,14 @@ class CharacterImplTests {
         assertThrows(EntityDeletedException.class,
                 () -> character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(EntityDeletedException.class, () -> character.getName());
-        assertThrows(EntityDeletedException.class, () -> character.setName(""));
+        assertThrows(EntityDeletedException.class, () -> character.setName(randomString()));
         assertThrows(EntityDeletedException.class, () -> character.getInterfaceName());
     }
 
-    @SuppressWarnings("rawtypes")
     @Test
     void testEnforceTileInvariant() {
-        var tile = new FakeTile();
-        tile.characters().add(character);
-        ((FakeTileEntities) tile.characters()).ENTITIES.remove(character);
+        character.assignTileAfterAddedToTileEntitiesOfType(mockTile);
+        when(mockTileCharacters.contains(any())).thenReturn(false);
 
         assertThrows(IllegalStateException.class, () -> character.type());
         assertThrows(IllegalStateException.class, () -> character.classifications());
@@ -400,14 +373,18 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class, () -> character.setDirection(SOUTHWEST));
         assertThrows(IllegalStateException.class, () -> character.getImageAssetSet());
         assertThrows(IllegalStateException.class,
-                () -> character.setImageAssetSet(new FakeImageAssetSet()));
+                () -> character.setImageAssetSet(mockImageAssetSet));
         assertThrows(IllegalStateException.class, () -> character.getAIType());
         assertThrows(IllegalStateException.class, () -> character.setAIType(null));
         assertThrows(IllegalStateException.class, () -> character.events());
         assertThrows(IllegalStateException.class, () -> character.equipmentSlots());
         assertThrows(IllegalStateException.class, () -> character.inventory());
-        assertThrows(IllegalStateException.class, () -> character.variableStatistics());
-        assertThrows(IllegalStateException.class, () -> character.staticStatistics());
+        assertThrows(IllegalStateException.class,
+                () -> character.getVariableStatisticCurrentValue(mockVariableStatType));
+        assertThrows(IllegalStateException.class,
+                () -> character.setVariableStatisticCurrentValue(mockVariableStatType, 0));
+        assertThrows(IllegalStateException.class,
+                () -> character.variableStatisticCurrentValuesRepresentation());
         assertThrows(IllegalStateException.class, () -> character.statusEffects());
         assertThrows(IllegalStateException.class, () -> character.passiveAbilities());
         assertThrows(IllegalStateException.class, () -> character.activeAbilities());
@@ -420,7 +397,7 @@ class CharacterImplTests {
         assertThrows(IllegalStateException.class,
                 () -> character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> character.getName());
-        assertThrows(IllegalStateException.class, () -> character.setName(""));
+        assertThrows(IllegalStateException.class, () -> character.setName(randomString()));
         assertThrows(IllegalStateException.class, () -> character.getInterfaceName());
     }
 }

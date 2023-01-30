@@ -40,10 +40,6 @@ public class FakeItem implements Item {
 
     }
 
-    public FakeItem(ItemType itemType) {
-        this.itemType = itemType;
-    }
-
     public FakeItem(ItemType itemType, VariableCache data, UUID uuid) {
         this.uuid = uuid;
         this.itemType = itemType;

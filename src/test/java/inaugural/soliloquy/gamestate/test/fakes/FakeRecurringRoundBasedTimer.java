@@ -15,10 +15,6 @@ public class FakeRecurringRoundBasedTimer extends FakeRoundBasedTimer
         _roundOffset = roundOffset;
     }
 
-    public FakeRecurringRoundBasedTimer() {
-
-    }
-
     @Override
     public int roundModulo() {
         return _roundModulo;
