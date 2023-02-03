@@ -97,7 +97,7 @@
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>soliloquy.specs</artifactId>
-            <version>0.0.468</version>
+            <version>0.0.469</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>

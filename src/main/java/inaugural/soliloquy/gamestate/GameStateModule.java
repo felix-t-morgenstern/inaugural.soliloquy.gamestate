@@ -12,8 +12,8 @@ import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.PersistentValuesHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
+import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
-import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
@@ -28,7 +28,10 @@ import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.entities.character.*;
-import soliloquy.specs.ruleset.gameconcepts.*;
+import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
+import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
+import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
+import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.nio.file.Path;
@@ -54,7 +57,7 @@ public class GameStateModule extends AbstractModule {
                            Registry<WallSegmentType> wallSegmentTypes,
                            Registry<ImageAssetSet> imageAssetSets,
                            Registry<CharacterAIType> characterAITypes,
-                           Registry<GameCharacterEvent> gameCharacterEvents,
+                           Registry<CharacterEvents.CharacterEvent> gameCharacterEvents,
                            Registry<GameMovementEvent> gameMovementEvents,
                            Registry<GameAbilityEvent> gameAbilityEvents,
                            Registry<CharacterStaticStatisticType> characterStaticStatisticTypes,

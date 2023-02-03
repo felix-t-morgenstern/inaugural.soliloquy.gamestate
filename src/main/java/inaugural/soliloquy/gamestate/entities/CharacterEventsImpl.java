@@ -1,12 +1,10 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +16,7 @@ import static inaugural.soliloquy.tools.collections.Collections.listOf;
 public class CharacterEventsImpl extends HasDeletionInvariants implements CharacterEvents {
     private final Character CHARACTER;
 
-    private HashMap<String, List<GameCharacterEvent>> eventsPerTrigger;
+    private HashMap<String, List<CharacterEvent>> eventsPerTrigger;
 
     public CharacterEventsImpl(Character character) {
         CHARACTER = Check.ifNull(character, "character");
@@ -26,7 +24,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     }
 
     @Override
-    public void addEvent(String[] triggers, GameCharacterEvent event)
+    public void addEvent(String[] triggers, CharacterEvent event)
             throws IllegalArgumentException, EntityDeletedException {
         enforceDeletionInvariants();
         Check.ifNull(triggers, "triggers");
@@ -43,7 +41,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     }
 
     @Override
-    public boolean removeEvent(GameCharacterEvent event)
+    public boolean removeEvent(CharacterEvent event)
             throws IllegalArgumentException, EntityDeletedException {
         enforceDeletionInvariants();
         Check.ifNull(event, "event");
@@ -87,20 +85,10 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     }
 
     @Override
-    public void fire(String trigger, VariableCache data) throws IllegalArgumentException, IllegalStateException {
-        enforceDeletionInvariants();
-        Check.ifNullOrEmpty(trigger, "trigger");
-        Check.ifNull(data, "data");
-        if (eventsPerTrigger.containsKey(trigger)) {
-            eventsPerTrigger.get(trigger).forEach(event -> event.fire(CHARACTER, data));
-        }
-    }
-
-    @Override
-    public Map<String, List<GameCharacterEvent>> representation()
+    public Map<String, List<CharacterEvent>> representation()
             throws IllegalStateException {
         enforceDeletionInvariants();
-        var representation = new HashMap<String, List<GameCharacterEvent>>();
+        var representation = new HashMap<String, List<CharacterEvent>>();
         eventsPerTrigger.forEach((t, e) -> representation.put(t, new ArrayList<>(e)));
         return representation;
     }

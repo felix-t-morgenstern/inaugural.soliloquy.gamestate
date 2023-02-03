@@ -4,20 +4,17 @@ import inaugural.soliloquy.gamestate.entities.CharacterEventsImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
+import soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.entities.gameevents.GameCharacterEvent;
-
-import java.util.List;
-import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.*;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CharacterEventsImplTests {
     private final String event1Id = randomString();
@@ -25,23 +22,20 @@ class CharacterEventsImplTests {
     private final String event3Id = randomString();
     private final String event4Id = randomString();
 
-    private final GameCharacterEvent mockEvent1 = generateMockCharacterEvent(event1Id);
-    private final GameCharacterEvent mockEvent2 = generateMockCharacterEvent(event2Id);
-    private final GameCharacterEvent mockEvent3 = generateMockCharacterEvent(event3Id);
-    private final GameCharacterEvent mockEvent4 = generateMockCharacterEvent(event4Id);
+    private final CharacterEvent mockEvent1 = generateMockCharacterEvent(event1Id);
+    private final CharacterEvent mockEvent2 = generateMockCharacterEvent(event2Id);
+    private final CharacterEvent mockEvent3 = generateMockCharacterEvent(event3Id);
+    private final CharacterEvent mockEvent4 = generateMockCharacterEvent(event4Id);
 
     private final String trigger1 = randomString();
     private final String trigger2 = randomString();
 
-    @Mock private VariableCache mockEventData;
     @Mock private Character mockCharacter;
 
     private CharacterEvents characterEvents;
 
     @BeforeEach
     void setUp() {
-        mockEventData = mock(VariableCache.class);
-
         mockCharacter = mock(Character.class);
 
         characterEvents = new CharacterEventsImpl(mockCharacter);
@@ -166,32 +160,9 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testFire() {
-        characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
-        characterEvents.addEvent(arrayOf(trigger2), mockEvent2);
-        characterEvents.addEvent(arrayOf(trigger1), mockEvent3);
-
-        characterEvents.fire(trigger1, mockEventData);
-
-        verify(mockEvent1, times(1)).fire(mockCharacter, mockEventData);
-        verify(mockEvent2, never()).fire(mockCharacter, mockEventData);
-        verify(mockEvent3, times(1)).fire(mockCharacter, mockEventData);
-    }
-
-    @Test
-    void testFireWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> characterEvents.fire(null, mockEventData));
-        assertThrows(IllegalArgumentException.class, () -> characterEvents.fire("", mockEventData));
-        assertThrows(IllegalArgumentException.class, () -> characterEvents.fire(trigger1, null));
-    }
-
-    @Test
     void testCopyAllTriggers() {
-        CharacterEvents copyFrom = mock(CharacterEvents.class);
-        Map<String, List<GameCharacterEvent>> toCopy =
-                mapOf(Pair.of(trigger1, listOf(mockEvent1, mockEvent3)), Pair.of(trigger2, listOf(
-                        mockEvent2)));
+        var copyFrom = mock(CharacterEvents.class);
+        var toCopy = mapOf(Pair.of(trigger1, listOf(mockEvent1, mockEvent3)), Pair.of(trigger2, listOf(mockEvent2)));
         when(copyFrom.representation()).thenReturn(toCopy);
 
         characterEvents.copyAllTriggers(copyFrom);
@@ -227,8 +198,6 @@ class CharacterEventsImplTests {
         assertThrows(EntityDeletedException.class, () -> characterEvents.clearAllEvents());
         assertThrows(EntityDeletedException.class,
                 () -> characterEvents.copyAllTriggers(characterEvents));
-        assertThrows(EntityDeletedException.class,
-                () -> characterEvents.fire(trigger1, mockEventData));
         assertThrows(EntityDeletedException.class, () -> characterEvents.representation());
     }
 
@@ -243,13 +212,11 @@ class CharacterEventsImplTests {
         assertThrows(IllegalStateException.class, () -> characterEvents.clearAllEvents());
         assertThrows(IllegalStateException.class,
                 () -> characterEvents.copyAllTriggers(characterEvents));
-        assertThrows(IllegalStateException.class,
-                () -> characterEvents.fire(trigger1, mockEventData));
         assertThrows(IllegalStateException.class, () -> characterEvents.representation());
     }
 
-    private static GameCharacterEvent generateMockCharacterEvent(String eventId) {
-        GameCharacterEvent mockCharacterEvent = mock(GameCharacterEvent.class);
+    private static CharacterEvent generateMockCharacterEvent(String eventId) {
+        var mockCharacterEvent = mock(CharacterEvent.class);
         when(mockCharacterEvent.id()).thenReturn(eventId);
         return mockCharacterEvent;
     }
