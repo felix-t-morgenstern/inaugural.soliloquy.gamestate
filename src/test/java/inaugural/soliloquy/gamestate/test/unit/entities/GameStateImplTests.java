@@ -32,7 +32,6 @@ class GameStateImplTests {
     private final RegistryFactory REGISTRY_FACTORY = new FakeRegistryFactory();
     private final GameZonesRepo GAME_ZONES_REPO = new GameZonesRepoStub();
     private final FakeCameraFactory CAMERA_FACTORY = new FakeCameraFactory();
-    private final RoundManager ROUND_MANAGER = new FakeRoundManager();
     private final ItemFactory ITEM_FACTORY = new FakeItemFactory();
     private final CharacterFactory CHARACTER_FACTORY = new FakeCharacterFactory();
     private final FakeRoundBasedTimerFactory ROUND_BASED_TIMER_FACTORY =
@@ -43,6 +42,7 @@ class GameStateImplTests {
     private final FakeKeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY =
             new FakeKeyEventListenerFactory();
 
+    @Mock private RoundManager mockRoundManager;
     @Mock private RoundBasedTimerManager mockRoundBasedTimerManager;
     @Mock private ClockBasedTimerManager mockClockBasedTimerManager;
 
@@ -50,6 +50,7 @@ class GameStateImplTests {
 
     @BeforeEach
     void setUp() {
+        mockRoundManager = mock(RoundManager.class);
         mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
         mockClockBasedTimerManager = mock(ClockBasedTimerManager.class);
 
@@ -58,7 +59,7 @@ class GameStateImplTests {
                 REGISTRY_FACTORY,
                 GAME_ZONES_REPO,
                 CAMERA_FACTORY,
-                ROUND_MANAGER,
+                mockRoundManager,
                 mockRoundBasedTimerManager,
                 mockClockBasedTimerManager,
                 ITEM_FACTORY,
@@ -77,7 +78,7 @@ class GameStateImplTests {
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
-                        ROUND_MANAGER,
+                        mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -91,7 +92,7 @@ class GameStateImplTests {
                         null,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -105,7 +106,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         null,
                         GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -119,7 +120,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         null,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -133,7 +134,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        null, ROUND_MANAGER,
+                        null, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -163,7 +164,7 @@ class GameStateImplTests {
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
-                        ROUND_MANAGER,
+                        mockRoundManager,
                         null,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -178,7 +179,7 @@ class GameStateImplTests {
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
-                        ROUND_MANAGER,
+                        mockRoundManager,
                         mockRoundBasedTimerManager,
                         null,
                         ITEM_FACTORY,
@@ -193,7 +194,7 @@ class GameStateImplTests {
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
                         CAMERA_FACTORY,
-                        ROUND_MANAGER,
+                        mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         null,
@@ -207,7 +208,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -221,7 +222,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -235,7 +236,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -249,7 +250,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -263,7 +264,7 @@ class GameStateImplTests {
                         PERSISTENT_VARIABLE_CACHE,
                         REGISTRY_FACTORY,
                         GAME_ZONES_REPO,
-                        CAMERA_FACTORY, ROUND_MANAGER,
+                        CAMERA_FACTORY, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         ITEM_FACTORY,
@@ -341,7 +342,7 @@ class GameStateImplTests {
 
     @Test
     void testRoundManager() {
-        assertSame(ROUND_MANAGER, gameState.roundManager());
+        assertSame(mockRoundManager, gameState.roundManager());
     }
 
     @Test
