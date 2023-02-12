@@ -16,7 +16,7 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 import soliloquy.specs.ruleset.entities.character.CharacterType;
-import soliloquy.specs.ruleset.entities.character.CharacterVariableStatisticType;
+import soliloquy.specs.ruleset.entities.character.VariableStatisticType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
@@ -29,7 +29,7 @@ public class CharacterImpl implements Character {
     private final CharacterEvents EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
-    private final Map<CharacterVariableStatisticType, Integer> VARIABLE_STATISTIC_CURRENT_VALUES;
+    private final Map<VariableStatisticType, Integer> VARIABLE_STATISTIC_CURRENT_VALUES;
     private final CharacterStatusEffects STATUS_EFFECTS;
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
@@ -161,7 +161,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public int getVariableStatisticCurrentValue(CharacterVariableStatisticType variableStatType)
+    public int getVariableStatisticCurrentValue(VariableStatisticType variableStatType)
             throws IllegalArgumentException, EntityDeletedException {
         enforceInvariant("getVariableStatisticCurrentValue", true);
         Check.ifNull(variableStatType, "variableStatType");
@@ -169,7 +169,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public void setVariableStatisticCurrentValue(CharacterVariableStatisticType variableStatType,
+    public void setVariableStatisticCurrentValue(VariableStatisticType variableStatType,
                                                  int value)
             throws IllegalArgumentException, EntityDeletedException {
         enforceInvariant("setVariableStatisticCurrentValue", true);
@@ -178,7 +178,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<CharacterVariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
+    public Map<VariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
             throws EntityDeletedException {
         enforceInvariant("variableStatisticCurrentValuesRepresentation", true);
         return new HashMap<>(VARIABLE_STATISTIC_CURRENT_VALUES);

@@ -17,7 +17,7 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 import soliloquy.specs.ruleset.entities.character.CharacterType;
-import soliloquy.specs.ruleset.entities.character.CharacterVariableStatisticType;
+import soliloquy.specs.ruleset.entities.character.VariableStatisticType;
 import soliloquy.specs.ruleset.entities.character.StatusEffectType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
@@ -82,8 +82,8 @@ class CharacterHandlerTests {
     private final String VARIABLE_STAT_TYPE_ID = randomString();
     private final int VARIABLE_STAT_CURRENT_LEVEL = randomInt();
 
-    private final Map<String, StatusEffectType> STAT_EFFECT_TYPES = new HashMap<>();
-    private final String STAT_EFFECT_TYPE_ID = randomString();
+    private final Map<String, StatusEffectType> STATUS_EFFECT_TYPES = new HashMap<>();
+    private final String STATUS_EFFECT_TYPE_ID = randomString();
     private final int STAT_EFFECT_LEVEL = randomInt();
 
     private final Map<String, PassiveAbility> PASSIVE_ABILITIES = new HashMap<>();
@@ -111,16 +111,16 @@ class CharacterHandlerTests {
     @Mock private CharacterAIType mockCharacterAIType;
     @Mock private CharacterEquipmentSlots mockEquipmentSlots;
     @Mock private CharacterInventory mockInventory;
-    @Mock private CharacterVariableStatisticType mockVariableStatType;
-    @Mock private Function<String, CharacterVariableStatisticType> mockGetVariableStatType;
-    @Mock private Map<CharacterVariableStatisticType, Integer> mockVariableStats;
+    @Mock private VariableStatisticType mockVariableStatType;
+    @Mock private Function<String, VariableStatisticType> mockGetVariableStatType;
+    @Mock private Map<VariableStatisticType, Integer> mockVariableStats;
     @Mock private PassiveAbility mockPassiveAbility;
     @Mock private ActiveAbility mockActiveAbility;
     @Mock private ReactiveAbility mockReactiveAbility;
     @Mock private List<PassiveAbility> mockPassiveAbilities;
     @Mock private List<ActiveAbility> mockActiveAbilities;
     @Mock private List<ReactiveAbility> mockReactiveAbilities;
-    @Mock private StatusEffectType mockStatEffectType;
+    @Mock private StatusEffectType mockStatusEffectType;
     @Mock private CharacterStatusEffects mockStatEffects;
     @Mock private Character mockCharacter;
     @Mock private CharacterFactory mockCharacterFactory;
@@ -138,7 +138,8 @@ class CharacterHandlerTests {
             UUID, CHARACTER_TYPE_ID, CLASSIFICATION_ID, CASE, ARTICLE, STANCE, DIRECTION.getValue(),
             IMAGE_ASSET_SET_ID, AI_TYPE_ID, EVENTS_WRITTEN, EQUIPMENT_SLOT,
             EQUIPMENT_SLOT_ITEM_WRITTEN_VALUE, INVENTORY_ITEM_WRITTEN_VALUE, VARIABLE_STAT_TYPE_ID,
-            VARIABLE_STAT_CURRENT_LEVEL, STAT_EFFECT_TYPE_ID, STAT_EFFECT_LEVEL, PASSIVE_ABILITY_ID,
+            VARIABLE_STAT_CURRENT_LEVEL, STATUS_EFFECT_TYPE_ID, STAT_EFFECT_LEVEL,
+            PASSIVE_ABILITY_ID,
             ACTIVE_ABILITY_ID, REACTIVE_ABILITY_ID, DATA_WRITTEN, NAME);
 
     private TypeHandler<Character> characterHandler;
@@ -147,8 +148,7 @@ class CharacterHandlerTests {
     void setUp() {
         mockCharacterType = generateMockWithId(CharacterType.class, CHARACTER_TYPE_ID);
 
-        mockClassification =
-                generateMockWithId(CharacterClassification.class, CLASSIFICATION_ID);
+        mockClassification = generateMockWithId(CharacterClassification.class, CLASSIFICATION_ID);
 
         mockClassifications = generateMockList(mockClassification);
 
@@ -165,22 +165,21 @@ class CharacterHandlerTests {
         mockInventory = mock(CharacterInventory.class);
         when(mockInventory.representation()).thenReturn(listOf(INVENTORY_ITEM));
 
-        mockVariableStatType = mock(CharacterVariableStatisticType.class);
+        mockVariableStatType = mock(VariableStatisticType.class);
         when(mockVariableStatType.id()).thenReturn(VARIABLE_STAT_TYPE_ID);
 
         //noinspection unchecked
-        mockGetVariableStatType =
-                (Function<String, CharacterVariableStatisticType>) mock(Function.class);
+        mockGetVariableStatType = (Function<String, VariableStatisticType>) mock(Function.class);
         when(mockGetVariableStatType.apply(anyString())).thenReturn(mockVariableStatType);
 
         mockVariableStats =
                 generateMockMap(Pair.of(mockVariableStatType, VARIABLE_STAT_CURRENT_LEVEL));
 
-        mockStatEffectType = generateMockWithId(StatusEffectType.class, STAT_EFFECT_TYPE_ID);
+        mockStatusEffectType = generateMockWithId(StatusEffectType.class, STATUS_EFFECT_TYPE_ID);
 
         mockStatEffects = mock(CharacterStatusEffects.class);
         when(mockStatEffects.representation()).thenReturn(
-                mapOf(Pair.of(mockStatEffectType, STAT_EFFECT_LEVEL)));
+                mapOf(Pair.of(mockStatusEffectType, STAT_EFFECT_LEVEL)));
 
         mockPassiveAbility = generateMockWithId(PassiveAbility.class, PASSIVE_ABILITY_ID);
 
@@ -223,14 +222,14 @@ class CharacterHandlerTests {
         CLASSIFICATIONS.put(CLASSIFICATION_ID, mockClassification);
         IMAGE_ASSET_SETS.put(IMAGE_ASSET_SET_ID, mockImageAssetSet);
         AI_TYPES.put(AI_TYPE_ID, mockCharacterAIType);
-        STAT_EFFECT_TYPES.put(STAT_EFFECT_TYPE_ID, mockStatEffectType);
+        STATUS_EFFECT_TYPES.put(STATUS_EFFECT_TYPE_ID, mockStatusEffectType);
         PASSIVE_ABILITIES.put(PASSIVE_ABILITY_ID, mockPassiveAbility);
         ACTIVE_ABILITIES.put(ACTIVE_ABILITY_ID, mockActiveAbility);
         REACTIVE_ABILITIES.put(REACTIVE_ABILITY_ID, mockReactiveAbility);
 
         characterHandler = new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                 CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                 ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER, ITEM_HANDLER);
     }
 
@@ -239,44 +238,45 @@ class CharacterHandlerTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(null, CHARACTER_TYPES::get, CLASSIFICATIONS::get,
                         IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, null, CLASSIFICATIONS::get,
                         IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get, null,
                         IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, null, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, null, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, null,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        null, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get, ACTIVE_ABILITIES::get,
-                        REACTIVE_ABILITIES::get, DATA_HANDLER, ITEM_HANDLER));
+                        null, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
+                        ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
@@ -286,28 +286,28 @@ class CharacterHandlerTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, null,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, null,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
                         ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         null, REACTIVE_ABILITIES::get, DATA_HANDLER, ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, null, DATA_HANDLER, ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, null, ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class, () ->
                 new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
                         CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STAT_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
+                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
                         ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER, null));
     }
 
@@ -340,7 +340,7 @@ class CharacterHandlerTests {
         verify(mockVariableStatType, times(1)).id();
         verify(mockCharacter, times(1)).statusEffects();
         verify(mockStatEffects, times(1)).representation();
-        verify(mockStatEffectType, times(1)).id();
+        verify(mockStatusEffectType, times(1)).id();
         verify(mockPassiveAbility, times(1)).id();
         verify(mockActiveAbility, times(1)).id();
         verify(mockReactiveAbility, times(1)).id();
@@ -378,7 +378,7 @@ class CharacterHandlerTests {
         verify(mockGetVariableStatType, times(1)).apply(VARIABLE_STAT_TYPE_ID);
         verify(mockCharacter, times(1)).setVariableStatisticCurrentValue(mockVariableStatType,
                 VARIABLE_STAT_CURRENT_LEVEL);
-        verify(mockStatEffects, times(1)).setStatusEffectLevel(mockStatEffectType,
+        verify(mockStatEffects, times(1)).setStatusEffectLevel(mockStatusEffectType,
                 STAT_EFFECT_LEVEL);
         verify(mockPassiveAbilities, times(1)).add(mockPassiveAbility);
         verify(mockActiveAbilities, times(1)).add(mockActiveAbility);

@@ -29,7 +29,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final Function<String, ImageAssetSet> GET_IMAGE_ASSET_SET;
     private final Function<String, CharacterAIType> GET_AI_TYPE;
     private final TypeHandler<CharacterEvents> CHARACTER_EVENTS_HANDLER;
-    private final Function<String, CharacterVariableStatisticType> GET_VARIABLE_STAT_TYPE;
+    private final Function<String, VariableStatisticType> GET_VARIABLE_STAT_TYPE;
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
     private final Function<String, PassiveAbility> GET_PASSIVE_ABILITY;
     private final Function<String, ActiveAbility> GET_ACTIVE_ABILITY;
@@ -40,13 +40,11 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     @SuppressWarnings("ConstantConditions")
     public CharacterHandler(CharacterFactory characterFactory,
                             Function<String, CharacterType> getCharacterType,
-                            Function<String, CharacterClassification>
-                                    getCharacterClassification,
+                            Function<String, CharacterClassification> getCharacterClassification,
                             Function<String, ImageAssetSet> getImageAssetSet,
                             Function<String, CharacterAIType> getAIType,
                             TypeHandler<CharacterEvents> characterEventsHandler,
-                            Function<String, CharacterVariableStatisticType>
-                                    getVariableStatType,
+                            Function<String, VariableStatisticType> getVariableStatType,
                             Function<String, StatusEffectType> getStatusType,
                             Function<String, PassiveAbility> getPassiveAbility,
                             Function<String, ActiveAbility> getActiveAbility,

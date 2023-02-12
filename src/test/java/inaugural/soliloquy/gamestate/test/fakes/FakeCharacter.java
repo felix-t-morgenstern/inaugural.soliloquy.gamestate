@@ -11,7 +11,7 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 import soliloquy.specs.ruleset.entities.character.CharacterType;
-import soliloquy.specs.ruleset.entities.character.CharacterVariableStatisticType;
+import soliloquy.specs.ruleset.entities.character.VariableStatisticType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
@@ -130,20 +130,20 @@ public class FakeCharacter implements Character {
 
     @Override
     public int getVariableStatisticCurrentValue(
-            CharacterVariableStatisticType characterVariableStatisticType)
+            VariableStatisticType characterVariableStatisticType)
             throws IllegalArgumentException, EntityDeletedException {
         return 0;
     }
 
     @Override
     public void setVariableStatisticCurrentValue(
-            CharacterVariableStatisticType characterVariableStatisticType, int i)
+            VariableStatisticType characterVariableStatisticType, int i)
             throws IllegalArgumentException, EntityDeletedException {
 
     }
 
     @Override
-    public Map<CharacterVariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
+    public Map<VariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
             throws EntityDeletedException {
         return null;
     }

@@ -29,7 +29,7 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.entities.character.*;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
-import soliloquy.specs.ruleset.gameconcepts.CharacterStatisticCalculation;
+import soliloquy.specs.ruleset.gameconcepts.StatisticCalculation;
 import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
 import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
@@ -45,7 +45,7 @@ public class GameStateModule extends AbstractModule {
     public GameStateModule(RegistryFactory registryFactory,
                            VariableCacheFactory variableCacheFactory,
                            PersistentValuesHandler persistentValuesHandler,
-                           CharacterStatisticCalculation characterStatisticCalculation,
+                           StatisticCalculation characterStatisticCalculation,
                            TileVisibility tileVisibility,
                            ActiveCharactersProvider activeCharactersProvider,
                            TurnHandling turnHandling,
@@ -60,9 +60,8 @@ public class GameStateModule extends AbstractModule {
                            Registry<CharacterEvents.CharacterEvent> gameCharacterEvents,
                            Registry<GameMovementEvent> gameMovementEvents,
                            Registry<GameAbilityEvent> gameAbilityEvents,
-                           Registry<CharacterStaticStatisticType> characterStaticStatisticTypes,
-                           Registry<CharacterVariableStatisticType>
-                                   characterVariableStatisticTypes,
+                           Registry<StaticStatisticType> staticStatisticTypes,
+                           Registry<VariableStatisticType> variableStatisticTypes,
                            Registry<StatusEffectType> statusEffectTypes,
                            Registry<PassiveAbility> passiveAbilities,
                            Registry<ActiveAbility> activeAbilities,
@@ -71,14 +70,14 @@ public class GameStateModule extends AbstractModule {
                            java.util.Map<String, Path> fileLocations) {
         Supplier<UUID> uuidFactory = UUID::randomUUID;
 
-        TypeHandler<UUID> uuidHandler = persistentValuesHandler
-                .getTypeHandler(UUID.class.getCanonicalName());
+        TypeHandler<UUID> uuidHandler =
+                persistentValuesHandler.getTypeHandler(UUID.class.getCanonicalName());
 
-        TypeHandler<VariableCache> dataHandler = persistentValuesHandler
-                .getTypeHandler(VariableCache.class.getCanonicalName());
+        TypeHandler<VariableCache> dataHandler =
+                persistentValuesHandler.getTypeHandler(VariableCache.class.getCanonicalName());
 
-        TypeHandler<Sprite> spriteHandler = persistentValuesHandler
-                .getTypeHandler(Sprite.class.getCanonicalName());
+        TypeHandler<Sprite> spriteHandler =
+                persistentValuesHandler.getTypeHandler(Sprite.class.getCanonicalName());
 
         var itemFactory = new ItemFactoryImpl(variableCacheFactory);
 
@@ -90,8 +89,6 @@ public class GameStateModule extends AbstractModule {
 
         var characterInventoryFactory = new CharacterInventoryFactoryImpl();
 
-        var entitiesOfTypeFactory = new EntityMembersOfTypeFactoryImpl(variableCacheFactory);
-
         var characterStatusEffectsFactory = new CharacterStatusEffectsFactoryImpl();
 
         var characterFactory = new CharacterFactoryImpl(uuidFactory, characterEventsFactory,
@@ -101,7 +98,7 @@ public class GameStateModule extends AbstractModule {
         // TODO: Populate with characterEventsHandler
         var characterHandler = new CharacterHandler(characterFactory, characterTypes::get,
                 characterClassifications::get, imageAssetSets::get, characterAITypes::get, null,
-                characterVariableStatisticTypes::get, statusEffectTypes::get, passiveAbilities::get,
+                variableStatisticTypes::get, statusEffectTypes::get, passiveAbilities::get,
                 activeAbilities::get, reactiveAbilities::get, dataHandler, itemHandler);
 
         var tileFixtureItemsFactory = new TileFixtureItemsFactoryImpl();

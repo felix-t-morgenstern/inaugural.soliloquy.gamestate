@@ -15,7 +15,7 @@ import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 import soliloquy.specs.ruleset.entities.character.CharacterType;
-import soliloquy.specs.ruleset.entities.character.CharacterVariableStatisticType;
+import soliloquy.specs.ruleset.entities.character.VariableStatisticType;
 
 import java.util.UUID;
 
@@ -40,7 +40,7 @@ class CharacterImplTests {
     @Mock private CharacterInventoryFactory mockInventoryFactory;
     @Mock private CharacterEquipmentSlots mockEquipmentSlots;
     @Mock private CharacterEquipmentSlotsFactory mockEquipmentSlotsFactory;
-    @Mock private CharacterVariableStatisticType mockVariableStatType;
+    @Mock private VariableStatisticType mockVariableStatType;
     @Mock private VariableCache mockData;
     @Mock private ImageAssetSet mockImageAssetSet;
 
@@ -77,7 +77,7 @@ class CharacterImplTests {
         mockEquipmentSlotsFactory = mock(CharacterEquipmentSlotsFactory.class);
         when(mockEquipmentSlotsFactory.make(any())).thenReturn(mockEquipmentSlots);
 
-        mockVariableStatType = mock(CharacterVariableStatisticType.class);
+        mockVariableStatType = mock(VariableStatisticType.class);
 
         mockData = mock(VariableCache.class);
 

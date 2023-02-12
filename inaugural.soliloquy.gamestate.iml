@@ -22,7 +22,7 @@
     <orderEntry type="library" name="Maven: org.checkerframework:checker-qual:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.errorprone:error_prone_annotations:2.3.4" level="project" />
     <orderEntry type="library" name="Maven: com.google.j2objc:j2objc-annotations:1.3" level="project" />
-    <orderEntry type="library" name="Maven: disorg.soliloquy:soliloquy.specs:0.0.479" level="project" />
+    <orderEntry type="library" name="Maven: disorg.soliloquy:soliloquy.specs:0.0.485" level="project" />
     <orderEntry type="library" name="Maven: disorg.soliloquy:inaugural.soliloquy.tools:0.0.122" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.10" level="project" />
     <orderEntry type="library" name="Maven: org.mockito:mockito-core:4.8.0" level="project" />
