@@ -3,30 +3,36 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 import inaugural.soliloquy.gamestate.factories.KeyBindingFactoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.factories.KeyBindingFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static inaugural.soliloquy.tools.random.Random.randomChar;
+import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingFactoryImplTests {
-    private KeyBindingFactory _keyBindingFactory;
+    private final char[] CHARACTERS = new char[]{randomChar(), randomChar(), randomChar()};
+
+    private KeyBindingFactory keyBindingFactory;
 
     @BeforeEach
     void setUp() {
-        _keyBindingFactory = new KeyBindingFactoryImpl();
+        keyBindingFactory = new KeyBindingFactoryImpl();
     }
 
     @Test
     void testGetInterfaceName() {
         assertEquals(KeyBindingFactory.class.getCanonicalName(),
-                _keyBindingFactory.getInterfaceName());
+                keyBindingFactory.getInterfaceName());
     }
 
     @Test
     void testMake() {
-        KeyBinding keyBinding = _keyBindingFactory.make();
+        var output = keyBindingFactory.make(CHARACTERS);
 
-        assertNotNull(keyBinding);
+        assertNotNull(output);
+    }
+
+    @Test
+    void testMakeWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> keyBindingFactory.make(null));
     }
 }

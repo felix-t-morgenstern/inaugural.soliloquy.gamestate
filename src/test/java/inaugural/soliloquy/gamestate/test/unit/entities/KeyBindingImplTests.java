@@ -6,69 +6,83 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
+import static inaugural.soliloquy.tools.random.Random.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class KeyBindingImplTests {
-    private final String KEY_PRESS_ACTION_ID = "keyPressActionId";
-    private final String KEY_RELEASE_ACTION_ID = "keyReleaseActionId";
+    private final String KEY_PRESS_ACTION_ID = randomString();
+    private final String KEY_RELEASE_ACTION_ID = randomString();
     private final FakeAction<Long> KEY_PRESS_ACTION = new FakeAction<>(KEY_PRESS_ACTION_ID);
     private final FakeAction<Long> KEY_RELEASE_ACTION = new FakeAction<>(KEY_RELEASE_ACTION_ID);
-    private final long TIMESTAMP = 123123L;
+    private final long TIMESTAMP = randomLong();
+    private final char[] CHARACTERS = new char[]{randomChar(), randomChar(), randomChar()};
 
-    private KeyBinding _keyBinding;
+    private KeyBinding keyBinding;
 
     @BeforeEach
     void setUp() {
-        _keyBinding = new KeyBindingImpl();
+        keyBinding = new KeyBindingImpl(CHARACTERS);
     }
 
     @Test
-    void testGetInterfaceName() {
-        assertEquals(KeyBinding.class.getCanonicalName(), _keyBinding.getInterfaceName());
+    void testConstructorWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> new KeyBindingImpl(null));
     }
 
     @Test
     void testBoundCharacters() {
-        assertNotNull(_keyBinding.boundCharacters());
+        var boundCharacters = keyBinding.boundCharacters();
+
+        assertNotNull(boundCharacters);
+        assertNotSame(keyBinding.boundCharacters(), boundCharacters);
+        assertEquals(CHARACTERS.length, boundCharacters.size());
+        for (var c : CHARACTERS) {
+            assertTrue(boundCharacters.contains(c));
+        }
     }
 
     @Test
     void testSetOnPressAndOnPressActionIdAndPress() {
-        assertNull(_keyBinding.onPressActionId());
+        assertNull(keyBinding.onPressActionId());
 
-        _keyBinding.setOnPress(KEY_PRESS_ACTION);
+        keyBinding.setOnPress(KEY_PRESS_ACTION);
 
-        _keyBinding.press(TIMESTAMP);
+        keyBinding.press(TIMESTAMP);
 
-        assertEquals(KEY_PRESS_ACTION_ID, _keyBinding.onPressActionId());
+        assertEquals(KEY_PRESS_ACTION_ID, keyBinding.onPressActionId());
         assertEquals(TIMESTAMP, KEY_PRESS_ACTION._mostRecentInput);
     }
 
     @Test
     void testSetOnReleaseAndOnReleaseActionIdAndRelease() {
-        assertNull(_keyBinding.onReleaseActionId());
+        assertNull(keyBinding.onReleaseActionId());
 
-        _keyBinding.setOnRelease(KEY_RELEASE_ACTION);
+        keyBinding.setOnRelease(KEY_RELEASE_ACTION);
 
-        _keyBinding.release(TIMESTAMP);
+        keyBinding.release(TIMESTAMP);
 
-        assertEquals(KEY_RELEASE_ACTION_ID, _keyBinding.onReleaseActionId());
+        assertEquals(KEY_RELEASE_ACTION_ID, keyBinding.onReleaseActionId());
         assertEquals(TIMESTAMP, KEY_RELEASE_ACTION._mostRecentInput);
     }
 
     @Test
     void testSetAndGetBlocksLowerBindings() {
-        _keyBinding.setBlocksLowerBindings(true);
+        keyBinding.setBlocksLowerBindings(true);
 
-        assertTrue(_keyBinding.getBlocksLowerBindings());
+        assertTrue(keyBinding.getBlocksLowerBindings());
     }
 
     @Test
     void testPressAndReleaseWithInvalidParams() {
-        _keyBinding.press(TIMESTAMP);
-        _keyBinding.release(TIMESTAMP);
+        keyBinding.press(TIMESTAMP);
+        keyBinding.release(TIMESTAMP);
 
-        assertThrows(IllegalArgumentException.class, () -> _keyBinding.press(TIMESTAMP - 1));
-        assertThrows(IllegalArgumentException.class, () -> _keyBinding.release(TIMESTAMP - 1));
+        assertThrows(IllegalArgumentException.class, () -> keyBinding.press(TIMESTAMP - 1));
+        assertThrows(IllegalArgumentException.class, () -> keyBinding.release(TIMESTAMP - 1));
+    }
+
+    @Test
+    void testGetInterfaceName() {
+        assertEquals(KeyBinding.class.getCanonicalName(), keyBinding.getInterfaceName());
     }
 }

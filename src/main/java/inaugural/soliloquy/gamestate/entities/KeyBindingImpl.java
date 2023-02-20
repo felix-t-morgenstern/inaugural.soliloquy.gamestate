@@ -1,22 +1,28 @@
 package inaugural.soliloquy.gamestate.entities;
 
+import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.timing.TimestampValidator;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public class KeyBindingImpl implements KeyBinding {
     private final List<Character> BOUND_CHARACTERS;
     private final TimestampValidator TIMESTAMP_VALIDATOR;
 
-    private Action<Long> _onPress;
-    private Action<Long> _onRelease;
-    private boolean _blocksLowerBindings;
+    private Action<Long> onPress;
+    private Action<Long> onRelease;
+    private boolean blocksLowerBindings;
 
-    public KeyBindingImpl() {
-        BOUND_CHARACTERS = new ArrayList<>();
+    public KeyBindingImpl(char[] chars) {
+        Check.ifNull(chars, "chars");
+        BOUND_CHARACTERS = listOf();
+        for (var c : chars) {
+            BOUND_CHARACTERS.add(c);
+        }
         // TODO: Consider having this accept a most recent timestamp on creation
         TIMESTAMP_VALIDATOR = new TimestampValidator(null);
     }
@@ -24,27 +30,27 @@ public class KeyBindingImpl implements KeyBinding {
     // TODO: Ensure that this is a clone
     @Override
     public List<Character> boundCharacters() {
-        return new ArrayList<>(BOUND_CHARACTERS);
+        return listOf(BOUND_CHARACTERS);
     }
 
     @Override
     public void press(long timestamp) throws IllegalArgumentException {
-        runAction(timestamp, _onPress);
+        runAction(timestamp, onPress);
     }
 
     @Override
     public String onPressActionId() {
-        return _onPress == null ? null : _onPress.id();
+        return onPress == null ? null : onPress.id();
     }
 
     @Override
     public void release(long timestamp) throws IllegalArgumentException {
-        runAction(timestamp, _onRelease);
+        runAction(timestamp, onRelease);
     }
 
     @Override
     public String onReleaseActionId() {
-        return _onRelease == null ? null : _onRelease.id();
+        return onRelease == null ? null : onRelease.id();
     }
 
     private void runAction(long timestamp, Action<Long> action) {
@@ -56,22 +62,22 @@ public class KeyBindingImpl implements KeyBinding {
 
     @Override
     public void setOnPress(Action<Long> onPress) {
-        _onPress = onPress;
+        this.onPress = onPress;
     }
 
     @Override
     public void setOnRelease(Action<Long> onRelease) {
-        _onRelease = onRelease;
+        this.onRelease = onRelease;
     }
 
     @Override
     public boolean getBlocksLowerBindings() {
-        return _blocksLowerBindings;
+        return blocksLowerBindings;
     }
 
     @Override
     public void setBlocksLowerBindings(boolean blocksLowerBindings) {
-        _blocksLowerBindings = blocksLowerBindings;
+        this.blocksLowerBindings = blocksLowerBindings;
     }
 
     @Override
