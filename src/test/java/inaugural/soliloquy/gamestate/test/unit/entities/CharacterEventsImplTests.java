@@ -12,6 +12,7 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import static inaugural.soliloquy.tools.collections.Collections.*;
 import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.testing.Mock.generateMockWithId;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,10 +23,10 @@ class CharacterEventsImplTests {
     private final String event3Id = randomString();
     private final String event4Id = randomString();
 
-    private final CharacterEvent mockEvent1 = generateMockCharacterEvent(event1Id);
-    private final CharacterEvent mockEvent2 = generateMockCharacterEvent(event2Id);
-    private final CharacterEvent mockEvent3 = generateMockCharacterEvent(event3Id);
-    private final CharacterEvent mockEvent4 = generateMockCharacterEvent(event4Id);
+    private final CharacterEvent mockEvent1 = generateMockWithId(CharacterEvent.class, event1Id);
+    private final CharacterEvent mockEvent2 = generateMockWithId(CharacterEvent.class, event2Id);
+    private final CharacterEvent mockEvent3 = generateMockWithId(CharacterEvent.class, event3Id);
+    private final CharacterEvent mockEvent4 = generateMockWithId(CharacterEvent.class, event4Id);
 
     private final String trigger1 = randomString();
     private final String trigger2 = randomString();
@@ -213,11 +214,5 @@ class CharacterEventsImplTests {
         assertThrows(IllegalStateException.class,
                 () -> characterEvents.copyAllTriggers(characterEvents));
         assertThrows(IllegalStateException.class, () -> characterEvents.representation());
-    }
-
-    private static CharacterEvent generateMockCharacterEvent(String eventId) {
-        var mockCharacterEvent = mock(CharacterEvent.class);
-        when(mockCharacterEvent.id()).thenReturn(eventId);
-        return mockCharacterEvent;
     }
 }
