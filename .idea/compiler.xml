@@ -9,8 +9,5 @@
         <module name="inaugural.soliloquy.gamestate" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="inaugural.soliloquy.gamestate" target="18" />
-    </bytecodeTargetLevel>
   </component>
 </project>
