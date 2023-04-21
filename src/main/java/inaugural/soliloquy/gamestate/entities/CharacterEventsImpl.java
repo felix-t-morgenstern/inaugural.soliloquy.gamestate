@@ -6,21 +6,20 @@ import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class CharacterEventsImpl extends HasDeletionInvariants implements CharacterEvents {
     private final Character CHARACTER;
 
-    private HashMap<String, List<CharacterEvent>> eventsPerTrigger;
+    private Map<String, List<CharacterEvent>> eventsPerTrigger;
 
     public CharacterEventsImpl(Character character) {
         CHARACTER = Check.ifNull(character, "character");
-        eventsPerTrigger = new HashMap<>();
+        eventsPerTrigger = mapOf();
     }
 
     @Override
@@ -32,7 +31,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
         for (var trigger : triggers) {
             Check.ifNullOrEmpty(trigger, "trigger within addEvent");
             if (!eventsPerTrigger.containsKey(trigger)) {
-                eventsPerTrigger.put(trigger, new ArrayList<>());
+                eventsPerTrigger.put(trigger, listOf());
             }
             if (!eventsPerTrigger.get(trigger).contains(event)) {
                 eventsPerTrigger.get(trigger).add(event);
@@ -81,15 +80,15 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     public void copyAllTriggers(CharacterEvents characterEvents) throws IllegalArgumentException {
         enforceDeletionInvariants();
         Check.ifNull(characterEvents, "characterEvents");
-        eventsPerTrigger = new HashMap<>(characterEvents.representation());
+        eventsPerTrigger = mapOf(characterEvents.representation());
     }
 
     @Override
     public Map<String, List<CharacterEvent>> representation()
             throws IllegalStateException {
         enforceDeletionInvariants();
-        var representation = new HashMap<String, List<CharacterEvent>>();
-        eventsPerTrigger.forEach((t, e) -> representation.put(t, new ArrayList<>(e)));
+        Map<String, List<CharacterEvent>> representation = mapOf();
+        eventsPerTrigger.forEach((t, e) -> representation.put(t, listOf(e)));
         return representation;
     }
 
