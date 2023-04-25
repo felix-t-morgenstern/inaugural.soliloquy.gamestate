@@ -9,11 +9,11 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import java.util.List;
 import java.util.Map;
 
-import static inaugural.soliloquy.tools.collections.Collections.listOf;
-import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.collections.Collections.*;
 
 public class CharacterEventsImpl extends HasDeletionInvariants implements CharacterEvents {
     private final Character CHARACTER;
+    private final CharacterEvent[] NO_EVENTS = new CharacterEvent[0];
 
     private Map<String, List<CharacterEvent>> eventsPerTrigger;
 
@@ -36,6 +36,17 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
             if (!eventsPerTrigger.get(trigger).contains(event)) {
                 eventsPerTrigger.get(trigger).add(event);
             }
+        }
+    }
+
+    @Override
+    public CharacterEvent[] eventsForTrigger(String trigger) throws IllegalArgumentException {
+        Check.ifNullOrEmpty(trigger, "trigger");
+        if (eventsPerTrigger.containsKey(trigger)) {
+            return eventsPerTrigger.get(trigger).toArray(NO_EVENTS);
+        }
+        else {
+            return NO_EVENTS;
         }
     }
 

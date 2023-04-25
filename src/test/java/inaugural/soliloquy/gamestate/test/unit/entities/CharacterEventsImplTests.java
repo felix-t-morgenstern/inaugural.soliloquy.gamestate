@@ -1,9 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterEventsImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
@@ -13,11 +15,12 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import static inaugural.soliloquy.tools.collections.Collections.*;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static inaugural.soliloquy.tools.testing.Mock.generateMockWithId;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class CharacterEventsImplTests {
+@RunWith(MockitoJUnitRunner.class)
+public class CharacterEventsImplTests {
     private final String event1Id = randomString();
     private final String event2Id = randomString();
     private final String event3Id = randomString();
@@ -35,26 +38,26 @@ class CharacterEventsImplTests {
 
     private CharacterEvents characterEvents;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         mockCharacter = mock(Character.class);
 
         characterEvents = new CharacterEventsImpl(mockCharacter);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterEventsImpl(null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(CharacterEvents.class.getCanonicalName(),
                 characterEvents.getInterfaceName());
     }
 
     @Test
-    void testAddEventAndRepresentation() {
+    public void testAddEventAndRepresentation() {
         characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
         characterEvents.addEvent(arrayOf(trigger1), mockEvent2);
         characterEvents.addEvent(arrayOf(trigger1), mockEvent3);
@@ -73,7 +76,25 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testAddEventTwice() {
+    public void testEventsForTrigger() {
+        assertArrayEquals(new CharacterEvents[]{}, characterEvents.eventsForTrigger(trigger1));
+
+        characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
+        characterEvents.addEvent(arrayOf(trigger1), mockEvent2);
+        characterEvents.addEvent(arrayOf(trigger1), mockEvent3);
+
+        assertArrayEquals(arrayOf(mockEvent1, mockEvent2, mockEvent3),
+                characterEvents.eventsForTrigger(trigger1));
+    }
+
+    @Test
+    public void testEventsForTriggerWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> characterEvents.eventsForTrigger(null));
+        assertThrows(IllegalArgumentException.class, () -> characterEvents.eventsForTrigger(""));
+    }
+
+    @Test
+    public void testAddEventTwice() {
         characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
         characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
 
@@ -86,7 +107,7 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testAddEventWithInvalidParams() {
+    public void testAddEventWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> characterEvents.addEvent(null, mockEvent1));
         assertThrows(IllegalArgumentException.class,
@@ -96,7 +117,7 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testRemoveEvent() {
+    public void testRemoveEvent() {
         characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
         characterEvents.addEvent(arrayOf(trigger2), mockEvent2);
         characterEvents.addEvent(arrayOf(trigger1), mockEvent3);
@@ -120,12 +141,12 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testRemoveEventWithInvalidParams() {
+    public void testRemoveEventWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> characterEvents.removeEvent(null));
     }
 
     @Test
-    void testClearTrigger() {
+    public void testClearTrigger() {
         characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
         characterEvents.addEvent(arrayOf(trigger2), mockEvent2);
         characterEvents.addEvent(arrayOf(trigger1), mockEvent3);
@@ -141,13 +162,13 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testClearTriggerWithInvalidParams() {
+    public void testClearTriggerWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> characterEvents.clearTrigger(null));
         assertThrows(IllegalArgumentException.class, () -> characterEvents.clearTrigger(""));
     }
 
     @Test
-    void testClearAllEvents() {
+    public void testClearAllEvents() {
         characterEvents.addEvent(arrayOf(trigger1), mockEvent1);
         characterEvents.addEvent(arrayOf(trigger2), mockEvent2);
         characterEvents.addEvent(arrayOf(trigger1), mockEvent3);
@@ -161,9 +182,10 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testCopyAllTriggers() {
+    public void testCopyAllTriggers() {
         var copyFrom = mock(CharacterEvents.class);
-        var toCopy = mapOf(Pair.of(trigger1, listOf(mockEvent1, mockEvent3)), Pair.of(trigger2, listOf(mockEvent2)));
+        var toCopy = mapOf(Pair.of(trigger1, listOf(mockEvent1, mockEvent3)),
+                Pair.of(trigger2, listOf(mockEvent2)));
         when(copyFrom.representation()).thenReturn(toCopy);
 
         characterEvents.copyAllTriggers(copyFrom);
@@ -177,19 +199,19 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testCopyAllTriggersWithInvalidParams() {
+    public void testCopyAllTriggersWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> characterEvents.copyAllTriggers(null));
     }
 
     @Test
-    void testDelete() {
+    public void testDelete() {
         characterEvents.delete();
 
         assertTrue(characterEvents.isDeleted());
     }
 
     @Test
-    void testDeletedInvariant() {
+    public void testDeletedInvariant() {
         characterEvents.delete();
 
         assertThrows(EntityDeletedException.class, () -> characterEvents.addEvent(arrayOf(trigger1),
@@ -203,7 +225,7 @@ class CharacterEventsImplTests {
     }
 
     @Test
-    void testCharacterDeletedInvariant() {
+    public void testCharacterDeletedInvariant() {
         when(mockCharacter.isDeleted()).thenReturn(true);
 
         assertThrows(IllegalStateException.class, () -> characterEvents.addEvent(arrayOf(trigger1),
