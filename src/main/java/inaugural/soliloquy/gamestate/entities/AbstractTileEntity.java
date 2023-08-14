@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class AbstractTileEntity<TEntity extends TileEntity>
         extends AbstractGameEventTargetEntity
         implements TileEntity {
-    protected Tile _tile;
+    protected Tile tile;
 
     AbstractTileEntity() {
         super();
@@ -27,7 +27,7 @@ public abstract class AbstractTileEntity<TEntity extends TileEntity>
 
     @Override
     protected Deletable getContainingObject() {
-        return _tile;
+        return tile;
     }
 
     @Override
@@ -54,7 +54,7 @@ public abstract class AbstractTileEntity<TEntity extends TileEntity>
 
     @SuppressWarnings("unchecked")
     void enforceCorrectTileInvariant(String methodName) {
-        if (_tile != null && !getTileAggregation().contains((TEntity) this)) {
+        if (tile != null && !getTileAggregation().contains((TEntity) this)) {
             throw new IllegalStateException(className() + methodName +
                     ": this is not present on its specified Tile");
         }

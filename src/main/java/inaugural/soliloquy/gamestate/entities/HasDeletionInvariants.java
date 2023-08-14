@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 public abstract class HasDeletionInvariants implements Deletable {
-    private boolean _isDeleted;
+    private boolean isDeleted;
 
     protected abstract String containingClassName();
 
     protected abstract Deletable getContainingObject();
 
     protected void enforceDeletionInvariants() {
-        if (_isDeleted) {
+        if (isDeleted) {
             throwException("object is deleted", EntityDeletedException::new);
         }
         if (containingClassName() != null && getContainingObject() != null &&
@@ -38,12 +38,12 @@ public abstract class HasDeletionInvariants implements Deletable {
 
     @Override
     public boolean isDeleted() {
-        return _isDeleted;
+        return isDeleted;
     }
 
     @Override
     public void delete() {
-        _isDeleted = true;
+        isDeleted = true;
         afterDeleted();
     }
 

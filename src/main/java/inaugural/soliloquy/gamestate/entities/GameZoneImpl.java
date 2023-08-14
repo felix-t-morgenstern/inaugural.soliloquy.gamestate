@@ -4,27 +4,33 @@ import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.Deletable;
-import soliloquy.specs.gamestate.entities.GameZone;
-import soliloquy.specs.gamestate.entities.Tile;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
     private final String TYPE;
     private final Coordinate MAX_COORDINATES;
     private final Tile[][] TILES;
+    private final Map<Integer, WallSegment>[][] NORTH_SEGMENTS;
+    private final Map<Integer, WallSegment>[][] NORTHWEST_SEGMENTS;
+    private final Map<Integer, WallSegment>[][] WEST_SEGMENTS;
     @SuppressWarnings("rawtypes")
     private final List<Action> ENTRY_ACTIONS;
     @SuppressWarnings("rawtypes")
     private final List<Action> EXIT_ACTIONS;
     private final VariableCache DATA;
-    public final HashMap<UUID, Character> CHARACTERS_IN_GAME_ZONE;
+    public final Map<UUID, Character> CHARACTERS_IN_GAME_ZONE;
 
-    private String _name;
+    private String name;
 
     public GameZoneImpl(String id, String type, Tile[][] tiles,
                         VariableCache data,
@@ -32,7 +38,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                         Consumer<Character> removeFromRoundManager) {
         ID = Check.ifNullOrEmpty(id, "id");
         TYPE = Check.ifNullOrEmpty(type, "type");
-        CHARACTERS_IN_GAME_ZONE = new HashMap<>();
+        CHARACTERS_IN_GAME_ZONE = mapOf();
 
         Check.ifNull(tiles, "tiles");
         Check.throwOnLteZero(tiles.length, "tiles.length");
@@ -40,9 +46,17 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         Check.ifNull(addToEndOfRoundManager, "addToEndOfRoundManager");
         Check.ifNull(removeFromRoundManager, "removeFromRoundManager");
 
-        TILES = new Tile[tiles.length][tiles[0].length];
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
+        var tilesWidth = tiles.length;
+        var tilesHeight = tiles[0].length;
+        TILES = new Tile[tilesWidth][tilesHeight];
+        //noinspection unchecked
+        NORTH_SEGMENTS = new Map[tilesWidth + 1][tilesHeight];
+        //noinspection unchecked
+        NORTHWEST_SEGMENTS = new Map[tilesWidth + 1][tilesHeight];
+        //noinspection unchecked
+        WEST_SEGMENTS = new Map[tilesWidth + 1][tilesHeight];
+        for (var x = 0; x < tilesWidth; x++) {
+            for (var y = 0; y < tilesHeight; y++) {
                 if (tiles[x][y] == null) {
                     throw new IllegalArgumentException("GameZoneImpl: tiles has null tile at (" +
                             x + "," + y + ")");
@@ -70,9 +84,9 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                         c -> CHARACTERS_IN_GAME_ZONE.put(c.getItem1().uuid(), c.getItem1()));
             }
         }
-        MAX_COORDINATES = Coordinate.of(tiles.length - 1, tiles[0].length - 1);
-        ENTRY_ACTIONS = new ArrayList<>();
-        EXIT_ACTIONS = new ArrayList<>();
+        MAX_COORDINATES = Coordinate.of(tilesWidth - 1, tilesHeight - 1);
+        ENTRY_ACTIONS = listOf();
+        EXIT_ACTIONS = listOf();
         DATA = Check.ifNull(data, "data");
     }
 
@@ -81,49 +95,87 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         return TYPE;
     }
 
-    // TODO: Ensure that this is a clone
     @Override
     public Coordinate maxCoordinates() {
         return MAX_COORDINATES;
     }
 
     @Override
-    public Tile tile(Coordinate coordinate) throws IllegalArgumentException {
-        int x = coordinate.x();
-        int y = coordinate.y();
-        if (x < 0) {
-            throw new IllegalArgumentException("GameZoneImpl.tile: x cannot be negative");
-        }
-        if (y < 0) {
-            throw new IllegalArgumentException("GameZoneImpl.tile: y cannot be negative");
-        }
-        if (x > MAX_COORDINATES.x()) {
-            throw new IllegalArgumentException("GameZoneImpl.tile: x is beyond max x coordinate");
-        }
-        if (y > MAX_COORDINATES.y()) {
-            throw new IllegalArgumentException("GameZoneImpl.tile: y is beyond max y coordinate");
-        }
-        return TILES[x][y];
+    public Tile tile(Coordinate location) throws IllegalArgumentException {
+        checkIfLocationValid(location, false);
+        return TILES[location.x()][location.y()];
     }
 
-    // TODO: Ensure this object is a clone
+    @Override
+    public Map<Integer, WallSegment> getSegments(Coordinate location,
+                                                 WallSegmentDirection direction)
+            throws IllegalArgumentException {
+        checkIfLocationValid(location, true);
+        Check.ifNull(direction, "direction");
+
+        Map<Integer, WallSegment>[][] segmentsOfDirection;
+        switch(direction){
+            case NORTH -> segmentsOfDirection = NORTH_SEGMENTS;
+            case NORTHWEST -> segmentsOfDirection = NORTHWEST_SEGMENTS;
+            case WEST -> segmentsOfDirection = WEST_SEGMENTS;
+            default -> throw new IllegalArgumentException("GameZoneImpl.getSegmentsAtLocation: invalid direction");
+        }
+
+        var segmentsAtLocation = segmentsOfDirection[location.x()][location.y()];
+        if (segmentsAtLocation == null) {
+            segmentsAtLocation = segmentsOfDirection[location.x()][location.y()] = mapOf();
+        }
+
+        return segmentsAtLocation;
+    }
+
+    @Override
+    public void setSegment(Coordinate location, int z, WallSegment segment)
+            throws IllegalArgumentException {
+        Check.ifNull(segment, "segment");
+        Check.ifNull(segment.getType(), "segment.getType()");
+        Check.ifNull(segment.getType().direction(), "segment.getType().direction()");
+
+        var segmentsAtLocation = getSegments(location, segment.getType().direction());
+
+        segmentsAtLocation.put(z, segment);
+    }
+
+    @Override
+    public boolean removeSegment(Coordinate location, int z, WallSegmentDirection direction)
+            throws IllegalArgumentException {
+        var segmentsAtLocation = getSegments(location, direction);
+        if (segmentsAtLocation == null) {
+            return false;
+        }
+        if (!segmentsAtLocation.containsKey(z)) {
+            return false;
+        }
+        segmentsAtLocation.remove(z);
+        return true;
+    }
+
+    @Override
+    public void removeAllSegments(Coordinate location, WallSegmentDirection direction)
+            throws IllegalArgumentException {
+        getSegments(location, direction).clear();
+    }
+
     @SuppressWarnings("rawtypes")
     @Override
     public List<Action> onEntry() {
-        return new ArrayList<>(ENTRY_ACTIONS);
+        return ENTRY_ACTIONS;
     }
 
-    // TODO: Ensure this object is a clone
     @SuppressWarnings("rawtypes")
     @Override
     public List<Action> onExit() {
-        return new ArrayList<>(EXIT_ACTIONS);
+        return EXIT_ACTIONS;
     }
 
-    // TODO: Ensure this object is a clone
     @Override
     public Map<UUID, Character> charactersRepresentation() {
-        return new HashMap<>(CHARACTERS_IN_GAME_ZONE);
+        return mapOf(CHARACTERS_IN_GAME_ZONE);
     }
 
     @Override
@@ -133,7 +185,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @Override
     public String getName() {
-        return _name;
+        return name;
     }
 
     @Override
@@ -144,7 +196,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         if (name.equals("")) {
             throw new IllegalArgumentException("GameZoneImpl.setName: name cannot be empty");
         }
-        _name = name;
+        this.name = name;
     }
 
     @Override
@@ -169,10 +221,19 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        for (int x = 0; x <= MAX_COORDINATES.x(); x++) {
-            for (int y = 0; y <= MAX_COORDINATES.y(); y++) {
+        for (var x = 0; x <= MAX_COORDINATES.x(); x++) {
+            for (var y = 0; y <= MAX_COORDINATES.y(); y++) {
                 TILES[x][y].delete();
             }
         }
+    }
+
+    private void checkIfLocationValid(Coordinate location, boolean forSegment) {
+        Check.ifNull(location, "location");
+        Check.ifNonNegative(location.x(), "location.x()");
+        Check.ifNonNegative(location.y(), "location.y()");
+        var segmentAddend = forSegment ? 1 : 0;
+        Check.throwOnGtValue(location.x(), MAX_COORDINATES.x() + segmentAddend, "location.x()");
+        Check.throwOnGtValue(location.y(), MAX_COORDINATES.y() + segmentAddend, "location.y()");
     }
 }

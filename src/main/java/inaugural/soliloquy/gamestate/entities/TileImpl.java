@@ -7,13 +7,12 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
-import soliloquy.specs.gamestate.factories.TileWallSegmentsFactory;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
@@ -21,7 +20,6 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     private final TileEntities<Character> TILE_CHARACTERS;
     private final TileEntities<Item> TILE_ITEMS;
     private final TileEntities<TileFixture> TILE_FIXTURES;
-    private final TileWallSegments TILE_WALL_SEGMENTS;
     private final Map<Sprite, Integer> SPRITES;
     private final VariableCache DATA;
 
@@ -31,7 +29,6 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
 
     public TileImpl(int x, int y,
                     TileEntitiesFactory tileEntitiesFactory,
-                    TileWallSegmentsFactory tileWallSegmentsFactory,
                     VariableCache data) {
         super();
         LOCATION = Coordinate.of(x, y);
@@ -40,15 +37,8 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
         TILE_CHARACTERS = tileEntitiesFactory.make(this, generateSimpleArchetype(Character.class));
         TILE_ITEMS = tileEntitiesFactory.make(this, generateSimpleArchetype(Item.class));
         TILE_FIXTURES = tileEntitiesFactory.make(this, generateSimpleArchetype(TileFixture.class));
-        if (tileWallSegmentsFactory == null) {
-            throw new IllegalArgumentException("TileImpl: tileWallSegmentsFactory cannot be null");
-        }
-        TILE_WALL_SEGMENTS = tileWallSegmentsFactory.make(this);
-        SPRITES = new HashMap<>();
-        if (data == null) {
-            throw new IllegalArgumentException("TileImpl: data cannot be null");
-        }
-        DATA = data;
+        SPRITES = mapOf();
+        DATA = Check.ifNull(data, "data");
     }
 
     @Override
@@ -116,13 +106,6 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     }
 
     @Override
-    public TileWallSegments wallSegments() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("wallSegments");
-        return TILE_WALL_SEGMENTS;
-    }
-
-    @Override
     public Map<Sprite, Integer> sprites() throws IllegalStateException {
         enforceDeletionInvariants();
         enforceLocationCorrespondenceInvariant("sprites");
@@ -169,7 +152,6 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
         TILE_CHARACTERS.delete();
         TILE_FIXTURES.delete();
         TILE_ITEMS.delete();
-        TILE_WALL_SEGMENTS.delete();
     }
 
     @Override
@@ -197,7 +179,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
             }
 
             @Override
-            public TileWallSegment tileWallSegment() {
+            public WallSegment tileWallSegment() {
                 return null;
             }
 

@@ -24,7 +24,6 @@ public class FakeTile implements Tile {
     private final TileEntities<Character> CHARACTERS = new FakeTileEntities<>(this);
     private final TileEntities<TileFixture> FIXTURES = new FakeTileEntities<>(this);
     private final TileEntities<Item> TILE_ITEMS = new FakeTileEntities<>(this);
-    private final TileWallSegments TILE_WALL_SEGMENTS = new FakeTileWallSegments(this);
     private final List<GameMovementEvent> MOVEMENT_EVENTS = new ArrayList<>();
     private final List<GameAbilityEvent> ABILITY_EVENTS = new ArrayList<>();
 
@@ -117,11 +116,6 @@ public class FakeTile implements Tile {
     @Override
     public TileEntities<TileFixture> fixtures() throws IllegalStateException {
         return FIXTURES;
-    }
-
-    @Override
-    public TileWallSegments wallSegments() throws IllegalStateException {
-        return TILE_WALL_SEGMENTS;
     }
 
     @Override

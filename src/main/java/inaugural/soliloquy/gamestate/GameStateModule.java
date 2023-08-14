@@ -111,16 +111,13 @@ public class GameStateModule extends AbstractModule {
                         itemHandler);
 
         var tileEntitiesFactory = new TileEntitiesFactoryImpl();
-        var tileWallSegmentsFactory = new TileWallSegmentsFactoryImpl();
 
-        var tileFactory = new TileFactoryImpl(tileEntitiesFactory, tileWallSegmentsFactory);
-
-        var tileWallSegmentFactory = new TileWallSegmentFactoryImpl(variableCacheFactory);
+        var tileFactory = new TileFactoryImpl(tileEntitiesFactory);
 
         var tileHandler =
-                new TileHandler(tileFactory, tileWallSegmentFactory, characterHandler, itemHandler,
-                        tileFixturesHandler, spriteHandler, dataHandler, wallSegmentTypes::get,
-                        gameMovementEvents::get, gameAbilityEvents::get, groundTypes::get);
+                new TileHandler(tileFactory, characterHandler, itemHandler, tileFixturesHandler,
+                        spriteHandler, dataHandler, gameMovementEvents::get, gameAbilityEvents::get,
+                        groundTypes::get);
 
         // TODO: Populate this!
         RoundBasedTimerManager roundBasedTimerManager = null;

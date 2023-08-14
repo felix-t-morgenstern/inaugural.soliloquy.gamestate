@@ -3,14 +3,15 @@ package inaugural.soliloquy.gamestate.test.fakes;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.GameZone;
-import soliloquy.specs.gamestate.entities.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.mockito.Mockito.mock;
 
 public class FakeGameZone implements GameZone {
     public int _maxX = 99;
@@ -37,7 +38,7 @@ public class FakeGameZone implements GameZone {
         THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
         for (int x = 0; x <= _maxX; x++) {
             for (int y = 0; y <= _maxY; y++) {
-                TILES[x][y] = new FakeTile(this, x, y);
+                TILES[x][y] = mock(Tile.class);
             }
         }
     }
@@ -71,8 +72,21 @@ public class FakeGameZone implements GameZone {
             return TILES[coordinate.x()][coordinate.y()];
         }
         else {
-            return new FakeTile(coordinate.x(), coordinate.y(), null);
+            return mock(Tile.class);
         }
+    }
+
+    @Override
+    public Map<Integer, WallSegment> getSegments(Coordinate coordinate,
+                                                 WallSegmentDirection wallSegmentDirection)
+            throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public void setSegment(Coordinate coordinate, int i, WallSegment wallSegment)
+            throws IllegalArgumentException {
+
     }
 
     @SuppressWarnings("rawtypes")

@@ -3,54 +3,40 @@ package inaugural.soliloquy.gamestate.test.fakes;
 import soliloquy.specs.common.infrastructure.List;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileWallSegment;
+import soliloquy.specs.gamestate.entities.WallSegment;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-public class FakeTileWallSegment implements TileWallSegment {
-    private WallSegmentType _type;
-    private boolean _isDeleted;
-    private VariableCache _data;
+public class FakeWallSegment implements WallSegment {
+    private WallSegmentType type;
+    private boolean isDeleted;
+    private VariableCache data;
 
     public Tile _tile;
 
-    public FakeTileWallSegment() {
+    public FakeWallSegment() {
 
     }
 
-    FakeTileWallSegment(VariableCache data) {
-        _data = data;
+    FakeWallSegment(VariableCache data) {
+        this.data = data;
     }
 
     @Override
     public WallSegmentType getType() throws IllegalStateException {
-        return _type;
+        return type;
     }
 
     @Override
     public void setType(WallSegmentType type) throws IllegalStateException {
-        _type = type;
-    }
-
-    @Override
-    public Tile tile() {
-        if (_tile == null) {
-            return null;
-        }
-        return _tile;
-    }
-
-    @Override
-    public void assignTileAfterAddedToTileEntitiesOfType(Tile tile)
-            throws IllegalArgumentException, IllegalStateException {
-        _tile = tile;
+        this.type = type;
     }
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        return _data;
+        return data;
     }
 
     @Override
@@ -65,12 +51,12 @@ public class FakeTileWallSegment implements TileWallSegment {
 
     @Override
     public void delete() throws IllegalStateException {
-        _isDeleted = true;
+        isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return _isDeleted;
+        return isDeleted;
     }
 
     @Override

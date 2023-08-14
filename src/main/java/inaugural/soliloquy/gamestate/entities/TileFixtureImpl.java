@@ -42,7 +42,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     public Tile tile() throws IllegalStateException {
         enforceDeletionInvariants();
         enforceCorrectTileInvariant("tile");
-        return _tile;
+        return tile;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
             throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants();
         enforceCorrectTileInvariant("assignTileAfterAddedToTileEntitiesOfType");
-        _tile = tile;
+        this.tile = tile;
         enforceCorrectTileInvariant("assignTileAfterAddedToTileEntitiesOfType");
     }
 
@@ -90,7 +90,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
             }
 
             @Override
-            public TileWallSegment tileWallSegment() {
+            public WallSegment tileWallSegment() {
                 return null;
             }
 
@@ -105,9 +105,9 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     public void afterDeleted() throws IllegalStateException {
         enforceCorrectTileInvariant("delete");
         TILE_FIXTURE_ITEMS.delete();
-        if (_tile != null) {
-            TileEntities<TileFixture> tileFixtures = _tile.fixtures();
-            _tile = null;
+        if (tile != null) {
+            TileEntities<TileFixture> tileFixtures = tile.fixtures();
+            tile = null;
             tileFixtures.remove(this);
         }
     }
@@ -136,7 +136,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
 
     @Override
     protected TileEntities<TileFixture> getTileAggregation() {
-        return _tile.fixtures();
+        return tile.fixtures();
     }
 
     @Override
