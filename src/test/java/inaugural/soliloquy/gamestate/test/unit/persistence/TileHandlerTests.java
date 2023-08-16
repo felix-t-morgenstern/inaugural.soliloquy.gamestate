@@ -142,8 +142,8 @@ class TileHandlerTests {
         var readTile = tileHandler.read(WRITTEN_DATA);
 
         assertNotNull(readTile);
-        assertEquals(X, readTile.location().x());
-        assertEquals(Y, readTile.location().y());
+        assertEquals(X, readTile.location().X);
+        assertEquals(Y, readTile.location().Y);
         assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
                 readTile.data());
         assertEquals(HEIGHT, readTile.getHeight());

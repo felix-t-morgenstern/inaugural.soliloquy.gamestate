@@ -96,8 +96,8 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
         Check.ifNull(tile, "tile");
 
         var dto = new TileDTO();
-        dto.x = tile.location().x();
-        dto.y = tile.location().y();
+        dto.x = tile.location().X;
+        dto.y = tile.location().Y;
         dto.height = tile.getHeight();
         dto.groundTypeId = tile.getGroundType().id();
 

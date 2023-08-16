@@ -15,6 +15,8 @@ import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
@@ -48,7 +50,7 @@ public class GameStateImpl implements GameState {
                          VariableCache data,
                          RegistryFactory registryFactory,
                          GameZonesRepo gameZonesRepo,
-                         CameraFactory cameraFactory,
+                         Function<Supplier<GameZone>, Camera> cameraFactory,
                          RoundManager roundManager,
                          RoundBasedTimerManager roundBasedTimerManager,
                          ClockBasedTimerManager clockBasedTimerManager,
@@ -62,7 +64,7 @@ public class GameStateImpl implements GameState {
         this.data = Check.ifNull(data, "data");
         CHARACTER_AI_TYPES = new HashMap<>();
         GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
-        CAMERA = Check.ifNull(cameraFactory, "cameraFactory").make(this::getCurrentGameZone);
+        CAMERA = Check.ifNull(cameraFactory, "cameraFactory").apply(this::getCurrentGameZone);
         Check.ifNull(registryFactory, "registryFactory");
         MOVEMENT_EVENTS = registryFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
         ABILITY_EVENTS = registryFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);

@@ -10,7 +10,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Coordinate2d;
+import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -31,11 +32,11 @@ public class GameZoneImplTests {
     private final String ID = randomString();
     private final String ZONE_TYPE = randomString();
     // These ranges are chosen arbitrarily to make the tests meaningful but not burdensome
-    private final int MAX_X_COORDINATE = randomIntInRange(10, 100);
-    private final int MAX_Y_COORDINATE = randomIntInRange(10, 100);
+    private final int MAX_X_Coordinate2d = randomIntInRange(10, 100);
+    private final int MAX_Y_Coordinate2d = randomIntInRange(10, 100);
     private final UUID CHARACTER_1_UUID = UUID.randomUUID();
     private final UUID CHARACTER_2_UUID = UUID.randomUUID();
-    private final Tile[][] TILES = new Tile[MAX_X_COORDINATE + 1][MAX_Y_COORDINATE + 1];
+    private final Tile[][] TILES = new Tile[MAX_X_Coordinate2d + 1][MAX_Y_Coordinate2d + 1];
     private final VariableCache DATA = new VariableCacheStub();
     private final List<Character> ADDED_TO_END_OF_ROUND_MANAGER = listOf();
     private final List<Character> REMOVED_FROM_ROUND_MANAGER = listOf();
@@ -105,15 +106,15 @@ public class GameZoneImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithAssignedTile, DATA,
                         ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        var tilesWithMismatchedXCoordinate = new Tile[1][1];
-        tilesWithMismatchedXCoordinate[0][0] = new FakeTile(1, 0, new VariableCacheStub());
+        var tilesWithMismatchedXCoordinate2d = new Tile[1][1];
+        tilesWithMismatchedXCoordinate2d[0][0] = new FakeTile(1, 0, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedXCoordinate, DATA,
+                () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedXCoordinate2d, DATA,
                         ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
-        var tilesWithMismatchedYCoordinate = new Tile[1][1];
-        tilesWithMismatchedYCoordinate[0][0] = new FakeTile(0, 1, new VariableCacheStub());
+        var tilesWithMismatchedYCoordinate2d = new Tile[1][1];
+        tilesWithMismatchedYCoordinate2d[0][0] = new FakeTile(0, 1, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class,
-                () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedYCoordinate, DATA,
+                () -> new GameZoneImpl(ID, ZONE_TYPE, tilesWithMismatchedYCoordinate2d, DATA,
                         ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneImpl(ID, ZONE_TYPE, TILES, null,
@@ -128,8 +129,8 @@ public class GameZoneImplTests {
 
     @Test
     public void testConstructorAssignsGameZoneToTile() {
-        for (var x = 0; x <= MAX_X_COORDINATE; x++) {
-            for (var y = 0; y <= MAX_Y_COORDINATE; y++) {
+        for (var x = 0; x <= MAX_X_Coordinate2d; x++) {
+            for (var y = 0; y <= MAX_Y_Coordinate2d; y++) {
                 assertSame(gameZone, TILES[x][y].gameZone());
             }
         }
@@ -146,32 +147,32 @@ public class GameZoneImplTests {
     }
 
     @Test
-    public void testMaxCoordinates() {
-        assertEquals(MAX_X_COORDINATE, gameZone.maxCoordinates().x());
-        assertEquals(MAX_Y_COORDINATE, gameZone.maxCoordinates().y());
+    public void testmaxCoordinates() {
+        assertEquals(MAX_X_Coordinate2d, gameZone.maxCoordinates().X);
+        assertEquals(MAX_Y_Coordinate2d, gameZone.maxCoordinates().Y);
     }
 
     @Test
     public void testTile() {
-        for (var x = 0; x <= MAX_X_COORDINATE; x++) {
-            for (var y = 0; y <= MAX_Y_COORDINATE; y++) {
-                var tile = gameZone.tile(Coordinate.of(x, y));
+        for (var x = 0; x <= MAX_X_Coordinate2d; x++) {
+            for (var y = 0; y <= MAX_Y_Coordinate2d; y++) {
+                var tile = gameZone.tile(Coordinate2d.of(x, y));
                 assertNotNull(tile);
                 assertSame(gameZone, tile.gameZone());
-                assertEquals(x, tile.location().x());
-                assertEquals(y, tile.location().y());
+                assertEquals(x, tile.location().X);
+                assertEquals(y, tile.location().Y);
             }
         }
     }
 
     @Test
-    public void testTileWithInvalidCoordinates() {
+    public void testTileWithInvalidCoordinate2ds() {
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.tile(Coordinate.of(MAX_X_COORDINATE + 1, 0)));
+                () -> gameZone.tile(Coordinate2d.of(MAX_X_Coordinate2d + 1, 0)));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.tile(Coordinate.of(0, MAX_Y_COORDINATE + 1)));
-        assertThrows(IllegalArgumentException.class, () -> gameZone.tile(Coordinate.of(-1, 0)));
-        assertThrows(IllegalArgumentException.class, () -> gameZone.tile(Coordinate.of(0, -1)));
+                () -> gameZone.tile(Coordinate2d.of(0, MAX_Y_Coordinate2d + 1)));
+        assertThrows(IllegalArgumentException.class, () -> gameZone.tile(Coordinate2d.of(-1, 0)));
+        assertThrows(IllegalArgumentException.class, () -> gameZone.tile(Coordinate2d.of(0, -1)));
     }
 
     @Test
@@ -219,26 +220,33 @@ public class GameZoneImplTests {
     public void testSetAndGetSegment() {
         when(mockSegmentType1.direction()).thenReturn(WallSegmentDirection.NORTH);
         when(mockSegment1.getType()).thenReturn(mockSegmentType1);
-        var mockSegment1Location = validCoordinate();
+        var mockSegment1Location = validCoordinate3d(MOCK_SEGMENT_1_Z);
 
         when(mockSegmentType2.direction()).thenReturn(WallSegmentDirection.NORTHWEST);
         when(mockSegment2.getType()).thenReturn(mockSegmentType2);
-        var mockSegment2And3Location = validCoordinate();
+        var mockSegment2And3TileLocation = validCoordinate2d();
+        var mockSegment2Location =
+                Coordinate3d.of(mockSegment2And3TileLocation.X, mockSegment2And3TileLocation.Y,
+                        MOCK_SEGMENT_2_Z);
 
         when(mockSegmentType3.direction()).thenReturn(WallSegmentDirection.WEST);
         when(mockSegment3.getType()).thenReturn(mockSegmentType3);
+        var mockSegment3Location =
+                Coordinate3d.of(mockSegment2And3TileLocation.X, mockSegment2And3TileLocation.Y,
+                        MOCK_SEGMENT_3_Z);
 
-        gameZone.setSegment(mockSegment1Location, MOCK_SEGMENT_1_Z, mockSegment1);
-        gameZone.setSegment(mockSegment2And3Location, MOCK_SEGMENT_2_Z, mockSegment2);
-        gameZone.setSegment(mockSegment2And3Location, MOCK_SEGMENT_3_Z, mockSegment3);
+        gameZone.setSegment(mockSegment1Location, mockSegment1);
+        gameZone.setSegment(mockSegment2Location, mockSegment2);
+        gameZone.setSegment(mockSegment3Location, mockSegment3);
 
         assertEquals(mapOf(Pair.of(MOCK_SEGMENT_1_Z, mockSegment1)),
-                gameZone.getSegments(mockSegment1Location, WallSegmentDirection.NORTH));
+                gameZone.getSegments(mockSegment1Location.to2d(), WallSegmentDirection.NORTH));
         assertEquals(mapOf(Pair.of(MOCK_SEGMENT_2_Z, mockSegment2)),
-                gameZone.getSegments(mockSegment2And3Location, WallSegmentDirection.NORTHWEST));
+                gameZone.getSegments(mockSegment2And3TileLocation, WallSegmentDirection.NORTHWEST));
         assertEquals(mapOf(Pair.of(MOCK_SEGMENT_3_Z, mockSegment3)),
-                gameZone.getSegments(mockSegment2And3Location, WallSegmentDirection.WEST));
-        assertEquals(mapOf(), gameZone.getSegments(validCoordinate(), WallSegmentDirection.NORTH));
+                gameZone.getSegments(mockSegment2And3TileLocation, WallSegmentDirection.WEST));
+        assertEquals(mapOf(),
+                gameZone.getSegments(validCoordinate2d(), WallSegmentDirection.NORTH));
     }
 
     @Test
@@ -246,17 +254,16 @@ public class GameZoneImplTests {
         when(mockSegmentType1.direction()).thenReturn(WallSegmentDirection.NORTH);
         when(mockSegment1.getType()).thenReturn(mockSegmentType1);
         when(mockSegment2.getType()).thenReturn(mockSegmentType1);
-        var location = validCoordinate();
-        var z = randomInt();
+        var location = validCoordinate3d(randomInt());
 
-        gameZone.setSegment(location, z, mockSegment1);
-        gameZone.setSegment(location, z, mockSegment2);
-        var segmentsAtLocation = gameZone.getSegments(location, WallSegmentDirection.NORTH);
+        gameZone.setSegment(location, mockSegment1);
+        gameZone.setSegment(location, mockSegment2);
+        var segmentsAtLocation = gameZone.getSegments(location.to2d(), WallSegmentDirection.NORTH);
 
         assertNotNull(segmentsAtLocation);
         assertEquals(1, segmentsAtLocation.size());
-        assertTrue(segmentsAtLocation.containsKey(z));
-        assertSame(mockSegment2, segmentsAtLocation.get(z));
+        assertTrue(segmentsAtLocation.containsKey(location.Z));
+        assertSame(mockSegment2, segmentsAtLocation.get(location.Z));
     }
 
     @Test
@@ -264,17 +271,17 @@ public class GameZoneImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.getSegments(null, WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.getSegments(Coordinate.of(-1, 0), WallSegmentDirection.NORTH));
+                () -> gameZone.getSegments(Coordinate2d.of(-1, 0), WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.getSegments(Coordinate.of(0, -1), WallSegmentDirection.NORTH));
+                () -> gameZone.getSegments(Coordinate2d.of(0, -1), WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.getSegments(Coordinate.of(MAX_X_COORDINATE + 2, 0),
+                () -> gameZone.getSegments(Coordinate2d.of(MAX_X_Coordinate2d + 2, 0),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.getSegments(Coordinate.of(0, MAX_Y_COORDINATE + 2),
+                () -> gameZone.getSegments(Coordinate2d.of(0, MAX_Y_Coordinate2d + 2),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.getSegments(validCoordinate(), null));
+                () -> gameZone.getSegments(validCoordinate2d(), null));
     }
 
     @Test
@@ -282,43 +289,40 @@ public class GameZoneImplTests {
         when(mockSegment1.getType()).thenReturn(mockSegmentType1);
         when(mockSegmentType1.direction()).thenReturn(WallSegmentDirection.NORTH);
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(null, randomInt(), mockSegment1));
+                () -> gameZone.setSegment(Coordinate3d.of(-1, 0, randomInt()), mockSegment1));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(Coordinate.of(-1, 0), randomInt(), mockSegment1));
+                () -> gameZone.setSegment(Coordinate3d.of(0, -1, randomInt()), mockSegment1));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(Coordinate.of(0, -1), randomInt(), mockSegment1));
-        assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(Coordinate.of(MAX_X_COORDINATE + 2, 0), randomInt(),
+                () -> gameZone.setSegment(Coordinate3d.of(MAX_X_Coordinate2d + 2, 0, randomInt()),
                         mockSegment1));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(Coordinate.of(0, MAX_Y_COORDINATE + 2), randomInt(),
+                () -> gameZone.setSegment(Coordinate3d.of(0, MAX_Y_Coordinate2d + 2, randomInt()),
                         mockSegment1));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(validCoordinate(), randomInt(), null));
+                () -> gameZone.setSegment(validCoordinate3d(), null));
         when(mockSegment1.getType()).thenReturn(null);
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(validCoordinate(), randomInt(), mockSegment1));
+                () -> gameZone.setSegment(validCoordinate3d(), mockSegment1));
         when(mockSegment1.getType()).thenReturn(mockSegmentType1);
         when(mockSegmentType1.direction()).thenReturn(null);
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.setSegment(validCoordinate(), randomInt(), mockSegment1));
+                () -> gameZone.setSegment(validCoordinate3d(), mockSegment1));
     }
 
     @Test
     public void testRemoveSegment() {
         when(mockSegmentType1.direction()).thenReturn(WallSegmentDirection.NORTH);
         when(mockSegment1.getType()).thenReturn(mockSegmentType1);
-        var location = validCoordinate();
-        var z = randomInt();
+        var location = validCoordinate3d();
 
-        assertFalse(gameZone.removeSegment(location, z, WallSegmentDirection.NORTH));
+        assertFalse(gameZone.removeSegment(location, WallSegmentDirection.NORTH));
 
-        gameZone.setSegment(location, z, mockSegment1);
-        var wasPresent = gameZone.removeSegment(location, z, WallSegmentDirection.NORTH);
-        var segmentsAtLocation = gameZone.getSegments(location, WallSegmentDirection.NORTH);
+        gameZone.setSegment(location, mockSegment1);
+        var wasPresent = gameZone.removeSegment(location, WallSegmentDirection.NORTH);
+        var segmentsAtLocation = gameZone.getSegments(location.to2d(), WallSegmentDirection.NORTH);
 
         assertTrue(wasPresent);
-        assertFalse(gameZone.removeSegment(location, z, WallSegmentDirection.NORTH));
+        assertFalse(gameZone.removeSegment(location, WallSegmentDirection.NORTH));
         assertNotNull(segmentsAtLocation);
         assertEquals(0, segmentsAtLocation.size());
     }
@@ -326,21 +330,23 @@ public class GameZoneImplTests {
     @Test
     public void testRemoveSegmentWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeSegment(null, randomInt(), WallSegmentDirection.NORTH));
+                () -> gameZone.removeSegment(null, WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeSegment(Coordinate.of(-1, 0), randomInt(),
+                () -> gameZone.removeSegment(Coordinate3d.of(-1, 0, randomInt()),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeSegment(Coordinate.of(0, -1), randomInt(),
+                () -> gameZone.removeSegment(Coordinate3d.of(0, -1, randomInt()),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeSegment(Coordinate.of(MAX_X_COORDINATE + 2, 0), randomInt(),
+                () -> gameZone.removeSegment(
+                        Coordinate3d.of(MAX_X_Coordinate2d + 2, 0, randomInt()),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeSegment(Coordinate.of(0, MAX_Y_COORDINATE + 2), randomInt(),
+                () -> gameZone.removeSegment(
+                        Coordinate3d.of(0, MAX_Y_Coordinate2d + 2, randomInt()),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeSegment(validCoordinate(), randomInt(), null));
+                () -> gameZone.removeSegment(validCoordinate3d(), null));
     }
 
     @Test
@@ -349,13 +355,14 @@ public class GameZoneImplTests {
         when(mockSegment1.getType()).thenReturn(mockSegmentType1);
         when(mockSegment2.getType()).thenReturn(mockSegmentType1);
         when(mockSegment3.getType()).thenReturn(mockSegmentType1);
-        var location = validCoordinate();
-        gameZone.setSegment(location, randomInt(), mockSegment1);
-        gameZone.setSegment(location, randomInt(), mockSegment2);
-        gameZone.setSegment(location, randomInt(), mockSegment3);
+        var location = validCoordinate3d();
+        gameZone.setSegment(location, mockSegment1);
+        gameZone.setSegment(location, mockSegment2);
+        gameZone.setSegment(location, mockSegment3);
 
-        gameZone.removeAllSegments(location, WallSegmentDirection.NORTH);
-        var segmentsAfterRemoveAll = gameZone.getSegments(location, WallSegmentDirection.NORTH);
+        gameZone.removeAllSegments(location.to2d(), WallSegmentDirection.NORTH);
+        var segmentsAfterRemoveAll =
+                gameZone.getSegments(location.to2d(), WallSegmentDirection.NORTH);
 
         assertNotNull(segmentsAfterRemoveAll);
         assertEquals(0, segmentsAfterRemoveAll.size());
@@ -366,22 +373,32 @@ public class GameZoneImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeAllSegments(null, WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeAllSegments(Coordinate.of(-1, 0), WallSegmentDirection.NORTH));
-        assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeAllSegments(Coordinate.of(0, -1), WallSegmentDirection.NORTH));
-        assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeAllSegments(Coordinate.of(MAX_X_COORDINATE + 2, 0),
+                () -> gameZone.removeAllSegments(Coordinate2d.of(-1, 0),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeAllSegments(Coordinate.of(0, MAX_Y_COORDINATE + 2),
+                () -> gameZone.removeAllSegments(Coordinate2d.of(0, -1),
                         WallSegmentDirection.NORTH));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeAllSegments(validCoordinate(), null));
+                () -> gameZone.removeAllSegments(Coordinate2d.of(MAX_X_Coordinate2d + 2, 0),
+                        WallSegmentDirection.NORTH));
+        assertThrows(IllegalArgumentException.class,
+                () -> gameZone.removeAllSegments(Coordinate2d.of(0, MAX_Y_Coordinate2d + 2),
+                        WallSegmentDirection.NORTH));
+        assertThrows(IllegalArgumentException.class,
+                () -> gameZone.removeAllSegments(validCoordinate2d(), null));
     }
 
-    private Coordinate validCoordinate() {
-        return Coordinate.of(randomIntInRange(0, MAX_X_COORDINATE),
-                randomIntInRange(0, MAX_Y_COORDINATE));
+    private Coordinate2d validCoordinate2d() {
+        return validCoordinate3d(randomInt()).to2d();
+    }
+
+    private Coordinate3d validCoordinate3d() {
+        return validCoordinate3d(randomInt());
+    }
+
+    private Coordinate3d validCoordinate3d(int z) {
+        return Coordinate3d.of(randomIntInRange(0, MAX_X_Coordinate2d),
+                randomIntInRange(0, MAX_Y_Coordinate2d), z);
     }
 
     @Test
@@ -399,7 +416,7 @@ public class GameZoneImplTests {
 
     @Test
     public void testAddCharacterToGameZoneViaTileCharactersAndCharactersIteratorAndAddedToRoundManager() {
-        gameZone.tile(Coordinate.of(0, 0)).characters().add(mockCharacter2);
+        gameZone.tile(Coordinate2d.of(0, 0)).characters().add(mockCharacter2);
 
         var charactersInGameZone = gameZone.charactersRepresentation();
         assertEquals(2, charactersInGameZone.size());
@@ -412,7 +429,7 @@ public class GameZoneImplTests {
 
     @Test
     public void testRemoveCharacterFromGameZoneViaTileCharactersAndRemovedFromRoundManager() {
-        gameZone.tile(Coordinate.of(0, 0)).characters().remove(mockCharacter1);
+        gameZone.tile(Coordinate2d.of(0, 0)).characters().remove(mockCharacter1);
 
         assertEquals(0, gameZone.charactersRepresentation().size());
         assertEquals(1, REMOVED_FROM_ROUND_MANAGER.size());
@@ -422,9 +439,9 @@ public class GameZoneImplTests {
     @Test
     public void testDelete() {
         var tiles = new HashSet<Tile>();
-        for (var x = 0; x <= MAX_X_COORDINATE; x++) {
-            for (var y = 0; y <= MAX_Y_COORDINATE; y++) {
-                tiles.add(gameZone.tile(Coordinate.of(x, y)));
+        for (var x = 0; x <= MAX_X_Coordinate2d; x++) {
+            for (var y = 0; y <= MAX_Y_Coordinate2d; y++) {
+                tiles.add(gameZone.tile(Coordinate2d.of(x, y)));
             }
         }
 

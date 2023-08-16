@@ -44,8 +44,8 @@ class TileFactoryImplTests {
         Tile tile = tileFactory.make(X, Y, DATA);
 
         assertNotNull(tile);
-        assertEquals(X, tile.location().x());
-        assertEquals(Y, tile.location().y());
+        assertEquals(X, tile.location().X);
+        assertEquals(Y, tile.location().Y);
     }
 
     @Test

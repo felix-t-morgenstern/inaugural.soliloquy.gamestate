@@ -5,17 +5,18 @@ import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.GameState;
-import soliloquy.specs.gamestate.entities.GameZonesRepo;
-import soliloquy.specs.gamestate.entities.Party;
-import soliloquy.specs.gamestate.entities.RoundManager;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public class GameStateFactoryImpl implements GameStateFactory {
     private final RegistryFactory REGISTRY_FACTORY;
     private final GameZonesRepo GAME_ZONES_REPO;
-    private final CameraFactory CAMERA_FACTORY;
+    private final Function<Supplier<GameZone>, Camera> CAMERA_FACTORY;
     private final RoundManager ROUND_MANAGER;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
     private final ClockBasedTimerManager CLOCK_BASED_TIMER_MANAGER;
@@ -27,7 +28,8 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final KeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY;
 
     public GameStateFactoryImpl(RegistryFactory registryFactory,
-                                GameZonesRepo gameZonesRepo, CameraFactory cameraFactory,
+                                GameZonesRepo gameZonesRepo,
+                                Function<Supplier<GameZone>, Camera> cameraFactory,
                                 RoundManager roundManager,
                                 RoundBasedTimerManager roundBasedTimerManager,
                                 ClockBasedTimerManager clockBasedTimerManager,
@@ -54,11 +56,10 @@ public class GameStateFactoryImpl implements GameStateFactory {
     }
 
     @Override
-    public GameState make(Party party, VariableCache variableCache)
-            throws IllegalArgumentException {
-        return new GameStateImpl(party, variableCache, REGISTRY_FACTORY, GAME_ZONES_REPO,
-                CAMERA_FACTORY, ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER, CLOCK_BASED_TIMER_MANAGER,
-                ITEM_FACTORY, CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
+    public GameState make(Party party, VariableCache data) throws IllegalArgumentException {
+        return new GameStateImpl(party, data, REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+                ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER, CLOCK_BASED_TIMER_MANAGER, ITEM_FACTORY,
+                CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
                 KEY_BINDING_CONTEXT_FACTORY, KEY_EVENT_LISTENER_FACTORY);
     }
 

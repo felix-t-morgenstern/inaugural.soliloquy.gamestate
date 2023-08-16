@@ -6,7 +6,7 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -45,11 +45,11 @@ class TileImplTests {
 
     @Test
     void testLocation() {
-        Coordinate location = tile.location();
+        Coordinate2d location = tile.location();
 
         assertNotNull(location);
-        assertEquals(X, location.x());
-        assertEquals(Y, location.y());
+        assertEquals(X, location.X);
+        assertEquals(Y, location.Y);
     }
 
     @Test

@@ -7,7 +7,7 @@ import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
@@ -58,10 +58,10 @@ class GameZoneFactoryImplTests {
 
         assertEquals(ID, gameZone.id());
         assertEquals(TYPE, gameZone.type());
-        assertEquals(0, gameZone.maxCoordinates().x());
-        assertEquals(1, gameZone.maxCoordinates().y());
-        assertSame(TILES[0][0], gameZone.tile(Coordinate.of(0, 0)));
-        assertSame(TILES[0][1], gameZone.tile(Coordinate.of(0, 1)));
+        assertEquals(0, gameZone.maxCoordinates().X);
+        assertEquals(1, gameZone.maxCoordinates().Y);
+        assertSame(TILES[0][0], gameZone.tile(Coordinate2d.of(0, 0)));
+        assertSame(TILES[0][1], gameZone.tile(Coordinate2d.of(0, 1)));
         assertSame(DATA, gameZone.data());
     }
 
@@ -89,14 +89,14 @@ class GameZoneFactoryImplTests {
         tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new FakeGameZone());
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
                 tilesWithAssignedTile, DATA));
-        Tile[][] tilesWithMismatchedXCoordinate = new Tile[1][1];
-        tilesWithMismatchedXCoordinate[0][0] = new FakeTile(1, 0, new VariableCacheStub());
+        Tile[][] tilesWithMismatchedXCoordinate2d = new Tile[1][1];
+        tilesWithMismatchedXCoordinate2d[0][0] = new FakeTile(1, 0, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
-                tilesWithMismatchedXCoordinate, DATA));
-        Tile[][] tilesWithMismatchedYCoordinate = new Tile[1][1];
-        tilesWithMismatchedYCoordinate[0][0] = new FakeTile(0, 1, new VariableCacheStub());
+                tilesWithMismatchedXCoordinate2d, DATA));
+        Tile[][] tilesWithMismatchedYCoordinate2d = new Tile[1][1];
+        tilesWithMismatchedYCoordinate2d[0][0] = new FakeTile(0, 1, new VariableCacheStub());
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
-                tilesWithMismatchedYCoordinate, DATA));
+                tilesWithMismatchedYCoordinate2d, DATA));
         assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE, TILES,
                 null));
     }

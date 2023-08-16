@@ -2,7 +2,8 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Coordinate2d;
+import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 
@@ -17,7 +18,7 @@ public class FakeGameZone implements GameZone {
     public int _maxX = 99;
     public int _maxY = 99;
 
-    public Coordinate FAKE_MAX_COORDINATES = null;
+    public Coordinate2d FAKE_MAX_Coordinate2dS = null;
 
     public String ID = "GameZoneStubId";
     public Tile[][] TILES = new Tile[_maxX + 1][_maxY + 1];
@@ -28,14 +29,14 @@ public class FakeGameZone implements GameZone {
     @SuppressWarnings("rawtypes")
     private final List<Action> ON_EXIT = new ArrayList<>();
 
-    private final boolean THROW_EXCEPTION_ON_GET_MAX_COORDINATES;
+    private final boolean THROW_EXCEPTION_ON_GET_MAX_Coordinate2dS;
 
     private boolean _isDeleted;
     public String _customId;
     private String _name;
 
     public FakeGameZone() {
-        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
+        THROW_EXCEPTION_ON_GET_MAX_Coordinate2dS = false;
         for (int x = 0; x <= _maxX; x++) {
             for (int y = 0; y <= _maxY; y++) {
                 TILES[x][y] = mock(Tile.class);
@@ -45,7 +46,7 @@ public class FakeGameZone implements GameZone {
 
 
     public FakeGameZone(String customId) {
-        THROW_EXCEPTION_ON_GET_MAX_COORDINATES = false;
+        THROW_EXCEPTION_ON_GET_MAX_Coordinate2dS = false;
         _customId = customId;
     }
 
@@ -56,20 +57,20 @@ public class FakeGameZone implements GameZone {
 
     @SuppressWarnings("ReplaceNullCheck")
     @Override
-    public Coordinate maxCoordinates() {
-        if (THROW_EXCEPTION_ON_GET_MAX_COORDINATES) {
+    public Coordinate2d maxCoordinates() {
+        if (THROW_EXCEPTION_ON_GET_MAX_Coordinate2dS) {
             throw new GameZoneStubException();
         }
-        if (FAKE_MAX_COORDINATES != null) {
-            return FAKE_MAX_COORDINATES;
+        if (FAKE_MAX_Coordinate2dS != null) {
+            return FAKE_MAX_Coordinate2dS;
         }
-        return Coordinate.of(TILES.length - 1, TILES[0].length - 1);
+        return Coordinate2d.of(TILES.length - 1, TILES[0].length - 1);
     }
 
     @Override
-    public Tile tile(Coordinate coordinate) throws IllegalArgumentException {
+    public Tile tile(Coordinate2d Coordinate2d) throws IllegalArgumentException {
         if (RETURN_ACTUAL_TILE_AT_LOCATION) {
-            return TILES[coordinate.x()][coordinate.y()];
+            return TILES[Coordinate2d.X][Coordinate2d.Y];
         }
         else {
             return mock(Tile.class);
@@ -77,14 +78,28 @@ public class FakeGameZone implements GameZone {
     }
 
     @Override
-    public Map<Integer, WallSegment> getSegments(Coordinate coordinate,
+    public Map<Integer, WallSegment> getSegments(Coordinate2d Coordinate2d,
                                                  WallSegmentDirection wallSegmentDirection)
             throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public void setSegment(Coordinate coordinate, int i, WallSegment wallSegment)
+    public void setSegment(Coordinate3d coordinate3d, WallSegment wallSegment)
+            throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public boolean removeSegment(Coordinate3d coordinate3d,
+                                 WallSegmentDirection wallSegmentDirection)
+            throws IllegalArgumentException {
+        return false;
+    }
+
+    @Override
+    public void removeAllSegments(Coordinate2d coordinate2d,
+                                  WallSegmentDirection wallSegmentDirection)
             throws IllegalArgumentException {
 
     }

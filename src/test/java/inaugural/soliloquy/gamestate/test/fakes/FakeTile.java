@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -33,7 +33,7 @@ public class FakeTile implements Tile {
     private GroundType _groundType;
     private boolean _isDeleted;
 
-    private Coordinate _tileLocation;
+    private Coordinate2d _tileLocation;
     private VariableCache _data;
 
     public FakeTile() {
@@ -42,19 +42,19 @@ public class FakeTile implements Tile {
 
     public FakeTile(GameZone gameZone, int x, int y) {
         _gameZone = gameZone;
-        Coordinate coordinate = mock(Coordinate.class);
-        when(coordinate.x()).thenReturn(x);
-        when(coordinate.y()).thenReturn(y);
-        _tileLocation = coordinate;
+        Coordinate2d Coordinate2d = mock(Coordinate2d.class);
+        when(Coordinate2d.X).thenReturn(x);
+        when(Coordinate2d.Y).thenReturn(y);
+        _tileLocation = Coordinate2d;
     }
 
-    public FakeTile(Coordinate tileLocation) {
+    public FakeTile(Coordinate2d tileLocation) {
         _tileLocation = tileLocation;
         _gameZone = new FakeGameZone();
     }
 
     public FakeTile(int x, int y, VariableCache data) {
-        _tileLocation = Coordinate.of(x, y);
+        _tileLocation = Coordinate2d.of(x, y);
         _data = data;
     }
 
@@ -79,7 +79,7 @@ public class FakeTile implements Tile {
     }
 
     @Override
-    public Coordinate location() throws IllegalStateException {
+    public Coordinate2d location() throws IllegalStateException {
         return _tileLocation;
     }
 

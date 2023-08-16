@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
@@ -105,7 +105,7 @@ class GameZoneHandlerTests {
         when(mockGameZone.getName()).thenReturn(NAME);
         when(mockGameZone.data()).thenReturn(mockData);
         when(mockGameZone.maxCoordinates())
-                .thenReturn(Coordinate.of(TILES_WIDTH - 1, TILES_HEIGHT - 1));
+                .thenReturn(Coordinate2d.of(TILES_WIDTH - 1, TILES_HEIGHT - 1));
         when(mockGameZone.onEntry()).thenReturn(mockOnEntry);
         when(mockGameZone.onExit()).thenReturn(mockOnExit);
         when(mockGameZone.tile(any())).thenReturn(mockTile);
@@ -167,7 +167,7 @@ class GameZoneHandlerTests {
         verify(mockTileHandler, times(TOTAL_NUMBER_TILES)).write(mockTile);
         for (int x = 0; x < TILES_WIDTH; x++) {
             for (int y = 0; y < TILES_HEIGHT; y++) {
-                verify(mockGameZone, times(1)).tile(eq(Coordinate.of(x, y)));
+                verify(mockGameZone, times(1)).tile(eq(Coordinate2d.of(x, y)));
             }
         }
     }

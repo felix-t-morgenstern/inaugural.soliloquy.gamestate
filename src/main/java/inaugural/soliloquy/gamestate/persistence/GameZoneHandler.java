@@ -5,12 +5,12 @@ import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.Coordinate;
+import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,6 +18,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.concurrency.Concurrency.runTaskAsync;
 import static inaugural.soliloquy.tools.concurrency.Concurrency.waitUntilTasksCompleted;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
@@ -52,84 +53,83 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
 
     @Override
     public GameZone read(String writtenData) throws IllegalArgumentException {
-        GameZoneDTO dto = JSON.fromJson(writtenData, GameZoneDTO.class);
+        var dto = JSON.fromJson(writtenData, GameZoneDTO.class);
 
-        Tile[][] tiles = new Tile[dto.maxX + 1][dto.maxY + 1];
+        var tiles = new Tile[dto.maxX + 1][dto.maxY + 1];
 
         runTileTasksBatched(dto.maxX, dto.maxY, (x, y) -> TILE_HANDLER.read(dto.tiles[x][y]),
                 tiles);
 
-        VariableCache data = DATA_HANDLER.read(dto.data);
+        var data = DATA_HANDLER.read(dto.data);
 
-        GameZone gameZone = GAME_ZONE_FACTORY.make(dto.id, dto.type, tiles, data);
+        var gameZone = GAME_ZONE_FACTORY.make(dto.id, dto.type, tiles, data);
         gameZone.setName(dto.name);
-        for (String onEntry : dto.onEntry) {
+        for (var onEntry : dto.onEntry) {
             gameZone.onEntry().add(GET_ACTION.apply(onEntry));
         }
-        for (String onExit : dto.onExit) {
+        for (var onExit : dto.onExit) {
             gameZone.onExit().add(GET_ACTION.apply(onExit));
         }
 
         return gameZone;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public String write(GameZone gameZone) {
         Check.ifNull(gameZone, "gameZone");
-        GameZoneDTO dto = new GameZoneDTO();
+        var dto = new GameZoneDTO();
         dto.id = gameZone.id();
         dto.type = gameZone.type();
         dto.name = gameZone.getName();
         dto.data = DATA_HANDLER.write(gameZone.data());
         dto.onEntry = new String[gameZone.onEntry().size()];
-        int index = 0;
-        for (Action action : gameZone.onEntry()) {
+        var index = 0;
+        for (var action : gameZone.onEntry()) {
             dto.onEntry[index++] = action.id();
         }
         dto.onExit = new String[gameZone.onExit().size()];
         index = 0;
-        for (Action action : gameZone.onExit()) {
+        for (var action : gameZone.onExit()) {
             dto.onExit[index++] = action.id();
         }
-        Coordinate maxCoordinates = gameZone.maxCoordinates();
-        dto.maxX = maxCoordinates.x();
-        dto.maxY = maxCoordinates.y();
+        var maxCoordinates = gameZone.maxCoordinates();
+        dto.maxX = maxCoordinates.X;
+        dto.maxY = maxCoordinates.Y;
 
-        dto.tiles = new String[maxCoordinates.x() + 1][maxCoordinates.y() + 1];
+        dto.tiles = new String[maxCoordinates.X + 1][maxCoordinates.Y + 1];
 
         runTileTasksBatched(dto.maxX, dto.maxY,
-                (x, y) -> TILE_HANDLER.write(gameZone.tile(Coordinate.of(x, y))), dto.tiles);
+                (x, y) -> TILE_HANDLER.write(gameZone.tile(Coordinate2d.of(x, y))), dto.tiles);
 
         return JSON.toJson(dto);
     }
 
     private <T> void runTileTasksBatched(int maxX, int maxY, BiFunction<Integer, Integer, T> task,
                                          T[][] resultsArray) {
-        ArrayList<Runnable> batch = new ArrayList<>();
-        ArrayList<CompletableFuture<Void>> batchTasks = new ArrayList<>();
-        for (int x = 0; x <= maxX; x++) {
-            for (int y = 0; y <= maxY; y++) {
+        List<Runnable> batch = listOf();
+        List<CompletableFuture<Void>> batchTasks = listOf();
+        for (var x = 0; x <= maxX; x++) {
+            for (var y = 0; y <= maxY; y++) {
                 // NB: These variables are necessary, since lambdas can only reference values which
                 //     are final.
-                int finalX = x;
-                int finalY = y;
+                var finalX = x;
+                var finalY = y;
                 batch.add(() -> {
-                    T taskResult = task.apply(finalX, finalY);
+                    var taskResult = task.apply(finalX, finalY);
                     synchronized (resultsArray) {
                         resultsArray[finalX][finalY] = taskResult;
                     }
                 });
                 if (batch.size() >= TILES_PER_BATCH) {
-                    final ArrayList<Runnable> batchToRun = batch;
+                    final var batchToRun = batch;
                     batchTasks.add(runTaskAsync(() -> batchToRun.forEach(Runnable::run),
                             this::handleThrowable, EXECUTOR));
-                    batch = new ArrayList<>();
+                    batch = listOf();
                 }
             }
         }
         if (!batch.isEmpty()) {
-            final ArrayList<Runnable> batchToRun = batch;
+            final var batchToRun = batch;
             batchTasks.add(runTaskAsync(() -> batchToRun.forEach(Runnable::run),
                     this::handleThrowable, EXECUTOR));
         }
@@ -151,6 +151,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         }
     }
 
+    // TODO: Handle Segment persistence!
     private static class GameZoneDTO {
         String id;
         String type;

@@ -138,8 +138,6 @@ public class GameStateModule extends AbstractModule {
 
         var gameZonesRepo = new GameZonesRepoImpl(gameZoneHandler, fileLocations);
 
-        var cameraFactory = new CameraFactoryImpl(tileVisibility);
-
         var roundBasedTimerFactory = new RoundBasedTimerFactoryImpl(roundBasedTimerManager);
 
         var keyBindingFactory = new KeyBindingFactoryImpl();
@@ -148,9 +146,10 @@ public class GameStateModule extends AbstractModule {
 
         var keyEventListenerFactory = new KeyEventListenerFactoryImpl();
 
+        // TODO: Populate this with Camera constructor
         var gameStateFactory =
-                new GameStateFactoryImpl(registryFactory, gameZonesRepo, cameraFactory,
-                        roundManager, roundBasedTimerManager, clockBasedTimerManager, itemFactory,
+                new GameStateFactoryImpl(registryFactory, gameZonesRepo, null, roundManager,
+                        roundBasedTimerManager, clockBasedTimerManager, itemFactory,
                         characterFactory, roundBasedTimerFactory, keyBindingFactory,
                         keyBindingContextFactory, keyEventListenerFactory);
     }
