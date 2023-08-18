@@ -9,7 +9,6 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.factories.PartyFactory;
 
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -35,15 +34,15 @@ public class PartyHandler extends AbstractSoliloquyTypeHandler<Party>
     public Party read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
 
-        PartyDTO partyDTO = JSON.fromJson(data, PartyDTO.class);
+        var partyDTO = JSON.fromJson(data, DTO.class);
 
-        Party party = PARTY_FACTORY.make(ATTRIBUTES_HANDLER.read(partyDTO.attributes));
+        var party = PARTY_FACTORY.make(ATTRIBUTES_HANDLER.read(partyDTO.attributes));
 
-        Map<UUID, Character> charactersInZone = GET_CURRENT_GAME_ZONE.get().charactersRepresentation();
-        for(int i = 0; i < partyDTO.pcs.length; i++) {
-            PcDTO pcDTO = partyDTO.pcs[i];
-            UUID pcUuid = UUID.fromString(pcDTO.uuid);
-            Character matchFromGameZone = charactersInZone.get(pcUuid);
+        var charactersInZone = GET_CURRENT_GAME_ZONE.get().charactersRepresentation();
+        for(var i = 0; i < partyDTO.pcs.length; i++) {
+            var pcDTO = partyDTO.pcs[i];
+            var pcUuid = UUID.fromString(pcDTO.uuid);
+            var matchFromGameZone = charactersInZone.get(pcUuid);
             if (matchFromGameZone != null) {
                 party.characters().add(matchFromGameZone);
             }
@@ -59,16 +58,15 @@ public class PartyHandler extends AbstractSoliloquyTypeHandler<Party>
     public String write(Party party) {
         Check.ifNull(party, "party");
 
-        PartyDTO partyDTO = new PartyDTO();
+        var partyDTO = new DTO();
 
         partyDTO.attributes = ATTRIBUTES_HANDLER.write(party.attributes());
 
         partyDTO.pcs = new PcDTO[party.characters().size()];
 
-        for (int i = 0; i < party.characters().size(); i++) {
-            PcDTO pcDTO = new PcDTO();
-
-            Character pc = party.characters().get(i);
+        for (var i = 0; i < party.characters().size(); i++) {
+            var pcDTO = new PcDTO();
+            var pc = party.characters().get(i);
 
             pcDTO.uuid = pc.uuid().toString();
 
@@ -82,7 +80,7 @@ public class PartyHandler extends AbstractSoliloquyTypeHandler<Party>
         return JSON.toJson(partyDTO);
     }
 
-    private static class PartyDTO {
+    private static class DTO {
         PcDTO[] pcs;
         String attributes;
     }

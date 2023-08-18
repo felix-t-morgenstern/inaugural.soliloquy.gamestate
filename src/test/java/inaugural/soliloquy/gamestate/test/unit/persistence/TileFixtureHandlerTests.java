@@ -1,136 +1,174 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.TileFixtureHandler;
-import inaugural.soliloquy.gamestate.test.fakes.FakeFixtureType;
-import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixtureFactory;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeItemHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeTypeHandler;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.FakeVariableCacheHandler;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import soliloquy.specs.gamestate.factories.TileFixtureFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static inaugural.soliloquy.tools.collections.Collections.arrayOf;
+import static inaugural.soliloquy.tools.random.Random.randomFloat;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.testing.Mock.*;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-class TileFixtureHandlerTests {
-    private final UUID UUID = java.util.UUID.fromString("2efdff52-44da-4ea1-a415-7b5fb32f6442");
-    private final Map<String, FixtureType> FIXTURE_TYPES = new HashMap<>();
-    private final String FIXTURE_TYPE_ID = "fixtureTypeId";
-    private final FixtureType FIXTURE_TYPE = new FakeFixtureType(FIXTURE_TYPE_ID);
-    private final TileFixtureFactory TILE_FIXTURE_FACTORY = new FakeTileFixtureFactory();
-    private final TypeHandler<VariableCache> DATA_HANDLER =
-            new FakeVariableCacheHandler();
-    private final FakeTypeHandler<Item> ITEM_HANDLER =
-            new FakeItemHandler();
-    private final float X_TILE_WIDTH_OFFSET = 0.123f;
-    private final float Y_TILE_HEIGHT_OFFSET = 0.456f;
-    private final String NAME = "fixtureName";
+@RunWith(MockitoJUnitRunner.class)
+public class TileFixtureHandlerTests {
+    private final UUID UUID = java.util.UUID.randomUUID();
+    private final String FIXTURE_TYPE_ID = randomString();
+    private final float TILE_WIDTH_OFFSET = randomFloat();
+    private final float TILE_HEIGHT_OFFSET = randomFloat();
+    private final String NAME = randomString();
+    private final String DATA_STR = randomString();
+    private final String ITEM_STR_1 = randomString();
+    private final String ITEM_STR_2 = randomString();
+    private final String ITEM_STR_3 = randomString();
+    private final HandlerAndEntities<Item> MOCK_ITEMS_AND_HANDLER =
+            generateMockHandlerAndEntities(Item.class, arrayOf(ITEM_STR_1, ITEM_STR_2, ITEM_STR_3));
+    private final TypeHandler<Item> MOCK_ITEM_HANDLER = MOCK_ITEMS_AND_HANDLER.handler;
+    private final Item MOCK_ITEM_1 = MOCK_ITEMS_AND_HANDLER.entities.get(ITEM_STR_1);
+    private final Item MOCK_ITEM_2 = MOCK_ITEMS_AND_HANDLER.entities.get(ITEM_STR_2);
+    private final Item MOCK_ITEM_3 = MOCK_ITEMS_AND_HANDLER.entities.get(ITEM_STR_3);
+    private final List<Item> MOCK_ITEMS = generateMockList(MOCK_ITEM_1, MOCK_ITEM_2, MOCK_ITEM_3);
+    private final HandlerAndEntity<VariableCache> MOCK_DATA_AND_HANDLER =
+            generateMockEntityAndHandler(VariableCache.class, DATA_STR);
+    private final TypeHandler<VariableCache> MOCK_DATA_HANDLER = MOCK_DATA_AND_HANDLER.handler;
+    private final VariableCache MOCK_DATA = MOCK_DATA_AND_HANDLER.entity;
 
-    private final String WRITTEN_VALUE =
-            "{\"uuid\":\"2efdff52-44da-4ea1-a415-7b5fb32f6442\"," +
-                    "\"fixtureTypeId\":\"fixtureTypeId\",\"tileWidthOffset\":0.123," +
-                    "\"tileHeightOffset\":0.456,\"items\":[\"Item0\",\"Item1\",\"Item2\"]," +
-                    "\"data\":\"VariableCache0\",\"name\":\"fixtureName\"}";
+    @Mock private FixtureType mockFixtureType;
+    @Mock private TileFixture mockTileFixture;
+    @Mock private TileFixtureItems mockTileFixtureItems;
+    @Mock private TileFixtureFactory mockTileFixtureFactory;
+    private Function<String, FixtureType> mockGetFixtureType;
 
-    private TypeHandler<TileFixture> _tileFixtureHandler;
+    private final String WRITTEN_VALUE = String.format(
+            "{\"uuid\":\"%s\",\"typeId\":\"%s\",\"widthOffset\":%s,\"heightOffset\":%s," +
+                    "\"items\":[\"%s\",\"%s\",\"%s\"],\"data\":\"%s\",\"name\":\"%s\"}",
+            UUID, FIXTURE_TYPE_ID, TILE_WIDTH_OFFSET, TILE_HEIGHT_OFFSET, ITEM_STR_1, ITEM_STR_2,
+            ITEM_STR_3, DATA_STR, NAME);
 
-    @BeforeEach
-    void setUp() {
-        FIXTURE_TYPES.put(FIXTURE_TYPE_ID, FIXTURE_TYPE);
+    private TypeHandler<TileFixture> handler;
 
-        _tileFixtureHandler = new TileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
-                DATA_HANDLER, ITEM_HANDLER);
+    @Before
+    public void setUp() {
+        when(mockFixtureType.id()).thenReturn(FIXTURE_TYPE_ID);
+
+        when(mockTileFixtureFactory.make(any(), any(), any())).thenReturn(mockTileFixture);
+
+        when(mockTileFixture.getTileOffset())
+                .thenReturn(Vertex.of(TILE_WIDTH_OFFSET, TILE_HEIGHT_OFFSET));
+        when(mockTileFixture.items()).thenReturn(mockTileFixtureItems);
+        when(mockTileFixture.data()).thenReturn(MOCK_DATA);
+        when(mockTileFixture.getName()).thenReturn(NAME);
+        when(mockTileFixture.uuid()).thenReturn(UUID);
+        when(mockTileFixture.type()).thenReturn(mockFixtureType);
+
+        when(mockTileFixtureItems.representation()).thenReturn(MOCK_ITEMS);
+
+        mockGetFixtureType = generateMockLookupFunction(pairOf(FIXTURE_TYPE_ID, mockFixtureType));
+
+        handler = new TileFixtureHandler(mockGetFixtureType, mockTileFixtureFactory,
+                MOCK_DATA_HANDLER, MOCK_ITEM_HANDLER);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureHandler(null, TILE_FIXTURE_FACTORY,
-                        DATA_HANDLER, ITEM_HANDLER));
+                () -> new TileFixtureHandler(null, mockTileFixtureFactory,
+                        MOCK_DATA_HANDLER, MOCK_ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureHandler(FIXTURE_TYPES::get, null,
-                        DATA_HANDLER, ITEM_HANDLER));
+                () -> new TileFixtureHandler(mockGetFixtureType, null,
+                        MOCK_DATA_HANDLER, MOCK_ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
-                        null, ITEM_HANDLER));
+                () -> new TileFixtureHandler(mockGetFixtureType, mockTileFixtureFactory,
+                        null, MOCK_ITEM_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureHandler(FIXTURE_TYPES::get, TILE_FIXTURE_FACTORY,
-                        DATA_HANDLER, null));
+                () -> new TileFixtureHandler(mockGetFixtureType, mockTileFixtureFactory,
+                        MOCK_DATA_HANDLER, null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         TileFixture.class.getCanonicalName() + ">",
-                _tileFixtureHandler.getInterfaceName());
+                handler.getInterfaceName());
     }
 
     @Test
-    void testGetArchetype() {
-        assertNotNull(_tileFixtureHandler.getArchetype());
+    public void testArchetype() {
+        assertNotNull(handler.archetype());
         assertEquals(TileFixture.class.getCanonicalName(),
-                _tileFixtureHandler.getArchetype().getInterfaceName());
+                handler.archetype().getInterfaceName());
     }
 
     @Test
-    void testWrite() {
-        VariableCache data = new VariableCacheStub();
-        Item item1 = new FakeItem();
-        Item item2 = new FakeItem();
-        Item item3 = new FakeItem();
-        TileFixture tileFixture = new FakeTileFixture(UUID, FIXTURE_TYPE, data);
-        tileFixture.setTileOffset(Vertex.of(X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET));
-        tileFixture.items().add(item1);
-        tileFixture.items().add(item2);
-        tileFixture.items().add(item3);
-        tileFixture.setName(NAME);
-
-        String writtenValue = _tileFixtureHandler.write(tileFixture);
+    public void testWrite() {
+        var writtenValue = handler.write(mockTileFixture);
 
         assertEquals(WRITTEN_VALUE, writtenValue);
+        verify(mockTileFixture).uuid();
+        verify(mockTileFixture).type();
+        verify(mockFixtureType).id();
+        verify(mockTileFixture).items();
+        verify(mockTileFixtureItems).representation();
+        verify(MOCK_ITEMS, atLeast(1)).size();
+        verify(MOCK_ITEMS, times(3)).get(anyInt());
+        verify(MOCK_ITEMS).get(0);
+        verify(MOCK_ITEMS).get(1);
+        verify(MOCK_ITEMS).get(2);
+        verify(MOCK_ITEM_HANDLER, times(3)).write(any());
+        verify(MOCK_ITEM_HANDLER).write(MOCK_ITEM_1);
+        verify(MOCK_ITEM_HANDLER).write(MOCK_ITEM_2);
+        verify(MOCK_ITEM_HANDLER).write(MOCK_ITEM_3);
+        verify(mockTileFixture).data();
+        verify(MOCK_DATA_HANDLER).write(MOCK_DATA);
+        verify(mockTileFixture).getName();
     }
 
     @Test
-    void testWriteWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _tileFixtureHandler.write(null));
+    public void testWriteWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> handler.write(null));
     }
 
     @Test
-    void testRead() {
-        TileFixture tileFixture = _tileFixtureHandler.read(WRITTEN_VALUE);
+    public void testRead() {
+        var tileFixture = handler.read(WRITTEN_VALUE);
 
         assertNotNull(tileFixture);
-        assertEquals(UUID, tileFixture.uuid());
-        assertSame(FIXTURE_TYPE, tileFixture.type());
-        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
-                tileFixture.data());
-        assertEquals(Vertex.of(X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET), tileFixture.getTileOffset());
-        assertEquals(3, tileFixture.items().representation().size());
-        assertTrue(tileFixture.items().contains(ITEM_HANDLER.READ_OUTPUTS.get(0)));
-        assertTrue(tileFixture.items().contains(ITEM_HANDLER.READ_OUTPUTS.get(1)));
-        assertTrue(tileFixture.items().contains(ITEM_HANDLER.READ_OUTPUTS.get(2)));
-        assertEquals(NAME, tileFixture.getName());
+        assertSame(mockTileFixture, tileFixture);
+        verify(mockGetFixtureType).apply(FIXTURE_TYPE_ID);
+        verify(MOCK_DATA_HANDLER).read(DATA_STR);
+        verify(mockTileFixtureFactory).make(same(mockFixtureType), same(MOCK_DATA), eq(UUID));
+        verify(mockTileFixture).setTileOffset(eq(Vertex.of(TILE_WIDTH_OFFSET, TILE_HEIGHT_OFFSET)));
+        verify(MOCK_ITEM_HANDLER, times(3)).read(any());
+        verify(MOCK_ITEM_HANDLER).read(ITEM_STR_1);
+        verify(MOCK_ITEM_HANDLER).read(ITEM_STR_2);
+        verify(MOCK_ITEM_HANDLER).read(ITEM_STR_3);
+        verify(mockTileFixture, times(3)).items();
+        verify(mockTileFixtureItems).add(MOCK_ITEM_1);
+        verify(mockTileFixtureItems).add(MOCK_ITEM_2);
+        verify(mockTileFixtureItems).add(MOCK_ITEM_3);
+        verify(mockTileFixture).setName(NAME);
     }
 
     @Test
-    void testReadWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _tileFixtureHandler.read(null));
-        assertThrows(IllegalArgumentException.class,
-                () -> _tileFixtureHandler.read(""));
+    public void testReadWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> handler.read(null));
+        assertThrows(IllegalArgumentException.class, () -> handler.read(""));
     }
 }

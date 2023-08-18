@@ -1,35 +1,35 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.KeyBindingContextImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class KeyBindingContextImplTests {
-    private KeyBindingContext _keyBindingContext;
+public class KeyBindingContextImplTests {
+    private KeyBindingContext keyBindingContext;
 
-    @BeforeEach
-    void setUp() {
-        _keyBindingContext = new KeyBindingContextImpl();
+    @Before
+    public void setUp() {
+        keyBindingContext = new KeyBindingContextImpl();
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(KeyBindingContext.class.getCanonicalName(),
-                _keyBindingContext.getInterfaceName());
+                keyBindingContext.getInterfaceName());
     }
 
     @Test
-    void testBindings() {
-        assertNotNull(_keyBindingContext.bindings());
+    public void testBindings() {
+        assertNotNull(keyBindingContext.bindings());
     }
 
     @Test
-    void testSetAndGetBlocksAllLowerBindings() {
-        _keyBindingContext.setBlocksAllLowerBindings(true);
+    public void testSetAndGetBlocksAllLowerBindings() {
+        keyBindingContext.setBlocksAllLowerBindings(true);
 
-        assertTrue(_keyBindingContext.getBlocksAllLowerBindings());
+        assertTrue(keyBindingContext.getBlocksAllLowerBindings());
     }
 }

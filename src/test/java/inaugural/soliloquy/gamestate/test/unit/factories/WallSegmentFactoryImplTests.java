@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.WallSegmentFactory;
@@ -23,6 +22,7 @@ import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static inaugural.soliloquy.tools.testing.Mock.generateMockEntityAndHandler;
 import static inaugural.soliloquy.tools.testing.Mock.generateMockLookupFunction;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
@@ -56,11 +56,11 @@ public class WallSegmentFactoryImplTests {
 
     @Before
     public void setUp() {
-        mockGetSegmentType = generateMockLookupFunction(Pair.of(SEGMENT_TYPE_ID, mockSegmentType));
+        mockGetSegmentType = generateMockLookupFunction(pairOf(SEGMENT_TYPE_ID, mockSegmentType));
         mockGetGameMovementEvent =
-                generateMockLookupFunction(Pair.of(MOVEMENT_EVENT_ID, mockGameMovementEvent));
+                generateMockLookupFunction(pairOf(MOVEMENT_EVENT_ID, mockGameMovementEvent));
         mockGetGameAbilityEvent =
-                generateMockLookupFunction(Pair.of(ABILITY_EVENT_ID, mockGameAbilityEvent));
+                generateMockLookupFunction(pairOf(ABILITY_EVENT_ID, mockGameAbilityEvent));
 
         wallSegmentFactory = new WallSegmentFactoryImpl(MOCK_DATA_HANDLER, mockGetSegmentType,
                 mockGetGameMovementEvent, mockGetGameAbilityEvent);

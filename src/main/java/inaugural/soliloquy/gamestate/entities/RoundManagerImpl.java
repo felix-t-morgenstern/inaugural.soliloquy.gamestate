@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 
 public class RoundManagerImpl implements RoundManager {
     private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
@@ -105,8 +106,7 @@ public class RoundManagerImpl implements RoundManager {
     public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
         List<Pair<Character, VariableCache>> output = listOf();
 
-        QUEUE.forEach(character ->
-                output.add(new Pair<>(character, CHARACTER_ROUND_DATA.get(character))));
+        QUEUE.forEach(character -> output.add(pairOf(character, CHARACTER_ROUND_DATA.get(character))));
 
         return output;
     }
@@ -148,8 +148,8 @@ public class RoundManagerImpl implements RoundManager {
         CHARACTER_ROUND_DATA.clear();
 
         ACTIVE_CHARACTERS_PROVIDER.generateInTurnOrder(GET_CURRENT_GAME_ZONE.get()).forEach(ac -> {
-            QUEUE.add(ac.getItem1());
-            CHARACTER_ROUND_DATA.put(ac.getItem1(), ac.getItem2());
+            QUEUE.add(ac.item1());
+            CHARACTER_ROUND_DATA.put(ac.item1(), ac.item2());
         });
 
         var newRoundNumber = roundNumber + numberOfRounds;

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterStatusEffectsImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
@@ -10,12 +10,12 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.character.StatusEffectType;
 
 import static inaugural.soliloquy.tools.random.Random.randomIntWithInclusiveFloor;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class CharacterStatusEffectsImplTests {
+public class CharacterStatusEffectsImplTests {
     private final int EFFECT_1_LEVEL = randomIntWithInclusiveFloor(1);
     private final int EFFECT_2_LEVEL = randomIntWithInclusiveFloor(1);
 
@@ -25,8 +25,8 @@ class CharacterStatusEffectsImplTests {
 
     private CharacterStatusEffects characterStatusEffects;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         mockStatusEffectType1 = mock(StatusEffectType.class);
         mockStatusEffectType2 = mock(StatusEffectType.class);
         mockCharacter = mock(Character.class);
@@ -36,18 +36,18 @@ class CharacterStatusEffectsImplTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterStatusEffectsImpl(null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(CharacterStatusEffects.class.getCanonicalName(),
                 characterStatusEffects.getInterfaceName());
     }
 
     @Test
-    void testGetAndSetStatusEffectLevel() {
+    public void testGetAndSetStatusEffectLevel() {
         var statusEffectLevel = randomIntWithInclusiveFloor(1);
 
         assertEquals(0, (int) characterStatusEffects.getStatusEffectLevel(mockStatusEffectType2));
@@ -58,7 +58,7 @@ class CharacterStatusEffectsImplTests {
     }
 
     @Test
-    void testGetAllStatusEffects() {
+    public void testGetAllStatusEffects() {
         characterStatusEffects.setStatusEffectLevel(mockStatusEffectType1, EFFECT_1_LEVEL);
         characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, EFFECT_2_LEVEL);
 
@@ -70,7 +70,7 @@ class CharacterStatusEffectsImplTests {
     }
 
     @Test
-    void testClearStatusEffects() {
+    public void testClearStatusEffects() {
         characterStatusEffects.setStatusEffectLevel(mockStatusEffectType1, EFFECT_1_LEVEL);
         characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, EFFECT_2_LEVEL);
         var statusEffectLevels = characterStatusEffects.representation();
@@ -83,7 +83,7 @@ class CharacterStatusEffectsImplTests {
     }
 
     @Test
-    void testGetAndSetInvalidStatusEffectType() {
+    public void testGetAndSetInvalidStatusEffectType() {
         assertThrows(IllegalArgumentException.class,
                 () -> characterStatusEffects.getStatusEffectLevel(null));
         assertThrows(IllegalArgumentException.class,
@@ -91,7 +91,7 @@ class CharacterStatusEffectsImplTests {
     }
 
     @Test
-    void testStatusEffectIsRemovedWhenSetToZero() {
+    public void testStatusEffectIsRemovedWhenSetToZero() {
         characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, 1);
 
         assertEquals(1, characterStatusEffects.representation().size());
@@ -102,7 +102,7 @@ class CharacterStatusEffectsImplTests {
     }
 
     @Test
-    void testEnforceDeletionInvariant() {
+    public void testEnforceDeletionInvariant() {
         characterStatusEffects.delete();
 
         assertThrows(EntityDeletedException.class,

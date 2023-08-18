@@ -5,28 +5,30 @@ import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 
 public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemIsPresentElsewhere
         implements TileEntities<TEntity> {
     private final Tile TILE;
     private final TEntity ARCHETYPE;
-    final HashMap<TEntity, Integer> ENTITIES;
+    final Map<TEntity, Integer> ENTITIES;
 
     private final static CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
 
-    private Consumer<TEntity> _actionAfterAdding;
-    private Consumer<TEntity> _actionAfterRemoving;
+    private Consumer<TEntity> actionAfterAdding;
+    private Consumer<TEntity> actionAfterRemoving;
 
     @SuppressWarnings("ConstantConditions")
     public TileEntitiesImpl(Tile tile, TEntity archetype) {
         TILE = Check.ifNull(tile, "tile");
         ARCHETYPE = Check.ifNull(archetype, "archetype");
 
-        ENTITIES = new HashMap<>();
+        ENTITIES = mapOf();
     }
 
     public void add(TEntity entity) throws IllegalArgumentException {
@@ -46,14 +48,14 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         }
         ENTITIES.put(entity, zIndex);
         entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
-        if (_actionAfterAdding != null) {
-            _actionAfterAdding.accept(entity);
+        if (actionAfterAdding != null) {
+            actionAfterAdding.accept(entity);
         }
     }
 
     private boolean entityIsPresentElsewhere(TEntity entity) {
-        if (entity instanceof Item) {
-            return itemIsPresentElsewhere((Item) entity);
+        if (entity instanceof Item item) {
+            return itemIsPresentElsewhere(item);
         }
         else {
             return entity.tile() != null;
@@ -90,11 +92,11 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
         enforceDeletionInvariants();
         enforceAssignmentInvariant(entity, "remove");
         Check.ifNull(entity, "entity");
-        boolean entityWasPresent = ENTITIES.remove(entity) != null;
+        var entityWasPresent = ENTITIES.remove(entity) != null;
         if (entityWasPresent) {
             entity.assignTileAfterAddedToTileEntitiesOfType(TILE);
-            if (_actionAfterRemoving != null) {
-                _actionAfterRemoving.accept(entity);
+            if (actionAfterRemoving != null) {
+                actionAfterRemoving.accept(entity);
             }
         }
         return entityWasPresent;
@@ -119,35 +121,35 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     @Override
     public Map<TEntity, Integer> representation() throws IllegalStateException {
         enforceDeletionInvariants();
-        return new HashMap<>(ENTITIES);
+        return mapOf(ENTITIES);
     }
 
     @Override
     public void initializeActionAfterAdding(Consumer<TEntity> actionAfterAdding) {
-        if (_actionAfterAdding != null) {
+        if (this.actionAfterAdding != null) {
             throw new UnsupportedOperationException(
                     "TileEntitiesImpl.initializeActionAfterAdding: actionAfterAdding " +
                             "already assigned");
         }
-        _actionAfterAdding = actionAfterAdding;
+        this.actionAfterAdding = actionAfterAdding;
     }
 
     @Override
     public void initializeActionAfterRemoving(
             Consumer<TEntity> actionAfterRemoving) {
-        if (_actionAfterRemoving != null) {
+        if (this.actionAfterRemoving != null) {
             throw new UnsupportedOperationException(
                     "TileEntitiesImpl.initializeActionAfterRemoving: actionAfterRemoving " +
                             "already assigned");
         }
-        _actionAfterRemoving = actionAfterRemoving;
+        this.actionAfterRemoving = actionAfterRemoving;
     }
 
     @Override
     public String getInterfaceName() {
         enforceDeletionInvariants();
         return TileEntities.class.getCanonicalName() + "<" +
-                CAN_GET_INTERFACE_NAME.getProperTypeName(getArchetype()) + ">";
+                CAN_GET_INTERFACE_NAME.getProperTypeName(archetype()) + ">";
     }
 
     @Override
@@ -161,7 +163,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     }
 
     @Override
-    public TEntity getArchetype() {
+    public TEntity archetype() {
         return ARCHETYPE;
     }
 
@@ -175,7 +177,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        for (java.util.Map.Entry<TEntity, Integer> entry : ENTITIES.entrySet()) {
+        for (var entry : ENTITIES.entrySet()) {
             entry.getKey().delete();
         }
     }
@@ -183,8 +185,8 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     @Override
     public Iterator<Pair<TEntity, Integer>> iterator() {
         enforceDeletionInvariants();
-        Iterator<TEntity> entities = ENTITIES.keySet().iterator();
-        Iterator<Integer> zIndices = ENTITIES.values().iterator();
+        var entities = ENTITIES.keySet().iterator();
+        var zIndices = ENTITIES.values().iterator();
         return new Iterator<>() {
             @Override
             public boolean hasNext() {
@@ -193,8 +195,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
             @Override
             public Pair<TEntity, Integer> next() {
-                return new Pair<>(entities.next(), zIndices.next(),
-                        ARCHETYPE, 0);
+                return pairOf(entities.next(), zIndices.next(), ARCHETYPE, 0);
             }
         };
     }

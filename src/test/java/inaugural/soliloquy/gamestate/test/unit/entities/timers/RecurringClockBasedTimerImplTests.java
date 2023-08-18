@@ -2,13 +2,13 @@ package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class RecurringClockBasedTimerImplTests {
+public class RecurringClockBasedTimerImplTests {
     private final String ID = "ID";
     private final int PERIOD_DURATION = 789;
     private final int PERIOD_MODULO_OFFSET = 456;
@@ -16,20 +16,20 @@ class RecurringClockBasedTimerImplTests {
     private final FakeAction<Long> FIRING_ACTION = new FakeAction<>(FIRING_ACTION_ID);
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = true;
     private final long LAST_FIRING_TIMESTAMP = 123123L;
-    private final long MOST_RECENT_TIMESTAMP = 456456L;
+    private final Long MOST_RECENT_TIMESTAMP = 456456L;
 
-    private RecurringClockBasedTimer _recurringClockBasedTimer;
+    private RecurringClockBasedTimer recurringClockBasedTimer;
 
-    @BeforeEach
-    void setUp() {
-        _recurringClockBasedTimer = new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION,
+    @Before
+    public void setUp() {
+        recurringClockBasedTimer = new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION,
                 PERIOD_MODULO_OFFSET, FIRING_ACTION,
                 FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null, LAST_FIRING_TIMESTAMP,
                 MOST_RECENT_TIMESTAMP);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
                 new RecurringClockBasedTimerImpl(null, PERIOD_DURATION,
                         PERIOD_MODULO_OFFSET, FIRING_ACTION,
@@ -74,77 +74,77 @@ class RecurringClockBasedTimerImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(RecurringClockBasedTimer.class.getCanonicalName(),
-                _recurringClockBasedTimer.getInterfaceName());
+                recurringClockBasedTimer.getInterfaceName());
     }
 
     @Test
-    void testId() {
-        assertEquals(ID, _recurringClockBasedTimer.id());
+    public void testId() {
+        assertEquals(ID, recurringClockBasedTimer.id());
     }
 
     @Test
-    void testPeriodDuration() {
-        assertEquals(PERIOD_DURATION, _recurringClockBasedTimer.periodDuration());
+    public void testPeriodDuration() {
+        assertEquals(PERIOD_DURATION, recurringClockBasedTimer.periodDuration());
     }
 
     @Test
-    void testPeriodModuloOffset() {
-        assertEquals(PERIOD_MODULO_OFFSET, _recurringClockBasedTimer.periodModuloOffset());
+    public void testPeriodModuloOffset() {
+        assertEquals(PERIOD_MODULO_OFFSET, recurringClockBasedTimer.periodModuloOffset());
     }
 
     @Test
-    void testLastFiringTimestamp() {
-        assertEquals(LAST_FIRING_TIMESTAMP, _recurringClockBasedTimer.lastFiringTimestamp());
+    public void testLastFiringTimestamp() {
+        assertEquals(LAST_FIRING_TIMESTAMP, recurringClockBasedTimer.lastFiringTimestamp());
     }
 
     @Test
-    void testActionId() {
-        assertEquals(FIRING_ACTION_ID, _recurringClockBasedTimer.actionId());
+    public void testActionId() {
+        assertEquals(FIRING_ACTION_ID, recurringClockBasedTimer.actionId());
     }
 
     @Test
-    void testFire() {
-        long firingTime = MOST_RECENT_TIMESTAMP + 1;
+    public void testFire() {
+        var firingTime = MOST_RECENT_TIMESTAMP + 1;
 
-        _recurringClockBasedTimer.fire(firingTime);
+        recurringClockBasedTimer.fire(firingTime);
 
-        assertEquals(firingTime, FIRING_ACTION._mostRecentInput);
-        assertTrue(FIRING_ACTION._actionRun);
-        assertEquals(firingTime, _recurringClockBasedTimer.lastFiringTimestamp());
+        assertEquals((Long)firingTime, FIRING_ACTION.mostRecentInput);
+        assertTrue(FIRING_ACTION.actionRun);
+        assertEquals(firingTime, recurringClockBasedTimer.lastFiringTimestamp());
     }
 
     @Test
-    void testFireMultipleTimesForMultiplePeriodsElapsed() {
+    public void testFireMultipleTimesForMultiplePeriodsElapsed() {
         assertEquals(FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
-                _recurringClockBasedTimer.fireMultipleTimesForMultiplePeriodsElapsed());
+                recurringClockBasedTimer.fireMultipleTimesForMultiplePeriodsElapsed());
     }
 
     @Test
-    void testFireWhenPaused() {
+    public void testFireWhenPaused() {
         long pausedTimestamp = MOST_RECENT_TIMESTAMP + 1;
 
-        _recurringClockBasedTimer.reportPause(pausedTimestamp);
+        recurringClockBasedTimer.reportPause(pausedTimestamp);
 
         assertThrows(UnsupportedOperationException.class, () ->
-                _recurringClockBasedTimer.fire(pausedTimestamp));
+                recurringClockBasedTimer.fire(pausedTimestamp));
     }
 
     @Test
-    void testPeriodModuloUpdatedOnUnpause() {
+    public void testPeriodModuloUpdatedOnUnpause() {
         long pauseTimestamp = 456456L;
         long timeToUnpause = 111L;
 
-        _recurringClockBasedTimer.reportPause(pauseTimestamp);
-        _recurringClockBasedTimer.reportUnpause(pauseTimestamp + timeToUnpause);
+        recurringClockBasedTimer.reportPause(pauseTimestamp);
+        recurringClockBasedTimer.reportUnpause(pauseTimestamp + timeToUnpause);
 
         assertEquals(PERIOD_MODULO_OFFSET - timeToUnpause,
-                _recurringClockBasedTimer.periodModuloOffset());
+                recurringClockBasedTimer.periodModuloOffset());
     }
 
     @Test
-    void testMostRecentTimestamp() {
-        assertEquals(MOST_RECENT_TIMESTAMP, _recurringClockBasedTimer.mostRecentTimestamp());
+    public void testMostRecentTimestamp() {
+        assertEquals(MOST_RECENT_TIMESTAMP, recurringClockBasedTimer.mostRecentTimestamp());
     }
 }

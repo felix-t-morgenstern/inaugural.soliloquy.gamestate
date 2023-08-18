@@ -4,43 +4,43 @@ import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.factories.ClockBasedTimerFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static org.junit.Assert.*;
 
-class ClockBasedTimerFactoryImplTests {
+public class ClockBasedTimerFactoryImplTests {
     private final String ID = "ID";
     private final long FIRING_TIME = 789789L;
     private final int PERIOD_DURATION = 789;
     private final int PERIOD_MODULO_OFFSET = 456;
-    private final long PAUSE_TIME = 123123L;
+    private final Long PAUSE_TIME = 123123L;
     @SuppressWarnings("FieldCanBeLocal")
-    private final String FIRING_ACTION_ID = "firingActionId";
+    private final String FIRING_ACTION_ID = randomString();
     private final FakeAction<Long> FIRING_ACTION = new FakeAction<>(FIRING_ACTION_ID);
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = true;
     private final long LAST_FIRING_TIMESTAMP = 123123L;
-    private final long MOST_RECENT_TIMESTAMP = 456456L;
+    private final Long MOST_RECENT_TIMESTAMP = 456456L;
 
-    private ClockBasedTimerFactory _clockBasedTimerFactory;
+    private ClockBasedTimerFactory factory;
 
-    @BeforeEach
-    void setUp() {
-        _clockBasedTimerFactory = new ClockBasedTimerFactoryImpl();
+    @Before
+    public void setUp() {
+        factory = new ClockBasedTimerFactoryImpl();
     }
 
     @Test
-    void testGetInterfaceName() {
-        assertEquals(ClockBasedTimerFactory.class.getCanonicalName(),
-                _clockBasedTimerFactory.getInterfaceName());
+    public void testGetInterfaceName() {
+        assertEquals(ClockBasedTimerFactory.class.getCanonicalName(), factory.getInterfaceName());
     }
 
     @Test
-    void testMakeOneTime() {
-        OneTimeClockBasedTimer oneTimeClockBasedTimer = _clockBasedTimerFactory.make(
+    public void testMakeOneTime() {
+        OneTimeClockBasedTimer oneTimeClockBasedTimer = factory.make(
                 ID,
                 FIRING_TIME,
                 FIRING_ACTION,
@@ -57,30 +57,30 @@ class ClockBasedTimerFactoryImplTests {
     }
 
     @Test
-    void testMakeOneTimeWithInvalidParams() {
+    public void testMakeOneTimeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(null, FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
+                factory.make(null, FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
                         MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make("", FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
+                factory.make("", FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
                         MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, FIRING_TIME, FIRING_ACTION, FIRING_TIME,
+                factory.make(ID, FIRING_TIME, FIRING_ACTION, FIRING_TIME,
                         MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, FIRING_TIME, null, FIRING_TIME - 1,
+                factory.make(ID, FIRING_TIME, null, FIRING_TIME - 1,
                         MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
+                factory.make(ID, FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
                         null));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, FIRING_TIME, FIRING_ACTION,
+                factory.make(ID, FIRING_TIME, FIRING_ACTION,
                         MOST_RECENT_TIMESTAMP + 1, MOST_RECENT_TIMESTAMP));
     }
 
     @Test
-    void testMakeRecurring() {
-        RecurringClockBasedTimer recurringClockBasedTimer = _clockBasedTimerFactory.make(
+    public void testMakeRecurring() {
+        RecurringClockBasedTimer recurringClockBasedTimer = factory.make(
                 ID,
                 PERIOD_DURATION,
                 PERIOD_MODULO_OFFSET,
@@ -105,45 +105,45 @@ class ClockBasedTimerFactoryImplTests {
     }
 
     @Test
-    void testMakeRecurringWithInvalidParams() {
+    public void testMakeRecurringWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(null, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+                factory.make(null, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                         PAUSE_TIME, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make("", PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+                factory.make("", PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                         PAUSE_TIME, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, 0, 0,
+                factory.make(ID, 0, 0,
                         FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, PERIOD_DURATION, -1,
+                factory.make(ID, PERIOD_DURATION, -1,
                         FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, PERIOD_DURATION, PERIOD_DURATION,
+                factory.make(ID, PERIOD_DURATION, PERIOD_DURATION,
                         FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+                factory.make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         null, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory.make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+                factory.make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP,
                         MOST_RECENT_TIMESTAMP));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory
+                factory
                         .make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
                                 FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSE_TIME,
                                 LAST_FIRING_TIMESTAMP, null));
 
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerFactory
+                factory
                         .make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET, FIRING_ACTION,
                                 FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                                 MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP,

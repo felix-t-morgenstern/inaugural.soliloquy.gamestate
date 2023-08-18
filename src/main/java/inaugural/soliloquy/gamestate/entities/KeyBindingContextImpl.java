@@ -3,8 +3,9 @@ package inaugural.soliloquy.gamestate.entities;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public class KeyBindingContextImpl implements KeyBindingContext {
     private final List<KeyBinding> BINDINGS;
@@ -12,13 +13,13 @@ public class KeyBindingContextImpl implements KeyBindingContext {
     private boolean _blocksAllLowerBindings;
 
     public KeyBindingContextImpl() {
-        BINDINGS = new ArrayList<>();
+        BINDINGS = listOf();
     }
 
     // TODO: Ensure that this is a clone
     @Override
     public List<KeyBinding> bindings() {
-        return new ArrayList<>(BINDINGS);
+        return listOf(BINDINGS);
     }
 
     @Override

@@ -8,10 +8,14 @@ import soliloquy.specs.gamestate.entities.TileEntity;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+
 public class FakeTileEntities<TEntity extends TileEntity> implements TileEntities<TEntity> {
-    public final HashMap<TEntity, Integer> ENTITIES = new HashMap<>();
+    public final Map<TEntity, Integer> ENTITIES = mapOf();
     public final Tile TILE;
-    public final List<TEntity> REMOVED_ENTITIES = new ArrayList<>();
+    public final List<TEntity> REMOVED_ENTITIES = listOf();
 
     private boolean _isDeleted;
     private Consumer<TEntity> _actionAfterAdding;
@@ -106,13 +110,13 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
             @Override
             public Pair<TEntity, Integer> next() {
                 TEntity entity = entities.next();
-                return new Pair<>(entity, ENTITIES.get(entity));
+                return pairOf(entity, ENTITIES.get(entity));
             }
         };
     }
 
     @Override
-    public TEntity getArchetype() {
+    public TEntity archetype() {
         return null;
     }
 }

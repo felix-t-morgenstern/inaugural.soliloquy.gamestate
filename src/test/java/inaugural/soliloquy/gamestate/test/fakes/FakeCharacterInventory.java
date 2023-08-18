@@ -4,14 +4,15 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public class FakeCharacterInventory implements CharacterInventory {
     public static Boolean OVERRIDE_CONTAINS;
     public final Character CHARACTER;
-    public final java.util.List<Item> ITEMS = new ArrayList<>();
+    public final java.util.List<Item> ITEMS = listOf();
 
     public boolean _isDeleted;
 
@@ -36,7 +37,7 @@ public class FakeCharacterInventory implements CharacterInventory {
 
     @Override
     public List<Item> representation() throws IllegalStateException {
-        return new ArrayList<>(ITEMS);
+        return listOf(ITEMS);
     }
 
     @Override

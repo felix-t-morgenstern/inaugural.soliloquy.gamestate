@@ -6,37 +6,38 @@ import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.ruleset.entities.character.StatusEffectType;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class CharacterStatusEffectsImpl extends HasDeletionInvariants
         implements CharacterStatusEffects {
     private final Character CHARACTER;
-    private final HashMap<StatusEffectType, Integer> STATUS_EFFECT_LEVELS;
+    private final Map<StatusEffectType, Integer> STATUS_EFFECT_LEVELS;
 
     public CharacterStatusEffectsImpl(Character character) {
         CHARACTER = Check.ifNull(character, "character");
-        STATUS_EFFECT_LEVELS = new HashMap<>();
+        STATUS_EFFECT_LEVELS = mapOf();
     }
 
     @Override
     public Integer getStatusEffectLevel(StatusEffectType type) throws IllegalStateException,
             IllegalArgumentException {
         Check.ifNull(type, "type");
-        enforceInvariants("getStatusEffectLevel");
+        enforceDeletionInvariants();
         return STATUS_EFFECT_LEVELS.getOrDefault(type, 0);
     }
 
     @Override
     public Map<StatusEffectType, Integer> representation() {
-        enforceInvariants("getAllStatusEffects");
-        return new HashMap<>(STATUS_EFFECT_LEVELS);
+        enforceDeletionInvariants();
+        return mapOf(STATUS_EFFECT_LEVELS);
     }
 
     @Override
     public void setStatusEffectLevel(StatusEffectType type, int level)
             throws IllegalStateException {
-        enforceInvariants("alterStatusEffect");
+        enforceDeletionInvariants();
         Check.ifNull(type, "type");
         if (level == 0) {
             STATUS_EFFECT_LEVELS.remove(type);
@@ -48,13 +49,13 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
 
     @Override
     public void clearStatusEffects() throws IllegalStateException {
-        enforceInvariants("alterStatusEffect");
+        enforceDeletionInvariants();
         STATUS_EFFECT_LEVELS.clear();
     }
 
     @Override
     public String getInterfaceName() {
-        enforceInvariants("alterStatusEffect");
+        enforceDeletionInvariants();
         return CharacterStatusEffects.class.getCanonicalName();
     }
 
@@ -66,13 +67,5 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     @Override
     protected Deletable getContainingObject() {
         return CHARACTER;
-    }
-
-    private void enforceInvariants(String methodName) {
-        if (CHARACTER == null) {
-            throw new IllegalStateException("CharacterStatusEffects." + methodName +
-                    ": character is null");
-        }
-        enforceDeletionInvariants();
     }
 }

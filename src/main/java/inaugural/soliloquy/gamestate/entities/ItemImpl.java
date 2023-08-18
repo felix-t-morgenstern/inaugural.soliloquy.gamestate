@@ -12,9 +12,11 @@ import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 
 // TODO: Consider extending HasDeletionInvariants
 public class ItemImpl implements Item {
@@ -45,9 +47,9 @@ public class ItemImpl implements Item {
         tileOffset = ITEM_TYPE.defaultTileOffset();
         DATA = Check.ifNull(data, "data");
 
-        PASSIVE_ABILITIES = new ArrayList<>();
-        ACTIVE_ABILITIES = new ArrayList<>();
-        REACTIVE_ABILITIES = new ArrayList<>();
+        PASSIVE_ABILITIES = listOf();
+        ACTIVE_ABILITIES = listOf();
+        REACTIVE_ABILITIES = listOf();
     }
 
     @Override
@@ -125,8 +127,7 @@ public class ItemImpl implements Item {
                             "stack");
         }
         numberInStack -= numberToTake;
-        Item takenFromStack =
-                new ItemImpl(java.util.UUID.randomUUID(), ITEM_TYPE, DATA.makeClone());
+        var takenFromStack = new ItemImpl(java.util.UUID.randomUUID(), ITEM_TYPE, DATA.makeClone());
         takenFromStack.setNumberInStack(numberToTake);
         return takenFromStack;
     }
@@ -137,7 +138,7 @@ public class ItemImpl implements Item {
         enforceDeletionInvariant("equipmentSlot");
         enforceAssignmentInvariant("equipmentSlot");
         return characterEquipmentSlotsCharacter != null ?
-                Pair.of(characterEquipmentSlotsCharacter, characterEquipmentSlotType) : null;
+                pairOf(characterEquipmentSlotsCharacter, characterEquipmentSlotType) : null;
     }
 
     @Override
@@ -336,10 +337,9 @@ public class ItemImpl implements Item {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof Item)) {
+        if (!(o instanceof Item item)) {
             return false;
         }
-        Item item = (Item) o;
         if (isDeleted || item.isDeleted()) {
             return false;
         }

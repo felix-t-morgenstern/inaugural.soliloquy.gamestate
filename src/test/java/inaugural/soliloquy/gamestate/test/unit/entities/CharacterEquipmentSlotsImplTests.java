@@ -3,8 +3,8 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.CharacterEquipmentSlotsImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.EquipmentTypeStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
@@ -12,35 +12,36 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class CharacterEquipmentSlotsImplTests {
+// TODO: Revolting test suite.
+public class CharacterEquipmentSlotsImplTests {
     private final Character CHARACTER = new FakeCharacter();
     private final Item ITEM = new FakeItem();
     private final String EQUIPMENT_SLOT_TYPE = "armor";
 
     private CharacterEquipmentSlots _characterEquipmentSlots;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         ((FakeItem) ITEM).equipmentCharacter = null;
         _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterEquipmentSlotsImpl(null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(CharacterEquipmentSlots.class.getCanonicalName(),
                 _characterEquipmentSlots.getInterfaceName());
     }
 
     @Test
-    void testAddEquipmentSlotAndCheckIfExists() {
+    public void testAddEquipmentSlotAndCheckIfExists() {
         assertFalse(_characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
 
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
@@ -49,7 +50,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testAddInvalidEquipmentSlot() {
+    public void testAddInvalidEquipmentSlot() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.addCharacterEquipmentSlot(null));
         assertThrows(IllegalArgumentException.class,
@@ -57,7 +58,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testCheckIfExistsForInvalidSlotTypes() {
+    public void testCheckIfExistsForInvalidSlotTypes() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipmentSlotExists(null));
         assertThrows(IllegalArgumentException.class,
@@ -65,7 +66,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testCanEquipItemToSlot() {
+    public void testCanEquipItemToSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         assertTrue(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
 
@@ -75,7 +76,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testCanEquipInvalidItemToInvalidSlot() {
+    public void testCanEquipInvalidItemToInvalidSlot() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.canEquipItemToSlot(null, ITEM));
         assertThrows(IllegalArgumentException.class,
@@ -89,7 +90,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testGetAndSetCanAlterEquipmentInSlot() {
+    public void testGetAndSetCanAlterEquipmentInSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
         assertTrue(_characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
@@ -100,7 +101,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testGetAndSetCanAlterEquipmentInInvalidSlot() {
+    public void testGetAndSetCanAlterEquipmentInInvalidSlot() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalArgumentException.class,
@@ -109,7 +110,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testGetAndSetCanAlterEquipmentInSlotWithInvalidParams() {
+    public void testGetAndSetCanAlterEquipmentInSlotWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(null));
         assertThrows(IllegalArgumentException.class,
@@ -121,17 +122,17 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testEquipItemToSlot() {
+    public void testEquipItemToSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
         assertSame(ITEM, _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
-        assertSame(CHARACTER, ITEM.equipmentSlot().getFirstArchetype());
-        assertEquals(EQUIPMENT_SLOT_TYPE, ITEM.equipmentSlot().getSecondArchetype());
+        assertSame(CHARACTER, ITEM.equipmentSlot().firstArchetype());
+        assertEquals(EQUIPMENT_SLOT_TYPE, ITEM.equipmentSlot().secondArchetype());
     }
 
     @Test
-    void testEquipItemToSlotWithInvalidParams() {
+    public void testEquipItemToSlotWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.equipItemToSlot(null, ITEM));
         assertThrows(IllegalArgumentException.class,
@@ -139,7 +140,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testEquipItemAndCanEquipItemElsewhereInOtherLocationTypes() {
+    public void testEquipItemAndCanEquipItemElsewhereInOtherLocationTypes() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
         ((FakeItem) ITEM).equipmentCharacter = CHARACTER;
@@ -173,14 +174,14 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testPreviouslyEquippedItemUnassignedFromSlot() {
+    public void testPreviouslyEquippedItemUnassignedFromSlot() {
         Item previousItem = new FakeItem();
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, previousItem);
         assertNotNull(previousItem.equipmentSlot());
-        assertSame(CHARACTER, previousItem.equipmentSlot().getFirstArchetype());
+        assertSame(CHARACTER, previousItem.equipmentSlot().firstArchetype());
         assertEquals(EQUIPMENT_SLOT_TYPE,
-                previousItem.equipmentSlot().getSecondArchetype());
+                previousItem.equipmentSlot().secondArchetype());
 
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
@@ -188,7 +189,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testItemInInvalidSlot() {
+    public void testItemInInvalidSlot() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.itemInSlot(null));
         assertThrows(IllegalArgumentException.class,
@@ -198,7 +199,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testItemReferencesCorrectSlotInvariant() {
+    public void testItemReferencesCorrectSlotInvariant() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
         ((FakeItem) ITEM).equipmentCharacter = null;
@@ -249,7 +250,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testUnequipItemFromSlot() {
+    public void testUnequipItemFromSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
@@ -258,7 +259,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testEquipItemToSlotWhichCannotBeAltered() {
+    public void testEquipItemToSlotWhichCannotBeAltered() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE, false);
 
@@ -267,7 +268,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testEquipItemToInvalidSlot() {
+    public void testEquipItemToInvalidSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.clear();
 
@@ -276,7 +277,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testRemoveEquipmentSlot() {
+    public void testRemoveEquipmentSlot() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
         assertTrue(_characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
@@ -288,7 +289,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testRemoveInvalidEquipmentSlot() {
+    public void testRemoveInvalidEquipmentSlot() {
         assertThrows(IllegalArgumentException.class,
                 () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(null));
         assertThrows(IllegalArgumentException.class,
@@ -298,7 +299,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testGetRepresentation() {
+    public void testGetRepresentation() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
 
@@ -315,7 +316,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testDelete() {
+    public void testDelete() {
         _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
         // NB: This is added to ensure that NullPointerExceptions are being avoided
         _characterEquipmentSlots.addCharacterEquipmentSlot("Slot with null item");
@@ -329,7 +330,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testIsDeletedInvariant() {
+    public void testIsDeletedInvariant() {
         _characterEquipmentSlots.delete();
 
         assertThrows(EntityDeletedException.class,
@@ -354,7 +355,7 @@ class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    void testCharacterDeletedInvariant() {
+    public void testCharacterDeletedInvariant() {
         CHARACTER.delete();
 
         assertThrows(IllegalStateException.class,

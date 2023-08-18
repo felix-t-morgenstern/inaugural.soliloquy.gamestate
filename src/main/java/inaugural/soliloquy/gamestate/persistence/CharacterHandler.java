@@ -71,7 +71,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     @Override
     public Character read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
-        var dto = JSON.fromJson(data, CharacterDTO.class);
+        var dto = JSON.fromJson(data, DTO.class);
         var readCharacter = CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
                 UUID.fromString(dto.uuid), DATA_HANDLER.read(dto.data));
 
@@ -138,7 +138,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     @Override
     public String write(Character character) {
         Check.ifNull(character, "character");
-        var dto = new CharacterDTO();
+        var dto = new DTO();
         dto.uuid = character.uuid().toString();
         dto.characterTypeId = character.type().id();
 
@@ -229,11 +229,11 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     }
 
     @Override
-    public Character getArchetype() {
+    public Character archetype() {
         return ARCHETYPE;
     }
 
-    private static class CharacterDTO {
+    private static class DTO {
         String uuid;
         String characterTypeId;
         String[] classifications;

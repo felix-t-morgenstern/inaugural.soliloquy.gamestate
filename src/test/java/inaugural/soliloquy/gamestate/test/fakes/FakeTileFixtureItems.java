@@ -4,13 +4,14 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public class FakeTileFixtureItems implements TileFixtureItems {
     public final TileFixture TILE_FIXTURE;
 
-    public final java.util.List<Item> _items = new ArrayList<>();
+    public final java.util.List<Item> _items = listOf();
 
     private boolean _deleted;
 
@@ -35,7 +36,7 @@ public class FakeTileFixtureItems implements TileFixtureItems {
 
     @Override
     public List<Item> representation() throws UnsupportedOperationException, IllegalStateException {
-        return new ArrayList<>(_items);
+        return listOf(_items);
     }
 
     @Override

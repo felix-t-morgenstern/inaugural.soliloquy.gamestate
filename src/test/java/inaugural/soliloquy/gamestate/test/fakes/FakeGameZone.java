@@ -7,11 +7,11 @@ import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static org.mockito.Mockito.mock;
 
 public class FakeGameZone implements GameZone {
@@ -25,9 +25,9 @@ public class FakeGameZone implements GameZone {
     public boolean RETURN_ACTUAL_TILE_AT_LOCATION = false;
 
     @SuppressWarnings("rawtypes")
-    private final List<Action> ON_ENTRY = new ArrayList<>();
+    private final List<Action> ON_ENTRY = listOf();
     @SuppressWarnings("rawtypes")
-    private final List<Action> ON_EXIT = new ArrayList<>();
+    private final List<Action> ON_EXIT = listOf();
 
     private final boolean THROW_EXCEPTION_ON_GET_MAX_Coordinate2dS;
 

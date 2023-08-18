@@ -2,33 +2,33 @@ package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class OneTimeClockBasedTimerImplTests {
+public class OneTimeClockBasedTimerImplTests {
     private final String ID = randomString();
-    private final long MOST_RECENT_TIMESTAMP = randomLong();
-    private final long PAUSE_TIME = randomLongWithInclusiveFloor(MOST_RECENT_TIMESTAMP + 1);
+    private final Long MOST_RECENT_TIMESTAMP = randomLong();
+    private final Long PAUSE_TIME = randomLongWithInclusiveFloor(MOST_RECENT_TIMESTAMP + 1);
     @SuppressWarnings("FieldCanBeLocal")
-    private final long UNPAUSE_TIME = randomLongWithInclusiveFloor(PAUSE_TIME + 1);
+    private final Long UNPAUSE_TIME = randomLongWithInclusiveFloor(PAUSE_TIME + 1);
     private final long FIRING_TIME = randomLongWithInclusiveFloor(UNPAUSE_TIME + 1);
     private final String FIRING_ACTION_ID = randomString();
     private final FakeAction<Long> FIRING_ACTION = new FakeAction<>(FIRING_ACTION_ID);
 
     private OneTimeClockBasedTimer oneTimeClockBasedTimer;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         oneTimeClockBasedTimer = new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, FIRING_ACTION,
                 null, MOST_RECENT_TIMESTAMP);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
                 new OneTimeClockBasedTimerImpl(null, FIRING_TIME, FIRING_ACTION,
                         null, MOST_RECENT_TIMESTAMP));
@@ -50,39 +50,39 @@ class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(OneTimeClockBasedTimer.class.getCanonicalName(),
                 oneTimeClockBasedTimer.getInterfaceName());
     }
 
     @Test
-    void testId() {
+    public void testId() {
         assertEquals(ID, oneTimeClockBasedTimer.id());
     }
 
     @Test
-    void testFiringTime() {
+    public void testFiringTime() {
         assertEquals(FIRING_TIME, oneTimeClockBasedTimer.firingTime());
     }
 
     @Test
-    void testActionId() {
+    public void testActionId() {
         assertSame(FIRING_ACTION_ID, oneTimeClockBasedTimer.actionId());
     }
 
     @Test
-    void testFire() {
-        long firingTime = MOST_RECENT_TIMESTAMP + 1;
+    public void testFire() {
+        var firingTime = MOST_RECENT_TIMESTAMP + 1;
 
         oneTimeClockBasedTimer.fire(firingTime);
 
-        assertEquals(firingTime, FIRING_ACTION._mostRecentInput);
-        assertTrue(FIRING_ACTION._actionRun);
-        assertEquals(firingTime, oneTimeClockBasedTimer.mostRecentTimestamp());
+        assertEquals((Long)firingTime, FIRING_ACTION.mostRecentInput);
+        assertTrue(FIRING_ACTION.actionRun);
+        assertEquals((Long)firingTime, oneTimeClockBasedTimer.mostRecentTimestamp());
     }
 
     @Test
-    void testReportPauseOrUnpauseAfterFired() {
+    public void testReportPauseOrUnpauseAfterFired() {
         oneTimeClockBasedTimer.fire(MOST_RECENT_TIMESTAMP);
 
         assertThrows(UnsupportedOperationException.class, () ->
@@ -92,7 +92,7 @@ class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    void testReportPause() {
+    public void testReportPause() {
         assertNull(oneTimeClockBasedTimer.pausedTimestamp());
 
         oneTimeClockBasedTimer.reportPause(PAUSE_TIME);
@@ -102,7 +102,7 @@ class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    void testReportUnpause() {
+    public void testReportUnpause() {
         oneTimeClockBasedTimer.reportPause(PAUSE_TIME);
 
         assertEquals(PAUSE_TIME, oneTimeClockBasedTimer.mostRecentTimestamp());
@@ -116,7 +116,7 @@ class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    void testReportPauseOrProvideWithOutdatedTimestamp() {
+    public void testReportPauseOrProvideWithOutdatedTimestamp() {
         oneTimeClockBasedTimer.reportPause(MOST_RECENT_TIMESTAMP + 1);
 
         assertThrows(IllegalArgumentException.class, () ->
@@ -129,7 +129,7 @@ class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    void testReportPauseWhilePausedOrViceVersa() {
+    public void testReportPauseWhilePausedOrViceVersa() {
         assertThrows(UnsupportedOperationException.class, () ->
                 oneTimeClockBasedTimer.reportUnpause(MOST_RECENT_TIMESTAMP));
 
@@ -140,7 +140,7 @@ class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    void testFireWhenPaused() {
+    public void testFireWhenPaused() {
         oneTimeClockBasedTimer.reportPause(PAUSE_TIME);
 
         assertThrows(UnsupportedOperationException.class, () ->
@@ -149,7 +149,7 @@ class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    void testMostRecentTimestamp() {
+    public void testMostRecentTimestamp() {
         assertEquals(MOST_RECENT_TIMESTAMP, oneTimeClockBasedTimer.mostRecentTimestamp());
     }
 }

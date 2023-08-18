@@ -6,23 +6,24 @@ import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
         implements TileFixtureItems {
     private final TileFixture TILE_FIXTURE;
-    private final ArrayList<Item> CONTAINED_ITEMS;
+    private final List<Item> CONTAINED_ITEMS;
 
     @SuppressWarnings("ConstantConditions")
     public TileFixtureItemsImpl(TileFixture tileFixture) {
         TILE_FIXTURE = Check.ifNull(tileFixture, "tileFixture");
-        CONTAINED_ITEMS = new ArrayList<>();
+        CONTAINED_ITEMS = listOf();
     }
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        for (Item item : CONTAINED_ITEMS) {
+        for (var item : CONTAINED_ITEMS) {
             if (!item.isDeleted()) {
                 item.delete();
             }
@@ -38,16 +39,14 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public List<Item> representation() throws UnsupportedOperationException, IllegalStateException {
         enforceDeletionInvariants();
-        return new ArrayList<>(CONTAINED_ITEMS);
+        return listOf(CONTAINED_ITEMS);
     }
 
     @Override
     public void add(Item item) throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants();
         enforceItemAssignmentInvariant(item, "add");
-        if (item == null) {
-            throw new IllegalArgumentException("TileFixtureItems.add: item must be non-null");
-        }
+        Check.ifNull(item, "item");
         if (itemIsPresentElsewhere(item)) {
             throw new IllegalArgumentException("TileFixtureItems.add: item present elsewhere");
         }
@@ -59,10 +58,8 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
     public boolean remove(Item item) throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants();
         enforceItemAssignmentInvariant(item, "remove");
-        if (item == null) {
-            throw new IllegalArgumentException("TileFixtureItems.remove: item must be non-null");
-        }
-        boolean itemWasInAggregate = CONTAINED_ITEMS.remove(item);
+        Check.ifNull(item, "item");
+        var itemWasInAggregate = CONTAINED_ITEMS.remove(item);
         if (itemWasInAggregate) {
             item.assignTileFixtureAfterAddedItemToTileFixtureItems(null);
         }
@@ -73,15 +70,13 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
     public boolean contains(Item item) throws IllegalArgumentException, IllegalStateException {
         enforceDeletionInvariants();
         enforceItemAssignmentInvariant(item, "contains");
-        if (item == null) {
-            throw new IllegalArgumentException("TileFixtureItems.contains: item must be non-null");
-        }
+        Check.ifNull(item, "item");
         return CONTAINED_ITEMS.contains(item);
     }
 
     @Override
     protected String containingClassName() {
-        return "tile fixture";
+        return "tileFixture";
     }
 
     @Override

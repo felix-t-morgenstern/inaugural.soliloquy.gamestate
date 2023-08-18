@@ -2,41 +2,41 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.entities.CharacterStatusEffectsImpl;
 import inaugural.soliloquy.gamestate.factories.CharacterStatusEffectsFactoryImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-class CharacterStatusEffectsFactoryImplTests {
-    private CharacterStatusEffectsFactory characterStatusEffectsFactory;
+public class CharacterStatusEffectsFactoryImplTests {
+    private CharacterStatusEffectsFactory factory;
 
-    @BeforeEach
-    void setUp() {
-        characterStatusEffectsFactory = new CharacterStatusEffectsFactoryImpl();
+    @Before
+    public void setUp() {
+        factory = new CharacterStatusEffectsFactoryImpl();
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(CharacterStatusEffectsFactory.class.getCanonicalName(),
-                characterStatusEffectsFactory.getInterfaceName());
+                factory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
+    public void testMake() {
         var mockCharacter = mock(Character.class);
 
-        var characterStatusEffects = characterStatusEffectsFactory.make(mockCharacter);
+        var characterStatusEffects = factory.make(mockCharacter);
 
         assertNotNull(characterStatusEffects);
         assertTrue(characterStatusEffects instanceof CharacterStatusEffectsImpl);
     }
 
     @Test
-    void testMakeWithNullInput() {
+    public void testMakeWithNullInput() {
         assertThrows(IllegalArgumentException.class,
-                () -> characterStatusEffectsFactory.make(null));
+                () -> factory.make(null));
     }
 }

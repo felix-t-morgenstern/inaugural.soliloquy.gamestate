@@ -2,103 +2,102 @@ package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.OneTimeClockBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
-import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.random.Random.randomLong;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-class OneTimeClockBasedTimerHandlerTests {
-    private final String ONE_TIME_CLOCK_TIMER_ID = "oneTimeClockBasedTimerId";
-    private final String ACTION_ID = "actionId";
+@RunWith(MockitoJUnitRunner.class)
+public class OneTimeClockBasedTimerHandlerTests {
+    private final String ONE_TIME_CLOCK_TIMER_ID = randomString();
+    private final String ACTION_ID = randomString();
     @SuppressWarnings("rawtypes")
     private final Action ACTION = new FakeAction(ACTION_ID);
-    private long FIRING_TIME = 123123L;
-    private long PAUSE_TIME = 456456L;
-    private long MOST_RECENT_TIMESTAMP = 789789;
+    private final long FIRING_TIME = randomLong();
+    private final long PAUSE_TIME = randomLong();
+    private final long MOST_RECENT_TIMESTAMP = randomLong();
     @SuppressWarnings("rawtypes")
-    private HashMap<String, Action> ACTIONS = new HashMap<>();
+    private final Map<String, Action> ACTIONS = mapOf(pairOf(ACTION_ID, ACTION));
 
-    @Mock
-    private OneTimeClockBasedTimer _mockOneTimeClockBasedTimer;
-    @Mock
-    private ClockBasedTimerFactory _mockClockBasedTimerFactory;
+    @Mock private OneTimeClockBasedTimer mockOneTimeClockBasedTimer;
+    @Mock private ClockBasedTimerFactory mockClockBasedTimerFactory;
 
-    private TypeHandler<OneTimeClockBasedTimer> _oneTimeClockBasedTimerHandler;
+    private TypeHandler<OneTimeClockBasedTimer> handler;
 
-    private final String WRITTEN_VALUE =
-            "{\"id\":\"oneTimeClockBasedTimerId\",\"actionId\":\"actionId\"," +
-                    "\"firingTime\":123123,\"pausedTime\":456456,\"mostRecentTimestamp\":789789}";
+    private final String WRITTEN_VALUE = String.format(
+            "{\"id\":\"%s\",\"actionId\":\"%s\",\"firingTime\":%d,\"pausedTime\":%d," +
+                    "\"mostRecentTimestamp\":%d}",
+            ONE_TIME_CLOCK_TIMER_ID, ACTION_ID, FIRING_TIME, PAUSE_TIME, MOST_RECENT_TIMESTAMP);
 
-    @BeforeEach
-    void setUp() {
-        ACTIONS.put(ACTION_ID, ACTION);
+    @Before
+    public void setUp() {
+        when(mockClockBasedTimerFactory.make(anyString(), anyLong(), any(), anyLong(), anyLong()))
+                .thenReturn(mockOneTimeClockBasedTimer);
 
-        _mockOneTimeClockBasedTimer = mock(OneTimeClockBasedTimer.class);
-        _mockClockBasedTimerFactory = mock(ClockBasedTimerFactory.class);
-        when(_mockClockBasedTimerFactory.make(anyString(), anyLong(), any(), anyLong(), anyLong()))
-                .thenReturn(_mockOneTimeClockBasedTimer);
-
-        _oneTimeClockBasedTimerHandler =
-                new OneTimeClockBasedTimerHandler(_mockClockBasedTimerFactory, ACTIONS::get);
+        handler = new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, ACTIONS::get);
     }
 
     @Test
-    void testWrite() {
-        when(_mockOneTimeClockBasedTimer.id()).thenReturn(ONE_TIME_CLOCK_TIMER_ID);
-        when(_mockOneTimeClockBasedTimer.firingTime()).thenReturn(FIRING_TIME);
-        when(_mockOneTimeClockBasedTimer.pausedTimestamp()).thenReturn(PAUSE_TIME);
-        when(_mockOneTimeClockBasedTimer.actionId()).thenReturn(ACTION_ID);
-        when(_mockOneTimeClockBasedTimer.mostRecentTimestamp()).thenReturn(MOST_RECENT_TIMESTAMP);
+    public void testWrite() {
+        when(mockOneTimeClockBasedTimer.id()).thenReturn(ONE_TIME_CLOCK_TIMER_ID);
+        when(mockOneTimeClockBasedTimer.firingTime()).thenReturn(FIRING_TIME);
+        when(mockOneTimeClockBasedTimer.pausedTimestamp()).thenReturn(PAUSE_TIME);
+        when(mockOneTimeClockBasedTimer.actionId()).thenReturn(ACTION_ID);
+        when(mockOneTimeClockBasedTimer.mostRecentTimestamp()).thenReturn(MOST_RECENT_TIMESTAMP);
 
-        String result = _oneTimeClockBasedTimerHandler.write(_mockOneTimeClockBasedTimer);
+        var result = handler.write(mockOneTimeClockBasedTimer);
 
         assertEquals(WRITTEN_VALUE, result);
     }
 
     @Test
-    void testWriteWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () ->
-                _oneTimeClockBasedTimerHandler.write(null));
+    public void testWriteWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> handler.write(null));
     }
 
     @Test
-    void testRead() {
-        OneTimeClockBasedTimer result = _oneTimeClockBasedTimerHandler.read(WRITTEN_VALUE);
+    public void testRead() {
+        var result = handler.read(WRITTEN_VALUE);
 
-        assertSame(_mockOneTimeClockBasedTimer, result);
+        assertSame(mockOneTimeClockBasedTimer, result);
         //noinspection unchecked
-        verify(_mockClockBasedTimerFactory).make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, ACTION,
+        verify(mockClockBasedTimerFactory).make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, ACTION,
                 PAUSE_TIME, MOST_RECENT_TIMESTAMP);
     }
 
     @Test
-    void testReadWithInvalidParams() {
+    public void testReadWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _oneTimeClockBasedTimerHandler.read(null));
+                handler.read(null));
         assertThrows(IllegalArgumentException.class, () ->
-                _oneTimeClockBasedTimerHandler.read(""));
+                handler.read(""));
     }
 
     @Test
-    void testGetArchetype() {
-        assertNotNull(_oneTimeClockBasedTimerHandler.getArchetype());
+    public void testArchetype() {
+        assertNotNull(handler.archetype());
         assertEquals(OneTimeClockBasedTimer.class.getCanonicalName(),
-                _oneTimeClockBasedTimerHandler.getArchetype().getInterfaceName());
+                handler.archetype().getInterfaceName());
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         OneTimeClockBasedTimer.class.getCanonicalName() + ">",
-                _oneTimeClockBasedTimerHandler.getInterfaceName());
+                handler.getInterfaceName());
     }
 }

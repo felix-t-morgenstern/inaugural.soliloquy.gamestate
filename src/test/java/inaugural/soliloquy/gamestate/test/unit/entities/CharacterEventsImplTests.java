@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
@@ -15,6 +14,7 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import static inaugural.soliloquy.tools.collections.Collections.*;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static inaugural.soliloquy.tools.testing.Mock.generateMockWithId;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -184,8 +184,8 @@ public class CharacterEventsImplTests {
     @Test
     public void testCopyAllTriggers() {
         var copyFrom = mock(CharacterEvents.class);
-        var toCopy = mapOf(Pair.of(trigger1, listOf(mockEvent1, mockEvent3)),
-                Pair.of(trigger2, listOf(mockEvent2)));
+        var toCopy = mapOf(pairOf(trigger1, listOf(mockEvent1, mockEvent3)),
+                pairOf(trigger2, listOf(mockEvent2)));
         when(copyFrom.representation()).thenReturn(toCopy);
 
         characterEvents.copyAllTriggers(copyFrom);

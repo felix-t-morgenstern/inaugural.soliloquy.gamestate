@@ -9,7 +9,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.factories.RegistryFactory;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.shared.HasId;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -21,9 +20,7 @@ import soliloquy.specs.gamestate.factories.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 

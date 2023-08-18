@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.WallSegmentImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.WallSegment;
@@ -10,84 +10,84 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-class WallSegmentImplTests {
+public class WallSegmentImplTests {
     @Mock private VariableCache mockData;
     @Mock private WallSegmentType mockWallSegmentType;
 
-    private WallSegment tileWallSegment;
+    private WallSegment wallSegment;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         mockData = mock(VariableCache.class);
         mockWallSegmentType = mock(WallSegmentType.class);
 
-        tileWallSegment = new WallSegmentImpl(mockData);
+        wallSegment = new WallSegmentImpl(mockData);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new WallSegmentImpl(null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(WallSegment.class.getCanonicalName(),
-                tileWallSegment.getInterfaceName());
+                wallSegment.getInterfaceName());
     }
 
     @Test
-    void testData() {
-        assertSame(mockData, tileWallSegment.data());
+    public void testData() {
+        assertSame(mockData, wallSegment.data());
     }
 
     @Test
-    void testSetAndGetType() {
-        tileWallSegment.setType(mockWallSegmentType);
+    public void testSetAndGetType() {
+        wallSegment.setType(mockWallSegmentType);
 
-        assertSame(mockWallSegmentType, tileWallSegment.getType());
+        assertSame(mockWallSegmentType, wallSegment.getType());
     }
 
     @Test
-    void testSetTypeWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> tileWallSegment.setType(null));
+    public void testSetTypeWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> wallSegment.setType(null));
     }
 
     @Test
-    void testSetAndGetName() {
+    public void testSetAndGetName() {
         final var name = "name";
 
-        tileWallSegment.setName(name);
+        wallSegment.setName(name);
 
-        assertEquals(name, tileWallSegment.getName());
+        assertEquals(name, wallSegment.getName());
     }
 
     @Test
-    void testDelete() {
+    public void testDelete() {
         // TODO: Add a WallSegment here
-        assertFalse(tileWallSegment.isDeleted());
+        assertFalse(wallSegment.isDeleted());
 
-        tileWallSegment.delete();
+        wallSegment.delete();
 
         // TODO: Test whether added WallSegment was deleted
-        assertTrue(tileWallSegment.isDeleted());
+        assertTrue(wallSegment.isDeleted());
     }
 
     @Test
-    void testMovementEvents() {
-        assertNotNull(tileWallSegment.movementEvents());
+    public void testMovementEvents() {
+        assertNotNull(wallSegment.movementEvents());
     }
 
     @Test
-    void testAbilityEvents() {
-        assertNotNull(tileWallSegment.abilityEvents());
+    public void testAbilityEvents() {
+        assertNotNull(wallSegment.abilityEvents());
     }
 
     @Test
-    void testMakeGameEventTarget() {
-        var gameEventTarget = tileWallSegment.makeGameEventTarget();
+    public void testMakeGameEventTarget() {
+        var gameEventTarget = wallSegment.makeGameEventTarget();
 
         assertNotNull(gameEventTarget);
         assertNotNull(gameEventTarget.tileWallSegment());
@@ -97,17 +97,17 @@ class WallSegmentImplTests {
     }
 
     @Test
-    void testDeletionInvariant() {
-        tileWallSegment.delete();
+    public void testDeletionInvariant() {
+        wallSegment.delete();
 
-        assertThrows(EntityDeletedException.class, () -> tileWallSegment.getType());
+        assertThrows(EntityDeletedException.class, () -> wallSegment.getType());
         assertThrows(EntityDeletedException.class,
-                () -> tileWallSegment.setType(mock(WallSegmentType.class)));
-        assertThrows(EntityDeletedException.class, () -> tileWallSegment.data());
-        assertThrows(EntityDeletedException.class, () -> tileWallSegment.getName());
-        assertThrows(EntityDeletedException.class, () -> tileWallSegment.setName(""));
-        assertThrows(EntityDeletedException.class, () -> tileWallSegment.movementEvents());
-        assertThrows(EntityDeletedException.class, () -> tileWallSegment.abilityEvents());
-        assertThrows(EntityDeletedException.class, () -> tileWallSegment.makeGameEventTarget());
+                () -> wallSegment.setType(mock(WallSegmentType.class)));
+        assertThrows(EntityDeletedException.class, () -> wallSegment.data());
+        assertThrows(EntityDeletedException.class, () -> wallSegment.getName());
+        assertThrows(EntityDeletedException.class, () -> wallSegment.setName(""));
+        assertThrows(EntityDeletedException.class, () -> wallSegment.movementEvents());
+        assertThrows(EntityDeletedException.class, () -> wallSegment.abilityEvents());
+        assertThrows(EntityDeletedException.class, () -> wallSegment.makeGameEventTarget());
     }
 }

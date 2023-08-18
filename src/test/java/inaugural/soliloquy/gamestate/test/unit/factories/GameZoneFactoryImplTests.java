@@ -4,39 +4,40 @@ import inaugural.soliloquy.gamestate.factories.GameZoneFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeGameZone;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
-import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-class GameZoneFactoryImplTests {
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") private final ArrayList<Character>
-            ADDED_TO_END_OF_ROUND_MANAGER = new ArrayList<>();
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") private final ArrayList<Character>
-            REMOVED_FROM_ROUND_MANAGER = new ArrayList<>();
-    private final String ID = "GameZoneId";
-    private final String TYPE = "GameZoneType";
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static org.junit.Assert.*;
+
+public class GameZoneFactoryImplTests {
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final List<Character> ADDED_TO_END_OF_ROUND_MANAGER = listOf();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    private final List<Character> REMOVED_FROM_ROUND_MANAGER = listOf();
+    private final String ID = randomString();
+    private final String TYPE = randomString();
     private final Tile[][] TILES = new Tile[1][2];
     private final VariableCache DATA = new VariableCacheStub();
 
-    private GameZoneFactory _gameZoneFactory;
+    private GameZoneFactory factory;
 
-    @BeforeEach
-    void setUp() {
-        _gameZoneFactory = new GameZoneFactoryImpl(ADDED_TO_END_OF_ROUND_MANAGER::add,
-                REMOVED_FROM_ROUND_MANAGER::add);
+    @Before
+    public void setUp() {
+        factory = new GameZoneFactoryImpl(ADDED_TO_END_OF_ROUND_MANAGER::add, REMOVED_FROM_ROUND_MANAGER::add);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(null, REMOVED_FROM_ROUND_MANAGER::add));
         assertThrows(IllegalArgumentException.class,
@@ -44,17 +45,17 @@ class GameZoneFactoryImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(GameZoneFactory.class.getCanonicalName(),
-                _gameZoneFactory.getInterfaceName());
+                factory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
+    public void testMake() {
         TILES[0][0] = new FakeTile(0, 0, new VariableCacheStub());
         TILES[0][1] = new FakeTile(0, 1, new VariableCacheStub());
 
-        GameZone gameZone = _gameZoneFactory.make(ID, TYPE, TILES, DATA);
+        var gameZone = factory.make(ID, TYPE, TILES, DATA);
 
         assertEquals(ID, gameZone.id());
         assertEquals(TYPE, gameZone.type());
@@ -66,38 +67,38 @@ class GameZoneFactoryImplTests {
     }
 
     @Test
-    void testMakeWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(null, TYPE, TILES,
+    public void testMakeWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> factory.make(null, TYPE, TILES,
                 DATA));
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make("", TYPE, TILES,
+        assertThrows(IllegalArgumentException.class, () -> factory.make("", TYPE, TILES,
                 DATA));
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, null, TILES,
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, null, TILES,
                 DATA));
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, "", TILES,
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, "", TILES,
                 DATA));
-        Tile[][] tilesWithZeroXIndex = new Tile[0][1];
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+        var tilesWithZeroXIndex = new Tile[0][1];
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, TYPE,
                 tilesWithZeroXIndex, DATA));
-        Tile[][] tilesWithZeroYIndex = new Tile[1][0];
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+        var tilesWithZeroYIndex = new Tile[1][0];
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, TYPE,
                 tilesWithZeroYIndex, DATA));
-        Tile[][] tilesWithNullEntry = new Tile[1][1];
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+        var tilesWithNullEntry = new Tile[1][1];
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, TYPE,
                 tilesWithNullEntry, DATA));
-        Tile[][] tilesWithAssignedTile = new Tile[1][1];
+        var tilesWithAssignedTile = new Tile[1][1];
         tilesWithAssignedTile[0][0] = new FakeTile(0, 0, new VariableCacheStub());
         tilesWithAssignedTile[0][0].assignGameZoneAfterAddedToGameZone(new FakeGameZone());
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, TYPE,
                 tilesWithAssignedTile, DATA));
-        Tile[][] tilesWithMismatchedXCoordinate2d = new Tile[1][1];
+        var tilesWithMismatchedXCoordinate2d = new Tile[1][1];
         tilesWithMismatchedXCoordinate2d[0][0] = new FakeTile(1, 0, new VariableCacheStub());
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, TYPE,
                 tilesWithMismatchedXCoordinate2d, DATA));
-        Tile[][] tilesWithMismatchedYCoordinate2d = new Tile[1][1];
+        var tilesWithMismatchedYCoordinate2d = new Tile[1][1];
         tilesWithMismatchedYCoordinate2d[0][0] = new FakeTile(0, 1, new VariableCacheStub());
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE,
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, TYPE,
                 tilesWithMismatchedYCoordinate2d, DATA));
-        assertThrows(IllegalArgumentException.class, () -> _gameZoneFactory.make(ID, TYPE, TILES,
+        assertThrows(IllegalArgumentException.class, () -> factory.make(ID, TYPE, TILES,
                 null));
     }
 }

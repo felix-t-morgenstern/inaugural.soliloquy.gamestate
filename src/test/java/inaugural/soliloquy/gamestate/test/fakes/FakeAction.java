@@ -2,35 +2,35 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.common.entities.Action;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FakeAction<T> implements Action<T> {
-    private final String _id;
-    public boolean _actionRun;
-    public T _mostRecentInput;
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
-    @SuppressWarnings("rawtypes") public static final List<FakeAction> ACTIONS_FIRED =
-            new ArrayList<>();
+public class FakeAction<T> implements Action<T> {
+    private final String id;
+    public boolean actionRun;
+    public T mostRecentInput;
+
+    @SuppressWarnings("rawtypes") public static final List<FakeAction> ACTIONS_FIRED = listOf();
 
     public FakeAction(String id) {
-        _id = id;
+        this.id = id;
     }
 
     @Override
     public void run(T t) throws IllegalArgumentException {
-        _actionRun = true;
-        _mostRecentInput = t;
+        actionRun = true;
+        mostRecentInput = t;
         ACTIONS_FIRED.add(this);
     }
 
     @Override
     public String id() throws IllegalStateException {
-        return _id;
+        return id;
     }
 
     @Override
-    public T getArchetype() {
+    public T archetype() {
         return null;
     }
 

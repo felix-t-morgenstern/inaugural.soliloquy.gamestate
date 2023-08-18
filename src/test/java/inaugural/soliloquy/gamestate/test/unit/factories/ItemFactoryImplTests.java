@@ -5,8 +5,8 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
@@ -19,9 +19,9 @@ import soliloquy.specs.ruleset.entities.ItemType;
 import java.util.UUID;
 
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class ItemFactoryImplTests {
+public class ItemFactoryImplTests {
     private final VariableCacheFactory DATA_FACTORY = new FakeVariableCacheFactory();
     private final ItemType ITEM_TYPE = new ItemTypeStub();
     private final UUID UUID = java.util.UUID.randomUUID();
@@ -29,23 +29,23 @@ class ItemFactoryImplTests {
 
     private ItemFactory itemFactory;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         itemFactory = new ItemFactoryImpl(DATA_FACTORY);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new ItemFactoryImpl(null));
     }
 
     @Test
-    void testGetInterface() {
+    public void testGetInterface() {
         assertEquals(ItemFactory.class.getCanonicalName(), itemFactory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
+    public void testMake() {
         Character character = new FakeCharacter();
         String equipmentSlotType = randomString();
         Item item = itemFactory.make(ITEM_TYPE, null);
@@ -60,15 +60,15 @@ class ItemFactoryImplTests {
         assertSame(ITEM_TYPE, item.type());
         assertSame(((FakeVariableCacheFactory) DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
-        assertSame(character, characterEquipmentSlot.getItem1());
-        assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
+        assertSame(character, characterEquipmentSlot.item1());
+        assertEquals(equipmentSlotType, characterEquipmentSlot.item2());
         assertNotSame(item.uuid(), takenFromStack.uuid());
         assertEquals(Vertex.of(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
                 ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET), item.getTileOffset());
     }
 
     @Test
-    void testMakeWithData() {
+    public void testMakeWithData() {
         Character character = new FakeCharacter();
         String equipmentSlotType = "equipmentSlotType";
         Item item = itemFactory.make(ITEM_TYPE, DATA);
@@ -83,15 +83,15 @@ class ItemFactoryImplTests {
         assertSame(ITEM_TYPE, item.type());
         assertSame(DATA, item.data());
         assertNotNull(characterEquipmentSlot);
-        assertSame(character, characterEquipmentSlot.getItem1());
-        assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
+        assertSame(character, characterEquipmentSlot.item1());
+        assertEquals(equipmentSlotType, characterEquipmentSlot.item2());
         assertNotSame(item.uuid(), takenFromStack.uuid());
         assertEquals(Vertex.of(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
                 ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET), item.getTileOffset());
     }
 
     @Test
-    void testMakeWithId() {
+    public void testMakeWithId() {
         Character character = new FakeCharacter();
         String equipmentSlotType = "equipmentSlotType";
         Item item = itemFactory.make(ITEM_TYPE, null, UUID);
@@ -106,15 +106,15 @@ class ItemFactoryImplTests {
         assertSame(ITEM_TYPE, item.type());
         assertSame(((FakeVariableCacheFactory) DATA_FACTORY).Created.get(0), item.data());
         assertNotNull(characterEquipmentSlot);
-        assertSame(character, characterEquipmentSlot.getItem1());
-        assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
+        assertSame(character, characterEquipmentSlot.item1());
+        assertEquals(equipmentSlotType, characterEquipmentSlot.item2());
         assertNotSame(item.uuid(), takenFromStack.uuid());
         assertEquals(Vertex.of(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
                 ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET), item.getTileOffset());
     }
 
     @Test
-    void testMakeWithIdAndData() {
+    public void testMakeWithIdAndData() {
         Character character = new FakeCharacter();
         String equipmentSlotType = "equipmentSlotType";
         Item item = itemFactory.make(ITEM_TYPE, DATA, UUID);
@@ -129,15 +129,15 @@ class ItemFactoryImplTests {
         assertSame(ITEM_TYPE, item.type());
         assertSame(DATA, item.data());
         assertNotNull(characterEquipmentSlot);
-        assertSame(character, characterEquipmentSlot.getItem1());
-        assertEquals(equipmentSlotType, characterEquipmentSlot.getItem2());
+        assertSame(character, characterEquipmentSlot.item1());
+        assertEquals(equipmentSlotType, characterEquipmentSlot.item2());
         assertNotSame(item.uuid(), takenFromStack.uuid());
         assertEquals(Vertex.of(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
                 ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET), item.getTileOffset());
     }
 
     @Test
-    void testMakeWithInvalidParams() {
+    public void testMakeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> itemFactory.make(null, DATA));
 

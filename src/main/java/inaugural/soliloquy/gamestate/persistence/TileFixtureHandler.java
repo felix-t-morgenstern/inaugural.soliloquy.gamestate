@@ -10,7 +10,6 @@ import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.factories.TileFixtureFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -36,12 +35,12 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
     @Override
     public TileFixture read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
-        TileFixtureDTO dto = JSON.fromJson(data, TileFixtureDTO.class);
-        TileFixture tileFixture = TILE_FIXTURE_FACTORY.make(
-                GET_FIXTURE_TYPE.apply(dto.fixtureTypeId),
+        var dto = JSON.fromJson(data, DTO.class);
+        var tileFixture = TILE_FIXTURE_FACTORY.make(
+                GET_FIXTURE_TYPE.apply(dto.typeId),
                 DATA_HANDLER.read(dto.data), UUID.fromString(dto.uuid));
-        tileFixture.setTileOffset(Vertex.of(dto.tileWidthOffset, dto.tileHeightOffset));
-        for (int i = 0; i < dto.items.length; i++) {
+        tileFixture.setTileOffset(Vertex.of(dto.widthOffset, dto.heightOffset));
+        for (var i = 0; i < dto.items.length; i++) {
             tileFixture.items().add(ITEMS_HANDLER.read(dto.items[i]));
         }
         tileFixture.setName(dto.name);
@@ -51,14 +50,14 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
     @Override
     public String write(TileFixture tileFixture) {
         Check.ifNull(tileFixture, "tileFixture");
-        TileFixtureDTO dto = new TileFixtureDTO();
+        var dto = new DTO();
         dto.uuid = tileFixture.uuid().toString();
-        dto.fixtureTypeId = tileFixture.type().id();
-        dto.tileWidthOffset = tileFixture.getTileOffset().X;
-        dto.tileHeightOffset = tileFixture.getTileOffset().Y;
-        List<Item> items = tileFixture.items().representation();
+        dto.typeId = tileFixture.type().id();
+        dto.widthOffset = tileFixture.getTileOffset().X;
+        dto.heightOffset = tileFixture.getTileOffset().Y;
+        var items = tileFixture.items().representation();
         dto.items = new String[items.size()];
-        for (int i = 0; i < items.size(); i++) {
+        for (var i = 0; i < items.size(); i++) {
             dto.items[i] = ITEMS_HANDLER.write(items.get(i));
         }
         dto.data = DATA_HANDLER.write(tileFixture.data());
@@ -66,11 +65,11 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
         return JSON.toJson(dto);
     }
 
-    private static class TileFixtureDTO {
+    private static class DTO {
         String uuid;
-        String fixtureTypeId;
-        float tileWidthOffset;
-        float tileHeightOffset;
+        String typeId;
+        float widthOffset;
+        float heightOffset;
         String[] items;
         String data;
         String name;

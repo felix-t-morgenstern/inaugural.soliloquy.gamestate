@@ -2,15 +2,16 @@ package inaugural.soliloquy.gamestate.test.fakes.persistence;
 
 import soliloquy.specs.common.persistence.TypeHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FakeTypeHandler<T> implements TypeHandler<T> {
-    public final List<String> READ_INPUTS = new ArrayList<>();
-    public final List<T> READ_OUTPUTS = new ArrayList<>();
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
-    public final List<T> WRITE_INPUTS = new ArrayList<>();
-    public final List<String> WRITE_OUTPUTS = new ArrayList<>();
+public abstract class FakeTypeHandler<T> implements TypeHandler<T> {
+    public final List<String> READ_INPUTS = listOf();
+    public final List<T> READ_OUTPUTS = listOf();
+
+    public final List<T> WRITE_INPUTS = listOf();
+    public final List<String> WRITE_OUTPUTS = listOf();
 
     public abstract String typeName();
 
@@ -36,7 +37,7 @@ public abstract class FakeTypeHandler<T> implements TypeHandler<T> {
     }
 
     @Override
-    public T getArchetype() {
+    public T archetype() {
         return null;
     }
 

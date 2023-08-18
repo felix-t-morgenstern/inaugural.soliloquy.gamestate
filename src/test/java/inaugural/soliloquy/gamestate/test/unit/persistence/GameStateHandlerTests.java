@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.GameStateHandler;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -13,10 +13,10 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import inaugural.soliloquy.tools.testing.Mock.HandlerAndEntity;
 
 import static inaugural.soliloquy.tools.testing.Mock.generateMockEntityAndHandler;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-class GameStateHandlerTests {
+public class GameStateHandlerTests {
     private final String CURRENT_GAME_ZONE_ID = "currentGameZoneId";
     private final String PARTY_WRITTEN_VALUE = "party";
     private final String VARIABLE_CACHE_WRITTEN_VALUE = "variableCache";
@@ -77,8 +77,8 @@ class GameStateHandlerTests {
             "\"roundBasedTimerHandler\":\"roundBasedTimerManager\"," +
             "\"clockBasedTimerHandler\":\"clockBasedTimerManager\"}";
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         mockGameZone = mock(GameZone.class);
         when(mockGameZone.id()).thenReturn(CURRENT_GAME_ZONE_ID);
 
@@ -102,7 +102,7 @@ class GameStateHandlerTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(null, PARTY_HANDLER,
                         VARIABLE_CACHE_HANDLER, CAMERA_HANDLER, ROUND_MANAGER_HANDLER,
@@ -134,7 +134,7 @@ class GameStateHandlerTests {
     }
 
     @Test
-    void testWrite() {
+    public void testWrite() {
         String output = gameStateHandler.write(mockGameState);
 
         assertEquals(WRITTEN_DATA, output);
@@ -147,12 +147,12 @@ class GameStateHandlerTests {
     }
 
     @Test
-    void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> gameStateHandler.write(null));
     }
 
     @Test
-    void testRead() {
+    public void testRead() {
         GameState output = gameStateHandler.read(WRITTEN_DATA);
 
         assertNull(output);
@@ -169,20 +169,20 @@ class GameStateHandlerTests {
     }
 
     @Test
-    void testReadWithInvalidParams() {
+    public void testReadWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> gameStateHandler.read(null));
         assertThrows(IllegalArgumentException.class, () -> gameStateHandler.read(""));
     }
 
     @Test
-    void testGetArchetype() {
-        assertNotNull(gameStateHandler.getArchetype());
+    public void testArchetype() {
+        assertNotNull(gameStateHandler.archetype());
         assertEquals(GameState.class.getCanonicalName(),
-                gameStateHandler.getArchetype().getInterfaceName());
+                gameStateHandler.archetype().getInterfaceName());
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         GameState.class.getCanonicalName() + ">",
                 gameStateHandler.getInterfaceName());

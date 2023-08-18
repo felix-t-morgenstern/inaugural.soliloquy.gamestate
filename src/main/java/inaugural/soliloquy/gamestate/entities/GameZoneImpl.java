@@ -82,7 +82,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
                     removeFromRoundManager.accept(c);
                 });
                 tiles[x][y].characters().forEach(
-                        c -> CHARACTERS_IN_GAME_ZONE.put(c.getItem1().uuid(), c.getItem1()));
+                        c -> CHARACTERS_IN_GAME_ZONE.put(c.item1().uuid(), c.item1()));
             }
         }
         MAX_COORDINATES = Coordinate2d.of(tilesWidth - 1, tilesHeight - 1);
@@ -191,12 +191,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @Override
     public void setName(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("GameZoneImpl.setName: name cannot be null");
-        }
-        if (name.equals("")) {
-            throw new IllegalArgumentException("GameZoneImpl.setName: name cannot be empty");
-        }
+        Check.ifNullOrEmpty(name, "name");
         this.name = name;
     }
 

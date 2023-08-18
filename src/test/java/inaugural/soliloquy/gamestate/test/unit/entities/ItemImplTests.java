@@ -4,8 +4,8 @@ import inaugural.soliloquy.gamestate.entities.ItemImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.common.valueobjects.Vertex;
@@ -16,9 +16,9 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import java.util.UUID;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class ItemImplTests {
+public class ItemImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final VariableCache DATA = new VariableCacheStub();
 
@@ -34,8 +34,8 @@ class ItemImplTests {
 
     private Item item;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = null;
         FakeCharacterInventory.OVERRIDE_CONTAINS = null;
         itemTypeStub = new ItemTypeStub();
@@ -43,31 +43,31 @@ class ItemImplTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, itemTypeStub, DATA));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, null, DATA));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, itemTypeStub, null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(Item.class.getCanonicalName(), item.getInterfaceName());
     }
 
     @Test
-    void testEquals() {
+    public void testEquals() {
         Item item2 = new ItemImpl(UUID, itemTypeStub, DATA);
 
         assertEquals(item, item2);
     }
 
     @Test
-    void testType() {
+    public void testType() {
         assertSame(itemTypeStub, item.type());
     }
 
     @Test
-    void testSetAndGetCharges() {
+    public void testSetAndGetCharges() {
         int charges = randomIntWithInclusiveFloor(1);
 
         item.setCharges(charges);
@@ -76,7 +76,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testSetAndGetChargesWhenHasChargesIsFalse() {
+    public void testSetAndGetChargesWhenHasChargesIsFalse() {
         itemTypeStub.HasCharges = false;
 
         assertThrows(UnsupportedOperationException.class, () ->
@@ -85,12 +85,12 @@ class ItemImplTests {
     }
 
     @Test
-    void testSetNegativeCharges() {
+    public void testSetNegativeCharges() {
         assertThrows(IllegalArgumentException.class, () -> item.setCharges(-1));
     }
 
     @Test
-    void testSetAndGetItemsInStack() {
+    public void testSetAndGetItemsInStack() {
         itemTypeStub.IsStackable = true;
         int itemsInStack = randomIntWithInclusiveFloor(1);
         item.setNumberInStack(itemsInStack);
@@ -99,7 +99,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testSetAndGetNumberInStackWhenIsStackableIsFalse() {
+    public void testSetAndGetNumberInStackWhenIsStackableIsFalse() {
         itemTypeStub.IsStackable = false;
 
         assertThrows(UnsupportedOperationException.class, () -> item.setNumberInStack(123));
@@ -107,17 +107,17 @@ class ItemImplTests {
     }
 
     @Test
-    void testUuid() {
+    public void testUuid() {
         assertEquals(UUID, item.uuid());
     }
 
     @Test
-    void testData() {
+    public void testData() {
         assertSame(DATA, item.data());
     }
 
     @Test
-    void testInvalidNumberFromStack() {
+    public void testInvalidNumberFromStack() {
         itemTypeStub.IsStackable = true;
         item.setNumberInStack(2);
 
@@ -126,14 +126,14 @@ class ItemImplTests {
     }
 
     @Test
-    void testTakeFromStackWhenNotStackable() {
+    public void testTakeFromStackWhenNotStackable() {
         itemTypeStub.IsStackable = false;
 
         assertThrows(UnsupportedOperationException.class, () -> item.takeFromStack(1));
     }
 
     @Test
-    void testTakeFromStack() {
+    public void testTakeFromStack() {
         itemTypeStub.IsStackable = true;
         int numberInStack = randomIntWithInclusiveFloor(2);
         int numberToTake = randomIntInRange(1, numberInStack - 1);
@@ -149,7 +149,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot() {
+    public void testAssignCharacterEquipmentSlotToItemAfterAddingToCharacterEquipmentSlot() {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
         Character character = new FakeCharacter();
@@ -160,12 +160,12 @@ class ItemImplTests {
         Pair<Character, String> equipmentSlot = item.equipmentSlot();
 
         assertNotNull(equipmentSlot);
-        assertSame(character, equipmentSlot.getItem1());
-        assertSame(CHARACTER_EQUIPMENT_SLOT_TYPE, equipmentSlot.getItem2());
+        assertSame(character, equipmentSlot.item1());
+        assertSame(CHARACTER_EQUIPMENT_SLOT_TYPE, equipmentSlot.item2());
     }
 
     @Test
-    void testAssignCharacterInventoryToItemAfterAddingToCharacterInventory() {
+    public void testAssignCharacterInventoryToItemAfterAddingToCharacterInventory() {
         FakeCharacterInventory.OVERRIDE_CONTAINS = true;
 
         item.assignInventoryCharacterAfterAddedToCharacterInventory(CHARACTER);
@@ -174,7 +174,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignTileAfterAddedToTileEntitiesOfType() {
+    public void testAssignTileAfterAddedToTileEntitiesOfType() {
         TILE.items().add(item);
 
         item.assignTileAfterAddedToTileEntitiesOfType(TILE);
@@ -183,7 +183,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignTileFixtureAfterAddedItemToTileFixtureItems() {
+    public void testAssignTileFixtureAfterAddedItemToTileFixtureItems() {
         FakeTileFixtureItems tileFixtureItems = new FakeTileFixtureItems(null);
 
         item.assignTileFixtureAfterAddedItemToTileFixtureItems(
@@ -193,22 +193,22 @@ class ItemImplTests {
     }
 
     @Test
-    void testPassiveAbilities() {
+    public void testPassiveAbilities() {
         assertNotNull(item.passiveAbilities());
     }
 
     @Test
-    void testActiveAbilities() {
+    public void testActiveAbilities() {
         assertNotNull(item.activeAbilities());
     }
 
     @Test
-    void testReactiveAbilities() {
+    public void testReactiveAbilities() {
         assertNotNull(item.reactiveAbilities());
     }
 
     @Test
-    void testAssignEquipmentSlotToItemAfterAddedToEquipmentSlotNullifiesOtherAssignments() {
+    public void testAssignEquipmentSlotToItemAfterAddedToEquipmentSlotNullifiesOtherAssignments() {
         CHARACTER_INVENTORY.add(item);
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
 
@@ -226,7 +226,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignInventoryCharacterToItemAfterAddedToInventoryNullifiesOtherAssignments() {
+    public void testAssignInventoryCharacterToItemAfterAddedToInventoryNullifiesOtherAssignments() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
         CHARACTER_INVENTORY.add(item);
 
@@ -244,7 +244,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignTileFixtureToItemAfterAddingItemToTileFixtureItemsNullifiesOtherAssignments() {
+    public void testAssignTileFixtureToItemAfterAddingItemToTileFixtureItemsNullifiesOtherAssignments() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
         TILE_FIXTURE.items().add(item);
         assertNull(item.equipmentSlot());
@@ -259,7 +259,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignTileToItemAfterAddedToTileEntitiesNullifiesOtherAssignments() {
+    public void testAssignTileToItemAfterAddedToTileEntitiesNullifiesOtherAssignments() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
         TILE.items().add(item);
         assertNull(item.equipmentSlot());
@@ -274,7 +274,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignToNullCharacterEquipmentSlotsNullifiesGetEquipmentSlot() {
+    public void testAssignToNullCharacterEquipmentSlotsNullifiesGetEquipmentSlot() {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
         item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
@@ -287,7 +287,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignToNullEquipmentSlotTypeNullifiesGetEquipmentSlot() {
+    public void testAssignToNullEquipmentSlotTypeNullifiesGetEquipmentSlot() {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
         item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
@@ -300,7 +300,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testAssignToEmptyEquipmentSlotTypeNullifiesGetEquipmentSlot() {
+    public void testAssignToEmptyEquipmentSlotTypeNullifiesGetEquipmentSlot() {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = item;
 
         item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(
@@ -313,20 +313,20 @@ class ItemImplTests {
     }
 
     @Test
-    void testCharacterEquipmentSlotAssignmentInvariant() {
+    public void testCharacterEquipmentSlotAssignmentInvariant() {
         CHARACTER_EQUIPMENT_SLOTS.addCharacterEquipmentSlot(CHARACTER_EQUIPMENT_SLOT_TYPE);
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
     }
 
     @Test
-    void testDelete() {
+    public void testDelete() {
         item.delete();
 
         assertTrue(item.isDeleted());
     }
 
     @Test
-    void testSetAndGetName() {
+    public void testSetAndGetName() {
         String name = randomString();
 
         item.setName(name);
@@ -335,21 +335,21 @@ class ItemImplTests {
     }
 
     @Test
-    void testGetNameWithNullItemImplNameReturnsItemTypeName() {
+    public void testGetNameWithNullItemImplNameReturnsItemTypeName() {
         item.setName(null);
 
         assertEquals(ItemTypeStub.ITEM_TYPE_NAME, item.getName());
     }
 
     @Test
-    void testGetNameWithEmptyItemImplNameReturnsItemTypeName() {
+    public void testGetNameWithEmptyItemImplNameReturnsItemTypeName() {
         item.setName("");
 
         assertEquals(ItemTypeStub.ITEM_TYPE_NAME, item.getName());
     }
 
     @Test
-    void testSetAndGetPluralName() {
+    public void testSetAndGetPluralName() {
         String pluralName = randomString();
 
         item.setPluralName(pluralName);
@@ -358,13 +358,13 @@ class ItemImplTests {
     }
 
     @Test
-    void testCreatedItemTakesDefaultOffsets() {
+    public void testCreatedItemTakesDefaultOffsets() {
         assertEquals(Vertex.of(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
                 ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET), item.getTileOffset());
     }
 
     @Test
-    void testSetAndGetTileOffset() {
+    public void testSetAndGetTileOffset() {
         Vertex tileOffset = Vertex.of(randomFloat(), randomFloat());
 
         item.setTileOffset(tileOffset);
@@ -373,21 +373,21 @@ class ItemImplTests {
     }
 
     @Test
-    void testGetNameWithNullItemImplPluralNameReturnsItemTypePluralName() {
+    public void testGetNameWithNullItemImplPluralNameReturnsItemTypePluralName() {
         item.setPluralName(null);
 
         assertEquals(ItemTypeStub.ITEM_TYPE_PLURAL_NAME, item.getPluralName());
     }
 
     @Test
-    void testGetNameWithEmptyItemImplPluralNameReturnsItemTypePluralName() {
+    public void testGetNameWithEmptyItemImplPluralNameReturnsItemTypePluralName() {
         item.setPluralName("");
 
         assertEquals(ItemTypeStub.ITEM_TYPE_PLURAL_NAME, item.getPluralName());
     }
 
     @Test
-    void testDeleteRemovesItemFromCharacterEquipmentSlot() {
+    public void testDeleteRemovesItemFromCharacterEquipmentSlot() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
         assertSame(item, CHARACTER_EQUIPMENT_SLOTS.itemInSlot(CHARACTER_EQUIPMENT_SLOT_TYPE));
 
@@ -397,7 +397,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testDeleteRemovesItemFromCharacterInventory() {
+    public void testDeleteRemovesItemFromCharacterInventory() {
         CHARACTER_INVENTORY.add(item);
         assertTrue(CHARACTER_INVENTORY.contains(item));
         int originalCharacterInventorySize =
@@ -412,7 +412,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testDeleteRemovesItemFromTileFixtureItems() {
+    public void testDeleteRemovesItemFromTileFixtureItems() {
         TILE_FIXTURE.items().add(item);
         assertTrue(TILE_FIXTURE.items().contains(item));
         int originalTileFixtureSize = ((FakeTileFixtureItems) TILE_FIXTURE.items())._items.size();
@@ -427,7 +427,7 @@ class ItemImplTests {
 
     @SuppressWarnings("rawtypes")
     @Test
-    void testDeleteRemovesItemFromTileItems() {
+    public void testDeleteRemovesItemFromTileItems() {
         TILE.items().add(item);
         assertTrue(TILE.items().contains(item));
         int originalTileFixtureSize = ((FakeTileEntities) TILE.items()).ENTITIES.size();
@@ -441,7 +441,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testDeletionInvariant() {
+    public void testDeletionInvariant() {
         item.delete();
 
         assertThrows(EntityDeletedException.class, () -> item.type());
@@ -476,7 +476,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testItemNotFoundInCharacterEquipmentSlotInvariant() {
+    public void testItemNotFoundInCharacterEquipmentSlotInvariant() {
         CHARACTER_EQUIPMENT_SLOTS.equipItemToSlot(CHARACTER_EQUIPMENT_SLOT_TYPE, item);
         FakeCharacterEquipmentSlots.EQUIPMENT_SLOTS.remove(CHARACTER_EQUIPMENT_SLOT_TYPE);
 
@@ -512,7 +512,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testItemNotFoundInCharacterInventoryInvariant() {
+    public void testItemNotFoundInCharacterInventoryInvariant() {
         CHARACTER_INVENTORY.add(item);
         ((FakeCharacterInventory) CHARACTER_INVENTORY).ITEMS.remove(item);
 
@@ -549,7 +549,7 @@ class ItemImplTests {
 
     @SuppressWarnings("rawtypes")
     @Test
-    void testItemNotFoundInTileItemsInvariant() {
+    public void testItemNotFoundInTileItemsInvariant() {
         TILE.items().add(item);
         ((FakeTileEntities) TILE.items()).ENTITIES.remove(item);
 
@@ -585,7 +585,7 @@ class ItemImplTests {
     }
 
     @Test
-    void testItemNotFoundInTileFixtureItemsInvariant() {
+    public void testItemNotFoundInTileFixtureItemsInvariant() {
         FakeTileFixture tileFixture = new FakeTileFixture();
         tileFixture.items().add(item);
         ((FakeTileFixtureItems) tileFixture.items())._items.remove(item);

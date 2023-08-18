@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.CharacterFactoryImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -12,11 +12,11 @@ import soliloquy.specs.ruleset.entities.character.CharacterType;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class CharacterFactoryImplTests {
+public class CharacterFactoryImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final Supplier<UUID> UUID_FACTORY = () -> UUID;
 
@@ -30,8 +30,8 @@ class CharacterFactoryImplTests {
 
     private CharacterFactory characterFactory;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         mockEventsFactory = mock(CharacterEventsFactory.class);
 
         mockEquipmentSlotsFactory = mock(CharacterEquipmentSlotsFactory.class);
@@ -53,7 +53,7 @@ class CharacterFactoryImplTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterFactoryImpl(null, mockEventsFactory, mockEquipmentSlotsFactory,
                         mockInventoryFactory, mockStatusEffectsFactory, mockDataFactory));
@@ -77,13 +77,13 @@ class CharacterFactoryImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(CharacterFactory.class.getCanonicalName(),
                 characterFactory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
+    public void testMake() {
         var character = characterFactory.make(mockCharacterType);
 
         assertNotNull(character);
@@ -91,7 +91,7 @@ class CharacterFactoryImplTests {
     }
 
     @Test
-    void testMakeWithEntityUuid() {
+    public void testMakeWithEntityUuid() {
         var character = characterFactory.make(mockCharacterType, UUID, mockData);
 
         assertNotNull(character);
@@ -100,7 +100,7 @@ class CharacterFactoryImplTests {
     }
 
     @Test
-    void testMakeWithInvalidParams() {
+    public void testMakeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> characterFactory.make(null));
         assertThrows(IllegalArgumentException.class,
                 () -> characterFactory.make(null, UUID, mockData));

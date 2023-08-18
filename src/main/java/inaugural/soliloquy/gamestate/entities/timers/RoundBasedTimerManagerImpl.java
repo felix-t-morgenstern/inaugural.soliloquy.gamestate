@@ -9,6 +9,9 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
 import java.util.*;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+
 public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
     private final GameEventFiring GAME_EVENT_FIRING;
     private final HashSet<OneTimeRoundBasedTimer> ONE_TIME_ROUND_BASED_TIMERS = new HashSet<>();
@@ -58,7 +61,7 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
             throws IllegalArgumentException {
         Check.throwOnSecondLte(previousRound, newRound, "previousRound", "newRound");
 
-        HashMap<Integer, List<RoundBasedTimer>> timersFiredByRound = new HashMap<>();
+        Map<Integer, List<RoundBasedTimer>> timersFiredByRound = mapOf();
 
         ONE_TIME_ROUND_BASED_TIMERS.forEach(oneTimeRoundBasedTimer -> {
             if (newRound > oneTimeRoundBasedTimer.roundWhenGoesOff()) {
@@ -77,7 +80,7 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
             });
         }
 
-        ArrayList<Integer> roundsToFire = new ArrayList<>(timersFiredByRound.keySet());
+        List<Integer> roundsToFire = listOf(timersFiredByRound.keySet());
         Collections.sort(roundsToFire);
         for (int roundToFire : roundsToFire) {
             timersFiredByRound.get(roundToFire)
@@ -86,9 +89,9 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
     }
 
     private void addRoundBasedTimerToFire(RoundBasedTimer roundBasedTimer, int round,
-                                          HashMap<Integer, List<RoundBasedTimer>> timersFiredByRound) {
+                                          Map<Integer, List<RoundBasedTimer>> timersFiredByRound) {
         if (!timersFiredByRound.containsKey(round)) {
-            timersFiredByRound.put(round, new ArrayList<>());
+            timersFiredByRound.put(round, listOf());
         }
 
         timersFiredByRound.get(round).add(roundBasedTimer);
@@ -96,12 +99,12 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
 
     @Override
     public List<OneTimeRoundBasedTimer> oneTimeRoundBasedTimersRepresentation() {
-        return new ArrayList<>(ONE_TIME_ROUND_BASED_TIMERS);
+        return listOf(ONE_TIME_ROUND_BASED_TIMERS);
     }
 
     @Override
     public List<RecurringRoundBasedTimer> recurringRoundBasedTimersRepresentation() {
-        return new ArrayList<>(RECURRING_ROUND_BASED_TIMERS);
+        return listOf(RECURRING_ROUND_BASED_TIMERS);
     }
 
     @Override

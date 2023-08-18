@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.RoundBasedTimerFactoryImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
@@ -11,51 +11,51 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class RoundBasedTimerFactoryImplTests {
+public class RoundBasedTimerFactoryImplTests {
     private final String TIMER_ID = randomString();
     private final String ACTION_ID = randomString();
     private final int PRIORITY = randomInt();
 
     @SuppressWarnings({"rawtypes"})
     @Mock
-    private Action _mockAction;
+    private Action mockAction;
     @Mock
-    private RoundBasedTimerManager _mockRoundBasedTimerManager;
+    private RoundBasedTimerManager mockRoundBasedTimerManager;
 
-    private RoundBasedTimerFactory _roundBasedTimerFactory;
+    private RoundBasedTimerFactory roundbasedtimerfactory;
 
-    @BeforeEach
-    void setUp() {
-        _mockAction = mock(Action.class);
-        when(_mockAction.id()).thenReturn(ACTION_ID);
+    @Before
+    public void setUp() {
+        mockAction = mock(Action.class);
+        when(mockAction.id()).thenReturn(ACTION_ID);
 
-        _mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
+        mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
 
-        _roundBasedTimerFactory = new RoundBasedTimerFactoryImpl(_mockRoundBasedTimerManager);
+        roundbasedtimerfactory = new RoundBasedTimerFactoryImpl(mockRoundBasedTimerManager);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new RoundBasedTimerFactoryImpl(null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(RoundBasedTimerFactory.class.getCanonicalName(),
-                _roundBasedTimerFactory.getInterfaceName());
+                roundbasedtimerfactory.getInterfaceName());
     }
 
     @Test
-    void testMakeOneTimeTimer() {
+    public void testMakeOneTimeTimer() {
         int roundWhenGoesOff = randomInt();
 
-        OneTimeRoundBasedTimer oneTimeRoundBasedTimer = _roundBasedTimerFactory.makeOneTimeTimer(
-                TIMER_ID, _mockAction, roundWhenGoesOff, PRIORITY);
+        OneTimeRoundBasedTimer oneTimeRoundBasedTimer = roundbasedtimerfactory.makeOneTimeTimer(
+                TIMER_ID, mockAction, roundWhenGoesOff, PRIORITY);
 
         assertEquals(TIMER_ID, oneTimeRoundBasedTimer.id());
         assertEquals(ACTION_ID, oneTimeRoundBasedTimer.actionId());
@@ -64,12 +64,12 @@ class RoundBasedTimerFactoryImplTests {
     }
 
     @Test
-    void testMakeRecurringTimer() {
+    public void testMakeRecurringTimer() {
         int roundModulo = randomIntWithInclusiveFloor(1);
         int roundOffset = roundModulo - 1;
 
-        RecurringRoundBasedTimer recurringRoundBasedTimer = _roundBasedTimerFactory
-                .makeRecurringTimer(TIMER_ID, _mockAction, roundModulo, roundOffset, PRIORITY);
+        RecurringRoundBasedTimer recurringRoundBasedTimer = roundbasedtimerfactory
+                .makeRecurringTimer(TIMER_ID, mockAction, roundModulo, roundOffset, PRIORITY);
 
         assertEquals(TIMER_ID, recurringRoundBasedTimer.id());
         assertEquals(ACTION_ID, recurringRoundBasedTimer.actionId());

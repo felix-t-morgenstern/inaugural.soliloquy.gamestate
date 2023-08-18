@@ -2,8 +2,10 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
-import java.util.ArrayList;
 
+import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 
 public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
@@ -11,7 +13,7 @@ public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
     public int PeriodModuloOffset;
     public long LastFiringTimestamp;
     public boolean FireMultipleTimesForMultiplePeriodsElapsed;
-    public ArrayList<Long> FiredTimes = new ArrayList<>();
+    public List<Long> FiredTimes = listOf();
     public String Id = randomString();
 
     public FakeRecurringClockBasedTimer() {

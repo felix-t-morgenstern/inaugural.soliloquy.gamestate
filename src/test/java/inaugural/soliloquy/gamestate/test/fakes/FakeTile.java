@@ -10,11 +10,11 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,10 +24,10 @@ public class FakeTile implements Tile {
     private final TileEntities<Character> CHARACTERS = new FakeTileEntities<>(this);
     private final TileEntities<TileFixture> FIXTURES = new FakeTileEntities<>(this);
     private final TileEntities<Item> TILE_ITEMS = new FakeTileEntities<>(this);
-    private final List<GameMovementEvent> MOVEMENT_EVENTS = new ArrayList<>();
-    private final List<GameAbilityEvent> ABILITY_EVENTS = new ArrayList<>();
+    private final List<GameMovementEvent> MOVEMENT_EVENTS = listOf();
+    private final List<GameAbilityEvent> ABILITY_EVENTS = listOf();
 
-    private final Map<Sprite, Integer> SPRITES = new HashMap<>();
+    private final Map<Sprite, Integer> SPRITES = mapOf();
 
     private int _height;
     private GroundType _groundType;

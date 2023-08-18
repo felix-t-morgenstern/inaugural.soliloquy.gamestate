@@ -3,11 +3,12 @@ package inaugural.soliloquy.gamestate.test.fakes;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+
 public class FakeKeyBinding implements KeyBinding {
-    private final List<Character> BOUND_CHARACTERS = new ArrayList<>();
+    private final List<Character> BOUND_CHARACTERS = listOf();
 
     public Long _pressed;
     public Long _released;

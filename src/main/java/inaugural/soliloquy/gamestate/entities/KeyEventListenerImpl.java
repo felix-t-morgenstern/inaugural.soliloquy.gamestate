@@ -9,15 +9,18 @@ import soliloquy.specs.gamestate.entities.KeyEventListener;
 import java.util.*;
 import java.util.function.Consumer;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+
 public class KeyEventListenerImpl implements KeyEventListener {
     private final TreeMap<Integer, List<KeyBindingContext>> CONTEXTS;
     private final TimestampValidator TIMESTAMP_VALIDATOR;
-    private final HashMap<KeyBindingContext, Integer> PRIORITIES_BY_CONTEXTS;
+    private final Map<KeyBindingContext, Integer> PRIORITIES_BY_CONTEXTS;
 
     public KeyEventListenerImpl(Long mostRecentTimestamp) {
         CONTEXTS = new TreeMap<>();
         TIMESTAMP_VALIDATOR = new TimestampValidator(mostRecentTimestamp);
-        PRIORITIES_BY_CONTEXTS = new HashMap<>();
+        PRIORITIES_BY_CONTEXTS = mapOf();
     }
 
     @Override
@@ -31,7 +34,7 @@ public class KeyEventListenerImpl implements KeyEventListener {
         Check.ifNull(keyBindingContext, "keyBindingContext");
         removeContext(keyBindingContext);
         if (!CONTEXTS.containsKey(priority)) {
-            ArrayList<KeyBindingContext> contextsAtPriority = new ArrayList<>();
+            List<KeyBindingContext> contextsAtPriority = listOf();
             contextsAtPriority.add(keyBindingContext);
             CONTEXTS.put(priority, contextsAtPriority);
         }
@@ -46,8 +49,8 @@ public class KeyEventListenerImpl implements KeyEventListener {
             throws IllegalArgumentException {
         Check.ifNull(keyBindingContext, "keyBindingContext");
         if (PRIORITIES_BY_CONTEXTS.containsKey(keyBindingContext)) {
-            int priority = PRIORITIES_BY_CONTEXTS.get(keyBindingContext);
-            List<KeyBindingContext> contextsAtPriority = CONTEXTS.get(priority);
+            var priority = PRIORITIES_BY_CONTEXTS.get(keyBindingContext);
+            var contextsAtPriority = CONTEXTS.get(priority);
             contextsAtPriority.remove(keyBindingContext);
             if (contextsAtPriority.isEmpty()) {
                 CONTEXTS.remove(priority);
@@ -58,7 +61,7 @@ public class KeyEventListenerImpl implements KeyEventListener {
 
     @Override
     public java.util.List<Character> activeKeysRepresentation() {
-        ArrayList<Character> representation = new ArrayList<>();
+        List<Character> representation = listOf();
         loopOverBindings(null, null, c -> {
             if (!representation.contains(c)) {
                 representation.add(c);
@@ -82,7 +85,7 @@ public class KeyEventListenerImpl implements KeyEventListener {
     // TODO: Ensure that the values in CONTEXT are also deeply cloned in KeyEventListenerImpl.contextsRepresentation
     @Override
     public Map<Integer, List<KeyBindingContext>> contextsRepresentation() {
-        return new HashMap<>(CONTEXTS);
+        return mapOf(CONTEXTS);
     }
 
     private void handleKeyEvent(char c, Consumer<KeyBinding> onEvent) {
@@ -91,10 +94,10 @@ public class KeyEventListenerImpl implements KeyEventListener {
 
     private void loopOverBindings(Character c, Consumer<KeyBinding> handleEvent,
                                   Consumer<Character> handleCharacter) {
-        for (List<KeyBindingContext> contexts : CONTEXTS.values()) {
-            for (KeyBindingContext context : contexts) {
-                List<KeyBinding> bindings = context.bindings();
-                for (KeyBinding binding : bindings) {
+        for (var contexts : CONTEXTS.values()) {
+            for (var context : contexts) {
+                var bindings = context.bindings();
+                for (var binding : bindings) {
                     if (handleCharacter != null) {
                         binding.boundCharacters().forEach(handleCharacter);
                     }

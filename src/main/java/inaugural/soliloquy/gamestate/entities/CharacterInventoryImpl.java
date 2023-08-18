@@ -6,10 +6,11 @@ import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.Item;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
         implements CharacterInventory {
@@ -35,7 +36,7 @@ public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public List<Item> representation() throws IllegalStateException {
         enforceDeletionInvariants();
-        return new ArrayList<>(INVENTORY);
+        return listOf(INVENTORY);
     }
 
     @Override

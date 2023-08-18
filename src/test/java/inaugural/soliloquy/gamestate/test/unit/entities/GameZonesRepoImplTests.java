@@ -14,42 +14,47 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.random.Random.randomString;
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameZonesRepoImplTests {
+// TODO: Touch up this suite
+// NB: This suite still uses the Jupiter API, since the JUnit version which supports @TempDir
+//     (5.4.x) is not yet available on Maven central repo.
+public class GameZonesRepoImplTests {
     private final GameZone GAME_ZONE = new FakeGameZone();
     private final TypeHandler<GameZone> GAME_ZONE_HANDLER =
             new FakeGameZoneHandler();
-    private final HashMap<String, Path> FILE_LOCATIONS = new HashMap<>();
+    private final Map<String, Path> FILE_LOCATIONS = mapOf();
     private final String DIRECTORY_NAME = "gameZone1";
     private final String TEMP_FILE_RELATIVE_LOC = DIRECTORY_NAME + "\\sharedTempFile.txt";
-    private final String ORIGINAL_FILE_TEXT = "This is a fake GameZone.";
+    private final String ORIGINAL_FILE_TEXT = randomString();
 
-    private GameZonesRepo _gameZonesRepo;
+    private GameZonesRepo gameZonesRepo;
 
     @SuppressWarnings("WeakerAccess")
     @TempDir
     static Path sharedTempDir;
 
     @BeforeEach
-    void setUp() throws Exception {
-        Path sharedTempDirPath = sharedTempDir.resolve(DIRECTORY_NAME);
+    public void setUp() throws Exception {
+        var sharedTempDirPath = sharedTempDir.resolve(DIRECTORY_NAME);
         //noinspection ResultOfMethodCallIgnored
         new File(sharedTempDirPath.toString()).mkdir();
-        Path sharedTempFilePath = sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOC);
-        Files.write(sharedTempFilePath, new ArrayList<>());
+        var sharedTempFilePath = sharedTempDir.resolve(TEMP_FILE_RELATIVE_LOC);
+        Files.write(sharedTempFilePath, listOf());
         Files.writeString(sharedTempFilePath, ORIGINAL_FILE_TEXT,
                 StandardOpenOption.APPEND);
         FILE_LOCATIONS.put(GAME_ZONE.id(), sharedTempFilePath);
 
-        _gameZonesRepo = new GameZonesRepoImpl(GAME_ZONE_HANDLER, FILE_LOCATIONS);
+        gameZonesRepo = new GameZonesRepoImpl(GAME_ZONE_HANDLER, FILE_LOCATIONS);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZonesRepoImpl(null, FILE_LOCATIONS));
         assertThrows(IllegalArgumentException.class,
@@ -57,13 +62,13 @@ class GameZonesRepoImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
-        assertEquals(GameZonesRepo.class.getCanonicalName(), _gameZonesRepo.getInterfaceName());
+    public void testGetInterfaceName() {
+        assertEquals(GameZonesRepo.class.getCanonicalName(), gameZonesRepo.getInterfaceName());
     }
 
     @Test
-    void testGetGameZone() {
-        GameZone gameZone = _gameZonesRepo.getGameZone(GAME_ZONE.id());
+    public void testGetGameZone() {
+        var gameZone = gameZonesRepo.getGameZone(GAME_ZONE.id());
 
         assertEquals(ORIGINAL_FILE_TEXT,
                 ((FakeGameZoneHandler) GAME_ZONE_HANDLER).READ_INPUTS.get(0));
@@ -72,15 +77,15 @@ class GameZonesRepoImplTests {
     }
 
     @Test
-    void testGetGameZoneWithInvalidParameters() {
-        assertThrows(IllegalArgumentException.class, () -> _gameZonesRepo.getGameZone(null));
-        assertThrows(IllegalArgumentException.class, () -> _gameZonesRepo.getGameZone(""));
-        assertThrows(IllegalArgumentException.class, () -> _gameZonesRepo.getGameZone("invalid"));
+    public void testGetGameZoneWithInvalidParameters() {
+        assertThrows(IllegalArgumentException.class, () -> gameZonesRepo.getGameZone(null));
+        assertThrows(IllegalArgumentException.class, () -> gameZonesRepo.getGameZone(""));
+        assertThrows(IllegalArgumentException.class, () -> gameZonesRepo.getGameZone("invalid"));
     }
 
     @Test
-    void testSaveGameZone() {
-        _gameZonesRepo.saveGameZone(GAME_ZONE);
+    public void testSaveGameZone() {
+        gameZonesRepo.saveGameZone(GAME_ZONE);
 
         assertEquals(GAME_ZONE,
                 ((FakeGameZoneHandler) GAME_ZONE_HANDLER).WRITE_INPUTS.get(0));
@@ -94,9 +99,9 @@ class GameZonesRepoImplTests {
     }
 
     @Test
-    void testSaveGameZoneWithInvalidParameters() {
-        assertThrows(IllegalArgumentException.class, () -> _gameZonesRepo.saveGameZone(null));
+    public void testSaveGameZoneWithInvalidParameters() {
+        assertThrows(IllegalArgumentException.class, () -> gameZonesRepo.saveGameZone(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _gameZonesRepo.saveGameZone(new FakeGameZone("InvalidId")));
+                () -> gameZonesRepo.saveGameZone(new FakeGameZone("InvalidId")));
     }
 }

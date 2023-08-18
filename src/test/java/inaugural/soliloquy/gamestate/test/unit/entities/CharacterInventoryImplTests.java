@@ -1,159 +1,158 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterInventoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import inaugural.soliloquy.gamestate.entities.TileFixtureImpl;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-class CharacterInventoryImplTests {
-    private final Character CHARACTER = new FakeCharacter();
-    private final Item ITEM = new FakeItem();
+@RunWith(MockitoJUnitRunner.class)
+public class CharacterInventoryImplTests {
+    @Mock private Character mockCharacter;
+    @Mock private Item mockItem1;
+    @Mock private Item mockItem2;
+    @Mock private Item mockItem3;
 
-    private CharacterInventory _characterInventory;
+    private CharacterInventory characterInventory;
 
-    @BeforeEach
-    void setUp() {
-        _characterInventory = new CharacterInventoryImpl(CHARACTER);
+    @Before
+    public void setUp() {
+        characterInventory = new CharacterInventoryImpl(mockCharacter);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(CharacterInventory.class.getCanonicalName(),
-                _characterInventory.getInterfaceName());
+                characterInventory.getInterfaceName());
     }
 
     @Test
-    void testAddAndContains() {
-        _characterInventory.add(ITEM);
+    public void testAddAndContains() {
+        characterInventory.add(mockItem1);
 
-        assertTrue(_characterInventory.contains(ITEM));
+        assertTrue(characterInventory.contains(mockItem1));
     }
 
     @Test
-    void testAddAndRemove() {
-        _characterInventory.add(ITEM);
+    public void testAddAndRemove() {
+        characterInventory.add(mockItem1);
 
-        assertTrue(_characterInventory.remove(ITEM));
-        assertFalse(_characterInventory.remove(ITEM));
+        assertTrue(characterInventory.remove(mockItem1));
+        assertFalse(characterInventory.remove(mockItem1));
     }
 
     @Test
-    void testThrowsWhenItemIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(null));
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.contains(null));
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.remove(null));
+    public void testThrowsWhenItemIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.add(null));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.contains(null));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.remove(null));
     }
 
     @Test
-    void testThrowWhenItemIsDeleted() {
-        ITEM.delete();
+    public void testThrowWhenItemIsDeleted() {
+        when(mockItem1.isDeleted()).thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.contains(ITEM));
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.remove(ITEM));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.add(mockItem1));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.contains(mockItem1));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.remove(mockItem1));
     }
 
     @Test
-    void testRepresentation() {
-        Item item1 = new FakeItem();
-        Item item2 = new FakeItem();
-        Item item3 = new FakeItem();
-        _characterInventory.add(item1);
-        _characterInventory.add(item2);
-        _characterInventory.add(item3);
+    public void testRepresentation() {
+        characterInventory.add(mockItem1);
+        characterInventory.add(mockItem2);
+        characterInventory.add(mockItem3);
 
-        List<Item> representation = _characterInventory.representation();
+        var representation = characterInventory.representation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        assertTrue(representation.contains(item1));
-        assertTrue(representation.contains(item2));
-        assertTrue(representation.contains(item3));
+        assertTrue(representation.contains(mockItem1));
+        assertTrue(representation.contains(mockItem2));
+        assertTrue(representation.contains(mockItem3));
     }
 
     @Test
-    void testThrowOnAddItemPresentElsewhere() {
-        ((FakeItem) ITEM).inventoryCharacter = new FakeCharacter();
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
+    public void testThrowOnAddItemPresentElsewhere() {
+        when(mockItem1.inventoryCharacter()).thenReturn(mockCharacter);
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.add(mockItem1));
 
-        ((FakeItem) ITEM).inventoryCharacter = null;
-        ((FakeItem) ITEM).tileFixture = new FakeTileFixture();
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
+        when(mockItem1.inventoryCharacter()).thenReturn(null);
+        when(mockItem1.tileFixture()).thenReturn(mock(TileFixtureImpl.class));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.add(mockItem1));
 
-        ((FakeItem) ITEM).tileFixture = null;
-        ((FakeItem) ITEM).tile = new FakeTile();
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
+        when(mockItem1.tileFixture()).thenReturn(null);
+        when(mockItem1.tile()).thenReturn(mock(Tile.class));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.add(mockItem1));
 
-        ((FakeItem) ITEM).tile = null;
-        ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
-        ((FakeItem) ITEM).equipmentSlotType = "slotType";
-        assertThrows(IllegalArgumentException.class, () -> _characterInventory.add(ITEM));
+        lenient().when(mockItem1.tile()).thenReturn(null);
+        when(mockItem1.equipmentSlot()).thenReturn(pairOf(mockCharacter, randomString()));
+        assertThrows(IllegalArgumentException.class, () -> characterInventory.add(mockItem1));
     }
 
     @Test
-    void testIterator() {
-        Item item1 = new FakeItem();
-        Item item2 = new FakeItem();
-        Item item3 = new FakeItem();
+    public void testIterator() {
+        characterInventory.add(mockItem1);
+        characterInventory.add(mockItem2);
+        characterInventory.add(mockItem3);
 
-        _characterInventory.add(item1);
-        _characterInventory.add(item2);
-        _characterInventory.add(item3);
+        List<Item> itemsFromIterator = listOf();
 
-        ArrayList<Item> itemsFromIterator = new ArrayList<>();
-
-        _characterInventory.forEach(itemsFromIterator::add);
+        characterInventory.forEach(itemsFromIterator::add);
 
         assertEquals(3, itemsFromIterator.size());
-        assertTrue(itemsFromIterator.contains(item1));
-        assertTrue(itemsFromIterator.contains(item2));
-        assertTrue(itemsFromIterator.contains(item3));
+        assertTrue(itemsFromIterator.contains(mockItem1));
+        assertTrue(itemsFromIterator.contains(mockItem2));
+        assertTrue(itemsFromIterator.contains(mockItem3));
     }
 
     @Test
-    void testDelete() {
-        _characterInventory.add(ITEM);
+    public void testDelete() {
+        characterInventory.add(mockItem1);
 
-        _characterInventory.delete();
+        characterInventory.delete();
 
-        assertTrue(_characterInventory.isDeleted());
-        assertTrue(ITEM.isDeleted());
+        assertTrue(characterInventory.isDeleted());
+        verify(mockItem1).delete();
     }
 
     @Test
-    void testDeletionInvariant() {
-        _characterInventory.delete();
+    public void testDeletionInvariant() {
+        characterInventory.delete();
 
-        assertThrows(EntityDeletedException.class, () -> _characterInventory.add(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _characterInventory.contains(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _characterInventory.remove(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _characterInventory.representation());
+        assertThrows(EntityDeletedException.class, () -> characterInventory.add(mockItem1));
+        assertThrows(EntityDeletedException.class, () -> characterInventory.contains(mockItem1));
+        assertThrows(EntityDeletedException.class, () -> characterInventory.remove(mockItem1));
+        assertThrows(EntityDeletedException.class, () -> characterInventory.representation());
     }
 
     @Test
-    void testCharacterDeletedInvariant() {
-        CHARACTER.delete();
+    public void testCharacterDeletedInvariant() {
+        when(mockCharacter.isDeleted()).thenReturn(true);
 
-        assertThrows(IllegalStateException.class, () -> _characterInventory.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _characterInventory.contains(ITEM));
-        assertThrows(IllegalStateException.class, () -> _characterInventory.remove(ITEM));
-        assertThrows(IllegalStateException.class, () -> _characterInventory.representation());
+        assertThrows(IllegalStateException.class, () -> characterInventory.add(mockItem1));
+        assertThrows(IllegalStateException.class, () -> characterInventory.contains(mockItem1));
+        assertThrows(IllegalStateException.class, () -> characterInventory.remove(mockItem1));
+        assertThrows(IllegalStateException.class, () -> characterInventory.representation());
     }
 }

@@ -77,7 +77,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     @Override
     public GameEventTarget makeGameEventTarget() throws IllegalStateException {
         enforceInvariants("makeGameEventTarget");
-        TileFixture tileFixture = this;
+        var tileFixture = this;
         return new GameEventTarget() {
             @Override
             public Tile tile() {
@@ -106,7 +106,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
         enforceCorrectTileInvariant("delete");
         TILE_FIXTURE_ITEMS.delete();
         if (tile != null) {
-            TileEntities<TileFixture> tileFixtures = tile.fixtures();
+            var tileFixtures = tile.fixtures();
             tile = null;
             tileFixtures.remove(this);
         }

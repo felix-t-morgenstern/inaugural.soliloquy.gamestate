@@ -106,22 +106,22 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
         dto.characters = new TileEntityDTO[tile.characters().size()];
         index = 0;
         for (var pair : tile.characters()) {
-            dto.characters[index++] = new TileEntityDTO(pair.getItem2(),
-                    CHARACTERS_HANDLER.write(pair.getItem1()));
+            dto.characters[index++] = new TileEntityDTO(pair.item2(),
+                    CHARACTERS_HANDLER.write(pair.item1()));
         }
 
         dto.items = new TileEntityDTO[tile.items().size()];
         index = 0;
         for (var pair : tile.items()) {
-            dto.items[index++] = new TileEntityDTO(pair.getItem2(),
-                    ITEMS_HANDLER.write(pair.getItem1()));
+            dto.items[index++] = new TileEntityDTO(pair.item2(),
+                    ITEMS_HANDLER.write(pair.item1()));
         }
 
         dto.fixtures = new TileEntityDTO[tile.fixtures().size()];
         index = 0;
         for (var pair : tile.fixtures()) {
-            dto.fixtures[index++] = new TileEntityDTO(pair.getItem2(),
-                    FIXTURES_HANDLER.write(pair.getItem1()));
+            dto.fixtures[index++] = new TileEntityDTO(pair.item2(),
+                    FIXTURES_HANDLER.write(pair.item1()));
         }
 
         dto.movementEvents = new String[tile.movementEvents().size()];

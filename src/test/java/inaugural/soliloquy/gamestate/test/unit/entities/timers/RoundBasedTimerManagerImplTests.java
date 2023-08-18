@@ -1,30 +1,30 @@
 package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.RoundBasedTimerManagerImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventFiring;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
-import java.util.ArrayList;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomIntInRange;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-class RoundBasedTimerManagerImplTests {
+public class RoundBasedTimerManagerImplTests {
     @Mock private OneTimeRoundBasedTimer mockOneTimeRoundBasedTimer;
     @Mock private RecurringRoundBasedTimer mockRecurringRoundBasedTimer;
     @Mock private GameEventFiring mockGameEventFiring;
 
     private RoundBasedTimerManager roundBasedTimerManager;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         mockOneTimeRoundBasedTimer = mock(OneTimeRoundBasedTimer.class);
         mockRecurringRoundBasedTimer = mock(RecurringRoundBasedTimer.class);
         mockGameEventFiring = mock(GameEventFiring.class);
@@ -33,33 +33,29 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new RoundBasedTimerManagerImpl(null));
     }
 
     @Test
-    void testRegisterOneTimeRoundBasedTimerAndOneTimeRoundBasedTimersRepresentation() {
+    public void testRegisterOneTimeRoundBasedTimerAndOneTimeRoundBasedTimersRepresentation() {
         roundBasedTimerManager.registerOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
 
-        assertEquals(new ArrayList<>() {{
-                         add(mockOneTimeRoundBasedTimer);
-                     }},
+        assertEquals(listOf(mockOneTimeRoundBasedTimer),
                 roundBasedTimerManager.oneTimeRoundBasedTimersRepresentation());
     }
 
     @Test
-    void testRegisterOneTimeRoundBasedTimerTwiceAndOneTimeRoundBasedTimersRepresentation() {
+    public void testRegisterOneTimeRoundBasedTimerTwiceAndOneTimeRoundBasedTimersRepresentation() {
         roundBasedTimerManager.registerOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
         roundBasedTimerManager.registerOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
 
-        assertEquals(new ArrayList<>() {{
-                         add(mockOneTimeRoundBasedTimer);
-                     }},
+        assertEquals(listOf(mockOneTimeRoundBasedTimer),
                 roundBasedTimerManager.oneTimeRoundBasedTimersRepresentation());
     }
 
     @Test
-    void testDeregisterOneTimeRoundBasedTimer() {
+    public void testDeregisterOneTimeRoundBasedTimer() {
         roundBasedTimerManager.registerOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
 
         roundBasedTimerManager.deregisterOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
@@ -68,28 +64,24 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testRegisterRecurringRoundBasedTimerAndOneTimeRoundBasedTimersRepresentation() {
+    public void testRegisterRecurringRoundBasedTimerAndOneTimeRoundBasedTimersRepresentation() {
         roundBasedTimerManager.registerRecurringRoundBasedTimer(mockRecurringRoundBasedTimer);
 
-        assertEquals(new ArrayList<>() {{
-                         add(mockRecurringRoundBasedTimer);
-                     }},
+        assertEquals(listOf(mockRecurringRoundBasedTimer),
                 roundBasedTimerManager.recurringRoundBasedTimersRepresentation());
     }
 
     @Test
-    void testRegisterRecurringRoundBasedTimerTwiceAndOneTimeRoundBasedTimersRepresentation() {
+    public void testRegisterRecurringRoundBasedTimerTwiceAndOneTimeRoundBasedTimersRepresentation() {
         roundBasedTimerManager.registerRecurringRoundBasedTimer(mockRecurringRoundBasedTimer);
         roundBasedTimerManager.registerRecurringRoundBasedTimer(mockRecurringRoundBasedTimer);
 
-        assertEquals(new ArrayList<>() {{
-                         add(mockRecurringRoundBasedTimer);
-                     }},
+        assertEquals(listOf(mockRecurringRoundBasedTimer),
                 roundBasedTimerManager.recurringRoundBasedTimersRepresentation());
     }
 
     @Test
-    void testDeregisterRecurringRoundBasedTimer() {
+    public void testDeregisterRecurringRoundBasedTimer() {
         roundBasedTimerManager.registerRecurringRoundBasedTimer(mockRecurringRoundBasedTimer);
 
         roundBasedTimerManager.deregisterRecurringRoundBasedTimer(mockRecurringRoundBasedTimer);
@@ -98,7 +90,7 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testRegisterAndDeregisterTimersWithInvalidParams() {
+    public void testRegisterAndDeregisterTimersWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
                 roundBasedTimerManager.registerOneTimeRoundBasedTimer(null));
         assertThrows(IllegalArgumentException.class, () ->
@@ -110,7 +102,7 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testClear() {
+    public void testClear() {
         roundBasedTimerManager.registerOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
         roundBasedTimerManager.registerRecurringRoundBasedTimer(mockRecurringRoundBasedTimer);
 
@@ -121,9 +113,9 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testFireTimersForRoundsElapsedFiresOneTimeTimers() {
-        int roundWhenGoesOff = randomInt();
-        int priority = randomInt();
+    public void testFireTimersForRoundsElapsedFiresOneTimeTimers() {
+        var roundWhenGoesOff = randomInt();
+        var priority = randomInt();
         when(mockOneTimeRoundBasedTimer.roundWhenGoesOff()).thenReturn(roundWhenGoesOff);
         when(mockOneTimeRoundBasedTimer.priority()).thenReturn(priority);
         roundBasedTimerManager.registerOneTimeRoundBasedTimer(mockOneTimeRoundBasedTimer);
@@ -140,12 +132,12 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testFireTimersForRoundsElapsedFiresRecurringTimers() {
-        int roundModulo = randomIntInRange(5, 100);
-        int roundOffset = randomIntInRange(1, roundModulo - 1);
-        int priority = randomInt();
-        int numberOfTimesToFire = randomIntInRange(2, 10);
-        int roundAfterWhichAllFiringsHaveOccurred =
+    public void testFireTimersForRoundsElapsedFiresRecurringTimers() {
+        var roundModulo = randomIntInRange(5, 100);
+        var roundOffset = randomIntInRange(1, roundModulo - 1);
+        var priority = randomInt();
+        var numberOfTimesToFire = randomIntInRange(2, 10);
+        var roundAfterWhichAllFiringsHaveOccurred =
                 ((numberOfTimesToFire - 1) * roundModulo) + roundOffset;
 
         when(mockRecurringRoundBasedTimer.roundModulo()).thenReturn(roundModulo);
@@ -172,8 +164,8 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testFireTimersForRoundsElapsedWithInvalidParams() {
-        int previousRound = randomInt();
+    public void testFireTimersForRoundsElapsedWithInvalidParams() {
+        var previousRound = randomInt();
 
         roundBasedTimerManager.fireTimersForRoundsElapsed(previousRound, previousRound + 1);
         assertThrows(IllegalArgumentException.class, () ->
@@ -181,7 +173,7 @@ class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(RoundBasedTimerManager.class.getCanonicalName(),
                 roundBasedTimerManager.getInterfaceName());
     }

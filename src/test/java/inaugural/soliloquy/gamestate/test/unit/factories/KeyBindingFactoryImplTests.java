@@ -1,38 +1,38 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.KeyBindingFactoryImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.factories.KeyBindingFactory;
 
 import static inaugural.soliloquy.tools.random.Random.randomChar;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class KeyBindingFactoryImplTests {
+public class KeyBindingFactoryImplTests {
     private final char[] CHARACTERS = new char[]{randomChar(), randomChar(), randomChar()};
 
     private KeyBindingFactory keyBindingFactory;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         keyBindingFactory = new KeyBindingFactoryImpl();
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(KeyBindingFactory.class.getCanonicalName(),
                 keyBindingFactory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
+    public void testMake() {
         var output = keyBindingFactory.make(CHARACTERS);
 
         assertNotNull(output);
     }
 
     @Test
-    void testMakeWithInvalidParams() {
+    public void testMakeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> keyBindingFactory.make(null));
     }
 }

@@ -5,8 +5,8 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
 import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
@@ -14,9 +14,9 @@ import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class TileFixtureItemsImplTests {
+public class TileFixtureItemsImplTests {
     private final TileFixture TILE_FIXTURE = new FakeTileFixture();
     private final Item ITEM = new FakeItem();
     private final Item ITEM_2 = new FakeItem();
@@ -24,24 +24,24 @@ class TileFixtureItemsImplTests {
 
     private TileFixtureItems _tileFixtureItems;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         _tileFixtureItems = new TileFixtureItemsImpl(TILE_FIXTURE);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new TileFixtureItemsImpl(null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TileFixtureItems.class.getCanonicalName(),
                 _tileFixtureItems.getInterfaceName());
     }
 
     @Test
-    void testAddAndContains() {
+    public void testAddAndContains() {
         assertFalse(_tileFixtureItems.contains(ITEM));
         _tileFixtureItems.add(ITEM);
 
@@ -49,14 +49,14 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testAddCallsItemAssignmentFunction() {
+    public void testAddCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
 
         assertSame(TILE_FIXTURE, ((FakeItem) ITEM).tileFixture);
     }
 
     @Test
-    void testRemoveCallsItemAssignmentFunction() {
+    public void testRemoveCallsItemAssignmentFunction() {
         _tileFixtureItems.add(ITEM);
         assertSame(TILE_FIXTURE, ((FakeItem) ITEM).tileFixture);
 
@@ -66,7 +66,7 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testAddItemAlreadyPresentInOtherLocationTypes() {
+    public void testAddItemAlreadyPresentInOtherLocationTypes() {
         ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
         ((FakeItem) ITEM).equipmentSlotType = "EquipmentSlotType";
 
@@ -90,13 +90,13 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testAddAndContainsWithInvalidInput() {
+    public void testAddAndContainsWithInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(null));
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.contains(null));
     }
 
     @Test
-    void testRemove() {
+    public void testRemove() {
         assertFalse(_tileFixtureItems.contains(ITEM));
         _tileFixtureItems.add(ITEM);
         assertTrue(_tileFixtureItems.contains(ITEM));
@@ -107,12 +107,12 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testRemoveWithInvalidInput() {
+    public void testRemoveWithInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.remove(null));
     }
 
     @Test
-    void testGetRepresentation() {
+    public void testGetRepresentation() {
         _tileFixtureItems.add(ITEM);
         _tileFixtureItems.add(ITEM_2);
         _tileFixtureItems.add(ITEM_3);
@@ -127,7 +127,7 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testDelete() {
+    public void testDelete() {
         assertFalse(_tileFixtureItems.isDeleted());
         _tileFixtureItems.add(ITEM);
         _tileFixtureItems.delete();
@@ -137,7 +137,7 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testDeletedInvariant() {
+    public void testDeletedInvariant() {
         _tileFixtureItems.delete();
 
         assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.getInterfaceName());
@@ -148,7 +148,7 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testTileFixtureDeletedInvariant() {
+    public void testTileFixtureDeletedInvariant() {
         TILE_FIXTURE.delete();
 
         assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getInterfaceName());
@@ -159,7 +159,7 @@ class TileFixtureItemsImplTests {
     }
 
     @Test
-    void testItemAssignmentInvariant() {
+    public void testItemAssignmentInvariant() {
         _tileFixtureItems.add(ITEM);
         ((FakeItem) ITEM).tileFixture = null;
 

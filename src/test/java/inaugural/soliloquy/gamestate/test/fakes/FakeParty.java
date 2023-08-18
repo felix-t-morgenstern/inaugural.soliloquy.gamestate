@@ -5,11 +5,12 @@ import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Party;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+
 public class FakeParty implements Party {
-    private final List<Character> CHARACTERS = new ArrayList<>();
+    private final List<Character> CHARACTERS = listOf();
     private final VariableCache ATTRIBUTES;
 
     public FakeParty() {

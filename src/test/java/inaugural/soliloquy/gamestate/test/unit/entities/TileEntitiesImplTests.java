@@ -1,256 +1,261 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileEntitiesImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.valueobjects.Pair;
-import soliloquy.specs.gamestate.entities.Item;
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileEntities;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
-import static org.junit.jupiter.api.Assertions.*;
+import static inaugural.soliloquy.tools.random.Random.randomInt;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-class TileEntitiesImplTests {
-    private final Tile TILE = new FakeTile();
+@RunWith(MockitoJUnitRunner.class)
+public class TileEntitiesImplTests {
     private final Item ARCHETYPE = generateSimpleArchetype(Item.class);
-    private final Item ITEM = new FakeItem();
-    private final Item ITEM_2 = new FakeItem();
-    private final Item ITEM_3 = new FakeItem();
 
-    private TileEntitiesImpl<Item> _tileEntities;
+    @Mock private Tile mockTile;
+    @Mock private Item mockItem1;
+    @Mock private Item mockItem2;
+    @Mock private Item mockItem3;
 
-    @BeforeEach
-    void setUp() {
-        _tileEntities = new TileEntitiesImpl<>(TILE, ARCHETYPE);
+    private TileEntitiesImpl<Item> tileEntities;
+
+    @Before
+    public void setUp() {
+        tileEntities = new TileEntitiesImpl<>(mockTile, ARCHETYPE);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(null, ARCHETYPE));
-        assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(TILE, null));
+        assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(mockTile, null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TileEntities.class.getCanonicalName() + "<" + Item.class.getCanonicalName() +
                         ">",
-                _tileEntities.getInterfaceName());
+                tileEntities.getInterfaceName());
     }
 
     @Test
-    void testAddAndContains() {
-        assertFalse(_tileEntities.contains(ITEM));
-        _tileEntities.add(ITEM);
+    public void testAddAndContains() {
+        assertFalse(tileEntities.contains(mockItem1));
 
-        assertTrue(_tileEntities.contains(ITEM));
+        tileEntities.add(mockItem1);
+
+        when(mockItem1.tile()).thenReturn(mockTile);
+        assertTrue(tileEntities.contains(mockItem1));
     }
 
     @Test
-    void testAddItemAlreadyElsewhereInVariousLocations() {
-        ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
-        ((FakeItem) ITEM).equipmentSlotType = "EquipmentSlotType";
+    public void testAddItemAlreadyElsewhereInVariousLocations() {
+        when(mockItem1.equipmentSlot()).thenReturn(pairOf(mock(Character.class), randomString()));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1, 0));
 
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
+        when(mockItem1.equipmentSlot()).thenReturn(null);
+        when(mockItem1.inventoryCharacter()).thenReturn(mock(Character.class));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1, 0));
 
-        ((FakeItem) ITEM).equipmentCharacter = null;
-        ((FakeItem) ITEM).equipmentSlotType = null;
-        ((FakeItem) ITEM).inventoryCharacter = new FakeCharacter();
+        when(mockItem1.inventoryCharacter()).thenReturn(null);
+        when(mockItem1.tile()).thenReturn(mock(Tile.class));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1, 0));
 
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
-
-        ((FakeItem) ITEM).inventoryCharacter = null;
-        ((FakeItem) ITEM).tile = new FakeTile();
-
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
-
-        ((FakeItem) ITEM).tile = null;
-        ((FakeItem) ITEM).tileFixture = new FakeTileFixture();
-
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(ITEM, 0));
+        lenient().when(mockItem1.tile()).thenReturn(null);
+        when(mockItem1.tileFixture()).thenReturn(mock(TileFixture.class));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(mockItem1, 0));
     }
 
     @Test
-    void testRemove() {
-        assertFalse(_tileEntities.remove(ITEM));
-        _tileEntities.add(ITEM);
+    public void testRemove() {
+        assertFalse(tileEntities.remove(mockItem1));
+        tileEntities.add(mockItem1);
 
-        assertTrue(_tileEntities.remove(ITEM));
-        assertFalse(_tileEntities.remove(ITEM));
+        when(mockItem1.tile()).thenReturn(mockTile);
+        assertTrue(tileEntities.remove(mockItem1));
+        assertFalse(tileEntities.remove(mockItem1));
     }
 
     @Test
-    void testAddContainsAndRemoveWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(null));
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.add(null, 0));
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.contains(null));
-        assertThrows(IllegalArgumentException.class, () -> _tileEntities.remove(null));
+    public void testAddContainsAndRemoveWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(null));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.add(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.contains(null));
+        assertThrows(IllegalArgumentException.class, () -> tileEntities.remove(null));
     }
 
     @Test
-    void testGetRepresentation() {
-        _tileEntities.add(ITEM);
-        _tileEntities.add(ITEM_2);
-        _tileEntities.add(ITEM_3);
+    public void testGetRepresentation() {
+        tileEntities.add(mockItem1);
+        tileEntities.add(mockItem2);
+        tileEntities.add(mockItem3);
 
-        Map<Item, Integer> representation = _tileEntities.representation();
+        var representation = tileEntities.representation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        assertTrue(representation.containsKey(ITEM));
-        assertTrue(representation.containsKey(ITEM_2));
-        assertTrue(representation.containsKey(ITEM_3));
+        assertTrue(representation.containsKey(mockItem1));
+        assertTrue(representation.containsKey(mockItem2));
+        assertTrue(representation.containsKey(mockItem3));
     }
 
     @Test
-    void testAddAtZIndex() {
-        final int zIndex = 123;
-        _tileEntities.add(ITEM, zIndex);
-        Map<Item, Integer> representation = _tileEntities.representation();
+    public void testAddAtZIndex() {
+        var zIndex = randomInt();
 
-        assertEquals((Integer) zIndex, representation.get(ITEM));
+        tileEntities.add(mockItem1, zIndex);
+        var representation = tileEntities.representation();
+
+        assertEquals((Integer) zIndex, representation.get(mockItem1));
     }
 
     @Test
-    void testIterator() {
-        _tileEntities.add(ITEM, 123);
-        _tileEntities.add(ITEM_2, 456);
-        _tileEntities.add(ITEM_3, 789);
+    public void testIterator() {
+        Integer z1 = randomInt();
+        Integer z2 = randomInt();
+        Integer z3 = randomInt();
+        tileEntities.add(mockItem1, z1);
+        tileEntities.add(mockItem2, z2);
+        tileEntities.add(mockItem3, z3);
 
-        ArrayList<Pair<Item, Integer>> fromIterator = new ArrayList<>();
+        List<Pair<Item, Integer>> fromIterator = listOf();
 
-        _tileEntities.forEach(fromIterator::add);
+        tileEntities.forEach(fromIterator::add);
 
         assertEquals(3, fromIterator.size());
-        boolean[] entityFound = new boolean[3];
+        var entityFound = new boolean[3];
         fromIterator.forEach(pair -> {
-            if (pair.getItem1() == ITEM) {
+            if (pair.item1() == mockItem1) {
                 assertFalse(entityFound[0]);
-                assertEquals(123, pair.getItem2());
+                assertEquals(z1, pair.item2());
                 entityFound[0] = true;
             }
-            if (pair.getItem1() == ITEM_2) {
+            if (pair.item1() == mockItem2) {
                 assertFalse(entityFound[1]);
-                assertEquals(456, pair.getItem2());
+                assertEquals(z2, pair.item2());
                 entityFound[1] = true;
             }
-            if (pair.getItem1() == ITEM_3) {
+            if (pair.item1() == mockItem3) {
                 assertFalse(entityFound[2]);
-                assertEquals(789, pair.getItem2());
+                assertEquals(z3, pair.item2());
                 entityFound[2] = true;
             }
         });
     }
 
     @Test
-    void testInitializeActionAfterAdding() {
-        final ArrayList<Item> addedToGameZone = new ArrayList<>();
+    public void testInitializeActionAfterAdding() {
+        List<Item> addedToGameZone = listOf();
 
-        _tileEntities.initializeActionAfterAdding(addedToGameZone::add);
-        _tileEntities.add(ITEM);
+        tileEntities.initializeActionAfterAdding(addedToGameZone::add);
+        tileEntities.add(mockItem1);
 
         assertEquals(1, addedToGameZone.size());
-        assertTrue(addedToGameZone.contains(ITEM));
+        assertTrue(addedToGameZone.contains(mockItem1));
     }
 
     @Test
-    void testInitializeActionAfterRemoving() {
-        final ArrayList<Item> removedFromGameZone = new ArrayList<>();
+    public void testInitializeActionAfterRemoving() {
+        List<Item> removedFromGameZone = listOf();
 
-        _tileEntities.initializeActionAfterRemoving(
-                removedFromGameZone::add);
-        _tileEntities.remove(ITEM);
+        tileEntities.initializeActionAfterRemoving(removedFromGameZone::add);
+        tileEntities.remove(mockItem1);
 
         assertEquals(0, removedFromGameZone.size());
 
-        _tileEntities.add(ITEM);
-        _tileEntities.remove(ITEM);
+        tileEntities.add(mockItem1);
+        when(mockItem1.tile()).thenReturn(mockTile);
+        tileEntities.remove(mockItem1);
 
         assertEquals(1, removedFromGameZone.size());
-        assertTrue(removedFromGameZone.contains(ITEM));
+        assertTrue(removedFromGameZone.contains(mockItem1));
     }
 
     @Test
-    void testInitializeMoreThanOnce() {
-        _tileEntities.initializeActionAfterAdding(null);
-        _tileEntities.initializeActionAfterAdding(e -> {});
+    public void testInitializeMoreThanOnce() {
+        tileEntities.initializeActionAfterAdding(null);
+        tileEntities.initializeActionAfterAdding(e -> {});
         assertThrows(UnsupportedOperationException.class,
-                () -> _tileEntities.initializeActionAfterAdding(e -> {}));
+                () -> tileEntities.initializeActionAfterAdding(e -> {}));
 
-        _tileEntities.initializeActionAfterRemoving(null);
-        _tileEntities.initializeActionAfterRemoving(e -> {});
+        tileEntities.initializeActionAfterRemoving(null);
+        tileEntities.initializeActionAfterRemoving(e -> {});
         assertThrows(UnsupportedOperationException.class,
-                () -> _tileEntities.initializeActionAfterRemoving(e -> {}));
+                () -> tileEntities.initializeActionAfterRemoving(e -> {}));
     }
 
     @Test
-    void testGetArchetype() {
-        assertSame(ARCHETYPE, _tileEntities.getArchetype());
+    public void testArchetype() {
+        assertSame(ARCHETYPE, tileEntities.archetype());
     }
 
     @Test
-    void testDelete() {
-        assertFalse(_tileEntities.isDeleted());
+    public void testDelete() {
+        assertFalse(tileEntities.isDeleted());
 
-        _tileEntities.add(ITEM);
-        _tileEntities.add(ITEM_2);
-        _tileEntities.add(ITEM_3);
+        tileEntities.add(mockItem1);
+        tileEntities.add(mockItem2);
+        tileEntities.add(mockItem3);
 
-        _tileEntities.delete();
+        tileEntities.delete();
 
-        assertTrue(_tileEntities.isDeleted());
+        assertTrue(tileEntities.isDeleted());
 
-        assertTrue(ITEM.isDeleted());
-        assertTrue(ITEM_2.isDeleted());
-        assertTrue(ITEM_3.isDeleted());
+        verify(mockItem1).delete();
+        verify(mockItem2).delete();
+        verify(mockItem3).delete();
     }
 
     @Test
-    void testDeletedInvariant() {
-        _tileEntities.delete();
+    public void testDeletedInvariant() {
+        tileEntities.delete();
 
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.getInterfaceName());
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.representation());
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.add(ITEM, 0));
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.contains(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.remove(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _tileEntities.iterator());
+        assertThrows(EntityDeletedException.class, () -> tileEntities.getInterfaceName());
+        assertThrows(EntityDeletedException.class, () -> tileEntities.representation());
+        assertThrows(EntityDeletedException.class, () -> tileEntities.add(mockItem1));
+        assertThrows(EntityDeletedException.class, () -> tileEntities.add(mockItem1, 0));
+        assertThrows(EntityDeletedException.class, () -> tileEntities.contains(mockItem1));
+        assertThrows(EntityDeletedException.class, () -> tileEntities.remove(mockItem1));
+        assertThrows(EntityDeletedException.class, () -> tileEntities.iterator());
     }
 
     @Test
-    void testTileDeletedInvariant() {
-        TILE.delete();
+    public void testTileDeletedInvariant() {
+        when(mockTile.isDeleted()).thenReturn(true);
 
-        assertThrows(IllegalStateException.class, () -> _tileEntities.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileEntities.representation());
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM, 0));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.contains(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.remove(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.iterator());
+        assertThrows(IllegalStateException.class, () -> tileEntities.getInterfaceName());
+        assertThrows(IllegalStateException.class, () -> tileEntities.representation());
+        assertThrows(IllegalStateException.class, () -> tileEntities.add(mockItem1));
+        assertThrows(IllegalStateException.class, () -> tileEntities.add(mockItem1, 0));
+        assertThrows(IllegalStateException.class, () -> tileEntities.contains(mockItem1));
+        assertThrows(IllegalStateException.class, () -> tileEntities.remove(mockItem1));
+        assertThrows(IllegalStateException.class, () -> tileEntities.iterator());
     }
 
     @Test
-    void testItemAssignmentInvariant() {
-        _tileEntities.add(ITEM);
-        ((FakeItem) ITEM).tile = null;
+    public void testItemAssignmentInvariant() {
+        tileEntities.add(mockItem1);
+        when(mockItem1.tile()).thenReturn(null);
 
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.add(ITEM, 0));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.contains(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileEntities.remove(ITEM));
+        assertThrows(IllegalStateException.class, () -> tileEntities.add(mockItem1));
+        assertThrows(IllegalStateException.class, () -> tileEntities.add(mockItem1, 0));
+        assertThrows(IllegalStateException.class, () -> tileEntities.contains(mockItem1));
+        assertThrows(IllegalStateException.class, () -> tileEntities.remove(mockItem1));
     }
 }

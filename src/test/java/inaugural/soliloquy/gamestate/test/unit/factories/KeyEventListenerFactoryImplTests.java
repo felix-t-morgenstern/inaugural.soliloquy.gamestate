@@ -1,29 +1,29 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.KeyEventListenerFactoryImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.factories.KeyEventListenerFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-class KeyEventListenerFactoryImplTests {
-    private KeyEventListenerFactory _keyEventListenerFactory;
+public class KeyEventListenerFactoryImplTests {
+    private KeyEventListenerFactory keyEventListenerFactory;
 
-    @BeforeEach
-    void setUp() {
-        _keyEventListenerFactory = new KeyEventListenerFactoryImpl();
+    @Before
+    public void setUp() {
+        keyEventListenerFactory = new KeyEventListenerFactoryImpl();
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(KeyEventListenerFactory.class.getCanonicalName(),
-                _keyEventListenerFactory.getInterfaceName());
+                keyEventListenerFactory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
-        assertNotNull(_keyEventListenerFactory.make(null));
+    public void testMake() {
+        assertNotNull(keyEventListenerFactory.make(null));
     }
 }

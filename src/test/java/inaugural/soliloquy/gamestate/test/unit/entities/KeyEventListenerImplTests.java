@@ -3,50 +3,51 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.KeyEventListenerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeKeyBinding;
 import inaugural.soliloquy.gamestate.test.fakes.FakeKeyBindingContext;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.KeyBindingContext;
 import soliloquy.specs.gamestate.entities.KeyEventListener;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class KeyEventListenerImplTests {
-    private final long MOST_RECENT_TIMESTAMP = 123123L;
+// TODO: Awful suite.
+public class KeyEventListenerImplTests {
+    private final Long MOST_RECENT_TIMESTAMP = 123123L;
     private final char CHAR = 'a';
 
-    private KeyEventListener _keyEventListener;
+    private KeyEventListener keyEventListener;
 
-    @BeforeEach
-    void setUp() {
-        _keyEventListener =
+    @Before
+    public void setUp() {
+        keyEventListener =
                 new KeyEventListenerImpl(MOST_RECENT_TIMESTAMP);
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(KeyEventListener.class.getCanonicalName(),
-                _keyEventListener.getInterfaceName());
+                keyEventListener.getInterfaceName());
     }
 
     @Test
-    void testAddAndRemoveContextAndContextsRepresentation() {
+    public void testAddAndRemoveContextAndContextsRepresentation() {
         FakeKeyBindingContext keyBindingContext1 = new FakeKeyBindingContext();
         FakeKeyBindingContext keyBindingContext2 = new FakeKeyBindingContext();
         FakeKeyBindingContext keyBindingContext3 = new FakeKeyBindingContext();
         int priority1 = 123;
         int priority2 = 456;
 
-        _keyEventListener.addContext(keyBindingContext1, priority1);
-        _keyEventListener.addContext(keyBindingContext2, priority2);
-        _keyEventListener.addContext(keyBindingContext3, priority1);
+        keyEventListener.addContext(keyBindingContext1, priority1);
+        keyEventListener.addContext(keyBindingContext2, priority2);
+        keyEventListener.addContext(keyBindingContext3, priority1);
 
         Map<Integer, List<KeyBindingContext>> contextsRepresentation =
-                _keyEventListener.contextsRepresentation();
+                keyEventListener.contextsRepresentation();
         Map<Integer, List<KeyBindingContext>> contextsRepresentation2 =
-                _keyEventListener.contextsRepresentation();
+                keyEventListener.contextsRepresentation();
 
         assertNotNull(contextsRepresentation);
         assertNotSame(contextsRepresentation, contextsRepresentation2);
@@ -57,9 +58,9 @@ class KeyEventListenerImplTests {
         assertEquals(1, contextsRepresentation.get(priority2).size());
         assertTrue(contextsRepresentation.get(priority2).contains(keyBindingContext2));
 
-        _keyEventListener.removeContext(keyBindingContext2);
+        keyEventListener.removeContext(keyBindingContext2);
         Map<Integer, List<KeyBindingContext>> contextsRepresentationUpdated =
-                _keyEventListener.contextsRepresentation();
+                keyEventListener.contextsRepresentation();
 
         assertEquals(1, contextsRepresentationUpdated.size());
         assertEquals(2, contextsRepresentationUpdated.get(priority1).size());
@@ -68,21 +69,21 @@ class KeyEventListenerImplTests {
     }
 
     @Test
-    void testAddContextUpdatesPriority() {
+    public void testAddContextUpdatesPriority() {
         FakeKeyBindingContext keyBindingContext1 = new FakeKeyBindingContext();
         FakeKeyBindingContext keyBindingContext2 = new FakeKeyBindingContext();
         FakeKeyBindingContext keyBindingContext3 = new FakeKeyBindingContext();
         int priority1 = 123;
         int priority2 = 456;
 
-        _keyEventListener.addContext(keyBindingContext1, priority1);
-        _keyEventListener.addContext(keyBindingContext2, priority2);
-        _keyEventListener.addContext(keyBindingContext3, priority1);
+        keyEventListener.addContext(keyBindingContext1, priority1);
+        keyEventListener.addContext(keyBindingContext2, priority2);
+        keyEventListener.addContext(keyBindingContext3, priority1);
 
         Map<Integer, List<KeyBindingContext>> contextsRepresentation =
-                _keyEventListener.contextsRepresentation();
+                keyEventListener.contextsRepresentation();
         Map<Integer, List<KeyBindingContext>> contextsRepresentation2 =
-                _keyEventListener.contextsRepresentation();
+                keyEventListener.contextsRepresentation();
 
         assertNotNull(contextsRepresentation);
         assertNotSame(contextsRepresentation, contextsRepresentation2);
@@ -93,9 +94,9 @@ class KeyEventListenerImplTests {
         assertEquals(1, contextsRepresentation.get(priority2).size());
         assertTrue(contextsRepresentation.get(priority2).contains(keyBindingContext2));
 
-        _keyEventListener.addContext(keyBindingContext3, priority2);
+        keyEventListener.addContext(keyBindingContext3, priority2);
         Map<Integer, List<KeyBindingContext>> contextsRepresentationUpdated =
-                _keyEventListener.contextsRepresentation();
+                keyEventListener.contextsRepresentation();
 
         assertEquals(2, contextsRepresentationUpdated.size());
         assertEquals(1, contextsRepresentationUpdated.get(priority1).size());
@@ -106,13 +107,13 @@ class KeyEventListenerImplTests {
     }
 
     @Test
-    void testAddAndRemoveContextWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> _keyEventListener.addContext(null, 0));
-        assertThrows(IllegalArgumentException.class, () -> _keyEventListener.removeContext(null));
+    public void testAddAndRemoveContextWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> keyEventListener.addContext(null, 0));
+        assertThrows(IllegalArgumentException.class, () -> keyEventListener.removeContext(null));
     }
 
     @Test
-    void testActiveKeysRepresentation() {
+    public void testActiveKeysRepresentation() {
         FakeKeyBindingContext keyBindingContext1 = new FakeKeyBindingContext();
         FakeKeyBindingContext keyBindingContext2 = new FakeKeyBindingContext();
         FakeKeyBindingContext keyBindingContext3 = new FakeKeyBindingContext();
@@ -138,14 +139,14 @@ class KeyEventListenerImplTests {
         keyBindingContext3Binding1.boundCharacters().add('f');
         keyBindingContext3.bindings().add(keyBindingContext3Binding1);
 
-        _keyEventListener.addContext(keyBindingContext1, 1);
-        _keyEventListener.addContext(keyBindingContext2, 2);
-        _keyEventListener.addContext(keyBindingContext3, 3);
+        keyEventListener.addContext(keyBindingContext1, 1);
+        keyEventListener.addContext(keyBindingContext2, 2);
+        keyEventListener.addContext(keyBindingContext3, 3);
 
         java.util.List<java.lang.Character> activeKeysRepresentation =
-                _keyEventListener.activeKeysRepresentation();
+                keyEventListener.activeKeysRepresentation();
         java.util.List<java.lang.Character> activeKeysRepresentation2 =
-                _keyEventListener.activeKeysRepresentation();
+                keyEventListener.activeKeysRepresentation();
 
         assertNotNull(activeKeysRepresentation);
         assertNotSame(activeKeysRepresentation, activeKeysRepresentation2);
@@ -157,37 +158,37 @@ class KeyEventListenerImplTests {
     }
 
     @Test
-    void testKeyPressed() {
+    public void testKeyPressed() {
         FakeKeyBinding keyBinding = new FakeKeyBinding();
         keyBinding.boundCharacters().add(CHAR);
 
         KeyBindingContext keyBindingContext = new FakeKeyBindingContext();
         keyBindingContext.bindings().add(keyBinding);
 
-        _keyEventListener.addContext(keyBindingContext, 0);
+        keyEventListener.addContext(keyBindingContext, 0);
 
-        _keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP);
+        keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP);
 
         assertEquals(MOST_RECENT_TIMESTAMP, keyBinding._pressed);
     }
 
     @Test
-    void testKeyReleased() {
+    public void testKeyReleased() {
         FakeKeyBinding keyBinding = new FakeKeyBinding();
         keyBinding.boundCharacters().add(CHAR);
 
         KeyBindingContext keyBindingContext = new FakeKeyBindingContext();
         keyBindingContext.bindings().add(keyBinding);
 
-        _keyEventListener.addContext(keyBindingContext, 0);
+        keyEventListener.addContext(keyBindingContext, 0);
 
-        _keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP);
+        keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP);
 
         assertEquals(MOST_RECENT_TIMESTAMP, keyBinding._released);
     }
 
     @Test
-    void testContextBlocksLowerContextEvents() {
+    public void testContextBlocksLowerContextEvents() {
         FakeKeyBinding lowerKeyBinding = new FakeKeyBinding();
         lowerKeyBinding.boundCharacters().add(CHAR);
 
@@ -202,22 +203,22 @@ class KeyEventListenerImplTests {
 
         upperKeyBindingContext.setBlocksAllLowerBindings(true);
 
-        _keyEventListener.addContext(upperKeyBindingContext, 0);
-        _keyEventListener.addContext(lowerKeyBindingContext, 1);
+        keyEventListener.addContext(upperKeyBindingContext, 0);
+        keyEventListener.addContext(lowerKeyBindingContext, 1);
 
-        _keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP);
+        keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP);
 
         assertEquals(MOST_RECENT_TIMESTAMP, upperKeyBinding._pressed);
         assertNull(lowerKeyBinding._pressed);
 
-        _keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP);
+        keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP);
 
         assertEquals(MOST_RECENT_TIMESTAMP, upperKeyBinding._released);
         assertNull(lowerKeyBinding._released);
     }
 
     @Test
-    void testBindingBlocksLowerBindingEvents() {
+    public void testBindingBlocksLowerBindingEvents() {
         FakeKeyBinding lowerKeyBinding = new FakeKeyBinding();
         lowerKeyBinding.boundCharacters().add('a');
 
@@ -232,25 +233,25 @@ class KeyEventListenerImplTests {
 
         upperKeyBinding.setBlocksLowerBindings(true);
 
-        _keyEventListener.addContext(upperKeyBindingContext, 0);
-        _keyEventListener.addContext(lowerKeyBindingContext, 1);
+        keyEventListener.addContext(upperKeyBindingContext, 0);
+        keyEventListener.addContext(lowerKeyBindingContext, 1);
 
-        _keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP);
+        keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP);
 
         assertEquals(MOST_RECENT_TIMESTAMP, upperKeyBinding._pressed);
         assertEquals(MOST_RECENT_TIMESTAMP, lowerKeyBinding._pressed);
 
-        _keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP);
+        keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP);
 
         assertEquals(MOST_RECENT_TIMESTAMP, upperKeyBinding._released);
         assertEquals(MOST_RECENT_TIMESTAMP, lowerKeyBinding._released);
     }
 
     @Test
-    void testPressOrReleaseAtInvalidTimestamp() {
+    public void testPressOrReleaseAtInvalidTimestamp() {
         assertThrows(IllegalArgumentException.class, () ->
-                _keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP - 1));
+                keyEventListener.press(CHAR, MOST_RECENT_TIMESTAMP - 1));
         assertThrows(IllegalArgumentException.class, () ->
-                _keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP - 1));
+                keyEventListener.release(CHAR, MOST_RECENT_TIMESTAMP - 1));
     }
 }

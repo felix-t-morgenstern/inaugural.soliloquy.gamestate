@@ -17,6 +17,8 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import java.util.List;
 import java.util.UUID;
 
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+
 public class FakeItem implements Item {
     private final ItemType ITEM_TYPE = new ItemTypeStub();
 
@@ -91,7 +93,7 @@ public class FakeItem implements Item {
             return null;
         }
         else {
-            return new Pair<>(equipmentCharacter, equipmentSlotType);
+            return pairOf(equipmentCharacter, equipmentSlotType);
         }
     }
 

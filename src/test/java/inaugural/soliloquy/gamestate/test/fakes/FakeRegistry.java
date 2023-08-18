@@ -5,11 +5,13 @@ import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.shared.HasId;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class FakeRegistry<T extends HasId> implements Registry<T> {
-    private final HashMap<String, T> REGISTRY = new HashMap<>();
+    private final Map<String, T> REGISTRY = mapOf();
 
     @Override
     public boolean contains(String s) {
@@ -82,7 +84,7 @@ public class FakeRegistry<T extends HasId> implements Registry<T> {
     }
 
     @Override
-    public T getArchetype() {
+    public T archetype() {
         return null;
     }
 

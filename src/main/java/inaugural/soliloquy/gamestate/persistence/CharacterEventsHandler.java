@@ -32,7 +32,7 @@ public class CharacterEventsHandler extends AbstractTypeHandler<CharacterEvents>
 
         var characterEvents = CHARACTER_EVENTS_FACTORY.make(CHARACTER_ARCHETYPE);
 
-        var triggerWithEventsDtos = JSON.fromJson(data, CharacterTriggerWithEventsDTO[].class);
+        var triggerWithEventsDtos = JSON.fromJson(data, DTO[].class);
         for (var triggerWithEventsDto : triggerWithEventsDtos) {
             for (var eventId : triggerWithEventsDto.eventIds) {
                 characterEvents.addEvent(arrayOf(triggerWithEventsDto.trigger),
@@ -48,10 +48,10 @@ public class CharacterEventsHandler extends AbstractTypeHandler<CharacterEvents>
         Check.ifNull(characterEvents, "characterEvents");
 
         var representation = characterEvents.representation();
-        var triggersWithEvents = new CharacterTriggerWithEventsDTO[representation.size()];
+        var triggersWithEvents = new DTO[representation.size()];
         var index = new AtomicInteger(0);
         representation.forEach((key, value) -> {
-            var triggerWithEventsDto = new CharacterTriggerWithEventsDTO();
+            var triggerWithEventsDto = new DTO();
             triggerWithEventsDto.trigger = key;
             triggerWithEventsDto.eventIds = value.stream().map(HasId::id).toArray(String[]::new);
             triggersWithEvents[index.getAndIncrement()] = triggerWithEventsDto;
@@ -60,7 +60,7 @@ public class CharacterEventsHandler extends AbstractTypeHandler<CharacterEvents>
         return JSON.toJson(triggersWithEvents);
     }
 
-    private static class CharacterTriggerWithEventsDTO {
+    private static class DTO {
         String trigger;
         String[] eventIds;
     }

@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
@@ -21,12 +21,11 @@ import java.util.UUID;
 
 import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static soliloquy.specs.common.shared.Direction.SOUTHWEST;
 
-class CharacterImplTests {
+public class CharacterImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
 
     @Mock private CharacterType mockCharacterType;
@@ -46,8 +45,8 @@ class CharacterImplTests {
 
     private Character character;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         mockCharacterType = mock(CharacterType.class);
 
         //noinspection unchecked
@@ -89,7 +88,7 @@ class CharacterImplTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterImpl(null, mockCharacterType, mockEventsFactory,
                         mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
@@ -117,12 +116,12 @@ class CharacterImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(Character.class.getCanonicalName(), character.getInterfaceName());
     }
 
     @Test
-    void testEquals() {
+    public void testEquals() {
         var character2 = new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
                 mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
                 mockData);
@@ -131,22 +130,22 @@ class CharacterImplTests {
     }
 
     @Test
-    void testCharacterType() {
+    public void testCharacterType() {
         assertSame(mockCharacterType, character.type());
     }
 
     @Test
-    void testClassifications() {
+    public void testClassifications() {
         assertNotNull(character.classifications());
     }
 
     @Test
-    void testPronouns() {
+    public void testPronouns() {
         assertNotNull(character.pronouns());
     }
 
     @Test
-    void testSetAndGetStance() {
+    public void testSetAndGetStance() {
         var stance = randomString();
 
         character.setStance(stance);
@@ -155,7 +154,7 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetAndGetDirection() {
+    public void testSetAndGetDirection() {
         var direction = SOUTHWEST;
 
         character.setDirection(direction);
@@ -164,19 +163,19 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetAndGetImageAssetSet() {
+    public void testSetAndGetImageAssetSet() {
         character.setImageAssetSet(mockImageAssetSet);
 
         assertSame(mockImageAssetSet, character.getImageAssetSet());
     }
 
     @Test
-    void testSetImageAssetSetWithInvalidParams() {
+    public void testSetImageAssetSetWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> character.setImageAssetSet(null));
     }
 
     @Test
-    void testSetAndGetAIType() {
+    public void testSetAndGetAIType() {
         var mockCharacterAIType = mock(CharacterAIType.class);
 
         assertNull(character.getAIType());
@@ -187,27 +186,27 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetAITypeWithInvalidParams() {
+    public void testSetAITypeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> character.setAIType(null));
     }
 
     @Test
-    void testCharacterEvents() {
+    public void testCharacterEvents() {
         assertNotNull(character.events());
     }
 
     @Test
-    void testEquipment() {
+    public void testEquipment() {
         assertSame(mockEquipmentSlots, character.equipmentSlots());
     }
 
     @Test
-    void testInventory() {
+    public void testInventory() {
         assertNotNull(character.inventory());
     }
 
     @Test
-    void testSetAndGetVariableStatisticCurrentValue() {
+    public void testSetAndGetVariableStatisticCurrentValue() {
         assertEquals(0, character.getVariableStatisticCurrentValue(mockVariableStatType));
 
         var variableStatCurrentLevel = randomInt();
@@ -219,7 +218,7 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetAndGetVariableStatisticCurrentValueWithInvalidParams() {
+    public void testSetAndGetVariableStatisticCurrentValueWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> character.setVariableStatisticCurrentValue(null, randomInt()));
         assertThrows(IllegalArgumentException.class,
@@ -227,8 +226,8 @@ class CharacterImplTests {
     }
 
     @Test
-    void testVariableStatisticCurrentValuesRepresentation() {
-        var variableStatCurrentLevel = randomInt();
+    public void testVariableStatisticCurrentValuesRepresentation() {
+        Integer variableStatCurrentLevel = randomInt();
 
         assertNotNull(character.variableStatisticCurrentValuesRepresentation());
         assertTrue(character.variableStatisticCurrentValuesRepresentation().isEmpty());
@@ -244,27 +243,27 @@ class CharacterImplTests {
     }
 
     @Test
-    void testStatusEffects() {
+    public void testStatusEffects() {
         assertNotNull(character.statusEffects());
     }
 
     @Test
-    void testPassiveAbilities() {
+    public void testPassiveAbilities() {
         assertNotNull(character.passiveAbilities());
     }
 
     @Test
-    void testActiveAbilities() {
+    public void testActiveAbilities() {
         assertNotNull(character.activeAbilities());
     }
 
     @Test
-    void testReactiveAbilities() {
+    public void testReactiveAbilities() {
         assertNotNull(character.reactiveAbilities());
     }
 
     @Test
-    void testSetAndGetPlayerControlled() {
+    public void testSetAndGetPlayerControlled() {
         character.setPlayerControlled(true);
         assertTrue(character.getPlayerControlled());
 
@@ -273,12 +272,12 @@ class CharacterImplTests {
     }
 
     @Test
-    void testData() {
+    public void testData() {
         assertSame(mockData, character.data());
     }
 
     @Test
-    void testSetAndGetName() {
+    public void testSetAndGetName() {
         var name = randomString();
 
         character.setName(name);
@@ -287,25 +286,25 @@ class CharacterImplTests {
     }
 
     @Test
-    void testSetNameWithInvalidParams() {
+    public void testSetNameWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> character.setName(null));
         assertThrows(IllegalArgumentException.class, () -> character.setName(""));
     }
 
     @Test
-    void testUuid() {
+    public void testUuid() {
         assertSame(UUID, character.uuid());
     }
 
     @Test
-    void testAssignTileAfterAddedToTileEntitiesOfTypeAndTile() {
+    public void testAssignTileAfterAddedToTileEntitiesOfTypeAndTile() {
         character.assignTileAfterAddedToTileEntitiesOfType(mockTile);
 
         assertSame(mockTile, character.tile());
     }
 
     @Test
-    void testDelete() {
+    public void testDelete() {
         character.assignTileAfterAddedToTileEntitiesOfType(mockTile);
 
         character.delete();
@@ -319,7 +318,7 @@ class CharacterImplTests {
     }
 
     @Test
-    void testThrowsIllegalStateExceptionWhenDeleted() {
+    public void testThrowsIllegalStateExceptionWhenDeleted() {
         character.delete();
 
         assertThrows(EntityDeletedException.class, () -> character.type());
@@ -359,7 +358,7 @@ class CharacterImplTests {
     }
 
     @Test
-    void testEnforceTileInvariant() {
+    public void testEnforceTileInvariant() {
         character.assignTileAfterAddedToTileEntitiesOfType(mockTile);
         when(mockTileCharacters.contains(any())).thenReturn(false);
 

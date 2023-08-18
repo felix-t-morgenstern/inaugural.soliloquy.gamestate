@@ -11,13 +11,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class GameZonesRepoImpl implements GameZonesRepo {
     private final TypeHandler<GameZone> GAME_ZONE_HANDLER;
-    private final HashMap<String, Path> FILE_LOCATIONS = new HashMap<>();
+    private final Map<String, Path> FILE_LOCATIONS = mapOf();
 
     public GameZonesRepoImpl(TypeHandler<GameZone> gameZoneHandler,
                              Map<String, Path> fileLocations) {
@@ -57,7 +58,7 @@ public class GameZonesRepoImpl implements GameZonesRepo {
                 throw new IOException("GameZoneRepoImpl.saveGameZone: Could not delete file (" +
                         filePath + ")");
             }
-            Files.write(filePath, new ArrayList<>());
+            Files.write(filePath, listOf());
             Files.writeString(filePath,
                     GAME_ZONE_HANDLER.write(gameZone),
                     StandardOpenOption.APPEND);

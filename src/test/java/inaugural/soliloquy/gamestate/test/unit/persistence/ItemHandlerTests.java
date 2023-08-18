@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.ItemHandler;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.infrastructure.VariableCache;
@@ -16,12 +16,10 @@ import java.util.UUID;
 
 import static inaugural.soliloquy.tools.random.Random.*;
 import static inaugural.soliloquy.tools.testing.Mock.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-class ItemHandlerTests {
+public class ItemHandlerTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final String ITEM_TYPE_ID = randomString();
     private final int NUM_CHARGES = randomInt();
@@ -54,8 +52,8 @@ class ItemHandlerTests {
 
     private TypeHandler<Item> itemHandler;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         itemType = generateMockWithId(ItemType.class, ITEM_TYPE_ID);
 
         //noinspection unchecked
@@ -86,7 +84,7 @@ class ItemHandlerTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new ItemHandler(null, DATA_HANDLER, itemFactory));
         assertThrows(IllegalArgumentException.class,
@@ -96,21 +94,21 @@ class ItemHandlerTests {
     }
 
     @Test
-    void testGetArchetype() {
-        assertNotNull(itemHandler.getArchetype());
+    public void testArchetype() {
+        assertNotNull(itemHandler.archetype());
         assertEquals(Item.class.getCanonicalName(),
-                itemHandler.getArchetype().getInterfaceName());
+                itemHandler.archetype().getInterfaceName());
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         Item.class.getCanonicalName() + ">",
                 itemHandler.getInterfaceName());
     }
 
     @Test
-    void testWriteWithCharges() {
+    public void testWriteWithCharges() {
         when(itemType.hasCharges()).thenReturn(true);
 
         String writtenValue = itemHandler.write(itemWithCharges);
@@ -119,7 +117,7 @@ class ItemHandlerTests {
     }
 
     @Test
-    void testWriteStackable() {
+    public void testWriteStackable() {
         when(itemType.isStackable()).thenReturn(true);
 
         String writtenValue = itemHandler.write(itemStackable);
@@ -128,12 +126,12 @@ class ItemHandlerTests {
     }
 
     @Test
-    void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> itemHandler.write(null));
     }
 
     @Test
-    void testReadWithCharges() {
+    public void testReadWithCharges() {
         when(itemType.hasCharges()).thenReturn(true);
 
         Item output = itemHandler.read(WRITTEN_VALUE_WITH_CHARGES);
@@ -147,7 +145,7 @@ class ItemHandlerTests {
     }
 
     @Test
-    void testReadStackable() {
+    public void testReadStackable() {
         when(itemType.isStackable()).thenReturn(true);
 
         Item output = itemHandler.read(WRITTEN_VALUE_STACKABLE);
@@ -161,7 +159,7 @@ class ItemHandlerTests {
     }
 
     @Test
-    void testReadWithInvalidParams() {
+    public void testReadWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> itemHandler.read(null));
         assertThrows(IllegalArgumentException.class, () -> itemHandler.read(""));
     }

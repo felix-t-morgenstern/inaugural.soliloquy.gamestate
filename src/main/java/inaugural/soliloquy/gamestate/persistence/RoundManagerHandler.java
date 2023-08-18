@@ -4,11 +4,9 @@ import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.RoundManager;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -36,15 +34,14 @@ public class RoundManagerHandler extends AbstractTypeHandler<RoundManager> {
 
         ROUND_MANAGER.clearQueue();
 
-        RoundManagerDTO dto = JSON.fromJson(writtenValue, RoundManagerDTO.class);
+        var dto = JSON.fromJson(writtenValue, DTO.class);
 
         ROUND_MANAGER.setRoundNumber(dto.roundNumber);
 
-        for (int i = 0; i < dto.characterIds.length; i++) {
-            Character character = GET_CHARACTER_FROM_CURRENT_GAME_ZONE.apply(
+        for (var i = 0; i < dto.characterIds.length; i++) {
+            var character = GET_CHARACTER_FROM_CURRENT_GAME_ZONE.apply(
                     UUID.fromString(dto.characterIds[i]));
-            VariableCache characterRoundData =
-                    VARIABLE_CACHE_HANDLER.read(dto.characterRoundData[i]);
+            var characterRoundData = VARIABLE_CACHE_HANDLER.read(dto.characterRoundData[i]);
             ROUND_MANAGER.setCharacterPositionInQueue(character, i);
             ROUND_MANAGER.setCharacterRoundData(character, characterRoundData);
         }
@@ -56,23 +53,23 @@ public class RoundManagerHandler extends AbstractTypeHandler<RoundManager> {
     public String write(RoundManager roundManager) {
         Check.ifNull(roundManager, "roundManager");
 
-        RoundManagerDTO dto = new RoundManagerDTO();
+        var dto = new DTO();
 
         dto.roundNumber = roundManager.getRoundNumber();
 
-        List<Pair<Character, VariableCache>> queue = roundManager.characterQueueRepresentation();
+        var queue = roundManager.characterQueueRepresentation();
         dto.characterIds = new String[queue.size()];
         dto.characterRoundData = new String[queue.size()];
 
-        for (int i = 0; i < queue.size(); i++) {
-            dto.characterIds[i] = queue.get(i).getItem1().uuid().toString();
-            dto.characterRoundData[i] = VARIABLE_CACHE_HANDLER.write(queue.get(i).getItem2());
+        for (var i = 0; i < queue.size(); i++) {
+            dto.characterIds[i] = queue.get(i).item1().uuid().toString();
+            dto.characterRoundData[i] = VARIABLE_CACHE_HANDLER.write(queue.get(i).item2());
         }
 
         return JSON.toJson(dto);
     }
 
-    private static class RoundManagerDTO {
+    private static class DTO {
         int roundNumber;
         String[] characterIds;
         String[] characterRoundData;

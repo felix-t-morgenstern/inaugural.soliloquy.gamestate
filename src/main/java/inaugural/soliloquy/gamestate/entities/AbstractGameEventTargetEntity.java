@@ -4,8 +4,9 @@ import soliloquy.specs.gamestate.entities.GameEventTargetEntity;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 abstract class AbstractGameEventTargetEntity
         extends HasDeletionInvariants
@@ -15,8 +16,8 @@ abstract class AbstractGameEventTargetEntity
 
     // NB: This constructor is to ONLY be used by AbstractTileEntity
     AbstractGameEventTargetEntity() {
-        MOVEMENT_EVENTS = new ArrayList<>();
-        ABILITY_EVENTS = new ArrayList<>();
+        MOVEMENT_EVENTS = listOf();
+        ABILITY_EVENTS = listOf();
     }
 
     @Override

@@ -2,36 +2,36 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.TileFixtureItemsFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class TileFixtureItemsFactoryImplTests {
+public class TileFixtureItemsFactoryImplTests {
     private final TileFixture TILE_FIXTURE = new FakeTileFixture();
 
-    private TileFixtureItemsFactory _tileFixtureItemsFactory;
+    private TileFixtureItemsFactory tileFixtureItemsFactory;
 
-    @BeforeEach
-    void setUp() {
-        _tileFixtureItemsFactory = new TileFixtureItemsFactoryImpl();
+    @Before
+    public void setUp() {
+        tileFixtureItemsFactory = new TileFixtureItemsFactoryImpl();
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TileFixtureItemsFactory.class.getCanonicalName(),
-                _tileFixtureItemsFactory.getInterfaceName());
+                tileFixtureItemsFactory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
-        assertNotNull(_tileFixtureItemsFactory.make(TILE_FIXTURE));
+    public void testMake() {
+        assertNotNull(tileFixtureItemsFactory.make(TILE_FIXTURE));
     }
 
     @Test
-    void testMakeWithNullInput() {
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItemsFactory.make(null));
+    public void testMakeWithNullInput() {
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItemsFactory.make(null));
     }
 }

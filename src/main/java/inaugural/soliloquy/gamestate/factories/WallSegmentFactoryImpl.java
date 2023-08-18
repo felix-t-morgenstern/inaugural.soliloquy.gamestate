@@ -10,10 +10,7 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.WallSegmentFactory;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-import java.util.List;
 import java.util.function.Function;
-
-import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public class WallSegmentFactoryImpl implements WallSegmentFactory {
     private final TypeHandler<VariableCache> DATA_HANDLER;

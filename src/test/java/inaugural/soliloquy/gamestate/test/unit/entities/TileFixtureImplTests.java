@@ -1,135 +1,136 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileFixtureImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileEntities;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
+import soliloquy.specs.ruleset.entities.FixtureType;
 
-import java.util.HashMap;
 import java.util.UUID;
 
-import static inaugural.soliloquy.tools.random.Random.randomFloat;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-class TileFixtureImplTests {
+@RunWith(MockitoJUnitRunner.class)
+public class TileFixtureImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
-    private final FakeFixtureType TYPE = new FakeFixtureType();
-    private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
-            new FakeTileFixtureItemsFactory();
-    private final VariableCache DATA = new VariableCacheStub();
+
+    @Mock private FixtureType mockFixtureType;
+    @Mock private Vertex mockTileOffset;
+    @Mock private TileFixtureItems mockTileFixtureItems;
+    @Mock private TileFixtureItemsFactory mockTileFixtureItemsFactory;
+    @Mock private VariableCache mockData;
+    @Mock private Tile mockTile;
+    @Mock private TileEntities<TileFixture> mockTileFixtures;
 
     private TileFixture tileFixture;
 
-    @BeforeEach
-    void setUp() {
-        tileFixture = new TileFixtureImpl(UUID, TYPE, TILE_FIXTURE_ITEMS_FACTORY, DATA);
+    @Before
+    public void setUp() {
+        when(mockFixtureType.defaultTileOffset()).thenReturn(mockTileOffset);
+
+        when(mockTileFixtureItemsFactory.make(any())).thenReturn(mockTileFixtureItems);
+
+        tileFixture = new TileFixtureImpl(UUID, mockFixtureType, mockTileFixtureItemsFactory, mockData);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(null, TYPE, TILE_FIXTURE_ITEMS_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(UUID, null, TILE_FIXTURE_ITEMS_FACTORY, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(UUID, TYPE, null, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileFixtureImpl(UUID, TYPE, TILE_FIXTURE_ITEMS_FACTORY, null));
+    public void testConstructorWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(null, mockFixtureType, mockTileFixtureItemsFactory, mockData));
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, null, mockTileFixtureItemsFactory, mockData));
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, mockFixtureType, null, mockData));
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, mockFixtureType, mockTileFixtureItemsFactory, null));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TileFixture.class.getCanonicalName(), tileFixture.getInterfaceName());
     }
 
     @Test
-    void testUuid() {
+    public void testUuid() {
         assertSame(UUID, tileFixture.uuid());
     }
 
     @Test
-    void testType() {
-        assertSame(TYPE, tileFixture.type());
+    public void testType() {
+        assertSame(mockFixtureType, tileFixture.type());
     }
 
     @Test
-    void testMovementEvents() {
+    public void testMovementEvents() {
         assertNotNull(tileFixture.movementEvents());
     }
 
     @Test
-    void testAbilityEvents() {
+    public void testAbilityEvents() {
         assertNotNull(tileFixture.abilityEvents());
     }
 
     @Test
-    void testMakeGameEventTarget() {
-        GameEventTarget gameEventTarget = tileFixture.makeGameEventTarget();
+    public void testMakeGameEventTarget() {
+        var gameEventTarget = tileFixture.makeGameEventTarget();
 
         assertNotNull(gameEventTarget);
         assertNull(gameEventTarget.tile());
         assertNull(gameEventTarget.tileWallSegment());
         assertNotNull(gameEventTarget.tileFixture());
+        assertSame(tileFixture, gameEventTarget.tileFixture());
         assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }
 
     @Test
-    void testTileFixtureItems() {
+    public void testTileFixtureItems() {
         assertNotNull(tileFixture.items());
-        assertSame(tileFixture, ((FakeTileFixtureItems) tileFixture.items()).TILE_FIXTURE);
+        assertSame(mockTileFixtureItems, tileFixture.items());
+        verify(mockTileFixtureItemsFactory).make(tileFixture);
     }
 
     @Test
-    void testAssignTileFixtureToTile() {
-        Tile tile = new FakeTile();
-        assertNull(tileFixture.tile());
+    public void testAssignTileAfterAddedToTileEntitiesOfType() {
+        when(mockTile.fixtures()).thenReturn(mockTileFixtures);
+        when(mockTileFixtures.contains(any())).thenReturn(true);
 
-        // NB: TileFixture.TILE should NOT be exposed, and calling TileFixture.assignCharacterToTile
-        // violates the invariant condition; therefore, TileFixturesStub calls
-        // TileFixture.assignCharacterToTile indirectly, as it should be in production code
-        tile.fixtures().add(tileFixture);
+        tileFixture.assignTileAfterAddedToTileEntitiesOfType(mockTile);
 
-        assertSame(tile, tileFixture.tile());
+        verify(mockTile).fixtures();
+        verify(mockTileFixtures).contains(tileFixture);
     }
 
     @Test
-    void testData() {
-        assertSame(DATA, tileFixture.data());
+    public void testData() {
+        assertSame(mockData, tileFixture.data());
     }
 
     @Test
-    void testDelete() {
-        Tile tile = new FakeTile();
-        tile.fixtures().add(tileFixture);
-        TileFixtureItems containedItems = tileFixture.items();
-        HashMap<TileFixture, Integer> entities =
-                ((FakeTileEntities<TileFixture>) tile.fixtures()).ENTITIES;
-        int originalNumberOfContainedItems = entities.size();
+    public void testDelete() {
+        when(mockTile.fixtures()).thenReturn(mockTileFixtures);
+        when(mockTileFixtures.contains(any())).thenReturn(true);
+        tileFixture.assignTileAfterAddedToTileEntitiesOfType(mockTile);
 
         tileFixture.delete();
 
-        // The test is simply asking the TileFixtureItems to handle deletion of its Items
         assertTrue(tileFixture.isDeleted());
-        assertTrue(containedItems.isDeleted());
-
-        assertFalse(tile.fixtures().contains(tileFixture));
-        assertFalse(entities.containsKey(tileFixture));
-        assertEquals(originalNumberOfContainedItems - 1, entities.size());
+        verify(mockTileFixtureItems).delete();
+        verify(mockTile, atLeast(1)).fixtures();
+        verify(mockTileFixtures).remove(tileFixture);
     }
 
     @Test
-    void testSetAndGetName() {
-        String name = randomString();
+    public void testSetAndGetName() {
+        var name = randomString();
 
         tileFixture.setName(name);
 
@@ -137,22 +138,21 @@ class TileFixtureImplTests {
     }
 
     @Test
-    void testSetAndGetTileOffset() {
-        Vertex tileOffset = Vertex.of(randomFloat(), randomFloat());
+    public void testSetAndGetTileOffset() {
+        var newTileOffset = mock(Vertex.class);
 
-        tileFixture.setTileOffset(tileOffset);
+        tileFixture.setTileOffset(newTileOffset);
 
-        assertSame(tileOffset, tileFixture.getTileOffset());
+        assertSame(newTileOffset, tileFixture.getTileOffset());
     }
 
     @Test
-    void testCreatedWithDefaultOffsets() {
-        assertEquals(Vertex.of(FakeFixtureType.DEFAULT_X_TILE_WIDTH_OFFSET,
-                FakeFixtureType.DEFAULT_Y_TILE_HEIGHT_OFFSET), tileFixture.getTileOffset());
+    public void testCreatedWithDefaultOffsets() {
+        assertSame(mockTileOffset, tileFixture.getTileOffset());
     }
 
     @Test
-    void testDeletedInvariant() {
+    public void testDeletedInvariant() {
         tileFixture.delete();
 
         assertThrows(EntityDeletedException.class, () -> tileFixture.tile());
@@ -170,10 +170,11 @@ class TileFixtureImplTests {
     }
 
     @Test
-    void testContainingTileInvariant() {
-        Tile tile = new FakeTile();
-        tile.fixtures().add(tileFixture);
-        ((FakeTileEntities<TileFixture>) tile.fixtures()).ENTITIES.remove(tileFixture);
+    public void testContainingTileInvariant() {
+        when(mockTile.fixtures()).thenReturn(mockTileFixtures);
+        when(mockTileFixtures.contains(any())).thenReturn(true);
+        tileFixture.assignTileAfterAddedToTileEntitiesOfType(mockTile);
+        when(mockTileFixtures.contains(any())).thenReturn(false);
 
         assertThrows(IllegalStateException.class, () -> tileFixture.tile());
         assertThrows(IllegalStateException.class, () -> tileFixture.type());

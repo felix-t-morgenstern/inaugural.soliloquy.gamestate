@@ -1,28 +1,28 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.KeyBindingContextFactoryImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.factories.KeyBindingContextFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-class KeyBindingContextFactoryImplTests {
-    private KeyBindingContextFactory _keyBindingContextFactory;
+public class KeyBindingContextFactoryImplTests {
+    private KeyBindingContextFactory keyBindingContextFactory;
 
-    @BeforeEach
-    void setUp() {
-        _keyBindingContextFactory = new KeyBindingContextFactoryImpl();
+    @Before
+    public void setUp() {
+        keyBindingContextFactory = new KeyBindingContextFactoryImpl();
     }
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(KeyBindingContextFactory.class.getCanonicalName(),
-                _keyBindingContextFactory.getInterfaceName());
+                keyBindingContextFactory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
-        assertNotNull(_keyBindingContextFactory.make());
+    public void testMake() {
+        assertNotNull(keyBindingContextFactory.make());
     }
 }

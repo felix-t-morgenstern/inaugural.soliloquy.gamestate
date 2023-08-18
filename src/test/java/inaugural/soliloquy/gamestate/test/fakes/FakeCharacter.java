@@ -16,23 +16,26 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+
 public class FakeCharacter implements Character {
-    private boolean _isDeleted;
-    private String _stance;
-    private Direction _direction;
-    private ImageAssetSet _imageAssetSet;
-    private CharacterAIType _aiType;
-    private boolean _playerControlled;
-    private String _name;
-    private VariableCache _data;
+    private boolean isDeleted;
+    private String stance;
+    private Direction direction;
+    private ImageAssetSet imageAssetSet;
+    private CharacterAIType aiType;
+    private boolean playerControlled;
+    private String name;
+    private VariableCache data;
 
     private final UUID UUID;
     private final CharacterType TYPE;
-    private final List<CharacterClassification> CLASSIFICATIONS = new ArrayList<>();
-    private final Map<String, String> PRONOUNS = new HashMap<>();
-    private final List<PassiveAbility> PASSIVE_ABILITIES = new ArrayList<>();
-    private final List<ActiveAbility> ACTIVE_ABILITIES = new ArrayList<>();
-    private final List<ReactiveAbility> REACTIVE_ABILITIES = new ArrayList<>();
+    private final List<CharacterClassification> CLASSIFICATIONS = listOf();
+    private final Map<String, String> PRONOUNS = mapOf();
+    private final List<PassiveAbility> PASSIVE_ABILITIES = listOf();
+    private final List<ActiveAbility> ACTIVE_ABILITIES = listOf();
+    private final List<ReactiveAbility> REACTIVE_ABILITIES = listOf();
 
     public Tile _tile;
 
@@ -47,7 +50,7 @@ public class FakeCharacter implements Character {
     public FakeCharacter(UUID uuid, CharacterType type, VariableCache data) {
         UUID = uuid;
         TYPE = type;
-        _data = data;
+        this.data = data;
     }
 
     @Override
@@ -72,45 +75,45 @@ public class FakeCharacter implements Character {
 
     @Override
     public String getStance() throws IllegalStateException {
-        return _stance;
+        return stance;
     }
 
     @Override
     public void setStance(String stance) throws IllegalStateException {
-        _stance = stance;
+        this.stance = stance;
     }
 
     @Override
     public Direction getDirection() throws IllegalStateException {
-        return _direction;
+        return direction;
     }
 
     @Override
     public void setDirection(Direction direction)
             throws IllegalArgumentException, IllegalStateException {
-        _direction = direction;
+        this.direction = direction;
     }
 
     @Override
     public ImageAssetSet getImageAssetSet() throws IllegalStateException {
-        return _imageAssetSet;
+        return imageAssetSet;
     }
 
     @Override
     public void setImageAssetSet(ImageAssetSet imageAssetSet)
             throws IllegalArgumentException, IllegalStateException {
-        _imageAssetSet = imageAssetSet;
+        this.imageAssetSet = imageAssetSet;
     }
 
     @Override
     public CharacterAIType getAIType() throws IllegalStateException {
-        return _aiType;
+        return aiType;
     }
 
     @Override
     public void setAIType(CharacterAIType aiType)
             throws IllegalArgumentException, IllegalStateException {
-        _aiType = aiType;
+        this.aiType = aiType;
     }
 
     @Override
@@ -170,22 +173,22 @@ public class FakeCharacter implements Character {
 
     @Override
     public boolean getPlayerControlled() throws IllegalStateException {
-        return _playerControlled;
+        return playerControlled;
     }
 
     @Override
     public void setPlayerControlled(boolean b) throws IllegalStateException {
-        _playerControlled = b;
+        playerControlled = b;
     }
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        return _data;
+        return data;
     }
 
     @Override
     public void delete() throws IllegalStateException {
-        _isDeleted = true;
+        isDeleted = true;
     }
 
     @Override
@@ -196,7 +199,7 @@ public class FakeCharacter implements Character {
 
     @Override
     public boolean isDeleted() {
-        return _isDeleted;
+        return isDeleted;
     }
 
     @Override
@@ -206,12 +209,12 @@ public class FakeCharacter implements Character {
 
     @Override
     public String getName() {
-        return _name;
+        return name;
     }
 
     @Override
     public void setName(String name) {
-        _name = name;
+        this.name = name;
     }
 
     @Override

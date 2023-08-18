@@ -4,8 +4,10 @@ import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 
 public abstract class HasDeletionInvariants implements Deletable {
     private boolean isDeleted;
@@ -27,11 +29,8 @@ public abstract class HasDeletionInvariants implements Deletable {
 
     private static void throwException(String exceptionMessage,
                                        Function<String, RuntimeException> exceptionFactory) {
-        @SuppressWarnings("rawtypes") ArrayList<Class> classes = new ArrayList<>() {{
-            add(HasDeletionInvariants.class);
-            add(Thread.class);
-            add(Check.class);
-        }};
+        @SuppressWarnings("rawtypes") List<Class> classes =
+                listOf(HasDeletionInvariants.class, Thread.class, Check.class);
         throw exceptionFactory.apply(Check.getFirstStackTraceElementNotInClasses(classes) +
                 ": " + exceptionMessage);
     }

@@ -13,11 +13,11 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class GameStateImpl implements GameState {
@@ -62,7 +62,7 @@ public class GameStateImpl implements GameState {
                          KeyEventListenerFactory keyEventListenerFactory) {
         PARTY = Check.ifNull(party, "party");
         this.data = Check.ifNull(data, "data");
-        CHARACTER_AI_TYPES = new HashMap<>();
+        CHARACTER_AI_TYPES = mapOf();
         GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
         CAMERA = Check.ifNull(cameraFactory, "cameraFactory").apply(this::getCurrentGameZone);
         Check.ifNull(registryFactory, "registryFactory");
@@ -71,7 +71,7 @@ public class GameStateImpl implements GameState {
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
         CLOCK_BASED_TIMER_MANAGER = Check.ifNull(clockBasedTimerManager, "clockBasedTimerManager");
-        KEY_BINDING_CONTEXTS = new HashMap<>();
+        KEY_BINDING_CONTEXTS = mapOf();
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
         ROUND_BASED_TIMER_FACTORY = Check.ifNull(roundBasedTimerFactory, "roundBasedTimerFactory");

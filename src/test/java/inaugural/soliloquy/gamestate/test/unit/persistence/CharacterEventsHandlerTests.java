@@ -1,24 +1,23 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.CharacterEventsHandler;
-
-import static inaugural.soliloquy.tools.collections.Collections.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
 import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
 
 import java.util.function.Function;
 
+import static inaugural.soliloquy.tools.collections.Collections.arrayOf;
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static inaugural.soliloquy.tools.testing.Mock.*;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -54,13 +53,13 @@ public class CharacterEventsHandlerTests {
         mockCharacterEvent3 = generateMockWithId(CharacterEvent.class, CHARACTER_EVENT_ID_3);
 
         mockGetCharacterEvent =
-                generateMockLookupFunction(Pair.of(CHARACTER_EVENT_ID_1, mockCharacterEvent1),
-                        Pair.of(CHARACTER_EVENT_ID_2, mockCharacterEvent2),
-                        Pair.of(CHARACTER_EVENT_ID_3, mockCharacterEvent3));
+                generateMockLookupFunction(pairOf(CHARACTER_EVENT_ID_1, mockCharacterEvent1),
+                        pairOf(CHARACTER_EVENT_ID_2, mockCharacterEvent2),
+                        pairOf(CHARACTER_EVENT_ID_3, mockCharacterEvent3));
 
         var representation = generateMockMap(
-                Pair.of(TRIGGER_1, listOf(mockCharacterEvent1)),
-                Pair.of(TRIGGER_2, listOf(mockCharacterEvent2, mockCharacterEvent3)));
+                pairOf(TRIGGER_1, listOf(mockCharacterEvent1)),
+                pairOf(TRIGGER_2, listOf(mockCharacterEvent2, mockCharacterEvent3)));
         when(mockCharacterEvents.representation()).thenReturn(representation);
 
         when(mockCharacterEventsFactory.make(any())).thenReturn(mockCharacterEvents);

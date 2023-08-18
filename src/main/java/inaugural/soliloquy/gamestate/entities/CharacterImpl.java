@@ -21,6 +21,9 @@ import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.util.*;
 
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+
 public class CharacterImpl implements Character {
     private final UUID UUID;
     private final CharacterType CHARACTER_TYPE;
@@ -54,16 +57,16 @@ public class CharacterImpl implements Character {
                          VariableCache data) {
         UUID = Check.ifNull(uuid, "uuid");
         CHARACTER_TYPE = Check.ifNull(characterType, "characterType");
-        CHARACTER_CLASSIFICATIONS = new ArrayList<>();
-        PRONOUNS = new HashMap<>();
+        CHARACTER_CLASSIFICATIONS = listOf();
+        PRONOUNS = mapOf();
         EVENTS = Check.ifNull(characterEventsFactory, "characterEventsFactory").make(this);
         EQUIPMENT_SLOTS = Check.ifNull(equipmentSlotsFactory, "equipmentSlotsFactory").make(this);
         INVENTORY = Check.ifNull(inventoryFactory, "inventoryFactory").make(this);
-        VARIABLE_STATISTIC_CURRENT_VALUES = new HashMap<>();
+        VARIABLE_STATISTIC_CURRENT_VALUES = mapOf();
         STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").make(this);
-        PASSIVE_ABILITIES = new ArrayList<>();
-        ACTIVE_ABILITIES = new ArrayList<>();
-        REACTIVE_ABILITIES = new ArrayList<>();
+        PASSIVE_ABILITIES = listOf();
+        ACTIVE_ABILITIES = listOf();
+        REACTIVE_ABILITIES = listOf();
         DATA = Check.ifNull(data, "data");
     }
 
@@ -181,7 +184,7 @@ public class CharacterImpl implements Character {
     public Map<VariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
             throws EntityDeletedException {
         enforceInvariant("variableStatisticCurrentValuesRepresentation", true);
-        return new HashMap<>(VARIABLE_STATISTIC_CURRENT_VALUES);
+        return mapOf(VARIABLE_STATISTIC_CURRENT_VALUES);
     }
 
     @Override

@@ -1,90 +1,90 @@
 package inaugural.soliloquy.gamestate.test.unit.infrastructure;
 
 import inaugural.soliloquy.gamestate.infrastructure.GameSaveBlockerImpl;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class GameSaveBlockerImplTests {
-    private GameSaveBlocker _gameSaveBlocker;
+public class GameSaveBlockerImplTests {
+    private GameSaveBlocker gameSaveBlocker;
 
-    @BeforeEach
-    void setUp() {
-        _gameSaveBlocker = new GameSaveBlockerImpl();
+    @Before
+    public void setUp() {
+        gameSaveBlocker = new GameSaveBlockerImpl();
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(GameSaveBlocker.class.getCanonicalName(),
-                _gameSaveBlocker.getInterfaceName());
+                gameSaveBlocker.getInterfaceName());
     }
 
     @Test
-    void testPlaceAndReleaseTriggeredEventBlockAndCanSaveGame() {
+    public void testPlaceAndReleaseTriggeredEventBlockAndCanSaveGame() {
         UUID block1 = UUID.randomUUID();
         UUID block2 = UUID.randomUUID();
 
-        assertTrue(_gameSaveBlocker.canSaveGame());
+        assertTrue(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeEventFiringBlock(block1);
+        gameSaveBlocker.placeEventFiringBlock(block1);
 
-        assertFalse(_gameSaveBlocker.canSaveGame());
+        assertFalse(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeEventFiringBlock(block2);
-        _gameSaveBlocker.releaseEventFiringBlock(block1);
+        gameSaveBlocker.placeEventFiringBlock(block2);
+        gameSaveBlocker.releaseEventFiringBlock(block1);
 
-        assertFalse(_gameSaveBlocker.canSaveGame());
+        assertFalse(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.releaseEventFiringBlock(block2);
+        gameSaveBlocker.releaseEventFiringBlock(block2);
 
-        assertTrue(_gameSaveBlocker.canSaveGame());
+        assertTrue(gameSaveBlocker.canSaveGame());
     }
 
     @Test
-    void testPlaceAndReleaseTriggeredEventBlockWithInvalidParams() {
+    public void testPlaceAndReleaseTriggeredEventBlockWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _gameSaveBlocker.placeEventFiringBlock(null));
+                gameSaveBlocker.placeEventFiringBlock(null));
         assertThrows(IllegalArgumentException.class, () ->
-                _gameSaveBlocker.releaseEventFiringBlock(null));
+                gameSaveBlocker.releaseEventFiringBlock(null));
     }
 
     @Test
-    void testPlaceAndReleaseManualBlockAndCanSaveGame() {
-        assertTrue(_gameSaveBlocker.canSaveGame());
+    public void testPlaceAndReleaseManualBlockAndCanSaveGame() {
+        assertTrue(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeManualBlock();
+        gameSaveBlocker.placeManualBlock();
 
-        assertFalse(_gameSaveBlocker.canSaveGame());
+        assertFalse(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.releaseManualBlock();
+        gameSaveBlocker.releaseManualBlock();
 
-        assertTrue(_gameSaveBlocker.canSaveGame());
+        assertTrue(gameSaveBlocker.canSaveGame());
     }
 
     @Test
-    void testPlaceAndReleaseManualAndTriggeredEventBlocksAndCanSaveGame() {
+    public void testPlaceAndReleaseManualAndTriggeredEventBlocksAndCanSaveGame() {
         UUID block = UUID.randomUUID();
 
-        assertTrue(_gameSaveBlocker.canSaveGame());
+        assertTrue(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeEventFiringBlock(block);
+        gameSaveBlocker.placeEventFiringBlock(block);
 
-        assertFalse(_gameSaveBlocker.canSaveGame());
+        assertFalse(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.placeManualBlock();
+        gameSaveBlocker.placeManualBlock();
 
-        assertFalse(_gameSaveBlocker.canSaveGame());
+        assertFalse(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.releaseEventFiringBlock(block);
+        gameSaveBlocker.releaseEventFiringBlock(block);
 
-        assertFalse(_gameSaveBlocker.canSaveGame());
+        assertFalse(gameSaveBlocker.canSaveGame());
 
-        _gameSaveBlocker.releaseManualBlock();
+        gameSaveBlocker.releaseManualBlock();
 
-        assertTrue(_gameSaveBlocker.canSaveGame());
+        assertTrue(gameSaveBlocker.canSaveGame());
     }
 }

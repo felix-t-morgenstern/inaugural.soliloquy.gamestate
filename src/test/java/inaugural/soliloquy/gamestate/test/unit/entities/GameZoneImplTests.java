@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
-import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
@@ -24,6 +23,7 @@ import java.util.UUID;
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static inaugural.soliloquy.tools.random.Random.*;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -239,11 +239,11 @@ public class GameZoneImplTests {
         gameZone.setSegment(mockSegment2Location, mockSegment2);
         gameZone.setSegment(mockSegment3Location, mockSegment3);
 
-        assertEquals(mapOf(Pair.of(MOCK_SEGMENT_1_Z, mockSegment1)),
+        assertEquals(mapOf(pairOf(MOCK_SEGMENT_1_Z, mockSegment1)),
                 gameZone.getSegments(mockSegment1Location.to2d(), WallSegmentDirection.NORTH));
-        assertEquals(mapOf(Pair.of(MOCK_SEGMENT_2_Z, mockSegment2)),
+        assertEquals(mapOf(pairOf(MOCK_SEGMENT_2_Z, mockSegment2)),
                 gameZone.getSegments(mockSegment2And3TileLocation, WallSegmentDirection.NORTHWEST));
-        assertEquals(mapOf(Pair.of(MOCK_SEGMENT_3_Z, mockSegment3)),
+        assertEquals(mapOf(pairOf(MOCK_SEGMENT_3_Z, mockSegment3)),
                 gameZone.getSegments(mockSegment2And3TileLocation, WallSegmentDirection.WEST));
         assertEquals(mapOf(),
                 gameZone.getSegments(validCoordinate2d(), WallSegmentDirection.NORTH));

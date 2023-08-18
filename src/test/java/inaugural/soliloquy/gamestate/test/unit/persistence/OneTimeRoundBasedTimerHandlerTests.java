@@ -5,17 +5,17 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeRoundBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRoundBasedTimerFactory;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class OneTimeRoundBasedTimerHandlerTests {
+public class OneTimeRoundBasedTimerHandlerTests {
     private final RoundBasedTimerFactory TURN_BASED_TIMER_FACTORY =
             new FakeRoundBasedTimerFactory();
 
@@ -36,8 +36,8 @@ class OneTimeRoundBasedTimerHandlerTests {
 
     private TypeHandler<OneTimeRoundBasedTimer> _oneTimeRoundBasedTimerHandler;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         ACTIONS.add(ACTION);
 
         _oneTimeRoundBasedTimerHandler =
@@ -45,7 +45,7 @@ class OneTimeRoundBasedTimerHandlerTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new OneTimeRoundBasedTimerHandler(null, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
@@ -53,21 +53,21 @@ class OneTimeRoundBasedTimerHandlerTests {
     }
 
     @Test
-    void testGetArchetype() {
-        assertNotNull(_oneTimeRoundBasedTimerHandler.getArchetype());
+    public void testArchetype() {
+        assertNotNull(_oneTimeRoundBasedTimerHandler.archetype());
         assertEquals(OneTimeRoundBasedTimer.class.getCanonicalName(),
-                _oneTimeRoundBasedTimerHandler.getArchetype().getInterfaceName());
+                _oneTimeRoundBasedTimerHandler.archetype().getInterfaceName());
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         OneTimeRoundBasedTimer.class.getCanonicalName() + ">",
                 _oneTimeRoundBasedTimerHandler.getInterfaceName());
     }
 
     @Test
-    void testWrite() {
+    public void testWrite() {
         OneTimeRoundBasedTimer oneTimeRoundBasedTimer = new FakeOneTimeRoundBasedTimer(
                 ONE_TIME_TIMER_ID, ACTION, ROUND_WHEN_GOES_OFF, PRIORITY);
 
@@ -77,13 +77,13 @@ class OneTimeRoundBasedTimerHandlerTests {
     }
 
     @Test
-    void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
                 _oneTimeRoundBasedTimerHandler.write(null));
     }
 
     @Test
-    void testRead() {
+    public void testRead() {
         OneTimeRoundBasedTimer readResult = _oneTimeRoundBasedTimerHandler.read(WRITTEN_VALUE);
 
         assertNotNull(readResult);
@@ -94,7 +94,7 @@ class OneTimeRoundBasedTimerHandlerTests {
     }
 
     @Test
-    void testReadWithInvalidParams() {
+    public void testReadWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
                 _oneTimeRoundBasedTimerHandler.read(null));
         assertThrows(IllegalArgumentException.class, () ->

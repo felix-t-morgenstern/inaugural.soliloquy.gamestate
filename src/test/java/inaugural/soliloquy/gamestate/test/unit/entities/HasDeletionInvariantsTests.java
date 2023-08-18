@@ -2,28 +2,28 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.test.fakes.FakeDeletable;
 import inaugural.soliloquy.gamestate.test.fakes.FakeHasDeletionInvariants;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
-class HasDeletionInvariantsTests {
+public class HasDeletionInvariantsTests {
     private final FakeDeletable DELETABLE = new FakeDeletable();
     private final String CONTAINING_CLASS_NAME = "ContainingClassName";
 
     private FakeHasDeletionInvariants _hasDeletionInvariants;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         _hasDeletionInvariants = new FakeHasDeletionInvariants();
         _hasDeletionInvariants.ContainingObject = DELETABLE;
         _hasDeletionInvariants.ContainingClassName = CONTAINING_CLASS_NAME;
     }
 
     @Test
-    void testDeletedInvariant() {
+    public void testDeletedInvariant() {
         _hasDeletionInvariants.delete();
 
         try {
@@ -40,7 +40,7 @@ class HasDeletionInvariantsTests {
     }
 
     @Test
-    void testContainingObjectDeletedInvariant() {
+    public void testContainingObjectDeletedInvariant() {
         DELETABLE.delete();
 
         try {

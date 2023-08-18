@@ -6,8 +6,8 @@ import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixtureItems;
 import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixtureItemsFactory;
 import inaugural.soliloquy.gamestate.test.fakes.FakeVariableCacheFactory;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.common.factories.VariableCacheFactory;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Vertex;
@@ -17,9 +17,9 @@ import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class TileFixtureFactoryImplTests {
+public class TileFixtureFactoryImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final TileFixtureItemsFactory TILE_FIXTURE_ITEMS_FACTORY =
             new FakeTileFixtureItemsFactory();
@@ -29,13 +29,13 @@ class TileFixtureFactoryImplTests {
 
     private TileFixtureFactory tileFixtureFactory;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         tileFixtureFactory = new TileFixtureFactoryImpl(TILE_FIXTURE_ITEMS_FACTORY, DATA_FACTORY);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureFactoryImpl(null, DATA_FACTORY));
         assertThrows(IllegalArgumentException.class,
@@ -43,13 +43,13 @@ class TileFixtureFactoryImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TileFixtureFactory.class.getCanonicalName(),
                 tileFixtureFactory.getInterfaceName());
     }
 
     @Test
-    void testMake() {
+    public void testMake() {
         TileFixture tileFixture = tileFixtureFactory.make(FIXTURE_TYPE, null);
 
         assertNotNull(tileFixture);
@@ -64,7 +64,7 @@ class TileFixtureFactoryImplTests {
     }
 
     @Test
-    void testMakeWithData() {
+    public void testMakeWithData() {
         TileFixture tileFixture = tileFixtureFactory.make(FIXTURE_TYPE, DATA);
 
         assertNotNull(tileFixture);
@@ -79,7 +79,7 @@ class TileFixtureFactoryImplTests {
     }
 
     @Test
-    void testMakeWithId() {
+    public void testMakeWithId() {
         TileFixture tileFixture = tileFixtureFactory.make(FIXTURE_TYPE, null, UUID);
 
         assertNotNull(tileFixture);
@@ -94,7 +94,7 @@ class TileFixtureFactoryImplTests {
     }
 
     @Test
-    void testMakeWithIdAndData() {
+    public void testMakeWithIdAndData() {
         TileFixture tileFixture = tileFixtureFactory.make(FIXTURE_TYPE, DATA, UUID);
 
         assertNotNull(tileFixture);
@@ -109,7 +109,7 @@ class TileFixtureFactoryImplTests {
     }
 
     @Test
-    void testMakeWithInvalidParams() {
+    public void testMakeWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> tileFixtureFactory.make(null, null));
 

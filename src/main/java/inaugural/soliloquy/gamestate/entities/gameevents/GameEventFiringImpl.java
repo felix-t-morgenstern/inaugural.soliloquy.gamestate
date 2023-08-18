@@ -18,13 +18,13 @@ public class GameEventFiringImpl implements GameEventFiring {
     private final ConcurrentHashMap<Integer, LinkedBlockingQueue<Runnable>> QUEUE =
             new ConcurrentHashMap<>();
 
-    private UUID _currentBlockId;
+    private UUID currentBlockId;
 
     public GameEventFiringImpl(GameSaveBlocker gameSaveBlocker,
                                Consumer<Throwable> handleError) {
         GAME_SAVE_BLOCKER = Check.ifNull(gameSaveBlocker, "gameSaveBlocker");
         HANDLE_ERROR = Check.ifNull(handleError, "handleError");
-        _currentBlockId = null;
+        currentBlockId = null;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class GameEventFiringImpl implements GameEventFiring {
         }
         eventsAtPriority.offer(event);
 
-        UUID newBlock = setBlockIfNoneExists();
+        var newBlock = setBlockIfNoneExists();
 
         if (newBlock != null) {
             GAME_SAVE_BLOCKER.placeEventFiringBlock(newBlock);
@@ -53,7 +53,8 @@ public class GameEventFiringImpl implements GameEventFiring {
     }
 
     private synchronized void removeEventFromQueue(Runnable event, int priority) {
-        LinkedBlockingQueue<Runnable> eventsAtPriority = QUEUE.get(priority);
+        var eventsAtPriority = QUEUE.get(priority);
+        //noinspection ResultOfMethodCallIgnored
         eventsAtPriority.remove(event);
         if (eventsAtPriority.isEmpty()) {
             QUEUE.remove(priority);
@@ -61,8 +62,8 @@ public class GameEventFiringImpl implements GameEventFiring {
     }
 
     private synchronized void runAllEventsInQueueRecursively() {
-        int highestPriority = Collections.max(QUEUE.keySet());
-        Runnable event = QUEUE.get(highestPriority).peek();
+        var highestPriority = Collections.max(QUEUE.keySet());
+        var event = QUEUE.get(highestPriority).peek();
         assert event != null;
         CompletableFuture.runAsync(() -> {
             try {
@@ -72,8 +73,8 @@ public class GameEventFiringImpl implements GameEventFiring {
                     runAllEventsInQueueRecursively();
                 }
                 else {
-                    GAME_SAVE_BLOCKER.releaseEventFiringBlock(_currentBlockId);
-                    _currentBlockId = null;
+                    GAME_SAVE_BLOCKER.releaseEventFiringBlock(currentBlockId);
+                    currentBlockId = null;
                 }
             }
             catch (Exception e) {
@@ -83,7 +84,7 @@ public class GameEventFiringImpl implements GameEventFiring {
     }
 
     private synchronized UUID setBlockIfNoneExists() {
-        return _currentBlockId == null ? _currentBlockId = UUID.randomUUID() : null;
+        return currentBlockId == null ? currentBlockId = UUID.randomUUID() : null;
     }
 
     @Override

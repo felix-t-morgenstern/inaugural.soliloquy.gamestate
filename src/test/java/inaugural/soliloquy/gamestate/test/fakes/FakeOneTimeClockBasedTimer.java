@@ -2,13 +2,15 @@ package inaugural.soliloquy.gamestate.test.fakes;
 
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
-import java.util.ArrayList;
 
+import java.util.List;
+
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 
 public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
     public long FiringTime;
-    public ArrayList<Long> FiredTimes = new ArrayList<>();
+    public List<Long> FiredTimes = listOf();
     public String Id = randomString();
 
     public FakeOneTimeClockBasedTimer() {

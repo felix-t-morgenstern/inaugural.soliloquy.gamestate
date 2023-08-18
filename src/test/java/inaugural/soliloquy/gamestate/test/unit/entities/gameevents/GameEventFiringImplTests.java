@@ -2,8 +2,8 @@ package inaugural.soliloquy.gamestate.test.unit.entities.gameevents;
 
 import inaugural.soliloquy.gamestate.entities.gameevents.GameEventFiringImpl;
 import inaugural.soliloquy.tools.CheckedExceptionWrapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventFiring;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
@@ -11,11 +11,11 @@ import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-class GameEventFiringImplTests {
+// TODO: Bad suite.
+public class GameEventFiringImplTests {
     private boolean _event1CanComplete = false;
     private boolean _event2CanComplete = false;
     private boolean _event3CanComplete = false;
@@ -48,8 +48,8 @@ class GameEventFiringImplTests {
 
     private GameEventFiring _gameEventFiring;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         _eventsCompleted = new CopyOnWriteArrayList<>();
 
         _mockGameSaveBlocker = mock(GameSaveBlocker.class);
@@ -58,7 +58,7 @@ class GameEventFiringImplTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameEventFiringImpl(null, e -> _handledError = e));
         assertThrows(IllegalArgumentException.class,
@@ -66,7 +66,7 @@ class GameEventFiringImplTests {
     }
 
     @Test
-    void testRegisterEventFiresEvent() {
+    public void testRegisterEventFiresEvent() {
         _event1CanComplete = true;
 
         _gameEventFiring.registerEvent(EVENT_1, randomInt());
@@ -76,7 +76,7 @@ class GameEventFiringImplTests {
     }
 
     @Test
-    void testEventsFiredInOrderOfPriorityAndPlacement() {
+    public void testEventsFiredInOrderOfPriorityAndPlacement() {
         int event1Priority = randomInt();
         _gameEventFiring.registerEvent(EVENT_1, event1Priority);
         _gameEventFiring.registerEvent(EVENT_2, randomIntWithInclusiveCeiling(event1Priority - 1));
@@ -95,7 +95,7 @@ class GameEventFiringImplTests {
     }
 
     @Test
-    void testFreeForGameplayInput() {
+    public void testFreeForGameplayInput() {
         _gameEventFiring.registerEvent(EVENT_1, randomInt());
         _gameEventFiring.registerEvent(EVENT_2, randomInt());
         _gameEventFiring.registerEvent(EVENT_3, randomInt());
@@ -121,7 +121,7 @@ class GameEventFiringImplTests {
     }
 
     @Test
-    void testPlacementAndReleasingOfGameSaveBlocks() {
+    public void testPlacementAndReleasingOfGameSaveBlocks() {
         _gameEventFiring.registerEvent(EVENT_1, randomInt());
         _gameEventFiring.registerEvent(EVENT_2, randomInt());
         _gameEventFiring.registerEvent(EVENT_3, randomInt());
@@ -151,7 +151,7 @@ class GameEventFiringImplTests {
     }
 
     @Test
-    void testSubthreadErrorHandler() {
+    public void testSubthreadErrorHandler() {
         _gameEventFiring.registerEvent(EVENT_ERROR, randomInt());
 
         CheckedExceptionWrapper.sleep(50);
@@ -160,7 +160,7 @@ class GameEventFiringImplTests {
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(GameEventFiring.class.getCanonicalName(), _gameEventFiring.getInterfaceName());
     }
 }

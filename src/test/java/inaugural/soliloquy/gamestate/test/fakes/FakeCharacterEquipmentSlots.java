@@ -4,16 +4,17 @@ import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
 import soliloquy.specs.gamestate.entities.Item;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
     public final Character CHARACTER;
 
-    public static Map<String, Item> EQUIPMENT_SLOTS = new HashMap<>();
+    public static Map<String, Item> EQUIPMENT_SLOTS = mapOf();
     public static Item ITEM_IN_SLOT_RESULT_OVERRIDE = null;
 
-    public boolean _isDeleted;
+    public boolean isDeleted;
 
     FakeCharacterEquipmentSlots(Character character) {
         CHARACTER = character;
@@ -26,17 +27,17 @@ public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
 
     @Override
     public void delete() throws IllegalStateException {
-        _isDeleted = true;
+        isDeleted = true;
     }
 
     @Override
     public boolean isDeleted() {
-        return _isDeleted;
+        return isDeleted;
     }
 
     @Override
     public Map<String, Item> representation() throws IllegalStateException {
-        return new HashMap<>(EQUIPMENT_SLOTS);
+        return mapOf(EQUIPMENT_SLOTS);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
     @Override
     public Item removeCharacterEquipmentSlot(String s)
             throws IllegalArgumentException, IllegalStateException {
-        Item item = EQUIPMENT_SLOTS.remove(s);
+        var item = EQUIPMENT_SLOTS.remove(s);
         if (item != null) {
             item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
         }
@@ -78,7 +79,7 @@ public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
     @Override
     public Item equipItemToSlot(String s, Item item)
             throws IllegalArgumentException, IllegalStateException, UnsupportedOperationException {
-        Item originalItem = EQUIPMENT_SLOTS.get(s);
+        var originalItem = EQUIPMENT_SLOTS.get(s);
         if (originalItem != null) {
             originalItem.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
         }

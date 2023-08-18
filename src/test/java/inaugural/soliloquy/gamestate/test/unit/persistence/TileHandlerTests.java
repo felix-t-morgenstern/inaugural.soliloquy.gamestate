@@ -5,8 +5,8 @@ import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.fakes.persistence.*;
 import inaugural.soliloquy.gamestate.test.stubs.SpriteStub;
 import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
@@ -22,9 +22,9 @@ import soliloquy.specs.ruleset.entities.GroundType;
 import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class TileHandlerTests {
+public class TileHandlerTests {
     private final TileFactory TILE_FACTORY = new FakeTileFactory();
 
     private final FakeTypeHandler<Character> CHAR_HANDLER = new FakeCharacterHandler();
@@ -66,8 +66,8 @@ class TileHandlerTests {
 
     private TypeHandler<Tile> tileHandler;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         MOVEMENT_EVENTS.put(MOVEMENT_EVENT_ID, MOVEMENT_EVENT);
         ABILITY_EVENTS.put(ABILITY_EVENT_ID, ABILITY_EVENT);
         GROUND_TYPES.put(GROUND_TYPE_ID, GROUND_TYPE);
@@ -78,7 +78,7 @@ class TileHandlerTests {
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
                 new TileHandler(null, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER,
                         DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
@@ -118,7 +118,7 @@ class TileHandlerTests {
     }
 
     @Test
-    void testWrite() {
+    public void testWrite() {
         var tile = new FakeTile(X, Y, DATA);
         tile.setHeight(HEIGHT);
         tile.setGroundType(GROUND_TYPE);
@@ -133,12 +133,12 @@ class TileHandlerTests {
     }
 
     @Test
-    void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> tileHandler.write(null));
     }
 
     @Test
-    void testRead() {
+    public void testRead() {
         var readTile = tileHandler.read(WRITTEN_DATA);
 
         assertNotNull(readTile);
@@ -153,19 +153,19 @@ class TileHandlerTests {
         Character characterFromHandler = CHAR_HANDLER.READ_OUTPUTS.get(0);
         assertTrue(readTile.characters().contains(characterFromHandler));
         assertEquals("Character0", CHAR_HANDLER.READ_INPUTS.get(0));
-        assertEquals(111, readTile.characters().getZIndex(characterFromHandler));
+        assertEquals(111, (int)readTile.characters().getZIndex(characterFromHandler));
 
         assertEquals(1, readTile.items().size());
         Item itemFromHandler = ITEM_HANDLER.READ_OUTPUTS.get(0);
         assertTrue(readTile.items().contains(itemFromHandler));
         assertEquals("Item0", ITEM_HANDLER.READ_INPUTS.get(0));
-        assertEquals(222, readTile.items().getZIndex(itemFromHandler));
+        assertEquals(222, (int)readTile.items().getZIndex(itemFromHandler));
 
         assertEquals(1, readTile.fixtures().size());
         TileFixture fixtureFromHandler = FIXTURE_HANDLER.READ_OUTPUTS.get(0);
         assertTrue(readTile.fixtures().contains(fixtureFromHandler));
         assertEquals("TileFixture0", FIXTURE_HANDLER.READ_INPUTS.get(0));
-        assertEquals(333, readTile.fixtures().getZIndex(fixtureFromHandler));
+        assertEquals(333, (int)readTile.fixtures().getZIndex(fixtureFromHandler));
 
         assertEquals(1, readTile.movementEvents().size());
         assertTrue(readTile.movementEvents().contains(MOVEMENT_EVENT));
@@ -176,18 +176,18 @@ class TileHandlerTests {
         assertEquals(1, readTile.sprites().size());
         Sprite spriteFromHandler = SPRITE_HANDLER.READ_OUTPUTS.get(0);
         assertTrue(readTile.sprites().containsKey(spriteFromHandler));
-        assertEquals(666, readTile.sprites().get(spriteFromHandler));
+        assertEquals(666, (int)readTile.sprites().get(spriteFromHandler));
         assertEquals("Sprite0", SPRITE_HANDLER.READ_INPUTS.get(0));
     }
 
     @Test
-    void testReadWithInvalidParams() {
+    public void testReadWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> tileHandler.read(null));
         assertThrows(IllegalArgumentException.class, () -> tileHandler.read(""));
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         Tile.class.getCanonicalName() + ">",
                 tileHandler.getInterfaceName());

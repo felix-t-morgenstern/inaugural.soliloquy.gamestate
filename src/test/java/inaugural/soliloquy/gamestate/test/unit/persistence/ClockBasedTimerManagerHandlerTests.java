@@ -1,157 +1,137 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.ClockBasedTimerManagerHandler;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-class ClockBasedTimerManagerHandlerTests {
-    private final String ONE_TIME_CLOCK_BASED_TIMER_ID = "oneTimeClockBasedTimerId";
-
-    private final String RECURRING_CLOCK_BASED_TIMER_ID = "recurringClockBasedTimerId";
-
-    private final String ONE_TIME_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA =
-            "oneTimeClockBasedTimerMockWrittenData";
-    private final String RECURRING_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA =
-            "recurringClockBasedTimerMockWrittenData";
+@RunWith(MockitoJUnitRunner.class)
+public class ClockBasedTimerManagerHandlerTests {
+    private final String ONE_TIME_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA = randomString();
+    private final String RECURRING_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA = randomString();
 
     @Mock
-    private ClockBasedTimerManager _mockClockBasedTimerManager;
+    private ClockBasedTimerManager mockClockBasedTimerManager;
 
     @Mock
-    private TypeHandler<OneTimeClockBasedTimer> _mockOneTimeClockBasedTimerHandler;
+    private TypeHandler<OneTimeClockBasedTimer> mockOneTimeClockBasedTimerHandler;
     @Mock
-    private TypeHandler<RecurringClockBasedTimer> _mockRecurringClockBasedTimerHandler;
+    private TypeHandler<RecurringClockBasedTimer> mockRecurringClockBasedTimerHandler;
 
     @Mock
-    private OneTimeClockBasedTimer _mockOneTimeClockBasedTimer;
+    private OneTimeClockBasedTimer mockOneTimeClockBasedTimer;
     @Mock
-    private RecurringClockBasedTimer _mockRecurringClockBasedTimer;
+    private RecurringClockBasedTimer mockRecurringClockBasedTimer;
 
-    private TypeHandler<ClockBasedTimerManager> _clockBasedTimerManagerHandler;
+    private TypeHandler<ClockBasedTimerManager> clockBasedTimerManagerHandler;
 
-    private final String WRITTEN_DATA =
-            "{\"oneTimeClockBasedTimers\":[\"oneTimeClockBasedTimerMockWrittenData\"]," +
-                    "\"recurringClockBasedTimers\":[\"recurringClockBasedTimerMockWrittenData\"]}";
+    private final String WRITTEN_DATA = String.format(
+            "{\"oneTimeClockBasedTimers\":[\"%s\"],\"recurringClockBasedTimers\":[\"%s\"]}",
+            ONE_TIME_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA,
+            RECURRING_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA);
 
-    @BeforeEach
-    void setUp() {
-        _mockOneTimeClockBasedTimer = mock(OneTimeClockBasedTimer.class);
-        when(_mockOneTimeClockBasedTimer.id()).thenReturn(ONE_TIME_CLOCK_BASED_TIMER_ID);
-
-        _mockRecurringClockBasedTimer = mock(RecurringClockBasedTimer.class);
-        when(_mockRecurringClockBasedTimer.id()).thenReturn(RECURRING_CLOCK_BASED_TIMER_ID);
-
-        //noinspection unchecked
-        _mockOneTimeClockBasedTimerHandler = mock(TypeHandler.class);
-        when(_mockOneTimeClockBasedTimerHandler.read(anyString()))
-                .thenReturn(_mockOneTimeClockBasedTimer);
-        when(_mockOneTimeClockBasedTimerHandler.write(any()))
+    @Before
+    public void setUp() {
+        when(mockOneTimeClockBasedTimerHandler.read(anyString()))
+                .thenReturn(mockOneTimeClockBasedTimer);
+        when(mockOneTimeClockBasedTimerHandler.write(any()))
                 .thenReturn(ONE_TIME_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA);
 
-        //noinspection unchecked
-        _mockRecurringClockBasedTimerHandler = mock(TypeHandler.class);
-        when(_mockRecurringClockBasedTimerHandler.read(anyString()))
-                .thenReturn(_mockRecurringClockBasedTimer);
-        when(_mockRecurringClockBasedTimerHandler.write(any()))
+        when(mockRecurringClockBasedTimerHandler.read(anyString()))
+                .thenReturn(mockRecurringClockBasedTimer);
+        when(mockRecurringClockBasedTimerHandler.write(any()))
                 .thenReturn(RECURRING_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA);
 
-        _mockClockBasedTimerManager = mock(ClockBasedTimerManager.class);
 
-        _clockBasedTimerManagerHandler =
-                new ClockBasedTimerManagerHandler(_mockClockBasedTimerManager,
-                        _mockOneTimeClockBasedTimerHandler, _mockRecurringClockBasedTimerHandler);
+        clockBasedTimerManagerHandler =
+                new ClockBasedTimerManagerHandler(mockClockBasedTimerManager,
+                        mockOneTimeClockBasedTimerHandler, mockRecurringClockBasedTimerHandler);
     }
 
     @Test
-    void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> new ClockBasedTimerManagerHandler(
-                null, _mockOneTimeClockBasedTimerHandler,
-                _mockRecurringClockBasedTimerHandler
+                null, mockOneTimeClockBasedTimerHandler,
+                mockRecurringClockBasedTimerHandler
         ));
         assertThrows(IllegalArgumentException.class, () -> new ClockBasedTimerManagerHandler(
-                _mockClockBasedTimerManager, null,
-                _mockRecurringClockBasedTimerHandler
+                mockClockBasedTimerManager, null,
+                mockRecurringClockBasedTimerHandler
         ));
         assertThrows(IllegalArgumentException.class, () -> new ClockBasedTimerManagerHandler(
-                _mockClockBasedTimerManager, _mockOneTimeClockBasedTimerHandler,
+                mockClockBasedTimerManager, mockOneTimeClockBasedTimerHandler,
                 null
         ));
     }
 
     @Test
-    void testWrite() {
-        when(_mockClockBasedTimerManager.oneTimeTimersRepresentation())
-                .thenReturn(new ArrayList<>() {{
-                    add(_mockOneTimeClockBasedTimer);
-                }});
-        when(_mockClockBasedTimerManager.recurringTimersRepresentation())
-                .thenReturn(new ArrayList<>() {{
-                    add(_mockRecurringClockBasedTimer);
-                }});
+    public void testWrite() {
+        when(mockClockBasedTimerManager.oneTimeTimersRepresentation())
+                .thenReturn(listOf(mockOneTimeClockBasedTimer));
+        when(mockClockBasedTimerManager.recurringTimersRepresentation())
+                .thenReturn(listOf(mockRecurringClockBasedTimer));
 
-        String writtenValue = _clockBasedTimerManagerHandler.write(null);
+        String writtenValue = clockBasedTimerManagerHandler.write(null);
 
         assertEquals(WRITTEN_DATA, writtenValue);
     }
 
     @Test
-    void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerManagerHandler.write(_mockClockBasedTimerManager));
+                clockBasedTimerManagerHandler.write(mockClockBasedTimerManager));
     }
 
     @Test
-    void testRead() {
-        InOrder inOrder = inOrder(_mockClockBasedTimerManager);
+    public void testRead() {
+        var inOrder = inOrder(mockClockBasedTimerManager);
 
-        ClockBasedTimerManager unusedValue = _clockBasedTimerManagerHandler.read(WRITTEN_DATA);
+        ClockBasedTimerManager unusedValue = clockBasedTimerManagerHandler.read(WRITTEN_DATA);
 
         assertNull(unusedValue);
         // Test whether EXISTING manager received values, AND whether it cleared out OLD values
-        inOrder.verify(_mockClockBasedTimerManager).clear();
-        inOrder.verify(_mockClockBasedTimerManager)
-                .registerOneTimeTimer(_mockOneTimeClockBasedTimer);
-        inOrder.verify(_mockClockBasedTimerManager)
-                .registerRecurringTimer(_mockRecurringClockBasedTimer);
+        inOrder.verify(mockClockBasedTimerManager).clear();
+        inOrder.verify(mockClockBasedTimerManager)
+                .registerOneTimeTimer(mockOneTimeClockBasedTimer);
+        inOrder.verify(mockClockBasedTimerManager)
+                .registerRecurringTimer(mockRecurringClockBasedTimer);
 
-        verify(_mockOneTimeClockBasedTimerHandler)
+        verify(mockOneTimeClockBasedTimerHandler)
                 .read(ONE_TIME_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA);
-        verify(_mockRecurringClockBasedTimerHandler)
+        verify(mockRecurringClockBasedTimerHandler)
                 .read(RECURRING_CLOCK_BASED_TIMER_MOCK_WRITTEN_DATA);
     }
 
     @Test
-    void testReadWithInvalidParams() {
+    public void testReadWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerManagerHandler.read(null));
+                clockBasedTimerManagerHandler.read(null));
         assertThrows(IllegalArgumentException.class, () ->
-                _clockBasedTimerManagerHandler.read(""));
+                clockBasedTimerManagerHandler.read(""));
     }
 
     @Test
-    void testGetArchetype() {
-        assertNotNull(_clockBasedTimerManagerHandler.getArchetype());
+    public void testArchetype() {
+        assertNotNull(clockBasedTimerManagerHandler.archetype());
         assertEquals(ClockBasedTimerManager.class.getCanonicalName(),
-                _clockBasedTimerManagerHandler.getArchetype().getInterfaceName());
+                clockBasedTimerManagerHandler.archetype().getInterfaceName());
     }
 
     @Test
-    void testGetInterfaceName() {
+    public void testGetInterfaceName() {
         assertEquals(TypeHandler.class.getCanonicalName() + "<" +
                         ClockBasedTimerManager.class.getCanonicalName() + ">",
-                _clockBasedTimerManagerHandler.getInterfaceName());
+                clockBasedTimerManagerHandler.getInterfaceName());
     }
 }
