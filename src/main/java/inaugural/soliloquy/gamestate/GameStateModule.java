@@ -30,7 +30,7 @@ import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 import soliloquy.specs.ruleset.entities.character.*;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 import soliloquy.specs.ruleset.gameconcepts.StatisticCalculation;
-import soliloquy.specs.ruleset.gameconcepts.TileVisibility;
+import soliloquy.specs.ruleset.gameconcepts.TileVisibilityCalculation;
 import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
@@ -46,7 +46,7 @@ public class GameStateModule extends AbstractModule {
                            VariableCacheFactory variableCacheFactory,
                            PersistentValuesHandler persistentValuesHandler,
                            StatisticCalculation characterStatisticCalculation,
-                           TileVisibility tileVisibility,
+                           TileVisibilityCalculation tileVisibilityCalculation,
                            ActiveCharactersProvider activeCharactersProvider,
                            TurnHandling turnHandling,
                            Registry<CharacterType> characterTypes,

@@ -78,9 +78,8 @@ public class FakeGameZone implements GameZone {
     }
 
     @Override
-    public Map<Integer, WallSegment> getSegments(Coordinate2d Coordinate2d,
-                                                 WallSegmentDirection wallSegmentDirection)
-            throws IllegalArgumentException {
+    public Map<WallSegmentDirection, Map<Coordinate3d, WallSegment>> getSegments(
+            Coordinate2d coordinate2d) throws IllegalArgumentException {
         return null;
     }
 

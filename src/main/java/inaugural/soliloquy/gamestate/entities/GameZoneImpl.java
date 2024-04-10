@@ -1,6 +1,8 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
+import inaugural.soliloquy.tools.collections.Collections;
+import inaugural.soliloquy.tools.valueobjects.Pair;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
@@ -10,20 +12,23 @@ import soliloquy.specs.gamestate.entities.Character;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-import static inaugural.soliloquy.tools.collections.Collections.listOf;
-import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.collections.Collections.*;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.gamestate.entities.WallSegmentDirection.NORTH;
+import static soliloquy.specs.gamestate.entities.WallSegmentDirection.NORTHWEST;
+import static soliloquy.specs.gamestate.entities.WallSegmentDirection.WEST;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
     private final String TYPE;
     private final Coordinate2d MAX_COORDINATES;
     private final Tile[][] TILES;
-    private final Map<Integer, WallSegment>[][] NORTH_SEGMENTS;
-    private final Map<Integer, WallSegment>[][] NORTHWEST_SEGMENTS;
-    private final Map<Integer, WallSegment>[][] WEST_SEGMENTS;
+    private final Map<WallSegmentDirection, Map<Coordinate2d, Map<Integer, WallSegment>>> SEGMENTS;
     @SuppressWarnings("rawtypes")
     private final List<Action> ENTRY_ACTIONS;
     @SuppressWarnings("rawtypes")
@@ -50,12 +55,10 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         var tilesWidth = tiles.length;
         var tilesHeight = tiles[0].length;
         TILES = new Tile[tilesWidth][tilesHeight];
-        //noinspection unchecked
-        NORTH_SEGMENTS = new Map[tilesWidth + 1][tilesHeight];
-        //noinspection unchecked
-        NORTHWEST_SEGMENTS = new Map[tilesWidth + 1][tilesHeight];
-        //noinspection unchecked
-        WEST_SEGMENTS = new Map[tilesWidth + 1][tilesHeight];
+        SEGMENTS = mapOf();
+        SEGMENTS.put(NORTH, mapOf());
+        SEGMENTS.put(NORTHWEST, mapOf());
+        SEGMENTS.put(WEST, mapOf());
         for (var x = 0; x < tilesWidth; x++) {
             for (var y = 0; y < tilesHeight; y++) {
                 if (tiles[x][y] == null) {
@@ -108,58 +111,66 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public Map<Integer, WallSegment> getSegments(Coordinate2d location,
-                                                 WallSegmentDirection direction)
-            throws IllegalArgumentException {
+    public Map<WallSegmentDirection, Map<Coordinate3d, WallSegment>> getSegments(
+            Coordinate2d location) throws IllegalArgumentException {
         checkIfLocationValid(location, true);
-        Check.ifNull(direction, "direction");
 
-        Map<Integer, WallSegment>[][] segmentsOfDirection;
-        switch(direction){
-            case NORTH -> segmentsOfDirection = NORTH_SEGMENTS;
-            case NORTHWEST -> segmentsOfDirection = NORTHWEST_SEGMENTS;
-            case WEST -> segmentsOfDirection = WEST_SEGMENTS;
-            default -> throw new IllegalArgumentException("GameZoneImpl.getSegmentsAtLocation: invalid direction");
-        }
+        Map<WallSegmentDirection, Map<Coordinate3d, WallSegment>> segmentLocations = mapOf();
+        segmentLocations.put(NORTH, mapOf());
+        segmentLocations.put(NORTHWEST, mapOf());
+        segmentLocations.put(WEST, mapOf());
 
-        var segmentsAtLocation = segmentsOfDirection[location.X][location.Y];
-        if (segmentsAtLocation == null) {
-            segmentsAtLocation = segmentsOfDirection[location.X][location.Y] = mapOf();
-        }
+        var locationToWest = Coordinate2d.of(location.X + 1, location.Y);
+        var locationToSouth = Coordinate2d.of(location.X, location.Y + 1);
+        var locationToSouthwest = Coordinate2d.of(location.X + 1, location.Y + 1);
+        var adjacentSegments = setOf(
+                pairOf(NORTHWEST, location),
+                pairOf(NORTH, location),
+                pairOf(NORTHWEST, locationToWest),
+                pairOf(WEST, location),
+                pairOf(WEST, locationToWest),
+                pairOf(NORTHWEST, locationToSouth),
+                pairOf(NORTH, locationToSouth),
+                pairOf(NORTHWEST, locationToSouthwest)
+        );
+        adjacentSegments.forEach(segmentsToGet -> segmentLocations.get(segmentsToGet.item1())
+                .putAll(getOrDefaultAndAdd(SEGMENTS.get(segmentsToGet.item1()),
+                        segmentsToGet.item2(), Collections::mapOf).entrySet().stream().collect(
+                        Collectors.toMap(kv -> segmentsToGet.item2().to3d(kv.getKey()),
+                                Map.Entry::getValue))));
 
-        return segmentsAtLocation;
+        return segmentLocations;
     }
 
     @Override
-    public void setSegment(Coordinate3d location, WallSegment segment) throws IllegalArgumentException {
+    public void setSegment(Coordinate3d location, WallSegment segment)
+            throws IllegalArgumentException {
         Check.ifNull(segment, "segment");
         Check.ifNull(segment.getType(), "segment.getType()");
         Check.ifNull(segment.getType().direction(), "segment.getType().direction()");
+        checkIfLocationValid(location.to2d(), true);
 
-        var segmentsAtLocation = getSegments(location.to2d(), segment.getType().direction());
-
-        segmentsAtLocation.put(location.Z, segment);
+        getOrDefaultAndAdd(SEGMENTS.get(segment.getType().direction()), location.to2d(),
+                Collections::mapOf).put(location.Z, segment);
     }
 
     @Override
     public boolean removeSegment(Coordinate3d location, WallSegmentDirection direction)
             throws IllegalArgumentException {
         Check.ifNull(location, "location");
-        var segmentsAtLocation = getSegments(location.to2d(), direction);
-        if (segmentsAtLocation == null) {
-            return false;
-        }
-        if (!segmentsAtLocation.containsKey(location.Z)) {
-            return false;
-        }
-        segmentsAtLocation.remove(location.Z);
-        return true;
+        Check.ifNull(direction, "direction");
+        checkIfLocationValid(location.to2d(), true);
+        return removeChildMapKeyAndChildIfEmpty(SEGMENTS.get(direction), location.to2d(),
+                location.Z);
     }
 
     @Override
     public void removeAllSegments(Coordinate2d location, WallSegmentDirection direction)
             throws IllegalArgumentException {
-        getSegments(location, direction).clear();
+        Check.ifNull(location, "location");
+        Check.ifNull(direction, "direction");
+        checkIfLocationValid(location, true);
+        SEGMENTS.get(direction).remove(location);
     }
 
     @SuppressWarnings("rawtypes")
