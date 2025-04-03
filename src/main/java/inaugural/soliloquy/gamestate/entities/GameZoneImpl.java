@@ -2,26 +2,22 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.collections.Collections;
-import inaugural.soliloquy.tools.valueobjects.Pair;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static inaugural.soliloquy.tools.collections.Collections.*;
 import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.NORTH;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.NORTHWEST;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.WEST;
+import static soliloquy.specs.gamestate.entities.WallSegmentDirection.*;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
@@ -56,9 +52,9 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         var tilesHeight = tiles[0].length;
         TILES = new Tile[tilesWidth][tilesHeight];
         SEGMENTS = mapOf();
-        SEGMENTS.put(NORTH, mapOf());
-        SEGMENTS.put(NORTHWEST, mapOf());
-        SEGMENTS.put(WEST, mapOf());
+        SEGMENTS.put(HORIZONTAL, mapOf());
+        SEGMENTS.put(CORNER, mapOf());
+        SEGMENTS.put(VERTICAL, mapOf());
         for (var x = 0; x < tilesWidth; x++) {
             for (var y = 0; y < tilesHeight; y++) {
                 if (tiles[x][y] == null) {
@@ -116,22 +112,22 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
         checkIfLocationValid(location, true);
 
         Map<WallSegmentDirection, Map<Coordinate3d, WallSegment>> segmentLocations = mapOf();
-        segmentLocations.put(NORTH, mapOf());
-        segmentLocations.put(NORTHWEST, mapOf());
-        segmentLocations.put(WEST, mapOf());
+        segmentLocations.put(HORIZONTAL, mapOf());
+        segmentLocations.put(CORNER, mapOf());
+        segmentLocations.put(VERTICAL, mapOf());
 
         var locationToWest = Coordinate2d.of(location.X + 1, location.Y);
         var locationToSouth = Coordinate2d.of(location.X, location.Y + 1);
         var locationToSouthwest = Coordinate2d.of(location.X + 1, location.Y + 1);
         var adjacentSegments = setOf(
-                pairOf(NORTHWEST, location),
-                pairOf(NORTH, location),
-                pairOf(NORTHWEST, locationToWest),
-                pairOf(WEST, location),
-                pairOf(WEST, locationToWest),
-                pairOf(NORTHWEST, locationToSouth),
-                pairOf(NORTH, locationToSouth),
-                pairOf(NORTHWEST, locationToSouthwest)
+                pairOf(CORNER, location),
+                pairOf(HORIZONTAL, location),
+                pairOf(CORNER, locationToWest),
+                pairOf(VERTICAL, location),
+                pairOf(VERTICAL, locationToWest),
+                pairOf(CORNER, locationToSouth),
+                pairOf(HORIZONTAL, locationToSouth),
+                pairOf(CORNER, locationToSouthwest)
         );
         adjacentSegments.forEach(segmentsToGet -> segmentLocations.get(segmentsToGet.item1())
                 .putAll(getOrDefaultAndAdd(SEGMENTS.get(segmentsToGet.item1()),

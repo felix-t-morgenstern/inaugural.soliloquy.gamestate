@@ -27,9 +27,9 @@ import static inaugural.soliloquy.tools.valueobjects.Coordinate3d.addOffsets3d;
 import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.NORTH;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.NORTHWEST;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.WEST;
+import static soliloquy.specs.gamestate.entities.WallSegmentDirection.HORIZONTAL;
+import static soliloquy.specs.gamestate.entities.WallSegmentDirection.CORNER;
+import static soliloquy.specs.gamestate.entities.WallSegmentDirection.VERTICAL;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GameZoneImplTests {
@@ -70,8 +70,8 @@ public class GameZoneImplTests {
         }
         TILES[1][0].characters().add(mockCharacter1);
 
-        when(mockSegmentTypeNorth.direction()).thenReturn(NORTH);
-        when(mockSegmentTypeWest.direction()).thenReturn(WEST);
+        when(mockSegmentTypeNorth.direction()).thenReturn(HORIZONTAL);
+        when(mockSegmentTypeWest.direction()).thenReturn(VERTICAL);
 
         when(mockSegment1.getType()).thenReturn(mockSegmentTypeNorth);
 
@@ -235,9 +235,9 @@ public class GameZoneImplTests {
         var segmentsAtLocation2 = gameZone.getSegments(SEGMENT_LOCATION.to2d());
 
         var expectedResult = mapOf(
-                pairOf(NORTH, mapOf(pairOf(addOffsets3d(SEGMENT_LOCATION, 0, 1, 0), mockSegment2))),
-                pairOf(NORTHWEST, mapOf()),
-                pairOf(WEST, mapOf(pairOf(SEGMENT_LOCATION, mockSegment1)))
+                pairOf(HORIZONTAL, mapOf(pairOf(addOffsets3d(SEGMENT_LOCATION, 0, 1, 0), mockSegment2))),
+                pairOf(CORNER, mapOf()),
+                pairOf(VERTICAL, mapOf(pairOf(SEGMENT_LOCATION, mockSegment1)))
         );
         assertEquals(expectedResult, segmentsAtLocation);
         assertNotSame(segmentsAtLocation, segmentsAtLocation2);
@@ -254,9 +254,9 @@ public class GameZoneImplTests {
         var segmentsAtLocation = gameZone.getSegments(location.to2d());
 
         assertNotNull(segmentsAtLocation);
-        assertEquals(1, segmentsAtLocation.get(NORTH).size());
-        assertTrue(segmentsAtLocation.get(NORTH).containsKey(location));
-        assertSame(mockSegment2, segmentsAtLocation.get(NORTH).get(location));
+        assertEquals(1, segmentsAtLocation.get(HORIZONTAL).size());
+        assertTrue(segmentsAtLocation.get(HORIZONTAL).containsKey(location));
+        assertSame(mockSegment2, segmentsAtLocation.get(HORIZONTAL).get(location));
     }
 
     @Test
@@ -300,14 +300,14 @@ public class GameZoneImplTests {
     public void testRemoveSegment() {
         when(mockSegment1.getType()).thenReturn(mockSegmentTypeNorth);
 
-        assertFalse(gameZone.removeSegment(SEGMENT_LOCATION, NORTH));
+        assertFalse(gameZone.removeSegment(SEGMENT_LOCATION, HORIZONTAL));
 
         gameZone.setSegment(SEGMENT_LOCATION, mockSegment1);
-        var wasPresent = gameZone.removeSegment(SEGMENT_LOCATION, NORTH);
-        var segmentsAtLocation = gameZone.getSegments(SEGMENT_LOCATION.to2d()).get(NORTH);
+        var wasPresent = gameZone.removeSegment(SEGMENT_LOCATION, HORIZONTAL);
+        var segmentsAtLocation = gameZone.getSegments(SEGMENT_LOCATION.to2d()).get(HORIZONTAL);
 
         assertTrue(wasPresent);
-        assertFalse(gameZone.removeSegment(SEGMENT_LOCATION, NORTH));
+        assertFalse(gameZone.removeSegment(SEGMENT_LOCATION, HORIZONTAL));
         assertNotNull(segmentsAtLocation);
         assertEquals(0, segmentsAtLocation.size());
     }
@@ -315,21 +315,21 @@ public class GameZoneImplTests {
     @Test
     public void testRemoveSegmentWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeSegment(null, NORTH));
+                () -> gameZone.removeSegment(null, HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeSegment(Coordinate3d.of(-1, 0, randomInt()),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeSegment(Coordinate3d.of(0, -1, randomInt()),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeSegment(
                         Coordinate3d.of(MAX_X + 2, 0, randomInt()),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeSegment(
                         Coordinate3d.of(0, MAX_Y + 2, randomInt()),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeSegment(validCoordinate3d(), null));
     }
@@ -344,8 +344,8 @@ public class GameZoneImplTests {
         gameZone.setSegment(location, mockSegment2);
         gameZone.setSegment(location, mockSegment3);
 
-        gameZone.removeAllSegments(location.to2d(), NORTH);
-        var segmentsAfterRemoveAll = gameZone.getSegments(location.to2d()).get(NORTH);
+        gameZone.removeAllSegments(location.to2d(), HORIZONTAL);
+        var segmentsAfterRemoveAll = gameZone.getSegments(location.to2d()).get(HORIZONTAL);
 
         assertNotNull(segmentsAfterRemoveAll);
         assertEquals(0, segmentsAfterRemoveAll.size());
@@ -354,19 +354,19 @@ public class GameZoneImplTests {
     @Test
     public void testRemoveAllSegmentsWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.removeAllSegments(null, NORTH));
+                () -> gameZone.removeAllSegments(null, HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeAllSegments(Coordinate2d.of(-1, 0),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeAllSegments(Coordinate2d.of(0, -1),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeAllSegments(Coordinate2d.of(MAX_X + 2, 0),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeAllSegments(Coordinate2d.of(0, MAX_Y + 2),
-                        NORTH));
+                        HORIZONTAL));
         assertThrows(IllegalArgumentException.class,
                 () -> gameZone.removeAllSegments(validCoordinate2d(), null));
     }
