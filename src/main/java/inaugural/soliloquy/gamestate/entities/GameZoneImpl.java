@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 
 import static inaugural.soliloquy.tools.collections.Collections.*;
 import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.*;
+import static soliloquy.specs.gamestate.entities.WallSegmentOrientation.*;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final String ID;
     private final String TYPE;
     private final Coordinate2d MAX_COORDINATES;
     private final Tile[][] TILES;
-    private final Map<WallSegmentDirection, Map<Coordinate2d, Map<Integer, WallSegment>>> SEGMENTS;
+    private final Map<WallSegmentOrientation, Map<Coordinate2d, Map<Integer, WallSegment>>> SEGMENTS;
     @SuppressWarnings("rawtypes")
     private final List<Action> ENTRY_ACTIONS;
     @SuppressWarnings("rawtypes")
@@ -107,11 +107,11 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public Map<WallSegmentDirection, Map<Coordinate3d, WallSegment>> getSegments(
+    public Map<WallSegmentOrientation, Map<Coordinate3d, WallSegment>> getSegments(
             Coordinate2d location) throws IllegalArgumentException {
         checkIfLocationValid(location, true);
 
-        Map<WallSegmentDirection, Map<Coordinate3d, WallSegment>> segmentLocations = mapOf();
+        Map<WallSegmentOrientation, Map<Coordinate3d, WallSegment>> segmentLocations = mapOf();
         segmentLocations.put(HORIZONTAL, mapOf());
         segmentLocations.put(CORNER, mapOf());
         segmentLocations.put(VERTICAL, mapOf());
@@ -151,7 +151,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public boolean removeSegment(Coordinate3d location, WallSegmentDirection direction)
+    public boolean removeSegment(Coordinate3d location, WallSegmentOrientation direction)
             throws IllegalArgumentException {
         Check.ifNull(location, "location");
         Check.ifNull(direction, "direction");
@@ -161,7 +161,7 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public void removeAllSegments(Coordinate2d location, WallSegmentDirection direction)
+    public void removeAllSegments(Coordinate2d location, WallSegmentOrientation direction)
             throws IllegalArgumentException {
         Check.ifNull(location, "location");
         Check.ifNull(direction, "direction");

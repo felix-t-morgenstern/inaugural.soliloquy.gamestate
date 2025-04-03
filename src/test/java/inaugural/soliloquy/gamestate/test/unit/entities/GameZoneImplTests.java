@@ -27,9 +27,7 @@ import static inaugural.soliloquy.tools.valueobjects.Coordinate3d.addOffsets3d;
 import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.HORIZONTAL;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.CORNER;
-import static soliloquy.specs.gamestate.entities.WallSegmentDirection.VERTICAL;
+import static soliloquy.specs.gamestate.entities.WallSegmentOrientation.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GameZoneImplTests {
@@ -164,7 +162,7 @@ public class GameZoneImplTests {
     public void testTile() {
         for (var x = 0; x <= MAX_X; x++) {
             for (var y = 0; y <= MAX_Y; y++) {
-                var tile = gameZone.tile(Coordinate2d.of(x, y));
+                var tile = gameZone.tile(Coordinate3d.of(x, y, randomInt()));
                 assertNotNull(tile);
                 assertSame(gameZone, tile.gameZone());
                 assertEquals(x, tile.location().X);
@@ -176,11 +174,13 @@ public class GameZoneImplTests {
     @Test
     public void testTileWithInvalidCoordinate2ds() {
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.tile(Coordinate2d.of(MAX_X + 1, 0)));
+                () -> gameZone.tile(Coordinate3d.of(MAX_X + 1, 0, randomInt())));
         assertThrows(IllegalArgumentException.class,
-                () -> gameZone.tile(Coordinate2d.of(0, MAX_Y + 1)));
-        assertThrows(IllegalArgumentException.class, () -> gameZone.tile(Coordinate2d.of(-1, 0)));
-        assertThrows(IllegalArgumentException.class, () -> gameZone.tile(Coordinate2d.of(0, -1)));
+                () -> gameZone.tile(Coordinate3d.of(0, MAX_Y + 1, randomInt())));
+        assertThrows(IllegalArgumentException.class,
+                () -> gameZone.tile(Coordinate3d.of(-1, 0, randomInt())));
+        assertThrows(IllegalArgumentException.class,
+                () -> gameZone.tile(Coordinate3d.of(0, -1, randomInt())));
     }
 
     @Test
@@ -235,7 +235,8 @@ public class GameZoneImplTests {
         var segmentsAtLocation2 = gameZone.getSegments(SEGMENT_LOCATION.to2d());
 
         var expectedResult = mapOf(
-                pairOf(HORIZONTAL, mapOf(pairOf(addOffsets3d(SEGMENT_LOCATION, 0, 1, 0), mockSegment2))),
+                pairOf(HORIZONTAL,
+                        mapOf(pairOf(addOffsets3d(SEGMENT_LOCATION, 0, 1, 0), mockSegment2))),
                 pairOf(CORNER, mapOf()),
                 pairOf(VERTICAL, mapOf(pairOf(SEGMENT_LOCATION, mockSegment1)))
         );
@@ -399,7 +400,7 @@ public class GameZoneImplTests {
 
     @Test
     public void testAddCharacterToGameZoneViaTileCharactersAndCharactersIteratorAndAddedToRoundManager() {
-        gameZone.tile(Coordinate2d.of(0, 0)).characters().add(mockCharacter2);
+        gameZone.tile(Coordinate3d.of(0, 0, 0)).characters().add(mockCharacter2);
 
         var charactersInGameZone = gameZone.charactersRepresentation();
         assertEquals(2, charactersInGameZone.size());
@@ -412,7 +413,7 @@ public class GameZoneImplTests {
 
     @Test
     public void testRemoveCharacterFromGameZoneViaTileCharactersAndRemovedFromRoundManager() {
-        gameZone.tile(Coordinate2d.of(0, 0)).characters().remove(mockCharacter1);
+        gameZone.tile(Coordinate3d.of(0, 0, 0)).characters().remove(mockCharacter1);
 
         assertEquals(0, gameZone.charactersRepresentation().size());
         assertEquals(1, REMOVED_FROM_ROUND_MANAGER.size());
@@ -424,7 +425,7 @@ public class GameZoneImplTests {
         var tiles = new HashSet<Tile>();
         for (var x = 0; x <= MAX_X; x++) {
             for (var y = 0; y <= MAX_Y; y++) {
-                tiles.add(gameZone.tile(Coordinate2d.of(x, y)));
+                tiles.addAll(gameZone.tiles(Coordinate2d.of(x, y)));
             }
         }
 
