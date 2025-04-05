@@ -1,6 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes.persistence;
 
-import inaugural.soliloquy.gamestate.test.fakes.FakeGameZone;
+import org.mockito.Mockito;
 import soliloquy.specs.gamestate.entities.GameZone;
 
 public class FakeGameZoneHandler extends FakeTypeHandler<GameZone> {
@@ -11,6 +11,6 @@ public class FakeGameZoneHandler extends FakeTypeHandler<GameZone> {
 
     @Override
     protected GameZone generateInstance() {
-        return new FakeGameZone();
+        return Mockito.mock(GameZone.class);
     }
 }

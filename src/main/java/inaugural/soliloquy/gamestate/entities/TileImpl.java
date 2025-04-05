@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
@@ -15,118 +14,66 @@ import java.util.Map;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
-public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
-    private final Coordinate2d LOCATION;
+public class TileImpl extends AbstractGameZoneTerrain implements Tile {
     private final TileEntities<Character> TILE_CHARACTERS;
     private final TileEntities<Item> TILE_ITEMS;
     private final TileEntities<TileFixture> TILE_FIXTURES;
     private final Map<Sprite, Integer> SPRITES;
     private final VariableCache DATA;
 
-    private GameZone gameZone;
-    private int height;
     private GroundType groundType;
 
-    public TileImpl(int x, int y,
-                    TileEntitiesFactory tileEntitiesFactory,
+    public TileImpl(TileEntitiesFactory tileEntitiesFactory,
                     VariableCache data) {
         super();
-        LOCATION = Coordinate2d.of(x, y);
         Check.ifNull(tileEntitiesFactory, "tileEntitiesFactory");
         // TODO: Test and implement whether add and remove from gameZone works
-        TILE_CHARACTERS = tileEntitiesFactory.make(this, generateSimpleArchetype(Character.class));
-        TILE_ITEMS = tileEntitiesFactory.make(this, generateSimpleArchetype(Item.class));
-        TILE_FIXTURES = tileEntitiesFactory.make(this, generateSimpleArchetype(TileFixture.class));
+        TILE_CHARACTERS = tileEntitiesFactory.make(this, generateSimpleArchetype(Character.class), null, null);
+        TILE_ITEMS = tileEntitiesFactory.make(this, generateSimpleArchetype(Item.class), null, null);
+        TILE_FIXTURES = tileEntitiesFactory.make(this, generateSimpleArchetype(TileFixture.class), null, null);
         SPRITES = mapOf();
         DATA = Check.ifNull(data, "data");
     }
 
     @Override
-    public GameZone gameZone() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("gameZone");
-        return gameZone;
-    }
-
-    // TODO: Ensure that clone is made
-    @Override
-    public Coordinate2d location() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("location");
-        return LOCATION;
-    }
-
-    @Override
-    public int getHeight() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("getHeight");
-        return height;
-    }
-
-    @Override
-    public void setHeight(int height) throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("setHeight");
-        this.height = height;
-    }
-
-    @Override
     public GroundType getGroundType() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("getGroundType");
+        enforceInvariants("getGroundType");
         return groundType;
     }
 
     @Override
     public void setGroundType(GroundType groundType) throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("setGroundType");
+        enforceInvariants("setGroundType");
         this.groundType = groundType;
     }
 
     @Override
     public TileEntities<Character> characters() {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("characters");
+        enforceInvariants("characters");
         return TILE_CHARACTERS;
     }
 
     @Override
     public TileEntities<Item> items() {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("items");
+        enforceInvariants("items");
         return TILE_ITEMS;
     }
 
     @Override
     public TileEntities<TileFixture> fixtures() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("fixtures");
+        enforceInvariants("fixtures");
         return TILE_FIXTURES;
     }
 
     @Override
     public Map<Sprite, Integer> sprites() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("sprites");
+        enforceInvariants("sprites");
         return SPRITES;
     }
 
     @Override
-    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone)
-            throws IllegalArgumentException, IllegalStateException {
-        Check.ifNull(gameZone, "gameZone");
-        if (this.gameZone != null) {
-            throw new IllegalArgumentException(
-                    "TileImpl.assignGameZoneAfterAddedToGameZone: gameZone is already assigned");
-        }
-        this.gameZone = gameZone;
-    }
-
-    @Override
     public VariableCache data() throws IllegalStateException {
-        enforceDeletionInvariants();
-        enforceLocationCorrespondenceInvariant("data");
+        enforceInvariants("data");
         return DATA;
     }
 
@@ -142,7 +89,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
 
     @Override
     public void afterDeleted() throws IllegalStateException {
-        if (!gameZone.isDeleted()) {
+        if (gameZone != null && !gameZone.isDeleted()) {
             throw new IllegalStateException("TileImpl.deleteAfterDeletingContainingGameZone: " +
                     "containing GameZone has not been deleted");
         }
@@ -153,7 +100,7 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
 
     @Override
     public void delete() {
-        if (!gameZone.isDeleted()) {
+        if (gameZone != null && !gameZone.isDeleted()) {
             throw new IllegalStateException(
                     "TileImpl.delete: cannot delete before deleting containing GameZone");
         }
@@ -193,9 +140,9 @@ public class TileImpl extends AbstractGameEventTargetEntity implements Tile {
     }
 
     private void enforceLocationCorrespondenceInvariant(String methodName) {
-        if (gameZone != null && gameZone.tile(LOCATION) != this) {
+        if (gameZone != null && gameZone.tile(location) != this) {
             throw new IllegalStateException("TileImpl." + methodName + ": This Tile is not " +
-                    "present at its stated location (" + LOCATION.X + "," + LOCATION.Y +
+                    "present at its stated location (" + location.X + "," + location.Y +
                     ") in its containing GameZone");
         }
     }

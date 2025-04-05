@@ -15,10 +15,6 @@ public class FakeGroundType implements GroundType {
 
     }
 
-    public FakeGroundType(String id) {
-        _id = id;
-    }
-
     @Override
     public String id() throws IllegalStateException {
         return _id;

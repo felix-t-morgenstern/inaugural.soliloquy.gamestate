@@ -56,15 +56,6 @@ public class WallSegmentImplTests {
     }
 
     @Test
-    public void testSetAndGetName() {
-        final var name = "name";
-
-        wallSegment.setName(name);
-
-        assertEquals(name, wallSegment.getName());
-    }
-
-    @Test
     public void testDelete() {
         // TODO: Add a WallSegment here
         assertFalse(wallSegment.isDeleted());
@@ -104,8 +95,6 @@ public class WallSegmentImplTests {
         assertThrows(EntityDeletedException.class,
                 () -> wallSegment.setType(mock(WallSegmentType.class)));
         assertThrows(EntityDeletedException.class, () -> wallSegment.data());
-        assertThrows(EntityDeletedException.class, () -> wallSegment.getName());
-        assertThrows(EntityDeletedException.class, () -> wallSegment.setName(""));
         assertThrows(EntityDeletedException.class, () -> wallSegment.movementEvents());
         assertThrows(EntityDeletedException.class, () -> wallSegment.abilityEvents());
         assertThrows(EntityDeletedException.class, () -> wallSegment.makeGameEventTarget());

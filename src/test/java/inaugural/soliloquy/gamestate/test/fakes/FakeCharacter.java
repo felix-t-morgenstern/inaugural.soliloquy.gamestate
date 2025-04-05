@@ -47,12 +47,6 @@ public class FakeCharacter implements Character {
         TYPE = null;
     }
 
-    public FakeCharacter(UUID uuid, CharacterType type, VariableCache data) {
-        UUID = uuid;
-        TYPE = type;
-        this.data = data;
-    }
-
     @Override
     public CharacterType type() throws IllegalStateException {
         return TYPE;

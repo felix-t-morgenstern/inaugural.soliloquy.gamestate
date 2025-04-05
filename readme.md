@@ -4,7 +4,7 @@ This is the module for the Soliloquy engine that keeps track of the current stat
 
 This module implements *individual entities*, and *not* the *types* of those entities. For example, Gamestate contains Character, which is a single Character in the Game. CharacterType would instead be held in the Ruleset Module. *The entirety of the Gamestate Module should be wholly agnostic to the contents of the Ruleset Module.*
 
-The Ruleset Module will reach out to the Gamestate Module to create individual entities, e.g. Characters, Items, etc; and the Gamestate Module will accept method parameters from the Ruleset Module, but *never* constructor parameters. Ruleset Module should in no way be required to initialize the Gamestate Module.
+The Ruleset Module will reach out to the Gamestate Module to create individual entities, e.g. Characters, Items, etc.; and the Gamestate Module will accept method parameters from the Ruleset Module, but *never* constructor parameters. Ruleset Module should in no way be required to initialize the Gamestate Module.
 
 ## Getting Started
 

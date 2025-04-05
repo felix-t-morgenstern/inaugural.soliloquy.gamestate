@@ -2,12 +2,13 @@ package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-public class WallSegmentImpl extends AbstractGameEventTargetEntity implements WallSegment {
+public class WallSegmentImpl extends AbstractGameZoneTerrain implements WallSegment {
     private final VariableCache DATA;
 
     private WallSegmentType type;
@@ -34,18 +35,6 @@ public class WallSegmentImpl extends AbstractGameEventTargetEntity implements Wa
     public VariableCache data() throws IllegalStateException {
         enforceDeletionInvariants();
         return DATA;
-    }
-
-    @Override
-    public String getName() {
-        enforceDeletionInvariants();
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        enforceDeletionInvariants();
-        this.name = name;
     }
 
     @Override
@@ -93,5 +82,21 @@ public class WallSegmentImpl extends AbstractGameEventTargetEntity implements Wa
     @Override
     protected Deletable getContainingObject() {
         return null;
+    }
+
+    @Override
+    public GameZone gameZone() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public Coordinate3d location() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone, Coordinate3d coordinate3d)
+            throws IllegalArgumentException, IllegalStateException {
+
     }
 }

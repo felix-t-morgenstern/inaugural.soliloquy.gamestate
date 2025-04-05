@@ -16,10 +16,6 @@ public abstract class FakeRoundBasedTimer implements RoundBasedTimer {
         _priority = priority;
     }
 
-    FakeRoundBasedTimer() {
-
-    }
-
     @Override
     public String actionId() {
         return _action.id();

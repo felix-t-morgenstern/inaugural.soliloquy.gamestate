@@ -1,7 +1,8 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
+import org.mockito.Mock;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate2d;
+import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -15,12 +16,8 @@ import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class FakeTile implements Tile {
-    private GameZone _gameZone;
-
     private final TileEntities<Character> CHARACTERS = new FakeTileEntities<>(this);
     private final TileEntities<TileFixture> FIXTURES = new FakeTileEntities<>(this);
     private final TileEntities<Item> TILE_ITEMS = new FakeTileEntities<>(this);
@@ -29,33 +26,15 @@ public class FakeTile implements Tile {
 
     private final Map<Sprite, Integer> SPRITES = mapOf();
 
-    private int _height;
     private GroundType _groundType;
     private boolean _isDeleted;
 
-    private Coordinate2d _tileLocation;
+    private Coordinate3d location;
     private VariableCache _data;
 
+    @Mock private GameZone mockGameZone;
+
     public FakeTile() {
-        _gameZone = new FakeGameZone();
-    }
-
-    public FakeTile(GameZone gameZone, int x, int y) {
-        _gameZone = gameZone;
-        Coordinate2d Coordinate2d = mock(Coordinate2d.class);
-        when(Coordinate2d.X).thenReturn(x);
-        when(Coordinate2d.Y).thenReturn(y);
-        _tileLocation = Coordinate2d;
-    }
-
-    public FakeTile(Coordinate2d tileLocation) {
-        _tileLocation = tileLocation;
-        _gameZone = new FakeGameZone();
-    }
-
-    public FakeTile(int x, int y, VariableCache data) {
-        _tileLocation = Coordinate2d.of(x, y);
-        _data = data;
     }
 
     @Override
@@ -75,22 +54,12 @@ public class FakeTile implements Tile {
 
     @Override
     public GameZone gameZone() throws IllegalStateException {
-        return _gameZone;
+        return mockGameZone;
     }
 
     @Override
-    public Coordinate2d location() throws IllegalStateException {
-        return _tileLocation;
-    }
-
-    @Override
-    public int getHeight() throws IllegalStateException {
-        return _height;
-    }
-
-    @Override
-    public void setHeight(int height) throws IllegalStateException {
-        _height = height;
+    public Coordinate3d location() throws IllegalStateException {
+        return location;
     }
 
     @Override
@@ -124,9 +93,10 @@ public class FakeTile implements Tile {
     }
 
     @Override
-    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone)
+    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone, Coordinate3d location)
             throws IllegalArgumentException, IllegalStateException {
-        _gameZone = gameZone;
+        mockGameZone = gameZone;
+        this.location = location;
     }
 
     @Override

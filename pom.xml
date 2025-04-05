@@ -6,7 +6,7 @@
 
     <groupId>disorg.soliloquy</groupId>
     <artifactId>inaugural.soliloquy.gamestate</artifactId>
-    <version>0.0.169</version>
+    <version>0.0.170</version>
     <name>Inaugural Engine Gamestate Component</name>
     <description>Classes which keep track of the current state of the Game (rather than the rules of the Game)
     </description>
@@ -90,12 +90,12 @@
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>soliloquy.specs</artifactId>
-            <version>0.0.523</version>
+            <version>0.0.537</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>
             <artifactId>inaugural.soliloquy.tools</artifactId>
-            <version>0.0.144</version>
+            <version>0.0.149</version>
         </dependency>
         <dependency>
             <groupId>disorg.soliloquy</groupId>

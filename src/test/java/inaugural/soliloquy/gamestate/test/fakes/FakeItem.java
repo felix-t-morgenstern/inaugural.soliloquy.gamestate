@@ -42,12 +42,6 @@ public class FakeItem implements Item {
 
     }
 
-    public FakeItem(ItemType itemType, VariableCache data, UUID uuid) {
-        this.uuid = uuid;
-        this.itemType = itemType;
-        this.data = data;
-    }
-
     @Override
     public ItemType type() throws IllegalStateException {
         return itemType != null ? itemType : ITEM_TYPE;

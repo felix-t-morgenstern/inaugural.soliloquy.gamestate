@@ -31,13 +31,6 @@ public class FakeTileFixture implements TileFixture {
         TILE_FIXTURE_ITEMS = new FakeTileFixtureItems(this);
     }
 
-    public FakeTileFixture(UUID uuid, FixtureType fixtureType, VariableCache data) {
-        TILE_FIXTURE_ITEMS = new FakeTileFixtureItems(this);
-        _uuid = uuid;
-        _fixtureType = fixtureType;
-        _data = data;
-    }
-
     @Override
     public Tile tile() throws IllegalStateException {
         return _tile;

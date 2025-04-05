@@ -56,8 +56,8 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
 
         var dto = JSON.fromJson(data, TileDTO.class);
 
-        var tile = TILE_FACTORY.make(dto.x, dto.y, DATA_HANDLER.read(dto.data));
-        tile.setHeight(dto.height);
+        var tile = TILE_FACTORY.make(DATA_HANDLER.read(dto.data));
+
         tile.setGroundType(GET_GROUND_TYPE.apply(dto.groundTypeId));
 
         for (var i = 0; i < dto.characters.length; i++) {
@@ -96,9 +96,7 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
         Check.ifNull(tile, "tile");
 
         var dto = new TileDTO();
-        dto.x = tile.location().X;
-        dto.y = tile.location().Y;
-        dto.height = tile.getHeight();
+
         dto.groundTypeId = tile.getGroundType().id();
 
         int index;
@@ -138,9 +136,9 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
 
         dto.sprites = new TileEntityDTO[tile.sprites().size()];
         index = 0;
-        for (var sprite : tile.sprites().keySet()) {
+        for (var z : tile.sprites().keySet()) {
             dto.sprites[index++] =
-                    new TileEntityDTO(tile.sprites().get(sprite), SPRITE_HANDLER.write(sprite));
+                    new TileEntityDTO(tile.sprites().get(z), SPRITE_HANDLER.write(z));
         }
 
         dto.data = DATA_HANDLER.write(tile.data());
@@ -149,9 +147,6 @@ public class TileHandler extends AbstractSoliloquyTypeHandler<Tile> {
     }
 
     private static class TileDTO {
-        int x;
-        int y;
-        int height;
         String groundTypeId;
         TileEntityDTO[] characters;
         TileEntityDTO[] items;

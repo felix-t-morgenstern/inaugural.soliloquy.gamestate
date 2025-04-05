@@ -31,7 +31,7 @@ public class TileEntitiesFactoryImplTests {
 
     @Test
     public void testMake() {
-        TileEntities<Item> tileEntities = _tileEntitiesFactory.make(TILE, ARCHETYPE);
+        TileEntities<Item> tileEntities = _tileEntitiesFactory.make(TILE, ARCHETYPE, null, null);
 
         assertNotNull(tileEntities);
         assertSame(ARCHETYPE, tileEntities.archetype());
@@ -40,8 +40,8 @@ public class TileEntitiesFactoryImplTests {
     @Test
     public void testMakeWithNullInput() {
         assertThrows(IllegalArgumentException.class,
-                () -> _tileEntitiesFactory.make(null, ARCHETYPE));
+                () -> _tileEntitiesFactory.make(null, ARCHETYPE, null, null));
         assertThrows(IllegalArgumentException.class,
-                () -> _tileEntitiesFactory.make(TILE, null));
+                () -> _tileEntitiesFactory.make(TILE, null, null, null));
     }
 }

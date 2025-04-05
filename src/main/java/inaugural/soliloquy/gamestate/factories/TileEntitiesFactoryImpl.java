@@ -7,12 +7,16 @@ import soliloquy.specs.gamestate.entities.TileEntities;
 import soliloquy.specs.gamestate.entities.TileEntity;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
 
+import java.util.function.Consumer;
+
 public class TileEntitiesFactoryImpl implements TileEntitiesFactory {
     public TileEntitiesFactoryImpl() {
     }
 
     @Override
-    public <TEntity extends TileEntity> TileEntities<TEntity> make(Tile tile, TEntity archetype)
+    public <TEntity extends TileEntity> TileEntities<TEntity> make(Tile tile, TEntity archetype,
+                                                                   Consumer<TEntity> addHook,
+                                                                   Consumer<TEntity> removeHook)
             throws IllegalArgumentException {
         Check.ifNull(tile, "tile");
         return new TileEntitiesImpl<>(tile, archetype);

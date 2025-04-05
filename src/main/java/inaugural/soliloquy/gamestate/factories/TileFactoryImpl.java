@@ -15,10 +15,8 @@ public class TileFactoryImpl implements TileFactory {
     }
 
     @Override
-    public Tile make(int x, int y, VariableCache data) throws IllegalArgumentException {
-        Check.ifNonNegative(x, "x");
-        Check.ifNonNegative(y, "y");
-        return new TileImpl(x, y, TILE_ENTITIES_FACTORY, data);
+    public Tile make(VariableCache data) throws IllegalArgumentException {
+        return new TileImpl(TILE_ENTITIES_FACTORY, Check.ifNull(data, "data"));
     }
 
     @Override

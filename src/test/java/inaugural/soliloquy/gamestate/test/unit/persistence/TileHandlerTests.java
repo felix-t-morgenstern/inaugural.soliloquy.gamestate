@@ -1,135 +1,222 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.TileHandler;
-import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.fakes.persistence.*;
-import inaugural.soliloquy.gamestate.test.stubs.SpriteStub;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
+import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.Item;
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.TileFactory;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.random.Random.randomInt;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.testing.Mock.*;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TileHandlerTests {
-    private final TileFactory TILE_FACTORY = new FakeTileFactory();
+    @Mock private TileFactory mockTileFactory;
 
-    private final FakeTypeHandler<Character> CHAR_HANDLER = new FakeCharacterHandler();
-    private final FakeTypeHandler<Item> ITEM_HANDLER = new FakeItemHandler();
-    private final FakeTypeHandler<TileFixture> FIXTURE_HANDLER = new FakeTileFixtureHandler();
-    private final FakeTypeHandler<Sprite> SPRITE_HANDLER = new FakeSpriteHandler();
-    private final TypeHandler<VariableCache> DATA_HANDLER = new FakeVariableCacheHandler();
+    private final String CHAR_STR = randomString();
+    private final HandlerAndEntity<Character> MOCK_CHAR_AND_HANDLER =
+            generateMockEntityAndHandler(Character.class, CHAR_STR);
+    private final TypeHandler<Character> MOCK_CHAR_HANDLER = MOCK_CHAR_AND_HANDLER.handler;
+    private final Character MOCK_CHAR = MOCK_CHAR_AND_HANDLER.entity;
+    private final int CHAR_Z = randomInt();
 
-    private final int X = 123;
-    private final int Y = 456;
-    private final int HEIGHT = 789;
-    private final Character CHARACTER = new FakeCharacter();
-    private final Item ITEM = new FakeItem();
-    private final TileFixture TILE_FIXTURE = new FakeTileFixture();
-    private final Sprite SPRITE = new SpriteStub();
-    private final VariableCache DATA = new VariableCacheStub();
+    private final String ITEM_STR = randomString();
+    private final HandlerAndEntity<Item> MOCK_ITEM_AND_HANDLER =
+            generateMockEntityAndHandler(Item.class, ITEM_STR);
+    private final TypeHandler<Item> MOCK_ITEM_HANDLER = MOCK_ITEM_AND_HANDLER.handler;
+    private final Item MOCK_ITEM = MOCK_ITEM_AND_HANDLER.entity;
+    private final int ITEM_Z = randomInt();
 
-    private final String MOVEMENT_EVENT_ID = "movementEventId";
-    private final GameMovementEvent MOVEMENT_EVENT =
-            new FakeGameMovementEvent(MOVEMENT_EVENT_ID);
-    private final Map<String, GameMovementEvent> MOVEMENT_EVENTS = mapOf();
+    private final String FIXTURE_STR = randomString();
+    private final HandlerAndEntity<TileFixture> MOCK_FIXTURE_AND_HANDLER =
+            generateMockEntityAndHandler(TileFixture.class, FIXTURE_STR);
+    private final TypeHandler<TileFixture> MOCK_FIXTURE_HANDLER = MOCK_FIXTURE_AND_HANDLER.handler;
+    private final TileFixture MOCK_FIXTURE = MOCK_FIXTURE_AND_HANDLER.entity;
+    private final int FIXTURE_Z = randomInt();
 
-    private final String ABILITY_EVENT_ID = "abilityEventId";
-    private final GameAbilityEvent ABILITY_EVENT =
-            new FakeGameAbilityEvent(ABILITY_EVENT_ID);
-    private final Map<String, GameAbilityEvent> ABILITY_EVENTS = mapOf();
+    private final String SPRITE_STR = randomString();
+    private final HandlerAndEntity<Sprite> MOCK_SPRITE_AND_HANDLER =
+            generateMockEntityAndHandler(Sprite.class, SPRITE_STR);
+    private final TypeHandler<Sprite> MOCK_SPRITE_HANDLER = MOCK_SPRITE_AND_HANDLER.handler;
+    private final Sprite MOCK_SPRITE = MOCK_SPRITE_AND_HANDLER.entity;
+    private final int SPRITE_Z = randomInt();
 
-    private final String GROUND_TYPE_ID = "groundTypeId";
-    private final GroundType GROUND_TYPE = new FakeGroundType(GROUND_TYPE_ID);
-    private final Map<String, GroundType> GROUND_TYPES = mapOf();
+    private final String DATA_STR = randomString();
+    private final HandlerAndEntity<VariableCache> MOCK_DATA_AND_HANDLER =
+            generateMockEntityAndHandler(VariableCache.class, DATA_STR);
+    private final TypeHandler<VariableCache> MOCK_DATA_HANDLER = MOCK_DATA_AND_HANDLER.handler;
+    private final VariableCache MOCK_DATA = MOCK_DATA_AND_HANDLER.entity;
 
-    private final String WRITTEN_DATA =
-            "{\"x\":123,\"y\":456,\"height\":789,\"groundTypeId\":\"groundTypeId\"," +
-                    "\"characters\":[{\"z\":111,\"entity\":\"Character0\"}]," +
-                    "\"items\":[{\"z\":222,\"entity\":\"Item0\"}],\"fixtures\":[{\"z\":333," +
-                    "\"entity\":\"TileFixture0\"}],\"movementEvents\":[\"movementEventId\"]," +
-                    "\"abilityEvents\":[\"abilityEventId\"],\"sprites\":[{\"z\":666," +
-                    "\"entity\":\"Sprite0\"}],\"data\":\"VariableCache0\"}";
+    private final String MOVE_EVENT_ID = randomString();
+    private final GameMovementEvent MOCK_MOVE_EVENT =
+            generateMockWithId(GameMovementEvent.class, MOVE_EVENT_ID);
+    private final Function<String, GameMovementEvent> MOVE_EVENTS_LOOKUP =
+            generateMockLookupFunctionWithId(MOCK_MOVE_EVENT);
+
+    private final String ABILITY_EVENT_ID = randomString();
+    private final GameAbilityEvent MOCK_ABILITY_EVENT =
+            generateMockWithId(GameAbilityEvent.class, ABILITY_EVENT_ID);
+    private final Function<String, GameAbilityEvent> ABILITY_EVENTS_LOOKUP =
+            generateMockLookupFunctionWithId(MOCK_ABILITY_EVENT);
+
+    private final String GROUND_TYPE_ID = randomString();
+    private final GroundType MOCK_GROUND_TYPE =
+            generateMockWithId(GroundType.class, GROUND_TYPE_ID);
+    private final Function<String, GroundType> MOCK_GROUND_TYPES_LOOKUP =
+            generateMockLookupFunctionWithId(MOCK_GROUND_TYPE);
+
+    private final String WRITTEN_DATA = String.format(
+            "{\"groundTypeId\":\"%s\",\"characters\":[{\"z\":%d," +
+                    "\"entity\":\"%s\"}],\"items\":[{\"z\":%d," +
+                    "\"entity\":\"%s\"}],\"fixtures\":[{\"z\":%d," + "\"entity\":\"%s\"}]," +
+                    "\"movementEvents\":[\"%s\"]," +
+                    "\"abilityEvents\":[\"%s\"],\"sprites\":[{\"z\":%d,\"entity\":\"%s\"}]," +
+                    "\"data\":\"%s\"}",
+            GROUND_TYPE_ID, CHAR_Z, CHAR_STR, ITEM_Z, ITEM_STR, FIXTURE_Z, FIXTURE_STR,
+            MOVE_EVENT_ID, ABILITY_EVENT_ID, SPRITE_Z, SPRITE_STR, DATA_STR);
+
+    @Mock private Tile mockCharacterTile;
+    @Mock private Tile mockItemTile;
+    @Mock private Tile mockFixtureTile;
 
     private TypeHandler<Tile> tileHandler;
 
     @Before
     public void setUp() {
-        MOVEMENT_EVENTS.put(MOVEMENT_EVENT_ID, MOVEMENT_EVENT);
-        ABILITY_EVENTS.put(ABILITY_EVENT_ID, ABILITY_EVENT);
-        GROUND_TYPES.put(GROUND_TYPE_ID, GROUND_TYPE);
+        when(mockCharacterTile.location()).thenReturn(
+                Coordinate3d.of(randomInt(), randomInt(), CHAR_Z));
+        when(MOCK_CHAR.tile()).thenReturn(mockCharacterTile);
+        when(mockItemTile.location()).thenReturn(Coordinate3d.of(randomInt(), randomInt(), ITEM_Z));
+        when(MOCK_ITEM.tile()).thenReturn(mockItemTile);
+        when(mockFixtureTile.location()).thenReturn(
+                Coordinate3d.of(randomInt(), randomInt(), FIXTURE_Z));
+        when(MOCK_FIXTURE.tile()).thenReturn(mockFixtureTile);
 
-        tileHandler = new TileHandler(TILE_FACTORY, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER,
-                SPRITE_HANDLER, DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                GROUND_TYPES::get);
+        tileHandler = new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
+                MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER, MOVE_EVENTS_LOOKUP,
+                ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP);
     }
 
     @Test
     public void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(null, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER,
-                        DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, null, ITEM_HANDLER, FIXTURE_HANDLER, SPRITE_HANDLER,
-                        DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, CHAR_HANDLER, null, FIXTURE_HANDLER, SPRITE_HANDLER,
-                        DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, CHAR_HANDLER, ITEM_HANDLER, null, SPRITE_HANDLER,
-                        DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER, null,
-                        DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER,
-                        SPRITE_HANDLER, null, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER,
-                        SPRITE_HANDLER, DATA_HANDLER, null, ABILITY_EVENTS::get,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER,
-                        SPRITE_HANDLER, DATA_HANDLER, MOVEMENT_EVENTS::get, null,
-                        GROUND_TYPES::get));
-        assertThrows(IllegalArgumentException.class, () ->
-                new TileHandler(TILE_FACTORY, CHAR_HANDLER, ITEM_HANDLER, FIXTURE_HANDLER,
-                        SPRITE_HANDLER, DATA_HANDLER, MOVEMENT_EVENTS::get, ABILITY_EVENTS::get,
-                        null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(null, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
+                        MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER,
+                        MOVE_EVENTS_LOOKUP, ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, null, MOCK_ITEM_HANDLER,
+                        MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER,
+                        MOVE_EVENTS_LOOKUP, ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, null,
+                        MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER,
+                        MOVE_EVENTS_LOOKUP, ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER, null,
+                        MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER, MOVE_EVENTS_LOOKUP,
+                        ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
+                        MOCK_FIXTURE_HANDLER, null, MOCK_DATA_HANDLER, MOVE_EVENTS_LOOKUP,
+                        ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
+                        MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, null, MOVE_EVENTS_LOOKUP,
+                        ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
+                        MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER, null,
+                        ABILITY_EVENTS_LOOKUP, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
+                        MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER,
+                        MOVE_EVENTS_LOOKUP, null, MOCK_GROUND_TYPES_LOOKUP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
+                        MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_DATA_HANDLER,
+                        MOVE_EVENTS_LOOKUP, ABILITY_EVENTS_LOOKUP, null));
     }
 
     @Test
     public void testWrite() {
-        var tile = new FakeTile(X, Y, DATA);
-        tile.setHeight(HEIGHT);
-        tile.setGroundType(GROUND_TYPE);
-        tile.characters().add(CHARACTER, 111);
-        tile.items().add(ITEM, 222);
-        tile.fixtures().add(TILE_FIXTURE, 333);
-        tile.movementEvents().add(MOVEMENT_EVENT);
-        tile.abilityEvents().add(ABILITY_EVENT);
-        tile.sprites().put(SPRITE, 666);
+        var mockTile = mock(Tile.class);
+        var mockCharacters = mockTileEntities(MOCK_CHAR);
+        when(mockTile.characters()).thenReturn(mockCharacters);
+        var mockItems = mockTileEntities(MOCK_ITEM);
+        when(mockTile.items()).thenReturn(mockItems);
+        var mockFixtures = mockTileEntities(MOCK_FIXTURE);
+        when(mockTile.fixtures()).thenReturn(mockFixtures);
+        var mockSprites = generateMockMap(pairOf(MOCK_SPRITE, SPRITE_Z));
+        when(mockTile.sprites()).thenReturn(mockSprites);
+        when(mockTile.data()).thenReturn(MOCK_DATA);
+        var mockMoveEvents = generateMockList(MOCK_MOVE_EVENT);
+        when(mockTile.movementEvents()).thenReturn(mockMoveEvents);
+        var mockAbilityEvents = generateMockList(MOCK_ABILITY_EVENT);
+        when(mockTile.abilityEvents()).thenReturn(mockAbilityEvents);
+        when(mockTile.getGroundType()).thenReturn(MOCK_GROUND_TYPE);
 
-        assertEquals(WRITTEN_DATA, tileHandler.write(tile));
+        assertEquals(WRITTEN_DATA, tileHandler.write(mockTile));
+        verify(mockTile, times(2)).characters();
+        verify(mockCharacters).size();
+        verify(mockCharacters).iterator();
+        verify(MOCK_CHAR_HANDLER).write(MOCK_CHAR);
+        verify(mockTile, times(2)).items();
+        verify(mockItems).size();
+        verify(mockItems).iterator();
+        verify(MOCK_ITEM_HANDLER).write(MOCK_ITEM);
+        verify(mockTile, times(2)).fixtures();
+        verify(mockFixtures).size();
+        verify(mockFixtures).iterator();
+        verify(MOCK_FIXTURE_HANDLER).write(MOCK_FIXTURE);
+        verify(mockTile, times(3)).sprites();
+        verify(mockSprites).size();
+        verify(mockSprites).keySet();
+        verify(mockSprites).get(MOCK_SPRITE);
+        verify(MOCK_SPRITE_HANDLER).write(MOCK_SPRITE);
+        verify(mockTile).data();
+        verify(MOCK_DATA_HANDLER).write(MOCK_DATA);
+        verify(mockTile, times(2)).movementEvents();
+        verify(mockMoveEvents).size();
+        verify(mockMoveEvents).iterator();
+        // This (and some others below) are at least once since .id() is called once in the
+        // mocking setup
+        verify(MOCK_MOVE_EVENT, atLeastOnce()).id();
+        verify(mockTile, times(2)).abilityEvents();
+        verify(mockAbilityEvents).size();
+        verify(mockAbilityEvents).iterator();
+        verify(MOCK_ABILITY_EVENT, atLeastOnce()).id();
+        verify(mockTile).getGroundType();
+        verify(MOCK_GROUND_TYPE, atLeastOnce()).id();
+    }
+
+    private <T extends TileEntity> TileEntities<T> mockTileEntities(T entity) {
+        @SuppressWarnings("unchecked")
+        var mockTileEntities = (TileEntities<T>) mock(TileEntities.class);
+        var entities = listOf(pairOf(entity, entity.tile().location().Z));
+        var iterator = entities.iterator();
+        when(mockTileEntities.iterator()).thenReturn(iterator);
+        when(mockTileEntities.size()).thenReturn(1);
+        return mockTileEntities;
     }
 
     @Test
@@ -139,45 +226,50 @@ public class TileHandlerTests {
 
     @Test
     public void testRead() {
+        var mockTile = mock(Tile.class);
+        //noinspection unchecked
+        var mockTileChars = (TileEntities<Character>) mock(TileEntities.class);
+        when(mockTile.characters()).thenReturn(mockTileChars);
+        //noinspection unchecked
+        var mockTileFixtures = (TileEntities<TileFixture>) mock(TileEntities.class);
+        when(mockTile.fixtures()).thenReturn(mockTileFixtures);
+        //noinspection unchecked
+        var mockTileItems = (TileEntities<Item>) mock(TileEntities.class);
+        when(mockTile.items()).thenReturn(mockTileItems);
+        when(mockTileFactory.make(any())).thenReturn(mockTile);
+        //noinspection unchecked
+        var mockMoveEvents = (List<GameMovementEvent>) mock(List.class);
+        when(mockTile.movementEvents()).thenReturn(mockMoveEvents);
+        //noinspection unchecked
+        var mockAbilityEvents = (List<GameAbilityEvent>) mock(List.class);
+        when(mockTile.abilityEvents()).thenReturn(mockAbilityEvents);
+        //noinspection unchecked
+        var mockSprites = (Map<Sprite, Integer>) mock(Map.class);
+        when(mockTile.sprites()).thenReturn(mockSprites);
+
         var readTile = tileHandler.read(WRITTEN_DATA);
 
         assertNotNull(readTile);
-        assertEquals(X, readTile.location().X);
-        assertEquals(Y, readTile.location().Y);
-        assertSame(((FakeVariableCacheHandler) DATA_HANDLER).READ_OUTPUTS.get(0),
-                readTile.data());
-        assertEquals(HEIGHT, readTile.getHeight());
-        assertSame(GROUND_TYPE, readTile.getGroundType());
-
-        assertEquals(1, readTile.characters().size());
-        Character characterFromHandler = CHAR_HANDLER.READ_OUTPUTS.get(0);
-        assertTrue(readTile.characters().contains(characterFromHandler));
-        assertEquals("Character0", CHAR_HANDLER.READ_INPUTS.get(0));
-        assertEquals(111, (int)readTile.characters().getZIndex(characterFromHandler));
-
-        assertEquals(1, readTile.items().size());
-        Item itemFromHandler = ITEM_HANDLER.READ_OUTPUTS.get(0);
-        assertTrue(readTile.items().contains(itemFromHandler));
-        assertEquals("Item0", ITEM_HANDLER.READ_INPUTS.get(0));
-        assertEquals(222, (int)readTile.items().getZIndex(itemFromHandler));
-
-        assertEquals(1, readTile.fixtures().size());
-        TileFixture fixtureFromHandler = FIXTURE_HANDLER.READ_OUTPUTS.get(0);
-        assertTrue(readTile.fixtures().contains(fixtureFromHandler));
-        assertEquals("TileFixture0", FIXTURE_HANDLER.READ_INPUTS.get(0));
-        assertEquals(333, (int)readTile.fixtures().getZIndex(fixtureFromHandler));
-
-        assertEquals(1, readTile.movementEvents().size());
-        assertTrue(readTile.movementEvents().contains(MOVEMENT_EVENT));
-
-        assertEquals(1, readTile.abilityEvents().size());
-        assertTrue(readTile.abilityEvents().contains(ABILITY_EVENT));
-
-        assertEquals(1, readTile.sprites().size());
-        Sprite spriteFromHandler = SPRITE_HANDLER.READ_OUTPUTS.get(0);
-        assertTrue(readTile.sprites().containsKey(spriteFromHandler));
-        assertEquals(666, (int)readTile.sprites().get(spriteFromHandler));
-        assertEquals("Sprite0", SPRITE_HANDLER.READ_INPUTS.get(0));
+        assertSame(mockTile, readTile);
+        verify(MOCK_DATA_HANDLER).read(DATA_STR);
+        verify(mockTileFactory).make(MOCK_DATA);
+        verify(MOCK_GROUND_TYPES_LOOKUP).apply(GROUND_TYPE_ID);
+        verify(mockTile).setGroundType(MOCK_GROUND_TYPE);
+        verify(MOCK_CHAR_HANDLER).read(CHAR_STR);
+        verify(mockTileChars).add(MOCK_CHAR, CHAR_Z);
+        verify(MOCK_ITEM_HANDLER).read(ITEM_STR);
+        verify(mockTileItems).add(MOCK_ITEM, ITEM_Z);
+        verify(MOCK_FIXTURE_HANDLER).read(FIXTURE_STR);
+        verify(mockTileFixtures).add(MOCK_FIXTURE, FIXTURE_Z);
+        verify(MOVE_EVENTS_LOOKUP).apply(MOVE_EVENT_ID);
+        verify(mockTile).movementEvents();
+        verify(mockMoveEvents).add(MOCK_MOVE_EVENT);
+        verify(ABILITY_EVENTS_LOOKUP).apply(ABILITY_EVENT_ID);
+        verify(mockTile).abilityEvents();
+        verify(mockAbilityEvents).add(MOCK_ABILITY_EVENT);
+        verify(MOCK_SPRITE_HANDLER).read(SPRITE_STR);
+        verify(mockTile).sprites();
+        verify(mockSprites).put(MOCK_SPRITE, SPRITE_Z);
     }
 
     @Test

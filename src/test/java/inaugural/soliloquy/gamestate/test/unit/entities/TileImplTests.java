@@ -1,90 +1,80 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
+import inaugural.soliloquy.gamestate.test.fakes.FakeGroundType;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import soliloquy.specs.common.infrastructure.VariableCache;
-import soliloquy.specs.common.valueobjects.Coordinate2d;
-import soliloquy.specs.gamestate.entities.GameZone;
-import soliloquy.specs.gamestate.entities.Item;
-import soliloquy.specs.gamestate.entities.Tile;
-import soliloquy.specs.gamestate.entities.TileFixture;
+import soliloquy.specs.common.valueobjects.Coordinate3d;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
 import soliloquy.specs.ruleset.entities.GroundType;
 
+import static inaugural.soliloquy.tools.random.Random.randomCoordinate3d;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TileImplTests {
-    private final int X = 123;
-    private final int Y = 456;
+    private final Coordinate3d LOCATION = randomCoordinate3d();
 
-    private final GameZone GAME_ZONE = new FakeGameZone();
-    private final TileEntitiesFactory TILE_ENTITIES_FACTORY = new FakeTileEntitiesFactory();
-    private final VariableCache DATA = new VariableCacheStub();
+    @Mock private TileEntities<Character> mockCharacters;
+    @Mock private TileEntities<Item> mockItems;
+    @Mock private TileEntities<TileFixture> mockFixtures;
+    @Mock private TileEntitiesFactory mockEntitiesFactory;
+    @Mock private VariableCache mockData;
+    @Mock private GameZone mockGameZone;
+    @Mock private GroundType mockGroundType;
 
     private Tile tile;
 
     @Before
     public void setUp() {
-        tile = new TileImpl(X, Y, TILE_ENTITIES_FACTORY, DATA);
-        ((FakeGameZone) GAME_ZONE).TILES = new Tile[999][999];
-        ((FakeGameZone) GAME_ZONE).RETURN_ACTUAL_TILE_AT_LOCATION = true;
+        //noinspection unchecked,rawtypes
+        when(mockEntitiesFactory.make(any(), any(), any(), any()))
+                .thenReturn((TileEntities)mockCharacters)
+                .thenReturn(mockItems)
+                .thenReturn(mockFixtures);
+
+        tile = new TileImpl(mockEntitiesFactory, mockData);
+
+        when(mockGameZone.tile(any())).thenReturn(mock(Tile.class));
     }
 
     @Test
     public void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileImpl(X, Y, null, DATA));
-        assertThrows(IllegalArgumentException.class,
-                () -> new TileImpl(X, Y, TILE_ENTITIES_FACTORY, null));
-    }
-
-    @Test
-    public void testLocation() {
-        Coordinate2d location = tile.location();
-
-        assertNotNull(location);
-        assertEquals(X, location.X);
-        assertEquals(Y, location.Y);
-    }
-
-    @Test
-    public void testSetAndGetHeight() {
-        tile.setHeight(123);
-
-        assertEquals(123, tile.getHeight());
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(null, mockData));
+        assertThrows(IllegalArgumentException.class, () -> new TileImpl(mockEntitiesFactory, null));
     }
 
     @Test
     public void testSetAndGetGroundType() {
-        GroundType groundType = new FakeGroundType();
+        tile.setGroundType(mockGroundType);
 
-        tile.setGroundType(groundType);
-
-        assertSame(groundType, tile.getGroundType());
+        assertSame(mockGroundType, tile.getGroundType());
     }
 
     @Test
     public void testCharacters() {
-        assertNotNull(tile.characters());
-        //noinspection rawtypes
-        assertSame(tile, ((FakeTileEntities) tile.characters()).TILE);
+        assertSame(mockCharacters, tile.characters());
     }
 
     @Test
     public void testItems() {
-        assertNotNull(tile.items());
-        assertSame(tile, ((FakeTileEntities<Item>) tile.items()).TILE);
+        assertSame(mockItems, tile.items());
     }
 
     @Test
     public void testFixtures() {
-        assertNotNull(tile.fixtures());
-        assertSame(tile, ((FakeTileEntities<TileFixture>) tile.fixtures()).TILE);
+        assertSame(mockFixtures, tile.fixtures());
     }
 
     @Test
@@ -119,25 +109,19 @@ public class TileImplTests {
     }
 
     @Test
-    public void testAssignGameZoneAfterAddedToGameZone() {
-        ((FakeGameZone) GAME_ZONE).TILES[X][Y] = tile;
-        tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+    public void testAssignGameZoneAfterAddedToGameZoneAndLocation() {
+        when(mockGameZone.tile(any())).thenReturn(tile);
 
-        assertSame(GAME_ZONE, tile.gameZone());
+        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, LOCATION);
+
+        assertSame(mockGameZone, tile.gameZone());
+        assertEquals(LOCATION, tile.location());
     }
 
     @Test
     public void testAssignGameZoneAfterAddedToGameZoneWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> tile.assignGameZoneAfterAddedToGameZone(null));
-    }
-
-    @Test
-    public void testAssignGameZoneAfterAddedToGameZoneWhenAlreadyAssigned() {
-        tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
-
-        assertThrows(IllegalArgumentException.class,
-                () -> tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE));
+                () -> tile.assignGameZoneAfterAddedToGameZone(mockGameZone, null));
     }
 
     @Test
@@ -147,22 +131,18 @@ public class TileImplTests {
 
     @Test
     public void testThrowsOnDeleteWhenGameZoneIsNotDeleted() {
-        tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+        when(mockGameZone.isDeleted()).thenReturn(false);
+        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, Coordinate3d.of(0, 0, 0));
 
         assertThrows(IllegalStateException.class, tile::delete);
     }
 
     @Test
     public void testDeletedInvariant() {
-        ((FakeGameZone) GAME_ZONE).TILES[X][Y] = tile;
-        tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
-
-        GAME_ZONE.delete();
+        tile.delete();
 
         assertThrows(EntityDeletedException.class, () -> tile.gameZone());
         assertThrows(EntityDeletedException.class, () -> tile.location());
-        assertThrows(EntityDeletedException.class, () -> tile.getHeight());
-        assertThrows(EntityDeletedException.class, () -> tile.setHeight(0));
         assertThrows(EntityDeletedException.class, () -> tile.getGroundType());
         assertThrows(EntityDeletedException.class, () -> tile.setGroundType(new FakeGroundType()));
         assertThrows(EntityDeletedException.class, () -> tile.characters());
@@ -176,15 +156,12 @@ public class TileImplTests {
 
     @Test
     public void testGameZoneLocationCorrespondenceInvariant() {
-        tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, Coordinate3d.of(0, 0, 0));
 
-        ((FakeGameZone) GAME_ZONE).TILES[X][Y] = null;
-        ((FakeGameZone) GAME_ZONE).TILES[X][Y + 1] = tile;
+        when(mockGameZone.tile(any())).thenReturn(null);
 
         assertThrows(IllegalStateException.class, () -> tile.gameZone());
         assertThrows(IllegalStateException.class, () -> tile.location());
-        assertThrows(IllegalStateException.class, () -> tile.getHeight());
-        assertThrows(IllegalStateException.class, () -> tile.setHeight(0));
         assertThrows(IllegalStateException.class, () -> tile.getGroundType());
         assertThrows(IllegalStateException.class, () -> tile.setGroundType(new FakeGroundType()));
         assertThrows(IllegalStateException.class, () -> tile.characters());
@@ -198,12 +175,10 @@ public class TileImplTests {
 
     @Test
     public void testGameZoneMismatchInvariant() {
-        tile.assignGameZoneAfterAddedToGameZone(GAME_ZONE);
+        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, Coordinate3d.of(0, 0, 0));
 
         assertThrows(IllegalStateException.class, () -> tile.gameZone());
         assertThrows(IllegalStateException.class, () -> tile.location());
-        assertThrows(IllegalStateException.class, () -> tile.getHeight());
-        assertThrows(IllegalStateException.class, () -> tile.setHeight(0));
         assertThrows(IllegalStateException.class, () -> tile.getGroundType());
         assertThrows(IllegalStateException.class, () -> tile.setGroundType(new FakeGroundType()));
         assertThrows(IllegalStateException.class, () -> tile.characters());

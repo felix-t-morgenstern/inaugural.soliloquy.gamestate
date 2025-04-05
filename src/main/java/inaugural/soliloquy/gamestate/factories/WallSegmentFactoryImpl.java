@@ -44,7 +44,6 @@ public class WallSegmentFactoryImpl implements WallSegmentFactory {
         var data = DATA_HANDLER.read(definition.data);
 
         var output = new WallSegmentImpl(data);
-        output.setName(definition.name);
         output.setType(segmentType);
 
         Check.ifNull(definition.movementEventIds, "definition.movementEventIds");

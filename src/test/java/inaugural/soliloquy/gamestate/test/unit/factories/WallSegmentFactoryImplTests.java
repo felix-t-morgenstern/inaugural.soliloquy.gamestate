@@ -28,8 +28,6 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WallSegmentFactoryImplTests {
-    private final String NAME = randomString();
-
     private final String DATA_STRING = randomString();
     private final HandlerAndEntity<VariableCache> DATA_HANDLER_AND_DATA =
             generateMockEntityAndHandler(VariableCache.class, DATA_STRING);
@@ -41,7 +39,7 @@ public class WallSegmentFactoryImplTests {
     private final String ABILITY_EVENT_ID = randomString();
 
     private final WallSegmentFactory.Definition DEFINITION =
-            new WallSegmentFactory.Definition(NAME, SEGMENT_TYPE_ID, arrayOf(MOVEMENT_EVENT_ID),
+            new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, arrayOf(MOVEMENT_EVENT_ID),
                     arrayOf(ABILITY_EVENT_ID), DATA_STRING);
 
     @Mock private WallSegmentType mockSegmentType;
@@ -89,7 +87,6 @@ public class WallSegmentFactoryImplTests {
 
         assertNotNull(output);
         assertSame(WallSegmentImpl.class, output.getClass());
-        assertEquals(NAME, output.getName());
         assertSame(mockSegmentType, output.getType());
         assertEquals(listOf(mockGameMovementEvent), output.movementEvents());
         assertEquals(listOf(mockGameAbilityEvent), output.abilityEvents());
@@ -108,39 +105,39 @@ public class WallSegmentFactoryImplTests {
         assertThrows(IllegalArgumentException.class, () -> wallSegmentFactory.make(null));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, null, arrayOf(), arrayOf(),
+                        new WallSegmentFactory.Definition(null, arrayOf(), arrayOf(),
                                 DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, "", arrayOf(), arrayOf(),
+                        new WallSegmentFactory.Definition("", arrayOf(), arrayOf(),
                                 DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, invalidId, arrayOf(), arrayOf(),
+                        new WallSegmentFactory.Definition(invalidId, arrayOf(), arrayOf(),
                                 DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, SEGMENT_TYPE_ID, null, arrayOf(),
+                        new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, null, arrayOf(),
                                 DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, SEGMENT_TYPE_ID, arrayOf(""),
+                        new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, arrayOf(""),
                                 arrayOf(), DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, SEGMENT_TYPE_ID, arrayOf(invalidId),
+                        new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, arrayOf(invalidId),
                                 arrayOf(), DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, SEGMENT_TYPE_ID, arrayOf(), null,
+                        new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, arrayOf(), null,
                                 DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, SEGMENT_TYPE_ID, arrayOf(),
+                        new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, arrayOf(),
                                 arrayOf(""), DATA_STRING)));
         assertThrows(IllegalArgumentException.class,
                 () -> wallSegmentFactory.make(
-                        new WallSegmentFactory.Definition(null, SEGMENT_TYPE_ID, arrayOf(),
+                        new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, arrayOf(),
                                 arrayOf(invalidId), DATA_STRING)));
     }
 

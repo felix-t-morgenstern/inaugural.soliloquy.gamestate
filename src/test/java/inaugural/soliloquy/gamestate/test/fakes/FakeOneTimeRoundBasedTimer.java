@@ -11,10 +11,6 @@ public class FakeOneTimeRoundBasedTimer extends FakeRoundBasedTimer
 
     private int _roundWhenGoesOff;
 
-    public FakeOneTimeRoundBasedTimer() {
-        ON_DELETE = null;
-    }
-
     public FakeOneTimeRoundBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
                                       int roundWhenGoesOff, int priority) {
         super(id, action, priority);

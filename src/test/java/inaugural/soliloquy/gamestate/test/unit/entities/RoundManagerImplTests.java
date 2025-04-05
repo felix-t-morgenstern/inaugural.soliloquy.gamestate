@@ -291,6 +291,8 @@ public class RoundManagerImplTests {
     @Test
     public void testAdvanceRoundsWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () -> roundManager.advanceRounds(0));
+
+        // TODO: Refactor this shit to properly call RoundEndHandling!
     }
 
     @Test

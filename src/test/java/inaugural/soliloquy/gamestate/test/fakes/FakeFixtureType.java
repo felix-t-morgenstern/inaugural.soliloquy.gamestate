@@ -19,10 +19,6 @@ public class FakeFixtureType implements FixtureType {
 
     }
 
-    public FakeFixtureType(String id) {
-        this.id = id;
-    }
-
     @Override
     public boolean isContainer() throws IllegalStateException {
         return false;

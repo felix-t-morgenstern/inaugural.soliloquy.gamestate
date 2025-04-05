@@ -1,27 +1,32 @@
 package inaugural.soliloquy.gamestate.persistence;
 
 import inaugural.soliloquy.tools.Check;
+import inaugural.soliloquy.tools.collections.Collections;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
+import soliloquy.specs.common.valueobjects.Coordinate3d;
+import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.setOf;
 import static inaugural.soliloquy.tools.concurrency.Concurrency.runTaskAsync;
 import static inaugural.soliloquy.tools.concurrency.Concurrency.waitUntilTasksCompleted;
 import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 
 public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     private final GameZoneFactory GAME_ZONE_FACTORY;
@@ -55,14 +60,9 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     public GameZone read(String writtenData) throws IllegalArgumentException {
         var dto = JSON.fromJson(writtenData, GameZoneDTO.class);
 
-        var tiles = new Tile[dto.maxX + 1][dto.maxY + 1];
-
-        runTileTasksBatched(dto.maxX, dto.maxY, (x, y) -> TILE_HANDLER.read(dto.tiles[x][y]),
-                tiles);
-
         var data = DATA_HANDLER.read(dto.data);
 
-        var gameZone = GAME_ZONE_FACTORY.make(dto.id, dto.type, tiles, data);
+        var gameZone = GAME_ZONE_FACTORY.make(dto.id, Coordinate2d.of(dto.maxX, dto.maxY), data);
         gameZone.setName(dto.name);
         for (var onEntry : dto.onEntry) {
             gameZone.onEntry().add(GET_ACTION.apply(onEntry));
@@ -71,7 +71,16 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
             gameZone.onExit().add(GET_ACTION.apply(onExit));
         }
 
+        runTileTasksBatched(setOf(dto.tiles), this::readFromGameZoneTileDto,
+                tileWithLoc -> gameZone.addTile(tileWithLoc.item1(), tileWithLoc.item2()),
+                gameZone);
+
         return gameZone;
+    }
+
+    private Pair<Tile, Coordinate3d> readFromGameZoneTileDto(String dtoStr) {
+        var dto = JSON.fromJson(dtoStr, GameZoneTileDTO.class);
+        return pairOf(TILE_HANDLER.read(dto.tile), Coordinate3d.of(dto.x, dto.y, dto.z));
     }
 
     @Override
@@ -79,7 +88,6 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         Check.ifNull(gameZone, "gameZone");
         var dto = new GameZoneDTO();
         dto.id = gameZone.id();
-        dto.type = gameZone.type();
         dto.name = gameZone.getName();
         dto.data = DATA_HANDLER.write(gameZone.data());
         dto.onEntry = new String[gameZone.onEntry().size()];
@@ -96,36 +104,41 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         dto.maxX = maxCoordinates.X;
         dto.maxY = maxCoordinates.Y;
 
-        dto.tiles = new String[maxCoordinates.X + 1][maxCoordinates.Y + 1];
+        var writtenTiles = Collections.<String>listOf();
 
-        runTileTasksBatched(dto.maxX, dto.maxY,
-                (x, y) -> TILE_HANDLER.write(gameZone.tile(Coordinate2d.of(x, y))), dto.tiles);
+        runTileTasksBatched(gameZone.tiles(), this::writeGameZoneTileDto, writtenTiles::add,
+                writtenTiles);
+
+        dto.tiles = writtenTiles.toArray(new String[0]);
 
         return JSON.toJson(dto);
     }
 
-    private <T> void runTileTasksBatched(int maxX, int maxY, BiFunction<Integer, Integer, T> task,
-                                         T[][] resultsArray) {
-        List<Runnable> batch = listOf();
-        List<CompletableFuture<Void>> batchTasks = listOf();
-        for (var x = 0; x <= maxX; x++) {
-            for (var y = 0; y <= maxY; y++) {
-                // NB: These variables are necessary, since lambdas can only reference values which
-                //     are final.
-                var finalX = x;
-                var finalY = y;
-                batch.add(() -> {
-                    var taskResult = task.apply(finalX, finalY);
-                    synchronized (resultsArray) {
-                        resultsArray[finalX][finalY] = taskResult;
-                    }
-                });
-                if (batch.size() >= TILES_PER_BATCH) {
-                    final var batchToRun = batch;
-                    batchTasks.add(runTaskAsync(() -> batchToRun.forEach(Runnable::run),
-                            this::handleThrowable, EXECUTOR));
-                    batch = listOf();
+    private String writeGameZoneTileDto(Tile tile) {
+        var gameZoneTileDto = new GameZoneTileDTO();
+        gameZoneTileDto.x = tile.location().X;
+        gameZoneTileDto.y = tile.location().Y;
+        gameZoneTileDto.z = tile.location().Z;
+        gameZoneTileDto.tile = TILE_HANDLER.write(tile);
+        return JSON.toJson(gameZoneTileDto);
+    }
+
+    private <T1, T2> void runTileTasksBatched(Set<T1> inputs, Function<T1, T2> inputFunction,
+                                              Consumer<T2> outputConsumer, Object lock) {
+        var batch = Collections.<Runnable>listOf();
+        var batchTasks = Collections.<CompletableFuture<Void>>listOf();
+        for (var input : inputs) {
+            batch.add(() -> {
+                var taskResult = inputFunction.apply(input);
+                synchronized (lock) {
+                    outputConsumer.accept(taskResult);
                 }
+            });
+            if (batch.size() >= TILES_PER_BATCH) {
+                final var batchToRun = batch;
+                batchTasks.add(runTaskAsync(() ->
+                        batchToRun.forEach(Runnable::run), this::handleThrowable, EXECUTOR));
+                batch = listOf();
             }
         }
         if (!batch.isEmpty()) {
@@ -154,13 +167,19 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     // TODO: Handle Segment persistence!
     private static class GameZoneDTO {
         String id;
-        String type;
         String name;
         String data;
         String[] onEntry;
         String[] onExit;
         int maxX;
         int maxY;
-        String[][] tiles;
+        String[] tiles;
+    }
+
+    private static class GameZoneTileDTO {
+        int x;
+        int y;
+        int z;
+        String tile;
     }
 }
