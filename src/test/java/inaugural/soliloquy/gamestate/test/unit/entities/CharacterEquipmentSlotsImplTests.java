@@ -1,32 +1,68 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterEquipmentSlotsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.*;
-import inaugural.soliloquy.gamestate.test.stubs.EquipmentTypeStub;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterEquipmentSlots;
-import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
+import soliloquy.specs.ruleset.entities.EquipmentType;
+import soliloquy.specs.ruleset.entities.ItemType;
 
-import java.util.Map;
-
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
-// TODO: Revolting test suite.
+@RunWith(MockitoJUnitRunner.class)
 public class CharacterEquipmentSlotsImplTests {
-    private final Character CHARACTER = new FakeCharacter();
-    private final Item ITEM = new FakeItem();
-    private final String EQUIPMENT_SLOT_TYPE = "armor";
+    private final String EQUIPMENT_SLOT_TYPE = randomString();
 
-    private CharacterEquipmentSlots _characterEquipmentSlots;
+    @Mock private EquipmentType mockEquipmentType;
+    @Mock private ItemType mockItemType;
+    @Mock private Item mockItem;
+    @Mock private Item mockPrevItem;
+    @Mock private EquipmentType mockEquipmentTypeUnfit;
+    @Mock private ItemType mockItemTypeUnfit;
+    @Mock private Item mockItemUnfit;
+    @Mock private Character mockCharacter;
+
+    private CharacterEquipmentSlots characterEquipmentSlots;
 
     @Before
     public void setUp() {
-        ((FakeItem) ITEM).equipmentCharacter = null;
-        _characterEquipmentSlots = new CharacterEquipmentSlotsImpl(CHARACTER);
-        EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.add(EQUIPMENT_SLOT_TYPE);
+        when(mockEquipmentType.canEquipToSlotType(EQUIPMENT_SLOT_TYPE)).thenReturn(true);
+        when(mockItemType.equipmentType()).thenReturn(mockEquipmentType);
+        when(mockItem.type()).thenReturn(mockItemType);
+        doAnswer(invocationOnMock -> setupMockItemAssignEquipmentSlot(invocationOnMock, mockItem))
+                .when(mockItem)
+                .assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(any(), anyString());
+
+        when(mockPrevItem.type()).thenReturn(mockItemType);
+        doAnswer(invocationOnMock -> setupMockItemAssignEquipmentSlot(invocationOnMock,
+                mockPrevItem))
+                .when(mockPrevItem)
+                .assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(any(), anyString());
+
+        when(mockEquipmentTypeUnfit.canEquipToSlotType(anyString())).thenReturn(false);
+        when(mockItemTypeUnfit.equipmentType()).thenReturn(mockEquipmentTypeUnfit);
+        when(mockItemUnfit.type()).thenReturn(mockItemTypeUnfit);
+
+        characterEquipmentSlots = new CharacterEquipmentSlotsImpl(mockCharacter);
+    }
+
+    private Answer setupMockItemAssignEquipmentSlot(InvocationOnMock invocation, Item mockItem) {
+        Character character = invocation.getArgument(0);
+        String equipmentSlotType = invocation.getArgument(1);
+        when(mockItem.equipmentSlot()).thenReturn(pairOf(character, equipmentSlotType));
+        return null;
     }
 
     @Test
@@ -37,345 +73,353 @@ public class CharacterEquipmentSlotsImplTests {
     @Test
     public void testGetInterfaceName() {
         assertEquals(CharacterEquipmentSlots.class.getCanonicalName(),
-                _characterEquipmentSlots.getInterfaceName());
+                characterEquipmentSlots.getInterfaceName());
     }
 
     @Test
-    public void testAddEquipmentSlotAndCheckIfExists() {
-        assertFalse(_characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+    public void testAddCharacterEquipmentSlotAndCheckIfExists() {
+        assertFalse(characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
 
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
-        assertTrue(_characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+        assertTrue(characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
     }
 
     @Test
-    public void testAddInvalidEquipmentSlot() {
+    public void testEquipmentSlotExistsWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.addCharacterEquipmentSlot(null));
+                () -> characterEquipmentSlots.equipmentSlotExists(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.addCharacterEquipmentSlot(""));
+                () -> characterEquipmentSlots.equipmentSlotExists(""));
     }
 
     @Test
-    public void testCheckIfExistsForInvalidSlotTypes() {
+    public void testAddCharacterEquipmentSlotWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipmentSlotExists(null));
+                () -> characterEquipmentSlots.addCharacterEquipmentSlot(null));
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipmentSlotExists(""));
+                () -> characterEquipmentSlots.addCharacterEquipmentSlot(""));
+    }
+
+    @Test
+    public void testRemoveCharacterEquipmentSlot() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+
+        characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+
+        assertFalse(characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+    }
+
+    @Test
+    public void testRemoveCharacterEquipmentSlotWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.removeCharacterEquipmentSlot(null));
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.removeCharacterEquipmentSlot(""));
     }
 
     @Test
     public void testCanEquipItemToSlot() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        assertTrue(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
-        EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.clear();
-
-        assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertTrue(characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+        assertFalse(characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItemUnfit));
     }
 
     @Test
-    public void testCanEquipInvalidItemToInvalidSlot() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(null, ITEM));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot("", ITEM));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+    public void testCannotEquipItemToSlotIfAlreadyInInventory() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.inventoryCharacter()).thenReturn(mockCharacter);
 
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, null));
+        assertFalse(characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
     }
 
     @Test
-    public void testGetAndSetCanAlterEquipmentInSlot() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+    public void testCannotEquipItemToSlotIfAlreadyInAnotherEquipment() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.equipmentSlot()).thenReturn(pairOf(mockCharacter, EQUIPMENT_SLOT_TYPE));
 
-        assertTrue(_characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
-
-        _characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE, false);
-
-        assertFalse(_characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+        assertFalse(characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
     }
 
     @Test
-    public void testGetAndSetCanAlterEquipmentInInvalidSlot() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE,
-                        true));
+    public void testCannotEquipItemToSlotIfAlreadyInFixture() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.tileFixture()).thenReturn(mock(TileFixture.class));
+
+        assertFalse(characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
     }
 
     @Test
-    public void testGetAndSetCanAlterEquipmentInSlotWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(null));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(""));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.setCanAlterEquipmentInSlot(null, true));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.setCanAlterEquipmentInSlot("", true));
+    public void testCannotEquipItemToSlotIfAlreadyOnTile() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.tile()).thenReturn(mock(Tile.class));
+
+        assertFalse(characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
     }
 
     @Test
-    public void testEquipItemToSlot() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
-
-        assertSame(ITEM, _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
-        assertSame(CHARACTER, ITEM.equipmentSlot().firstArchetype());
-        assertEquals(EQUIPMENT_SLOT_TYPE, ITEM.equipmentSlot().secondArchetype());
+    public void testCanEquipItemToSlotWithInvalidParams() {
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.canEquipItemToSlot(null, mockItem));
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.canEquipItemToSlot("", mockItem));
+        // NB: If a slot type hasn't been added yet, it is an invalid param
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, null));
     }
 
     @Test
-    public void testEquipItemToSlotWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(null, ITEM));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot("", ITEM));
+    public void testEquipItemToSlotAndItemInSlot() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
+        var itemInSlot = characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE);
+
+        assertSame(mockItem, itemInSlot);
+        verify(mockItem).assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(mockCharacter,
+                EQUIPMENT_SLOT_TYPE);
     }
 
     @Test
-    public void testEquipItemAndCanEquipItemElsewhereInOtherLocationTypes() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+    public void testEquipItemToSlotReturnsPrevItem() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
 
-        ((FakeItem) ITEM).equipmentCharacter = CHARACTER;
-        ((FakeItem) ITEM).equipmentSlotType = EQUIPMENT_SLOT_TYPE;
+        var prevItemInSlot = characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, null);
 
-        assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-
-        ((FakeItem) ITEM).equipmentCharacter = null;
-        ((FakeItem) ITEM).equipmentSlotType = null;
-        ((FakeItem) ITEM).inventoryCharacter = CHARACTER;
-
-        assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-
-        ((FakeItem) ITEM).inventoryCharacter = null;
-        ((FakeItem) ITEM).tile = new FakeTile();
-
-        assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-
-        ((FakeItem) ITEM).tile = null;
-        ((FakeItem) ITEM).tileFixture = new FakeTileFixture();
-
-        assertFalse(_characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+        assertSame(mockItem, prevItemInSlot);
     }
 
     @Test
-    public void testPreviouslyEquippedItemUnassignedFromSlot() {
-        Item previousItem = new FakeItem();
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, previousItem);
-        assertNotNull(previousItem.equipmentSlot());
-        assertSame(CHARACTER, previousItem.equipmentSlot().firstArchetype());
-        assertEquals(EQUIPMENT_SLOT_TYPE,
-                previousItem.equipmentSlot().secondArchetype());
-
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
-
-        assertNull(previousItem.equipmentSlot());
-    }
-
-    @Test
-    public void testItemInInvalidSlot() {
+    public void testItemInSlotWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.itemInSlot(null));
+                () -> characterEquipmentSlots.itemInSlot(null));
+        assertThrows(IllegalArgumentException.class, () -> characterEquipmentSlots.itemInSlot(""));
+        // NB: If a slot type hasn't been added yet, it is an invalid param
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.itemInSlot(""));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
     }
 
     @Test
-    public void testItemReferencesCorrectSlotInvariant() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
-        ((FakeItem) ITEM).equipmentCharacter = null;
+    public void testRemovePrevItemEquipmentSlotWhenAddingNewItemToSameSlot() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockPrevItem);
 
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
 
-        ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
-
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
-
-        ((FakeItem) ITEM).equipmentCharacter = CHARACTER;
-        ((FakeItem) ITEM).equipmentSlotType = "NotAValidType";
-
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
-        assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+        verify(mockPrevItem).assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
     }
 
     @Test
-    public void testUnequipItemFromSlot() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
+    public void testGetCanAlterEquipmentInSlot() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
-        assertSame(ITEM, _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, null));
-        assertSame(null, _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, null));
+        assertTrue(characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
     }
 
     @Test
-    public void testEquipItemToSlotWhichCannotBeAltered() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        _characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE, false);
+    public void testSetAndGetCanAlterEquipmentInSlot() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+
+        characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE, false);
+
+        assertFalse(characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+    }
+
+    @Test
+    public void testEquipItemToUnalterableSlot() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE, false);
 
         assertThrows(UnsupportedOperationException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
     }
 
     @Test
-    public void testEquipItemToInvalidSlot() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        EquipmentTypeStub.VALID_EQUIPMENT_SLOTS.clear();
+    public void testEquipItemUnfitType() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
 
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItemUnfit));
     }
 
     @Test
-    public void testRemoveEquipmentSlot() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
-        assertTrue(_characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+    public void testEquipItemToSlotIfAlreadyInInventory() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.inventoryCharacter()).thenReturn(mockCharacter);
 
-        assertSame(ITEM,
-                _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
-
-        assertFalse(_characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
     }
 
     @Test
-    public void testRemoveInvalidEquipmentSlot() {
+    public void testEquipItemToSlotIfAlreadyInAnotherEquipment() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.equipmentSlot()).thenReturn(pairOf(mockCharacter, EQUIPMENT_SLOT_TYPE));
+
         assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(null));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(""));
-        assertThrows(IllegalArgumentException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(""));
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
     }
 
     @Test
-    public void testGetRepresentation() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
+    public void testEquipItemToSlotIfAlreadyInFixture() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.tileFixture()).thenReturn(mock(TileFixture.class));
 
-        Map<String, Item> characterEquipmentSlotsRepresentation =
-                _characterEquipmentSlots.representation();
-        Map<String, Item> characterEquipmentSlotsRepresentationSecond =
-                _characterEquipmentSlots.representation();
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+    }
 
-        assertNotNull(characterEquipmentSlotsRepresentation);
-        assertNotSame(characterEquipmentSlotsRepresentation,
-                characterEquipmentSlotsRepresentationSecond);
-        assertEquals(1, characterEquipmentSlotsRepresentation.size());
-        assertSame(ITEM, characterEquipmentSlotsRepresentation.get(EQUIPMENT_SLOT_TYPE));
+    @Test
+    public void testEquipItemToSlotIfAlreadyOnTile() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        when(mockItem.tile()).thenReturn(mock(Tile.class));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+    }
+
+    @Test
+    public void testEquipItemWhichBreaksCorrectSlotInvariant() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        doAnswer(invocationOnMock -> null).when(mockItem)
+                .assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(any(), anyString());
+
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+    }
+
+    @Test
+    public void testRemoveCharacterEquipmentSlotReturnsItemInSlot() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
+
+        var prevItemInSlot =
+                characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+
+        assertSame(mockItem, prevItemInSlot);
+    }
+
+    @Test
+    public void testRepresentation() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
+
+        var representation = characterEquipmentSlots.representation();
+
+        assertNotNull(representation);
+        assertEquals(1, representation.size());
+        assertTrue(representation.containsKey(EQUIPMENT_SLOT_TYPE));
+        assertSame(mockItem, representation.get(EQUIPMENT_SLOT_TYPE));
+        assertNotSame(representation, characterEquipmentSlots.representation());
     }
 
     @Test
     public void testDelete() {
-        _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
-        // NB: This is added to ensure that NullPointerExceptions are being avoided
-        _characterEquipmentSlots.addCharacterEquipmentSlot("Slot with null item");
-        _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM);
-        assertFalse(_characterEquipmentSlots.isDeleted());
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
 
-        _characterEquipmentSlots.delete();
+        characterEquipmentSlots.delete();
 
-        assertTrue(_characterEquipmentSlots.isDeleted());
-        assertTrue(ITEM.isDeleted());
+        assertTrue(characterEquipmentSlots.isDeleted());
     }
 
     @Test
-    public void testIsDeletedInvariant() {
-        _characterEquipmentSlots.delete();
+    public void testDeletedInvariant() {
+        characterEquipmentSlots.delete();
 
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.getInterfaceName());
-        assertThrows(EntityDeletedException.class, () -> _characterEquipmentSlots.representation());
+                () -> characterEquipmentSlots.getInterfaceName());
+        assertThrows(EntityDeletedException.class, () -> characterEquipmentSlots.representation());
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+                () -> characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
         assertThrows(EntityDeletedException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(EntityDeletedException.class, () -> _characterEquipmentSlots
-                .setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE, true));
+                () -> characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(EntityDeletedException.class,
+                () -> characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE,
+                        true));
     }
 
     @Test
-    public void testCharacterDeletedInvariant() {
-        CHARACTER.delete();
+    public void testBreakItemInSlotHasNoSlotInvariant() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
+        when(mockItem.equipmentSlot()).thenReturn(null);
 
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots.representation());
+                () -> characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+                () -> characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, ITEM));
+                () -> characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE,
+                        true));
+    }
+
+    @Test
+    public void testBreakItemInSlotHasDiffCharacterInvariant() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
+        when(mockItem.equipmentSlot()).thenReturn(
+                pairOf(mock(Character.class), EQUIPMENT_SLOT_TYPE));
+
         assertThrows(IllegalStateException.class,
-                () -> _characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
-        assertThrows(IllegalStateException.class, () -> _characterEquipmentSlots
-                .setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE, true));
+                () -> characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE,
+                        true));
+    }
+
+    @Test
+    public void testBreakItemInSlotHasDiffSlotTypeInvariant() {
+        characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE);
+        characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem);
+        when(mockItem.equipmentSlot()).thenReturn(pairOf(mockCharacter, "different slot type"));
+
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.equipmentSlotExists(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.removeCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.itemInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.canEquipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.equipItemToSlot(EQUIPMENT_SLOT_TYPE, mockItem));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.getCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE));
+        assertThrows(IllegalStateException.class,
+                () -> characterEquipmentSlots.setCanAlterEquipmentInSlot(EQUIPMENT_SLOT_TYPE,
+                        true));
     }
 }
