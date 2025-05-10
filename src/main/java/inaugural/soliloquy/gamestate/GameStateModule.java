@@ -1,6 +1,7 @@
 package inaugural.soliloquy.gamestate;
 
 import com.google.inject.AbstractModule;
+import inaugural.soliloquy.gamestate.entities.AbstractGameZoneTerrain;
 import inaugural.soliloquy.gamestate.entities.GameZonesRepoImpl;
 import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import inaugural.soliloquy.gamestate.factories.*;
@@ -130,7 +131,9 @@ public class GameStateModule extends AbstractModule {
 
         var gameZoneFactory = new GameZoneFactoryImpl(
                 c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
-                roundManager::removeCharacterFromQueue);
+                roundManager::removeCharacterFromQueue,
+                (terrain, gameZone, loc) -> ((AbstractGameZoneTerrain)terrain)
+                        .assignGameZoneAfterAddedToGameZone(gameZone, loc));
 
         // TODO: Populate tilesPerBatch and threadPoolSize from configs somewhere
         var gameZoneHandler =

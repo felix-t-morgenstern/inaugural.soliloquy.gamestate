@@ -184,7 +184,7 @@ public class GameZoneHandlerTests {
         verify(mockGameZone).onExit();
         verify(mockZoneOnExit).add(mockExitAction);
         verify(mockTileHandler).read(TILE_STR);
-        verify(mockGameZone).addTile(same(mockTile), eq(TILE_LOCATION));
+        verify(mockGameZone).putTile(same(mockTile), eq(TILE_LOCATION));
     }
 
     @Test

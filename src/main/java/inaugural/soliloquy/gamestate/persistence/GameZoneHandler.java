@@ -72,7 +72,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         }
 
         runTileTasksBatched(setOf(dto.tiles), this::readFromGameZoneTileDto,
-                tileWithLoc -> gameZone.addTile(tileWithLoc.item1(), tileWithLoc.item2()),
+                tileWithLoc -> gameZone.putTile(tileWithLoc.item1(), tileWithLoc.item2()),
                 gameZone);
 
         return gameZone;

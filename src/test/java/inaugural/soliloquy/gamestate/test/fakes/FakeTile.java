@@ -29,9 +29,6 @@ public class FakeTile implements Tile {
     private GroundType _groundType;
     private boolean _isDeleted;
 
-    private Coordinate3d location;
-    private VariableCache _data;
-
     @Mock private GameZone mockGameZone;
 
     public FakeTile() {
@@ -39,7 +36,7 @@ public class FakeTile implements Tile {
 
     @Override
     public VariableCache data() throws IllegalStateException {
-        return _data;
+        return null;
     }
 
     @Override
@@ -59,7 +56,7 @@ public class FakeTile implements Tile {
 
     @Override
     public Coordinate3d location() throws IllegalStateException {
-        return location;
+        return null;
     }
 
     @Override
@@ -90,13 +87,6 @@ public class FakeTile implements Tile {
     @Override
     public Map<Sprite, Integer> sprites() throws IllegalStateException {
         return SPRITES;
-    }
-
-    @Override
-    public void assignGameZoneAfterAddedToGameZone(GameZone gameZone, Coordinate3d location)
-            throws IllegalArgumentException, IllegalStateException {
-        mockGameZone = gameZone;
-        this.location = location;
     }
 
     @Override

@@ -50,6 +50,11 @@ public class FakeFixtureType implements FixtureType {
     }
 
     @Override
+    public int escalation(Direction direction) {
+        return 0;
+    }
+
+    @Override
     public int heightMovementPenaltyMitigation(Tile tile, Character character,
                                                Direction direction) {
         return 0;

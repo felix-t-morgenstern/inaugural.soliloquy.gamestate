@@ -21,7 +21,6 @@ public abstract class AbstractGameZoneTerrain extends AbstractGameEventTargetEnt
         return location;
     }
 
-    @Override
     public void assignGameZoneAfterAddedToGameZone(GameZone gameZone, Coordinate3d location)
             throws IllegalArgumentException, IllegalStateException {
         if (gameZone != null && location == null) {

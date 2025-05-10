@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeGroundType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +39,7 @@ public class TileImplTests {
     public void setUp() {
         //noinspection unchecked,rawtypes
         when(mockEntitiesFactory.make(any(), any(), any(), any()))
-                .thenReturn((TileEntities)mockCharacters)
+                .thenReturn((TileEntities) mockCharacters)
                 .thenReturn(mockItems)
                 .thenReturn(mockFixtures);
 
@@ -50,7 +49,7 @@ public class TileImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(null, mockData));
         assertThrows(IllegalArgumentException.class, () -> new TileImpl(mockEntitiesFactory, null));
     }
@@ -112,16 +111,16 @@ public class TileImplTests {
     public void testAssignGameZoneAfterAddedToGameZoneAndLocation() {
         when(mockGameZone.tile(any())).thenReturn(tile);
 
-        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, LOCATION);
+        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone, LOCATION);
 
         assertSame(mockGameZone, tile.gameZone());
         assertEquals(LOCATION, tile.location());
     }
 
     @Test
-    public void testAssignGameZoneAfterAddedToGameZoneWithInvalidParams() {
+    public void testAssignGameZoneAfterAddedToGameZoneWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> tile.assignGameZoneAfterAddedToGameZone(mockGameZone, null));
+                () -> ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone, null));
     }
 
     @Test
@@ -129,10 +128,14 @@ public class TileImplTests {
         assertEquals(Tile.class.getCanonicalName(), tile.getInterfaceName());
     }
 
+    // I'm testing a method not listed on the interface, since it's expected to be passed into
+    // the constructor of GameZone as a method reference, while remaining closed to consumers of
+    // the interface
     @Test
     public void testThrowsOnDeleteWhenGameZoneIsNotDeleted() {
         when(mockGameZone.isDeleted()).thenReturn(false);
-        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, Coordinate3d.of(0, 0, 0));
+        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone,
+                Coordinate3d.of(0, 0, 0));
 
         assertThrows(IllegalStateException.class, tile::delete);
     }
@@ -144,7 +147,7 @@ public class TileImplTests {
         assertThrows(EntityDeletedException.class, () -> tile.gameZone());
         assertThrows(EntityDeletedException.class, () -> tile.location());
         assertThrows(EntityDeletedException.class, () -> tile.getGroundType());
-        assertThrows(EntityDeletedException.class, () -> tile.setGroundType(new FakeGroundType()));
+        assertThrows(EntityDeletedException.class, () -> tile.setGroundType(mockGroundType));
         assertThrows(EntityDeletedException.class, () -> tile.characters());
         assertThrows(EntityDeletedException.class, () -> tile.fixtures());
         assertThrows(EntityDeletedException.class, () -> tile.items());
@@ -156,14 +159,15 @@ public class TileImplTests {
 
     @Test
     public void testGameZoneLocationCorrespondenceInvariant() {
-        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, Coordinate3d.of(0, 0, 0));
+        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone,
+                Coordinate3d.of(0, 0, 0));
 
         when(mockGameZone.tile(any())).thenReturn(null);
 
         assertThrows(IllegalStateException.class, () -> tile.gameZone());
         assertThrows(IllegalStateException.class, () -> tile.location());
         assertThrows(IllegalStateException.class, () -> tile.getGroundType());
-        assertThrows(IllegalStateException.class, () -> tile.setGroundType(new FakeGroundType()));
+        assertThrows(IllegalStateException.class, () -> tile.setGroundType(mockGroundType));
         assertThrows(IllegalStateException.class, () -> tile.characters());
         assertThrows(IllegalStateException.class, () -> tile.fixtures());
         assertThrows(IllegalStateException.class, () -> tile.items());
@@ -175,12 +179,13 @@ public class TileImplTests {
 
     @Test
     public void testGameZoneMismatchInvariant() {
-        tile.assignGameZoneAfterAddedToGameZone(mockGameZone, Coordinate3d.of(0, 0, 0));
+        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone,
+                Coordinate3d.of(0, 0, 0));
 
         assertThrows(IllegalStateException.class, () -> tile.gameZone());
         assertThrows(IllegalStateException.class, () -> tile.location());
         assertThrows(IllegalStateException.class, () -> tile.getGroundType());
-        assertThrows(IllegalStateException.class, () -> tile.setGroundType(new FakeGroundType()));
+        assertThrows(IllegalStateException.class, () -> tile.setGroundType(mockGroundType));
         assertThrows(IllegalStateException.class, () -> tile.characters());
         assertThrows(IllegalStateException.class, () -> tile.fixtures());
         assertThrows(IllegalStateException.class, () -> tile.items());
