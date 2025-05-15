@@ -10,9 +10,4 @@ public class KeyBindingFactoryImpl implements KeyBindingFactory {
     public KeyBinding make(char[] chars) {
         return new KeyBindingImpl(Check.ifNull(chars, "chars"));
     }
-
-    @Override
-    public String getInterfaceName() {
-        return KeyBindingFactory.class.getCanonicalName();
-    }
 }

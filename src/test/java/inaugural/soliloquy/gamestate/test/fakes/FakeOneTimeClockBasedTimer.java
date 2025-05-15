@@ -37,11 +37,6 @@ public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public String actionId() {
         return null;
     }

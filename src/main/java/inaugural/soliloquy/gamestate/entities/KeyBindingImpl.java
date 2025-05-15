@@ -79,9 +79,4 @@ public class KeyBindingImpl implements KeyBinding {
     public void setBlocksLowerBindings(boolean blocksLowerBindings) {
         this.blocksLowerBindings = blocksLowerBindings;
     }
-
-    @Override
-    public String getInterfaceName() {
-        return KeyBinding.class.getCanonicalName();
-    }
 }

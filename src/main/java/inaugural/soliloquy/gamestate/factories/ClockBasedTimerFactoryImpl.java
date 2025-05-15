@@ -27,9 +27,4 @@ public class ClockBasedTimerFactoryImpl implements ClockBasedTimerFactory {
                 firingAction, fireMultipleTimesForMultiplePeriodsElapsed, pausedTimestamp,
                 lastFiringTimestamp, mostRecentTimestamp);
     }
-
-    @Override
-    public String getInterfaceName() {
-        return ClockBasedTimerFactory.class.getCanonicalName();
-    }
 }

@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -27,7 +26,6 @@ public class FakeCharacter implements Character {
     private CharacterAIType aiType;
     private boolean playerControlled;
     private String name;
-    private VariableCache data;
 
     private final UUID UUID;
     private final CharacterType TYPE;
@@ -176,8 +174,8 @@ public class FakeCharacter implements Character {
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
-        return data;
+    public Map<String, Object> data() throws IllegalStateException {
+        return null;
     }
 
     @Override
@@ -209,10 +207,5 @@ public class FakeCharacter implements Character {
     @Override
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
     }
 }

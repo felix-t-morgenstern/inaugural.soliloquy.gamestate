@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.timers.OneTimeRoundBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -17,32 +18,27 @@ public class OneTimeRoundBasedTimerHandler extends AbstractTypeHandler<OneTimeRo
     public OneTimeRoundBasedTimerHandler(RoundBasedTimerFactory RoundBasedTimerFactory,
                                          @SuppressWarnings("rawtypes") Function<String, Action>
                                                  getAction) {
-        super(new OneTimeRoundBasedTimerArchetype());
         TURN_BASED_TIMER_FACTORY = Check.ifNull(RoundBasedTimerFactory, "RoundBasedTimerFactory");
         GET_ACTION = Check.ifNull(getAction, "getAction");
     }
 
     @Override
+    public String typeHandled() {
+        return OneTimeRoundBasedTimerImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public OneTimeRoundBasedTimer read(String data) throws IllegalArgumentException {
-        if (data == null) {
-            throw new IllegalArgumentException(
-                    "OneTimeRoundBasedTimerHandler.read: data cannot be null");
-        }
-        if (data.equals("")) {
-            throw new IllegalArgumentException(
-                    "OneTimeRoundBasedTimerHandler.read: data cannot be empty");
-        }
-        OneTimeTimerDTO dto = JSON.fromJson(data, OneTimeTimerDTO.class);
+        OneTimeTimerDTO dto =
+                JSON.fromJson(Check.ifNullOrEmpty(data, "data"), OneTimeTimerDTO.class);
         return TURN_BASED_TIMER_FACTORY.makeOneTimeTimer(dto.id, GET_ACTION.apply(dto.actionId),
                 dto.round, dto.priority);
     }
 
     @Override
     public String write(OneTimeRoundBasedTimer oneTimeTimer) {
-        if (oneTimeTimer == null) {
-            throw new IllegalArgumentException(
-                    "OneTimeRoundBasedTimerHandler.write: oneTimeTimer cannot be null");
-        }
+        Check.ifNull(oneTimeTimer, "oneTimeTimer");
         OneTimeTimerDTO dto = new OneTimeTimerDTO();
         dto.id = oneTimeTimer.id();
         dto.actionId = oneTimeTimer.actionId();
@@ -56,48 +52,5 @@ public class OneTimeRoundBasedTimerHandler extends AbstractTypeHandler<OneTimeRo
         String actionId;
         int round;
         int priority;
-    }
-
-    private static class OneTimeRoundBasedTimerArchetype implements OneTimeRoundBasedTimer {
-
-        @Override
-        public int roundWhenGoesOff() {
-            return 0;
-        }
-
-        @Override
-        public String id() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public void delete() throws IllegalStateException {
-
-        }
-
-        @Override
-        public boolean isDeleted() {
-            return false;
-        }
-
-        @Override
-        public int priority() {
-            return 0;
-        }
-
-        @Override
-        public void run() {
-
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return OneTimeRoundBasedTimer.class.getCanonicalName();
-        }
-
-        @Override
-        public String actionId() {
-            return null;
-        }
     }
 }

@@ -1,13 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.factories.VariableCacheFactory;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.RoundManager;
@@ -16,21 +14,23 @@ import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
 import soliloquy.specs.ruleset.gameconcepts.RoundEndHandling;
 import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
 
-import static inaugural.soliloquy.tools.collections.Collections.listOf;
-import static inaugural.soliloquy.tools.random.Random.*;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import java.util.Map;
 
-@RunWith(MockitoJUnitRunner.class)
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.random.Random.*;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
+
+@ExtendWith(MockitoExtension.class)
 public class RoundManagerImplTests {
     @Mock private Character mockCharacter1;
     @Mock private Character mockCharacter2;
     @Mock private Character mockCharacter3;
-    @Mock private VariableCache mockVariableCacheFromFactory;
-    @Mock private VariableCache mockVariableCache2;
-    @Mock private VariableCache mockVariableCache3;
-    @Mock private VariableCacheFactory mockVariableCacheFactory;
+    @Mock private Map<String, Object> mockCharacter2Data;
+    @Mock private Map<String, Object> mockCharacter3Data;
     @Mock private RoundBasedTimerManager mockRoundBasedTimerManager;
     @Mock private ActiveCharactersProvider mockActiveCharactersProvider;
     @Mock private GameZone mockGameZone;
@@ -39,45 +39,36 @@ public class RoundManagerImplTests {
 
     private RoundManager roundManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        when(mockVariableCacheFactory.make()).thenReturn(mockVariableCacheFromFactory);
-
         var activeCharactersToProvide = listOf(
-                pairOf(mockCharacter2, mockVariableCache2),
-                pairOf(mockCharacter3, mockVariableCache3));
-        when(mockActiveCharactersProvider.generateInTurnOrder(any()))
+                pairOf(mockCharacter2, mockCharacter2Data),
+                pairOf(mockCharacter3, mockCharacter3Data));
+        lenient().when(mockActiveCharactersProvider.generateInTurnOrder(any()))
                 .thenReturn(activeCharactersToProvide);
 
-        roundManager = new RoundManagerImpl(mockVariableCacheFactory,
-                mockRoundBasedTimerManager, mockActiveCharactersProvider, () -> mockGameZone,
-                mockTurnHandling, mockRoundEndHandling);
+        roundManager =
+                new RoundManagerImpl(mockRoundBasedTimerManager, mockActiveCharactersProvider,
+                        () -> mockGameZone, mockTurnHandling, mockRoundEndHandling);
     }
 
     @Test
     public void testConstructorWithInvalidParams() {
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(null, mockRoundBasedTimerManager,
-                        mockActiveCharactersProvider, () -> mockGameZone, mockTurnHandling,
-                        mockRoundEndHandling));
+                () -> new RoundManagerImpl(null, mockActiveCharactersProvider, () -> mockGameZone,
+                        mockTurnHandling, mockRoundEndHandling));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(mockVariableCacheFactory, null,
-                        mockActiveCharactersProvider, () -> mockGameZone, mockTurnHandling,
-                        mockRoundEndHandling));
+                () -> new RoundManagerImpl(mockRoundBasedTimerManager, null, () -> mockGameZone,
+                        mockTurnHandling, mockRoundEndHandling));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(mockVariableCacheFactory, mockRoundBasedTimerManager,
-                        null, () -> mockGameZone, mockTurnHandling, mockRoundEndHandling));
+                () -> new RoundManagerImpl(mockRoundBasedTimerManager, mockActiveCharactersProvider,
+                        null, mockTurnHandling, mockRoundEndHandling));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(mockVariableCacheFactory, mockRoundBasedTimerManager,
-                        mockActiveCharactersProvider, null, mockTurnHandling,
-                        mockRoundEndHandling));
+                () -> new RoundManagerImpl(mockRoundBasedTimerManager, mockActiveCharactersProvider,
+                        () -> mockGameZone, null, mockRoundEndHandling));
         assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(mockVariableCacheFactory, mockRoundBasedTimerManager,
-                        mockActiveCharactersProvider, () -> mockGameZone, null,
-                        mockRoundEndHandling));
-        assertThrows(IllegalArgumentException.class,
-                () -> new RoundManagerImpl(mockVariableCacheFactory, mockRoundBasedTimerManager,
-                        mockActiveCharactersProvider, () -> mockGameZone, mockTurnHandling, null));
+                () -> new RoundManagerImpl(mockRoundBasedTimerManager, mockActiveCharactersProvider,
+                        () -> mockGameZone, mockTurnHandling, null));
     }
 
     @Test
@@ -85,8 +76,6 @@ public class RoundManagerImplTests {
         roundManager.setCharacterPositionInQueue(mockCharacter1, randomIntWithInclusiveFloor(0));
 
         assertTrue(roundManager.characterIsInQueue(mockCharacter1));
-        assertSame(mockVariableCacheFromFactory,
-                roundManager.characterRoundData(mockCharacter1));
     }
 
     @Test
@@ -99,18 +88,18 @@ public class RoundManagerImplTests {
         roundManager.setCharacterPositionInQueue(mockCharacter1, randomIntWithInclusiveFloor(0));
         roundManager.setCharacterPositionInQueue(mockCharacter2, 0);
 
-        assertEquals(0, (int)roundManager.getCharacterPositionInQueue(mockCharacter2));
-        assertEquals(1, (int)roundManager.getCharacterPositionInQueue(mockCharacter1));
+        assertEquals(0, (int) roundManager.getCharacterPositionInQueue(mockCharacter2));
+        assertEquals(1, (int) roundManager.getCharacterPositionInQueue(mockCharacter1));
     }
 
     @Test
     public void testSetCharacterPositionInQueueDoesNotOverwriteDataForCharactersAlreadyInQueue() {
         roundManager.setCharacterPositionInQueue(mockCharacter1, randomIntWithInclusiveFloor(0));
-        roundManager.setCharacterRoundData(mockCharacter1, mockVariableCache2);
+        roundManager.setCharacterRoundData(mockCharacter1, mockCharacter2Data);
 
         roundManager.setCharacterPositionInQueue(mockCharacter1, randomIntWithInclusiveFloor(0));
 
-        assertSame(mockVariableCache2, roundManager.characterRoundData(mockCharacter1));
+        assertSame(mockCharacter2Data, roundManager.characterRoundData(mockCharacter1));
     }
 
     @Test
@@ -149,14 +138,14 @@ public class RoundManagerImplTests {
     public void testSetCharacterRoundData() {
         roundManager.setCharacterPositionInQueue(mockCharacter1, randomIntWithInclusiveFloor(0));
 
-        roundManager.setCharacterRoundData(mockCharacter1, mockVariableCache2);
+        roundManager.setCharacterRoundData(mockCharacter1, mockCharacter2Data);
 
-        assertSame(mockVariableCache2, roundManager.characterRoundData(mockCharacter1));
+        assertSame(mockCharacter2Data, roundManager.characterRoundData(mockCharacter1));
     }
 
     @Test
     public void testSetUnaddedCharacterRoundData() {
-        roundManager.setCharacterRoundData(mockCharacter1, mockVariableCache2);
+        roundManager.setCharacterRoundData(mockCharacter1, mockCharacter2Data);
 
         assertNull(roundManager.characterRoundData(mockCharacter1));
     }
@@ -164,7 +153,7 @@ public class RoundManagerImplTests {
     @Test
     public void testSetCharacterRoundDataWithInvalidParams() {
         assertThrows(IllegalArgumentException.class, () ->
-                roundManager.setCharacterRoundData(null, mockVariableCache2));
+                roundManager.setCharacterRoundData(null, mockCharacter2Data));
         assertThrows(IllegalArgumentException.class, () ->
                 roundManager.setCharacterRoundData(mockCharacter1, null));
     }
@@ -208,11 +197,11 @@ public class RoundManagerImplTests {
     public void testCharacterQueueRepresentation() {
         roundManager.setCharacterPositionInQueue(mockCharacter1, randomIntWithInclusiveFloor(0));
         roundManager.setCharacterPositionInQueue(mockCharacter2, randomIntWithInclusiveFloor(0));
-        roundManager.setCharacterRoundData(mockCharacter2, mockVariableCache2);
+        roundManager.setCharacterRoundData(mockCharacter2, mockCharacter2Data);
 
         var expectedOutput = listOf(
-                pairOf(mockCharacter1, mockVariableCacheFromFactory),
-                pairOf(mockCharacter2, mockVariableCache2));
+                pairOf(mockCharacter1, mapOf()),
+                pairOf(mockCharacter2, mockCharacter2Data));
 
         var characterQueueRepresentation = roundManager.characterQueueRepresentation();
         var characterQueueRepresentation2 = roundManager.characterQueueRepresentation();
@@ -321,17 +310,12 @@ public class RoundManagerImplTests {
         assertEquals(2, roundManager.queueSize());
         assertFalse(roundManager.characterIsInQueue(mockCharacter1));
         assertNull(roundManager.characterRoundData(mockCharacter1));
-        assertEquals(0, (int)roundManager.getCharacterPositionInQueue(mockCharacter2));
-        assertEquals(1, (int)roundManager.getCharacterPositionInQueue(mockCharacter3));
-        assertSame(mockVariableCache2, roundManager.characterRoundData(mockCharacter2));
-        assertSame(mockVariableCache3, roundManager.characterRoundData(mockCharacter3));
+        assertEquals(0, (int) roundManager.getCharacterPositionInQueue(mockCharacter2));
+        assertEquals(1, (int) roundManager.getCharacterPositionInQueue(mockCharacter3));
+        assertSame(mockCharacter2Data, roundManager.characterRoundData(mockCharacter2));
+        assertSame(mockCharacter3Data, roundManager.characterRoundData(mockCharacter3));
         verify(mockRoundBasedTimerManager)
                 .fireTimersForRoundsElapsed(initialRound, initialRound + roundsToAdvance);
-        verify(mockActiveCharactersProvider, times(1)).generateInTurnOrder(mockGameZone);
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(RoundManager.class.getCanonicalName(), roundManager.getInterfaceName());
+        verify(mockActiveCharactersProvider, once()).generateInTurnOrder(mockGameZone);
     }
 }

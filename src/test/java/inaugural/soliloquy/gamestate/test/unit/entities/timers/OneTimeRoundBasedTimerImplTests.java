@@ -1,9 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.OneTimeRoundBasedTimerImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
@@ -11,70 +13,63 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
 import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class OneTimeRoundBasedTimerImplTests {
     private final String TIMER_ID = randomString();
     private final String ACTION_ID = randomString();
     private final int ROUND_WHEN_GOES_OFF = randomInt();
     private final int PRIORITY = randomInt();
 
-    @Mock
-    private Action<Long> _mockAction;
-    @Mock
-    private RoundBasedTimerManager _mockRoundBasedTimerManager;
+    @Mock private Action<Long> mockAction;
+    @Mock private RoundBasedTimerManager mockRoundBasedTimerManager;
 
-    private OneTimeRoundBasedTimer _oneTimeRoundBasedTimer;
+    private OneTimeRoundBasedTimer oneTimeRoundBasedTimer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         //noinspection unchecked
-        _mockAction = mock(Action.class);
+        mockAction = mock(Action.class);
 
-        when(_mockAction.id()).thenReturn(ACTION_ID);
-        _mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
+        lenient().when(mockAction.id()).thenReturn(ACTION_ID);
+        mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
 
-        _oneTimeRoundBasedTimer = new OneTimeRoundBasedTimerImpl(TIMER_ID, _mockAction,
+        oneTimeRoundBasedTimer = new OneTimeRoundBasedTimerImpl(TIMER_ID, mockAction,
                 ROUND_WHEN_GOES_OFF, PRIORITY,
-                _mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
-                _mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer);
+                mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
+                mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new OneTimeRoundBasedTimerImpl(
-                null, _mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
-                _mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
-                _mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
+                null, mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
+                mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
+                mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
         ));
         assertThrows(IllegalArgumentException.class, () -> new OneTimeRoundBasedTimerImpl(
-                "", _mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
-                _mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
-                _mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
+                "", mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
+                mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
+                mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
         ));
         assertThrows(IllegalArgumentException.class, () -> new OneTimeRoundBasedTimerImpl(
                 TIMER_ID, null, ROUND_WHEN_GOES_OFF, PRIORITY,
-                _mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
-                _mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
+                mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
+                mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
         ));
         assertThrows(IllegalArgumentException.class, () -> new OneTimeRoundBasedTimerImpl(
-                TIMER_ID, _mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
+                TIMER_ID, mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
                 null,
-                _mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
+                mockRoundBasedTimerManager::deregisterOneTimeRoundBasedTimer
         ));
         assertThrows(IllegalArgumentException.class, () -> new OneTimeRoundBasedTimerImpl(
-                TIMER_ID, _mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
-                _mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
+                TIMER_ID, mockAction, ROUND_WHEN_GOES_OFF, PRIORITY,
+                mockRoundBasedTimerManager::registerOneTimeRoundBasedTimer,
                 null
         ));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(OneTimeRoundBasedTimer.class.getCanonicalName(),
-                _oneTimeRoundBasedTimer.getInterfaceName());
     }
 
     @Test
@@ -85,52 +80,52 @@ public class OneTimeRoundBasedTimerImplTests {
         when(mockEqualTimer.priority()).thenReturn(PRIORITY);
         when(mockEqualTimer.roundWhenGoesOff()).thenReturn(ROUND_WHEN_GOES_OFF);
 
-        assertEquals(_oneTimeRoundBasedTimer, mockEqualTimer);
+        assertEquals(oneTimeRoundBasedTimer, mockEqualTimer);
     }
 
     @Test
     public void testRoundWhenGoesOff() {
-        assertEquals(ROUND_WHEN_GOES_OFF, _oneTimeRoundBasedTimer.roundWhenGoesOff());
+        assertEquals(ROUND_WHEN_GOES_OFF, oneTimeRoundBasedTimer.roundWhenGoesOff());
     }
 
     @Test
     public void testActionId() {
-        assertEquals(ACTION_ID, _oneTimeRoundBasedTimer.actionId());
+        assertEquals(ACTION_ID, oneTimeRoundBasedTimer.actionId());
     }
 
     @Test
     public void testRun() {
-        _oneTimeRoundBasedTimer.run();
+        oneTimeRoundBasedTimer.run();
 
-        verify(_mockAction).run(null);
+        verify(mockAction).run(null);
     }
 
     @Test
     public void testPriority() {
-        assertEquals(PRIORITY, _oneTimeRoundBasedTimer.priority());
+        assertEquals(PRIORITY, oneTimeRoundBasedTimer.priority());
     }
 
     @Test
     public void testId() {
-        assertEquals(TIMER_ID, _oneTimeRoundBasedTimer.id());
+        assertEquals(TIMER_ID, oneTimeRoundBasedTimer.id());
     }
 
     @Test
     public void testDelete() {
-        _oneTimeRoundBasedTimer.delete();
+        oneTimeRoundBasedTimer.delete();
 
-        verify(_mockRoundBasedTimerManager)
-                .deregisterOneTimeRoundBasedTimer(_oneTimeRoundBasedTimer);
+        verify(mockRoundBasedTimerManager)
+                .deregisterOneTimeRoundBasedTimer(oneTimeRoundBasedTimer);
     }
 
     @Test
     public void testDeletedInvariant() {
-        _oneTimeRoundBasedTimer.delete();
+        oneTimeRoundBasedTimer.delete();
 
-        assertThrows(EntityDeletedException.class, () -> _oneTimeRoundBasedTimer.id());
-        assertThrows(EntityDeletedException.class, () -> _oneTimeRoundBasedTimer.run());
-        assertThrows(EntityDeletedException.class, () -> _oneTimeRoundBasedTimer.priority());
+        assertThrows(EntityDeletedException.class, () -> oneTimeRoundBasedTimer.id());
+        assertThrows(EntityDeletedException.class, () -> oneTimeRoundBasedTimer.run());
+        assertThrows(EntityDeletedException.class, () -> oneTimeRoundBasedTimer.priority());
         assertThrows(EntityDeletedException.class,
-                () -> _oneTimeRoundBasedTimer.roundWhenGoesOff());
+                () -> oneTimeRoundBasedTimer.roundWhenGoesOff());
     }
 }

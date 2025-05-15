@@ -1,8 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.VariableCacheFactory;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
@@ -18,26 +16,23 @@ import java.util.function.Supplier;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 public class RoundManagerImpl implements RoundManager {
-    private final VariableCacheFactory VARIABLE_CACHE_FACTORY;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
     private final ActiveCharactersProvider ACTIVE_CHARACTERS_PROVIDER;
     private final Supplier<GameZone> GET_CURRENT_GAME_ZONE;
     private final TurnHandling TURN_HANDLING;
     private final RoundEndHandling ROUND_END_HANDLING;
     private final List<Character> QUEUE = listOf();
-    private final Map<Character, VariableCache> CHARACTER_ROUND_DATA = mapOf();
+    private final Map<Character, Map<String, Object>> CHARACTER_ROUND_DATA = mapOf();
 
     private int roundNumber;
 
-    public RoundManagerImpl(VariableCacheFactory variableCacheFactory,
-                            RoundBasedTimerManager roundBasedTimerManager,
+    public RoundManagerImpl(RoundBasedTimerManager roundBasedTimerManager,
                             ActiveCharactersProvider activeCharactersProvider,
                             Supplier<GameZone> getCurrentGameZone, TurnHandling turnHandling,
                             RoundEndHandling roundEndHandling) {
-        VARIABLE_CACHE_FACTORY = Check.ifNull(variableCacheFactory, "variableCacheFactory");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
         ACTIVE_CHARACTERS_PROVIDER = Check.ifNull(activeCharactersProvider, "activeCharactersProvider");
         GET_CURRENT_GAME_ZONE = Check.ifNull(getCurrentGameZone, "getCurrentGameZone");
@@ -64,7 +59,7 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public VariableCache characterRoundData(Character character) throws IllegalArgumentException {
+    public Map<String, Object> characterRoundData(Character character) throws IllegalArgumentException {
         return CHARACTER_ROUND_DATA.get(Check.ifNull(character, "character"));
     }
 
@@ -75,12 +70,12 @@ public class RoundManagerImpl implements RoundManager {
         Check.ifNonNegative(position, "position");
         QUEUE.add(Math.min(QUEUE.size(), position), character);
         if (!CHARACTER_ROUND_DATA.containsKey(character)) {
-            CHARACTER_ROUND_DATA.put(character, VARIABLE_CACHE_FACTORY.make());
+            CHARACTER_ROUND_DATA.put(character, mapOf());
         }
     }
 
     @Override
-    public void setCharacterRoundData(Character character, VariableCache roundData)
+    public void setCharacterRoundData(Character character, Map<String, Object> roundData)
             throws IllegalArgumentException {
         Check.ifNull(character, "character");
         Check.ifNull(roundData, "roundData");
@@ -103,8 +98,8 @@ public class RoundManagerImpl implements RoundManager {
     }
 
     @Override
-    public List<Pair<Character, VariableCache>> characterQueueRepresentation() {
-        List<Pair<Character, VariableCache>> output = listOf();
+    public List<Pair<Character, Map<String, Object>>> characterQueueRepresentation() {
+        List<Pair<Character, Map<String, Object>>> output = listOf();
 
         QUEUE.forEach(character -> output.add(pairOf(character, CHARACTER_ROUND_DATA.get(character))));
 
@@ -148,8 +143,8 @@ public class RoundManagerImpl implements RoundManager {
         CHARACTER_ROUND_DATA.clear();
 
         ACTIVE_CHARACTERS_PROVIDER.generateInTurnOrder(GET_CURRENT_GAME_ZONE.get()).forEach(ac -> {
-            QUEUE.add(ac.item1());
-            CHARACTER_ROUND_DATA.put(ac.item1(), ac.item2());
+            QUEUE.add(ac.FIRST);
+            CHARACTER_ROUND_DATA.put(ac.FIRST, ac.SECOND);
         });
 
         var newRoundNumber = roundNumber + numberOfRounds;
@@ -157,10 +152,5 @@ public class RoundManagerImpl implements RoundManager {
         ROUND_BASED_TIMER_MANAGER.fireTimersForRoundsElapsed(roundNumber, newRoundNumber);
 
         roundNumber = newRoundNumber;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return RoundManager.class.getCanonicalName();
     }
 }

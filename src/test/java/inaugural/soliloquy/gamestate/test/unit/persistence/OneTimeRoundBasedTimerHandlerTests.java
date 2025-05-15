@@ -1,19 +1,23 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
+import inaugural.soliloquy.gamestate.entities.timers.OneTimeRoundBasedTimerImpl;
 import inaugural.soliloquy.gamestate.persistence.OneTimeRoundBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeRoundBasedTimer;
-import inaugural.soliloquy.gamestate.test.fakes.FakeRegistry;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRoundBasedTimerFactory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.infrastructure.Registry;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
 
-import static org.junit.Assert.*;
+import java.util.Map;
+
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static org.junit.jupiter.api.Assertions.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
+
 
 public class OneTimeRoundBasedTimerHandlerTests {
     private final RoundBasedTimerFactory TURN_BASED_TIMER_FACTORY =
@@ -24,8 +28,9 @@ public class OneTimeRoundBasedTimerHandlerTests {
     private final String ACTION_ID = "actionId";
     @SuppressWarnings("rawtypes")
     private final Action ACTION = new FakeAction(ACTION_ID);
+
     @SuppressWarnings("rawtypes")
-    private final Registry<Action> ACTIONS = new FakeRegistry<>();
+    private Map<String, Action> actions;
 
     private final int ROUND_WHEN_GOES_OFF = 123123123;
     private final int PRIORITY = 456;
@@ -34,36 +39,27 @@ public class OneTimeRoundBasedTimerHandlerTests {
             "{\"id\":\"oneTimeRoundBasedTimerId\",\"actionId\":\"actionId\",\"round\":123123123," +
                     "\"priority\":456}";
 
-    private TypeHandler<OneTimeRoundBasedTimer> _oneTimeRoundBasedTimerHandler;
+    private TypeHandler<OneTimeRoundBasedTimer> handler;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        ACTIONS.add(ACTION);
+        actions = mapOf(pairOf(ACTION_ID, ACTION));
 
-        _oneTimeRoundBasedTimerHandler =
-                new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, ACTIONS::get);
+        handler =
+                new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, actions::get);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> new OneTimeRoundBasedTimerHandler(null, ACTIONS::get));
+                () -> new OneTimeRoundBasedTimerHandler(null, actions::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, null));
     }
 
     @Test
-    public void testArchetype() {
-        assertNotNull(_oneTimeRoundBasedTimerHandler.archetype());
-        assertEquals(OneTimeRoundBasedTimer.class.getCanonicalName(),
-                _oneTimeRoundBasedTimerHandler.archetype().getInterfaceName());
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                        OneTimeRoundBasedTimer.class.getCanonicalName() + ">",
-                _oneTimeRoundBasedTimerHandler.getInterfaceName());
+    public void testTypeHandled() {
+        assertEquals(OneTimeRoundBasedTimerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test
@@ -71,20 +67,20 @@ public class OneTimeRoundBasedTimerHandlerTests {
         OneTimeRoundBasedTimer oneTimeRoundBasedTimer = new FakeOneTimeRoundBasedTimer(
                 ONE_TIME_TIMER_ID, ACTION, ROUND_WHEN_GOES_OFF, PRIORITY);
 
-        String writtenValue = _oneTimeRoundBasedTimerHandler.write(oneTimeRoundBasedTimer);
+        String writtenValue = handler.write(oneTimeRoundBasedTimer);
 
         assertEquals(WRITTEN_VALUE, writtenValue);
     }
 
     @Test
-    public void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
-                _oneTimeRoundBasedTimerHandler.write(null));
+                handler.write(null));
     }
 
     @Test
     public void testRead() {
-        OneTimeRoundBasedTimer readResult = _oneTimeRoundBasedTimerHandler.read(WRITTEN_VALUE);
+        OneTimeRoundBasedTimer readResult = handler.read(WRITTEN_VALUE);
 
         assertNotNull(readResult);
         assertEquals(ONE_TIME_TIMER_ID, readResult.id());
@@ -94,10 +90,10 @@ public class OneTimeRoundBasedTimerHandlerTests {
     }
 
     @Test
-    public void testReadWithInvalidParams() {
+    public void testReadWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
-                _oneTimeRoundBasedTimerHandler.read(null));
+                handler.read(null));
         assertThrows(IllegalArgumentException.class, () ->
-                _oneTimeRoundBasedTimerHandler.read(""));
+                handler.read(""));
     }
 }

@@ -1,62 +1,66 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileFixtureImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileEntities;
 import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.TileFixtureItems;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Vertex.vertexOf;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TileFixtureImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
 
     @Mock private FixtureType mockFixtureType;
     @Mock private Vertex mockTileOffset;
     @Mock private TileFixtureItems mockTileFixtureItems;
-    @Mock private TileFixtureItemsFactory mockTileFixtureItemsFactory;
-    @Mock private VariableCache mockData;
+    @Mock private Function<TileFixture, TileFixtureItems> mockTileFixtureItemsFactory;
     @Mock private Tile mockTile;
     @Mock private TileEntities<TileFixture> mockTileFixtures;
 
+    private Map<String, Object> data;
+
     private TileFixture tileFixture;
 
-    @Before
+    @BeforeEach
     public void setUp() {
+        data = mapOf(pairOf(randomString(), randomInt()));
+
         when(mockFixtureType.defaultTileOffset()).thenReturn(mockTileOffset);
 
-        when(mockTileFixtureItemsFactory.make(any())).thenReturn(mockTileFixtureItems);
+        when(mockTileFixtureItemsFactory.apply(any())).thenReturn(mockTileFixtureItems);
 
-        tileFixture = new TileFixtureImpl(UUID, mockFixtureType, mockTileFixtureItemsFactory, mockData);
+        tileFixture = new TileFixtureImpl(UUID, mockFixtureType, mockTileFixtureItemsFactory, data);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(null, mockFixtureType, mockTileFixtureItemsFactory, mockData));
-        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, null, mockTileFixtureItemsFactory, mockData));
-        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, mockFixtureType, null, mockData));
+    public void testConstructorWithInvalidArgs() {
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(null, mockFixtureType, mockTileFixtureItemsFactory,
+                data));
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, null, mockTileFixtureItemsFactory,
+                data));
+        assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, mockFixtureType, null,
+                data));
         assertThrows(IllegalArgumentException.class, () -> new TileFixtureImpl(UUID, mockFixtureType, mockTileFixtureItemsFactory, null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(TileFixture.class.getCanonicalName(), tileFixture.getInterfaceName());
     }
 
     @Test
@@ -88,14 +92,13 @@ public class TileFixtureImplTests {
         assertNull(gameEventTarget.tileWallSegment());
         assertNotNull(gameEventTarget.tileFixture());
         assertSame(tileFixture, gameEventTarget.tileFixture());
-        assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }
 
     @Test
     public void testTileFixtureItems() {
         assertNotNull(tileFixture.items());
         assertSame(mockTileFixtureItems, tileFixture.items());
-        verify(mockTileFixtureItemsFactory).make(tileFixture);
+        verify(mockTileFixtureItemsFactory).apply(tileFixture);
     }
 
     @Test
@@ -111,7 +114,7 @@ public class TileFixtureImplTests {
 
     @Test
     public void testData() {
-        assertSame(mockData, tileFixture.data());
+        assertEquals(data, tileFixture.data());
     }
 
     @Test
@@ -159,7 +162,7 @@ public class TileFixtureImplTests {
         assertThrows(EntityDeletedException.class, () -> tileFixture.type());
         assertThrows(EntityDeletedException.class, () -> tileFixture.getTileOffset());
         assertThrows(EntityDeletedException.class,
-                () -> tileFixture.setTileOffset(Vertex.of(0f, 0f)));
+                () -> tileFixture.setTileOffset(vertexOf(0f, 0f)));
         assertThrows(EntityDeletedException.class, () -> tileFixture.movementEvents());
         assertThrows(EntityDeletedException.class, () -> tileFixture.items());
         assertThrows(EntityDeletedException.class,
@@ -180,7 +183,7 @@ public class TileFixtureImplTests {
         assertThrows(IllegalStateException.class, () -> tileFixture.type());
         assertThrows(IllegalStateException.class, () -> tileFixture.getTileOffset());
         assertThrows(IllegalStateException.class,
-                () -> tileFixture.setTileOffset(Vertex.of(0f, 0f)));
+                () -> tileFixture.setTileOffset(vertexOf(0f, 0f)));
         assertThrows(IllegalStateException.class, () -> tileFixture.movementEvents());
         assertThrows(IllegalStateException.class, () -> tileFixture.items());
         assertThrows(IllegalStateException.class,

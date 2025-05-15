@@ -3,17 +3,14 @@ package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 import inaugural.soliloquy.gamestate.entities.timers.ClockBasedTimerManagerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeClockBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRecurringClockBasedTimer;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
-import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
-import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 import soliloquy.specs.graphics.rendering.FrameExecutor;
 
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class ClockBasedTimerManagerImplTests {
@@ -28,7 +25,7 @@ public class ClockBasedTimerManagerImplTests {
 
     private ClockBasedTimerManager clockBasedTimerManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         RECURRING_CLOCK_BASED_TIMER.FireMultipleTimesForMultiplePeriodsElapsed = false;
         RECURRING_CLOCK_BASED_TIMER.LastFiringTimestamp = 90;
@@ -41,15 +38,9 @@ public class ClockBasedTimerManagerImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 new ClockBasedTimerManagerImpl(null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(ClockBasedTimerManager.class.getCanonicalName(),
-                clockBasedTimerManager.getInterfaceName());
     }
 
     // NB: Many of the following tests use 'any()' instead of 'eq
@@ -70,11 +61,11 @@ public class ClockBasedTimerManagerImplTests {
 
         clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 1);
 
-        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
+        verify(mockFrameExecutor, once()).registerFrameBlockingEvent(any());
 
         clockBasedTimerManager.fireTimers(GLOBAL_CLOCK_GLOBAL_TIMESTAMP + 2);
 
-        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
+        verify(mockFrameExecutor, once()).registerFrameBlockingEvent(any());
     }
 
     @Test
@@ -93,7 +84,7 @@ public class ClockBasedTimerManagerImplTests {
 
         clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 1);
 
-        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
+        verify(mockFrameExecutor, once()).registerFrameBlockingEvent(any());
 
         clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 51);
 
@@ -116,7 +107,7 @@ public class ClockBasedTimerManagerImplTests {
 
         clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 1);
 
-        verify(mockFrameExecutor, times(1)).registerFrameBlockingEvent(any());
+        verify(mockFrameExecutor, once()).registerFrameBlockingEvent(any());
 
         clockBasedTimerManager.fireTimers(globalClockGlobalTimestamp + 51);
 
@@ -145,13 +136,13 @@ public class ClockBasedTimerManagerImplTests {
     }
 
     @Test
-    public void testRegisterOneTimeTimerWithInvalidParams() {
+    public void testRegisterOneTimeTimerWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> clockBasedTimerManager.registerOneTimeTimer(null));
     }
 
     @Test
-    public void testRegisterRecurringTimerWithInvalidParams() {
+    public void testRegisterRecurringTimerWithInvalidArgs() {
         RECURRING_CLOCK_BASED_TIMER.PeriodModuloOffset =
                 RECURRING_CLOCK_BASED_TIMER.PeriodDuration = 123;
 
@@ -162,13 +153,13 @@ public class ClockBasedTimerManagerImplTests {
     }
 
     @Test
-    public void testDeregisterOneTimeTimerWithInvalidParams() {
+    public void testDeregisterOneTimeTimerWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> clockBasedTimerManager.deregisterOneTimeTimer(null));
     }
 
     @Test
-    public void testDeregisterRecurringTimerWithInvalidParams() {
+    public void testDeregisterRecurringTimerWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> clockBasedTimerManager.deregisterRecurringTimer(null));
     }
@@ -205,10 +196,8 @@ public class ClockBasedTimerManagerImplTests {
         clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer2);
         clockBasedTimerManager.registerOneTimeTimer(oneTimeClockBasedTimer3);
 
-        List<OneTimeClockBasedTimer> oneTimeTimersRepresentation =
-                clockBasedTimerManager.oneTimeTimersRepresentation();
-        List<OneTimeClockBasedTimer> oneTimeTimersRepresentation2 =
-                clockBasedTimerManager.oneTimeTimersRepresentation();
+        var oneTimeTimersRepresentation = clockBasedTimerManager.oneTimeTimersRepresentation();
+        var oneTimeTimersRepresentation2 = clockBasedTimerManager.oneTimeTimersRepresentation();
 
         clockBasedTimerManager.deregisterOneTimeTimer(oneTimeClockBasedTimer1.id());
 
@@ -235,10 +224,8 @@ public class ClockBasedTimerManagerImplTests {
         clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer2);
         clockBasedTimerManager.registerRecurringTimer(recurringClockBasedTimer3);
 
-        List<RecurringClockBasedTimer> recurringTimersRepresentation =
-                clockBasedTimerManager.recurringTimersRepresentation();
-        List<RecurringClockBasedTimer> recurringTimersRepresentation2 =
-                clockBasedTimerManager.recurringTimersRepresentation();
+        var recurringTimersRepresentation = clockBasedTimerManager.recurringTimersRepresentation();
+        var recurringTimersRepresentation2 = clockBasedTimerManager.recurringTimersRepresentation();
 
         clockBasedTimerManager.deregisterRecurringTimer(recurringClockBasedTimer1.id());
 

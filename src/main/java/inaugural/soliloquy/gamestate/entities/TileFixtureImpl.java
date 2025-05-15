@@ -1,36 +1,38 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.gamestate.factories.TileFixtureItemsFactory;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements TileFixture {
     private final UUID UUID;
     private final FixtureType TYPE;
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
-    private final VariableCache DATA;
+    private final Map<String, Object> DATA;
 
     private String name;
     private Vertex tileOffset;
 
     public TileFixtureImpl(UUID uuid,
                            FixtureType fixtureType,
-                           TileFixtureItemsFactory tileFixtureItemsFactory,
-                           VariableCache data) {
+                           Function<TileFixture, TileFixtureItems> tileFixtureItemsFactory,
+                           Map<String, Object> data) {
         super();
         UUID = Check.ifNull(uuid, "uuid");
         TYPE = Check.ifNull(fixtureType, "fixtureType");
         tileOffset = TYPE.defaultTileOffset();
         TILE_FIXTURE_ITEMS = Check.ifNull(tileFixtureItemsFactory, "tileFixtureItemsFactory")
-                .make(this);
-        DATA = Check.ifNull(data, "data");
+                .apply(this);
+        DATA = mapOf(Check.ifNull(data, "data"));
     }
 
     @Override
@@ -69,7 +71,7 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
+    public Map<String, Object> data() throws IllegalStateException {
         enforceInvariants("data");
         return DATA;
     }
@@ -92,11 +94,6 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
             @Override
             public WallSegment tileWallSegment() {
                 return null;
-            }
-
-            @Override
-            public String getInterfaceName() {
-                return GameEventTarget.class.getCanonicalName();
             }
         };
     }
@@ -122,11 +119,6 @@ public class TileFixtureImpl extends AbstractTileEntity<TileFixture> implements 
     public void setName(String name) {
         enforceInvariants("setName");
         this.name = name;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return TileFixture.class.getCanonicalName();
     }
 
     @Override

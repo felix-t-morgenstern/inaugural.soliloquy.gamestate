@@ -19,9 +19,4 @@ public class FakeRoundBasedTimerFactory implements RoundBasedTimerFactory {
             throws IllegalArgumentException {
         return new FakeRecurringRoundBasedTimer(id, action, roundModulo, roundOffset, priority);
     }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
 }

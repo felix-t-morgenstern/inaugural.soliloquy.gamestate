@@ -1,27 +1,27 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterEquipmentSlotsImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.EquipmentType;
 import soliloquy.specs.ruleset.entities.ItemType;
 
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CharacterEquipmentSlotsImplTests {
     private final String EQUIPMENT_SLOT_TYPE = randomString();
 
@@ -36,28 +36,31 @@ public class CharacterEquipmentSlotsImplTests {
 
     private CharacterEquipmentSlots characterEquipmentSlots;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        when(mockEquipmentType.canEquipToSlotType(EQUIPMENT_SLOT_TYPE)).thenReturn(true);
-        when(mockItemType.equipmentType()).thenReturn(mockEquipmentType);
-        when(mockItem.type()).thenReturn(mockItemType);
-        doAnswer(invocationOnMock -> setupMockItemAssignEquipmentSlot(invocationOnMock, mockItem))
+        lenient().when(mockEquipmentType.canEquipToSlotType(EQUIPMENT_SLOT_TYPE)).thenReturn(true);
+        lenient().when(mockItemType.equipmentType()).thenReturn(mockEquipmentType);
+        lenient().when(mockItem.type()).thenReturn(mockItemType);
+        lenient().doAnswer(
+                        invocationOnMock -> setupMockItemAssignEquipmentSlot(invocationOnMock,
+                                mockItem))
                 .when(mockItem)
                 .assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(any(), anyString());
 
-        when(mockPrevItem.type()).thenReturn(mockItemType);
-        doAnswer(invocationOnMock -> setupMockItemAssignEquipmentSlot(invocationOnMock,
+        lenient().when(mockPrevItem.type()).thenReturn(mockItemType);
+        lenient().doAnswer(invocationOnMock -> setupMockItemAssignEquipmentSlot(invocationOnMock,
                 mockPrevItem))
                 .when(mockPrevItem)
                 .assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(any(), anyString());
 
-        when(mockEquipmentTypeUnfit.canEquipToSlotType(anyString())).thenReturn(false);
-        when(mockItemTypeUnfit.equipmentType()).thenReturn(mockEquipmentTypeUnfit);
-        when(mockItemUnfit.type()).thenReturn(mockItemTypeUnfit);
+        lenient().when(mockEquipmentTypeUnfit.canEquipToSlotType(anyString())).thenReturn(false);
+        lenient().when(mockItemTypeUnfit.equipmentType()).thenReturn(mockEquipmentTypeUnfit);
+        lenient().when(mockItemUnfit.type()).thenReturn(mockItemTypeUnfit);
 
         characterEquipmentSlots = new CharacterEquipmentSlotsImpl(mockCharacter);
     }
 
+    @SuppressWarnings("rawtypes")
     private Answer setupMockItemAssignEquipmentSlot(InvocationOnMock invocation, Item mockItem) {
         Character character = invocation.getArgument(0);
         String equipmentSlotType = invocation.getArgument(1);
@@ -66,14 +69,8 @@ public class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterEquipmentSlotsImpl(null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(CharacterEquipmentSlots.class.getCanonicalName(),
-                characterEquipmentSlots.getInterfaceName());
     }
 
     @Test
@@ -86,7 +83,7 @@ public class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    public void testEquipmentSlotExistsWithInvalidParams() {
+    public void testEquipmentSlotExistsWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> characterEquipmentSlots.equipmentSlotExists(null));
         assertThrows(IllegalArgumentException.class,
@@ -94,7 +91,7 @@ public class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    public void testAddCharacterEquipmentSlotWithInvalidParams() {
+    public void testAddCharacterEquipmentSlotWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> characterEquipmentSlots.addCharacterEquipmentSlot(null));
         assertThrows(IllegalArgumentException.class,
@@ -111,7 +108,7 @@ public class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    public void testRemoveCharacterEquipmentSlotWithInvalidParams() {
+    public void testRemoveCharacterEquipmentSlotWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> characterEquipmentSlots.removeCharacterEquipmentSlot(null));
         assertThrows(IllegalArgumentException.class,
@@ -159,7 +156,7 @@ public class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    public void testCanEquipItemToSlotWithInvalidParams() {
+    public void testCanEquipItemToSlotWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> characterEquipmentSlots.canEquipItemToSlot(null, mockItem));
         assertThrows(IllegalArgumentException.class,
@@ -194,7 +191,7 @@ public class CharacterEquipmentSlotsImplTests {
     }
 
     @Test
-    public void testItemInSlotWithInvalidParams() {
+    public void testItemInSlotWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> characterEquipmentSlots.itemInSlot(null));
         assertThrows(IllegalArgumentException.class, () -> characterEquipmentSlots.itemInSlot(""));
@@ -331,8 +328,6 @@ public class CharacterEquipmentSlotsImplTests {
     public void testDeletedInvariant() {
         characterEquipmentSlots.delete();
 
-        assertThrows(EntityDeletedException.class,
-                () -> characterEquipmentSlots.getInterfaceName());
         assertThrows(EntityDeletedException.class, () -> characterEquipmentSlots.representation());
         assertThrows(EntityDeletedException.class,
                 () -> characterEquipmentSlots.addCharacterEquipmentSlot(EQUIPMENT_SLOT_TYPE));

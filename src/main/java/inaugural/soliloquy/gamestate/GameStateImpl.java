@@ -1,9 +1,6 @@
 package inaugural.soliloquy.gamestate;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.RegistryFactory;
-import soliloquy.specs.common.infrastructure.Registry;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -18,38 +15,31 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+import static soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
 
 public class GameStateImpl implements GameState {
     private final Party PARTY;
-    private final Map<String, CharacterAIType> CHARACTER_AI_TYPES;
-    private final GameZonesRepo GAME_ZONES_REPO;
-    private final Registry<GameMovementEvent> MOVEMENT_EVENTS;
-    private final Registry<GameAbilityEvent> ABILITY_EVENTS;
+    private final java.util.Map<String, CharacterAIType> CHARACTER_AI_TYPES;
+    private final GameZoneRepo GAME_ZONE_REPO;
+    private final Map<String, GameMovementEvent> MOVEMENT_EVENTS;
+    private final Map<String, GameAbilityEvent> ABILITY_EVENTS;
+    private final Map<String, CharacterEvent> CHARACTER_EVENTS;
     private final Camera CAMERA;
     private final RoundManager ROUND_MANAGER;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
     private final ClockBasedTimerManager CLOCK_BASED_TIMER_MANAGER;
-    private final Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
+    private final java.util.Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
     private final RoundBasedTimerFactory ROUND_BASED_TIMER_FACTORY;
     private final KeyBindingFactory KEY_BINDING_FACTORY;
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyEventListener KEY_EVENT_LISTENER;
-
-    private final static GameMovementEvent GAME_MOVEMENT_EVENT_ARCHETYPE =
-            generateSimpleArchetype(GameMovementEvent.class);
-    private final static GameAbilityEvent GAME_ABILITY_EVENT_ARCHETYPE =
-            generateSimpleArchetype(GameAbilityEvent.class);
-
-    private VariableCache data;
-    private GameZone currentGameZone;
+    private final Map<String, Object> DATA;
 
     public GameStateImpl(Party party,
-                         VariableCache data,
-                         RegistryFactory registryFactory,
-                         GameZonesRepo gameZonesRepo,
+                         Map<String, Object> data,
+                         GameZoneRepo GameZoneRepo,
                          Function<Supplier<GameZone>, Camera> cameraFactory,
                          RoundManager roundManager,
                          RoundBasedTimerManager roundBasedTimerManager,
@@ -61,13 +51,15 @@ public class GameStateImpl implements GameState {
                          KeyBindingContextFactory keyBindingContextFactory,
                          KeyEventListenerFactory keyEventListenerFactory) {
         PARTY = Check.ifNull(party, "party");
-        this.data = Check.ifNull(data, "data");
+        // TODO: Test to ensure this is actually cloned
+        DATA = mapOf(Check.ifNull(data, "data"));
         CHARACTER_AI_TYPES = mapOf();
-        GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
-        CAMERA = Check.ifNull(cameraFactory, "cameraFactory").apply(this::getCurrentGameZone);
-        Check.ifNull(registryFactory, "registryFactory");
-        MOVEMENT_EVENTS = registryFactory.make(GAME_MOVEMENT_EVENT_ARCHETYPE);
-        ABILITY_EVENTS = registryFactory.make(GAME_ABILITY_EVENT_ARCHETYPE);
+        GAME_ZONE_REPO = Check.ifNull(GameZoneRepo, "GameZoneRepo");
+        CAMERA = Check.ifNull(cameraFactory, "cameraFactory")
+                .apply(() -> this.gameZoneRepo().currentGameZone());
+        MOVEMENT_EVENTS = mapOf();
+        ABILITY_EVENTS = mapOf();
+        CHARACTER_EVENTS = mapOf();
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
         CLOCK_BASED_TIMER_MANAGER = Check.ifNull(clockBasedTimerManager, "clockBasedTimerManager");
@@ -89,33 +81,13 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public VariableCache getVariableCache() {
-        return data;
-    }
-
-    @Override
-    public void setVariableCache(VariableCache variableCache) throws IllegalArgumentException {
-        data = Check.ifNull(variableCache, "variableCache");
-    }
-
-    @Override
-    public Map<String, CharacterAIType> characterAIs() {
+    public java.util.Map<String, CharacterAIType> characterAIs() {
         return CHARACTER_AI_TYPES;
     }
 
     @Override
-    public GameZonesRepo gameZonesRepo() {
-        return GAME_ZONES_REPO;
-    }
-
-    @Override
-    public GameZone getCurrentGameZone() {
-        return currentGameZone;
-    }
-
-    @Override
-    public void setCurrentGameZone(GameZone gameZone) {
-        currentGameZone = gameZone;
+    public GameZoneRepo gameZoneRepo() {
+        return GAME_ZONE_REPO;
     }
 
     @Override
@@ -124,13 +96,18 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public Registry<GameMovementEvent> movementEvents() {
+    public Map<String, GameMovementEvent> movementEvents() {
         return MOVEMENT_EVENTS;
     }
 
     @Override
-    public Registry<GameAbilityEvent> abilityEvents() {
+    public Map<String, GameAbilityEvent> abilityEvents() {
         return ABILITY_EVENTS;
+    }
+
+    @Override
+    public Map<String, CharacterEvents.CharacterEvent> characterEvents() {
+        return CHARACTER_EVENTS;
     }
 
     @Override
@@ -149,7 +126,8 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public Map<Integer, KeyBindingContext> keyBindingContexts() throws IllegalStateException {
+    public java.util.Map<Integer, KeyBindingContext> keyBindingContexts()
+            throws IllegalStateException {
         return KEY_BINDING_CONTEXTS;
     }
 
@@ -184,7 +162,7 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public String getInterfaceName() {
-        return GameState.class.getCanonicalName();
+    public Map<String, Object> data() throws IllegalStateException {
+        return DATA;
     }
 }

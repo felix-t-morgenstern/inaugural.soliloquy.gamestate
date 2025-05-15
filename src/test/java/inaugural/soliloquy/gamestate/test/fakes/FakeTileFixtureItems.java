@@ -20,11 +20,6 @@ public class FakeTileFixtureItems implements TileFixtureItems {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public void delete() throws IllegalStateException {
         _deleted = true;
     }

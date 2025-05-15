@@ -9,9 +9,4 @@ public class KeyEventListenerFactoryImpl implements KeyEventListenerFactory {
     public KeyEventListener make(Long mostRecentTimestamp) {
         return new KeyEventListenerImpl(mostRecentTimestamp);
     }
-
-    @Override
-    public String getInterfaceName() {
-        return KeyEventListenerFactory.class.getCanonicalName();
-    }
 }

@@ -1,51 +1,51 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
 import soliloquy.specs.ruleset.entities.GroundType;
 
-import static inaugural.soliloquy.tools.random.Random.randomCoordinate3d;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.util.Map;
+import java.util.function.Function;
 
-@RunWith(MockitoJUnitRunner.class)
+import static inaugural.soliloquy.tools.random.Random.randomCoordinate3d;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.valueobjects.Coordinate3d.coordinate3dOf;
+
+@ExtendWith(MockitoExtension.class)
 public class TileImplTests {
     private final Coordinate3d LOCATION = randomCoordinate3d();
 
     @Mock private TileEntities<Character> mockCharacters;
     @Mock private TileEntities<Item> mockItems;
     @Mock private TileEntities<TileFixture> mockFixtures;
-    @Mock private TileEntitiesFactory mockEntitiesFactory;
-    @Mock private VariableCache mockData;
+    @SuppressWarnings("rawtypes") @Mock private Function<Tile, TileEntities> mockEntitiesFactory;
+    @Mock private Map<String, Object> mockData;
     @Mock private GameZone mockGameZone;
     @Mock private GroundType mockGroundType;
 
     private Tile tile;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        //noinspection unchecked,rawtypes
-        when(mockEntitiesFactory.make(any(), any(), any(), any()))
-                .thenReturn((TileEntities) mockCharacters)
+        lenient().when(mockEntitiesFactory.apply(any()))
+                .thenReturn(mockCharacters)
                 .thenReturn(mockItems)
                 .thenReturn(mockFixtures);
 
         tile = new TileImpl(mockEntitiesFactory, mockData);
 
-        when(mockGameZone.tile(any())).thenReturn(mock(Tile.class));
+        lenient().when(mockGameZone.tile(any())).thenReturn(mock(Tile.class));
     }
 
     @Test
@@ -104,7 +104,6 @@ public class TileImplTests {
         assertNotNull(gameEventTarget.tile());
         assertNull(gameEventTarget.tileFixture());
         assertNull(gameEventTarget.tileWallSegment());
-        assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }
 
     @Test
@@ -123,11 +122,6 @@ public class TileImplTests {
                 () -> ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone, null));
     }
 
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(Tile.class.getCanonicalName(), tile.getInterfaceName());
-    }
-
     // I'm testing a method not listed on the interface, since it's expected to be passed into
     // the constructor of GameZone as a method reference, while remaining closed to consumers of
     // the interface
@@ -135,7 +129,7 @@ public class TileImplTests {
     public void testThrowsOnDeleteWhenGameZoneIsNotDeleted() {
         when(mockGameZone.isDeleted()).thenReturn(false);
         ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone,
-                Coordinate3d.of(0, 0, 0));
+                coordinate3dOf(0, 0, 0));
 
         assertThrows(IllegalStateException.class, tile::delete);
     }
@@ -159,8 +153,7 @@ public class TileImplTests {
 
     @Test
     public void testGameZoneLocationCorrespondenceInvariant() {
-        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone,
-                Coordinate3d.of(0, 0, 0));
+        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone, coordinate3dOf(0, 0, 0));
 
         when(mockGameZone.tile(any())).thenReturn(null);
 
@@ -179,8 +172,7 @@ public class TileImplTests {
 
     @Test
     public void testGameZoneMismatchInvariant() {
-        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone,
-                Coordinate3d.of(0, 0, 0));
+        ((TileImpl) tile).assignGameZoneAfterAddedToGameZone(mockGameZone, coordinate3dOf(0, 0, 0));
 
         assertThrows(IllegalStateException.class, () -> tile.gameZone());
         assertThrows(IllegalStateException.class, () -> tile.location());

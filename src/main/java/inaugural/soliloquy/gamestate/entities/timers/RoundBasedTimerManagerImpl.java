@@ -106,9 +106,4 @@ public class RoundBasedTimerManagerImpl implements RoundBasedTimerManager {
     public List<RecurringRoundBasedTimer> recurringRoundBasedTimersRepresentation() {
         return listOf(RECURRING_ROUND_BASED_TIMERS);
     }
-
-    @Override
-    public String getInterfaceName() {
-        return RoundBasedTimerManager.class.getCanonicalName();
-    }
 }

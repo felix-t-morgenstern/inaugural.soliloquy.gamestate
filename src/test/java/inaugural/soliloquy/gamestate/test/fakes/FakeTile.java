@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import org.mockito.Mock;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
@@ -35,7 +34,7 @@ public class FakeTile implements Tile {
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
+    public Map<String, Object> data() throws IllegalStateException {
         return null;
     }
 
@@ -87,11 +86,6 @@ public class FakeTile implements Tile {
     @Override
     public Map<Sprite, Integer> sprites() throws IllegalStateException {
         return SPRITES;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
     }
 
     @Override

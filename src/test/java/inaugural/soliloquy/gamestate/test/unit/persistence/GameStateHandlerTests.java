@@ -1,10 +1,10 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
+import inaugural.soliloquy.gamestate.GameStateImpl;
 import inaugural.soliloquy.gamestate.persistence.GameStateHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
@@ -12,179 +12,182 @@ import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import inaugural.soliloquy.tools.testing.Mock.HandlerAndEntity;
 
+import java.util.Map;
+
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
 import static inaugural.soliloquy.tools.testing.Mock.generateMockEntityAndHandler;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class GameStateHandlerTests {
-    private final String CURRENT_GAME_ZONE_ID = "currentGameZoneId";
-    private final String PARTY_WRITTEN_VALUE = "party";
-    private final String VARIABLE_CACHE_WRITTEN_VALUE = "variableCache";
-    private final String CAMERA_WRITTEN_VALUE = "camera";
-    private final String ROUND_MANAGER_WRITTEN_VALUE = "roundManager";
-    private final String ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE = "roundBasedTimerManager";
-    private final String CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE = "clockBasedTimerManager";
+    private final String CURRENT_GAME_ZONE_ID = randomString();
+    private final String PARTY_WRITTEN_VALUE = randomString();
+    private final String DATA_WRITTEN_VALUE = randomString();
+    private final String CAMERA_WRITTEN_VALUE = randomString();
+    private final String ROUND_MANAGER_WRITTEN_VALUE = randomString();
+    private final String ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE = randomString();
+    private final String CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE = randomString();
 
     private final HandlerAndEntity<Party> MOCK_PARTY_AND_HANDLER =
             generateMockEntityAndHandler(Party.class, PARTY_WRITTEN_VALUE);
     private final Party PARTY = MOCK_PARTY_AND_HANDLER.entity;
     private final TypeHandler<Party> PARTY_HANDLER = MOCK_PARTY_AND_HANDLER.handler;
 
-    private final HandlerAndEntity<VariableCache> MOCK_VARIABLE_CACHE_AND_HANDLER =
-            generateMockEntityAndHandler(VariableCache.class, VARIABLE_CACHE_WRITTEN_VALUE);
-    private final VariableCache VARIABLE_CACHE = MOCK_VARIABLE_CACHE_AND_HANDLER.entity;
-    private final TypeHandler<VariableCache> VARIABLE_CACHE_HANDLER =
+    @SuppressWarnings("rawtypes") private final HandlerAndEntity<Map>
+            MOCK_VARIABLE_CACHE_AND_HANDLER =
+            generateMockEntityAndHandler(Map.class, DATA_WRITTEN_VALUE);
+    @SuppressWarnings("unchecked") private final Map<String, Object> MOCK_DATA =
+            MOCK_VARIABLE_CACHE_AND_HANDLER.entity;
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> VARIABLE_CACHE_HANDLER =
             MOCK_VARIABLE_CACHE_AND_HANDLER.handler;
 
     private final HandlerAndEntity<Camera> MOCK_CAMERA_AND_HANDLER =
             generateMockEntityAndHandler(Camera.class, CAMERA_WRITTEN_VALUE);
-    private final Camera CAMERA = MOCK_CAMERA_AND_HANDLER.entity;
-    private final TypeHandler<Camera> CAMERA_HANDLER = MOCK_CAMERA_AND_HANDLER.handler;
+    private final Camera MOCK_CAMERA = MOCK_CAMERA_AND_HANDLER.entity;
+    private final TypeHandler<Camera> MOCK_CAMERA_HANDLER = MOCK_CAMERA_AND_HANDLER.handler;
 
     private final HandlerAndEntity<RoundManager> MOCK_ROUND_MANAGER_AND_HANDLER =
             generateMockEntityAndHandler(RoundManager.class, ROUND_MANAGER_WRITTEN_VALUE);
-    private final RoundManager ROUND_MANAGER = MOCK_ROUND_MANAGER_AND_HANDLER.entity;
-    private final TypeHandler<RoundManager> ROUND_MANAGER_HANDLER =
+    private final RoundManager MOCK_ROUND_MANAGER = MOCK_ROUND_MANAGER_AND_HANDLER.entity;
+    private final TypeHandler<RoundManager> MOCK_ROUND_MANAGER_HANDLER =
             MOCK_ROUND_MANAGER_AND_HANDLER.handler;
 
     private final HandlerAndEntity<RoundBasedTimerManager>
             MOCK_ROUND_BASED_TIMER_MANAGER_AND_HANDLER =
             generateMockEntityAndHandler(RoundBasedTimerManager.class,
                     ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE);
-    private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER =
+    private final RoundBasedTimerManager MOCK_ROUND_BASED_TIMER_MANAGER =
             MOCK_ROUND_BASED_TIMER_MANAGER_AND_HANDLER.entity;
-    private final TypeHandler<RoundBasedTimerManager> ROUND_BASED_TIMER_MANAGER_HANDLER =
+    private final TypeHandler<RoundBasedTimerManager> MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER =
             MOCK_ROUND_BASED_TIMER_MANAGER_AND_HANDLER.handler;
 
     private final HandlerAndEntity<ClockBasedTimerManager>
             MOCK_CLOCK_BASED_TIMER_MANAGER_AND_HANDLER =
             generateMockEntityAndHandler(ClockBasedTimerManager.class,
                     CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE);
-    private final ClockBasedTimerManager CLOCK_BASED_TIMER_MANAGER =
+    private final ClockBasedTimerManager MOCK_CLOCK_BASED_TIMER_MANAGER =
             MOCK_CLOCK_BASED_TIMER_MANAGER_AND_HANDLER.entity;
-    private final TypeHandler<ClockBasedTimerManager> CLOCK_BASED_TIMER_MANAGER_HANDLER =
+    private final TypeHandler<ClockBasedTimerManager> MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER =
             MOCK_CLOCK_BASED_TIMER_MANAGER_AND_HANDLER.handler;
 
     @Mock private GameZone mockGameZone;
-    @Mock private GameZonesRepo mockGameZonesRepo;
+    @Mock private GameZoneRepo mockGameZoneRepo;
     @Mock private GameState mockGameState;
 
-    private TypeHandler<GameState> gameStateHandler;
+    private TypeHandler<GameState> handler;
 
-    private final String WRITTEN_DATA = "{\"party\":\"party\",\"variableCache\":\"variableCache" +
-            "\",\"currentGameZoneId\":\"currentGameZoneId\",\"camera\":\"camera\"," +
-            "\"roundManager\":\"roundManager\"," +
-            "\"roundBasedTimerHandler\":\"roundBasedTimerManager\"," +
-            "\"clockBasedTimerHandler\":\"clockBasedTimerManager\"}";
+    private final String WRITTEN_DATA = String.format(
+            "{\"party\":\"%s\",\"data\":\"%s\",\"currentGameZoneId\":\"%s\",\"camera\":\"%s\"," +
+                    "\"roundManager\":\"%s\",\"roundBasedTimerManager\":\"%s\"," +
+                    "\"clockBasedTimerManager\":\"%s\"}",
+            PARTY_WRITTEN_VALUE, DATA_WRITTEN_VALUE, CURRENT_GAME_ZONE_ID, CAMERA_WRITTEN_VALUE,
+            ROUND_MANAGER_WRITTEN_VALUE, ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE,
+            CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockGameZone = mock(GameZone.class);
         when(mockGameZone.id()).thenReturn(CURRENT_GAME_ZONE_ID);
 
-        mockGameZonesRepo = mock(GameZonesRepo.class);
-        when(mockGameZonesRepo.getGameZone(anyString())).thenReturn(mockGameZone);
+        mockGameZoneRepo = mock(GameZoneRepo.class);
+        when(mockGameZoneRepo.currentGameZone()).thenReturn(mockGameZone);
 
         mockGameState = mock(GameState.class);
-        when(mockGameState.gameZonesRepo()).thenReturn(mockGameZonesRepo);
+        when(mockGameState.gameZoneRepo()).thenReturn(mockGameZoneRepo);
         when(mockGameState.party()).thenReturn(PARTY);
-        when(mockGameState.getVariableCache()).thenReturn(VARIABLE_CACHE);
-        when(mockGameState.getCurrentGameZone()).thenReturn(mockGameZone);
-        when(mockGameState.camera()).thenReturn(CAMERA);
-        when(mockGameState.roundManager()).thenReturn(ROUND_MANAGER);
-        when(mockGameState.roundBasedTimerManager()).thenReturn(ROUND_BASED_TIMER_MANAGER);
-        when(mockGameState.clockBasedTimerManager()).thenReturn(CLOCK_BASED_TIMER_MANAGER);
+        when(mockGameState.data()).thenReturn(MOCK_DATA);
+        when(mockGameState.camera()).thenReturn(MOCK_CAMERA);
+        when(mockGameState.roundManager()).thenReturn(MOCK_ROUND_MANAGER);
+        when(mockGameState.roundBasedTimerManager()).thenReturn(MOCK_ROUND_BASED_TIMER_MANAGER);
+        when(mockGameState.clockBasedTimerManager()).thenReturn(MOCK_CLOCK_BASED_TIMER_MANAGER);
 
-        gameStateHandler =
+        handler =
                 new GameStateHandler(mockGameState, PARTY_HANDLER, VARIABLE_CACHE_HANDLER,
-                        CAMERA_HANDLER, ROUND_MANAGER_HANDLER, ROUND_BASED_TIMER_MANAGER_HANDLER,
-                        CLOCK_BASED_TIMER_MANAGER_HANDLER);
+                        MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
+                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                        MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(null, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, CAMERA_HANDLER, ROUND_MANAGER_HANDLER,
-                        ROUND_BASED_TIMER_MANAGER_HANDLER, CLOCK_BASED_TIMER_MANAGER_HANDLER));
+                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
+                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                        MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(mockGameState, null,
-                        VARIABLE_CACHE_HANDLER, CAMERA_HANDLER, ROUND_MANAGER_HANDLER,
-                        ROUND_BASED_TIMER_MANAGER_HANDLER, CLOCK_BASED_TIMER_MANAGER_HANDLER));
+                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
+                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                        MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        null, CAMERA_HANDLER, ROUND_MANAGER_HANDLER,
-                        ROUND_BASED_TIMER_MANAGER_HANDLER, CLOCK_BASED_TIMER_MANAGER_HANDLER));
+                        null, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
+                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                        MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, null, ROUND_MANAGER_HANDLER,
-                        ROUND_BASED_TIMER_MANAGER_HANDLER, CLOCK_BASED_TIMER_MANAGER_HANDLER));
+                        VARIABLE_CACHE_HANDLER, null, MOCK_ROUND_MANAGER_HANDLER,
+                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                        MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, CAMERA_HANDLER, null,
-                        ROUND_BASED_TIMER_MANAGER_HANDLER, CLOCK_BASED_TIMER_MANAGER_HANDLER));
+                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, null,
+                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                        MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, CAMERA_HANDLER, ROUND_MANAGER_HANDLER,
-                        null, CLOCK_BASED_TIMER_MANAGER_HANDLER));
+                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
+                        null, MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, CAMERA_HANDLER, ROUND_MANAGER_HANDLER,
-                        ROUND_BASED_TIMER_MANAGER_HANDLER, null));
+                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
+                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, null));
+    }
+
+    @Test
+    public void testTypeHandled() {
+        assertEquals(GameStateImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test
     public void testWrite() {
-        String output = gameStateHandler.write(mockGameState);
+        String output = handler.write(mockGameState);
 
         assertEquals(WRITTEN_DATA, output);
-        verify(PARTY_HANDLER, times(1)).write(PARTY);
-        verify(VARIABLE_CACHE_HANDLER, times(1)).write(VARIABLE_CACHE);
-        verify(CAMERA_HANDLER, times(1)).write(CAMERA);
-        verify(ROUND_MANAGER_HANDLER, times(1)).write(ROUND_MANAGER);
-        verify(ROUND_BASED_TIMER_MANAGER_HANDLER, times(1)).write(ROUND_BASED_TIMER_MANAGER);
-        verify(CLOCK_BASED_TIMER_MANAGER_HANDLER, times(1)).write(CLOCK_BASED_TIMER_MANAGER);
+        verify(PARTY_HANDLER, once()).write(PARTY);
+        verify(VARIABLE_CACHE_HANDLER, once()).write(MOCK_DATA);
+        verify(MOCK_CAMERA_HANDLER, once()).write(MOCK_CAMERA);
+        verify(MOCK_ROUND_MANAGER_HANDLER, once()).write(MOCK_ROUND_MANAGER);
+        verify(MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, once()).write(MOCK_ROUND_BASED_TIMER_MANAGER);
+        verify(MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER, once()).write(MOCK_CLOCK_BASED_TIMER_MANAGER);
     }
 
     @Test
-    public void testWriteWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> gameStateHandler.write(null));
+    public void testWriteWithInvalidArgs() {
+        assertThrows(IllegalArgumentException.class, () -> handler.write(null));
     }
 
     @Test
     public void testRead() {
-        GameState output = gameStateHandler.read(WRITTEN_DATA);
+        GameState output = handler.read(WRITTEN_DATA);
 
         assertNull(output);
-        verify(mockGameZonesRepo, times(1)).getGameZone(CURRENT_GAME_ZONE_ID);
-        verify(mockGameState, times(1)).setCurrentGameZone(mockGameZone);
-        verify(PARTY_HANDLER, times(1)).read(PARTY_WRITTEN_VALUE);
-        verify(VARIABLE_CACHE_HANDLER, times(1)).read(VARIABLE_CACHE_WRITTEN_VALUE);
-        verify(CAMERA_HANDLER, times(1)).read(CAMERA_WRITTEN_VALUE);
-        verify(ROUND_MANAGER_HANDLER, times(1)).read(ROUND_MANAGER_WRITTEN_VALUE);
-        verify(ROUND_BASED_TIMER_MANAGER_HANDLER, times(1)).read(
+        verify(mockGameZoneRepo, once()).loadGameZone(CURRENT_GAME_ZONE_ID);
+        verify(PARTY_HANDLER, once()).read(PARTY_WRITTEN_VALUE);
+        verify(VARIABLE_CACHE_HANDLER, once()).read(DATA_WRITTEN_VALUE);
+        verify(MOCK_CAMERA_HANDLER, once()).read(CAMERA_WRITTEN_VALUE);
+        verify(MOCK_ROUND_MANAGER_HANDLER, once()).read(ROUND_MANAGER_WRITTEN_VALUE);
+        verify(MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, once()).read(
                 ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE);
-        verify(CLOCK_BASED_TIMER_MANAGER_HANDLER, times(1)).read(
+        verify(MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER, once()).read(
                 CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE);
     }
 
     @Test
-    public void testReadWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> gameStateHandler.read(null));
-        assertThrows(IllegalArgumentException.class, () -> gameStateHandler.read(""));
-    }
-
-    @Test
-    public void testArchetype() {
-        assertNotNull(gameStateHandler.archetype());
-        assertEquals(GameState.class.getCanonicalName(),
-                gameStateHandler.archetype().getInterfaceName());
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                        GameState.class.getCanonicalName() + ">",
-                gameStateHandler.getInterfaceName());
+    public void testReadWithInvalidArgs() {
+        assertThrows(IllegalArgumentException.class, () -> handler.read(null));
+        assertThrows(IllegalArgumentException.class, () -> handler.read(""));
     }
 }

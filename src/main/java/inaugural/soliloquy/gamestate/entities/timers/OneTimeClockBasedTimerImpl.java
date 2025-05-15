@@ -30,11 +30,6 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
     }
 
     @Override
-    public String getInterfaceName() {
-        return OneTimeClockBasedTimer.class.getCanonicalName();
-    }
-
-    @Override
     public String actionId() {
         return FIRING_ACTION.id();
     }

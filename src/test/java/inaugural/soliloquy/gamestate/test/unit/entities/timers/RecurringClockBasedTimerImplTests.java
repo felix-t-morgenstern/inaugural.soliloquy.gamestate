@@ -2,11 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class RecurringClockBasedTimerImplTests {
     private final String ID = "ID";
@@ -20,7 +21,7 @@ public class RecurringClockBasedTimerImplTests {
 
     private RecurringClockBasedTimer recurringClockBasedTimer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         recurringClockBasedTimer = new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION,
                 PERIOD_MODULO_OFFSET, FIRING_ACTION,
@@ -29,7 +30,7 @@ public class RecurringClockBasedTimerImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 new RecurringClockBasedTimerImpl(null, PERIOD_DURATION,
                         PERIOD_MODULO_OFFSET, FIRING_ACTION,
@@ -71,12 +72,6 @@ public class RecurringClockBasedTimerImplTests {
                 new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                         MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(RecurringClockBasedTimer.class.getCanonicalName(),
-                recurringClockBasedTimer.getInterfaceName());
     }
 
     @Test

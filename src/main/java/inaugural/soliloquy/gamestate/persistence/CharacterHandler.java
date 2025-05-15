@@ -1,26 +1,31 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.CharacterImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.CharacterEvents;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.CharacterFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
-import soliloquy.specs.ruleset.entities.character.*;
+import soliloquy.specs.ruleset.entities.character.CharacterAIType;
+import soliloquy.specs.ruleset.entities.character.CharacterType;
+import soliloquy.specs.ruleset.entities.character.StatusEffectType;
+import soliloquy.specs.ruleset.entities.character.VariableStatisticType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+import static inaugural.soliloquy.tools.collections.Collections.listOf;
+import static soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
 
 public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final CharacterFactory CHARACTER_FACTORY;
@@ -28,13 +33,13 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     private final Function<String, CharacterClassification> GET_CHARACTER_CLASSIFICATION;
     private final Function<String, ImageAssetSet> GET_IMAGE_ASSET_SET;
     private final Function<String, CharacterAIType> GET_AI_TYPE;
-    private final TypeHandler<CharacterEvents> CHARACTER_EVENTS_HANDLER;
     private final Function<String, VariableStatisticType> GET_VARIABLE_STAT_TYPE;
     private final Function<String, StatusEffectType> GET_STATUS_TYPE;
     private final Function<String, PassiveAbility> GET_PASSIVE_ABILITY;
     private final Function<String, ActiveAbility> GET_ACTIVE_ABILITY;
     private final Function<String, ReactiveAbility> GET_REACTIVE_ABILITY;
-    private final TypeHandler<VariableCache> DATA_HANDLER;
+    private final Function<String, CharacterEvent> GET_CHARACTER_EVENT;
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER;
     private final TypeHandler<Item> ITEM_HANDLER;
 
     @SuppressWarnings("ConstantConditions")
@@ -43,37 +48,42 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                             Function<String, CharacterClassification> getCharacterClassification,
                             Function<String, ImageAssetSet> getImageAssetSet,
                             Function<String, CharacterAIType> getAIType,
-                            TypeHandler<CharacterEvents> characterEventsHandler,
+                            Function<String, CharacterEvent> getCharacterEvent,
                             Function<String, VariableStatisticType> getVariableStatType,
                             Function<String, StatusEffectType> getStatusType,
                             Function<String, PassiveAbility> getPassiveAbility,
                             Function<String, ActiveAbility> getActiveAbility,
                             Function<String, ReactiveAbility> getReactiveAbility,
-                            TypeHandler<VariableCache> dataHandler,
+                            @SuppressWarnings("rawtypes") TypeHandler<Map> mapHandler,
                             TypeHandler<Item> itemHandler) {
-        super(generateSimpleArchetype(Character.class));
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
         GET_CHARACTER_TYPE = Check.ifNull(getCharacterType, "getCharacterType");
         GET_CHARACTER_CLASSIFICATION = Check.ifNull(getCharacterClassification,
                 "getCharacterClassification");
         GET_IMAGE_ASSET_SET = Check.ifNull(getImageAssetSet, "getImageAssetSet");
         GET_AI_TYPE = Check.ifNull(getAIType, "getAIType");
-        CHARACTER_EVENTS_HANDLER = Check.ifNull(characterEventsHandler, "characterEventsHandler");
         GET_VARIABLE_STAT_TYPE = Check.ifNull(getVariableStatType, "getVariableStatType");
         GET_STATUS_TYPE = Check.ifNull(getStatusType, "getStatusType");
         GET_PASSIVE_ABILITY = Check.ifNull(getPassiveAbility, "getPassiveAbility");
         GET_ACTIVE_ABILITY = Check.ifNull(getActiveAbility, "getActiveAbility");
         GET_REACTIVE_ABILITY = Check.ifNull(getReactiveAbility, "getReactiveAbility");
-        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        GET_CHARACTER_EVENT = Check.ifNull(getCharacterEvent, "getCharacterEvent");
+        MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         ITEM_HANDLER = Check.ifNull(itemHandler, "itemHandler");
     }
 
+    @Override
+    public String typeHandled() {
+        return CharacterImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public Character read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
         var dto = JSON.fromJson(data, DTO.class);
         var readCharacter = CHARACTER_FACTORY.make(GET_CHARACTER_TYPE.apply(dto.characterTypeId),
-                UUID.fromString(dto.uuid), DATA_HANDLER.read(dto.data));
+                UUID.fromString(dto.uuid), MAP_HANDLER.read(dto.data));
 
         for (var classificationId : dto.classifications) {
             readCharacter.classifications().add(
@@ -89,11 +99,13 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         readCharacter.setImageAssetSet(GET_IMAGE_ASSET_SET.apply(dto.assetSetId));
         readCharacter.setAIType(GET_AI_TYPE.apply(dto.aiTypeId));
 
-        readCharacter.events().copyAllTriggers(CHARACTER_EVENTS_HANDLER.read(dto.events));
+        for (var event : dto.events) {
+            readCharacter.events().addEvent(GET_CHARACTER_EVENT.apply(event.id), event.trigger);
+        }
 
         for (var equipmentSlot : dto.equipmentSlots) {
             readCharacter.equipmentSlots().addCharacterEquipmentSlot(equipmentSlot.key);
-            if (equipmentSlot.val != null && !equipmentSlot.val.equals("")) {
+            if (equipmentSlot.val != null && !equipmentSlot.val.isEmpty()) {
                 readCharacter.equipmentSlots().equipItemToSlot(equipmentSlot.key,
                         ITEM_HANDLER.read(equipmentSlot.val));
             }
@@ -164,7 +176,14 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         dto.assetSetId = character.getImageAssetSet().id();
         dto.aiTypeId = character.getAIType().id();
 
-        dto.events = CHARACTER_EVENTS_HANDLER.write(character.events());
+        var charEvents = character.events().representation();
+        dto.events = listOf();
+        charEvents.forEach((trigger, value) -> value.forEach(event -> {
+            var charEventDto = new CharacterEventDTO();
+            charEventDto.trigger = trigger;
+            charEventDto.id = event.id();
+            dto.events.add(charEventDto);
+        }));
 
         var equipmentSlotsIndex = new AtomicInteger(0);
         var equipmentSlotsRepresentation = character.equipmentSlots().representation();
@@ -222,15 +241,10 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
                         reactiveAbility.id());
 
         dto.isPlayerControlled = character.getPlayerControlled();
-        dto.data = DATA_HANDLER.write(character.data());
+        dto.data = MAP_HANDLER.write(character.data());
         dto.name = character.getName();
 
         return JSON.toJson(dto);
-    }
-
-    @Override
-    public Character archetype() {
-        return ARCHETYPE;
     }
 
     private static class DTO {
@@ -242,7 +256,7 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         Integer direction;
         String assetSetId;
         String aiTypeId;
-        String events;
+        List<CharacterEventDTO> events;
         CharacterPairedDataDTO[] equipmentSlots;
         String[] inventoryItems;
         CharacterVariableStatisticDTO[] variableStats;
@@ -258,6 +272,11 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
     private static class CharacterPairedDataDTO {
         String key;
         String val;
+    }
+
+    private static class CharacterEventDTO {
+        String id;
+        String trigger;
     }
 
     private static class CharacterStatusEffectDTO {

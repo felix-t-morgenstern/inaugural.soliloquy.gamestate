@@ -1,33 +1,37 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.RoundManager;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
-
 public class RoundManagerHandler extends AbstractTypeHandler<RoundManager> {
     private final RoundManager ROUND_MANAGER;
-    private final TypeHandler<VariableCache> VARIABLE_CACHE_HANDLER;
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER;
     private final Function<UUID, Character> GET_CHARACTER_FROM_CURRENT_GAME_ZONE;
 
     public RoundManagerHandler(RoundManager roundManager,
-                               TypeHandler<VariableCache> variableCacheHandler,
+                               @SuppressWarnings("rawtypes") TypeHandler<Map> mapHandler,
                                Function<UUID, Character> getCharacterFromCurrentGameZone) {
-        super(generateSimpleArchetype(RoundManager.class));
 
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
-        VARIABLE_CACHE_HANDLER = Check.ifNull(variableCacheHandler, "variableCacheHandler");
+        MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         GET_CHARACTER_FROM_CURRENT_GAME_ZONE =
                 Check.ifNull(getCharacterFromCurrentGameZone, "getCharacterFromCurrentGameZone");
     }
 
+    @Override
+    public String typeHandled() {
+        return RoundManagerImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public RoundManager read(String writtenValue) throws IllegalArgumentException {
         Check.ifNullOrEmpty(writtenValue, "writtenValue");
@@ -41,8 +45,9 @@ public class RoundManagerHandler extends AbstractTypeHandler<RoundManager> {
         for (var i = 0; i < dto.characterIds.length; i++) {
             var character = GET_CHARACTER_FROM_CURRENT_GAME_ZONE.apply(
                     UUID.fromString(dto.characterIds[i]));
-            var characterRoundData = VARIABLE_CACHE_HANDLER.read(dto.characterRoundData[i]);
+            var characterRoundData = MAP_HANDLER.read(dto.characterRoundData[i]);
             ROUND_MANAGER.setCharacterPositionInQueue(character, i);
+            //noinspection unchecked
             ROUND_MANAGER.setCharacterRoundData(character, characterRoundData);
         }
 
@@ -62,8 +67,8 @@ public class RoundManagerHandler extends AbstractTypeHandler<RoundManager> {
         dto.characterRoundData = new String[queue.size()];
 
         for (var i = 0; i < queue.size(); i++) {
-            dto.characterIds[i] = queue.get(i).item1().uuid().toString();
-            dto.characterRoundData[i] = VARIABLE_CACHE_HANDLER.write(queue.get(i).item2());
+            dto.characterIds[i] = queue.get(i).FIRST.uuid().toString();
+            dto.characterRoundData[i] = MAP_HANDLER.write(queue.get(i).SECOND);
         }
 
         return JSON.toJson(dto);

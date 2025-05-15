@@ -2,12 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.KeyBindingImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.KeyBinding;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class KeyBindingImplTests {
     private final String KEY_PRESS_ACTION_ID = randomString();
@@ -19,13 +19,13 @@ public class KeyBindingImplTests {
 
     private KeyBinding keyBinding;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         keyBinding = new KeyBindingImpl(CHARACTERS);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new KeyBindingImpl(null));
     }
 
@@ -73,16 +73,11 @@ public class KeyBindingImplTests {
     }
 
     @Test
-    public void testPressAndReleaseWithInvalidParams() {
+    public void testPressAndReleaseWithInvalidArgs() {
         keyBinding.press(TIMESTAMP);
         keyBinding.release(TIMESTAMP);
 
         assertThrows(IllegalArgumentException.class, () -> keyBinding.press(TIMESTAMP - 1));
         assertThrows(IllegalArgumentException.class, () -> keyBinding.release(TIMESTAMP - 1));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(KeyBinding.class.getCanonicalName(), keyBinding.getInterfaceName());
     }
 }

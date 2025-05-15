@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.stubs;
 
 import soliloquy.specs.common.entities.Function;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import soliloquy.specs.common.infrastructure.ImmutableMap;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
@@ -12,6 +12,7 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 import java.util.List;
+import java.util.Map;
 
 public class ItemTypeStub implements ItemType {
     public boolean HasCharges = true;
@@ -37,7 +38,7 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public VariableCache traits() {
+    public ImmutableMap<String, Object> traits() {
         return null;
     }
 
@@ -87,11 +88,6 @@ public class ItemTypeStub implements ItemType {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public String getName() {
         return ITEM_TYPE_NAME;
     }
@@ -113,6 +109,6 @@ public class ItemTypeStub implements ItemType {
 
     @Override
     public Vertex defaultTileOffset() {
-        return Vertex.of(DEFAULT_X_TILE_WIDTH_OFFSET, DEFAULT_Y_TILE_HEIGHT_OFFSET);
+        return Vertex.vertexOf(DEFAULT_X_TILE_WIDTH_OFFSET, DEFAULT_Y_TILE_HEIGHT_OFFSET);
     }
 }

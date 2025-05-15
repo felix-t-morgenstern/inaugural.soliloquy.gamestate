@@ -1,20 +1,22 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterStatusEffectsImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterStatusEffects;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.ruleset.entities.character.StatusEffectType;
 
 import static inaugural.soliloquy.tools.random.Random.randomIntWithInclusiveFloor;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class CharacterStatusEffectsImplTests {
     private final int EFFECT_1_LEVEL = randomIntWithInclusiveFloor(1);
     private final int EFFECT_2_LEVEL = randomIntWithInclusiveFloor(1);
@@ -25,25 +27,19 @@ public class CharacterStatusEffectsImplTests {
 
     private CharacterStatusEffects characterStatusEffects;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockStatusEffectType1 = mock(StatusEffectType.class);
         mockStatusEffectType2 = mock(StatusEffectType.class);
         mockCharacter = mock(Character.class);
-        when(mockCharacter.isDeleted()).thenReturn(false);
+        lenient().when(mockCharacter.isDeleted()).thenReturn(false);
 
         characterStatusEffects = new CharacterStatusEffectsImpl(mockCharacter);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterStatusEffectsImpl(null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(CharacterStatusEffects.class.getCanonicalName(),
-                characterStatusEffects.getInterfaceName());
     }
 
     @Test
@@ -113,7 +109,5 @@ public class CharacterStatusEffectsImplTests {
                 () -> characterStatusEffects.setStatusEffectLevel(mockStatusEffectType2, 0));
         assertThrows(EntityDeletedException.class,
                 () -> characterStatusEffects.clearStatusEffects());
-        assertThrows(EntityDeletedException.class,
-                () -> characterStatusEffects.getInterfaceName());
     }
 }

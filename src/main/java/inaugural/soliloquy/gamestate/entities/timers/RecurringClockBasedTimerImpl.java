@@ -49,11 +49,6 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
     }
 
     @Override
-    public String getInterfaceName() {
-        return RecurringClockBasedTimer.class.getCanonicalName();
-    }
-
-    @Override
     public String actionId() {
         return FIRING_ACTION.id();
     }

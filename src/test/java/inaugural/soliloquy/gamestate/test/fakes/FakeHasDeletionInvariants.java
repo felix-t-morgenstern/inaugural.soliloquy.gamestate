@@ -20,9 +20,4 @@ public class FakeHasDeletionInvariants extends HasDeletionInvariants {
     public void callEnforceInvariants() {
         enforceDeletionInvariants();
     }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
 }

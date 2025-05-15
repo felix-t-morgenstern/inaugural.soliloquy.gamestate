@@ -3,26 +3,27 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 import inaugural.soliloquy.gamestate.entities.ItemImpl;
 import inaugural.soliloquy.gamestate.test.fakes.*;
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.Before;
-import org.junit.Test;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
+import java.util.Map;
 import java.util.UUID;
 
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Vertex.vertexOf;
 
 public class ItemImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
-    private final VariableCache DATA = new VariableCacheStub();
-
     private final Character CHARACTER = new FakeCharacter();
+
     private final CharacterEquipmentSlots CHARACTER_EQUIPMENT_SLOTS =
             ((FakeCharacter) CHARACTER).EQUIPMENT;
     private final String CHARACTER_EQUIPMENT_SLOT_TYPE = randomString();
@@ -30,33 +31,34 @@ public class ItemImplTests {
     private final Tile TILE = new FakeTile();
     private final TileFixture TILE_FIXTURE = new FakeTileFixture();
 
+    private Map<String, Object> data;
+
     private ItemTypeStub itemTypeStub;
 
     private Item item;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         FakeCharacterEquipmentSlots.ITEM_IN_SLOT_RESULT_OVERRIDE = null;
         FakeCharacterInventory.OVERRIDE_CONTAINS = null;
         itemTypeStub = new ItemTypeStub();
-        item = new ItemImpl(UUID, itemTypeStub, DATA);
+
+        data = mapOf(pairOf(randomString(), randomInt()));
+
+        item = new ItemImpl(UUID, itemTypeStub, data);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, itemTypeStub, DATA));
-        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, null, DATA));
+    public void testConstructorWithInvalidArgs() {
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(null, itemTypeStub,
+                data));
+        assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, null, data));
         assertThrows(IllegalArgumentException.class, () -> new ItemImpl(UUID, itemTypeStub, null));
     }
 
     @Test
-    public void testGetInterfaceName() {
-        assertEquals(Item.class.getCanonicalName(), item.getInterfaceName());
-    }
-
-    @Test
     public void testEquals() {
-        Item item2 = new ItemImpl(UUID, itemTypeStub, DATA);
+        Item item2 = new ItemImpl(UUID, itemTypeStub, data);
 
         assertEquals(item, item2);
     }
@@ -113,7 +115,7 @@ public class ItemImplTests {
 
     @Test
     public void testData() {
-        assertSame(DATA, item.data());
+        assertSame(data, item.data());
     }
 
     @Test
@@ -143,7 +145,7 @@ public class ItemImplTests {
 
         assertNotNull(takenFromStack);
         assertNotEquals(item.uuid(), takenFromStack.uuid());
-        assertSame(((VariableCacheStub) DATA)._cloneResult, takenFromStack.data());
+        assertEquals(data, item.data());
         assertEquals((Integer) numberToTake, takenFromStack.getNumberInStack());
         assertEquals((Integer) (numberInStack - numberToTake), item.getNumberInStack());
     }
@@ -160,8 +162,8 @@ public class ItemImplTests {
         Pair<Character, String> equipmentSlot = item.equipmentSlot();
 
         assertNotNull(equipmentSlot);
-        assertSame(character, equipmentSlot.item1());
-        assertSame(CHARACTER_EQUIPMENT_SLOT_TYPE, equipmentSlot.item2());
+        assertSame(character, equipmentSlot.FIRST);
+        assertSame(CHARACTER_EQUIPMENT_SLOT_TYPE, equipmentSlot.SECOND);
     }
 
     @Test
@@ -359,13 +361,13 @@ public class ItemImplTests {
 
     @Test
     public void testCreatedItemTakesDefaultOffsets() {
-        assertEquals(Vertex.of(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
+        assertEquals(vertexOf(ItemTypeStub.DEFAULT_X_TILE_WIDTH_OFFSET,
                 ItemTypeStub.DEFAULT_Y_TILE_HEIGHT_OFFSET), item.getTileOffset());
     }
 
     @Test
     public void testSetAndGetTileOffset() {
-        Vertex tileOffset = Vertex.of(randomFloat(), randomFloat());
+        Vertex tileOffset = vertexOf(randomFloat(), randomFloat());
 
         item.setTileOffset(tileOffset);
 
@@ -471,7 +473,7 @@ public class ItemImplTests {
         assertThrows(EntityDeletedException.class, () -> item.getPluralName());
         assertThrows(EntityDeletedException.class, () -> item.setPluralName(""));
         assertThrows(EntityDeletedException.class, () -> item.getTileOffset());
-        assertThrows(EntityDeletedException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(EntityDeletedException.class, () -> item.setTileOffset(vertexOf(0f, 0f)));
         assertThrows(EntityDeletedException.class, () -> item.delete());
     }
 
@@ -507,7 +509,7 @@ public class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> item.getPluralName());
         assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
         assertThrows(IllegalStateException.class, () -> item.getTileOffset());
-        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(vertexOf(0f, 0f)));
         assertThrows(IllegalStateException.class, () -> item.delete());
     }
 
@@ -543,7 +545,7 @@ public class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> item.getPluralName());
         assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
         assertThrows(IllegalStateException.class, () -> item.getTileOffset());
-        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(vertexOf(0f, 0f)));
         assertThrows(IllegalStateException.class, () -> item.delete());
     }
 
@@ -580,7 +582,7 @@ public class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> item.getPluralName());
         assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
         assertThrows(IllegalStateException.class, () -> item.getTileOffset());
-        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(vertexOf(0f, 0f)));
         assertThrows(IllegalStateException.class, () -> item.delete());
     }
 
@@ -617,7 +619,7 @@ public class ItemImplTests {
         assertThrows(IllegalStateException.class, () -> item.getPluralName());
         assertThrows(IllegalStateException.class, () -> item.setPluralName(""));
         assertThrows(IllegalStateException.class, () -> item.getTileOffset());
-        assertThrows(IllegalStateException.class, () -> item.setTileOffset(Vertex.of(0f, 0f)));
+        assertThrows(IllegalStateException.class, () -> item.setTileOffset(vertexOf(0f, 0f)));
         assertThrows(IllegalStateException.class, () -> item.delete());
     }
 }

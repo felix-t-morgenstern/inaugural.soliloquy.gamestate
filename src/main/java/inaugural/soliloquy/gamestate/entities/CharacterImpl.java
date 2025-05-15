@@ -1,15 +1,10 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
-import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
-import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
-import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
@@ -19,25 +14,27 @@ import soliloquy.specs.ruleset.entities.character.CharacterType;
 import soliloquy.specs.ruleset.entities.character.VariableStatisticType;
 import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class CharacterImpl implements Character {
-    private final UUID UUID;
+    private final java.util.UUID UUID;
     private final CharacterType CHARACTER_TYPE;
     private final List<CharacterClassification> CHARACTER_CLASSIFICATIONS;
-    private final Map<String, String> PRONOUNS;
+    private final java.util.Map<String, String> PRONOUNS;
     private final CharacterEvents EVENTS;
     private final CharacterEquipmentSlots EQUIPMENT_SLOTS;
     private final CharacterInventory INVENTORY;
-    private final Map<VariableStatisticType, Integer> VARIABLE_STATISTIC_CURRENT_VALUES;
+    private final java.util.Map<VariableStatisticType, Integer> VARIABLE_STATISTIC_CURRENT_VALUES;
     private final CharacterStatusEffects STATUS_EFFECTS;
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
     private final List<ReactiveAbility> REACTIVE_ABILITIES;
-    private final VariableCache DATA;
+    private final Map<String, Object> DATA;
 
     private Tile tile;
     private String stance;
@@ -48,22 +45,22 @@ public class CharacterImpl implements Character {
     private String name;
     private CharacterAIType aiType;
 
-    public CharacterImpl(UUID uuid,
+    public CharacterImpl(java.util.UUID uuid,
                          CharacterType characterType,
-                         CharacterEventsFactory characterEventsFactory,
-                         CharacterEquipmentSlotsFactory equipmentSlotsFactory,
-                         CharacterInventoryFactory inventoryFactory,
-                         CharacterStatusEffectsFactory statusEffectsFactory,
-                         VariableCache data) {
+                         Function<Character, CharacterEvents> characterEventsFactory,
+                         Function<Character, CharacterEquipmentSlots> equipmentSlotsFactory,
+                         Function<Character, CharacterInventory> inventoryFactory,
+                         Function<Character, CharacterStatusEffects> statusEffectsFactory,
+                         Map<String, Object> data) {
         UUID = Check.ifNull(uuid, "uuid");
         CHARACTER_TYPE = Check.ifNull(characterType, "characterType");
         CHARACTER_CLASSIFICATIONS = listOf();
         PRONOUNS = mapOf();
-        EVENTS = Check.ifNull(characterEventsFactory, "characterEventsFactory").make(this);
-        EQUIPMENT_SLOTS = Check.ifNull(equipmentSlotsFactory, "equipmentSlotsFactory").make(this);
-        INVENTORY = Check.ifNull(inventoryFactory, "inventoryFactory").make(this);
+        EVENTS = Check.ifNull(characterEventsFactory, "characterEventsFactory").apply(this);
+        EQUIPMENT_SLOTS = Check.ifNull(equipmentSlotsFactory, "equipmentSlotsFactory").apply(this);
+        INVENTORY = Check.ifNull(inventoryFactory, "inventoryFactory").apply(this);
         VARIABLE_STATISTIC_CURRENT_VALUES = mapOf();
-        STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").make(this);
+        STATUS_EFFECTS = Check.ifNull(statusEffectsFactory, "statusEffectsFactory").apply(this);
         PASSIVE_ABILITIES = listOf();
         ACTIVE_ABILITIES = listOf();
         REACTIVE_ABILITIES = listOf();
@@ -83,7 +80,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<String, String> pronouns() throws IllegalStateException {
+    public java.util.Map<String, String> pronouns() throws IllegalStateException {
         enforceInvariant("pronouns", true);
         return PRONOUNS;
     }
@@ -181,7 +178,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public Map<VariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
+    public java.util.Map<VariableStatisticType, Integer> variableStatisticCurrentValuesRepresentation()
             throws EntityDeletedException {
         enforceInvariant("variableStatisticCurrentValuesRepresentation", true);
         return mapOf(VARIABLE_STATISTIC_CURRENT_VALUES);
@@ -224,7 +221,7 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
+    public Map<String, Object> data() throws IllegalStateException {
         enforceInvariant("data", true);
         return DATA;
     }
@@ -271,14 +268,8 @@ public class CharacterImpl implements Character {
     }
 
     @Override
-    public UUID uuid() {
+    public java.util.UUID uuid() {
         return UUID;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        enforceInvariant("getInterfaceName", true);
-        return Character.class.getCanonicalName();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.timers.RecurringRoundBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -16,11 +17,16 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
     public RecurringRoundBasedTimerHandler(RoundBasedTimerFactory RoundBasedTimerFactory,
                                            @SuppressWarnings("rawtypes")
                                                    Function<String, Action> getAction) {
-        super(new RecurringRoundBasedTimerArchetype());
         TURN_BASED_TIMER_FACTORY = Check.ifNull(RoundBasedTimerFactory, "RoundBasedTimerFactory");
         GET_ACTION = Check.ifNull(getAction, "getAction");
     }
 
+    @Override
+    public String typeHandled() {
+        return RecurringRoundBasedTimerImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public RecurringRoundBasedTimer read(String data) throws IllegalArgumentException {
         if (data == null) {
@@ -54,53 +60,5 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
         int roundModulo;
         int roundOffset;
         int priority;
-    }
-
-    private static class RecurringRoundBasedTimerArchetype implements RecurringRoundBasedTimer {
-
-        @Override
-        public int roundModulo() {
-            return 0;
-        }
-
-        @Override
-        public int roundOffset() {
-            return 0;
-        }
-
-        @Override
-        public String id() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public void delete() throws IllegalStateException {
-
-        }
-
-        @Override
-        public boolean isDeleted() {
-            return false;
-        }
-
-        @Override
-        public int priority() {
-            return 0;
-        }
-
-        @Override
-        public void run() {
-
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return RecurringRoundBasedTimer.class.getCanonicalName();
-        }
-
-        @Override
-        public String actionId() {
-            return null;
-        }
     }
 }

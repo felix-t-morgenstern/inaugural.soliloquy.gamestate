@@ -1,27 +1,22 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.KeyBindingFactoryImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.factories.KeyBindingFactory;
 
 import static inaugural.soliloquy.tools.random.Random.randomChar;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class KeyBindingFactoryImplTests {
     private final char[] CHARACTERS = new char[]{randomChar(), randomChar(), randomChar()};
 
     private KeyBindingFactory keyBindingFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         keyBindingFactory = new KeyBindingFactoryImpl();
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(KeyBindingFactory.class.getCanonicalName(),
-                keyBindingFactory.getInterfaceName());
     }
 
     @Test
@@ -32,7 +27,7 @@ public class KeyBindingFactoryImplTests {
     }
 
     @Test
-    public void testMakeWithInvalidParams() {
+    public void testMakeWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> keyBindingFactory.make(null));
     }
 }

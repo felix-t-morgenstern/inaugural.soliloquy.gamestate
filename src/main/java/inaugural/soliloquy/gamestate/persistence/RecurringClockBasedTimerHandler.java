@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -15,21 +16,25 @@ public class RecurringClockBasedTimerHandler
     private final Function<String, Action> GET_ACTION;
 
     public RecurringClockBasedTimerHandler(ClockBasedTimerFactory clockBasedTimerFactory,
-                                           @SuppressWarnings("rawtypes") Function<String, Action>
-                                                   getAction) {
-        super(new RecurringClockBasedTimerArchetype());
-        CLOCK_BASED_TIMER_FACTORY = clockBasedTimerFactory;
-        GET_ACTION = getAction;
+                                           @SuppressWarnings("rawtypes")
+                                           Function<String, Action> getAction) {
+        CLOCK_BASED_TIMER_FACTORY = Check.ifNull(clockBasedTimerFactory, "clockBasedTimerFactory");
+        GET_ACTION = Check.ifNull(getAction, "getAction");
     }
 
+    @Override
+    public String typeHandled() {
+        return RecurringClockBasedTimerImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public RecurringClockBasedTimer read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
 
         RecurringClockBasedTimerDTO dto = JSON.fromJson(data, RecurringClockBasedTimerDTO.class);
 
-        //noinspection rawtypes
-        Action firingAction = GET_ACTION.apply(dto.actionId);
+        var firingAction = GET_ACTION.apply(dto.actionId);
 
         //noinspection unchecked
         return CLOCK_BASED_TIMER_FACTORY.make(dto.id, dto.periodDuration, dto.periodModuloOffset,
@@ -65,68 +70,5 @@ public class RecurringClockBasedTimerHandler
         Long pausedTimestamp;
         Long lastFiredTimestamp;
         Long mostRecentTimestamp;
-    }
-
-    private static class RecurringClockBasedTimerArchetype implements RecurringClockBasedTimer {
-
-        @Override
-        public long lastFiringTimestamp() {
-            return 0;
-        }
-
-        @Override
-        public boolean fireMultipleTimesForMultiplePeriodsElapsed() {
-            return false;
-        }
-
-        @Override
-        public int periodDuration() {
-            return 0;
-        }
-
-        @Override
-        public int periodModuloOffset() {
-            return 0;
-        }
-
-        @Override
-        public String actionId() {
-            return null;
-        }
-
-        @Override
-        public void fire(long l) throws UnsupportedOperationException, IllegalArgumentException {
-
-        }
-
-        @Override
-        public String id() throws IllegalStateException {
-            return null;
-        }
-
-        @Override
-        public void reportPause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void reportUnpause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public Long pausedTimestamp() {
-            return null;
-        }
-
-        @Override
-        public Long mostRecentTimestamp() {
-            return null;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return RecurringClockBasedTimer.class.getCanonicalName();
-        }
     }
 }

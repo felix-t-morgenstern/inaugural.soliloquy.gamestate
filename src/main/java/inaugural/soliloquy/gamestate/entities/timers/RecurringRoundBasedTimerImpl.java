@@ -39,19 +39,13 @@ public class RecurringRoundBasedTimerImpl extends AbstractRoundBasedTimer<Recurr
     }
 
     @Override
-    public String getInterfaceName() {
-        return RecurringRoundBasedTimer.class.getCanonicalName();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof RecurringRoundBasedTimer)) {
+        if (!(o instanceof RecurringRoundBasedTimer recurringTimer)) {
             return false;
         }
-        RecurringRoundBasedTimer recurringTimer = (RecurringRoundBasedTimer) o;
         return ROUND_MODULO == recurringTimer.roundModulo() &&
                 ROUND_OFFSET == recurringTimer.roundOffset() &&
                 equalz(recurringTimer);

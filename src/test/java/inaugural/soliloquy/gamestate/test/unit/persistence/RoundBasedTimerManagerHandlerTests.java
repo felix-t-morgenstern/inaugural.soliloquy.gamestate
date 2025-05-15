@@ -1,11 +1,13 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
+import inaugural.soliloquy.gamestate.entities.CharacterImpl;
+import inaugural.soliloquy.gamestate.entities.timers.RoundBasedTimerManagerImpl;
 import inaugural.soliloquy.gamestate.persistence.RoundBasedTimerManagerHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
@@ -13,10 +15,11 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.Assert.*;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RoundBasedTimerManagerHandlerTests {
     private final String ONE_TIME_ROUND_BASED_TIMER = randomString();
     private final String RECURRING_ROUND_BASED_TIMER = randomString();
@@ -33,18 +36,18 @@ public class RoundBasedTimerManagerHandlerTests {
             "{\"oneTimeRoundBasedTimers\":[\"%s\"],\"recurringRoundBasedTimers\":[\"%s\"]}",
             ONE_TIME_ROUND_BASED_TIMER, RECURRING_ROUND_BASED_TIMER);
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        when(mockOneTimeRoundBasedTimerHandler.read(anyString()))
+        lenient().when(mockOneTimeRoundBasedTimerHandler.read(anyString()))
                 .thenReturn(mockOneTimeRoundBasedTimer);
-        when(mockOneTimeRoundBasedTimerHandler.write(any())).thenReturn(ONE_TIME_ROUND_BASED_TIMER);
-        when(mockRecurringRoundBasedTimerHandler.read(anyString()))
+        lenient().when(mockOneTimeRoundBasedTimerHandler.write(any())).thenReturn(ONE_TIME_ROUND_BASED_TIMER);
+        lenient().when(mockRecurringRoundBasedTimerHandler.read(anyString()))
                 .thenReturn(mockRecurringRoundBasedTimer);
-        when(mockRecurringRoundBasedTimerHandler.write(any()))
+        lenient().when(mockRecurringRoundBasedTimerHandler.write(any()))
                 .thenReturn(RECURRING_ROUND_BASED_TIMER);
-        when(mockRoundBasedTimerManager.oneTimeRoundBasedTimersRepresentation()).thenReturn(
+        lenient().when(mockRoundBasedTimerManager.oneTimeRoundBasedTimersRepresentation()).thenReturn(
                 listOf(mockOneTimeRoundBasedTimer));
-        when(mockRoundBasedTimerManager.recurringRoundBasedTimersRepresentation()).thenReturn(
+        lenient().when(mockRoundBasedTimerManager.recurringRoundBasedTimersRepresentation()).thenReturn(
                 listOf(mockRecurringRoundBasedTimer));
 
         handler = new RoundBasedTimerManagerHandler(mockRoundBasedTimerManager,
@@ -52,7 +55,7 @@ public class RoundBasedTimerManagerHandlerTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundBasedTimerManagerHandler(null, mockOneTimeRoundBasedTimerHandler,
                         mockRecurringRoundBasedTimerHandler));
@@ -65,6 +68,11 @@ public class RoundBasedTimerManagerHandlerTests {
     }
 
     @Test
+    public void testTypeHandled() {
+        assertEquals(RoundBasedTimerManagerImpl.class.getCanonicalName(), handler.typeHandled());
+    }
+
+    @Test
     public void testWrite() {
         var writtenValue = handler.write(mockRoundBasedTimerManager);
 
@@ -72,7 +80,7 @@ public class RoundBasedTimerManagerHandlerTests {
     }
 
     @Test
-    public void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> handler.write(null));
     }
 
@@ -81,19 +89,12 @@ public class RoundBasedTimerManagerHandlerTests {
         var output = handler.read(DATA);
 
         assertNull(output);
-        verify(mockRoundBasedTimerManager, times(1)).clear();
-        verify(mockOneTimeRoundBasedTimerHandler, times(1)).read(ONE_TIME_ROUND_BASED_TIMER);
-        verify(mockRoundBasedTimerManager, times(1)).registerOneTimeRoundBasedTimer(
+        verify(mockRoundBasedTimerManager, once()).clear();
+        verify(mockOneTimeRoundBasedTimerHandler, once()).read(ONE_TIME_ROUND_BASED_TIMER);
+        verify(mockRoundBasedTimerManager, once()).registerOneTimeRoundBasedTimer(
                 mockOneTimeRoundBasedTimer);
-        verify(mockRecurringRoundBasedTimerHandler, times(1)).read(RECURRING_ROUND_BASED_TIMER);
-        verify(mockRoundBasedTimerManager, times(1)).registerRecurringRoundBasedTimer(
+        verify(mockRecurringRoundBasedTimerHandler, once()).read(RECURRING_ROUND_BASED_TIMER);
+        verify(mockRoundBasedTimerManager, once()).registerRecurringRoundBasedTimer(
                 mockRecurringRoundBasedTimer);
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                        RoundBasedTimerManager.class.getCanonicalName() + ">",
-                handler.getInterfaceName());
     }
 }

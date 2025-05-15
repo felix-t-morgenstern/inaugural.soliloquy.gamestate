@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Character;
@@ -13,16 +12,18 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 // TODO: Consider extending HasDeletionInvariants
 public class ItemImpl implements Item {
     private final UUID UUID;
     private final ItemType ITEM_TYPE;
-    private final VariableCache DATA;
+    private final Map<String, Object> DATA;
     private final List<PassiveAbility> PASSIVE_ABILITIES;
     private final List<ActiveAbility> ACTIVE_ABILITIES;
     private final List<ReactiveAbility> REACTIVE_ABILITIES;
@@ -41,7 +42,7 @@ public class ItemImpl implements Item {
 
     public ItemImpl(UUID uuid,
                     ItemType itemType,
-                    VariableCache data) {
+                    Map<String, Object> data) {
         UUID = Check.ifNull(uuid, "uuid");
         ITEM_TYPE = Check.ifNull(itemType, "itemType");
         tileOffset = ITEM_TYPE.defaultTileOffset();
@@ -127,7 +128,7 @@ public class ItemImpl implements Item {
                             "stack");
         }
         numberInStack -= numberToTake;
-        var takenFromStack = new ItemImpl(java.util.UUID.randomUUID(), ITEM_TYPE, DATA.makeClone());
+        var takenFromStack = new ItemImpl(java.util.UUID.randomUUID(), ITEM_TYPE, mapOf(DATA));
         takenFromStack.setNumberInStack(numberToTake);
         return takenFromStack;
     }
@@ -248,7 +249,7 @@ public class ItemImpl implements Item {
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
+    public Map<String, Object> data() throws IllegalStateException {
         enforceDeletionInvariant("data");
         enforceAssignmentInvariant("data");
         return DATA;
@@ -323,13 +324,6 @@ public class ItemImpl implements Item {
         enforceDeletionInvariant("setPluralName");
         enforceAssignmentInvariant("setPluralName");
         this.pluralName = pluralName;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        enforceDeletionInvariant("getInterfaceName");
-        enforceAssignmentInvariant("getInterfaceName");
-        return Item.class.getCanonicalName();
     }
 
     @Override

@@ -54,12 +54,6 @@ public class CharacterStatusEffectsImpl extends HasDeletionInvariants
     }
 
     @Override
-    public String getInterfaceName() {
-        enforceDeletionInvariants();
-        return CharacterStatusEffects.class.getCanonicalName();
-    }
-
-    @Override
     protected String containingClassName() {
         return "Character";
     }

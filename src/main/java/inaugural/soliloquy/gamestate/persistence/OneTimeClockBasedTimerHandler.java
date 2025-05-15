@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -14,13 +15,18 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
     private final Function<String, Action> GET_ACTION;
 
     public OneTimeClockBasedTimerHandler(ClockBasedTimerFactory clockBasedTimerFactory,
-                                         @SuppressWarnings("rawtypes") Function<String, Action>
-                                                 getAction) {
-        super(new OneTimeClockBasedTimerArchetype());
+                                         @SuppressWarnings("rawtypes")
+                                         Function<String, Action> getAction) {
         CLOCK_BASED_TIMER_FACTORY = clockBasedTimerFactory;
         GET_ACTION = getAction;
     }
 
+    @Override
+    public String typeHandled() {
+        return OneTimeClockBasedTimerImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public OneTimeClockBasedTimer read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
@@ -55,53 +61,5 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
         long firingTime;
         Long pausedTime;
         Long mostRecentTimestamp;
-    }
-
-    private static class OneTimeClockBasedTimerArchetype implements OneTimeClockBasedTimer {
-
-        @Override
-        public long firingTime() {
-            return 0;
-        }
-
-        @Override
-        public String actionId() {
-            return null;
-        }
-
-        @Override
-        public void fire(long l) throws UnsupportedOperationException, IllegalArgumentException {
-
-        }
-
-        @Override
-        public void reportPause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void reportUnpause(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public Long pausedTimestamp() {
-            return null;
-        }
-
-        @Override
-        public Long mostRecentTimestamp() {
-            return null;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return OneTimeClockBasedTimer.class.getCanonicalName();
-        }
-
-        @Override
-        public String id() throws IllegalStateException {
-            return null;
-        }
     }
 }

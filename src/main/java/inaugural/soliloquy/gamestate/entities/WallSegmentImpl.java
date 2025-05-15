@@ -1,20 +1,20 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
+import java.util.Map;
+
 public class WallSegmentImpl extends AbstractGameZoneTerrain implements WallSegment {
-    private final VariableCache DATA;
+    private final Map<String, Object> DATA;
 
     private WallSegmentType type;
-    private String name;
 
-    public WallSegmentImpl(VariableCache data) {
+    public WallSegmentImpl(Map<String, Object> data) {
         DATA = Check.ifNull(data, "data");
     }
 
@@ -32,7 +32,7 @@ public class WallSegmentImpl extends AbstractGameZoneTerrain implements WallSegm
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
+    public Map<String, Object> data() throws IllegalStateException {
         enforceDeletionInvariants();
         return DATA;
     }
@@ -56,17 +56,7 @@ public class WallSegmentImpl extends AbstractGameZoneTerrain implements WallSegm
             public WallSegment tileWallSegment() {
                 return wallSegment;
             }
-
-            @Override
-            public String getInterfaceName() {
-                return GameEventTarget.class.getCanonicalName();
-            }
         };
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return WallSegment.class.getCanonicalName();
     }
 
     @Override

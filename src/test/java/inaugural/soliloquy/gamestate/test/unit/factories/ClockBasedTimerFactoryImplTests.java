@@ -4,14 +4,14 @@ import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.factories.ClockBasedTimerFactoryImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClockBasedTimerFactoryImplTests {
     private final String ID = "ID";
@@ -28,14 +28,9 @@ public class ClockBasedTimerFactoryImplTests {
 
     private ClockBasedTimerFactory factory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         factory = new ClockBasedTimerFactoryImpl();
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(ClockBasedTimerFactory.class.getCanonicalName(), factory.getInterfaceName());
     }
 
     @Test
@@ -57,7 +52,7 @@ public class ClockBasedTimerFactoryImplTests {
     }
 
     @Test
-    public void testMakeOneTimeWithInvalidParams() {
+    public void testMakeOneTimeWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 factory.make(null, FIRING_TIME, FIRING_ACTION, PAUSE_TIME,
                         MOST_RECENT_TIMESTAMP));
@@ -105,7 +100,7 @@ public class ClockBasedTimerFactoryImplTests {
     }
 
     @Test
-    public void testMakeRecurringWithInvalidParams() {
+    public void testMakeRecurringWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 factory.make(null, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,

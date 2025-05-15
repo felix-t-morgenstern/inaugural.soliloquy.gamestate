@@ -55,11 +55,6 @@ public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public String actionId() {
         return null;
     }

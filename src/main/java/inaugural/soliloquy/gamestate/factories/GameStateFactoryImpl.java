@@ -2,20 +2,18 @@ package inaugural.soliloquy.gamestate.factories;
 
 import inaugural.soliloquy.gamestate.GameStateImpl;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.factories.RegistryFactory;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class GameStateFactoryImpl implements GameStateFactory {
-    private final RegistryFactory REGISTRY_FACTORY;
-    private final GameZonesRepo GAME_ZONES_REPO;
+    private final GameZoneRepo GAME_ZONES_REPO;
     private final Function<Supplier<GameZone>, Camera> CAMERA_FACTORY;
     private final RoundManager ROUND_MANAGER;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
@@ -27,8 +25,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
     private final KeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY;
 
-    public GameStateFactoryImpl(RegistryFactory registryFactory,
-                                GameZonesRepo gameZonesRepo,
+    public GameStateFactoryImpl(GameZoneRepo GameZoneRepo,
                                 Function<Supplier<GameZone>, Camera> cameraFactory,
                                 RoundManager roundManager,
                                 RoundBasedTimerManager roundBasedTimerManager,
@@ -39,8 +36,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
                                 KeyBindingFactory keyBindingFactory,
                                 KeyBindingContextFactory keyBindingContextFactory,
                                 KeyEventListenerFactory keyEventListenerFactory) {
-        REGISTRY_FACTORY = Check.ifNull(registryFactory, "registryFactory");
-        GAME_ZONES_REPO = Check.ifNull(gameZonesRepo, "gameZonesRepo");
+        GAME_ZONES_REPO = Check.ifNull(GameZoneRepo, "GameZoneRepo");
         CAMERA_FACTORY = Check.ifNull(cameraFactory, "cameraFactory");
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
@@ -56,15 +52,10 @@ public class GameStateFactoryImpl implements GameStateFactory {
     }
 
     @Override
-    public GameState make(Party party, VariableCache data) throws IllegalArgumentException {
-        return new GameStateImpl(party, data, REGISTRY_FACTORY, GAME_ZONES_REPO, CAMERA_FACTORY,
+    public GameState make(Party party, Map<String, Object> data) throws IllegalArgumentException {
+        return new GameStateImpl(party, data, GAME_ZONES_REPO, CAMERA_FACTORY,
                 ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER, CLOCK_BASED_TIMER_MANAGER, ITEM_FACTORY,
                 CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
                 KEY_BINDING_CONTEXT_FACTORY, KEY_EVENT_LISTENER_FACTORY);
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return GameStateFactory.class.getCanonicalName();
     }
 }

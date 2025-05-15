@@ -38,9 +38,4 @@ public class EquipmentTypeStub implements EquipmentType {
     public void setPluralName(String s) throws IllegalArgumentException {
 
     }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
 }

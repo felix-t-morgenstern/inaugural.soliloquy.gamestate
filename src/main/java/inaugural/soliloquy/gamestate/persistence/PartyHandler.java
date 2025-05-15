@@ -1,29 +1,28 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.PartyImpl;
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.persistence.AbstractSoliloquyTypeHandler;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Party;
-import soliloquy.specs.gamestate.factories.PartyFactory;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class PartyHandler extends AbstractSoliloquyTypeHandler<Party>
-        implements TypeHandler<Party> {
-    private final PartyFactory PARTY_FACTORY;
+public class PartyHandler extends AbstractTypeHandler<Party> implements TypeHandler<Party> {
+    private final Function<Map<String, Object>, Party> PARTY_FACTORY;
     private final Supplier<GameZone> GET_CURRENT_GAME_ZONE;
-    private final TypeHandler<VariableCache> ATTRIBUTES_HANDLER;
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> ATTRIBUTES_HANDLER;
     private final TypeHandler<Character> CHARACTER_HANDLER;
 
-    public PartyHandler(PartyFactory partyFactory,
+    public PartyHandler(Function<Map<String, Object>, Party> partyFactory,
                         Supplier<GameZone> getCurrentGameZone,
-                        TypeHandler<VariableCache> attributesHandler,
+                        @SuppressWarnings("rawtypes") TypeHandler<Map> attributesHandler,
                         TypeHandler<Character> characterHandler) {
-        super(Party.class);
         PARTY_FACTORY = Check.ifNull(partyFactory, "partyFactory");
         GET_CURRENT_GAME_ZONE = Check.ifNull(getCurrentGameZone, "getCurrentGameZone");
         ATTRIBUTES_HANDLER = Check.ifNull(attributesHandler, "attributesHandler");
@@ -31,15 +30,23 @@ public class PartyHandler extends AbstractSoliloquyTypeHandler<Party>
     }
 
     @Override
+    public String typeHandled() {
+        return PartyImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public Party read(String data) throws IllegalArgumentException {
         Check.ifNullOrEmpty(data, "data");
 
         var partyDTO = JSON.fromJson(data, DTO.class);
 
-        var party = PARTY_FACTORY.make(ATTRIBUTES_HANDLER.read(partyDTO.attributes));
+        //noinspection unchecked
+        var party = PARTY_FACTORY.apply(
+                (Map<String, Object>) ATTRIBUTES_HANDLER.read(partyDTO.attributes));
 
         var charactersInZone = GET_CURRENT_GAME_ZONE.get().charactersRepresentation();
-        for(var i = 0; i < partyDTO.pcs.length; i++) {
+        for (var i = 0; i < partyDTO.pcs.length; i++) {
             var pcDTO = partyDTO.pcs[i];
             var pcUuid = UUID.fromString(pcDTO.uuid);
             var matchFromGameZone = charactersInZone.get(pcUuid);

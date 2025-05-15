@@ -2,32 +2,32 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.test.fakes.FakeDeletable;
 import inaugural.soliloquy.gamestate.test.fakes.FakeHasDeletionInvariants;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class HasDeletionInvariantsTests {
     private final FakeDeletable DELETABLE = new FakeDeletable();
     private final String CONTAINING_CLASS_NAME = "ContainingClassName";
 
-    private FakeHasDeletionInvariants _hasDeletionInvariants;
+    private FakeHasDeletionInvariants hasDeletionInvariants;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        _hasDeletionInvariants = new FakeHasDeletionInvariants();
-        _hasDeletionInvariants.ContainingObject = DELETABLE;
-        _hasDeletionInvariants.ContainingClassName = CONTAINING_CLASS_NAME;
+        hasDeletionInvariants = new FakeHasDeletionInvariants();
+        hasDeletionInvariants.ContainingObject = DELETABLE;
+        hasDeletionInvariants.ContainingClassName = CONTAINING_CLASS_NAME;
     }
 
     @Test
     public void testDeletedInvariant() {
-        _hasDeletionInvariants.delete();
+        hasDeletionInvariants.delete();
 
         try {
-            _hasDeletionInvariants.callEnforceInvariants();
+            hasDeletionInvariants.callEnforceInvariants();
         }
         catch (EntityDeletedException e) {
             assertEquals(FakeHasDeletionInvariants.class.getCanonicalName() +
@@ -44,7 +44,7 @@ public class HasDeletionInvariantsTests {
         DELETABLE.delete();
 
         try {
-            _hasDeletionInvariants.callEnforceInvariants();
+            hasDeletionInvariants.callEnforceInvariants();
         }
         catch (IllegalStateException e) {
             assertEquals(FakeHasDeletionInvariants.class.getCanonicalName() +

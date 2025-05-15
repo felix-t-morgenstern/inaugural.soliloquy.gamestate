@@ -14,9 +14,4 @@ public class FakeDeletable implements Deletable {
     public boolean isDeleted() {
         return Deleted;
     }
-
-    @Override
-    public String getInterfaceName() {
-        return Deletable.class.getCanonicalName();
-    }
 }

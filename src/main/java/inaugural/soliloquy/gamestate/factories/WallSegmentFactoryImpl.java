@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.factories;
 
 import inaugural.soliloquy.gamestate.entities.WallSegmentImpl;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.WallSegment;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -10,20 +9,21 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.WallSegmentFactory;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
+import java.util.Map;
 import java.util.function.Function;
 
 public class WallSegmentFactoryImpl implements WallSegmentFactory {
-    private final TypeHandler<VariableCache> DATA_HANDLER;
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER;
     private final Function<String, WallSegmentType> GET_SEGMENT_TYPE;
     private final Function<String, GameMovementEvent> GET_MOVEMENT_EVENT;
     private final Function<String, GameAbilityEvent> GET_ABILITY_EVENT;
 
     @SuppressWarnings("ConstantConditions")
-    public WallSegmentFactoryImpl(TypeHandler<VariableCache> dataHandler,
+    public WallSegmentFactoryImpl(@SuppressWarnings("rawtypes") TypeHandler<Map> mapHandler,
                                   Function<String, WallSegmentType> getSegmentType,
                                   Function<String, GameMovementEvent> getMovementEvent,
                                   Function<String, GameAbilityEvent> getAbilityEvent) {
-        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         GET_SEGMENT_TYPE = Check.ifNull(getSegmentType, "getSegmentType");
         GET_MOVEMENT_EVENT = Check.ifNull(getMovementEvent, "getMovementEvent");
         GET_ABILITY_EVENT = Check.ifNull(getAbilityEvent, "getAbilityEvent");
@@ -41,7 +41,8 @@ public class WallSegmentFactoryImpl implements WallSegmentFactory {
                             ") does not correspond to a valid WallSegmentType");
         }
 
-        var data = DATA_HANDLER.read(definition.data);
+        //noinspection unchecked
+        var data = (Map<String, Object>) MAP_HANDLER.read(definition.data);
 
         var output = new WallSegmentImpl(data);
         output.setType(segmentType);
@@ -69,10 +70,5 @@ public class WallSegmentFactoryImpl implements WallSegmentFactory {
         }
 
         return output;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return WallSegmentFactory.class.getCanonicalName();
     }
 }

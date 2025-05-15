@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import inaugural.soliloquy.tools.generic.CanGetInterfaceName;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.*;
 
@@ -10,23 +9,19 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemIsPresentElsewhere
         implements TileEntities<TEntity> {
     private final Tile TILE;
-    private final TEntity ARCHETYPE;
     final Map<TEntity, Integer> ENTITIES;
-
-    private final static CanGetInterfaceName CAN_GET_INTERFACE_NAME = new CanGetInterfaceName();
 
     private Consumer<TEntity> actionAfterAdding;
     private Consumer<TEntity> actionAfterRemoving;
 
     @SuppressWarnings("ConstantConditions")
-    public TileEntitiesImpl(Tile tile, TEntity archetype) {
+    public TileEntitiesImpl(Tile tile) {
         TILE = Check.ifNull(tile, "tile");
-        ARCHETYPE = Check.ifNull(archetype, "archetype");
 
         ENTITIES = mapOf();
     }
@@ -146,13 +141,6 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     }
 
     @Override
-    public String getInterfaceName() {
-        enforceDeletionInvariants();
-        return TileEntities.class.getCanonicalName() + "<" +
-                CAN_GET_INTERFACE_NAME.getProperTypeName(archetype()) + ">";
-    }
-
-    @Override
     protected String containingClassName() {
         return "tile";
     }
@@ -160,11 +148,6 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
     @Override
     protected Deletable getContainingObject() {
         return TILE;
-    }
-
-    @Override
-    public TEntity archetype() {
-        return ARCHETYPE;
     }
 
     private void enforceAssignmentInvariant(TEntity entity, String methodName) {
@@ -195,7 +178,7 @@ public class TileEntitiesImpl<TEntity extends TileEntity> extends CanTellIfItemI
 
             @Override
             public Pair<TEntity, Integer> next() {
-                return pairOf(entities.next(), zIndices.next(), ARCHETYPE, 0);
+                return pairOf(entities.next(), zIndices.next());
             }
         };
     }

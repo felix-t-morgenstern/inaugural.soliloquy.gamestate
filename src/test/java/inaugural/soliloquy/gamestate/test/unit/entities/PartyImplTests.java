@@ -1,32 +1,33 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.PartyImpl;
-import inaugural.soliloquy.gamestate.test.stubs.VariableCacheStub;
-import org.junit.Before;
-import org.junit.Test;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.Party;
 
-import static org.junit.Assert.*;
+import java.util.Map;
+
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
+import static inaugural.soliloquy.tools.random.Random.randomInt;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static org.junit.jupiter.api.Assertions.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 public class PartyImplTests {
-    private final static VariableCache DATA = new VariableCacheStub();
+    private Map<String, Object> data;
 
     private Party party;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        party = new PartyImpl(DATA);
+        data = mapOf(pairOf(randomString(), randomInt()));
+
+        party = new PartyImpl(data);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new PartyImpl(null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(Party.class.getCanonicalName(), party.getInterfaceName());
     }
 
     @Test
@@ -36,6 +37,7 @@ public class PartyImplTests {
 
     @Test
     public void testAttributes() {
-        assertSame(DATA, party.attributes());
+        assertEquals(data, party.attributes());
+        assertNotSame(data, party.attributes());
     }
 }

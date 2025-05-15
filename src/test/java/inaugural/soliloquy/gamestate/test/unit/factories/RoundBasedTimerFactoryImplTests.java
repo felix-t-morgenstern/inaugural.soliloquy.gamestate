@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.RoundBasedTimerFactoryImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
@@ -11,8 +11,8 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +29,7 @@ public class RoundBasedTimerFactoryImplTests {
 
     private RoundBasedTimerFactory roundbasedtimerfactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockAction = mock(Action.class);
         when(mockAction.id()).thenReturn(ACTION_ID);
@@ -40,14 +40,8 @@ public class RoundBasedTimerFactoryImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new RoundBasedTimerFactoryImpl(null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(RoundBasedTimerFactory.class.getCanonicalName(),
-                roundbasedtimerfactory.getInterfaceName());
     }
 
     @Test

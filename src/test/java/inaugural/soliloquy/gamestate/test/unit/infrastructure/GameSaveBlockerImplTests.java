@@ -1,32 +1,27 @@
 package inaugural.soliloquy.gamestate.test.unit.infrastructure;
 
 import inaugural.soliloquy.gamestate.infrastructure.GameSaveBlockerImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class GameSaveBlockerImplTests {
     private GameSaveBlocker gameSaveBlocker;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         gameSaveBlocker = new GameSaveBlockerImpl();
     }
 
     @Test
-    public void testGetInterfaceName() {
-        assertEquals(GameSaveBlocker.class.getCanonicalName(),
-                gameSaveBlocker.getInterfaceName());
-    }
-
-    @Test
     public void testPlaceAndReleaseTriggeredEventBlockAndCanSaveGame() {
-        UUID block1 = UUID.randomUUID();
-        UUID block2 = UUID.randomUUID();
+        var block1 = UUID.randomUUID();
+        var block2 = UUID.randomUUID();
 
         assertTrue(gameSaveBlocker.canSaveGame());
 
@@ -45,7 +40,7 @@ public class GameSaveBlockerImplTests {
     }
 
     @Test
-    public void testPlaceAndReleaseTriggeredEventBlockWithInvalidParams() {
+    public void testPlaceAndReleaseTriggeredEventBlockWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 gameSaveBlocker.placeEventFiringBlock(null));
         assertThrows(IllegalArgumentException.class, () ->
@@ -67,7 +62,7 @@ public class GameSaveBlockerImplTests {
 
     @Test
     public void testPlaceAndReleaseManualAndTriggeredEventBlocksAndCanSaveGame() {
-        UUID block = UUID.randomUUID();
+        var block = UUID.randomUUID();
 
         assertTrue(gameSaveBlocker.canSaveGame());
 

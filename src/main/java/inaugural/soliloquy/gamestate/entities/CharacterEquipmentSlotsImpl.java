@@ -10,8 +10,7 @@ import soliloquy.specs.gamestate.entities.Item;
 import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         implements CharacterEquipmentSlots {
@@ -27,17 +26,11 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
     @Override
     public void afterDeleted() throws IllegalStateException {
         for (var entry : EQUIPMENT_SLOTS.entrySet()) {
-            var item = entry.getValue().item1();
+            var item = entry.getValue().FIRST;
             if (item != null && !item.isDeleted()) {
                 item.delete();
             }
         }
-    }
-
-    @Override
-    public String getInterfaceName() {
-        enforceDeletionInvariants();
-        return CharacterEquipmentSlots.class.getCanonicalName();
     }
 
     @Override
@@ -46,7 +39,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         enforceDeletionInvariants();
         Map<String, Item> characterEquipmentSlots = mapOf();
         for (var equipmentSlot : EQUIPMENT_SLOTS.entrySet()) {
-            characterEquipmentSlots.put(equipmentSlot.getKey(), equipmentSlot.getValue().item1());
+            characterEquipmentSlots.put(equipmentSlot.getKey(), equipmentSlot.getValue().FIRST);
         }
         return characterEquipmentSlots;
     }
@@ -57,8 +50,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         enforceDeletionInvariants();
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
         if (!EQUIPMENT_SLOTS.containsKey(equipmentSlotType)) {
-            EQUIPMENT_SLOTS.putIfAbsent(equipmentSlotType,
-                    pairOf(null, true, generateSimpleArchetype(Item.class), true));
+            EQUIPMENT_SLOTS.putIfAbsent(equipmentSlotType, pairOf(null, true));
         }
     }
 
@@ -79,7 +71,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
         enforceItemReferencesCorrectSlotInvariant("removeCharacterEquipmentSlot",
                 equipmentSlotType);
         Check.ifNullOrEmpty(equipmentSlotType, "equipmentSlotType");
-        var itemInSlot = EQUIPMENT_SLOTS.get(equipmentSlotType).item1();
+        var itemInSlot = EQUIPMENT_SLOTS.get(equipmentSlotType).FIRST;
         EQUIPMENT_SLOTS.remove(equipmentSlotType);
         enforceItemReferencesCorrectSlotInvariant("removeCharacterEquipmentSlot",
                 equipmentSlotType);
@@ -96,7 +88,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.itemInSlot: no equipment slot of specified type");
         }
-        return EQUIPMENT_SLOTS.get(equipmentSlotType).item1();
+        return EQUIPMENT_SLOTS.get(equipmentSlotType).FIRST;
     }
 
     @Override
@@ -129,7 +121,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
 
         var equipmentSlot = EQUIPMENT_SLOTS.get(equipmentSlotType);
 
-        if (!equipmentSlot.item2()) {
+        if (!equipmentSlot.SECOND) {
             throw new UnsupportedOperationException(
                     "CharacterEquipmentSlots.equipItemToSlot: item in equipmentSlotType is set to" +
                             " prohibit alteration");
@@ -144,13 +136,11 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
             throw new IllegalArgumentException(
                     "CharacterEquipmentSlots.equipItemToSlot: item is already present elsewhere");
         }
-        var previousItem = equipmentSlot.item1();
+        var previousItem = equipmentSlot.FIRST;
         if (previousItem != null) {
             previousItem.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(null, null);
         }
-        EQUIPMENT_SLOTS.put(equipmentSlotType,
-                pairOf(item, equipmentSlot.item2(),
-                        equipmentSlot.firstArchetype(), equipmentSlot.secondArchetype()));
+        EQUIPMENT_SLOTS.put(equipmentSlotType, pairOf(item, equipmentSlot.SECOND));
         if (item != null) {
             item.assignEquipmentSlotAfterAddedToCharacterEquipmentSlot(CHARACTER,
                     equipmentSlotType);
@@ -173,7 +163,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
                             "specified type");
         }
         enforceItemReferencesCorrectSlotInvariant("getCanAlterEquipmentInSlot", equipmentSlotType);
-        return EQUIPMENT_SLOTS.get(equipmentSlotType).item2();
+        return EQUIPMENT_SLOTS.get(equipmentSlotType).SECOND;
     }
 
     @Override
@@ -190,10 +180,8 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
                             "specified type");
         }
         var equipmentSlot = EQUIPMENT_SLOTS.get(equipmentSlotType);
-        EQUIPMENT_SLOTS.put(equipmentSlotType, pairOf(
-                equipmentSlot.item1(), canAlterEquipmentInSlot,
-                equipmentSlot.firstArchetype(), equipmentSlot.secondArchetype()
-        ));
+        EQUIPMENT_SLOTS.put(equipmentSlotType,
+                pairOf(equipmentSlot.FIRST, canAlterEquipmentInSlot));
     }
 
     @Override
@@ -210,7 +198,7 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
                                                            String equipmentSlotType) {
         var slot = EQUIPMENT_SLOTS.get(equipmentSlotType);
         if (slot != null) {
-            var itemInSlot = slot.item1();
+            var itemInSlot = slot.FIRST;
             if (itemInSlot != null) {
                 var itemEquipmentSlot = itemInSlot.equipmentSlot();
                 if (itemEquipmentSlot == null) {
@@ -218,11 +206,11 @@ public class CharacterEquipmentSlotsImpl extends CanTellIfItemIsPresentElsewhere
                             ": Item in equipment slot (" + equipmentSlotType +
                             ") is not assigned to that slot");
                 }
-                if (itemEquipmentSlot.item1() != CHARACTER) {
+                if (itemEquipmentSlot.FIRST != CHARACTER) {
                     throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
                             ": Item is assigned to wrong Character");
                 }
-                if (!itemEquipmentSlot.item2().equals(equipmentSlotType)) {
+                if (!itemEquipmentSlot.SECOND.equals(equipmentSlotType)) {
                     throw new IllegalStateException("CharacterEquipmentSlotsImpl." + methodName +
                             ": Item is assigned to wrong Character");
                 }

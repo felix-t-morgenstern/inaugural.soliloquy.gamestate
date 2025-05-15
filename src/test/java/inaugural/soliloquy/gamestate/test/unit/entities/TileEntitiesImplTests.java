@@ -1,30 +1,29 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileEntitiesImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.Character;
-import soliloquy.specs.gamestate.entities.*;
+import soliloquy.specs.gamestate.entities.Item;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.TileFixture;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
 import java.util.List;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TileEntitiesImplTests {
-    private final Item ARCHETYPE = generateSimpleArchetype(Item.class);
-
     @Mock private Tile mockTile;
     @Mock private Item mockItem1;
     @Mock private Item mockItem2;
@@ -32,22 +31,14 @@ public class TileEntitiesImplTests {
 
     private TileEntitiesImpl<Item> tileEntities;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        tileEntities = new TileEntitiesImpl<>(mockTile, ARCHETYPE);
+        tileEntities = new TileEntitiesImpl<>(mockTile);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(null, ARCHETYPE));
-        assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(mockTile, null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(TileEntities.class.getCanonicalName() + "<" + Item.class.getCanonicalName() +
-                        ">",
-                tileEntities.getInterfaceName());
+    public void testConstructorWithInvalidArgs() {
+        assertThrows(IllegalArgumentException.class, () -> new TileEntitiesImpl<>(null));
     }
 
     @Test
@@ -93,7 +84,7 @@ public class TileEntitiesImplTests {
     }
 
     @Test
-    public void testAddContainsAndRemoveWithInvalidParams() {
+    public void testAddContainsAndRemoveWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> tileEntities.add(null));
         assertThrows(IllegalArgumentException.class, () -> tileEntities.add(null, 0));
         assertThrows(IllegalArgumentException.class, () -> tileEntities.contains(null));
@@ -141,19 +132,19 @@ public class TileEntitiesImplTests {
         assertEquals(3, fromIterator.size());
         var entityFound = new boolean[3];
         fromIterator.forEach(pair -> {
-            if (pair.item1() == mockItem1) {
+            if (pair.FIRST == mockItem1) {
                 assertFalse(entityFound[0]);
-                assertEquals(z1, pair.item2());
+                assertEquals(z1, pair.SECOND);
                 entityFound[0] = true;
             }
-            if (pair.item1() == mockItem2) {
+            if (pair.FIRST == mockItem2) {
                 assertFalse(entityFound[1]);
-                assertEquals(z2, pair.item2());
+                assertEquals(z2, pair.SECOND);
                 entityFound[1] = true;
             }
-            if (pair.item1() == mockItem3) {
+            if (pair.FIRST == mockItem3) {
                 assertFalse(entityFound[2]);
-                assertEquals(z3, pair.item2());
+                assertEquals(z3, pair.SECOND);
                 entityFound[2] = true;
             }
         });
@@ -201,11 +192,6 @@ public class TileEntitiesImplTests {
     }
 
     @Test
-    public void testArchetype() {
-        assertSame(ARCHETYPE, tileEntities.archetype());
-    }
-
-    @Test
     public void testDelete() {
         assertFalse(tileEntities.isDeleted());
 
@@ -226,7 +212,6 @@ public class TileEntitiesImplTests {
     public void testDeletedInvariant() {
         tileEntities.delete();
 
-        assertThrows(EntityDeletedException.class, () -> tileEntities.getInterfaceName());
         assertThrows(EntityDeletedException.class, () -> tileEntities.representation());
         assertThrows(EntityDeletedException.class, () -> tileEntities.add(mockItem1));
         assertThrows(EntityDeletedException.class, () -> tileEntities.add(mockItem1, 0));
@@ -239,7 +224,6 @@ public class TileEntitiesImplTests {
     public void testTileDeletedInvariant() {
         when(mockTile.isDeleted()).thenReturn(true);
 
-        assertThrows(IllegalStateException.class, () -> tileEntities.getInterfaceName());
         assertThrows(IllegalStateException.class, () -> tileEntities.representation());
         assertThrows(IllegalStateException.class, () -> tileEntities.add(mockItem1));
         assertThrows(IllegalStateException.class, () -> tileEntities.add(mockItem1, 0));

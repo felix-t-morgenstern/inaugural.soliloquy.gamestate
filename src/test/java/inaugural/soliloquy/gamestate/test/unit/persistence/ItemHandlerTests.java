@@ -1,165 +1,153 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.ItemHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import soliloquy.specs.common.infrastructure.Registry;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
 import soliloquy.specs.ruleset.entities.ItemType;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static inaugural.soliloquy.tools.random.Random.*;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
 import static inaugural.soliloquy.tools.testing.Mock.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class ItemHandlerTests {
     private final UUID UUID = java.util.UUID.randomUUID();
     private final String ITEM_TYPE_ID = randomString();
     private final int NUM_CHARGES = randomInt();
     private final int NUM_IN_STACK = randomInt();
-    private final float X_TILE_WIDTH_OFFSET = randomFloat();
-    private final float Y_TILE_HEIGHT_OFFSET = randomFloat();
+    private final Vertex TILE_OFFSET = randomVertex();
     private final String DATA_WRITTEN = randomString();
-    private final HandlerAndEntity<VariableCache> DATA_HANDLER_AND_ENTITY =
-            generateMockEntityAndHandler(VariableCache.class, DATA_WRITTEN);
-    private final TypeHandler<VariableCache> DATA_HANDLER = DATA_HANDLER_AND_ENTITY.handler;
-    private final VariableCache DATA = DATA_HANDLER_AND_ENTITY.entity;
+    @SuppressWarnings("rawtypes") private final HandlerAndEntity<Map> MAP_HANDLER_AND_ENTITY =
+            generateMockEntityAndHandler(Map.class, DATA_WRITTEN);
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER =
+            MAP_HANDLER_AND_ENTITY.handler;
+    @SuppressWarnings("unchecked")
+    private final Map<String, Object> DATA = MAP_HANDLER_AND_ENTITY.entity;
 
     private final String WRITTEN_VALUE_WITH_CHARGES = String.format(
             "{\"uuid\":\"%s\",\"typeId\":\"%s\",\"xOffset\":%s,\"yOffset\":%s,\"charges\":%d," +
                     "\"data\":\"%s\"}",
-            UUID, ITEM_TYPE_ID, X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET, NUM_CHARGES,
+            UUID, ITEM_TYPE_ID, TILE_OFFSET.X, TILE_OFFSET.Y, NUM_CHARGES,
             DATA_WRITTEN);
     private final String WRITTEN_VALUE_STACKABLE = String.format(
             "{\"uuid\":\"%s\",\"typeId\":\"%s\",\"xOffset\":%s,\"yOffset\":%s," +
                     "\"numberInStack\":%d,\"data\":\"%s\"}",
-            UUID, ITEM_TYPE_ID, X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET, NUM_IN_STACK,
+            UUID, ITEM_TYPE_ID, TILE_OFFSET.X, TILE_OFFSET.Y, NUM_IN_STACK,
             DATA_WRITTEN);
 
-    @Mock private ItemType itemType;
-    @Mock private Registry<ItemType> itemTypesRegistry;
-    @Mock private Item itemWithCharges;
-    @Mock private Item itemStackable;
+    @Mock private ItemType mockItemType;
+    @Mock private Map<String, ItemType> mockGetItemType;
+    @Mock private Item mockItemWithCharges;
+    @Mock private Item mockItemStackable;
     @Mock private Item factoryOutput;
     @Mock private ItemFactory itemFactory;
 
     private TypeHandler<Item> itemHandler;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        itemType = generateMockWithId(ItemType.class, ITEM_TYPE_ID);
+        mockItemType = generateMockWithId(ItemType.class, ITEM_TYPE_ID);
 
-        //noinspection unchecked
-        itemTypesRegistry = (Registry<ItemType>) mock(Registry.class);
-        when(itemTypesRegistry.get(anyString())).thenReturn(itemType);
+        lenient().when(mockGetItemType.get(anyString())).thenReturn(mockItemType);
 
-        itemWithCharges = generateMockItem();
-        when(itemWithCharges.getCharges()).thenReturn(NUM_CHARGES);
+        mockItemWithCharges = generateMockItem();
+        lenient().when(mockItemWithCharges.getCharges()).thenReturn(NUM_CHARGES);
 
-        itemStackable = generateMockItem();
-        when(itemStackable.getNumberInStack()).thenReturn(NUM_IN_STACK);
+        mockItemStackable = generateMockItem();
+        lenient().when(mockItemStackable.getNumberInStack()).thenReturn(NUM_IN_STACK);
 
         factoryOutput = mock(Item.class);
 
         itemFactory = mock(ItemFactory.class);
-        when(itemFactory.make(any(), any(), any())).thenReturn(factoryOutput);
+        lenient().when(itemFactory.make(any(), any(), any())).thenReturn(factoryOutput);
 
-        itemHandler = new ItemHandler(itemTypesRegistry::get, DATA_HANDLER, itemFactory);
+        itemHandler = new ItemHandler(mockGetItemType::get, MAP_HANDLER, itemFactory);
     }
 
     private Item generateMockItem() {
-        Item item = mock(Item.class);
-        when(item.uuid()).thenReturn(UUID);
-        when(item.type()).thenReturn(itemType);
-        when(item.data()).thenReturn(DATA);
-        when(item.getTileOffset()).thenReturn(Vertex.of(X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET));
+        var item = mock(Item.class);
+        lenient().when(item.uuid()).thenReturn(UUID);
+        lenient().when(item.type()).thenReturn(mockItemType);
+        lenient().when(item.data()).thenReturn(DATA);
+        lenient().when(item.getTileOffset()).thenReturn(TILE_OFFSET);
         return item;
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> new ItemHandler(null, DATA_HANDLER, itemFactory));
+                () -> new ItemHandler(null, MAP_HANDLER, itemFactory));
         assertThrows(IllegalArgumentException.class,
-                () -> new ItemHandler(itemTypesRegistry::get, null, itemFactory));
+                () -> new ItemHandler(mockGetItemType::get, null, itemFactory));
         assertThrows(IllegalArgumentException.class,
-                () -> new ItemHandler(itemTypesRegistry::get, DATA_HANDLER, null));
-    }
-
-    @Test
-    public void testArchetype() {
-        assertNotNull(itemHandler.archetype());
-        assertEquals(Item.class.getCanonicalName(),
-                itemHandler.archetype().getInterfaceName());
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                        Item.class.getCanonicalName() + ">",
-                itemHandler.getInterfaceName());
+                () -> new ItemHandler(mockGetItemType::get, MAP_HANDLER, null));
     }
 
     @Test
     public void testWriteWithCharges() {
-        when(itemType.hasCharges()).thenReturn(true);
+        when(mockItemType.hasCharges()).thenReturn(true);
 
-        String writtenValue = itemHandler.write(itemWithCharges);
+        String writtenValue = itemHandler.write(mockItemWithCharges);
 
         assertEquals(WRITTEN_VALUE_WITH_CHARGES, writtenValue);
     }
 
     @Test
     public void testWriteStackable() {
-        when(itemType.isStackable()).thenReturn(true);
+        when(mockItemType.isStackable()).thenReturn(true);
 
-        String writtenValue = itemHandler.write(itemStackable);
+        String writtenValue = itemHandler.write(mockItemStackable);
 
         assertEquals(WRITTEN_VALUE_STACKABLE, writtenValue);
     }
 
     @Test
-    public void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> itemHandler.write(null));
     }
 
     @Test
     public void testReadWithCharges() {
-        when(itemType.hasCharges()).thenReturn(true);
+        when(mockItemType.hasCharges()).thenReturn(true);
 
         Item output = itemHandler.read(WRITTEN_VALUE_WITH_CHARGES);
 
         assertSame(factoryOutput, output);
-        verify(itemTypesRegistry, times(1)).get(ITEM_TYPE_ID);
-        verify(DATA_HANDLER, times(1)).read(DATA_WRITTEN);
-        verify(itemFactory, times(1)).make(itemType, DATA, UUID);
-        verify(factoryOutput, times(1)).setTileOffset(eq(Vertex.of(X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET)));
-        verify(factoryOutput, times(1)).setCharges(NUM_CHARGES);
+        verify(mockGetItemType, once()).get(ITEM_TYPE_ID);
+        verify(MAP_HANDLER, once()).read(DATA_WRITTEN);
+        verify(itemFactory, once()).make(mockItemType, DATA, UUID);
+        verify(factoryOutput, once()).setTileOffset(eq(TILE_OFFSET));
+        verify(factoryOutput, once()).setCharges(NUM_CHARGES);
     }
 
     @Test
     public void testReadStackable() {
-        when(itemType.isStackable()).thenReturn(true);
+        when(mockItemType.isStackable()).thenReturn(true);
 
         Item output = itemHandler.read(WRITTEN_VALUE_STACKABLE);
 
         assertSame(factoryOutput, output);
-        verify(itemTypesRegistry, times(1)).get(ITEM_TYPE_ID);
-        verify(DATA_HANDLER, times(1)).read(DATA_WRITTEN);
-        verify(itemFactory, times(1)).make(itemType, DATA, UUID);
-        verify(factoryOutput, times(1)).setTileOffset(eq(Vertex.of(X_TILE_WIDTH_OFFSET, Y_TILE_HEIGHT_OFFSET)));
-        verify(factoryOutput, times(1)).setNumberInStack(NUM_IN_STACK);
+        verify(mockGetItemType, once()).get(ITEM_TYPE_ID);
+        verify(MAP_HANDLER, once()).read(DATA_WRITTEN);
+        verify(itemFactory, once()).make(mockItemType, DATA, UUID);
+        verify(factoryOutput, once()).setTileOffset(eq(TILE_OFFSET));
+        verify(factoryOutput, once()).setNumberInStack(NUM_IN_STACK);
     }
 
     @Test
-    public void testReadWithInvalidParams() {
+    public void testReadWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> itemHandler.read(null));
         assertThrows(IllegalArgumentException.class, () -> itemHandler.read(""));
     }

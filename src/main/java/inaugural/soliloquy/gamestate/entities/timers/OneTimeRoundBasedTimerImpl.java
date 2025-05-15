@@ -33,19 +33,13 @@ public class OneTimeRoundBasedTimerImpl extends AbstractRoundBasedTimer<OneTimeR
     }
 
     @Override
-    public String getInterfaceName() {
-        return OneTimeRoundBasedTimer.class.getCanonicalName();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (o == null) {
             return false;
         }
-        if (!(o instanceof OneTimeRoundBasedTimer)) {
+        if (!(o instanceof OneTimeRoundBasedTimer oneTimeTimer)) {
             return false;
         }
-        OneTimeRoundBasedTimer oneTimeTimer = (OneTimeRoundBasedTimer) o;
         return ROUND_WHEN_GOES_OFF == oneTimeTimer.roundWhenGoesOff() &&
                 equalz(oneTimeTimer);
     }

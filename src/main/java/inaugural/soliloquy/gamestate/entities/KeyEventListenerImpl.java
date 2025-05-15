@@ -24,11 +24,6 @@ public class KeyEventListenerImpl implements KeyEventListener {
     }
 
     @Override
-    public String getInterfaceName() {
-        return KeyEventListener.class.getCanonicalName();
-    }
-
-    @Override
     public void addContext(KeyBindingContext keyBindingContext, int priority)
             throws IllegalArgumentException {
         Check.ifNull(keyBindingContext, "keyBindingContext");

@@ -9,9 +9,4 @@ public class KeyBindingContextFactoryImpl implements KeyBindingContextFactory {
     public KeyBindingContext make() {
         return new KeyBindingContextImpl();
     }
-
-    @Override
-    public String getInterfaceName() {
-        return KeyBindingContextFactory.class.getCanonicalName();
-    }
 }

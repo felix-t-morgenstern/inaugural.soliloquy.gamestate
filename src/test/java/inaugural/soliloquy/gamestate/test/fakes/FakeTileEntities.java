@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 public class FakeTileEntities<TEntity extends TileEntity> implements TileEntities<TEntity> {
     public final Map<TEntity, Integer> ENTITIES = mapOf();
@@ -84,11 +84,6 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public void delete() throws IllegalStateException {
         _isDeleted = true;
     }
@@ -113,10 +108,5 @@ public class FakeTileEntities<TEntity extends TileEntity> implements TileEntitie
                 return pairOf(entity, ENTITIES.get(entity));
             }
         };
-    }
-
-    @Override
-    public TEntity archetype() {
-        return null;
     }
 }

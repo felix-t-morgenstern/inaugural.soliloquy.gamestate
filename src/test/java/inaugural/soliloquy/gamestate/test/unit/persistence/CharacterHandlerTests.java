@@ -1,12 +1,12 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
+import inaugural.soliloquy.gamestate.entities.CharacterImpl;
 import inaugural.soliloquy.gamestate.persistence.CharacterHandler;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
@@ -28,43 +28,62 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import static inaugural.soliloquy.tools.collections.Collections.*;
-import static inaugural.soliloquy.tools.random.Random.randomInt;
-import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.random.Random.*;
 import static inaugural.soliloquy.tools.testing.Mock.*;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static soliloquy.specs.common.shared.Direction.SOUTHWEST;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
+import static soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CharacterHandlerTests {
     private final UUID UUID = java.util.UUID.randomUUID();
 
-    private final Map<String, CharacterType> CHARACTER_TYPES = mapOf();
-
     private final String CHARACTER_TYPE_ID = randomString();
+    private final LookupAndEntitiesWithId<CharacterType> MOCK_TYPE_AND_LOOKUP =
+            generateMockLookupFunctionWithId(CharacterType.class, CHARACTER_TYPE_ID);
+    private final CharacterType MOCK_TYPE = MOCK_TYPE_AND_LOOKUP.entities.getFirst();
+    private final Function<String, CharacterType> MOCK_GET_CHARACTER_TYPE =
+            MOCK_TYPE_AND_LOOKUP.lookup;
 
     private final String CASE = randomString();
     private final String ARTICLE = randomString();
 
     private final String STANCE = randomString();
 
-    private final Direction DIRECTION = SOUTHWEST;
+    private final Direction DIRECTION = randomDirection();
 
-    private final Map<String, CharacterClassification> CLASSIFICATIONS = mapOf();
     private final String CLASSIFICATION_ID = randomString();
+    private final LookupAndEntitiesWithId<CharacterClassification> MOCK_CLASSIFICATION_AND_LOOKUP =
+            generateMockLookupFunctionWithId(CharacterClassification.class, CLASSIFICATION_ID);
+    private final CharacterClassification MOCK_CLASSIFICATION =
+            MOCK_CLASSIFICATION_AND_LOOKUP.entities.getFirst();
+    private final Function<String, CharacterClassification> MOCK_GET_CLASSIFICATION =
+            MOCK_CLASSIFICATION_AND_LOOKUP.lookup;
 
-    private final Map<String, ImageAssetSet> IMAGE_ASSET_SETS = mapOf();
     private final String IMAGE_ASSET_SET_ID = randomString();
+    private final LookupAndEntitiesWithId<ImageAssetSet> MOCK_IMAGE_ASSET_SET_AND_LOOKUP =
+            generateMockLookupFunctionWithId(ImageAssetSet.class, IMAGE_ASSET_SET_ID);
+    private final ImageAssetSet MOCK_IMAGE_ASSET_SET =
+            MOCK_IMAGE_ASSET_SET_AND_LOOKUP.entities.getFirst();
+    private final Function<String, ImageAssetSet> MOCK_GET_IMAGE_ASSET_SET =
+            MOCK_IMAGE_ASSET_SET_AND_LOOKUP.lookup;
 
-    private final Map<String, CharacterAIType> AI_TYPES = mapOf();
     private final String AI_TYPE_ID = randomString();
+    private final LookupAndEntitiesWithId<CharacterAIType> MOCK_AI_TYPE_AND_LOOKUP =
+            generateMockLookupFunctionWithId(CharacterAIType.class, AI_TYPE_ID);
+    private final CharacterAIType MOCK_AI_TYPE = MOCK_AI_TYPE_AND_LOOKUP.entities.getFirst();
+    private final Function<String, CharacterAIType> MOCK_GET_AI_TYPE =
+            MOCK_AI_TYPE_AND_LOOKUP.lookup;
 
-    private final String EVENTS_WRITTEN = randomString();
-    private final HandlerAndEntity<CharacterEvents> EVENTS_AND_HANDLER =
-            generateMockEntityAndHandler(CharacterEvents.class, EVENTS_WRITTEN);
-    private final CharacterEvents CHARACTER_EVENTS = EVENTS_AND_HANDLER.entity;
-    private final TypeHandler<CharacterEvents> EVENTS_HANDLER = EVENTS_AND_HANDLER.handler;
+    private final String CHARACTER_EVENT_ID = randomString();
+    private final String CHARACTER_EVENT_TRIGGER = randomString();
+    private final LookupAndEntitiesWithId<CharacterEvent> MOCK_CHARACTER_EVENT_AND_LOOKUP =
+            generateMockLookupFunctionWithId(CharacterEvent.class, CHARACTER_EVENT_ID);
+    private final CharacterEvent MOCK_CHARACTER_EVENT =
+            MOCK_CHARACTER_EVENT_AND_LOOKUP.entities.getFirst();
+    private final Function<String, CharacterEvent> MOCK_GET_CHARACTER_EVENT =
+            MOCK_CHARACTER_EVENT_AND_LOOKUP.lookup;
 
     private final String EQUIPMENT_SLOT = randomString();
 
@@ -81,47 +100,70 @@ public class CharacterHandlerTests {
             ITEM_HANDLER_AND_ENTITIES.entities.get(INVENTORY_ITEM_WRITTEN_VALUE);
 
     private final String VARIABLE_STAT_TYPE_ID = randomString();
+    private final LookupAndEntitiesWithId<VariableStatisticType>
+            MOCK_VARIABLE_STAT_TYPE_AND_LOOKUP =
+            generateMockLookupFunctionWithId(VariableStatisticType.class, VARIABLE_STAT_TYPE_ID);
+    private final VariableStatisticType MOCK_VARIABLE_STAT_TYPE =
+            MOCK_VARIABLE_STAT_TYPE_AND_LOOKUP.entities.getFirst();
+    private final Function<String, VariableStatisticType> MOCK_GET_VARIABLE_STAT_TYPE =
+            MOCK_VARIABLE_STAT_TYPE_AND_LOOKUP.lookup;
     private final int VARIABLE_STAT_CURRENT_LEVEL = randomInt();
 
-    private final Map<String, StatusEffectType> STATUS_EFFECT_TYPES = mapOf();
     private final String STATUS_EFFECT_TYPE_ID = randomString();
+    private final LookupAndEntitiesWithId<StatusEffectType> MOCK_STATUS_EFFECT_TYPE_AND_LOOKUP =
+            generateMockLookupFunctionWithId(StatusEffectType.class, STATUS_EFFECT_TYPE_ID);
+    private final StatusEffectType MOCK_STATUS_EFFECT_TYPE =
+            MOCK_STATUS_EFFECT_TYPE_AND_LOOKUP.entities.getFirst();
+    private final Function<String, StatusEffectType> MOCK_GET_STATUS_EFFECT_TYPE =
+            MOCK_STATUS_EFFECT_TYPE_AND_LOOKUP.lookup;
     private final int STAT_EFFECT_LEVEL = randomInt();
 
-    private final Map<String, PassiveAbility> PASSIVE_ABILITIES = mapOf();
     private final String PASSIVE_ABILITY_ID = randomString();
+    private final LookupAndEntitiesWithId<PassiveAbility> MOCK_PASSIVE_ABILITY_AND_LOOKUP =
+            generateMockLookupFunctionWithId(PassiveAbility.class, PASSIVE_ABILITY_ID);
+    private final PassiveAbility MOCK_PASSIVE_ABILITY =
+            MOCK_PASSIVE_ABILITY_AND_LOOKUP.entities.getFirst();
+    private final Function<String, PassiveAbility> MOCK_GET_PASSIVE_ABILITY =
+            MOCK_PASSIVE_ABILITY_AND_LOOKUP.lookup;
 
-    private final Map<String, ActiveAbility> ACTIVE_ABILITIES = mapOf();
     private final String ACTIVE_ABILITY_ID = randomString();
+    private final LookupAndEntitiesWithId<ActiveAbility> MOCK_ACTIVE_ABILITY_AND_LOOKUP =
+            generateMockLookupFunctionWithId(ActiveAbility.class, ACTIVE_ABILITY_ID);
+    private final ActiveAbility MOCK_ACTIVE_ABILITY =
+            MOCK_ACTIVE_ABILITY_AND_LOOKUP.entities.getFirst();
+    private final Function<String, ActiveAbility> MOCK_GET_ACTIVE_ABILITY =
+            MOCK_ACTIVE_ABILITY_AND_LOOKUP.lookup;
 
-    private final Map<String, ReactiveAbility> REACTIVE_ABILITIES = mapOf();
     private final String REACTIVE_ABILITY_ID = randomString();
+    private final LookupAndEntitiesWithId<ReactiveAbility> MOCK_REACTIVE_ABILITY_AND_LOOKUP =
+            generateMockLookupFunctionWithId(ReactiveAbility.class, REACTIVE_ABILITY_ID);
+    private final ReactiveAbility MOCK_REACTIVE_ABILITY =
+            MOCK_REACTIVE_ABILITY_AND_LOOKUP.entities.getFirst();
+    private final Function<String, ReactiveAbility> MOCK_GET_REACTIVE_ABILITY =
+            MOCK_REACTIVE_ABILITY_AND_LOOKUP.lookup;
 
     private final String DATA_WRITTEN = randomString();
-    private final HandlerAndEntities<VariableCache> DATA_HANDLER_AND_ENTITIES =
-            generateMockHandlerAndEntities(VariableCache.class, arrayOf(DATA_WRITTEN));
-    private final TypeHandler<VariableCache> DATA_HANDLER = DATA_HANDLER_AND_ENTITIES.handler;
-    private final VariableCache DATA = DATA_HANDLER_AND_ENTITIES.entities.get(DATA_WRITTEN);
+    @SuppressWarnings("rawtypes")
+    private final HandlerAndEntities<Map> MAP_HANDLER_AND_ENTITIES =
+            generateMockHandlerAndEntities(Map.class, arrayOf(DATA_WRITTEN));
+    @SuppressWarnings("rawtypes")
+    private final TypeHandler<Map> MAP_HANDLER = MAP_HANDLER_AND_ENTITIES.handler;
+    @SuppressWarnings({"unchecked"})
+    private final Map<String, Object> MOCK_DATA =
+            MAP_HANDLER_AND_ENTITIES.entities.get(DATA_WRITTEN);
 
     private final String NAME = randomString();
 
-    @Mock private CharacterType mockCharacterType;
-    @Mock private CharacterClassification mockClassification;
-    @Mock private List<CharacterClassification> mockClassifications;
-    @Mock private Map<String, String> mockPronouns;
-    @Mock private ImageAssetSet mockImageAssetSet;
-    @Mock private CharacterAIType mockCharacterAIType;
+    private List<CharacterClassification> mockClassifications;
+    private Map<String, String> mockPronouns;
+    private List<PassiveAbility> mockPassiveAbilities;
+    private List<ActiveAbility> mockActiveAbilities;
+    private List<ReactiveAbility> mockReactiveAbilities;
+
+    @Mock private CharacterEvents mockCharacterEvents;
     @Mock private CharacterEquipmentSlots mockEquipmentSlots;
     @Mock private CharacterInventory mockInventory;
-    @Mock private VariableStatisticType mockVariableStatType;
-    @Mock private Function<String, VariableStatisticType> mockGetVariableStatType;
     @Mock private Map<VariableStatisticType, Integer> mockVariableStats;
-    @Mock private PassiveAbility mockPassiveAbility;
-    @Mock private ActiveAbility mockActiveAbility;
-    @Mock private ReactiveAbility mockReactiveAbility;
-    @Mock private List<PassiveAbility> mockPassiveAbilities;
-    @Mock private List<ActiveAbility> mockActiveAbilities;
-    @Mock private List<ReactiveAbility> mockReactiveAbilities;
-    @Mock private StatusEffectType mockStatusEffectType;
     @Mock private CharacterStatusEffects mockStatEffects;
     @Mock private Character mockCharacter;
     @Mock private CharacterFactory mockCharacterFactory;
@@ -130,180 +172,166 @@ public class CharacterHandlerTests {
             "{\"uuid\":\"%s\",\"characterTypeId\":\"%s\",\"classifications\":[\"%s\"]," +
                     "\"pronouns\":[{\"key\":\"%s\",\"val\":\"%s\"}],\"stance\":\"%s\"," +
                     "\"direction\":%s,\"assetSetId\":\"%s\",\"aiTypeId\":\"%s\"," +
-                    "\"events\":\"%s\",\"equipmentSlots\":[{\"key\":\"%s\",\"val\":\"%s\"}]," +
+                    "\"events\":[{\"id\":\"%s\",\"trigger\":\"%s\"}]," +
+                    "\"equipmentSlots\":[{\"key\":\"%s\",\"val\":\"%s\"}]," +
                     "\"inventoryItems\":[\"%s\"],\"variableStats\":[{\"type\":\"%s\"," +
                     "\"current\":%d}],\"statusEffects\":[{\"type\":\"%s\",\"value\":%d}]," +
                     "\"passiveAbilityIds\":[\"%s\"],\"activeAbilityIds\":[\"%s\"]," +
                     "\"reactiveAbilityIds\":[\"%s\"],\"isPlayerControlled\":true,\"data\":\"%s\"," +
                     "\"name\":\"%s\"}",
             UUID, CHARACTER_TYPE_ID, CLASSIFICATION_ID, CASE, ARTICLE, STANCE, DIRECTION.getValue(),
-            IMAGE_ASSET_SET_ID, AI_TYPE_ID, EVENTS_WRITTEN, EQUIPMENT_SLOT,
-            EQUIPMENT_SLOT_ITEM_WRITTEN_VALUE, INVENTORY_ITEM_WRITTEN_VALUE, VARIABLE_STAT_TYPE_ID,
-            VARIABLE_STAT_CURRENT_LEVEL, STATUS_EFFECT_TYPE_ID, STAT_EFFECT_LEVEL,
-            PASSIVE_ABILITY_ID,
-            ACTIVE_ABILITY_ID, REACTIVE_ABILITY_ID, DATA_WRITTEN, NAME);
+            IMAGE_ASSET_SET_ID, AI_TYPE_ID, CHARACTER_EVENT_ID, CHARACTER_EVENT_TRIGGER,
+            EQUIPMENT_SLOT, EQUIPMENT_SLOT_ITEM_WRITTEN_VALUE, INVENTORY_ITEM_WRITTEN_VALUE,
+            VARIABLE_STAT_TYPE_ID, VARIABLE_STAT_CURRENT_LEVEL, STATUS_EFFECT_TYPE_ID,
+            STAT_EFFECT_LEVEL, PASSIVE_ABILITY_ID, ACTIVE_ABILITY_ID, REACTIVE_ABILITY_ID,
+            DATA_WRITTEN, NAME);
 
     private TypeHandler<Character> handler;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        mockCharacterType = generateMockWithId(CharacterType.class, CHARACTER_TYPE_ID);
-
-        mockClassification = generateMockWithId(CharacterClassification.class, CLASSIFICATION_ID);
-
-        mockClassifications = generateMockList(mockClassification);
-
+        mockClassifications = generateMockList(MOCK_CLASSIFICATION);
         mockPronouns = generateMockMap(pairOf(CASE, ARTICLE));
+        mockPassiveAbilities = generateMockList(MOCK_PASSIVE_ABILITY);
+        mockActiveAbilities = generateMockList(MOCK_ACTIVE_ABILITY);
+        mockReactiveAbilities = generateMockList(MOCK_REACTIVE_ABILITY);
 
-        mockImageAssetSet = generateMockWithId(ImageAssetSet.class, IMAGE_ASSET_SET_ID);
+        lenient().when(mockCharacterEvents.representation()).thenReturn(
+                mapOf(pairOf(CHARACTER_EVENT_TRIGGER, listOf(MOCK_CHARACTER_EVENT))));
 
-        mockCharacterAIType = generateMockWithId(CharacterAIType.class, AI_TYPE_ID);
-
-        when(mockEquipmentSlots.representation()).thenReturn(
+        lenient().when(mockEquipmentSlots.representation()).thenReturn(
                 mapOf(pairOf(EQUIPMENT_SLOT, EQUIPMENT_SLOT_ITEM)));
 
-        when(mockInventory.representation()).thenReturn(listOf(INVENTORY_ITEM));
-
-        when(mockVariableStatType.id()).thenReturn(VARIABLE_STAT_TYPE_ID);
-
-        //noinspection unchecked
-        mockGetVariableStatType = (Function<String, VariableStatisticType>) mock(Function.class);
-        when(mockGetVariableStatType.apply(anyString())).thenReturn(mockVariableStatType);
+        lenient().when(mockInventory.representation()).thenReturn(listOf(INVENTORY_ITEM));
 
         mockVariableStats =
-                generateMockMap(pairOf(mockVariableStatType, VARIABLE_STAT_CURRENT_LEVEL));
+                generateMockMap(pairOf(MOCK_VARIABLE_STAT_TYPE, VARIABLE_STAT_CURRENT_LEVEL));
 
-        mockStatusEffectType = generateMockWithId(StatusEffectType.class, STATUS_EFFECT_TYPE_ID);
+        lenient().when(mockStatEffects.representation()).thenReturn(
+                mapOf(pairOf(MOCK_STATUS_EFFECT_TYPE, STAT_EFFECT_LEVEL)));
 
-        when(mockStatEffects.representation()).thenReturn(
-                mapOf(pairOf(mockStatusEffectType, STAT_EFFECT_LEVEL)));
-
-        mockPassiveAbility = generateMockWithId(PassiveAbility.class, PASSIVE_ABILITY_ID);
-
-        mockActiveAbility = generateMockWithId(ActiveAbility.class, ACTIVE_ABILITY_ID);
-
-        mockReactiveAbility = generateMockWithId(ReactiveAbility.class, REACTIVE_ABILITY_ID);
-
-        mockPassiveAbilities = generateMockList(mockPassiveAbility);
-
-        mockActiveAbilities = generateMockList(mockActiveAbility);
-
-        mockReactiveAbilities = generateMockList(mockReactiveAbility);
-
-        when(mockCharacter.uuid()).thenReturn(UUID);
-        when(mockCharacter.data()).thenReturn(DATA);
-        when(mockCharacter.type()).thenReturn(mockCharacterType);
-        when(mockCharacter.classifications()).thenReturn(mockClassifications);
-        when(mockCharacter.pronouns()).thenReturn(mockPronouns);
-        when(mockCharacter.getStance()).thenReturn(STANCE);
-        when(mockCharacter.getDirection()).thenReturn(DIRECTION);
-        when(mockCharacter.getImageAssetSet()).thenReturn(mockImageAssetSet);
-        when(mockCharacter.getAIType()).thenReturn(mockCharacterAIType);
-        when(mockCharacter.events()).thenReturn(CHARACTER_EVENTS);
-        when(mockCharacter.equipmentSlots()).thenReturn(mockEquipmentSlots);
-        when(mockCharacter.inventory()).thenReturn(mockInventory);
-        when(mockCharacter.variableStatisticCurrentValuesRepresentation())
+        lenient().when(mockCharacter.uuid()).thenReturn(UUID);
+        lenient().when(mockCharacter.data()).thenReturn(MOCK_DATA);
+        lenient().when(mockCharacter.type()).thenReturn(MOCK_TYPE);
+        lenient().when(mockCharacter.classifications()).thenReturn(mockClassifications);
+        lenient().when(mockCharacter.pronouns()).thenReturn(mockPronouns);
+        lenient().when(mockCharacter.getStance()).thenReturn(STANCE);
+        lenient().when(mockCharacter.getDirection()).thenReturn(DIRECTION);
+        lenient().when(mockCharacter.getImageAssetSet()).thenReturn(MOCK_IMAGE_ASSET_SET);
+        lenient().when(mockCharacter.getAIType()).thenReturn(MOCK_AI_TYPE);
+        lenient().when(mockCharacter.events()).thenReturn(mockCharacterEvents);
+        lenient().when(mockCharacter.equipmentSlots()).thenReturn(mockEquipmentSlots);
+        lenient().when(mockCharacter.inventory()).thenReturn(mockInventory);
+        lenient().when(mockCharacter.variableStatisticCurrentValuesRepresentation())
                 .thenReturn(mockVariableStats);
-        when(mockCharacter.statusEffects()).thenReturn(mockStatEffects);
-        when(mockCharacter.passiveAbilities()).thenReturn(mockPassiveAbilities);
-        when(mockCharacter.activeAbilities()).thenReturn(mockActiveAbilities);
-        when(mockCharacter.reactiveAbilities()).thenReturn(mockReactiveAbilities);
-        when(mockCharacter.getPlayerControlled()).thenReturn(true);
-        when(mockCharacter.getName()).thenReturn(NAME);
+        lenient().when(mockCharacter.statusEffects()).thenReturn(mockStatEffects);
+        lenient().when(mockCharacter.passiveAbilities()).thenReturn(mockPassiveAbilities);
+        lenient().when(mockCharacter.activeAbilities()).thenReturn(mockActiveAbilities);
+        lenient().when(mockCharacter.reactiveAbilities()).thenReturn(mockReactiveAbilities);
+        lenient().when(mockCharacter.getPlayerControlled()).thenReturn(true);
+        lenient().when(mockCharacter.getName()).thenReturn(NAME);
 
-        when(mockCharacterFactory.make(any(), any(), any())).thenReturn(mockCharacter);
+        lenient().when(mockCharacterFactory.make(any(), any(), any())).thenReturn(mockCharacter);
 
-        CHARACTER_TYPES.put(CHARACTER_TYPE_ID, mockCharacterType);
-        CLASSIFICATIONS.put(CLASSIFICATION_ID, mockClassification);
-        IMAGE_ASSET_SETS.put(IMAGE_ASSET_SET_ID, mockImageAssetSet);
-        AI_TYPES.put(AI_TYPE_ID, mockCharacterAIType);
-        STATUS_EFFECT_TYPES.put(STATUS_EFFECT_TYPE_ID, mockStatusEffectType);
-        PASSIVE_ABILITIES.put(PASSIVE_ABILITY_ID, mockPassiveAbility);
-        ACTIVE_ABILITIES.put(ACTIVE_ABILITY_ID, mockActiveAbility);
-        REACTIVE_ABILITIES.put(REACTIVE_ABILITY_ID, mockReactiveAbility);
-
-        handler = new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER, ITEM_HANDLER);
+        handler = new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                MOCK_GET_CLASSIFICATION,
+                MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE, MOCK_GET_CHARACTER_EVENT,
+                MOCK_GET_VARIABLE_STAT_TYPE, MOCK_GET_STATUS_EFFECT_TYPE, MOCK_GET_PASSIVE_ABILITY,
+                MOCK_GET_ACTIVE_ABILITY, MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(null, CHARACTER_TYPES::get, CLASSIFICATIONS::get,
-                        IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
+    public void testConstructorWithInvalidArgs() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(null, MOCK_GET_CHARACTER_TYPE, MOCK_GET_CLASSIFICATION,
+                        MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE, MOCK_GET_CHARACTER_EVENT,
+                        MOCK_GET_VARIABLE_STAT_TYPE, MOCK_GET_STATUS_EFFECT_TYPE,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, null, MOCK_GET_CLASSIFICATION,
+                        MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE, MOCK_GET_CHARACTER_EVENT,
+                        MOCK_GET_VARIABLE_STAT_TYPE, MOCK_GET_STATUS_EFFECT_TYPE,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE, null,
+                        MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE, MOCK_GET_CHARACTER_EVENT,
+                        MOCK_GET_VARIABLE_STAT_TYPE, MOCK_GET_STATUS_EFFECT_TYPE,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, null, MOCK_GET_AI_TYPE, MOCK_GET_CHARACTER_EVENT,
+                        MOCK_GET_VARIABLE_STAT_TYPE, MOCK_GET_STATUS_EFFECT_TYPE,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, null,
+                        MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE,
+                        MOCK_GET_STATUS_EFFECT_TYPE, MOCK_GET_PASSIVE_ABILITY,
+                        MOCK_GET_ACTIVE_ABILITY, MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER,
                         ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, null, CLASSIFICATIONS::get,
-                        IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get, null,
-                        IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, null, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, null, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, null,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        null, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, null, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, null,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER,
-                        ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        null, REACTIVE_ABILITIES::get, DATA_HANDLER, ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, null, DATA_HANDLER, ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, null, ITEM_HANDLER));
-        assertThrows(IllegalArgumentException.class, () ->
-                new CharacterHandler(mockCharacterFactory, CHARACTER_TYPES::get,
-                        CLASSIFICATIONS::get, IMAGE_ASSET_SETS::get, AI_TYPES::get, EVENTS_HANDLER,
-                        mockGetVariableStatType, STATUS_EFFECT_TYPES::get, PASSIVE_ABILITIES::get,
-                        ACTIVE_ABILITIES::get, REACTIVE_ABILITIES::get, DATA_HANDLER, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE, null,
+                        MOCK_GET_VARIABLE_STAT_TYPE, MOCK_GET_STATUS_EFFECT_TYPE,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE, null,
+                        MOCK_GET_VARIABLE_STAT_TYPE, MOCK_GET_STATUS_EFFECT_TYPE,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE,
+                        MOCK_GET_CHARACTER_EVENT, null, MOCK_GET_STATUS_EFFECT_TYPE,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE,
+                        MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE, null,
+                        MOCK_GET_PASSIVE_ABILITY, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE,
+                        MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE,
+                        MOCK_GET_STATUS_EFFECT_TYPE, null, MOCK_GET_ACTIVE_ABILITY,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE,
+                        MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE,
+                        MOCK_GET_STATUS_EFFECT_TYPE, MOCK_GET_PASSIVE_ABILITY, null,
+                        MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE,
+                        MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE,
+                        MOCK_GET_STATUS_EFFECT_TYPE, MOCK_GET_PASSIVE_ABILITY,
+                        MOCK_GET_ACTIVE_ABILITY, null, MAP_HANDLER, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE,
+                        MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE,
+                        MOCK_GET_STATUS_EFFECT_TYPE, MOCK_GET_PASSIVE_ABILITY,
+                        MOCK_GET_ACTIVE_ABILITY, MOCK_GET_REACTIVE_ABILITY, null, ITEM_HANDLER));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CharacterHandler(mockCharacterFactory, MOCK_GET_CHARACTER_TYPE,
+                        MOCK_GET_CLASSIFICATION, MOCK_GET_IMAGE_ASSET_SET, MOCK_GET_AI_TYPE,
+                        MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE,
+                        MOCK_GET_STATUS_EFFECT_TYPE, MOCK_GET_PASSIVE_ABILITY,
+                        MOCK_GET_ACTIVE_ABILITY, MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, null));
+    }
+
+    @Test
+    public void testTypeHandled() {
+        assertEquals(CharacterImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test
@@ -313,18 +341,18 @@ public class CharacterHandlerTests {
         assertEquals(WRITTEN_VALUE, output);
         verify(mockCharacter).uuid();
         verify(mockCharacter).type();
-        verify(mockCharacterType).id();
+        verify(MOCK_TYPE).id();
         verify(mockClassifications).size();
         verify(mockClassifications).iterator();
-        verify(mockClassification).id();
+        verify(MOCK_CLASSIFICATION).id();
         verify(mockCharacter).getStance();
         verify(mockCharacter).getDirection();
         verify(mockCharacter).getImageAssetSet();
-        verify(mockImageAssetSet).id();
+        verify(MOCK_IMAGE_ASSET_SET).id();
         verify(mockCharacter).getAIType();
-        verify(mockCharacterAIType).id();
+        verify(MOCK_AI_TYPE).id();
         verify(mockCharacter).events();
-        verify(EVENTS_HANDLER).write(CHARACTER_EVENTS);
+        verify(mockCharacterEvents).representation();
         verify(mockCharacter).equipmentSlots();
         verify(mockEquipmentSlots).representation();
         verify(ITEM_HANDLER).write(EQUIPMENT_SLOT_ITEM);
@@ -332,21 +360,21 @@ public class CharacterHandlerTests {
         verify(ITEM_HANDLER).write(INVENTORY_ITEM);
         verify(mockCharacter).variableStatisticCurrentValuesRepresentation();
         verify(mockVariableStats).size();
-        verify(mockVariableStatType).id();
+        verify(MOCK_VARIABLE_STAT_TYPE).id();
         verify(mockCharacter).statusEffects();
         verify(mockStatEffects).representation();
-        verify(mockStatusEffectType).id();
-        verify(mockPassiveAbility).id();
-        verify(mockActiveAbility).id();
-        verify(mockReactiveAbility).id();
+        verify(MOCK_STATUS_EFFECT_TYPE).id();
+        verify(MOCK_PASSIVE_ABILITY).id();
+        verify(MOCK_ACTIVE_ABILITY).id();
+        verify(MOCK_REACTIVE_ABILITY).id();
         verify(mockCharacter).getPlayerControlled();
         verify(mockCharacter).data();
-        verify(DATA_HANDLER).write(DATA);
+        verify(MAP_HANDLER).write(MOCK_DATA);
         verify(mockCharacter).getName();
     }
 
     @Test
-    public void testWriteWithInvalidParams() {
+    public void testWriteWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> handler.write(null));
     }
 
@@ -355,48 +383,42 @@ public class CharacterHandlerTests {
         var output = handler.read(WRITTEN_VALUE);
 
         assertSame(mockCharacter, output);
-        verify(DATA_HANDLER).read(DATA_WRITTEN);
-        verify(mockCharacterFactory).make(mockCharacterType, UUID, DATA);
-        verify(mockClassifications).add(mockClassification);
+        verify(MAP_HANDLER).read(DATA_WRITTEN);
+        verify(MOCK_GET_CHARACTER_TYPE).apply(CHARACTER_TYPE_ID);
+        verify(mockCharacterFactory).make(MOCK_TYPE, UUID, MOCK_DATA);
+        verify(MOCK_GET_CLASSIFICATION).apply(CLASSIFICATION_ID);
+        verify(mockClassifications).add(MOCK_CLASSIFICATION);
         verify(mockPronouns).put(CASE, ARTICLE);
         verify(mockCharacter).setStance(STANCE);
         verify(mockCharacter).setDirection(DIRECTION);
-        verify(mockCharacter).setImageAssetSet(mockImageAssetSet);
-        verify(mockCharacter).setAIType(mockCharacterAIType);
-        verify(EVENTS_HANDLER).read(EVENTS_WRITTEN);
-        verify(CHARACTER_EVENTS).copyAllTriggers(CHARACTER_EVENTS);
+        verify(mockCharacter).setImageAssetSet(MOCK_IMAGE_ASSET_SET);
+        verify(mockCharacter).setAIType(MOCK_AI_TYPE);
+        verify(MOCK_GET_CHARACTER_EVENT).apply(CHARACTER_EVENT_ID);
+        verify(mockCharacterEvents).addEvent(same(MOCK_CHARACTER_EVENT),
+                eq(arrayOf(CHARACTER_EVENT_TRIGGER)));
         verify(mockEquipmentSlots).addCharacterEquipmentSlot(EQUIPMENT_SLOT);
         verify(ITEM_HANDLER).read(EQUIPMENT_SLOT_ITEM_WRITTEN_VALUE);
         verify(mockEquipmentSlots).equipItemToSlot(EQUIPMENT_SLOT, EQUIPMENT_SLOT_ITEM);
         verify(ITEM_HANDLER).read(INVENTORY_ITEM_WRITTEN_VALUE);
         verify(mockInventory).add(INVENTORY_ITEM);
-        verify(mockGetVariableStatType).apply(VARIABLE_STAT_TYPE_ID);
-        verify(mockCharacter).setVariableStatisticCurrentValue(mockVariableStatType,
+        verify(MOCK_GET_VARIABLE_STAT_TYPE).apply(VARIABLE_STAT_TYPE_ID);
+        verify(mockCharacter).setVariableStatisticCurrentValue(MOCK_VARIABLE_STAT_TYPE,
                 VARIABLE_STAT_CURRENT_LEVEL);
-        verify(mockStatEffects).setStatusEffectLevel(mockStatusEffectType, STAT_EFFECT_LEVEL);
-        verify(mockPassiveAbilities).add(mockPassiveAbility);
-        verify(mockActiveAbilities).add(mockActiveAbility);
-        verify(mockReactiveAbilities).add(mockReactiveAbility);
+        verify(MOCK_GET_STATUS_EFFECT_TYPE).apply(STATUS_EFFECT_TYPE_ID);
+        verify(mockStatEffects).setStatusEffectLevel(MOCK_STATUS_EFFECT_TYPE, STAT_EFFECT_LEVEL);
+        verify(MOCK_GET_PASSIVE_ABILITY).apply(PASSIVE_ABILITY_ID);
+        verify(mockPassiveAbilities).add(MOCK_PASSIVE_ABILITY);
+        verify(MOCK_GET_ACTIVE_ABILITY).apply(ACTIVE_ABILITY_ID);
+        verify(mockActiveAbilities).add(MOCK_ACTIVE_ABILITY);
+        verify(MOCK_GET_REACTIVE_ABILITY).apply(REACTIVE_ABILITY_ID);
+        verify(mockReactiveAbilities).add(MOCK_REACTIVE_ABILITY);
         verify(mockCharacter).setPlayerControlled(true);
         verify(mockCharacter).setName(NAME);
     }
 
     @Test
-    public void testReadWithInvalidParams() {
+    public void testReadWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> handler.read(null));
         assertThrows(IllegalArgumentException.class, () -> handler.read(""));
-    }
-
-    @Test
-    public void testArchetype() {
-        assertNotNull(handler.archetype());
-        assertEquals(Character.class.getCanonicalName(), handler.archetype().getInterfaceName());
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(TypeHandler.class.getCanonicalName() + "<" +
-                        Character.class.getCanonicalName() + ">",
-                handler.getInterfaceName());
     }
 }

@@ -2,37 +2,38 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.entities.WallSegmentImpl;
 import inaugural.soliloquy.gamestate.factories.WallSegmentFactoryImpl;
-import inaugural.soliloquy.tools.testing.Mock.HandlerAndEntity;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.factories.WallSegmentFactory;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
+import java.util.Map;
 import java.util.function.Function;
 
 import static inaugural.soliloquy.tools.collections.Collections.arrayOf;
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static inaugural.soliloquy.tools.testing.Mock.generateMockEntityAndHandler;
-import static inaugural.soliloquy.tools.testing.Mock.generateMockLookupFunction;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static org.junit.Assert.*;
+import static inaugural.soliloquy.tools.testing.Mock.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class WallSegmentFactoryImplTests {
     private final String DATA_STRING = randomString();
-    private final HandlerAndEntity<VariableCache> DATA_HANDLER_AND_DATA =
-            generateMockEntityAndHandler(VariableCache.class, DATA_STRING);
-    private final TypeHandler<VariableCache> MOCK_DATA_HANDLER = DATA_HANDLER_AND_DATA.handler;
-    private final VariableCache MOCK_DATA = DATA_HANDLER_AND_DATA.entity;
+    @SuppressWarnings("rawtypes")
+    private final HandlerAndEntity<Map> MAP_HANDLER_AND_DATA =
+            generateMockEntityAndHandler(Map.class, DATA_STRING);
+    @SuppressWarnings("rawtypes")
+    private final TypeHandler<Map> MOCK_MAP_HANDLER = MAP_HANDLER_AND_DATA.handler;
+    @SuppressWarnings("unchecked")
+    private final Map<String, Object> MOCK_DATA = MAP_HANDLER_AND_DATA.entity;
 
     private final String SEGMENT_TYPE_ID = randomString();
     private final String MOVEMENT_EVENT_ID = randomString();
@@ -52,7 +53,7 @@ public class WallSegmentFactoryImplTests {
 
     private WallSegmentFactory wallSegmentFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockGetSegmentType = generateMockLookupFunction(pairOf(SEGMENT_TYPE_ID, mockSegmentType));
         mockGetGameMovementEvent =
@@ -60,24 +61,24 @@ public class WallSegmentFactoryImplTests {
         mockGetGameAbilityEvent =
                 generateMockLookupFunction(pairOf(ABILITY_EVENT_ID, mockGameAbilityEvent));
 
-        wallSegmentFactory = new WallSegmentFactoryImpl(MOCK_DATA_HANDLER, mockGetSegmentType,
+        wallSegmentFactory = new WallSegmentFactoryImpl(MOCK_MAP_HANDLER, mockGetSegmentType,
                 mockGetGameMovementEvent, mockGetGameAbilityEvent);
     }
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new WallSegmentFactoryImpl(null, mockGetSegmentType, mockGetGameMovementEvent,
                         mockGetGameAbilityEvent));
         assertThrows(IllegalArgumentException.class,
-                () -> new WallSegmentFactoryImpl(MOCK_DATA_HANDLER, null, mockGetGameMovementEvent,
+                () -> new WallSegmentFactoryImpl(MOCK_MAP_HANDLER, null, mockGetGameMovementEvent,
                         mockGetGameAbilityEvent));
         assertThrows(IllegalArgumentException.class,
-                () -> new WallSegmentFactoryImpl(MOCK_DATA_HANDLER, mockGetSegmentType, null,
+                () -> new WallSegmentFactoryImpl(MOCK_MAP_HANDLER, mockGetSegmentType, null,
                         mockGetGameAbilityEvent));
         assertThrows(IllegalArgumentException.class,
-                () -> new WallSegmentFactoryImpl(MOCK_DATA_HANDLER, mockGetSegmentType,
+                () -> new WallSegmentFactoryImpl(MOCK_MAP_HANDLER, mockGetSegmentType,
                         mockGetGameMovementEvent, null));
     }
 
@@ -93,13 +94,13 @@ public class WallSegmentFactoryImplTests {
         assertSame(MOCK_DATA, output.data());
 
         verify(mockGetSegmentType).apply(SEGMENT_TYPE_ID);
-        verify(MOCK_DATA_HANDLER).read(DATA_STRING);
+        verify(MOCK_MAP_HANDLER).read(DATA_STRING);
         verify(mockGetGameMovementEvent).apply(MOVEMENT_EVENT_ID);
         verify(mockGetGameAbilityEvent).apply(ABILITY_EVENT_ID);
     }
 
     @Test
-    public void testMakeWithInvalidParams() {
+    public void testMakeWithInvalidArgs() {
         var invalidId = randomString();
 
         assertThrows(IllegalArgumentException.class, () -> wallSegmentFactory.make(null));
@@ -139,11 +140,5 @@ public class WallSegmentFactoryImplTests {
                 () -> wallSegmentFactory.make(
                         new WallSegmentFactory.Definition(SEGMENT_TYPE_ID, arrayOf(),
                                 arrayOf(invalidId), DATA_STRING)));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(WallSegmentFactory.class.getCanonicalName(),
-                wallSegmentFactory.getInterfaceName());
     }
 }

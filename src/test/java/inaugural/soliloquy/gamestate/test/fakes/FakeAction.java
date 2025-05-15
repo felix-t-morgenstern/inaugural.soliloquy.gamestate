@@ -28,14 +28,4 @@ public class FakeAction<T> implements Action<T> {
     public String id() throws IllegalStateException {
         return id;
     }
-
-    @Override
-    public T archetype() {
-        return null;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
 }

@@ -2,12 +2,11 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 
 import inaugural.soliloquy.gamestate.factories.GameZoneFactoryImpl;
 import org.apache.commons.lang3.function.TriConsumer;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
@@ -17,15 +16,18 @@ import soliloquy.specs.gamestate.entities.shared.GameZoneTerrain;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
 import java.util.List;
+import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
+import static soliloquy.specs.common.valueobjects.Coordinate2d.coordinate2dOf;
+import static soliloquy.specs.common.valueobjects.Coordinate3d.coordinate3dOf;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GameZoneFactoryImplTests {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private final List<Character> ADDED_TO_END_OF_ROUND_MANAGER = listOf();
@@ -33,27 +35,27 @@ public class GameZoneFactoryImplTests {
     private final List<Character> REMOVED_FROM_ROUND_MANAGER = listOf();
     private final String ID = randomString();
     private final Coordinate2d MAX_COORDINATES =
-            Coordinate2d.of(randomIntWithInclusiveFloor(1), randomIntWithInclusiveFloor(1));
-    private final Coordinate3d TILE_LOC = Coordinate3d.of(
+            coordinate2dOf(randomIntWithInclusiveFloor(1), randomIntWithInclusiveFloor(1));
+    private final Coordinate3d TILE_LOC = coordinate3dOf(
             randomIntInRange(0, MAX_COORDINATES.X),
             randomIntInRange(0, MAX_COORDINATES.Y),
             randomInt());
 
     @Mock private TriConsumer<GameZoneTerrain, GameZone, Coordinate3d>
             mockAssignLocationAfterPlacement;
-    @Mock private VariableCache mockData;
+    @Mock private Map<String, Object> mockData;
     @Mock private Tile mockTile;
 
     private GameZoneFactory factory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         factory = new GameZoneFactoryImpl(ADDED_TO_END_OF_ROUND_MANAGER::add,
                 REMOVED_FROM_ROUND_MANAGER::add, mockAssignLocationAfterPlacement);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(null, REMOVED_FROM_ROUND_MANAGER::add,
                         mockAssignLocationAfterPlacement));
@@ -63,12 +65,6 @@ public class GameZoneFactoryImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneFactoryImpl(ADDED_TO_END_OF_ROUND_MANAGER::add,
                         REMOVED_FROM_ROUND_MANAGER::add, null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(GameZoneFactory.class.getCanonicalName(),
-                factory.getInterfaceName());
     }
 
     @Test
@@ -84,17 +80,17 @@ public class GameZoneFactoryImplTests {
     }
 
     @Test
-    public void testMakeWithInvalidParams() {
+    public void testMakeWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> factory.make(null, MAX_COORDINATES, mockData));
         assertThrows(IllegalArgumentException.class,
                 () -> factory.make("", MAX_COORDINATES, mockData));
         assertThrows(IllegalArgumentException.class, () -> factory.make(ID, null, mockData));
         assertThrows(IllegalArgumentException.class,
-                () -> factory.make(ID, Coordinate2d.of(-1, randomIntWithInclusiveFloor(1)),
+                () -> factory.make(ID, coordinate2dOf(-1, randomIntWithInclusiveFloor(1)),
                         mockData));
         assertThrows(IllegalArgumentException.class,
-                () -> factory.make(ID, Coordinate2d.of(randomIntWithInclusiveFloor(1), -1),
+                () -> factory.make(ID, coordinate2dOf(randomIntWithInclusiveFloor(1), -1),
                         mockData));
         assertThrows(IllegalArgumentException.class, () -> factory.make(ID, MAX_COORDINATES, null));
     }

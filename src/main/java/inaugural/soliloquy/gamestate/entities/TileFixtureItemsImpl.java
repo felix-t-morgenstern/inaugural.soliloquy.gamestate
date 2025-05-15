@@ -31,12 +31,6 @@ public class TileFixtureItemsImpl extends CanTellIfItemIsPresentElsewhere
     }
 
     @Override
-    public String getInterfaceName() {
-        enforceDeletionInvariants();
-        return TileFixtureItems.class.getCanonicalName();
-    }
-
-    @Override
     public List<Item> representation() throws UnsupportedOperationException, IllegalStateException {
         enforceDeletionInvariants();
         return listOf(CONTAINED_ITEMS);

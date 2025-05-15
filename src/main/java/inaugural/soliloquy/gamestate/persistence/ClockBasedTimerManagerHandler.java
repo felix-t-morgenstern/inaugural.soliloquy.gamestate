@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.timers.ClockBasedTimerManagerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -19,7 +20,6 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
                                                  oneTimeClockBasedTimerHandler,
                                          TypeHandler<RecurringClockBasedTimer>
                                                  recurringClockBasedTimerHandler) {
-        super(new ClockBasedTimerManagerArchetype());
         CLOCK_BASED_TIMER_MANAGER = Check.ifNull(clockBasedTimerManager, "clockBasedTimerManager");
         ONE_TIME_CLOCK_BASED_TIMER_HANDLER = Check.ifNull(oneTimeClockBasedTimerHandler,
                 "oneTimeClockBasedTimerHandler");
@@ -27,6 +27,12 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
                 "recurringClockBasedTimerHandler");
     }
 
+    @Override
+    public String typeHandled() {
+        return ClockBasedTimerManagerImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public ClockBasedTimerManager read(String data) throws IllegalArgumentException {
         CLOCK_BASED_TIMER_MANAGER.clear();
@@ -78,55 +84,5 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
     private static class ClockBasedTimerManagerDTO {
         String[] oneTimeClockBasedTimers;
         String[] recurringClockBasedTimers;
-    }
-
-    private static class ClockBasedTimerManagerArchetype implements ClockBasedTimerManager {
-
-        @Override
-        public void registerOneTimeTimer(OneTimeClockBasedTimer oneTimeClockBasedTimer)
-                throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void registerRecurringTimer(RecurringClockBasedTimer recurringClockBasedTimer)
-                throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void deregisterOneTimeTimer(String s) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void deregisterRecurringTimer(String s) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public void clear() {
-
-        }
-
-        @Override
-        public void fireTimers(long l) throws IllegalArgumentException {
-
-        }
-
-        @Override
-        public List<OneTimeClockBasedTimer> oneTimeTimersRepresentation() {
-            return null;
-        }
-
-        @Override
-        public List<RecurringClockBasedTimer> recurringTimersRepresentation() {
-            return null;
-        }
-
-        @Override
-        public String getInterfaceName() {
-            return ClockBasedTimerManager.class.getCanonicalName();
-        }
     }
 }

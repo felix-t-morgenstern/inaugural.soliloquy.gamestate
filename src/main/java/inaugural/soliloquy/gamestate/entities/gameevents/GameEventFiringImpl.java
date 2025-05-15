@@ -91,9 +91,4 @@ public class GameEventFiringImpl implements GameEventFiring {
     public boolean freeForGameplayInput() {
         return QUEUE.isEmpty();
     }
-
-    @Override
-    public String getInterfaceName() {
-        return GameEventFiring.class.getCanonicalName();
-    }
 }

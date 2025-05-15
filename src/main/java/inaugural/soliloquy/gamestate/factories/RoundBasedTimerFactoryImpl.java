@@ -34,9 +34,4 @@ public class RoundBasedTimerFactoryImpl implements RoundBasedTimerFactory {
                 priority, ROUND_BASED_TIMER_MANAGER::registerRecurringRoundBasedTimer,
                 ROUND_BASED_TIMER_MANAGER::deregisterRecurringRoundBasedTimer);
     }
-
-    @Override
-    public String getInterfaceName() {
-        return RoundBasedTimerFactory.class.getCanonicalName();
-    }
 }

@@ -21,11 +21,6 @@ public class FakeCharacterEquipmentSlots implements CharacterEquipmentSlots {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public void delete() throws IllegalStateException {
         isDeleted = true;
     }

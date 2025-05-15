@@ -1,170 +1,164 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.TileFixtureItemsImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeCharacter;
-import inaugural.soliloquy.gamestate.test.fakes.FakeItem;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTile;
-import inaugural.soliloquy.gamestate.test.fakes.FakeTileFixture;
-import org.junit.Before;
-import org.junit.Test;
-import soliloquy.specs.gamestate.entities.Item;
-import soliloquy.specs.gamestate.entities.TileFixture;
-import soliloquy.specs.gamestate.entities.TileFixtureItems;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 
-import java.util.List;
+import static inaugural.soliloquy.tools.random.Random.randomString;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
-import static org.junit.Assert.*;
-
+@ExtendWith(MockitoExtension.class)
 public class TileFixtureItemsImplTests {
-    private final TileFixture TILE_FIXTURE = new FakeTileFixture();
-    private final Item ITEM = new FakeItem();
-    private final Item ITEM_2 = new FakeItem();
-    private final Item ITEM_3 = new FakeItem();
+    @Mock private TileFixture mockTileFixture;
+    @Mock private Item mockItem;
+    @Mock private Item mockItem2;
+    @Mock private Item mockItem3;
+    @Mock private Character mockCharacter;
 
-    private TileFixtureItems _tileFixtureItems;
+    private TileFixtureItems tileFixtureItems;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        _tileFixtureItems = new TileFixtureItemsImpl(TILE_FIXTURE);
+        tileFixtureItems = new TileFixtureItemsImpl(mockTileFixture);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new TileFixtureItemsImpl(null));
     }
 
     @Test
-    public void testGetInterfaceName() {
-        assertEquals(TileFixtureItems.class.getCanonicalName(),
-                _tileFixtureItems.getInterfaceName());
-    }
-
-    @Test
     public void testAddAndContains() {
-        assertFalse(_tileFixtureItems.contains(ITEM));
-        _tileFixtureItems.add(ITEM);
+        assertFalse(tileFixtureItems.contains(mockItem));
 
-        assertTrue(_tileFixtureItems.contains(ITEM));
+        tileFixtureItems.add(mockItem);
+
+        when(mockItem.tileFixture()).thenReturn(mockTileFixture);
+        assertTrue(tileFixtureItems.contains(mockItem));
     }
 
     @Test
     public void testAddCallsItemAssignmentFunction() {
-        _tileFixtureItems.add(ITEM);
+        tileFixtureItems.add(mockItem);
 
-        assertSame(TILE_FIXTURE, ((FakeItem) ITEM).tileFixture);
+        verify(mockItem, once()).assignTileFixtureAfterAddedItemToTileFixtureItems(mockTileFixture);
     }
 
     @Test
     public void testRemoveCallsItemAssignmentFunction() {
-        _tileFixtureItems.add(ITEM);
-        assertSame(TILE_FIXTURE, ((FakeItem) ITEM).tileFixture);
+        tileFixtureItems.add(mockItem);
 
-        _tileFixtureItems.remove(ITEM);
+        when(mockItem.tileFixture()).thenReturn(mockTileFixture);
+        tileFixtureItems.remove(mockItem);
 
-        assertNull(((FakeItem) ITEM).tileFixture);
+        verify(mockItem, once()).assignTileFixtureAfterAddedItemToTileFixtureItems(null);
     }
 
     @Test
     public void testAddItemAlreadyPresentInOtherLocationTypes() {
-        ((FakeItem) ITEM).equipmentCharacter = new FakeCharacter();
-        ((FakeItem) ITEM).equipmentSlotType = "EquipmentSlotType";
+        when(mockItem.equipmentSlot()).thenReturn(pairOf(mockCharacter, randomString()));
 
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItems.add(mockItem));
 
-        ((FakeItem) ITEM).equipmentCharacter = null;
-        ((FakeItem) ITEM).equipmentSlotType = null;
-        ((FakeItem) ITEM).inventoryCharacter = new FakeCharacter();
+        when(mockItem.equipmentSlot()).thenReturn(null);
+        when(mockItem.inventoryCharacter()).thenReturn(mockCharacter);
 
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItems.add(mockItem));
 
-        ((FakeItem) ITEM).inventoryCharacter = null;
-        ((FakeItem) ITEM).tile = new FakeTile();
+        when(mockItem.inventoryCharacter()).thenReturn(null);
+        when(mockItem.tile()).thenReturn(mock(Tile.class));
 
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItems.add(mockItem));
 
-        ((FakeItem) ITEM).tile = null;
-        ((FakeItem) ITEM).tileFixture = new FakeTileFixture();
+        when(mockItem.tileFixture()).thenReturn(mockTileFixture);
 
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(ITEM));
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItems.add(mockItem));
     }
 
     @Test
     public void testAddAndContainsWithInvalidInput() {
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.add(null));
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.contains(null));
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItems.add(null));
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItems.contains(null));
     }
 
     @Test
     public void testRemove() {
-        assertFalse(_tileFixtureItems.contains(ITEM));
-        _tileFixtureItems.add(ITEM);
-        assertTrue(_tileFixtureItems.contains(ITEM));
+        assertFalse(tileFixtureItems.contains(mockItem));
+        tileFixtureItems.add(mockItem);
+        when(mockItem.tileFixture()).thenReturn(mockTileFixture);
+        assertTrue(tileFixtureItems.contains(mockItem));
 
-        assertTrue(_tileFixtureItems.remove(ITEM));
-        assertFalse(_tileFixtureItems.remove(ITEM));
-        assertFalse(_tileFixtureItems.contains(ITEM));
+        assertTrue(tileFixtureItems.remove(mockItem));
+        assertFalse(tileFixtureItems.remove(mockItem));
+        assertFalse(tileFixtureItems.contains(mockItem));
     }
 
     @Test
     public void testRemoveWithInvalidInput() {
-        assertThrows(IllegalArgumentException.class, () -> _tileFixtureItems.remove(null));
+        assertThrows(IllegalArgumentException.class, () -> tileFixtureItems.remove(null));
     }
 
     @Test
     public void testGetRepresentation() {
-        _tileFixtureItems.add(ITEM);
-        _tileFixtureItems.add(ITEM_2);
-        _tileFixtureItems.add(ITEM_3);
+        tileFixtureItems.add(mockItem);
+        tileFixtureItems.add(mockItem2);
+        tileFixtureItems.add(mockItem3);
 
-        List<Item> representation = _tileFixtureItems.representation();
+        var representation = tileFixtureItems.representation();
 
         assertNotNull(representation);
         assertEquals(3, representation.size());
-        assertTrue(representation.contains(ITEM));
-        assertTrue(representation.contains(ITEM_2));
-        assertTrue(representation.contains(ITEM_3));
+        assertTrue(representation.contains(mockItem));
+        assertTrue(representation.contains(mockItem2));
+        assertTrue(representation.contains(mockItem3));
     }
 
     @Test
     public void testDelete() {
-        assertFalse(_tileFixtureItems.isDeleted());
-        _tileFixtureItems.add(ITEM);
-        _tileFixtureItems.delete();
+        assertFalse(tileFixtureItems.isDeleted());
+        tileFixtureItems.add(mockItem);
+        tileFixtureItems.delete();
 
-        assertTrue(_tileFixtureItems.isDeleted());
-        assertTrue(ITEM.isDeleted());
+        assertTrue(tileFixtureItems.isDeleted());
+        verify(mockItem, once()).delete();
     }
 
     @Test
     public void testDeletedInvariant() {
-        _tileFixtureItems.delete();
+        tileFixtureItems.delete();
 
-        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.getInterfaceName());
-        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.representation());
-        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.add(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.remove(ITEM));
-        assertThrows(EntityDeletedException.class, () -> _tileFixtureItems.contains(ITEM));
+        assertThrows(EntityDeletedException.class, () -> tileFixtureItems.representation());
+        assertThrows(EntityDeletedException.class, () -> tileFixtureItems.add(mockItem));
+        assertThrows(EntityDeletedException.class, () -> tileFixtureItems.remove(mockItem));
+        assertThrows(EntityDeletedException.class, () -> tileFixtureItems.contains(mockItem));
     }
 
     @Test
     public void testTileFixtureDeletedInvariant() {
-        TILE_FIXTURE.delete();
+        when(mockTileFixture.isDeleted()).thenReturn(true);
 
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.getInterfaceName());
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.representation());
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.contains(ITEM));
+        assertThrows(IllegalStateException.class, () -> tileFixtureItems.representation());
+        assertThrows(IllegalStateException.class, () -> tileFixtureItems.add(mockItem));
+        assertThrows(IllegalStateException.class, () -> tileFixtureItems.remove(mockItem));
+        assertThrows(IllegalStateException.class, () -> tileFixtureItems.contains(mockItem));
     }
 
     @Test
     public void testItemAssignmentInvariant() {
-        _tileFixtureItems.add(ITEM);
-        ((FakeItem) ITEM).tileFixture = null;
+        tileFixtureItems.add(mockItem);
+        when(mockItem.tileFixture()).thenReturn(null);
 
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.add(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.remove(ITEM));
-        assertThrows(IllegalStateException.class, () -> _tileFixtureItems.contains(ITEM));
+        assertThrows(IllegalStateException.class, () -> tileFixtureItems.add(mockItem));
+        assertThrows(IllegalStateException.class, () -> tileFixtureItems.remove(mockItem));
+        assertThrows(IllegalStateException.class, () -> tileFixtureItems.contains(mockItem));
     }
 }

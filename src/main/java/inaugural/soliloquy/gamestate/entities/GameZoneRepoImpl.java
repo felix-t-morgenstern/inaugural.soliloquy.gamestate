@@ -4,7 +4,7 @@ import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.common.exceptions.SoliloquyIOException;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.GameZone;
-import soliloquy.specs.gamestate.entities.GameZonesRepo;
+import soliloquy.specs.gamestate.entities.GameZoneRepo;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,27 +16,39 @@ import java.util.Map;
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
-public class GameZonesRepoImpl implements GameZonesRepo {
+public class GameZoneRepoImpl implements GameZoneRepo {
     private final TypeHandler<GameZone> GAME_ZONE_HANDLER;
     private final Map<String, Path> FILE_LOCATIONS = mapOf();
 
-    public GameZonesRepoImpl(TypeHandler<GameZone> gameZoneHandler,
-                             Map<String, Path> fileLocations) {
+    private GameZone currentGameZone;
+
+    public GameZoneRepoImpl(TypeHandler<GameZone> gameZoneHandler,
+                            Map<String, Path> fileLocations) {
         GAME_ZONE_HANDLER = Check.ifNull(gameZoneHandler, "gameZoneHandler");
         Check.ifNull(fileLocations, "fileLocations");
         FILE_LOCATIONS.putAll(fileLocations);
     }
 
     @Override
-    public GameZone getGameZone(String id) throws IllegalArgumentException {
+    public GameZone currentGameZone() {
+        return currentGameZone;
+    }
+
+    @Override
+    public void loadGameZone(String id)
+            throws IllegalArgumentException, UnsupportedOperationException {
+        if (currentGameZone != null) {
+            throw new UnsupportedOperationException(
+                    "GameZoneRepoImpl.loadGameZone: GameZone has already been loaded");
+        }
         Check.ifNull(id, "id");
         if (!FILE_LOCATIONS.containsKey(id)) {
             throw new IllegalArgumentException(
-                    "GameZonesRepoImpl.getGameZone: no file location corresponding to id");
+                    "GameZoneRepoImpl.getGameZone: no file location corresponding to id");
         }
         try {
             var fileContents = new String(Files.readAllBytes(FILE_LOCATIONS.get(id)));
-            return GAME_ZONE_HANDLER.read(fileContents);
+            currentGameZone = GAME_ZONE_HANDLER.read(fileContents);
         }
         catch (IOException e) {
             throw new SoliloquyIOException(e);
@@ -44,11 +56,16 @@ public class GameZonesRepoImpl implements GameZonesRepo {
     }
 
     @Override
+    public void unloadGameZone() {
+        currentGameZone = null;
+    }
+
+    @Override
     public void saveGameZone(GameZone gameZone) throws IllegalArgumentException {
         Check.ifNull(gameZone, "gameZone");
         if (!FILE_LOCATIONS.containsKey(gameZone.id())) {
             throw new IllegalArgumentException(
-                    "GameZonesRepoImpl.saveGameZone: no file location corresponding to " +
+                    "GameZoneRepoImpl.saveGameZone: no file location corresponding to " +
                             "gameZone.id");
         }
         var filePath = FILE_LOCATIONS.get(gameZone.id());
@@ -66,10 +83,5 @@ public class GameZonesRepoImpl implements GameZonesRepo {
         catch (IOException e) {
             throw new SoliloquyIOException(e);
         }
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return GameZonesRepo.class.getCanonicalName();
     }
 }

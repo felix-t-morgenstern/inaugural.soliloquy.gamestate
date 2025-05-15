@@ -26,9 +26,4 @@ public class FakeKeyBindingContext implements KeyBindingContext {
     public void setBlocksAllLowerBindings(boolean blocksAllLowerBindings) {
         _blocksAllLowerBindings = blocksAllLowerBindings;
     }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
 }

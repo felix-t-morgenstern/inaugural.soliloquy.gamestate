@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.infrastructure.List;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.TileFixture;
@@ -12,15 +10,16 @@ import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.ruleset.entities.FixtureType;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import static soliloquy.specs.common.valueobjects.Vertex.vertexOf;
 
 public class FakeTileFixture implements TileFixture {
     private boolean _isDeleted;
     private float _xTileWidthOffset;
     private float _yTileHeightOffset;
-    private UUID _uuid;
-    private FixtureType _fixtureType;
-    private VariableCache _data;
     private String _name;
 
     private final TileFixtureItems TILE_FIXTURE_ITEMS;
@@ -38,7 +37,7 @@ public class FakeTileFixture implements TileFixture {
 
     @Override
     public FixtureType type() throws IllegalStateException {
-        return _fixtureType;
+        return null;
     }
 
     @Override
@@ -53,8 +52,8 @@ public class FakeTileFixture implements TileFixture {
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
-        return _data;
+    public Map<String, Object> data() throws IllegalStateException {
+        return null;
     }
 
     @Override
@@ -78,11 +77,6 @@ public class FakeTileFixture implements TileFixture {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public List<GameMovementEvent> movementEvents() throws IllegalStateException {
         return null;
     }
@@ -99,12 +93,12 @@ public class FakeTileFixture implements TileFixture {
 
     @Override
     public UUID uuid() {
-        return _uuid;
+        return null;
     }
 
     @Override
     public Vertex getTileOffset() throws IllegalStateException, EntityDeletedException {
-        return Vertex.of(_xTileWidthOffset, _yTileHeightOffset);
+        return vertexOf(_xTileWidthOffset, _yTileHeightOffset);
     }
 
     @Override

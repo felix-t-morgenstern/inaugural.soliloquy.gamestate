@@ -31,11 +31,6 @@ public class FakeCharacterInventory implements CharacterInventory {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public List<Item> representation() throws IllegalStateException {
         return listOf(ITEMS);
     }

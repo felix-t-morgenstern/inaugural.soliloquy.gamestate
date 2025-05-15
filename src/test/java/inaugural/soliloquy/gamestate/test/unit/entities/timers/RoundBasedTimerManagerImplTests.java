@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.RoundBasedTimerManagerImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventFiring;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
@@ -13,7 +13,8 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomIntInRange;
-import static org.junit.Assert.*;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class RoundBasedTimerManagerImplTests {
@@ -23,7 +24,7 @@ public class RoundBasedTimerManagerImplTests {
 
     private RoundBasedTimerManager roundBasedTimerManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockOneTimeRoundBasedTimer = mock(OneTimeRoundBasedTimer.class);
         mockRecurringRoundBasedTimer = mock(RecurringRoundBasedTimer.class);
@@ -33,7 +34,7 @@ public class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new RoundBasedTimerManagerImpl(null));
     }
 
@@ -90,7 +91,7 @@ public class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    public void testRegisterAndDeregisterTimersWithInvalidParams() {
+    public void testRegisterAndDeregisterTimersWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 roundBasedTimerManager.registerOneTimeRoundBasedTimer(null));
         assertThrows(IllegalArgumentException.class, () ->
@@ -128,7 +129,7 @@ public class RoundBasedTimerManagerImplTests {
 
         roundBasedTimerManager.fireTimersForRoundsElapsed(roundWhenGoesOff, roundWhenGoesOff + 1);
 
-        verify(mockGameEventFiring, times(1)).registerEvent(mockOneTimeRoundBasedTimer, priority);
+        verify(mockGameEventFiring, once()).registerEvent(mockOneTimeRoundBasedTimer, priority);
     }
 
     @Test
@@ -164,17 +165,11 @@ public class RoundBasedTimerManagerImplTests {
     }
 
     @Test
-    public void testFireTimersForRoundsElapsedWithInvalidParams() {
+    public void testFireTimersForRoundsElapsedWithInvalidArgs() {
         var previousRound = randomInt();
 
         roundBasedTimerManager.fireTimersForRoundsElapsed(previousRound, previousRound + 1);
         assertThrows(IllegalArgumentException.class, () ->
                 roundBasedTimerManager.fireTimersForRoundsElapsed(previousRound, previousRound));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(RoundBasedTimerManager.class.getCanonicalName(),
-                roundBasedTimerManager.getInterfaceName());
     }
 }

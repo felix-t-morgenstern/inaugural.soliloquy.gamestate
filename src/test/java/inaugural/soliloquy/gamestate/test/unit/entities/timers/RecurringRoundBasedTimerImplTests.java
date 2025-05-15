@@ -1,8 +1,8 @@
 package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.RecurringRoundBasedTimerImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
@@ -10,7 +10,7 @@ import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class RecurringRoundBasedTimerImplTests {
@@ -27,7 +27,7 @@ public class RecurringRoundBasedTimerImplTests {
 
     private RecurringRoundBasedTimer recurringRoundBasedTimer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         //noinspection unchecked
         mockAction = mock(Action.class);
@@ -42,7 +42,7 @@ public class RecurringRoundBasedTimerImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 new RecurringRoundBasedTimerImpl(null, mockAction, ROUND_MODULO, ROUND_OFFSET,
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
@@ -83,12 +83,6 @@ public class RecurringRoundBasedTimerImplTests {
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                         null
                 ));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(RecurringRoundBasedTimer.class.getCanonicalName(),
-                recurringRoundBasedTimer.getInterfaceName());
     }
 
     @Test

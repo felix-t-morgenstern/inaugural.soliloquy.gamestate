@@ -1,5 +1,6 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.timers.RoundBasedTimerManagerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -8,8 +9,6 @@ import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 
 import java.util.List;
-
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class RoundBasedTimerManagerHandler extends AbstractTypeHandler<RoundBasedTimerManager> {
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
@@ -21,7 +20,6 @@ public class RoundBasedTimerManagerHandler extends AbstractTypeHandler<RoundBase
                                                  oneTimeRoundBasedTimerTypeHandler,
                                          TypeHandler<RecurringRoundBasedTimer>
                                                  recurringRoundBasedTimerTypeHandler) {
-        super(generateSimpleArchetype(RoundBasedTimerManager.class));
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
         ONE_TIME_ROUND_BASED_TIMER_HANDLER = Check.ifNull(oneTimeRoundBasedTimerTypeHandler,
                 "oneTimeRoundBasedTimerTypeHandler");
@@ -29,6 +27,12 @@ public class RoundBasedTimerManagerHandler extends AbstractTypeHandler<RoundBase
                 "recurringRoundBasedTimerTypeHandler");
     }
 
+    @Override
+    public String typeHandled() {
+        return RoundBasedTimerManagerImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public RoundBasedTimerManager read(String writtenValue) throws IllegalArgumentException {
         ROUND_BASED_TIMER_MANAGER.clear();

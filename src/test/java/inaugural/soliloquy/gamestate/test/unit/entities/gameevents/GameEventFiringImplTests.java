@@ -2,165 +2,162 @@ package inaugural.soliloquy.gamestate.test.unit.entities.gameevents;
 
 import inaugural.soliloquy.gamestate.entities.gameevents.GameEventFiringImpl;
 import inaugural.soliloquy.tools.CheckedExceptionWrapper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventFiring;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.Assert.*;
+import static inaugural.soliloquy.tools.testing.Assertions.once;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 // TODO: Bad suite.
+@ExtendWith(MockitoExtension.class)
 public class GameEventFiringImplTests {
-    private boolean _event1CanComplete = false;
-    private boolean _event2CanComplete = false;
-    private boolean _event3CanComplete = false;
-    private CopyOnWriteArrayList<Integer> _eventsCompleted;
+    private boolean event1CanComplete = false;
+    private boolean event2CanComplete = false;
+    private boolean event3CanComplete = false;
+    private CopyOnWriteArrayList<Integer> eventsCompleted;
 
     private final Runnable EVENT_1 = () -> {
-        while (!_event1CanComplete) {
+        while (!event1CanComplete) {
             CheckedExceptionWrapper.sleep(10);
         }
-        _eventsCompleted.add(1);
+        eventsCompleted.add(1);
     };
     private final Runnable EVENT_2 = () -> {
-        while (!_event2CanComplete) {
+        while (!event2CanComplete) {
             CheckedExceptionWrapper.sleep(10);
         }
-        _eventsCompleted.add(2);
+        eventsCompleted.add(2);
     };
     private final Runnable EVENT_3 = () -> {
-        while (!_event3CanComplete) {
+        while (!event3CanComplete) {
             CheckedExceptionWrapper.sleep(10);
         }
-        _eventsCompleted.add(3);
+        eventsCompleted.add(3);
     };
     private final IllegalArgumentException ERROR = new IllegalArgumentException();
     private final Runnable EVENT_ERROR = () -> { throw ERROR; };
 
-    private Throwable _handledError;
+    private Throwable handledError;
 
-    @Mock private GameSaveBlocker _mockGameSaveBlocker;
+    @Mock private GameSaveBlocker mockGameSaveBlocker;
 
-    private GameEventFiring _gameEventFiring;
+    private GameEventFiring gameEventFiring;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        _eventsCompleted = new CopyOnWriteArrayList<>();
+        eventsCompleted = new CopyOnWriteArrayList<>();
 
-        _mockGameSaveBlocker = mock(GameSaveBlocker.class);
-
-        _gameEventFiring = new GameEventFiringImpl(_mockGameSaveBlocker, e -> _handledError = e);
+        gameEventFiring = new GameEventFiringImpl(mockGameSaveBlocker, e -> handledError = e);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GameEventFiringImpl(null, e -> _handledError = e));
+                () -> new GameEventFiringImpl(null, e -> handledError = e));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameEventFiringImpl(_mockGameSaveBlocker, null));
+                () -> new GameEventFiringImpl(mockGameSaveBlocker, null));
     }
 
     @Test
     public void testRegisterEventFiresEvent() {
-        _event1CanComplete = true;
+        event1CanComplete = true;
 
-        _gameEventFiring.registerEvent(EVENT_1, randomInt());
+        gameEventFiring.registerEvent(EVENT_1, randomInt());
         CheckedExceptionWrapper.sleep(50);
 
-        assertTrue(_eventsCompleted.contains(1));
+        assertTrue(eventsCompleted.contains(1));
     }
 
     @Test
     public void testEventsFiredInOrderOfPriorityAndPlacement() {
         int event1Priority = randomInt();
-        _gameEventFiring.registerEvent(EVENT_1, event1Priority);
-        _gameEventFiring.registerEvent(EVENT_2, randomIntWithInclusiveCeiling(event1Priority - 1));
-        _gameEventFiring.registerEvent(EVENT_3, event1Priority);
+        gameEventFiring.registerEvent(EVENT_1, event1Priority);
+        gameEventFiring.registerEvent(EVENT_2, randomIntWithInclusiveCeiling(event1Priority - 1));
+        gameEventFiring.registerEvent(EVENT_3, event1Priority);
 
-        _event1CanComplete = true;
-        _event2CanComplete = true;
-        _event3CanComplete = true;
+        event1CanComplete = true;
+        event2CanComplete = true;
+        event3CanComplete = true;
 
         CheckedExceptionWrapper.sleep(50);
 
-        assertEquals(3, _eventsCompleted.size());
-        assertEquals(1, (int) _eventsCompleted.get(0));
-        assertEquals(3, (int) _eventsCompleted.get(1));
-        assertEquals(2, (int) _eventsCompleted.get(2));
+        assertEquals(3, eventsCompleted.size());
+        assertEquals(1, (int) eventsCompleted.get(0));
+        assertEquals(3, (int) eventsCompleted.get(1));
+        assertEquals(2, (int) eventsCompleted.get(2));
     }
 
     @Test
     public void testFreeForGameplayInput() {
-        _gameEventFiring.registerEvent(EVENT_1, randomInt());
-        _gameEventFiring.registerEvent(EVENT_2, randomInt());
-        _gameEventFiring.registerEvent(EVENT_3, randomInt());
+        gameEventFiring.registerEvent(EVENT_1, randomInt());
+        gameEventFiring.registerEvent(EVENT_2, randomInt());
+        gameEventFiring.registerEvent(EVENT_3, randomInt());
 
         CheckedExceptionWrapper.sleep(50);
 
-        assertFalse(_gameEventFiring.freeForGameplayInput());
+        assertFalse(gameEventFiring.freeForGameplayInput());
 
-        _event1CanComplete = true;
+        event1CanComplete = true;
         CheckedExceptionWrapper.sleep(50);
 
-        assertFalse(_gameEventFiring.freeForGameplayInput());
+        assertFalse(gameEventFiring.freeForGameplayInput());
 
-        _event2CanComplete = true;
+        event2CanComplete = true;
         CheckedExceptionWrapper.sleep(50);
 
-        assertFalse(_gameEventFiring.freeForGameplayInput());
+        assertFalse(gameEventFiring.freeForGameplayInput());
 
-        _event3CanComplete = true;
+        event3CanComplete = true;
         CheckedExceptionWrapper.sleep(50);
 
-        assertTrue(_gameEventFiring.freeForGameplayInput());
+        assertTrue(gameEventFiring.freeForGameplayInput());
     }
 
     @Test
     public void testPlacementAndReleasingOfGameSaveBlocks() {
-        _gameEventFiring.registerEvent(EVENT_1, randomInt());
-        _gameEventFiring.registerEvent(EVENT_2, randomInt());
-        _gameEventFiring.registerEvent(EVENT_3, randomInt());
+        gameEventFiring.registerEvent(EVENT_1, randomInt());
+        gameEventFiring.registerEvent(EVENT_2, randomInt());
+        gameEventFiring.registerEvent(EVENT_3, randomInt());
 
         CheckedExceptionWrapper.sleep(50);
 
-        verify(_mockGameSaveBlocker, times(1)).placeEventFiringBlock(any());
-        verify(_mockGameSaveBlocker, times(0)).releaseEventFiringBlock(any());
+        verify(mockGameSaveBlocker, once()).placeEventFiringBlock(any());
+        verify(mockGameSaveBlocker, times(0)).releaseEventFiringBlock(any());
 
-        _event1CanComplete = true;
+        event1CanComplete = true;
         CheckedExceptionWrapper.sleep(50);
 
-        verify(_mockGameSaveBlocker, times(1)).placeEventFiringBlock(any());
-        verify(_mockGameSaveBlocker, times(0)).releaseEventFiringBlock(any());
+        verify(mockGameSaveBlocker, once()).placeEventFiringBlock(any());
+        verify(mockGameSaveBlocker, times(0)).releaseEventFiringBlock(any());
 
-        _event2CanComplete = true;
+        event2CanComplete = true;
         CheckedExceptionWrapper.sleep(50);
 
-        verify(_mockGameSaveBlocker, times(1)).placeEventFiringBlock(any());
-        verify(_mockGameSaveBlocker, times(0)).releaseEventFiringBlock(any());
+        verify(mockGameSaveBlocker, once()).placeEventFiringBlock(any());
+        verify(mockGameSaveBlocker, times(0)).releaseEventFiringBlock(any());
 
-        _event3CanComplete = true;
+        event3CanComplete = true;
         CheckedExceptionWrapper.sleep(50);
 
-        verify(_mockGameSaveBlocker, times(1)).placeEventFiringBlock(any());
-        verify(_mockGameSaveBlocker, times(1)).releaseEventFiringBlock(any());
+        verify(mockGameSaveBlocker, once()).placeEventFiringBlock(any());
+        verify(mockGameSaveBlocker, once()).releaseEventFiringBlock(any());
     }
 
     @Test
     public void testSubthreadErrorHandler() {
-        _gameEventFiring.registerEvent(EVENT_ERROR, randomInt());
+        gameEventFiring.registerEvent(EVENT_ERROR, randomInt());
 
         CheckedExceptionWrapper.sleep(50);
 
-        assertSame(ERROR, _handledError);
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(GameEventFiring.class.getCanonicalName(), _gameEventFiring.getInterfaceName());
+        assertSame(ERROR, handledError);
     }
 }

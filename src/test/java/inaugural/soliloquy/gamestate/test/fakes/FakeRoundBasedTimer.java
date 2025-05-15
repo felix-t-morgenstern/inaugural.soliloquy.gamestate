@@ -44,9 +44,4 @@ public abstract class FakeRoundBasedTimer implements RoundBasedTimer {
     public boolean isDeleted() {
         return false;
     }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
 }

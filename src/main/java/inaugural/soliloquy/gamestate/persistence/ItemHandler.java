@@ -1,42 +1,47 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.ItemImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Item;
 import soliloquy.specs.gamestate.factories.ItemFactory;
 import soliloquy.specs.ruleset.entities.ItemType;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
+import static soliloquy.specs.common.valueobjects.Vertex.vertexOf;
 
 public class ItemHandler extends AbstractTypeHandler<Item> {
     private final Function<String, ItemType> GET_ITEM_TYPE;
-    private final TypeHandler<VariableCache> DATA_HANDLER;
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER;
     private final ItemFactory ITEM_FACTORY;
 
     public ItemHandler(Function<String, ItemType> getItemType,
-                       TypeHandler<VariableCache> dataHandler,
+                       @SuppressWarnings("rawtypes") TypeHandler<Map> mapHandler,
                        ItemFactory itemFactory) {
-        super(generateSimpleArchetype(Item.class));
         GET_ITEM_TYPE = Check.ifNull(getItemType, "getItemType");
-        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
     }
 
+    @Override
+    public String typeHandled() {
+        return ItemImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public Item read(String input) throws IllegalArgumentException {
         Check.ifNullOrEmpty(input, "input");
         ItemDTO itemDTO = JSON.fromJson(input, ItemDTO.class);
         UUID uuid = UUID.fromString(itemDTO.uuid);
         ItemType itemType = GET_ITEM_TYPE.apply(itemDTO.typeId);
-        VariableCache data = DATA_HANDLER.read(itemDTO.data);
+        Map<String, Object> data = MAP_HANDLER.read(itemDTO.data);
         Item readItem = ITEM_FACTORY.make(itemType, data, uuid);
-        readItem.setTileOffset(Vertex.of(itemDTO.xOffset, itemDTO.yOffset));
+        readItem.setTileOffset(vertexOf(itemDTO.xOffset, itemDTO.yOffset));
         if (itemType.hasCharges()) {
             readItem.setCharges(itemDTO.charges);
         }
@@ -60,7 +65,7 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
         else if (item.type().isStackable()) {
             itemDTO.numberInStack = item.getNumberInStack();
         }
-        itemDTO.data = DATA_HANDLER.write(item.data());
+        itemDTO.data = MAP_HANDLER.write(item.data());
         return JSON.toJson(itemDTO);
     }
 

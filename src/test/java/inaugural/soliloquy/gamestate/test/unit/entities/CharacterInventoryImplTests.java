@@ -2,11 +2,11 @@ package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterInventoryImpl;
 import inaugural.soliloquy.gamestate.entities.TileFixtureImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.CharacterInventory;
 import soliloquy.specs.gamestate.entities.Item;
@@ -17,11 +17,11 @@ import java.util.List;
 
 import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CharacterInventoryImplTests {
     @Mock private Character mockCharacter;
     @Mock private Item mockItem1;
@@ -30,20 +30,14 @@ public class CharacterInventoryImplTests {
 
     private CharacterInventory characterInventory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         characterInventory = new CharacterInventoryImpl(mockCharacter);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new CharacterInventoryImpl(null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(CharacterInventory.class.getCanonicalName(),
-                characterInventory.getInterfaceName());
     }
 
     @Test

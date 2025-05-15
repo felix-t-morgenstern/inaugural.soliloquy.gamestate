@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.factories;
 import inaugural.soliloquy.gamestate.entities.GameZoneImpl;
 import inaugural.soliloquy.tools.Check;
 import org.apache.commons.lang3.function.TriConsumer;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
@@ -11,6 +10,7 @@ import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.shared.GameZoneTerrain;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class GameZoneFactoryImpl implements GameZoneFactory {
@@ -29,7 +29,7 @@ public class GameZoneFactoryImpl implements GameZoneFactory {
     }
 
     @Override
-    public GameZone make(String id, Coordinate2d maxCoordinates, VariableCache data)
+    public GameZone make(String id, Coordinate2d maxCoordinates, Map<String, Object> data)
             throws IllegalArgumentException {
         Check.ifNullOrEmpty(id, "id");
         Check.ifNull(maxCoordinates, "maxCoordinates");
@@ -37,10 +37,5 @@ public class GameZoneFactoryImpl implements GameZoneFactory {
         Check.throwOnLteZero(maxCoordinates.Y, "maxCoordinates.Y");
         return new GameZoneImpl(Check.ifNullOrEmpty(id, "id"), maxCoordinates, data,
                 ADD_TO_END_OF_ROUND_MANAGER, REMOVE_FROM_ROUND_MANAGER, ASSIGN_LOC_AFTER_PLACE);
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return GameZoneFactory.class.getCanonicalName();
     }
 }

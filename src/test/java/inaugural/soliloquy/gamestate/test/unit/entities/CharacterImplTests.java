@@ -1,30 +1,30 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.CharacterImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.factories.CharacterEquipmentSlotsFactory;
-import soliloquy.specs.gamestate.factories.CharacterEventsFactory;
-import soliloquy.specs.gamestate.factories.CharacterInventoryFactory;
-import soliloquy.specs.gamestate.factories.CharacterStatusEffectsFactory;
 import soliloquy.specs.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 import soliloquy.specs.ruleset.entities.character.CharacterType;
 import soliloquy.specs.ruleset.entities.character.VariableStatisticType;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static inaugural.soliloquy.tools.random.Random.randomInt;
 import static inaugural.soliloquy.tools.random.Random.randomString;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static soliloquy.specs.common.shared.Direction.SOUTHWEST;
 
+@ExtendWith(MockitoExtension.class)
 public class CharacterImplTests {
     private final UUID UUID = java.util.UUID.randomUUID();
 
@@ -32,55 +32,36 @@ public class CharacterImplTests {
     @Mock private TileEntities<Character> mockTileCharacters;
     @Mock private Tile mockTile;
     @Mock private CharacterEvents mockEvents;
-    @Mock private CharacterEventsFactory mockEventsFactory;
+    @Mock private Function<Character, CharacterEvents> mockEventsFactory;
     @Mock private CharacterStatusEffects mockStatusEffects;
-    @Mock private CharacterStatusEffectsFactory mockStatusEffectsFactory;
+    @Mock private Function<Character, CharacterStatusEffects> mockStatusEffectsFactory;
     @Mock private CharacterInventory mockInventory;
-    @Mock private CharacterInventoryFactory mockInventoryFactory;
+    @Mock private Function<Character, CharacterInventory> mockInventoryFactory;
     @Mock private CharacterEquipmentSlots mockEquipmentSlots;
-    @Mock private CharacterEquipmentSlotsFactory mockEquipmentSlotsFactory;
+    @Mock private Function<Character, CharacterEquipmentSlots> mockEquipmentSlotsFactory;
     @Mock private VariableStatisticType mockVariableStatType;
-    @Mock private VariableCache mockData;
     @Mock private ImageAssetSet mockImageAssetSet;
-
+    @Mock private Map<String, Object> mockData;
+    
     private Character character;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        mockCharacterType = mock(CharacterType.class);
+        lenient().when(mockTileCharacters.contains(any())).thenReturn(true);
 
-        //noinspection unchecked
-        mockTileCharacters = (TileEntities<Character>) mock(TileEntities.class);
-        when(mockTileCharacters.contains(any())).thenReturn(true);
+        lenient().when(mockTile.characters()).thenReturn(mockTileCharacters);
+        
+        lenient().when(mockEventsFactory.apply(any())).thenReturn(mockEvents);
 
-        mockTile = mock(Tile.class);
-        when(mockTile.characters()).thenReturn(mockTileCharacters);
-
-        mockEvents = mock(CharacterEvents.class);
-
-        mockEventsFactory = mock(CharacterEventsFactory.class);
-        when(mockEventsFactory.make(any())).thenReturn(mockEvents);
-
-        mockStatusEffects = mock(CharacterStatusEffects.class);
-
-        mockStatusEffectsFactory = mock(CharacterStatusEffectsFactory.class);
-        when(mockStatusEffectsFactory.make(any())).thenReturn(mockStatusEffects);
+        lenient().when(mockStatusEffectsFactory.apply(any())).thenReturn(mockStatusEffects);
 
         mockInventory = mock(CharacterInventory.class);
 
-        mockInventoryFactory = mock(CharacterInventoryFactory.class);
-        when(mockInventoryFactory.make(any())).thenReturn(mockInventory);
+        lenient().when(mockInventoryFactory.apply(any())).thenReturn(mockInventory);
 
-        mockEquipmentSlots = mock(CharacterEquipmentSlots.class);
-
-        mockEquipmentSlotsFactory = mock(CharacterEquipmentSlotsFactory.class);
-        when(mockEquipmentSlotsFactory.make(any())).thenReturn(mockEquipmentSlots);
-
-        mockVariableStatType = mock(VariableStatisticType.class);
-
-        mockData = mock(VariableCache.class);
-
-        mockImageAssetSet = mock(ImageAssetSet.class);
+        //noinspection unchecked
+        mockEquipmentSlotsFactory = mock(Function.class);
+        lenient().when(mockEquipmentSlotsFactory.apply(any())).thenReturn(mockEquipmentSlots);
 
         character = new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
                 mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
@@ -88,7 +69,7 @@ public class CharacterImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new CharacterImpl(null, mockCharacterType, mockEventsFactory,
                         mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
@@ -113,11 +94,6 @@ public class CharacterImplTests {
                 () -> new CharacterImpl(UUID, mockCharacterType, mockEventsFactory,
                         mockEquipmentSlotsFactory, mockInventoryFactory, mockStatusEffectsFactory,
                         null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(Character.class.getCanonicalName(), character.getInterfaceName());
     }
 
     @Test
@@ -170,7 +146,7 @@ public class CharacterImplTests {
     }
 
     @Test
-    public void testSetImageAssetSetWithInvalidParams() {
+    public void testSetImageAssetSetWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> character.setImageAssetSet(null));
     }
 
@@ -186,7 +162,7 @@ public class CharacterImplTests {
     }
 
     @Test
-    public void testSetAITypeWithInvalidParams() {
+    public void testSetAITypeWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> character.setAIType(null));
     }
 
@@ -218,7 +194,7 @@ public class CharacterImplTests {
     }
 
     @Test
-    public void testSetAndGetVariableStatisticCurrentValueWithInvalidParams() {
+    public void testSetAndGetVariableStatisticCurrentValueWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> character.setVariableStatisticCurrentValue(null, randomInt()));
         assertThrows(IllegalArgumentException.class,
@@ -286,7 +262,7 @@ public class CharacterImplTests {
     }
 
     @Test
-    public void testSetNameWithInvalidParams() {
+    public void testSetNameWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> character.setName(null));
         assertThrows(IllegalArgumentException.class, () -> character.setName(""));
     }
@@ -354,7 +330,6 @@ public class CharacterImplTests {
                 () -> character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(EntityDeletedException.class, () -> character.getName());
         assertThrows(EntityDeletedException.class, () -> character.setName(randomString()));
-        assertThrows(EntityDeletedException.class, () -> character.getInterfaceName());
     }
 
     @Test
@@ -397,6 +372,5 @@ public class CharacterImplTests {
                 () -> character.assignTileAfterAddedToTileEntitiesOfType(null));
         assertThrows(IllegalStateException.class, () -> character.getName());
         assertThrows(IllegalStateException.class, () -> character.setName(randomString()));
-        assertThrows(IllegalStateException.class, () -> character.getInterfaceName());
     }
 }

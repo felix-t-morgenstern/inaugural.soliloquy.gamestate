@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
 import inaugural.soliloquy.gamestate.test.stubs.ItemTypeStub;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.common.valueobjects.Vertex;
 import soliloquy.specs.gamestate.entities.Character;
@@ -15,9 +14,11 @@ import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Vertex.vertexOf;
 
 public class FakeItem implements Item {
     private final ItemType ITEM_TYPE = new ItemTypeStub();
@@ -34,9 +35,6 @@ public class FakeItem implements Item {
 
     private Integer charges;
     private Integer numberInStack;
-    private UUID uuid;
-    private ItemType itemType;
-    private VariableCache data;
 
     public FakeItem() {
 
@@ -44,7 +42,7 @@ public class FakeItem implements Item {
 
     @Override
     public ItemType type() throws IllegalStateException {
-        return itemType != null ? itemType : ITEM_TYPE;
+        return ITEM_TYPE;
     }
 
     @Override
@@ -144,12 +142,12 @@ public class FakeItem implements Item {
 
     @Override
     public UUID uuid() {
-        return uuid;
+        return null;
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
-        return data;
+    public Map<String, Object> data() throws IllegalStateException {
+        return null;
     }
 
     @Override
@@ -173,11 +171,6 @@ public class FakeItem implements Item {
     }
 
     @Override
-    public String getInterfaceName() {
-        return null;
-    }
-
-    @Override
     public String getPluralName() {
         return null;
     }
@@ -189,7 +182,7 @@ public class FakeItem implements Item {
 
     @Override
     public Vertex getTileOffset() throws IllegalStateException, EntityDeletedException {
-        return Vertex.of(xTileWidthOffset, yTileHeightOffset);
+        return vertexOf(xTileWidthOffset, yTileHeightOffset);
     }
 
     @Override

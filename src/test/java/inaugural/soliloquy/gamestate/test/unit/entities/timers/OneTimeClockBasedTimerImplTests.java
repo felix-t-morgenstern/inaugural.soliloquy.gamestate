@@ -2,12 +2,12 @@ package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
 import static inaugural.soliloquy.tools.random.Random.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OneTimeClockBasedTimerImplTests {
     private final String ID = randomString();
@@ -21,14 +21,14 @@ public class OneTimeClockBasedTimerImplTests {
 
     private OneTimeClockBasedTimer oneTimeClockBasedTimer;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         oneTimeClockBasedTimer = new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, FIRING_ACTION,
                 null, MOST_RECENT_TIMESTAMP);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
                 new OneTimeClockBasedTimerImpl(null, FIRING_TIME, FIRING_ACTION,
                         null, MOST_RECENT_TIMESTAMP));
@@ -47,12 +47,6 @@ public class OneTimeClockBasedTimerImplTests {
         assertThrows(IllegalArgumentException.class, () ->
                 new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, FIRING_ACTION,
                         MOST_RECENT_TIMESTAMP + 1, MOST_RECENT_TIMESTAMP));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(OneTimeClockBasedTimer.class.getCanonicalName(),
-                oneTimeClockBasedTimer.getInterfaceName());
     }
 
     @Test

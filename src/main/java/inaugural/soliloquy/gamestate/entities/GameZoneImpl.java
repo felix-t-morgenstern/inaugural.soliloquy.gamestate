@@ -4,7 +4,6 @@ import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.collections.Collections;
 import org.apache.commons.lang3.function.TriConsumer;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
@@ -21,7 +20,7 @@ import java.util.function.Consumer;
 
 import static inaugural.soliloquy.tools.collections.Collections.*;
 import static inaugural.soliloquy.tools.valueobjects.Coordinate2d.addOffsets2d;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 import static soliloquy.specs.gamestate.entities.WallSegmentOrientation.*;
 
 public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
@@ -34,16 +33,18 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final List<Action> ENTRY_ACTIONS;
     @SuppressWarnings("rawtypes")
     private final List<Action> EXIT_ACTIONS;
-    private final VariableCache DATA;
+    private final Map<String, Object> DATA;
     private final Map<UUID, Character> CHARACTERS_IN_GAME_ZONE;
     private final TriConsumer<GameZoneTerrain, GameZone, Coordinate3d> ASSIGN_LOC_AFTER_PLACE;
 
     private String name;
 
-    public GameZoneImpl(String id, Coordinate2d maxCoordinates, VariableCache data,
+    public GameZoneImpl(String id, Coordinate2d maxCoordinates,
+                        Map<String, Object> data,
                         Consumer<Character> addToEndOfRoundManager,
                         Consumer<Character> removeFromRoundManager,
-                        TriConsumer<GameZoneTerrain, GameZone, Coordinate3d> assignLocationAfterPlacement) {
+                        TriConsumer<GameZoneTerrain, GameZone, Coordinate3d>
+                                assignLocationAfterPlacement) {
         ID = Check.ifNullOrEmpty(id, "id");
         CHARACTERS_IN_GAME_ZONE = mapOf();
 
@@ -337,13 +338,9 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
+    public Map<String, Object> data()
+            throws IllegalStateException {
         return DATA;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return GameZone.class.getCanonicalName();
     }
 
     @Override

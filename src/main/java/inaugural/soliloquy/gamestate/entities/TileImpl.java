@@ -1,36 +1,37 @@
 package inaugural.soliloquy.gamestate.entities;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.gamestate.factories.TileEntitiesFactory;
 import soliloquy.specs.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
 
 public class TileImpl extends AbstractGameZoneTerrain implements Tile {
     private final TileEntities<Character> TILE_CHARACTERS;
     private final TileEntities<Item> TILE_ITEMS;
     private final TileEntities<TileFixture> TILE_FIXTURES;
     private final Map<Sprite, Integer> SPRITES;
-    private final VariableCache DATA;
+    private final Map<String, Object> DATA;
 
     private GroundType groundType;
 
-    public TileImpl(TileEntitiesFactory tileEntitiesFactory,
-                    VariableCache data) {
+    public TileImpl(@SuppressWarnings("rawtypes") Function<Tile, TileEntities> tileEntitiesFactory,
+                    Map<String, Object> data) {
         super();
         Check.ifNull(tileEntitiesFactory, "tileEntitiesFactory");
         // TODO: Test and implement whether add and remove from gameZone works
-        TILE_CHARACTERS = tileEntitiesFactory.make(this, generateSimpleArchetype(Character.class), null, null);
-        TILE_ITEMS = tileEntitiesFactory.make(this, generateSimpleArchetype(Item.class), null, null);
-        TILE_FIXTURES = tileEntitiesFactory.make(this, generateSimpleArchetype(TileFixture.class), null, null);
+        //noinspection unchecked
+        TILE_CHARACTERS = tileEntitiesFactory.apply(this);
+        //noinspection unchecked
+        TILE_ITEMS = tileEntitiesFactory.apply(this);
+        //noinspection unchecked
+        TILE_FIXTURES = tileEntitiesFactory.apply(this);
         SPRITES = mapOf();
         DATA = Check.ifNull(data, "data");
     }
@@ -72,7 +73,7 @@ public class TileImpl extends AbstractGameZoneTerrain implements Tile {
     }
 
     @Override
-    public VariableCache data() throws IllegalStateException {
+    public Map<String, Object> data() throws IllegalStateException {
         enforceInvariants("data");
         return DATA;
     }
@@ -126,17 +127,7 @@ public class TileImpl extends AbstractGameZoneTerrain implements Tile {
             public WallSegment tileWallSegment() {
                 return null;
             }
-
-            @Override
-            public String getInterfaceName() {
-                return GameEventTarget.class.getCanonicalName();
-            }
         };
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return Tile.class.getCanonicalName();
     }
 
     private void enforceLocationCorrespondenceInvariant(String methodName) {

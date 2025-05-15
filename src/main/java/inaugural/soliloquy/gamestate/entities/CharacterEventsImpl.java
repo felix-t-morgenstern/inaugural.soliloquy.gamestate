@@ -23,7 +23,7 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
     }
 
     @Override
-    public void addEvent(String[] triggers, CharacterEvent event)
+    public void addEvent(CharacterEvent event, String... triggers)
             throws IllegalArgumentException, EntityDeletedException {
         enforceDeletionInvariants();
         Check.ifNull(triggers, "triggers");
@@ -101,11 +101,6 @@ public class CharacterEventsImpl extends HasDeletionInvariants implements Charac
         Map<String, List<CharacterEvent>> representation = mapOf();
         eventsPerTrigger.forEach((t, e) -> representation.put(t, listOf(e)));
         return representation;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return CharacterEvents.class.getCanonicalName();
     }
 
     @Override

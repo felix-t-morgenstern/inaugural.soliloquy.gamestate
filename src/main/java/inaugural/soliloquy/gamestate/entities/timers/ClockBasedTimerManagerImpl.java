@@ -114,9 +114,4 @@ public class ClockBasedTimerManagerImpl implements ClockBasedTimerManager {
     public List<RecurringClockBasedTimer> recurringTimersRepresentation() {
         return listOf(RECURRING_CLOCK_BASED_TIMERS.values());
     }
-
-    @Override
-    public String getInterfaceName() {
-        return ClockBasedTimerManager.class.getCanonicalName();
-    }
 }

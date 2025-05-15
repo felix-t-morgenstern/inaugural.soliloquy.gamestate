@@ -1,41 +1,35 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.entities.WallSegmentImpl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.WallSegment;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
 import soliloquy.specs.ruleset.entities.WallSegmentType;
 
-import static org.junit.Assert.*;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
+@ExtendWith(MockitoExtension.class)
 public class WallSegmentImplTests {
-    @Mock private VariableCache mockData;
+    @Mock private Map<String, Object> mockData;
     @Mock private WallSegmentType mockWallSegmentType;
 
     private WallSegment wallSegment;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        mockData = mock(VariableCache.class);
-        mockWallSegmentType = mock(WallSegmentType.class);
-
         wallSegment = new WallSegmentImpl(mockData);
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> new WallSegmentImpl(null));
-    }
-
-    @Test
-    public void testGetInterfaceName() {
-        assertEquals(WallSegment.class.getCanonicalName(),
-                wallSegment.getInterfaceName());
     }
 
     @Test
@@ -51,7 +45,7 @@ public class WallSegmentImplTests {
     }
 
     @Test
-    public void testSetTypeWithInvalidParams() {
+    public void testSetTypeWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () -> wallSegment.setType(null));
     }
 
@@ -84,7 +78,6 @@ public class WallSegmentImplTests {
         assertNotNull(gameEventTarget.tileWallSegment());
         assertNull(gameEventTarget.tile());
         assertNull(gameEventTarget.tileFixture());
-        assertEquals(GameEventTarget.class.getCanonicalName(), gameEventTarget.getInterfaceName());
     }
 
     @Test

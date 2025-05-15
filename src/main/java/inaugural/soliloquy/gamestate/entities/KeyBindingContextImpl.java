@@ -10,7 +10,7 @@ import static inaugural.soliloquy.tools.collections.Collections.listOf;
 public class KeyBindingContextImpl implements KeyBindingContext {
     private final List<KeyBinding> BINDINGS;
 
-    private boolean _blocksAllLowerBindings;
+    private boolean blocksAllLowerBindings;
 
     public KeyBindingContextImpl() {
         BINDINGS = listOf();
@@ -24,16 +24,11 @@ public class KeyBindingContextImpl implements KeyBindingContext {
 
     @Override
     public boolean getBlocksAllLowerBindings() {
-        return _blocksAllLowerBindings;
+        return blocksAllLowerBindings;
     }
 
     @Override
     public void setBlocksAllLowerBindings(boolean blocksAllLowerBindings) {
-        _blocksAllLowerBindings = blocksAllLowerBindings;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return KeyBindingContext.class.getCanonicalName();
+        this.blocksAllLowerBindings = blocksAllLowerBindings;
     }
 }

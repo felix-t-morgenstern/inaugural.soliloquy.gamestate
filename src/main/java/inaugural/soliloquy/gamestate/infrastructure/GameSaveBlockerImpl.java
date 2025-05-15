@@ -3,16 +3,18 @@ package inaugural.soliloquy.gamestate.infrastructure;
 import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.gamestate.infrastructure.GameSaveBlocker;
 
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-public class GameSaveBlockerImpl implements GameSaveBlocker {
-    private final HashSet<UUID> SAVE_BLOCKING_EVENT_SERIES;
+import static inaugural.soliloquy.tools.collections.Collections.setOf;
 
-    private boolean _manuallyBlocked;
+public class GameSaveBlockerImpl implements GameSaveBlocker {
+    private final Set<UUID> SAVE_BLOCKING_EVENT_SERIES;
+
+    private boolean manuallyBlocked;
 
     public GameSaveBlockerImpl() {
-        SAVE_BLOCKING_EVENT_SERIES = new HashSet<>();
+        SAVE_BLOCKING_EVENT_SERIES = setOf();
     }
 
     @Override
@@ -29,21 +31,16 @@ public class GameSaveBlockerImpl implements GameSaveBlocker {
 
     @Override
     public void placeManualBlock() {
-        _manuallyBlocked = true;
+        manuallyBlocked = true;
     }
 
     @Override
     public void releaseManualBlock() {
-        _manuallyBlocked = false;
+        manuallyBlocked = false;
     }
 
     @Override
     public boolean canSaveGame() {
-        return SAVE_BLOCKING_EVENT_SERIES.isEmpty() && !_manuallyBlocked;
-    }
-
-    @Override
-    public String getInterfaceName() {
-        return GameSaveBlocker.class.getCanonicalName();
+        return SAVE_BLOCKING_EVENT_SERIES.isEmpty() && !manuallyBlocked;
     }
 }

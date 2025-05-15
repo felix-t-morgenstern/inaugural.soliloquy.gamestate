@@ -81,11 +81,6 @@ public class CharacterInventoryImpl extends CanTellIfItemIsPresentElsewhere
     }
 
     @Override
-    public String getInterfaceName() {
-        return CharacterInventory.class.getCanonicalName();
-    }
-
-    @Override
     public Iterator<Item> iterator() {
         return INVENTORY.iterator();
     }

@@ -1,14 +1,11 @@
 package inaugural.soliloquy.gamestate.test.unit.entities;
 
 import inaugural.soliloquy.gamestate.GameStateImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import soliloquy.specs.common.factories.RegistryFactory;
-import soliloquy.specs.common.infrastructure.Registry;
-import soliloquy.specs.common.infrastructure.VariableCache;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.GameState;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
@@ -17,19 +14,19 @@ import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GameStateImplTests {
-    @Mock private Registry<GameMovementEvent> mockGameMovementEvents;
-    @Mock private Registry<GameAbilityEvent> mockGameAbilityEvents;
-    @Mock private RegistryFactory mockRegistryFactory;
-    @Mock private GameZonesRepo mockGameZonesRepo;
+    @Mock private Map<String, GameMovementEvent> mockGameMovementEvents;
+    @Mock private Map<String, GameAbilityEvent> mockGameAbilityEvents;
+    @Mock private GameZoneRepo mockGameZoneRepo;
     @Mock private Camera mockCamera;
     @Mock private Function<Supplier<GameZone>, Camera> mockCameraFactory;
     @Mock private KeyBindingFactory mockKeyBindingFactory;
@@ -43,23 +40,18 @@ public class GameStateImplTests {
     @Mock private KeyEventListener mockKeyEventListener;
     @Mock private KeyEventListenerFactory mockKeyEventListenerFactory;
     @Mock private Party mockParty;
-    @Mock private VariableCache mockData;
+    @Mock private Map<String, Object> mockData;
 
     private GameState gameState;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        //noinspection unchecked,rawtypes
-        when(mockRegistryFactory.make(any()))
-                .thenReturn((Registry) mockGameMovementEvents)
-                .thenReturn(mockGameAbilityEvents);
         when(mockCameraFactory.apply(any())).thenReturn(mockCamera);
         when(mockKeyEventListenerFactory.make(any())).thenReturn(mockKeyEventListener);
 
         gameState = new GameStateImpl(mockParty,
                 mockData,
-                mockRegistryFactory,
-                mockGameZonesRepo,
+                mockGameZoneRepo,
                 mockCameraFactory,
                 mockRoundManager,
                 mockRoundBasedTimerManager,
@@ -73,12 +65,11 @@ public class GameStateImplTests {
     }
 
     @Test
-    public void testConstructorWithInvalidParams() {
+    public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(null,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory,
                         mockRoundManager,
                         mockRoundBasedTimerManager,
@@ -92,8 +83,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         null,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -107,7 +97,6 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         null,
-                        mockGameZonesRepo,
                         mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -120,22 +109,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        null,
-                        mockCameraFactory, mockRoundManager,
-                        mockRoundBasedTimerManager,
-                        mockClockBasedTimerManager,
-                        mockItemFactory,
-                        mockCharacterFactory,
-                        mockRoundBasedTimerFactory,
-                        mockKeyBindingFactory,
-                        mockKeyBindingContextFactory,
-                        mockKeyEventListenerFactory));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameStateImpl(mockParty,
-                        mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         null, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -148,8 +122,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory,
                         null,
                         mockRoundBasedTimerManager,
@@ -163,8 +136,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory,
                         mockRoundManager,
                         null,
@@ -178,8 +150,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory,
                         mockRoundManager,
                         mockRoundBasedTimerManager,
@@ -193,8 +164,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory,
                         mockRoundManager,
                         mockRoundBasedTimerManager,
@@ -208,8 +178,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -222,8 +191,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -236,8 +204,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -250,8 +217,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -264,8 +230,7 @@ public class GameStateImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateImpl(mockParty,
                         mockData,
-                        mockRegistryFactory,
-                        mockGameZonesRepo,
+                        mockGameZoneRepo,
                         mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -278,29 +243,8 @@ public class GameStateImplTests {
     }
 
     @Test
-    public void testGetInterfaceName() {
-        assertEquals(GameState.class.getCanonicalName(), gameState.getInterfaceName());
-    }
-
-    @Test
     public void testParty() {
         assertSame(mockParty, gameState.party());
-    }
-
-    @Test
-    public void testSetAndGetVariableCache() {
-        assertSame(mockData, gameState.getVariableCache());
-
-        var newVariableCache = mock(VariableCache.class);
-
-        gameState.setVariableCache(newVariableCache);
-
-        assertSame(newVariableCache, gameState.getVariableCache());
-    }
-
-    @Test
-    public void testSetVariableCacheWithInvalidParams() {
-        assertThrows(IllegalArgumentException.class, () -> gameState.setVariableCache(null));
     }
 
     @Test
@@ -309,31 +253,18 @@ public class GameStateImplTests {
     }
 
     @Test
-    public void testGameZonesRepo() {
-        assertSame(mockGameZonesRepo, gameState.gameZonesRepo());
+    public void testGameZoneRepo() {
+        assertSame(mockGameZoneRepo, gameState.gameZoneRepo());
     }
 
     @Test
     public void testMovementEvents() {
         assertNotNull(gameState.movementEvents());
-        assertSame(mockGameMovementEvents, gameState.movementEvents());
     }
 
     @Test
     public void testAbilityEvents() {
         assertNotNull(gameState.abilityEvents());
-        assertSame(mockGameAbilityEvents, gameState.abilityEvents());
-    }
-
-    @Test
-    public void testGetAndSetGameZone() {
-        var mockGameZone = mock(GameZone.class);
-
-        assertNull(gameState.getCurrentGameZone());
-
-        gameState.setCurrentGameZone(mockGameZone);
-
-        assertSame(mockGameZone, gameState.getCurrentGameZone());
     }
 
     @Test

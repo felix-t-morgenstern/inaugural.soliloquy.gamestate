@@ -59,9 +59,4 @@ public class FakeKeyBinding implements KeyBinding {
     public void setBlocksLowerBindings(boolean blocksLowerBindings) {
         _blocksLowerBindings = blocksLowerBindings;
     }
-
-    @Override
-    public String getInterfaceName() {
-        return null;
-    }
 }

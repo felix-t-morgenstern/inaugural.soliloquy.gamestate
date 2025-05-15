@@ -1,18 +1,18 @@
 package inaugural.soliloquy.gamestate.persistence;
 
+import inaugural.soliloquy.gamestate.entities.GameZoneImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.collections.Collections;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
-import soliloquy.specs.common.infrastructure.VariableCache;
 import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.common.valueobjects.Pair;
 import soliloquy.specs.gamestate.entities.GameZone;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.factories.GameZoneFactory;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -25,13 +25,14 @@ import static inaugural.soliloquy.tools.collections.Collections.listOf;
 import static inaugural.soliloquy.tools.collections.Collections.setOf;
 import static inaugural.soliloquy.tools.concurrency.Concurrency.runTaskAsync;
 import static inaugural.soliloquy.tools.concurrency.Concurrency.waitUntilTasksCompleted;
-import static inaugural.soliloquy.tools.generic.Archetypes.generateSimpleArchetype;
-import static inaugural.soliloquy.tools.valueobjects.Pair.pairOf;
+import static soliloquy.specs.common.valueobjects.Coordinate2d.coordinate2dOf;
+import static soliloquy.specs.common.valueobjects.Coordinate3d.coordinate3dOf;
+import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     private final GameZoneFactory GAME_ZONE_FACTORY;
     private final TypeHandler<Tile> TILE_HANDLER;
-    private final TypeHandler<VariableCache> DATA_HANDLER;
+    @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER;
     @SuppressWarnings("rawtypes")
     private final Function<String, Action> GET_ACTION;
     private final int TILES_PER_BATCH;
@@ -43,26 +44,32 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     @SuppressWarnings("rawtypes")
     public GameZoneHandler(GameZoneFactory gameZoneFactory,
                            TypeHandler<Tile> tileHandler,
-                           TypeHandler<VariableCache> dataHandler,
+                           TypeHandler<Map> mapHandler,
                            Function<String, Action> getAction,
                            int tilesPerBatch,
                            int threadPoolSize) {
-        super(generateSimpleArchetype(GameZone.class));
         GAME_ZONE_FACTORY = Check.ifNull(gameZoneFactory, "gameZoneFactory");
         TILE_HANDLER = Check.ifNull(tileHandler, "tileHandler");
-        DATA_HANDLER = Check.ifNull(dataHandler, "dataHandler");
+        MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         GET_ACTION = Check.ifNull(getAction, "getAction");
         TILES_PER_BATCH = Check.ifNonNegative(tilesPerBatch, "tilesPerBatch");
         EXECUTOR = Executors.newFixedThreadPool(threadPoolSize);
     }
 
     @Override
+    public String typeHandled() {
+        return GameZoneImpl.class.getCanonicalName();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public GameZone read(String writtenData) throws IllegalArgumentException {
         var dto = JSON.fromJson(writtenData, GameZoneDTO.class);
 
-        var data = DATA_HANDLER.read(dto.data);
+        //noinspection unchecked
+        var data = (Map<String, Object>) MAP_HANDLER.read(dto.data);
 
-        var gameZone = GAME_ZONE_FACTORY.make(dto.id, Coordinate2d.of(dto.maxX, dto.maxY), data);
+        var gameZone = GAME_ZONE_FACTORY.make(dto.id, coordinate2dOf(dto.maxX, dto.maxY), data);
         gameZone.setName(dto.name);
         for (var onEntry : dto.onEntry) {
             gameZone.onEntry().add(GET_ACTION.apply(onEntry));
@@ -72,7 +79,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         }
 
         runTileTasksBatched(setOf(dto.tiles), this::readFromGameZoneTileDto,
-                tileWithLoc -> gameZone.putTile(tileWithLoc.item1(), tileWithLoc.item2()),
+                tileWithLoc -> gameZone.putTile(tileWithLoc.FIRST, tileWithLoc.SECOND),
                 gameZone);
 
         return gameZone;
@@ -80,7 +87,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
 
     private Pair<Tile, Coordinate3d> readFromGameZoneTileDto(String dtoStr) {
         var dto = JSON.fromJson(dtoStr, GameZoneTileDTO.class);
-        return pairOf(TILE_HANDLER.read(dto.tile), Coordinate3d.of(dto.x, dto.y, dto.z));
+        return pairOf(TILE_HANDLER.read(dto.tile), coordinate3dOf(dto.x, dto.y, dto.z));
     }
 
     @Override
@@ -89,7 +96,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         var dto = new GameZoneDTO();
         dto.id = gameZone.id();
         dto.name = gameZone.getName();
-        dto.data = DATA_HANDLER.write(gameZone.data());
+        dto.data = MAP_HANDLER.write(gameZone.data());
         dto.onEntry = new String[gameZone.onEntry().size()];
         var index = 0;
         for (var action : gameZone.onEntry()) {
