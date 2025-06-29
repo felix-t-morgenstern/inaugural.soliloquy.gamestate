@@ -21,9 +21,6 @@ public class GameStateFactoryImpl implements GameStateFactory {
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
     private final RoundBasedTimerFactory ROUND_BASED_TIMER_FACTORY;
-    private final KeyBindingFactory KEY_BINDING_FACTORY;
-    private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
-    private final KeyEventListenerFactory KEY_EVENT_LISTENER_FACTORY;
 
     public GameStateFactoryImpl(GameZoneRepo GameZoneRepo,
                                 Function<Supplier<GameZone>, Camera> cameraFactory,
@@ -32,10 +29,7 @@ public class GameStateFactoryImpl implements GameStateFactory {
                                 ClockBasedTimerManager clockBasedTimerManager,
                                 ItemFactory itemFactory,
                                 CharacterFactory characterFactory,
-                                RoundBasedTimerFactory roundBasedTimerFactory,
-                                KeyBindingFactory keyBindingFactory,
-                                KeyBindingContextFactory keyBindingContextFactory,
-                                KeyEventListenerFactory keyEventListenerFactory) {
+                                RoundBasedTimerFactory roundBasedTimerFactory) {
         GAME_ZONES_REPO = Check.ifNull(GameZoneRepo, "GameZoneRepo");
         CAMERA_FACTORY = Check.ifNull(cameraFactory, "cameraFactory");
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
@@ -44,18 +38,12 @@ public class GameStateFactoryImpl implements GameStateFactory {
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
         ROUND_BASED_TIMER_FACTORY = Check.ifNull(roundBasedTimerFactory, "roundBasedTimerFactory");
-        KEY_BINDING_FACTORY = Check.ifNull(keyBindingFactory, "keyBindingFactory");
-        KEY_BINDING_CONTEXT_FACTORY = Check.ifNull(keyBindingContextFactory,
-                "keyBindingContextFactory");
-        KEY_EVENT_LISTENER_FACTORY = Check.ifNull(keyEventListenerFactory,
-                "keyEventListenerFactory");
     }
 
     @Override
     public GameState make(Party party, Map<String, Object> data) throws IllegalArgumentException {
         return new GameStateImpl(party, data, GAME_ZONES_REPO, CAMERA_FACTORY,
                 ROUND_MANAGER, ROUND_BASED_TIMER_MANAGER, CLOCK_BASED_TIMER_MANAGER, ITEM_FACTORY,
-                CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY, KEY_BINDING_FACTORY,
-                KEY_BINDING_CONTEXT_FACTORY, KEY_EVENT_LISTENER_FACTORY);
+                CHARACTER_FACTORY, ROUND_BASED_TIMER_FACTORY);
     }
 }

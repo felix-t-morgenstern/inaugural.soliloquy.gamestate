@@ -5,7 +5,7 @@ import soliloquy.specs.common.shared.Direction;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.graphics.assets.ImageAssetSet;
+import soliloquy.specs.io.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
 import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;

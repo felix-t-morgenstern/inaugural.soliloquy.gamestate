@@ -4,7 +4,7 @@ import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
-import soliloquy.specs.graphics.rendering.FrameExecutor;
+import soliloquy.specs.io.graphics.rendering.FrameExecutor;
 
 import java.util.List;
 import java.util.Map;

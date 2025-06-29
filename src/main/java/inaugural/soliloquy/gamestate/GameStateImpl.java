@@ -28,13 +28,9 @@ public class GameStateImpl implements GameState {
     private final RoundManager ROUND_MANAGER;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
     private final ClockBasedTimerManager CLOCK_BASED_TIMER_MANAGER;
-    private final java.util.Map<Integer, KeyBindingContext> KEY_BINDING_CONTEXTS;
     private final ItemFactory ITEM_FACTORY;
     private final CharacterFactory CHARACTER_FACTORY;
     private final RoundBasedTimerFactory ROUND_BASED_TIMER_FACTORY;
-    private final KeyBindingFactory KEY_BINDING_FACTORY;
-    private final KeyBindingContextFactory KEY_BINDING_CONTEXT_FACTORY;
-    private final KeyEventListener KEY_EVENT_LISTENER;
     private final Map<String, Object> DATA;
 
     public GameStateImpl(Party party,
@@ -46,10 +42,7 @@ public class GameStateImpl implements GameState {
                          ClockBasedTimerManager clockBasedTimerManager,
                          ItemFactory itemFactory,
                          CharacterFactory characterFactory,
-                         RoundBasedTimerFactory roundBasedTimerFactory,
-                         KeyBindingFactory keyBindingFactory,
-                         KeyBindingContextFactory keyBindingContextFactory,
-                         KeyEventListenerFactory keyEventListenerFactory) {
+                         RoundBasedTimerFactory roundBasedTimerFactory) {
         PARTY = Check.ifNull(party, "party");
         // TODO: Test to ensure this is actually cloned
         DATA = mapOf(Check.ifNull(data, "data"));
@@ -63,16 +56,9 @@ public class GameStateImpl implements GameState {
         ROUND_MANAGER = Check.ifNull(roundManager, "roundManager");
         ROUND_BASED_TIMER_MANAGER = Check.ifNull(roundBasedTimerManager, "roundBasedTimerManager");
         CLOCK_BASED_TIMER_MANAGER = Check.ifNull(clockBasedTimerManager, "clockBasedTimerManager");
-        KEY_BINDING_CONTEXTS = mapOf();
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
         CHARACTER_FACTORY = Check.ifNull(characterFactory, "characterFactory");
         ROUND_BASED_TIMER_FACTORY = Check.ifNull(roundBasedTimerFactory, "roundBasedTimerFactory");
-        KEY_BINDING_FACTORY = Check.ifNull(keyBindingFactory, "keyBindingFactory");
-        KEY_BINDING_CONTEXT_FACTORY = Check.ifNull(keyBindingContextFactory,
-                "keyBindingContextFactory");
-        // TODO: Ensure that most recent timestamp info is fed into this class!
-        KEY_EVENT_LISTENER = Check.ifNull(keyEventListenerFactory,
-                "keyEventListenerFactory").make(null);
     }
 
     @Override
@@ -126,12 +112,6 @@ public class GameStateImpl implements GameState {
     }
 
     @Override
-    public java.util.Map<Integer, KeyBindingContext> keyBindingContexts()
-            throws IllegalStateException {
-        return KEY_BINDING_CONTEXTS;
-    }
-
-    @Override
     public ItemFactory itemFactory() {
         return ITEM_FACTORY;
     }
@@ -144,21 +124,6 @@ public class GameStateImpl implements GameState {
     @Override
     public RoundBasedTimerFactory roundBasedTimerFactory() {
         return ROUND_BASED_TIMER_FACTORY;
-    }
-
-    @Override
-    public KeyBindingFactory keyBindingFactory() {
-        return KEY_BINDING_FACTORY;
-    }
-
-    @Override
-    public KeyBindingContextFactory keyBindingContextFactory() {
-        return KEY_BINDING_CONTEXT_FACTORY;
-    }
-
-    @Override
-    public KeyEventListener keyEventListener() {
-        return KEY_EVENT_LISTENER;
     }
 
     @Override

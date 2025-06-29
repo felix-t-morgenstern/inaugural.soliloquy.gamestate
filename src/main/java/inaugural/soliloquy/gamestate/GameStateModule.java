@@ -13,8 +13,8 @@ import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.GameStateFactory;
-import soliloquy.specs.graphics.assets.ImageAssetSet;
-import soliloquy.specs.graphics.assets.Sprite;
+import soliloquy.specs.io.graphics.assets.ImageAssetSet;
+import soliloquy.specs.io.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.FixtureType;
 import soliloquy.specs.ruleset.entities.GroundType;
 import soliloquy.specs.ruleset.entities.ItemType;
@@ -118,18 +118,11 @@ public class GameStateModule extends AbstractModule {
 
         var roundBasedTimerFactory = new RoundBasedTimerFactoryImpl(roundBasedTimerManager);
 
-        var keyBindingFactory = new KeyBindingFactoryImpl();
-
-        var keyBindingContextFactory = new KeyBindingContextFactoryImpl();
-
-        var keyEventListenerFactory = new KeyEventListenerFactoryImpl();
-
         // TODO: Populate this with Camera constructor
         var gameStateFactory =
                 new GameStateFactoryImpl(GameZoneRepo, null, roundManager,
                         roundBasedTimerManager, clockBasedTimerManager, itemFactory,
-                        characterFactory, roundBasedTimerFactory, keyBindingFactory,
-                        keyBindingContextFactory, keyEventListenerFactory);
+                        characterFactory, roundBasedTimerFactory);
     }
 
     @Override

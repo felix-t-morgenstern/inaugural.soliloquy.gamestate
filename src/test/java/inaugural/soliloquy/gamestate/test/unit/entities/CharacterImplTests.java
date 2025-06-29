@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
-import soliloquy.specs.graphics.assets.ImageAssetSet;
+import soliloquy.specs.io.graphics.assets.ImageAssetSet;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 import soliloquy.specs.ruleset.entities.character.CharacterType;
 import soliloquy.specs.ruleset.entities.character.VariableStatisticType;

@@ -4,7 +4,7 @@ import inaugural.soliloquy.tools.Check;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.gameevents.GameEventTarget;
-import soliloquy.specs.graphics.assets.Sprite;
+import soliloquy.specs.io.graphics.assets.Sprite;
 import soliloquy.specs.ruleset.entities.GroundType;
 
 import java.util.Map;

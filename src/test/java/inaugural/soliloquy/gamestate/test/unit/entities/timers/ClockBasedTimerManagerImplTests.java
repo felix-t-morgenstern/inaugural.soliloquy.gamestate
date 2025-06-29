@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
-import soliloquy.specs.graphics.rendering.FrameExecutor;
+import soliloquy.specs.io.graphics.rendering.FrameExecutor;
 
 import static inaugural.soliloquy.tools.testing.Assertions.once;
 import static org.junit.jupiter.api.Assertions.*;

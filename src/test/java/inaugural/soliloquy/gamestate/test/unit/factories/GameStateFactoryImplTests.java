@@ -11,13 +11,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.*;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
-import soliloquy.specs.gamestate.factories.*;
+import soliloquy.specs.gamestate.factories.CharacterFactory;
+import soliloquy.specs.gamestate.factories.GameStateFactory;
+import soliloquy.specs.gamestate.factories.ItemFactory;
+import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
 
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -27,22 +28,18 @@ import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 public class GameStateFactoryImplTests {
     @Mock private GameZoneRepo mockGameZoneRepo;
     @Mock private Function<Supplier<GameZone>, Camera> mockCameraFactory;
-    @Mock private KeyBindingFactory mockKeyBindingFactory;
     @Mock private RoundManager mockRoundManager;
     @Mock private RoundBasedTimerManager mockRoundBasedTimerManager;
     @Mock private ClockBasedTimerManager mockClockBasedTimerManager;
     @Mock private ItemFactory mockItemFactory;
     @Mock private CharacterFactory mockCharacterFactory;
     @Mock private RoundBasedTimerFactory mockRoundBasedTimerFactory;
-    @Mock private KeyBindingContextFactory mockKeyBindingContextFactory;
-    @Mock private KeyEventListenerFactory mockKeyEventListenerFactory;
     @Mock private Party mockParty;
 
     private GameStateFactory gameStateFactory;
 
     @BeforeEach
     public void setUp() {
-        mockKeyBindingFactory = mock(KeyBindingFactory.class);
         mockRoundManager = mock(RoundManager.class);
         mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
         mockClockBasedTimerManager = mock(ClockBasedTimerManager.class);
@@ -50,9 +47,7 @@ public class GameStateFactoryImplTests {
         gameStateFactory =
                 new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
                         mockRoundManager, mockRoundBasedTimerManager, mockClockBasedTimerManager,
-                        mockItemFactory, mockCharacterFactory, mockRoundBasedTimerFactory,
-                        mockKeyBindingFactory, mockKeyBindingContextFactory,
-                        mockKeyEventListenerFactory);
+                        mockItemFactory, mockCharacterFactory, mockRoundBasedTimerFactory);
     }
 
     @Test
@@ -60,59 +55,35 @@ public class GameStateFactoryImplTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(null, mockCameraFactory, mockRoundManager,
                         mockRoundBasedTimerManager, mockClockBasedTimerManager, mockItemFactory,
-                        mockCharacterFactory, mockRoundBasedTimerFactory, mockKeyBindingFactory,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
+                        mockCharacterFactory, mockRoundBasedTimerFactory));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(mockGameZoneRepo, null, mockRoundManager,
                         mockRoundBasedTimerManager, mockClockBasedTimerManager, mockItemFactory,
-                        mockCharacterFactory, mockRoundBasedTimerFactory, mockKeyBindingFactory,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
+                        mockCharacterFactory, mockRoundBasedTimerFactory));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory, null,
                         mockRoundBasedTimerManager, mockClockBasedTimerManager, mockItemFactory,
-                        mockCharacterFactory, mockRoundBasedTimerFactory, mockKeyBindingFactory,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
+                        mockCharacterFactory, mockRoundBasedTimerFactory));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
                         mockRoundManager, null, mockClockBasedTimerManager, mockItemFactory,
-                        mockCharacterFactory, mockRoundBasedTimerFactory, mockKeyBindingFactory,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
+                        mockCharacterFactory, mockRoundBasedTimerFactory));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
                         mockRoundManager, mockRoundBasedTimerManager, null, mockItemFactory,
-                        mockCharacterFactory, mockRoundBasedTimerFactory, mockKeyBindingFactory,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
+                        mockCharacterFactory, mockRoundBasedTimerFactory));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
                         mockRoundManager, mockRoundBasedTimerManager, mockClockBasedTimerManager,
-                        null, mockCharacterFactory, mockRoundBasedTimerFactory,
-                        mockKeyBindingFactory, mockKeyBindingContextFactory,
-                        mockKeyEventListenerFactory));
+                        null, mockCharacterFactory, mockRoundBasedTimerFactory));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
                         mockRoundManager, mockRoundBasedTimerManager, mockClockBasedTimerManager,
-                        mockItemFactory, null, mockRoundBasedTimerFactory, mockKeyBindingFactory,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
+                        mockItemFactory, null, mockRoundBasedTimerFactory));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
                         mockRoundManager, mockRoundBasedTimerManager, mockClockBasedTimerManager,
-                        mockItemFactory, mockCharacterFactory, null, mockKeyBindingFactory,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
-                        mockRoundManager, mockRoundBasedTimerManager, mockClockBasedTimerManager,
-                        mockItemFactory, mockCharacterFactory, mockRoundBasedTimerFactory, null,
-                        mockKeyBindingContextFactory, mockKeyEventListenerFactory));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
-                        mockRoundManager, mockRoundBasedTimerManager, mockClockBasedTimerManager,
-                        mockItemFactory, mockCharacterFactory, mockRoundBasedTimerFactory,
-                        mockKeyBindingFactory, null, mockKeyEventListenerFactory));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameStateFactoryImpl(mockGameZoneRepo, mockCameraFactory,
-                        mockRoundManager, mockRoundBasedTimerManager, mockClockBasedTimerManager,
-                        mockItemFactory, mockCharacterFactory, mockRoundBasedTimerFactory,
-                        mockKeyBindingFactory, mockKeyBindingContextFactory, null));
+                        mockItemFactory, mockCharacterFactory, null));
     }
 
     @Test
