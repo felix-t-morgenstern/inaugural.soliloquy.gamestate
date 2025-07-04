@@ -15,11 +15,8 @@ import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
 import soliloquy.specs.gamestate.factories.*;
 
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -27,8 +24,6 @@ public class GameStateImplTests {
     @Mock private Map<String, GameMovementEvent> mockGameMovementEvents;
     @Mock private Map<String, GameAbilityEvent> mockGameAbilityEvents;
     @Mock private GameZoneRepo mockGameZoneRepo;
-    @Mock private Camera mockCamera;
-    @Mock private Function<Supplier<GameZone>, Camera> mockCameraFactory;
     @Mock private RoundManager mockRoundManager;
     @Mock private RoundBasedTimerManager mockRoundBasedTimerManager;
     @Mock private ClockBasedTimerManager mockClockBasedTimerManager;
@@ -42,12 +37,9 @@ public class GameStateImplTests {
 
     @BeforeEach
     public void setUp() {
-        when(mockCameraFactory.apply(any())).thenReturn(mockCamera);
-
         gameState = new GameStateImpl(mockParty,
                 mockData,
                 mockGameZoneRepo,
-                mockCameraFactory,
                 mockRoundManager,
                 mockRoundBasedTimerManager,
                 mockClockBasedTimerManager,
@@ -62,7 +54,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(null,
                         mockData,
                         mockGameZoneRepo,
-                        mockCameraFactory,
+
                         mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -73,7 +65,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         null,
                         mockGameZoneRepo,
-                        mockCameraFactory, mockRoundManager,
+                        mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         mockItemFactory,
@@ -83,7 +75,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         null,
-                        mockCameraFactory, mockRoundManager,
+                        mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         mockItemFactory,
@@ -93,17 +85,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         mockGameZoneRepo,
-                        null, mockRoundManager,
-                        mockRoundBasedTimerManager,
-                        mockClockBasedTimerManager,
-                        mockItemFactory,
-                        mockCharacterFactory,
-                        mockRoundBasedTimerFactory));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameStateImpl(mockParty,
-                        mockData,
-                        mockGameZoneRepo,
-                        mockCameraFactory,
+
                         null,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -114,7 +96,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         mockGameZoneRepo,
-                        mockCameraFactory,
+
                         mockRoundManager,
                         null,
                         mockClockBasedTimerManager,
@@ -125,7 +107,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         mockGameZoneRepo,
-                        mockCameraFactory,
+
                         mockRoundManager,
                         mockRoundBasedTimerManager,
                         null,
@@ -136,7 +118,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         mockGameZoneRepo,
-                        mockCameraFactory,
+
                         mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
@@ -147,7 +129,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         mockGameZoneRepo,
-                        mockCameraFactory, mockRoundManager,
+                        mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         mockItemFactory,
@@ -157,7 +139,7 @@ public class GameStateImplTests {
                 () -> new GameStateImpl(mockParty,
                         mockData,
                         mockGameZoneRepo,
-                        mockCameraFactory, mockRoundManager,
+                        mockRoundManager,
                         mockRoundBasedTimerManager,
                         mockClockBasedTimerManager,
                         mockItemFactory,
@@ -188,13 +170,6 @@ public class GameStateImplTests {
     @Test
     public void testAbilityEvents() {
         assertNotNull(gameState.abilityEvents());
-    }
-
-    @Test
-    public void testCamera() {
-        assertSame(mockCamera, gameState.camera());
-        verify(mockCameraFactory).apply(any());
-        // TODO: Figure out how to capture instance method references
     }
 
     @Test

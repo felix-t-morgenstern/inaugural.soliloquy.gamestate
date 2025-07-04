@@ -118,11 +118,10 @@ public class GameStateModule extends AbstractModule {
 
         var roundBasedTimerFactory = new RoundBasedTimerFactoryImpl(roundBasedTimerManager);
 
-        // TODO: Populate this with Camera constructor
         var gameStateFactory =
-                new GameStateFactoryImpl(GameZoneRepo, null, roundManager,
-                        roundBasedTimerManager, clockBasedTimerManager, itemFactory,
-                        characterFactory, roundBasedTimerFactory);
+                new GameStateFactoryImpl(GameZoneRepo, roundManager, roundBasedTimerManager,
+                        clockBasedTimerManager, itemFactory, characterFactory,
+                        roundBasedTimerFactory);
     }
 
     @Override

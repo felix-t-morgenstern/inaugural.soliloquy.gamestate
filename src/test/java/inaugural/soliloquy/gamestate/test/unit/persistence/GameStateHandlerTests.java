@@ -24,7 +24,6 @@ public class GameStateHandlerTests {
     private final String CURRENT_GAME_ZONE_ID = randomString();
     private final String PARTY_WRITTEN_VALUE = randomString();
     private final String DATA_WRITTEN_VALUE = randomString();
-    private final String CAMERA_WRITTEN_VALUE = randomString();
     private final String ROUND_MANAGER_WRITTEN_VALUE = randomString();
     private final String ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE = randomString();
     private final String CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE = randomString();
@@ -41,11 +40,6 @@ public class GameStateHandlerTests {
             MOCK_VARIABLE_CACHE_AND_HANDLER.entity;
     @SuppressWarnings("rawtypes") private final TypeHandler<Map> VARIABLE_CACHE_HANDLER =
             MOCK_VARIABLE_CACHE_AND_HANDLER.handler;
-
-    private final HandlerAndEntity<Camera> MOCK_CAMERA_AND_HANDLER =
-            generateMockEntityAndHandler(Camera.class, CAMERA_WRITTEN_VALUE);
-    private final Camera MOCK_CAMERA = MOCK_CAMERA_AND_HANDLER.entity;
-    private final TypeHandler<Camera> MOCK_CAMERA_HANDLER = MOCK_CAMERA_AND_HANDLER.handler;
 
     private final HandlerAndEntity<RoundManager> MOCK_ROUND_MANAGER_AND_HANDLER =
             generateMockEntityAndHandler(RoundManager.class, ROUND_MANAGER_WRITTEN_VALUE);
@@ -78,10 +72,10 @@ public class GameStateHandlerTests {
     private TypeHandler<GameState> handler;
 
     private final String WRITTEN_DATA = String.format(
-            "{\"party\":\"%s\",\"data\":\"%s\",\"currentGameZoneId\":\"%s\",\"camera\":\"%s\"," +
+            "{\"party\":\"%s\",\"data\":\"%s\",\"currentGameZoneId\":\"%s\"," +
                     "\"roundManager\":\"%s\",\"roundBasedTimerManager\":\"%s\"," +
                     "\"clockBasedTimerManager\":\"%s\"}",
-            PARTY_WRITTEN_VALUE, DATA_WRITTEN_VALUE, CURRENT_GAME_ZONE_ID, CAMERA_WRITTEN_VALUE,
+            PARTY_WRITTEN_VALUE, DATA_WRITTEN_VALUE, CURRENT_GAME_ZONE_ID,
             ROUND_MANAGER_WRITTEN_VALUE, ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE,
             CLOCK_BASED_TIMER_MANAGER_WRITTEN_VALUE);
 
@@ -97,53 +91,40 @@ public class GameStateHandlerTests {
         when(mockGameState.gameZoneRepo()).thenReturn(mockGameZoneRepo);
         when(mockGameState.party()).thenReturn(PARTY);
         when(mockGameState.data()).thenReturn(MOCK_DATA);
-        when(mockGameState.camera()).thenReturn(MOCK_CAMERA);
         when(mockGameState.roundManager()).thenReturn(MOCK_ROUND_MANAGER);
         when(mockGameState.roundBasedTimerManager()).thenReturn(MOCK_ROUND_BASED_TIMER_MANAGER);
         when(mockGameState.clockBasedTimerManager()).thenReturn(MOCK_CLOCK_BASED_TIMER_MANAGER);
 
         handler =
                 new GameStateHandler(mockGameState, PARTY_HANDLER, VARIABLE_CACHE_HANDLER,
-                        MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
-                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                        MOCK_ROUND_MANAGER_HANDLER, MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
                         MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER);
     }
 
     @Test
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> new GameStateHandler(null, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
-                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                () -> new GameStateHandler(null, PARTY_HANDLER, VARIABLE_CACHE_HANDLER,
+                        MOCK_ROUND_MANAGER_HANDLER, MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
                         MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameStateHandler(mockGameState, null,
-                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
-                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                () -> new GameStateHandler(mockGameState, null, VARIABLE_CACHE_HANDLER,
+                        MOCK_ROUND_MANAGER_HANDLER, MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
                         MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        null, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
-                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                () -> new GameStateHandler(mockGameState, PARTY_HANDLER, null,
+                        MOCK_ROUND_MANAGER_HANDLER, MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
                         MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, null, MOCK_ROUND_MANAGER_HANDLER,
-                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
+                () -> new GameStateHandler(mockGameState, PARTY_HANDLER, VARIABLE_CACHE_HANDLER,
+                        null, MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
                         MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, null,
-                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER,
-                        MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
+                () -> new GameStateHandler(mockGameState, PARTY_HANDLER, VARIABLE_CACHE_HANDLER,
+                        MOCK_ROUND_MANAGER_HANDLER, null, MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
         assertThrows(IllegalArgumentException.class,
-                () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
-                        null, MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER));
-        assertThrows(IllegalArgumentException.class,
-                () -> new GameStateHandler(mockGameState, PARTY_HANDLER,
-                        VARIABLE_CACHE_HANDLER, MOCK_CAMERA_HANDLER, MOCK_ROUND_MANAGER_HANDLER,
-                        MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, null));
+                () -> new GameStateHandler(mockGameState, PARTY_HANDLER, VARIABLE_CACHE_HANDLER,
+                        MOCK_ROUND_MANAGER_HANDLER, MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, null));
     }
 
     @Test
@@ -158,10 +139,11 @@ public class GameStateHandlerTests {
         assertEquals(WRITTEN_DATA, output);
         verify(PARTY_HANDLER, once()).write(PARTY);
         verify(VARIABLE_CACHE_HANDLER, once()).write(MOCK_DATA);
-        verify(MOCK_CAMERA_HANDLER, once()).write(MOCK_CAMERA);
         verify(MOCK_ROUND_MANAGER_HANDLER, once()).write(MOCK_ROUND_MANAGER);
-        verify(MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, once()).write(MOCK_ROUND_BASED_TIMER_MANAGER);
-        verify(MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER, once()).write(MOCK_CLOCK_BASED_TIMER_MANAGER);
+        verify(MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, once()).write(
+                MOCK_ROUND_BASED_TIMER_MANAGER);
+        verify(MOCK_CLOCK_BASED_TIMER_MANAGER_HANDLER, once()).write(
+                MOCK_CLOCK_BASED_TIMER_MANAGER);
     }
 
     @Test
@@ -177,7 +159,6 @@ public class GameStateHandlerTests {
         verify(mockGameZoneRepo, once()).loadGameZone(CURRENT_GAME_ZONE_ID);
         verify(PARTY_HANDLER, once()).read(PARTY_WRITTEN_VALUE);
         verify(VARIABLE_CACHE_HANDLER, once()).read(DATA_WRITTEN_VALUE);
-        verify(MOCK_CAMERA_HANDLER, once()).read(CAMERA_WRITTEN_VALUE);
         verify(MOCK_ROUND_MANAGER_HANDLER, once()).read(ROUND_MANAGER_WRITTEN_VALUE);
         verify(MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, once()).read(
                 ROUND_BASED_TIMER_MANAGER_WRITTEN_VALUE);

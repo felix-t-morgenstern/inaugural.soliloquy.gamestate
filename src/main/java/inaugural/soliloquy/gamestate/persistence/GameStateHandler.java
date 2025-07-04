@@ -5,7 +5,6 @@ import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.GameState;
-import soliloquy.specs.gamestate.entities.Camera;
 import soliloquy.specs.gamestate.entities.Party;
 import soliloquy.specs.gamestate.entities.RoundManager;
 import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
@@ -17,7 +16,6 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
     private final GameState GAME_STATE;
     private final TypeHandler<Party> PARTY_HANDLER;
     @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER;
-    private final TypeHandler<Camera> CAMERA_HANDLER;
     private final TypeHandler<RoundManager> ROUND_MANAGER_HANDLER;
     private final TypeHandler<RoundBasedTimerManager> ROUND_BASED_TIMER_HANDLER;
     private final TypeHandler<ClockBasedTimerManager> CLOCK_BASED_TIMER_HANDLER;
@@ -25,14 +23,12 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
     public GameStateHandler(GameState gameState,
                             TypeHandler<Party> partyHandler,
                             @SuppressWarnings("rawtypes") TypeHandler<Map> mapHandler,
-                            TypeHandler<Camera> cameraHandler,
                             TypeHandler<RoundManager> roundManagerHandler,
                             TypeHandler<RoundBasedTimerManager> roundBasedTimerHandler,
                             TypeHandler<ClockBasedTimerManager> clockBasedTimerHandler) {
         GAME_STATE = Check.ifNull(gameState, "gameState");
         PARTY_HANDLER = Check.ifNull(partyHandler, "partyHandler");
         MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
-        CAMERA_HANDLER = Check.ifNull(cameraHandler, "cameraHandler");
         ROUND_MANAGER_HANDLER = Check.ifNull(roundManagerHandler, "roundManagerHandler");
         ROUND_BASED_TIMER_HANDLER = Check.ifNull(roundBasedTimerHandler, "roundBasedTimerHandler");
         CLOCK_BASED_TIMER_HANDLER = Check.ifNull(clockBasedTimerHandler, "clockBasedTimerHandler");
@@ -54,7 +50,6 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
 
         PARTY_HANDLER.read(dto.party);
         MAP_HANDLER.read(dto.data);
-        CAMERA_HANDLER.read(dto.camera);
         ROUND_MANAGER_HANDLER.read(dto.roundManager);
         ROUND_BASED_TIMER_HANDLER.read(dto.roundBasedTimerManager);
         CLOCK_BASED_TIMER_HANDLER.read(dto.clockBasedTimerManager);
@@ -71,7 +66,6 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         dto.party = PARTY_HANDLER.write(gameState.party());
         dto.data = MAP_HANDLER.write(gameState.data());
         dto.currentGameZoneId = gameState.gameZoneRepo().currentGameZone().id();
-        dto.camera = CAMERA_HANDLER.write(gameState.camera());
         dto.roundManager = ROUND_MANAGER_HANDLER.write(gameState.roundManager());
         dto.roundBasedTimerManager =
                 ROUND_BASED_TIMER_HANDLER.write(gameState.roundBasedTimerManager());
@@ -85,7 +79,6 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         String party;
         String data;
         String currentGameZoneId;
-        String camera;
         String roundManager;
         String roundBasedTimerManager;
         String clockBasedTimerManager;

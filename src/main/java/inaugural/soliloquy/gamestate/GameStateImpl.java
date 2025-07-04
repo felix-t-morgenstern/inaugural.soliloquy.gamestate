@@ -11,8 +11,6 @@ import soliloquy.specs.gamestate.factories.*;
 import soliloquy.specs.ruleset.entities.character.CharacterAIType;
 
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
@@ -24,7 +22,6 @@ public class GameStateImpl implements GameState {
     private final Map<String, GameMovementEvent> MOVEMENT_EVENTS;
     private final Map<String, GameAbilityEvent> ABILITY_EVENTS;
     private final Map<String, CharacterEvent> CHARACTER_EVENTS;
-    private final Camera CAMERA;
     private final RoundManager ROUND_MANAGER;
     private final RoundBasedTimerManager ROUND_BASED_TIMER_MANAGER;
     private final ClockBasedTimerManager CLOCK_BASED_TIMER_MANAGER;
@@ -36,7 +33,6 @@ public class GameStateImpl implements GameState {
     public GameStateImpl(Party party,
                          Map<String, Object> data,
                          GameZoneRepo GameZoneRepo,
-                         Function<Supplier<GameZone>, Camera> cameraFactory,
                          RoundManager roundManager,
                          RoundBasedTimerManager roundBasedTimerManager,
                          ClockBasedTimerManager clockBasedTimerManager,
@@ -48,8 +44,6 @@ public class GameStateImpl implements GameState {
         DATA = mapOf(Check.ifNull(data, "data"));
         CHARACTER_AI_TYPES = mapOf();
         GAME_ZONE_REPO = Check.ifNull(GameZoneRepo, "GameZoneRepo");
-        CAMERA = Check.ifNull(cameraFactory, "cameraFactory")
-                .apply(() -> this.gameZoneRepo().currentGameZone());
         MOVEMENT_EVENTS = mapOf();
         ABILITY_EVENTS = mapOf();
         CHARACTER_EVENTS = mapOf();
@@ -74,11 +68,6 @@ public class GameStateImpl implements GameState {
     @Override
     public GameZoneRepo gameZoneRepo() {
         return GAME_ZONE_REPO;
-    }
-
-    @Override
-    public Camera camera() {
-        return CAMERA;
     }
 
     @Override
