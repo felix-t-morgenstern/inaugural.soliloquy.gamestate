@@ -1,130 +1,141 @@
 package inaugural.soliloquy.gamestate;
 
-import com.google.inject.AbstractModule;
 import inaugural.soliloquy.gamestate.entities.*;
+import inaugural.soliloquy.gamestate.entities.gameevents.GameEventFiringImpl;
+import inaugural.soliloquy.gamestate.entities.timers.ClockBasedTimerManagerImpl;
+import inaugural.soliloquy.gamestate.entities.timers.RoundBasedTimerManagerImpl;
 import inaugural.soliloquy.gamestate.factories.*;
+import inaugural.soliloquy.gamestate.infrastructure.GameSaveBlockerImpl;
 import inaugural.soliloquy.gamestate.persistence.*;
-import soliloquy.specs.common.entities.Action;
+import inaugural.soliloquy.tools.collections.Collections;
 import soliloquy.specs.common.persistence.PersistenceHandler;
-import soliloquy.specs.common.persistence.TypeHandler;
-import soliloquy.specs.gamestate.entities.CharacterEvents;
-import soliloquy.specs.gamestate.entities.gameevents.GameAbilityEvent;
-import soliloquy.specs.gamestate.entities.gameevents.GameMovementEvent;
-import soliloquy.specs.gamestate.entities.timers.ClockBasedTimerManager;
-import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
-import soliloquy.specs.gamestate.factories.GameStateFactory;
-import soliloquy.specs.io.graphics.assets.ImageAssetSet;
+import soliloquy.specs.game.Module;
+import soliloquy.specs.gamestate.entities.Character;
+import soliloquy.specs.gamestate.entities.Tile;
+import soliloquy.specs.gamestate.entities.WallSegment;
+import soliloquy.specs.io.IO;
 import soliloquy.specs.io.graphics.assets.Sprite;
-import soliloquy.specs.ruleset.entities.FixtureType;
-import soliloquy.specs.ruleset.entities.GroundType;
-import soliloquy.specs.ruleset.entities.ItemType;
-import soliloquy.specs.ruleset.entities.WallSegmentType;
-import soliloquy.specs.ruleset.entities.abilities.ActiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.PassiveAbility;
-import soliloquy.specs.ruleset.entities.abilities.ReactiveAbility;
-import soliloquy.specs.ruleset.entities.character.*;
+import soliloquy.specs.io.graphics.rendering.FrameExecutor;
+import soliloquy.specs.ruleset.Ruleset;
 import soliloquy.specs.ruleset.gameconcepts.ActiveCharactersProvider;
-import soliloquy.specs.ruleset.gameconcepts.StatisticCalculation;
-import soliloquy.specs.ruleset.gameconcepts.TileVisibilityCalculation;
+import soliloquy.specs.ruleset.gameconcepts.RoundEndHandling;
 import soliloquy.specs.ruleset.gameconcepts.TurnHandling;
-import soliloquy.specs.ruleset.valueobjects.CharacterClassification;
 
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.function.Consumer;
 
+import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
 
 @SuppressWarnings("unused")
-public class GameStateModule extends AbstractModule {
-    @SuppressWarnings("FieldCanBeLocal") private GameStateFactory gameStateFactory;
+public class GameStateModule implements Module {
+    public GameStateModule(Module commonModule,
+                           Module rulesetModule,
+                           Module ioModule,
+                           Map<String, Path> fileLocations,
+                           int gameZoneHandlerTilesPerBatch,
+                           int gameZoneHandlerThreadPoolSize,
+                           Consumer<Throwable> handleError) {
+        var persistenceHandler = commonModule.provide(PersistenceHandler.class);
+        @SuppressWarnings("rawtypes") var mapHandler =
+                persistenceHandler.<Map>getTypeHandler(Map.class.getCanonicalName());
+        var spriteHandler =
+                persistenceHandler.<Sprite>getTypeHandler(Sprite.class.getCanonicalName());
 
-    public GameStateModule(PersistenceHandler persistenceHandler,
-                           StatisticCalculation characterStatisticCalculation,
-                           TileVisibilityCalculation tileVisibilityCalculation,
-                           ActiveCharactersProvider activeCharactersProvider,
-                           TurnHandling turnHandling,
-                           Map<String, CharacterType> characterTypes,
-                           Map<String, CharacterClassification> characterClassifications,
-                           Map<String, ItemType> itemTypes,
-                           Map<String, GroundType> groundTypes,
-                           Map<String, FixtureType> fixtureTypes,
-                           Map<String, WallSegmentType> wallSegmentTypes,
-                           Map<String, ImageAssetSet> imageAssetSets,
-                           Map<String, CharacterAIType> characterAITypes,
-                           Map<String, CharacterEvent> characterEvents,
-                           Map<String, CharacterEvents.CharacterEvent> gameCharacterEvents,
-                           Map<String, GameMovementEvent> gameMovementEvents,
-                           Map<String, GameAbilityEvent> gameAbilityEvents,
-                           Map<String, StaticStatisticType> staticStatisticTypes,
-                           Map<String, VariableStatisticType> variableStatisticTypes,
-                           Map<String, StatusEffectType> statusEffectTypes,
-                           Map<String, PassiveAbility> passiveAbilities,
-                           Map<String, ActiveAbility> activeAbilities,
-                           Map<String, ReactiveAbility> reactiveAbilities,
-                           @SuppressWarnings("rawtypes") Map<String, Action> actions,
-                           java.util.Map<String, Path> fileLocations) {
-        //noinspection rawtypes
-        TypeHandler<Map> mapHandler =
-                persistenceHandler.getTypeHandler(Map.class.getCanonicalName());
-        TypeHandler<Sprite> spriteHandler =
-                persistenceHandler.getTypeHandler(Sprite.class.getCanonicalName());
+        var ruleset = rulesetModule.provide(Ruleset.class);
+        var activeCharactersProvider = rulesetModule.provide(ActiveCharactersProvider.class);
+        var turnHandling = rulesetModule.provide(TurnHandling.class);
+        var roundEndHandling = rulesetModule.provide(RoundEndHandling.class);
+        Consumer<Character> addToEndOfRoundManager =
+                rulesetModule.provide("addToEndOfRoundManager");
+        Consumer<Character> removeFromRoundManager =
+                rulesetModule.provide("removeFromRoundManager");
+
+        var io = ioModule.provide(IO.class);
+        var frameExecutor = ioModule.provide(FrameExecutor.class);
+
+        // NB: This is almost certainly _NOT_ the correct place to store this for now; once I
+        // have a clean place to register and store CharacterEvents, though, I can place this
+        // somewhere better.
+        var characterEvents = Collections.<String, CharacterEvent>mapOf();
+
+        var party = new PartyImpl(mapOf());
+
+        var gameZoneFactory = new GameZoneFactoryImpl(
+                addToEndOfRoundManager, removeFromRoundManager,
+                (terrain, zone, loc) -> {
+                    switch (terrain) {
+                        case Tile t -> ((TileImpl) t).assignGameZoneAfterAddedToGameZone(zone, loc);
+                        case WallSegment s ->
+                                ((WallSegmentImpl) s).assignGameZoneAfterAddedToGameZone(zone, loc);
+                        default -> throw new IllegalStateException("Unexpected value: " + terrain);
+                    }
+                });
 
         var itemFactory = new ItemFactoryImpl();
 
-        var itemHandler = new ItemHandler(itemTypes::get, mapHandler, itemFactory);
+        var itemHandler = new ItemHandler(ruleset.itemTypes()::get, mapHandler, itemFactory);
 
-        var characterFactory = new CharacterFactoryImpl(CharacterEventsImpl::new,
-                CharacterEquipmentSlotsImpl::new, CharacterInventoryImpl::new,
-                CharacterStatusEffectsImpl::new);
+        var fixtureFactory = new TileFixtureFactoryImpl(TileFixtureItemsImpl::new);
 
-        // TODO: Populate with characterEventsHandler
-        var characterHandler = new CharacterHandler(characterFactory, characterTypes::get,
-                characterClassifications::get, imageAssetSets::get, characterAITypes::get,
-                characterEvents::get, variableStatisticTypes::get, statusEffectTypes::get,
-                passiveAbilities::get, activeAbilities::get, reactiveAbilities::get, mapHandler,
-                itemHandler);
-
-        var tileFixtureFactory = new TileFixtureFactoryImpl(TileFixtureItemsImpl::new);
-
-        var tileFixturesHandler =
-                new TileFixtureHandler(fixtureTypes::get, tileFixtureFactory, mapHandler,
+        var fixtureHandler =
+                new TileFixtureHandler(ruleset.fixtureTypes()::get, fixtureFactory, mapHandler,
                         itemHandler);
 
-        var tileHandler = new TileHandler(
-                data -> new TileImpl(TileEntitiesImpl::new, data), characterHandler, itemHandler,
-                tileFixturesHandler, spriteHandler, mapHandler, gameMovementEvents::get,
-                gameAbilityEvents::get, groundTypes::get);
+        var characterFactory =
+                new CharacterFactoryImpl(CharacterEventsImpl::new, CharacterEquipmentSlotsImpl::new,
+                        CharacterInventoryImpl::new, CharacterStatusEffectsImpl::new);
 
-        // TODO: Populate this!
-        RoundBasedTimerManager roundBasedTimerManager = null;
+        var characterHandler = new CharacterHandler(characterFactory, ruleset.characterTypes()::get,
+                ruleset.characterClassifications()::get, io::getImageAssetSet,
+                ruleset.characterAITypes()::get, characterEvents::get,
+                ruleset.variableStatisticTypes()::get, ruleset.statusEffectTypes()::get,
+                ruleset.passiveAbilities()::getById, ruleset.activeAbilities()::getById,
+                ruleset.reactiveAbilities()::getById, mapHandler, itemHandler);
 
-        // TODO: Populate this!
-        ClockBasedTimerManager clockBasedTimerManager = null;
+        var tileHandler =
+                new TileHandler(data -> new TileImpl(TileEntitiesImpl::new, data), characterHandler,
+                        itemHandler, fixtureHandler, spriteHandler, mapHandler,
+                        ruleset.gameMovementEvents()::get, ruleset.gameAbilityEvents()::get,
+                        ruleset.groundTypes()::get);
 
-        // TODO: Populate this!
-        RoundManagerImpl roundManager = null;
+        var gameZoneHandler = new GameZoneHandler(gameZoneFactory, tileHandler, mapHandler,
+                ruleset.actions()::get, gameZoneHandlerTilesPerBatch,
+                gameZoneHandlerThreadPoolSize);
 
-        var gameZoneFactory = new GameZoneFactoryImpl(
-                c -> roundManager.setCharacterPositionInQueue(c, Integer.MAX_VALUE),
-                roundManager::removeCharacterFromQueue,
-                (terrain, gameZone, loc) -> ((AbstractGameZoneTerrain) terrain)
-                        .assignGameZoneAfterAddedToGameZone(gameZone, loc));
+        var gameZoneRepo = new GameZoneRepoImpl(gameZoneHandler, fileLocations);
 
-        // TODO: Populate tilesPerBatch and threadPoolSize from configs somewhere
-        var gameZoneHandler =
-                new GameZoneHandler(gameZoneFactory, tileHandler, mapHandler, actions::get, 5, 5);
+        var gameSaveBlocker = new GameSaveBlockerImpl();
 
-        var GameZoneRepo = new GameZoneRepoImpl(gameZoneHandler, fileLocations);
+        var gameEventFiring = new GameEventFiringImpl(gameSaveBlocker, handleError);
+
+        var roundBasedTimerManager = new RoundBasedTimerManagerImpl(gameEventFiring);
 
         var roundBasedTimerFactory = new RoundBasedTimerFactoryImpl(roundBasedTimerManager);
 
+        var clockBasedTimerManager = new ClockBasedTimerManagerImpl(frameExecutor);
+
+        var roundManager = new RoundManagerImpl(roundBasedTimerManager, activeCharactersProvider,
+                gameZoneRepo::currentGameZone, turnHandling, roundEndHandling);
+
+        var gameState = new GameStateImpl(party, mapOf(), gameZoneRepo, roundManager,
+                roundBasedTimerManager, clockBasedTimerManager, itemFactory, characterFactory,
+                roundBasedTimerFactory);
+
         var gameStateFactory =
-                new GameStateFactoryImpl(GameZoneRepo, roundManager, roundBasedTimerManager,
+                new GameStateFactoryImpl(gameZoneRepo, roundManager, roundBasedTimerManager,
                         clockBasedTimerManager, itemFactory, characterFactory,
                         roundBasedTimerFactory);
     }
 
     @Override
-    protected void configure() {
+    public <T> T provide(Class<T> aClass) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public <T> T provide(String s) throws IllegalArgumentException {
+        return null;
     }
 }
