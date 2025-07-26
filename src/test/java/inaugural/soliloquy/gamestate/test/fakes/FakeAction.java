@@ -17,10 +17,11 @@ public class FakeAction<T> implements Action<T> {
         this.id = id;
     }
 
+    @SafeVarargs
     @Override
-    public void run(T t) throws IllegalArgumentException {
+    public final void run(T... t) throws IllegalArgumentException {
         actionRun = true;
-        mostRecentInput = t;
+        mostRecentInput = t[0];
         ACTIONS_FIRED.add(this);
     }
 
