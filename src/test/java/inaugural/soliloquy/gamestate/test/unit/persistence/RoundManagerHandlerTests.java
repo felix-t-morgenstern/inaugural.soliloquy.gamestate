@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import inaugural.soliloquy.gamestate.persistence.RoundManagerHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -92,11 +91,6 @@ public class RoundManagerHandlerTests {
                         mockGetCharacterFromCurrentGameZone));
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundManagerHandler(mockRoundManager, mockMapHandler, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(RoundManagerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

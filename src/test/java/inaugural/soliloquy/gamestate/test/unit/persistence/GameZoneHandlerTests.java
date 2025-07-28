@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.GameZoneImpl;
 import inaugural.soliloquy.gamestate.persistence.GameZoneHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,11 +123,6 @@ public class GameZoneHandlerTests {
                 () -> new GameZoneHandler(mockGameZoneFactory, mockTileHandler,
                         mockMapHandler, mockActionLookup, TILES_PER_BATCH,
                         randomIntWithInclusiveCeiling(0)));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(GameZoneImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.CharacterImpl;
-import inaugural.soliloquy.gamestate.entities.PartyImpl;
 import inaugural.soliloquy.gamestate.persistence.PartyHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -107,11 +105,6 @@ public class PartyHandlerTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new PartyHandler(mockPartyFactory, () -> mockGameZone,
                         mockAttributesHandler, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(PartyImpl.class.getCanonicalName(), partyHandler.typeHandled());
     }
 
     @Test

@@ -33,7 +33,7 @@ public abstract class AbstractRoundBasedTimer<T extends RoundBasedTimer>
     @Override
     public void run() {
         enforceDeletionInvariants();
-        ACTION.run(null);
+        ACTION.run();
     }
 
     @Override

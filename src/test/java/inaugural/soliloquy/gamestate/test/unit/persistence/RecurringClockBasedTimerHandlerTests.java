@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.CharacterImpl;
-import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.persistence.RecurringClockBasedTimerHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,11 +77,6 @@ public class RecurringClockBasedTimerHandlerTests {
                 () -> new RecurringClockBasedTimerHandler(null, ACTIONS::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerHandler(mockClockBasedTimerFactory, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(RecurringClockBasedTimerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.CharacterImpl;
-import inaugural.soliloquy.gamestate.entities.timers.RoundBasedTimerManagerImpl;
 import inaugural.soliloquy.gamestate.persistence.RoundBasedTimerManagerHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,11 +63,6 @@ public class RoundBasedTimerManagerHandlerTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new RoundBasedTimerManagerHandler(mockRoundBasedTimerManager,
                         mockOneTimeRoundBasedTimerHandler, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(RoundBasedTimerManagerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

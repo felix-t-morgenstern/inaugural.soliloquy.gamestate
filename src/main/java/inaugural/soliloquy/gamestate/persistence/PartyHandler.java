@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.PartyImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -27,11 +26,6 @@ public class PartyHandler extends AbstractTypeHandler<Party> implements TypeHand
         GET_CURRENT_GAME_ZONE = Check.ifNull(getCurrentGameZone, "getCurrentGameZone");
         ATTRIBUTES_HANDLER = Check.ifNull(attributesHandler, "attributesHandler");
         CHARACTER_HANDLER = Check.ifNull(characterHandler, "characterHandler");
-    }
-
-    @Override
-    public String typeHandled() {
-        return PartyImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

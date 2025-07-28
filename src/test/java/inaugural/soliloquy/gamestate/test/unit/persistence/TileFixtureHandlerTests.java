@@ -1,7 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.CharacterImpl;
-import inaugural.soliloquy.gamestate.entities.TileFixtureImpl;
 import inaugural.soliloquy.gamestate.persistence.TileFixtureHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,11 +101,6 @@ public class TileFixtureHandlerTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new TileFixtureHandler(mockGetFixtureType, mockTileFixtureFactory,
                         MOCK_MAP_HANDLER, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(TileFixtureImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

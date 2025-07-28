@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.persistence.OneTimeClockBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,11 +49,6 @@ public class OneTimeClockBasedTimerHandlerTests {
                 anyLong())).thenReturn(mockOneTimeClockBasedTimer);
 
         handler = new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, ACTIONS::get);
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(OneTimeClockBasedTimerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.CharacterImpl;
 import inaugural.soliloquy.gamestate.persistence.CharacterHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -327,11 +326,6 @@ public class CharacterHandlerTests {
                         MOCK_GET_CHARACTER_EVENT, MOCK_GET_VARIABLE_STAT_TYPE,
                         MOCK_GET_STATUS_EFFECT_TYPE, MOCK_GET_PASSIVE_ABILITY,
                         MOCK_GET_ACTIVE_ABILITY, MOCK_GET_REACTIVE_ABILITY, MAP_HANDLER, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(CharacterImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

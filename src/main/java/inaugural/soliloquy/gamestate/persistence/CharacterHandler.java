@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.CharacterImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -70,11 +69,6 @@ public class CharacterHandler extends AbstractTypeHandler<Character> {
         GET_CHARACTER_EVENT = Check.ifNull(getCharacterEvent, "getCharacterEvent");
         MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         ITEM_HANDLER = Check.ifNull(itemHandler, "itemHandler");
-    }
-
-    @Override
-    public String typeHandled() {
-        return CharacterImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

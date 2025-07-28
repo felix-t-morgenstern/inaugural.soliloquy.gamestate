@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.RecurringRoundBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -19,11 +18,6 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
                                                    Function<String, Action> getAction) {
         TURN_BASED_TIMER_FACTORY = Check.ifNull(RoundBasedTimerFactory, "RoundBasedTimerFactory");
         GET_ACTION = Check.ifNull(getAction, "getAction");
-    }
-
-    @Override
-    public String typeHandled() {
-        return RecurringRoundBasedTimerImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

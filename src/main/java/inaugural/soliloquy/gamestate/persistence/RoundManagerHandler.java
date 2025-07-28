@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.RoundManagerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -24,11 +23,6 @@ public class RoundManagerHandler extends AbstractTypeHandler<RoundManager> {
         MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         GET_CHARACTER_FROM_CURRENT_GAME_ZONE =
                 Check.ifNull(getCharacterFromCurrentGameZone, "getCharacterFromCurrentGameZone");
-    }
-
-    @Override
-    public String typeHandled() {
-        return RoundManagerImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.ClockBasedTimerManagerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -25,11 +24,6 @@ public class ClockBasedTimerManagerHandler extends AbstractTypeHandler<ClockBase
                 "oneTimeClockBasedTimerHandler");
         RECURRING_CLOCK_BASED_TIMER_HANDLER = Check.ifNull(recurringClockBasedTimerHandler,
                 "recurringClockBasedTimerHandler");
-    }
-
-    @Override
-    public String typeHandled() {
-        return ClockBasedTimerManagerImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

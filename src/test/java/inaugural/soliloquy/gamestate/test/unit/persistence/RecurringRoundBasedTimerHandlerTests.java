@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.RecurringRoundBasedTimerImpl;
 import inaugural.soliloquy.gamestate.persistence.RecurringRoundBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRecurringRoundBasedTimer;
@@ -56,11 +55,6 @@ public class RecurringRoundBasedTimerHandlerTests {
                 () -> new RecurringRoundBasedTimerHandler(null, actions::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(RecurringRoundBasedTimerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.OneTimeRoundBasedTimerImpl;
 import inaugural.soliloquy.gamestate.persistence.OneTimeRoundBasedTimerHandler;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeRoundBasedTimer;
@@ -17,7 +16,6 @@ import java.util.Map;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static org.junit.jupiter.api.Assertions.*;
 import static soliloquy.specs.common.valueobjects.Pair.pairOf;
-
 
 public class OneTimeRoundBasedTimerHandlerTests {
     private final RoundBasedTimerFactory TURN_BASED_TIMER_FACTORY =
@@ -55,11 +53,6 @@ public class OneTimeRoundBasedTimerHandlerTests {
                 () -> new OneTimeRoundBasedTimerHandler(null, actions::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(OneTimeRoundBasedTimerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

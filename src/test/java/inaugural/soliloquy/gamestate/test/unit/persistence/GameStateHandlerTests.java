@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.GameStateImpl;
 import inaugural.soliloquy.gamestate.persistence.GameStateHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -125,11 +124,6 @@ public class GameStateHandlerTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameStateHandler(mockGameState, PARTY_HANDLER, VARIABLE_CACHE_HANDLER,
                         MOCK_ROUND_MANAGER_HANDLER, MOCK_ROUND_BASED_TIMER_MANAGER_HANDLER, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(GameStateImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

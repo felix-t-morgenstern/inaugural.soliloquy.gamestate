@@ -116,7 +116,7 @@ public class RecurringRoundBasedTimerImplTests {
     public void testRun() {
         recurringRoundBasedTimer.run();
 
-        verify(mockAction).run(null);
+        verify(mockAction).run();
         verify(mockRoundBasedTimerManager, never())
                 .deregisterRecurringRoundBasedTimer(recurringRoundBasedTimer);
         assertFalse(recurringRoundBasedTimer.isDeleted());

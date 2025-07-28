@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -19,11 +18,6 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
                                          Function<String, Action> getAction) {
         CLOCK_BASED_TIMER_FACTORY = clockBasedTimerFactory;
         GET_ACTION = getAction;
-    }
-
-    @Override
-    public String typeHandled() {
-        return OneTimeClockBasedTimerImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

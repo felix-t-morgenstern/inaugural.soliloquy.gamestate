@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.TileImpl;
 import inaugural.soliloquy.gamestate.persistence.TileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -158,11 +157,6 @@ public class TileHandlerTests {
                 () -> new TileHandler(mockTileFactory, MOCK_CHAR_HANDLER, MOCK_ITEM_HANDLER,
                         MOCK_FIXTURE_HANDLER, MOCK_SPRITE_HANDLER, MOCK_MAP_HANDLER,
                         MOVE_EVENTS_LOOKUP, ABILITY_EVENTS_LOOKUP, null));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(TileImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

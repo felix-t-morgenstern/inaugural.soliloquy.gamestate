@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -20,11 +19,6 @@ public class RecurringClockBasedTimerHandler
                                            Function<String, Action> getAction) {
         CLOCK_BASED_TIMER_FACTORY = Check.ifNull(clockBasedTimerFactory, "clockBasedTimerFactory");
         GET_ACTION = Check.ifNull(getAction, "getAction");
-    }
-
-    @Override
-    public String typeHandled() {
-        return RecurringClockBasedTimerImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

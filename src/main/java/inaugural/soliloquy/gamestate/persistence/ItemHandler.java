@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.ItemImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -25,11 +24,6 @@ public class ItemHandler extends AbstractTypeHandler<Item> {
         GET_ITEM_TYPE = Check.ifNull(getItemType, "getItemType");
         MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         ITEM_FACTORY = Check.ifNull(itemFactory, "itemFactory");
-    }
-
-    @Override
-    public String typeHandled() {
-        return ItemImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

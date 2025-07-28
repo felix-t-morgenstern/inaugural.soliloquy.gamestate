@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.TileFixtureImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -29,11 +28,6 @@ public class TileFixtureHandler extends AbstractTypeHandler<TileFixture> {
         TILE_FIXTURE_FACTORY = Check.ifNull(tileFixtureFactory, "tileFixtureFactory");
         MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
         ITEMS_HANDLER = Check.ifNull(itemsHandler, "itemsHandler");
-    }
-
-    @Override
-    public String typeHandled() {
-        return TileFixtureImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

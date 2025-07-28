@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.OneTimeRoundBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.entities.Action;
@@ -20,11 +19,6 @@ public class OneTimeRoundBasedTimerHandler extends AbstractTypeHandler<OneTimeRo
                                                  getAction) {
         TURN_BASED_TIMER_FACTORY = Check.ifNull(RoundBasedTimerFactory, "RoundBasedTimerFactory");
         GET_ACTION = Check.ifNull(getAction, "getAction");
-    }
-
-    @Override
-    public String typeHandled() {
-        return OneTimeRoundBasedTimerImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

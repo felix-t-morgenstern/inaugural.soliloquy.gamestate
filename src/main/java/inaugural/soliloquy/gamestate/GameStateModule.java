@@ -13,7 +13,7 @@ import soliloquy.specs.game.Module;
 import soliloquy.specs.gamestate.entities.Character;
 import soliloquy.specs.gamestate.entities.Tile;
 import soliloquy.specs.gamestate.entities.WallSegment;
-import soliloquy.specs.io.IO;
+import soliloquy.specs.io.graphics.Graphics;
 import soliloquy.specs.io.graphics.assets.Sprite;
 import soliloquy.specs.io.graphics.rendering.FrameExecutor;
 import soliloquy.specs.ruleset.Ruleset;
@@ -52,7 +52,7 @@ public class GameStateModule implements Module {
         Consumer<Character> removeFromRoundManager =
                 rulesetModule.provide("removeFromRoundManager");
 
-        var io = ioModule.provide(IO.class);
+        var graphics = ioModule.provide(Graphics.class);
         var frameExecutor = ioModule.provide(FrameExecutor.class);
 
         // NB: This is almost certainly _NOT_ the correct place to store this for now; once I
@@ -88,7 +88,7 @@ public class GameStateModule implements Module {
                         CharacterInventoryImpl::new, CharacterStatusEffectsImpl::new);
 
         var characterHandler = new CharacterHandler(characterFactory, ruleset.characterTypes()::get,
-                ruleset.characterClassifications()::get, io::getImageAssetSet,
+                ruleset.characterClassifications()::get, graphics::getImageAssetSet,
                 ruleset.characterAITypes()::get, characterEvents::get,
                 ruleset.variableStatisticTypes()::get, ruleset.statusEffectTypes()::get,
                 ruleset.passiveAbilities()::getById, ruleset.activeAbilities()::getById,

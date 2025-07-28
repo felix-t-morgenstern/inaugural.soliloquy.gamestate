@@ -97,7 +97,7 @@ public class OneTimeRoundBasedTimerImplTests {
     public void testRun() {
         oneTimeRoundBasedTimer.run();
 
-        verify(mockAction).run(null);
+        verify(mockAction).run();
     }
 
     @Test

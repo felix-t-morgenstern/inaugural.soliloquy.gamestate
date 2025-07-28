@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
-import inaugural.soliloquy.gamestate.entities.timers.ClockBasedTimerManagerImpl;
 import inaugural.soliloquy.gamestate.persistence.ClockBasedTimerManagerHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,11 +73,6 @@ public class ClockBasedTimerManagerHandlerTests {
                 mockClockBasedTimerManager, mockOneTimeClockBasedTimerHandler,
                 null
         ));
-    }
-
-    @Test
-    public void testTypeHandled() {
-        assertEquals(ClockBasedTimerManagerImpl.class.getCanonicalName(), handler.typeHandled());
     }
 
     @Test

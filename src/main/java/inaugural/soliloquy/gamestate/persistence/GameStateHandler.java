@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.GameStateImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -32,11 +31,6 @@ public class GameStateHandler extends AbstractTypeHandler<GameState> {
         ROUND_MANAGER_HANDLER = Check.ifNull(roundManagerHandler, "roundManagerHandler");
         ROUND_BASED_TIMER_HANDLER = Check.ifNull(roundBasedTimerHandler, "roundBasedTimerHandler");
         CLOCK_BASED_TIMER_HANDLER = Check.ifNull(clockBasedTimerHandler, "clockBasedTimerHandler");
-    }
-
-    @Override
-    public String typeHandled() {
-        return GameStateImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

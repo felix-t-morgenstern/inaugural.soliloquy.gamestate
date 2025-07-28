@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.GameZoneImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.collections.Collections;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
@@ -54,11 +53,6 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         GET_ACTION = Check.ifNull(getAction, "getAction");
         TILES_PER_BATCH = Check.ifNonNegative(tilesPerBatch, "tilesPerBatch");
         EXECUTOR = Executors.newFixedThreadPool(threadPoolSize);
-    }
-
-    @Override
-    public String typeHandled() {
-        return GameZoneImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")

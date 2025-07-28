@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.persistence;
 
-import inaugural.soliloquy.gamestate.entities.TileImpl;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
 import soliloquy.specs.common.persistence.TypeHandler;
@@ -47,11 +46,6 @@ public class TileHandler extends AbstractTypeHandler<Tile> {
         GET_MOVEMENT_EVENT = Check.ifNull(getMovementEvent, "getMovementEvent");
         GET_ABILITY_EVENT = Check.ifNull(getAbilityEvent, "getAbilityEvent");
         GET_GROUND_TYPE = Check.ifNull(getGroundType, "getGroundType");
-    }
-
-    @Override
-    public String typeHandled() {
-        return TileImpl.class.getCanonicalName();
     }
 
     @SuppressWarnings("unchecked")
