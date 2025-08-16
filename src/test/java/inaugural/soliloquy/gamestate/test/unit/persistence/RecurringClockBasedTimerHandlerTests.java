@@ -30,7 +30,6 @@ public class RecurringClockBasedTimerHandlerTests {
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = randomBoolean();
     private final Long PAUSED_TIMESTAMP = randomLong();
     private final Long LAST_FIRED_TIMESTAMP = randomLong();
-    private final Long MOST_RECENT_TIMESTAMP = randomLong();
 
     @SuppressWarnings("rawtypes")
     @Mock private Action mockAction;
@@ -42,10 +41,10 @@ public class RecurringClockBasedTimerHandlerTests {
     private final String WRITTEN_VALUE = String.format(
             "{\"id\":\"%s\",\"actionId\":\"%s\",\"periodDuration\":%d,\"periodModuloOffset\":%d," +
                     "\"fireMultipleTimesPerPeriodElapsed\":%s,\"pausedTimestamp\":%d," +
-                    "\"lastFiredTimestamp\":%d,\"mostRecentTimestamp\":%d}",
+                    "\"lastFiredTimestamp\":%d}",
             ID, ACTION_ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
             FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSED_TIMESTAMP,
-            LAST_FIRED_TIMESTAMP, MOST_RECENT_TIMESTAMP);
+            LAST_FIRED_TIMESTAMP);
 
     @BeforeEach
     public void setUp() {
@@ -61,11 +60,9 @@ public class RecurringClockBasedTimerHandlerTests {
         lenient().when(mockRecurringClockBasedTimer.pausedTimestamp()).thenReturn(PAUSED_TIMESTAMP);
         lenient().when(mockRecurringClockBasedTimer.lastFiringTimestamp())
                 .thenReturn(LAST_FIRED_TIMESTAMP);
-        lenient().when(mockRecurringClockBasedTimer.mostRecentTimestamp())
-                .thenReturn(MOST_RECENT_TIMESTAMP);
 
         lenient().when(mockClockBasedTimerFactory.make(anyString(), anyInt(), anyInt(), any(),
-                        anyBoolean(), anyLong(), anyLong(), anyLong()))
+                        anyBoolean(), anyLong(), anyLong()))
                 .thenReturn(mockRecurringClockBasedTimer);
 
         handler = new RecurringClockBasedTimerHandler(mockClockBasedTimerFactory, ACTIONS::get);
@@ -99,7 +96,7 @@ public class RecurringClockBasedTimerHandlerTests {
         //noinspection unchecked
         verify(mockClockBasedTimerFactory).make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                 mockAction, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSED_TIMESTAMP,
-                LAST_FIRED_TIMESTAMP, MOST_RECENT_TIMESTAMP);
+                LAST_FIRED_TIMESTAMP);
     }
 
     @Test

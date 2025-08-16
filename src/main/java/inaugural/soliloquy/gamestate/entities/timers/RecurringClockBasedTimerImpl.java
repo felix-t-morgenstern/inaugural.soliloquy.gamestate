@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.timing.AbstractLoopingPausableAtTime;
+import inaugural.soliloquy.tools.timing.TimestampValidator;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
@@ -19,8 +20,8 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
                                         Action<Long> firingAction,
                                         boolean fireMultipleTimesForMultiplePeriodsElapsed,
                                         Long pausedTimestamp, long lastFiringTimestamp,
-                                        Long mostRecentTimestamp) {
-        super(periodDuration, periodModuloOffset, pausedTimestamp, mostRecentTimestamp);
+                                        TimestampValidator timestampValidator) {
+        super(periodDuration, periodModuloOffset, pausedTimestamp, timestampValidator);
         ID = Check.ifNullOrEmpty(id, "id");
         if (pausedTimestamp != null && lastFiringTimestamp > pausedTimestamp) {
             throw new IllegalArgumentException("RecurringClockBasedTimerImpl: " +
@@ -62,11 +63,6 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
                     "pausedTimestamp (" + pausedTimestamp + ")");
         }
         FIRING_ACTION.run(lastFiringTimestamp = timestamp);
-    }
-
-    @Override
-    public Long mostRecentTimestamp() {
-        return TIMESTAMP_VALIDATOR.mostRecentTimestamp();
     }
 
     @Override

@@ -2,6 +2,7 @@ package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.timing.AbstractFinitePausableAtTime;
+import inaugural.soliloquy.tools.timing.TimestampValidator;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
@@ -13,8 +14,8 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
     private boolean hasFired = false;
 
     public OneTimeClockBasedTimerImpl(String id, long firingTime, Action<Long> firingAction,
-                                      Long pausedTimestamp, Long mostRecentTimestamp) {
-        super(firingTime, pausedTimestamp, mostRecentTimestamp);
+                                      Long pausedTimestamp, TimestampValidator timestampValidator) {
+        super(firingTime, pausedTimestamp, timestampValidator);
         ID = Check.ifNullOrEmpty(id, "id");
         if (pausedTimestamp != null && pausedTimestamp >= firingTime) {
             throw new IllegalArgumentException("OneTimeClockBasedTimerImpl: pausedTimestamp (" +
@@ -64,11 +65,6 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
         }
 
         super.reportUnpause(timestamp);
-    }
-
-    @Override
-    public Long mostRecentTimestamp() {
-        return TIMESTAMP_VALIDATOR.mostRecentTimestamp();
     }
 
     @Override

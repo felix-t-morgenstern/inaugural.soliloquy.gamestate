@@ -33,7 +33,7 @@ public class RecurringClockBasedTimerHandler
         //noinspection unchecked
         return CLOCK_BASED_TIMER_FACTORY.make(dto.id, dto.periodDuration, dto.periodModuloOffset,
                 firingAction, dto.fireMultipleTimesPerPeriodElapsed, dto.pausedTimestamp,
-                dto.lastFiredTimestamp, dto.mostRecentTimestamp);
+                dto.lastFiredTimestamp);
     }
 
     @Override
@@ -50,7 +50,6 @@ public class RecurringClockBasedTimerHandler
                 recurringClockBasedTimer.fireMultipleTimesForMultiplePeriodsElapsed();
         dto.pausedTimestamp = recurringClockBasedTimer.pausedTimestamp();
         dto.lastFiredTimestamp = recurringClockBasedTimer.lastFiringTimestamp();
-        dto.mostRecentTimestamp = recurringClockBasedTimer.mostRecentTimestamp();
 
         return JSON.toJson(dto);
     }
@@ -63,6 +62,5 @@ public class RecurringClockBasedTimerHandler
         boolean fireMultipleTimesPerPeriodElapsed;
         Long pausedTimestamp;
         Long lastFiredTimestamp;
-        Long mostRecentTimestamp;
     }
 }

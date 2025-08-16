@@ -47,11 +47,6 @@ public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
     }
 
     @Override
-    public Long mostRecentTimestamp() {
-        return null;
-    }
-
-    @Override
     public String id() throws IllegalStateException {
         return Id;
     }

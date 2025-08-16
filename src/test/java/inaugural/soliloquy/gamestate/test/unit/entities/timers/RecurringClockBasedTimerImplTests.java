@@ -2,13 +2,17 @@ package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
+import inaugural.soliloquy.tools.timing.TimestampValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@ExtendWith(MockitoExtension.class)
 public class RecurringClockBasedTimerImplTests {
     private final String ID = "ID";
     private final int PERIOD_DURATION = 789;
@@ -19,6 +23,8 @@ public class RecurringClockBasedTimerImplTests {
     private final long LAST_FIRING_TIMESTAMP = 123123L;
     private final Long MOST_RECENT_TIMESTAMP = 456456L;
 
+    @Mock private TimestampValidator mockTimestampValidator;
+
     private RecurringClockBasedTimer recurringClockBasedTimer;
 
     @BeforeEach
@@ -26,52 +32,50 @@ public class RecurringClockBasedTimerImplTests {
         recurringClockBasedTimer = new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION,
                 PERIOD_MODULO_OFFSET, FIRING_ACTION,
                 FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null, LAST_FIRING_TIMESTAMP,
-                MOST_RECENT_TIMESTAMP);
+                mockTimestampValidator);
     }
 
     @Test
     public void testConstructorWithInvalidArgs() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(null, PERIOD_DURATION,
-                        PERIOD_MODULO_OFFSET, FIRING_ACTION,
-                        FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
-                        LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl("", PERIOD_DURATION,
-                        PERIOD_MODULO_OFFSET, FIRING_ACTION,
-                        FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
-                        LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(null, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+                        FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
+                        LAST_FIRING_TIMESTAMP, mockTimestampValidator));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl("", PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+                        FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
+                        LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(ID, 0, 0,
-                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(ID, 0, 0, FIRING_ACTION, true, null,
+                        LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, -1,
-                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, -1, FIRING_ACTION, true,
+                        null, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_DURATION,
-                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_DURATION,
+                        FIRING_ACTION, true, null, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        null, true, null, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+                        null, true, null, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP,
-                        MOST_RECENT_TIMESTAMP));
+                        mockTimestampValidator));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                         MOST_RECENT_TIMESTAMP, LAST_FIRING_TIMESTAMP, null));
 
-        assertThrows(IllegalArgumentException.class, () ->
-                new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+        assertThrows(IllegalArgumentException.class,
+                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
                         FIRING_ACTION, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
-                        MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP, MOST_RECENT_TIMESTAMP));
+                        MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
     }
 
     @Test
@@ -105,7 +109,7 @@ public class RecurringClockBasedTimerImplTests {
 
         recurringClockBasedTimer.fire(firingTime);
 
-        assertEquals((Long)firingTime, FIRING_ACTION.mostRecentInput);
+        assertEquals((Long) firingTime, FIRING_ACTION.mostRecentInput);
         assertTrue(FIRING_ACTION.actionRun);
         assertEquals(firingTime, recurringClockBasedTimer.lastFiringTimestamp());
     }
@@ -136,10 +140,5 @@ public class RecurringClockBasedTimerImplTests {
 
         assertEquals(PERIOD_MODULO_OFFSET - timeToUnpause,
                 recurringClockBasedTimer.periodModuloOffset());
-    }
-
-    @Test
-    public void testMostRecentTimestamp() {
-        assertEquals(MOST_RECENT_TIMESTAMP, recurringClockBasedTimer.mostRecentTimestamp());
     }
 }

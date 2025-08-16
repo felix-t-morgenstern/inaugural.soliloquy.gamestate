@@ -29,7 +29,6 @@ public class OneTimeClockBasedTimerHandlerTests {
     private final Action ACTION = new FakeAction(ACTION_ID);
     private final long FIRING_TIME = randomLong();
     private final long PAUSE_TIME = randomLong();
-    private final long MOST_RECENT_TIMESTAMP = randomLong();
     @SuppressWarnings("rawtypes")
     private final Map<String, Action> ACTIONS = mapOf(pairOf(ACTION_ID, ACTION));
 
@@ -39,16 +38,23 @@ public class OneTimeClockBasedTimerHandlerTests {
     private TypeHandler<OneTimeClockBasedTimer> handler;
 
     private final String WRITTEN_VALUE = String.format(
-            "{\"id\":\"%s\",\"actionId\":\"%s\",\"firingTime\":%d,\"pausedTime\":%d," +
-                    "\"mostRecentTimestamp\":%d}",
-            ONE_TIME_CLOCK_TIMER_ID, ACTION_ID, FIRING_TIME, PAUSE_TIME, MOST_RECENT_TIMESTAMP);
+            "{\"id\":\"%s\",\"actionId\":\"%s\",\"firingTime\":%d,\"pausedTime\":%d}",
+            ONE_TIME_CLOCK_TIMER_ID, ACTION_ID, FIRING_TIME, PAUSE_TIME);
 
     @BeforeEach
     public void setUp() {
-        lenient().when(mockClockBasedTimerFactory.make(anyString(), anyLong(), any(), anyLong(),
-                anyLong())).thenReturn(mockOneTimeClockBasedTimer);
+        lenient().when(mockClockBasedTimerFactory.make(anyString(), anyLong(), any(), anyLong()))
+                .thenReturn(mockOneTimeClockBasedTimer);
 
         handler = new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, ACTIONS::get);
+    }
+
+    @Test
+    public void testConstructorWithInvalidArgs() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new OneTimeClockBasedTimerHandler(null, ACTIONS::get));
+        assertThrows(IllegalArgumentException.class,
+                () -> new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, null));
     }
 
     @Test
@@ -57,7 +63,6 @@ public class OneTimeClockBasedTimerHandlerTests {
         when(mockOneTimeClockBasedTimer.firingTime()).thenReturn(FIRING_TIME);
         when(mockOneTimeClockBasedTimer.pausedTimestamp()).thenReturn(PAUSE_TIME);
         when(mockOneTimeClockBasedTimer.actionId()).thenReturn(ACTION_ID);
-        when(mockOneTimeClockBasedTimer.mostRecentTimestamp()).thenReturn(MOST_RECENT_TIMESTAMP);
 
         var result = handler.write(mockOneTimeClockBasedTimer);
 
@@ -75,8 +80,8 @@ public class OneTimeClockBasedTimerHandlerTests {
 
         assertSame(mockOneTimeClockBasedTimer, result);
         //noinspection unchecked
-        verify(mockClockBasedTimerFactory).make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, ACTION,
-                PAUSE_TIME, MOST_RECENT_TIMESTAMP);
+        verify(mockClockBasedTimerFactory)
+                .make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, ACTION, PAUSE_TIME);
     }
 
     @Test

@@ -9,15 +9,15 @@ import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 import java.util.function.Function;
 
 public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeClockBasedTimer> {
-    private final ClockBasedTimerFactory CLOCK_BASED_TIMER_FACTORY;
+    private final ClockBasedTimerFactory FACTORY;
     @SuppressWarnings("rawtypes")
     private final Function<String, Action> GET_ACTION;
 
-    public OneTimeClockBasedTimerHandler(ClockBasedTimerFactory clockBasedTimerFactory,
+    public OneTimeClockBasedTimerHandler(ClockBasedTimerFactory factory,
                                          @SuppressWarnings("rawtypes")
                                          Function<String, Action> getAction) {
-        CLOCK_BASED_TIMER_FACTORY = clockBasedTimerFactory;
-        GET_ACTION = getAction;
+        FACTORY = Check.ifNull(factory, "factory");
+        GET_ACTION = Check.ifNull(getAction, "getAction");
     }
 
     @SuppressWarnings("unchecked")
@@ -29,9 +29,7 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
 
         @SuppressWarnings("rawtypes") Action firingAction = GET_ACTION.apply(dto.actionId);
 
-        //noinspection unchecked
-        return CLOCK_BASED_TIMER_FACTORY.make(dto.id, dto.firingTime, firingAction, dto.pausedTime,
-                dto.mostRecentTimestamp);
+        return FACTORY.make(dto.id, dto.firingTime, firingAction, dto.pausedTime);
     }
 
     @Override
@@ -44,7 +42,6 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
         dto.actionId = oneTimeClockBasedTimer.actionId();
         dto.firingTime = oneTimeClockBasedTimer.firingTime();
         dto.pausedTime = oneTimeClockBasedTimer.pausedTimestamp();
-        dto.mostRecentTimestamp = oneTimeClockBasedTimer.mostRecentTimestamp();
 
         return JSON.toJson(dto);
     }
@@ -54,6 +51,5 @@ public class OneTimeClockBasedTimerHandler extends AbstractTypeHandler<OneTimeCl
         String actionId;
         long firingTime;
         Long pausedTime;
-        Long mostRecentTimestamp;
     }
 }
