@@ -3,13 +3,13 @@ package inaugural.soliloquy.gamestate.test.unit.factories;
 import inaugural.soliloquy.gamestate.entities.timers.OneTimeClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.entities.timers.RecurringClockBasedTimerImpl;
 import inaugural.soliloquy.gamestate.factories.ClockBasedTimerFactoryImpl;
-import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.tools.timing.TimestampValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
 import static inaugural.soliloquy.tools.random.Random.*;
@@ -17,6 +17,7 @@ import static inaugural.soliloquy.tools.testing.Assertions.once;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
+import static soliloquy.specs.common.entities.Action.action;
 
 @ExtendWith(MockitoExtension.class)
 public class ClockBasedTimerFactoryImplTests {
@@ -28,7 +29,7 @@ public class ClockBasedTimerFactoryImplTests {
     private final long FIRING_TIME = randomLongWithInclusiveFloor(PAUSE_TIME + 1);
     @SuppressWarnings("FieldCanBeLocal")
     private final String FIRING_ACTION_ID = randomString();
-    private final FakeAction<Long> FIRING_ACTION = new FakeAction<>(FIRING_ACTION_ID);
+    private final Action<Long> FIRING_ACTION = action(FIRING_ACTION_ID, _ -> {});
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = true;
     private final long LAST_FIRING_TIMESTAMP = 123123L;
 

@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.OneTimeClockBasedTimerHandler;
-import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,15 +24,16 @@ import static org.mockito.Mockito.*;
 public class OneTimeClockBasedTimerHandlerTests {
     private final String ONE_TIME_CLOCK_TIMER_ID = randomString();
     private final String ACTION_ID = randomString();
-    @SuppressWarnings("rawtypes")
-    private final Action ACTION = new FakeAction(ACTION_ID);
     private final long FIRING_TIME = randomLong();
     private final long PAUSE_TIME = randomLong();
-    @SuppressWarnings("rawtypes")
-    private final Map<String, Action> ACTIONS = mapOf(pairOf(ACTION_ID, ACTION));
 
+    @SuppressWarnings("rawtypes")
+    @Mock private Action mockAction;
     @Mock private OneTimeClockBasedTimer mockOneTimeClockBasedTimer;
     @Mock private ClockBasedTimerFactory mockClockBasedTimerFactory;
+
+    @SuppressWarnings("rawtypes")
+    private Map<String, Action> actions = mapOf(pairOf(ACTION_ID, mockAction));
 
     private TypeHandler<OneTimeClockBasedTimer> handler;
 
@@ -43,16 +43,20 @@ public class OneTimeClockBasedTimerHandlerTests {
 
     @BeforeEach
     public void setUp() {
+        lenient().when(mockAction.id()).thenReturn(ACTION_ID);
+
         lenient().when(mockClockBasedTimerFactory.make(anyString(), anyLong(), any(), anyLong()))
                 .thenReturn(mockOneTimeClockBasedTimer);
 
-        handler = new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, ACTIONS::get);
+        actions = mapOf(pairOf(ACTION_ID, mockAction));
+
+        handler = new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, actions::get);
     }
 
     @Test
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> new OneTimeClockBasedTimerHandler(null, ACTIONS::get));
+                () -> new OneTimeClockBasedTimerHandler(null, actions::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, null));
     }
@@ -81,7 +85,7 @@ public class OneTimeClockBasedTimerHandlerTests {
         assertSame(mockOneTimeClockBasedTimer, result);
         //noinspection unchecked
         verify(mockClockBasedTimerFactory)
-                .make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, ACTION, PAUSE_TIME);
+                .make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, mockAction, PAUSE_TIME);
     }
 
     @Test

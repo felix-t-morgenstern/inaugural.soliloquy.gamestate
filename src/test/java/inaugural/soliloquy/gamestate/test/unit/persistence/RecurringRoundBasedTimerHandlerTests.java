@@ -1,11 +1,13 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.RecurringRoundBasedTimerHandler;
-import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRecurringRoundBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRoundBasedTimerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
@@ -15,9 +17,10 @@ import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
-
+@ExtendWith(MockitoExtension.class)
 public class RecurringRoundBasedTimerHandlerTests {
     private final RoundBasedTimerFactory TURN_BASED_TIMER_FACTORY =
             new FakeRoundBasedTimerFactory();
@@ -25,15 +28,16 @@ public class RecurringRoundBasedTimerHandlerTests {
     private final String RECURRING_TIMER_ID = "recurringRoundBasedTimerId";
 
     private final String ACTION_ID = "actionId";
-    @SuppressWarnings("rawtypes")
-    private final Action ACTION = new FakeAction(ACTION_ID);
-
-    @SuppressWarnings("rawtypes")
-    private Map<String, Action> actions;
 
     private final int ROUND_MODULO = 456;
     private final int ROUND_OFFSET = 123;
     private final int PRIORITY = 789;
+
+    @SuppressWarnings("rawtypes")
+    private Map<String, Action> actions;
+
+    @SuppressWarnings("rawtypes")
+    @Mock private Action mockAction;
 
     private final String WRITTEN_VALUE =
             "{\"id\":\"recurringRoundBasedTimerId\",\"actionId\":\"actionId\"," +
@@ -43,10 +47,11 @@ public class RecurringRoundBasedTimerHandlerTests {
 
     @BeforeEach
     public void setUp() {
-        actions = mapOf(pairOf(ACTION_ID, ACTION));
+        lenient().when(mockAction.id()).thenReturn(ACTION_ID);
 
-        handler = new RecurringRoundBasedTimerHandler(
-                TURN_BASED_TIMER_FACTORY, actions::get);
+        actions = mapOf(pairOf(ACTION_ID, mockAction));
+
+        handler = new RecurringRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, actions::get);
     }
 
     @Test
@@ -60,7 +65,7 @@ public class RecurringRoundBasedTimerHandlerTests {
     @Test
     public void testWrite() {
         RecurringRoundBasedTimer recurringTimer = new FakeRecurringRoundBasedTimer(
-                RECURRING_TIMER_ID, ACTION, ROUND_MODULO, ROUND_OFFSET, PRIORITY);
+                RECURRING_TIMER_ID, mockAction, ROUND_MODULO, ROUND_OFFSET, PRIORITY);
 
         String writtenValue = handler.write(recurringTimer);
 

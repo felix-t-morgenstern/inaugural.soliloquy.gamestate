@@ -1,11 +1,13 @@
 package inaugural.soliloquy.gamestate.test.unit.persistence;
 
 import inaugural.soliloquy.gamestate.persistence.OneTimeRoundBasedTimerHandler;
-import inaugural.soliloquy.gamestate.test.fakes.FakeAction;
 import inaugural.soliloquy.gamestate.test.fakes.FakeOneTimeRoundBasedTimer;
 import inaugural.soliloquy.gamestate.test.fakes.FakeRoundBasedTimerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
@@ -15,8 +17,10 @@ import java.util.Map;
 
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.lenient;
 import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
+@ExtendWith(MockitoExtension.class)
 public class OneTimeRoundBasedTimerHandlerTests {
     private final RoundBasedTimerFactory TURN_BASED_TIMER_FACTORY =
             new FakeRoundBasedTimerFactory();
@@ -24,14 +28,15 @@ public class OneTimeRoundBasedTimerHandlerTests {
     private final String ONE_TIME_TIMER_ID = "oneTimeRoundBasedTimerId";
 
     private final String ACTION_ID = "actionId";
-    @SuppressWarnings("rawtypes")
-    private final Action ACTION = new FakeAction(ACTION_ID);
 
     @SuppressWarnings("rawtypes")
-    private Map<String, Action> actions;
+    @Mock private Map<String, Action> actions;
 
     private final int ROUND_WHEN_GOES_OFF = 123123123;
     private final int PRIORITY = 456;
+
+    @SuppressWarnings("rawtypes")
+    @Mock private Action mockAction;
 
     private final String WRITTEN_VALUE =
             "{\"id\":\"oneTimeRoundBasedTimerId\",\"actionId\":\"actionId\",\"round\":123123123," +
@@ -41,10 +46,11 @@ public class OneTimeRoundBasedTimerHandlerTests {
 
     @BeforeEach
     public void setUp() {
-        actions = mapOf(pairOf(ACTION_ID, ACTION));
+        lenient().when(mockAction.id()).thenReturn(ACTION_ID);
 
-        handler =
-                new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, actions::get);
+        actions = mapOf(pairOf(ACTION_ID, mockAction));
+
+        handler = new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, actions::get);
     }
 
     @Test
@@ -58,7 +64,7 @@ public class OneTimeRoundBasedTimerHandlerTests {
     @Test
     public void testWrite() {
         OneTimeRoundBasedTimer oneTimeRoundBasedTimer = new FakeOneTimeRoundBasedTimer(
-                ONE_TIME_TIMER_ID, ACTION, ROUND_WHEN_GOES_OFF, PRIORITY);
+                ONE_TIME_TIMER_ID, mockAction, ROUND_WHEN_GOES_OFF, PRIORITY);
 
         String writtenValue = handler.write(oneTimeRoundBasedTimer);
 
