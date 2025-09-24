@@ -115,7 +115,7 @@ public class RecurringClockBasedTimerImplTests {
 
         recurringClockBasedTimer.fire(firingTime);
 
-        verify(mockFiringAction, once()).run(firingTime);
+        verify(mockFiringAction, once()).accept(firingTime);
         assertEquals(firingTime, recurringClockBasedTimer.lastFiringTimestamp());
     }
 

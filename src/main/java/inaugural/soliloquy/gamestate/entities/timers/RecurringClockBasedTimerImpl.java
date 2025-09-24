@@ -62,7 +62,7 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
                     "timestamp (" + timestamp + ") cannot be greater than current " +
                     "pausedTimestamp (" + pausedTimestamp + ")");
         }
-        FIRING_ACTION.run(lastFiringTimestamp = timestamp);
+        FIRING_ACTION.accept(lastFiringTimestamp = timestamp);
     }
 
     @Override

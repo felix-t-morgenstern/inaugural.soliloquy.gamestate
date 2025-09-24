@@ -84,7 +84,7 @@ public class OneTimeClockBasedTimerImplTests {
 
         timer.fire(firingTime);
 
-        verify(mockFiringAction, once()).run(firingTime);
+        verify(mockFiringAction, once()).accept(firingTime);
     }
 
     @Test

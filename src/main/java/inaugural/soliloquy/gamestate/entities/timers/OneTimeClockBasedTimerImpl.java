@@ -43,7 +43,7 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
                     "(" + timestamp + ") cannot be greater than current pausedTimestamp (" +
                     pausedTimestamp + ")");
         }
-        FIRING_ACTION.run(timestamp);
+        FIRING_ACTION.accept(timestamp);
         hasFired = true;
     }
 
