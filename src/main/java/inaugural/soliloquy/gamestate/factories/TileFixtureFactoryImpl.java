@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
+import static inaugural.soliloquy.tools.Tools.defaultIfNull;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class TileFixtureFactoryImpl implements TileFixtureFactory {
@@ -32,8 +33,11 @@ public class TileFixtureFactoryImpl implements TileFixtureFactory {
             throws IllegalArgumentException {
         Check.ifNull(fixtureType, "fixtureType");
         Check.ifNull(uuid, "uuid");
-        return new TileFixtureImpl(uuid, fixtureType,
+        return new TileFixtureImpl(
+                uuid,
+                fixtureType,
                 TILE_FIXTURE_ITEMS_FACTORY,
-                data == null ? mapOf() : data);
+                defaultIfNull(data, mapOf())
+        );
     }
 }

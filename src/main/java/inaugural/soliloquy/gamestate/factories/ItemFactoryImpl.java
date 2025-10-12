@@ -8,6 +8,7 @@ import soliloquy.specs.ruleset.entities.ItemType;
 import java.util.Map;
 import java.util.UUID;
 
+import static inaugural.soliloquy.tools.Tools.defaultIfNull;
 import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 
 public class ItemFactoryImpl implements ItemFactory {
@@ -20,6 +21,6 @@ public class ItemFactoryImpl implements ItemFactory {
     @Override
     public Item make(ItemType itemType, Map<String, Object> data, UUID uuid)
             throws IllegalArgumentException {
-        return new ItemImpl(uuid, itemType, data == null ? mapOf() : data);
+        return new ItemImpl(uuid, itemType, defaultIfNull(data, mapOf()));
     }
 }

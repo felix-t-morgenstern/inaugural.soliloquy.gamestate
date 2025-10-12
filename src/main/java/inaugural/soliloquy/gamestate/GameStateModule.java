@@ -8,6 +8,7 @@ import inaugural.soliloquy.gamestate.factories.*;
 import inaugural.soliloquy.gamestate.infrastructure.GameSaveBlockerImpl;
 import inaugural.soliloquy.gamestate.persistence.*;
 import inaugural.soliloquy.tools.collections.Collections;
+import inaugural.soliloquy.tools.module.AbstractModule;
 import soliloquy.specs.common.persistence.PersistenceHandler;
 import soliloquy.specs.game.Module;
 import soliloquy.specs.gamestate.entities.Character;
@@ -29,7 +30,7 @@ import static inaugural.soliloquy.tools.collections.Collections.mapOf;
 import static soliloquy.specs.gamestate.entities.CharacterEvents.CharacterEvent;
 
 @SuppressWarnings("unused")
-public class GameStateModule implements Module {
+public class GameStateModule extends AbstractModule {
     public GameStateModule(Module commonModule,
                            Module rulesetModule,
                            Module ioModule,
