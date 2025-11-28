@@ -7,36 +7,35 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static inaugural.soliloquy.tools.testing.Assertions.once;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static soliloquy.specs.common.entities.Action.action;
 
 @ExtendWith(MockitoExtension.class)
 public class RecurringClockBasedTimerImplTests {
     private final String ID = "ID";
     private final int PERIOD_DURATION = 789;
     private final int PERIOD_MODULO_OFFSET = 456;
-    private final String FIRING_ACTION_ID = randomString();
+    private final String FIRING_CONSUMER_ID = randomString();
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = true;
     private final long LAST_FIRING_TIMESTAMP = 123123L;
     private final Long MOST_RECENT_TIMESTAMP = 456456L;
 
-    @Mock private Action<Long> mockFiringAction;
+    @Mock private Consumer<Long> mockFiringConsumer;
     @Mock private TimestampValidator mockTimestampValidator;
 
     private RecurringClockBasedTimer recurringClockBasedTimer;
 
     @BeforeEach
     public void setUp() {
-        lenient().when(mockFiringAction.id()).thenReturn(FIRING_ACTION_ID);
+        lenient().when(mockFiringConsumer.id()).thenReturn(FIRING_CONSUMER_ID);
 
         recurringClockBasedTimer = new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION,
-                PERIOD_MODULO_OFFSET, mockFiringAction,
+                PERIOD_MODULO_OFFSET, mockFiringConsumer,
                 FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null, LAST_FIRING_TIMESTAMP,
                 mockTimestampValidator);
     }
@@ -45,24 +44,24 @@ public class RecurringClockBasedTimerImplTests {
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerImpl(null, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        mockFiringAction, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
+                        mockFiringConsumer, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
                         LAST_FIRING_TIMESTAMP, mockTimestampValidator));
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerImpl("", PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        mockFiringAction, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
+                        mockFiringConsumer, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, null,
                         LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
         assertThrows(IllegalArgumentException.class,
-                () -> new RecurringClockBasedTimerImpl(ID, 0, 0, mockFiringAction, true, null,
+                () -> new RecurringClockBasedTimerImpl(ID, 0, 0, mockFiringConsumer, true, null,
                         LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
         assertThrows(IllegalArgumentException.class,
-                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, -1, mockFiringAction, true,
+                () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, -1, mockFiringConsumer, true,
                         null, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_DURATION,
-                        mockFiringAction, true, null, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
+                        mockFiringConsumer, true, null, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
 
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
@@ -70,17 +69,17 @@ public class RecurringClockBasedTimerImplTests {
 
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        mockFiringAction, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP,
+                        mockFiringConsumer, true, LAST_FIRING_TIMESTAMP - 1, LAST_FIRING_TIMESTAMP,
                         mockTimestampValidator));
 
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        mockFiringAction, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
+                        mockFiringConsumer, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                         MOST_RECENT_TIMESTAMP, LAST_FIRING_TIMESTAMP, null));
 
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerImpl(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                        mockFiringAction, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
+                        mockFiringConsumer, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,
                         MOST_RECENT_TIMESTAMP + 1, LAST_FIRING_TIMESTAMP, mockTimestampValidator));
     }
 
@@ -105,8 +104,8 @@ public class RecurringClockBasedTimerImplTests {
     }
 
     @Test
-    public void testActionId() {
-        assertEquals(FIRING_ACTION_ID, recurringClockBasedTimer.actionId());
+    public void testConsumerId() {
+        assertEquals(FIRING_CONSUMER_ID, recurringClockBasedTimer.consumerId());
     }
 
     @Test
@@ -115,7 +114,7 @@ public class RecurringClockBasedTimerImplTests {
 
         recurringClockBasedTimer.fire(firingTime);
 
-        verify(mockFiringAction, once()).accept(firingTime);
+        verify(mockFiringConsumer, once()).accept(firingTime);
         assertEquals(firingTime, recurringClockBasedTimer.lastFiringTimestamp());
     }
 

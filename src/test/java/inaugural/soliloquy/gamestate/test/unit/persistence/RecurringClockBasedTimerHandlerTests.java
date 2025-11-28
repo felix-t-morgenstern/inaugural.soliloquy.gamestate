@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
@@ -22,9 +22,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class RecurringClockBasedTimerHandlerTests {
     private final String ID = randomString();
-    private final String ACTION_ID = randomString();
+    private final String CONSUMER_ID = randomString();
     @SuppressWarnings("rawtypes")
-    private final Map<String, Action> ACTIONS = mapOf();
+    private final Map<String, Consumer> CONSUMERS = mapOf();
     private final int PERIOD_DURATION = randomInt();
     private final int PERIOD_MODULO_OFFSET = randomInt();
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = randomBoolean();
@@ -32,26 +32,26 @@ public class RecurringClockBasedTimerHandlerTests {
     private final Long LAST_FIRED_TIMESTAMP = randomLong();
 
     @SuppressWarnings("rawtypes")
-    @Mock private Action mockAction;
+    @Mock private Consumer mockConsumer;
     @Mock private ClockBasedTimerFactory mockClockBasedTimerFactory;
     @Mock private RecurringClockBasedTimer mockRecurringClockBasedTimer;
 
     private TypeHandler<RecurringClockBasedTimer> handler;
 
     private final String WRITTEN_VALUE = String.format(
-            "{\"id\":\"%s\",\"actionId\":\"%s\",\"periodDuration\":%d,\"periodModuloOffset\":%d," +
+            "{\"id\":\"%s\",\"consumerId\":\"%s\",\"periodDuration\":%d,\"periodModuloOffset\":%d," +
                     "\"fireMultipleTimesPerPeriodElapsed\":%s,\"pausedTimestamp\":%d," +
                     "\"lastFiredTimestamp\":%d}",
-            ID, ACTION_ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
+            ID, CONSUMER_ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
             FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSED_TIMESTAMP,
             LAST_FIRED_TIMESTAMP);
 
     @BeforeEach
     public void setUp() {
-        ACTIONS.put(ACTION_ID, mockAction);
+        CONSUMERS.put(CONSUMER_ID, mockConsumer);
 
         lenient().when(mockRecurringClockBasedTimer.id()).thenReturn(ID);
-        lenient().when(mockRecurringClockBasedTimer.actionId()).thenReturn(ACTION_ID);
+        lenient().when(mockRecurringClockBasedTimer.consumerId()).thenReturn(CONSUMER_ID);
         lenient().when(mockRecurringClockBasedTimer.periodDuration()).thenReturn(PERIOD_DURATION);
         lenient().when(mockRecurringClockBasedTimer.periodModuloOffset())
                 .thenReturn(PERIOD_MODULO_OFFSET);
@@ -65,13 +65,13 @@ public class RecurringClockBasedTimerHandlerTests {
                         anyBoolean(), anyLong(), anyLong()))
                 .thenReturn(mockRecurringClockBasedTimer);
 
-        handler = new RecurringClockBasedTimerHandler(mockClockBasedTimerFactory, ACTIONS::get);
+        handler = new RecurringClockBasedTimerHandler(mockClockBasedTimerFactory, CONSUMERS::get);
     }
 
     @Test
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> new RecurringClockBasedTimerHandler(null, ACTIONS::get));
+                () -> new RecurringClockBasedTimerHandler(null, CONSUMERS::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new RecurringClockBasedTimerHandler(mockClockBasedTimerFactory, null));
     }
@@ -95,7 +95,7 @@ public class RecurringClockBasedTimerHandlerTests {
         assertSame(mockRecurringClockBasedTimer, result);
         //noinspection unchecked
         verify(mockClockBasedTimerFactory).make(ID, PERIOD_DURATION, PERIOD_MODULO_OFFSET,
-                mockAction, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSED_TIMESTAMP,
+                mockConsumer, FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED, PAUSED_TIMESTAMP,
                 LAST_FIRED_TIMESTAMP);
     }
 

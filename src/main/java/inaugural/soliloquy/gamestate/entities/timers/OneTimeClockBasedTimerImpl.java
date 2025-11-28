@@ -3,17 +3,17 @@ package inaugural.soliloquy.gamestate.entities.timers;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.timing.AbstractFinitePausableAtTime;
 import inaugural.soliloquy.tools.timing.TimestampValidator;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
 public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
         implements OneTimeClockBasedTimer {
     private final String ID;
-    private final Action<Long> FIRING_ACTION;
+    private final Consumer<Long> FIRING_ACTION;
 
     private boolean hasFired = false;
 
-    public OneTimeClockBasedTimerImpl(String id, long firingTime, Action<Long> firingAction,
+    public OneTimeClockBasedTimerImpl(String id, long firingTime, Consumer<Long> firingAction,
                                       Long pausedTimestamp, TimestampValidator timestampValidator) {
         super(firingTime, pausedTimestamp, timestampValidator);
         ID = Check.ifNullOrEmpty(id, "id");
@@ -31,7 +31,7 @@ public class OneTimeClockBasedTimerImpl extends AbstractFinitePausableAtTime
     }
 
     @Override
-    public String actionId() {
+    public String consumerId() {
         return FIRING_ACTION.id();
     }
 

@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.persistence;
 
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
 
@@ -11,13 +11,13 @@ import java.util.function.Function;
 public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<RecurringRoundBasedTimer> {
     private final RoundBasedTimerFactory TURN_BASED_TIMER_FACTORY;
     @SuppressWarnings("rawtypes")
-    private final Function<String, Action> GET_ACTION;
+    private final Function<String, Consumer> GET_CONSUMER;
 
     public RecurringRoundBasedTimerHandler(RoundBasedTimerFactory RoundBasedTimerFactory,
                                            @SuppressWarnings("rawtypes")
-                                                   Function<String, Action> getAction) {
+                                                   Function<String, Consumer> getAction) {
         TURN_BASED_TIMER_FACTORY = Check.ifNull(RoundBasedTimerFactory, "RoundBasedTimerFactory");
-        GET_ACTION = Check.ifNull(getAction, "getAction");
+        GET_CONSUMER = Check.ifNull(getAction, "getAction");
     }
 
     @SuppressWarnings("unchecked")
@@ -32,7 +32,7 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
                     "RecurringRoundBasedTimerHandler.read: data cannot be empty");
         }
         RecurringTimerDTO dto = JSON.fromJson(data, RecurringTimerDTO.class);
-        return TURN_BASED_TIMER_FACTORY.makeRecurringTimer(dto.id, GET_ACTION.apply(dto.actionId),
+        return TURN_BASED_TIMER_FACTORY.makeRecurringTimer(dto.id, GET_CONSUMER.apply(dto.consumerId),
                 dto.roundModulo, dto.roundOffset, dto.priority);
     }
 
@@ -41,7 +41,7 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
         Check.ifNull(recurringRoundBasedTimer, "recurringRoundBasedTimer");
         RecurringTimerDTO dto = new RecurringTimerDTO();
         dto.id = recurringRoundBasedTimer.id();
-        dto.actionId = recurringRoundBasedTimer.actionId();
+        dto.consumerId = recurringRoundBasedTimer.consumerId();
         dto.roundModulo = recurringRoundBasedTimer.roundModulo();
         dto.roundOffset = recurringRoundBasedTimer.roundOffset();
         dto.priority = recurringRoundBasedTimer.priority();
@@ -50,7 +50,7 @@ public class RecurringRoundBasedTimerHandler extends AbstractTypeHandler<Recurri
 
     private static class RecurringTimerDTO {
         String id;
-        String actionId;
+        String consumerId;
         int roundModulo;
         int roundOffset;
         int priority;

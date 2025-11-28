@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.persistence;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.collections.Collections;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.common.valueobjects.Pair;
@@ -33,7 +32,7 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     private final TypeHandler<Tile> TILE_HANDLER;
     @SuppressWarnings("rawtypes") private final TypeHandler<Map> MAP_HANDLER;
     @SuppressWarnings("rawtypes")
-    private final Function<String, Action> GET_ACTION;
+    private final Function<String, soliloquy.specs.common.entities.Consumer> GET_CONSUMER;
     private final int TILES_PER_BATCH;
     private final ExecutorService EXECUTOR;
 
@@ -44,13 +43,13 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
     public GameZoneHandler(GameZoneFactory gameZoneFactory,
                            TypeHandler<Tile> tileHandler,
                            TypeHandler<Map> mapHandler,
-                           Function<String, Action> getAction,
+                           Function<String, soliloquy.specs.common.entities.Consumer> getConsumer,
                            int tilesPerBatch,
                            int threadPoolSize) {
         GAME_ZONE_FACTORY = Check.ifNull(gameZoneFactory, "gameZoneFactory");
         TILE_HANDLER = Check.ifNull(tileHandler, "tileHandler");
         MAP_HANDLER = Check.ifNull(mapHandler, "mapHandler");
-        GET_ACTION = Check.ifNull(getAction, "getAction");
+        GET_CONSUMER = Check.ifNull(getConsumer, "getConsumer");
         TILES_PER_BATCH = Check.ifNonNegative(tilesPerBatch, "tilesPerBatch");
         EXECUTOR = Executors.newFixedThreadPool(threadPoolSize);
     }
@@ -66,10 +65,10 @@ public class GameZoneHandler extends AbstractTypeHandler<GameZone> {
         var gameZone = GAME_ZONE_FACTORY.make(dto.id, coordinate2dOf(dto.maxX, dto.maxY), data);
         gameZone.setName(dto.name);
         for (var onEntry : dto.onEntry) {
-            gameZone.onEntry().add(GET_ACTION.apply(onEntry));
+            gameZone.onEntry().add(GET_CONSUMER.apply(onEntry));
         }
         for (var onExit : dto.onExit) {
-            gameZone.onExit().add(GET_ACTION.apply(onExit));
+            gameZone.onExit().add(GET_CONSUMER.apply(onExit));
         }
 
         runTileTasksBatched(setOf(dto.tiles), this::readFromGameZoneTileDto,

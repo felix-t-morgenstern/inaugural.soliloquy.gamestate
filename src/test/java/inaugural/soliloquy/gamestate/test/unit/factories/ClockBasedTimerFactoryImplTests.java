@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
 import static inaugural.soliloquy.tools.random.Random.*;
@@ -17,7 +17,7 @@ import static inaugural.soliloquy.tools.testing.Assertions.once;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
-import static soliloquy.specs.common.entities.Action.action;
+import static soliloquy.specs.common.entities.Consumer.consumer;
 
 @ExtendWith(MockitoExtension.class)
 public class ClockBasedTimerFactoryImplTests {
@@ -28,8 +28,8 @@ public class ClockBasedTimerFactoryImplTests {
     private final Long PAUSE_TIME = randomLongWithInclusiveFloor(MOST_RECENT_TIMESTAMP + 1);;
     private final long FIRING_TIME = randomLongWithInclusiveFloor(PAUSE_TIME + 1);
     @SuppressWarnings("FieldCanBeLocal")
-    private final String FIRING_ACTION_ID = randomString();
-    private final Action<Long> FIRING_ACTION = action(FIRING_ACTION_ID, _ -> {});
+    private final String FIRING_CONSUMER_ID = randomString();
+    private final Consumer<Long> FIRING_ACTION = consumer(FIRING_CONSUMER_ID, _ -> {});
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED = true;
     private final long LAST_FIRING_TIMESTAMP = 123123L;
 
@@ -62,7 +62,7 @@ public class ClockBasedTimerFactoryImplTests {
         assertNotNull(oneTimeClockBasedTimer);
         assertInstanceOf(OneTimeClockBasedTimerImpl.class, oneTimeClockBasedTimer);
         assertEquals(ID, oneTimeClockBasedTimer.id());
-        assertEquals(FIRING_ACTION_ID, oneTimeClockBasedTimer.actionId());
+        assertEquals(FIRING_CONSUMER_ID, oneTimeClockBasedTimer.consumerId());
         assertEquals(FIRING_TIME, oneTimeClockBasedTimer.firingTime());
         assertEquals(PAUSE_TIME, oneTimeClockBasedTimer.pausedTimestamp());
         verify(mockTimestampValidator, once()).validateTimestamp(PAUSE_TIME);
@@ -96,7 +96,7 @@ public class ClockBasedTimerFactoryImplTests {
         assertNotNull(recurringClockBasedTimer);
         assertInstanceOf(RecurringClockBasedTimerImpl.class, recurringClockBasedTimer);
         assertEquals(ID, recurringClockBasedTimer.id());
-        assertEquals(FIRING_ACTION_ID, recurringClockBasedTimer.actionId());
+        assertEquals(FIRING_CONSUMER_ID, recurringClockBasedTimer.consumerId());
         assertEquals(PERIOD_DURATION, recurringClockBasedTimer.periodDuration());
         assertEquals(PERIOD_MODULO_OFFSET, recurringClockBasedTimer.periodModuloOffset());
         assertEquals(FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED,

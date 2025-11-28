@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.factories;
 import inaugural.soliloquy.gamestate.entities.timers.OneTimeRoundBasedTimerImpl;
 import inaugural.soliloquy.gamestate.entities.timers.RecurringRoundBasedTimerImpl;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
@@ -17,7 +17,7 @@ public class RoundBasedTimerFactoryImpl implements RoundBasedTimerFactory {
     }
 
     @Override
-    public OneTimeRoundBasedTimer makeOneTimeTimer(String timerId, Action action,
+    public OneTimeRoundBasedTimer makeOneTimeTimer(String timerId, Consumer action,
                                                    int roundWhenGoesOff, int priority)
             throws IllegalArgumentException {
         return new OneTimeRoundBasedTimerImpl(timerId, action, roundWhenGoesOff, priority,
@@ -26,7 +26,7 @@ public class RoundBasedTimerFactoryImpl implements RoundBasedTimerFactory {
     }
 
     @Override
-    public RecurringRoundBasedTimer makeRecurringTimer(String timerId, Action action,
+    public RecurringRoundBasedTimer makeRecurringTimer(String timerId, Consumer action,
                                                        int roundModulo, int roundOffset,
                                                        int priority)
             throws IllegalArgumentException {

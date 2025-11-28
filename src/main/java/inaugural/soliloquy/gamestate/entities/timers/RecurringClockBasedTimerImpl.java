@@ -3,7 +3,7 @@ package inaugural.soliloquy.gamestate.entities.timers;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.timing.AbstractLoopingPausableAtTime;
 import inaugural.soliloquy.tools.timing.TimestampValidator;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 
 // TODO: Consider abstracting out shared functionality between Recurring and OneTime
@@ -11,13 +11,13 @@ import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
         implements RecurringClockBasedTimer {
     private final String ID;
-    private final Action<Long> FIRING_ACTION;
+    private final Consumer<Long> FIRING_ACTION;
     private final boolean FIRE_MULTIPLE_TIMES_FOR_MULTIPLE_PERIODS_ELAPSED;
 
     private long lastFiringTimestamp;
 
     public RecurringClockBasedTimerImpl(String id, int periodDuration, int periodModuloOffset,
-                                        Action<Long> firingAction,
+                                        Consumer<Long> firingAction,
                                         boolean fireMultipleTimesForMultiplePeriodsElapsed,
                                         Long pausedTimestamp, long lastFiringTimestamp,
                                         TimestampValidator timestampValidator) {
@@ -50,7 +50,7 @@ public class RecurringClockBasedTimerImpl extends AbstractLoopingPausableAtTime
     }
 
     @Override
-    public String actionId() {
+    public String consumerId() {
         return FIRING_ACTION.id();
     }
 

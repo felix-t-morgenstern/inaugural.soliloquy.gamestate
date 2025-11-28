@@ -37,7 +37,7 @@ public class FakeOneTimeClockBasedTimer implements OneTimeClockBasedTimer {
     }
 
     @Override
-    public String actionId() {
+    public String consumerId() {
         return null;
     }
 

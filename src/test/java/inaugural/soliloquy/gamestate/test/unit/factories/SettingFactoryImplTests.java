@@ -8,7 +8,6 @@ import soliloquy.specs.gamestate.factories.SettingFactory;
 
 import static inaugural.soliloquy.tools.random.Random.randomString;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static soliloquy.specs.common.valueobjects.Pair.pairOf;
 
 public class SettingFactoryImplTests {

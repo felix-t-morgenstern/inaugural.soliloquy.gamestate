@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 
 import static inaugural.soliloquy.tools.random.Random.*;
@@ -24,9 +24,9 @@ public class OneTimeClockBasedTimerImplTests {
     @SuppressWarnings("FieldCanBeLocal")
     private final Long UNPAUSE_TIME = randomLongWithInclusiveFloor(PAUSE_TIME + 1);
     private final long FIRING_TIME = randomLongWithInclusiveFloor(UNPAUSE_TIME + 1);
-    private final String FIRING_ACTION_ID = randomString();
+    private final String FIRING_CONSUMER_ID = randomString();
 
-    @Mock private Action<Long> mockFiringAction;
+    @Mock private Consumer<Long> mockFiringConsumer;
     @Mock private TimestampValidator mockTimestampValidator;
 
     private OneTimeClockBasedTimer timer;
@@ -35,31 +35,31 @@ public class OneTimeClockBasedTimerImplTests {
     public void setUp() {
         lenient().when(mockTimestampValidator.mostRecentTimestamp())
                 .thenReturn(MOST_RECENT_TIMESTAMP);
-        lenient().when(mockFiringAction.id()).thenReturn(FIRING_ACTION_ID);
+        lenient().when(mockFiringConsumer.id()).thenReturn(FIRING_CONSUMER_ID);
 
-        timer = new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringAction, null,
+        timer = new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringConsumer, null,
                 mockTimestampValidator);
     }
 
     @Test
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(null, FIRING_TIME, mockFiringAction,
+                new OneTimeClockBasedTimerImpl(null, FIRING_TIME, mockFiringConsumer,
                         null, mockTimestampValidator));
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl("", FIRING_TIME, mockFiringAction,
+                new OneTimeClockBasedTimerImpl("", FIRING_TIME, mockFiringConsumer,
                         null, mockTimestampValidator));
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringAction, FIRING_TIME,
+                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringConsumer, FIRING_TIME,
                         mockTimestampValidator));
         assertThrows(IllegalArgumentException.class, () ->
                 new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, null, FIRING_TIME - 1,
                         mockTimestampValidator));
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringAction, PAUSE_TIME,
+                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringConsumer, PAUSE_TIME,
                         null));
         assertThrows(IllegalArgumentException.class, () ->
-                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringAction,
+                new OneTimeClockBasedTimerImpl(ID, FIRING_TIME, mockFiringConsumer,
                         MOST_RECENT_TIMESTAMP + 1, mockTimestampValidator));
     }
 
@@ -74,8 +74,8 @@ public class OneTimeClockBasedTimerImplTests {
     }
 
     @Test
-    public void testActionId() {
-        assertSame(FIRING_ACTION_ID, timer.actionId());
+    public void testConsumerId() {
+        assertSame(FIRING_CONSUMER_ID, timer.consumerId());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class OneTimeClockBasedTimerImplTests {
 
         timer.fire(firingTime);
 
-        verify(mockFiringAction, once()).accept(firingTime);
+        verify(mockFiringConsumer, once()).accept(firingTime);
     }
 
     @Test

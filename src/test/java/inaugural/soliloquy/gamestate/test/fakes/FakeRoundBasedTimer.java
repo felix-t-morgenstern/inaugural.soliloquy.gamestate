@@ -1,23 +1,23 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimer;
 
 public abstract class FakeRoundBasedTimer implements RoundBasedTimer {
     private String _id;
     private int _priority;
     @SuppressWarnings("rawtypes")
-    private Action _action;
+    private Consumer _action;
 
     @SuppressWarnings("rawtypes")
-    FakeRoundBasedTimer(String id, Action action, int priority) {
+    FakeRoundBasedTimer(String id, Consumer action, int priority) {
         _id = id;
         _action = action;
         _priority = priority;
     }
 
     @Override
-    public String actionId() {
+    public String consumerId() {
         return _action.id();
     }
 

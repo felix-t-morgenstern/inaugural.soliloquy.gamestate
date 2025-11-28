@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
@@ -27,29 +27,29 @@ public class RecurringRoundBasedTimerHandlerTests {
 
     private final String RECURRING_TIMER_ID = "recurringRoundBasedTimerId";
 
-    private final String ACTION_ID = "actionId";
+    private final String CONSUMER_ID = "consumerId";
 
     private final int ROUND_MODULO = 456;
     private final int ROUND_OFFSET = 123;
     private final int PRIORITY = 789;
 
     @SuppressWarnings("rawtypes")
-    private Map<String, Action> actions;
+    private Map<String, Consumer> actions;
 
     @SuppressWarnings("rawtypes")
-    @Mock private Action mockAction;
+    @Mock private Consumer mockConsumer;
 
     private final String WRITTEN_VALUE =
-            "{\"id\":\"recurringRoundBasedTimerId\",\"actionId\":\"actionId\"," +
+            "{\"id\":\"recurringRoundBasedTimerId\",\"consumerId\":\"consumerId\"," +
                     "\"roundModulo\":456,\"roundOffset\":123,\"priority\":789}";
 
     private TypeHandler<RecurringRoundBasedTimer> handler;
 
     @BeforeEach
     public void setUp() {
-        lenient().when(mockAction.id()).thenReturn(ACTION_ID);
+        lenient().when(mockConsumer.id()).thenReturn(CONSUMER_ID);
 
-        actions = mapOf(pairOf(ACTION_ID, mockAction));
+        actions = mapOf(pairOf(CONSUMER_ID, mockConsumer));
 
         handler = new RecurringRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, actions::get);
     }
@@ -65,7 +65,7 @@ public class RecurringRoundBasedTimerHandlerTests {
     @Test
     public void testWrite() {
         RecurringRoundBasedTimer recurringTimer = new FakeRecurringRoundBasedTimer(
-                RECURRING_TIMER_ID, mockAction, ROUND_MODULO, ROUND_OFFSET, PRIORITY);
+                RECURRING_TIMER_ID, mockConsumer, ROUND_MODULO, ROUND_OFFSET, PRIORITY);
 
         String writtenValue = handler.write(recurringTimer);
 
@@ -84,7 +84,7 @@ public class RecurringRoundBasedTimerHandlerTests {
 
         assertNotNull(readResult);
         assertEquals(RECURRING_TIMER_ID, readResult.id());
-        assertSame(ACTION_ID, readResult.actionId());
+        assertSame(CONSUMER_ID, readResult.consumerId());
         assertEquals(ROUND_MODULO, readResult.roundModulo());
         assertEquals(ROUND_OFFSET, readResult.roundOffset());
         assertEquals(PRIORITY, readResult.priority());

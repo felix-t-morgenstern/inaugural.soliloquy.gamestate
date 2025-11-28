@@ -3,8 +3,10 @@ package inaugural.soliloquy.gamestate.test.unit.entities.timers;
 import inaugural.soliloquy.gamestate.entities.timers.RecurringRoundBasedTimerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import soliloquy.specs.common.entities.Action;
+import org.mockito.junit.jupiter.MockitoExtension;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.exceptions.EntityDeletedException;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimerManager;
@@ -13,29 +15,24 @@ import static inaugural.soliloquy.tools.random.Random.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class RecurringRoundBasedTimerImplTests {
     private final String TIMER_ID = randomString();
-    private final String ACTION_ID = randomString();
+    private final String CONSUMER_ID = randomString();
     private final int ROUND_MODULO = randomIntWithInclusiveFloor(1);
     private final int ROUND_OFFSET = ROUND_MODULO - 1;
     private final int PRIORITY = randomInt();
 
-    @Mock
-    private Action<Long> mockAction;
-    @Mock
-    private RoundBasedTimerManager mockRoundBasedTimerManager;
+    @Mock private Consumer<Long> mockConsumer;
+    @Mock private RoundBasedTimerManager mockRoundBasedTimerManager;
 
     private RecurringRoundBasedTimer recurringRoundBasedTimer;
 
     @BeforeEach
     public void setUp() {
-        //noinspection unchecked
-        mockAction = mock(Action.class);
-        when(mockAction.id()).thenReturn(ACTION_ID);
+        lenient().when(mockConsumer.id()).thenReturn(CONSUMER_ID);
 
-        mockRoundBasedTimerManager = mock(RoundBasedTimerManager.class);
-
-        recurringRoundBasedTimer = new RecurringRoundBasedTimerImpl(TIMER_ID, mockAction,
+        recurringRoundBasedTimer = new RecurringRoundBasedTimerImpl(TIMER_ID, mockConsumer,
                 ROUND_MODULO, ROUND_OFFSET, PRIORITY,
                 mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                 mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer);
@@ -44,12 +41,12 @@ public class RecurringRoundBasedTimerImplTests {
     @Test
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class, () ->
-                new RecurringRoundBasedTimerImpl(null, mockAction, ROUND_MODULO, ROUND_OFFSET,
+                new RecurringRoundBasedTimerImpl(null, mockConsumer, ROUND_MODULO, ROUND_OFFSET,
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                         mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new RecurringRoundBasedTimerImpl("", mockAction, ROUND_MODULO, ROUND_OFFSET,
+                new RecurringRoundBasedTimerImpl("", mockConsumer, ROUND_MODULO, ROUND_OFFSET,
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                         mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer
                 ));
@@ -59,27 +56,27 @@ public class RecurringRoundBasedTimerImplTests {
                         mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new RecurringRoundBasedTimerImpl(TIMER_ID, mockAction, 0, 0,
+                new RecurringRoundBasedTimerImpl(TIMER_ID, mockConsumer, 0, 0,
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                         mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new RecurringRoundBasedTimerImpl(TIMER_ID, mockAction, ROUND_MODULO, -1,
+                new RecurringRoundBasedTimerImpl(TIMER_ID, mockConsumer, ROUND_MODULO, -1,
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                         mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new RecurringRoundBasedTimerImpl(TIMER_ID, mockAction, ROUND_MODULO, ROUND_MODULO,
+                new RecurringRoundBasedTimerImpl(TIMER_ID, mockConsumer, ROUND_MODULO, ROUND_MODULO,
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                         mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new RecurringRoundBasedTimerImpl(TIMER_ID, mockAction, ROUND_MODULO, ROUND_OFFSET,
+                new RecurringRoundBasedTimerImpl(TIMER_ID, mockConsumer, ROUND_MODULO, ROUND_OFFSET,
                         PRIORITY, null,
                         mockRoundBasedTimerManager::deregisterRecurringRoundBasedTimer
                 ));
         assertThrows(IllegalArgumentException.class, () ->
-                new RecurringRoundBasedTimerImpl(TIMER_ID, mockAction, ROUND_MODULO, ROUND_OFFSET,
+                new RecurringRoundBasedTimerImpl(TIMER_ID, mockConsumer, ROUND_MODULO, ROUND_OFFSET,
                         PRIORITY, mockRoundBasedTimerManager::registerRecurringRoundBasedTimer,
                         null
                 ));
@@ -87,9 +84,9 @@ public class RecurringRoundBasedTimerImplTests {
 
     @Test
     public void testEquals() {
-        RecurringRoundBasedTimer mockTimer = mock(RecurringRoundBasedTimer.class);
+        var mockTimer = mock(RecurringRoundBasedTimer.class);
         when(mockTimer.id()).thenReturn(TIMER_ID);
-        when(mockTimer.actionId()).thenReturn(ACTION_ID);
+        when(mockTimer.consumerId()).thenReturn(CONSUMER_ID);
         when(mockTimer.priority()).thenReturn(PRIORITY);
         when(mockTimer.roundModulo()).thenReturn(ROUND_MODULO);
         when(mockTimer.roundOffset()).thenReturn(ROUND_OFFSET);
@@ -109,14 +106,14 @@ public class RecurringRoundBasedTimerImplTests {
 
     @Test
     public void testActionId() {
-        assertEquals(ACTION_ID, recurringRoundBasedTimer.actionId());
+        assertEquals(CONSUMER_ID, recurringRoundBasedTimer.consumerId());
     }
 
     @Test
     public void testRun() {
         recurringRoundBasedTimer.run();
 
-        verify(mockAction).accept(null);
+        verify(mockConsumer).accept(null);
         verify(mockRoundBasedTimerManager, never())
                 .deregisterRecurringRoundBasedTimer(recurringRoundBasedTimer);
         assertFalse(recurringRoundBasedTimer.isDeleted());

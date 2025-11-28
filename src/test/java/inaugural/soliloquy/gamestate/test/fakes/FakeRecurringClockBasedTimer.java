@@ -55,7 +55,7 @@ public class FakeRecurringClockBasedTimer implements RecurringClockBasedTimer {
     }
 
     @Override
-    public String actionId() {
+    public String consumerId() {
         return null;
     }
 

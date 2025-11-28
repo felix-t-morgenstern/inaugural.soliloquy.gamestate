@@ -9,6 +9,8 @@ import inaugural.soliloquy.gamestate.infrastructure.GameSaveBlockerImpl;
 import inaugural.soliloquy.gamestate.persistence.*;
 import inaugural.soliloquy.tools.collections.Collections;
 import inaugural.soliloquy.tools.module.AbstractModule;
+import soliloquy.specs.common.entities.*;
+import soliloquy.specs.common.entities.Runnable;
 import soliloquy.specs.common.persistence.PersistenceHandler;
 import soliloquy.specs.game.Module;
 import soliloquy.specs.gamestate.entities.Character;
@@ -37,7 +39,14 @@ public class GameStateModule extends AbstractModule {
                            Map<String, Path> fileLocations,
                            int gameZoneHandlerTilesPerBatch,
                            int gameZoneHandlerThreadPoolSize,
-                           Consumer<Throwable> handleError) {
+                           Consumer<Throwable> handleError,
+                           Map<String, Runnable> runnables,
+                           @SuppressWarnings("rawtypes") Map<String, Supplier> suppliers,
+                           @SuppressWarnings("rawtypes")
+                           Map<String, soliloquy.specs.common.entities.Consumer> consumers,
+                           @SuppressWarnings("rawtypes") Map<String, BiConsumer> biConsumers,
+                           @SuppressWarnings("rawtypes") Map<String, Function> functions,
+                           @SuppressWarnings("rawtypes") Map<String, BiFunction> biFunctions) {
         var persistenceHandler = commonModule.provide(PersistenceHandler.class);
         @SuppressWarnings("rawtypes") var mapHandler =
                 persistenceHandler.<Map>getTypeHandler(Map.class.getCanonicalName());
@@ -102,7 +111,7 @@ public class GameStateModule extends AbstractModule {
                         ruleset.groundTypes()::get);
 
         var gameZoneHandler = new GameZoneHandler(gameZoneFactory, tileHandler, mapHandler,
-                ruleset.actions()::get, gameZoneHandlerTilesPerBatch,
+                consumers::get, gameZoneHandlerTilesPerBatch,
                 gameZoneHandlerThreadPoolSize);
 
         var gameZoneRepo = new GameZoneRepoImpl(gameZoneHandler, fileLocations);

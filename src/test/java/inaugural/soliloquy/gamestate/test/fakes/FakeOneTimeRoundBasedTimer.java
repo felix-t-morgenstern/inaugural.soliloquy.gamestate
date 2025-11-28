@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.test.fakes;
 
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 
 import java.util.function.Consumer;
@@ -11,7 +10,8 @@ public class FakeOneTimeRoundBasedTimer extends FakeRoundBasedTimer
 
     private int _roundWhenGoesOff;
 
-    public FakeOneTimeRoundBasedTimer(String id, @SuppressWarnings("rawtypes") Action action,
+    public FakeOneTimeRoundBasedTimer(String id, @SuppressWarnings("rawtypes")
+                                      soliloquy.specs.common.entities.Consumer action,
                                       int roundWhenGoesOff, int priority) {
         super(id, action, priority);
         _roundWhenGoesOff = roundWhenGoesOff;

@@ -1,7 +1,6 @@
 package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.RecurringRoundBasedTimer;
 
 import java.util.function.Consumer;
@@ -12,8 +11,9 @@ public class RecurringRoundBasedTimerImpl extends AbstractRoundBasedTimer<Recurr
     private final int ROUND_OFFSET;
 
     @SuppressWarnings("rawtypes")
-    public RecurringRoundBasedTimerImpl(String timerId, Action action, int roundModulo,
-                                        int roundOffset, int priority,
+    public RecurringRoundBasedTimerImpl(String timerId,
+                                        soliloquy.specs.common.entities.Consumer action,
+                                        int roundModulo, int roundOffset, int priority,
                                         Consumer<RecurringRoundBasedTimer>
                                                 addRecurringRoundBasedTimerToRoundManager,
                                         Consumer<RecurringRoundBasedTimer>

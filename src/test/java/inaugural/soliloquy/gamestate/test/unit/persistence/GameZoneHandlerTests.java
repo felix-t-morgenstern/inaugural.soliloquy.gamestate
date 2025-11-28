@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
@@ -26,8 +26,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GameZoneHandlerTests {
-    private final String ENTRY_ACTION_ID = randomString();
-    private final String EXIT_ACTION_ID = randomString();
+    private final String ENTRY_CONSUMER_ID = randomString();
+    private final String EXIT_CONSUMER_ID = randomString();
     private final String ID = randomString();
     private final String NAME = randomString();
     // Arbitrary numbers must be chosen here so the tiles written in the output will be of a
@@ -44,12 +44,12 @@ public class GameZoneHandlerTests {
     @SuppressWarnings("rawtypes") private TypeHandler<Map> mockMapHandler;
     private Map<String, Object> mockData;
     /** @noinspection rawtypes */
-    private Action mockEntryAction;
+    private Consumer mockEntryConsumer;
     /** @noinspection rawtypes */
-    private Action mockExitAction;
-    @SuppressWarnings("rawtypes") private Function<String, Action> mockActionLookup;
-    @SuppressWarnings("rawtypes") private List<Action> mockZoneOnEntry;
-    @SuppressWarnings("rawtypes") private List<Action> mockZoneOnExit;
+    private Consumer mockExitConsumer;
+    @SuppressWarnings("rawtypes") private Function<String, Consumer> mockConsumerLookup;
+    @SuppressWarnings("rawtypes") private List<Consumer> mockZoneOnEntry;
+    @SuppressWarnings("rawtypes") private List<Consumer> mockZoneOnExit;
     private Set<Tile> mockZoneTiles;
     @Mock private GameZone mockGameZone;
     @Mock private GameZoneFactory mockGameZoneFactory;
@@ -61,7 +61,7 @@ public class GameZoneHandlerTests {
                     "\"onExit\":[\"%s\"],\"maxX\":%d," +
                     "\"maxY\":%d,\"tiles\":[\"{\\\"x\\\":%d,\\\"y\\\":%d," +
                     "\\\"z\\\":%d,\\\"tile\\\":\\\"%s\\\"}\"]}", ID, NAME, DATA_STR,
-            ENTRY_ACTION_ID, EXIT_ACTION_ID, MAX_COORDINATES.X, MAX_COORDINATES.Y, TILE_LOCATION.X,
+            ENTRY_CONSUMER_ID, EXIT_CONSUMER_ID, MAX_COORDINATES.X, MAX_COORDINATES.Y, TILE_LOCATION.X,
             TILE_LOCATION.Y, TILE_LOCATION.Z, TILE_STR);
 
     @BeforeEach
@@ -77,13 +77,13 @@ public class GameZoneHandlerTests {
         mockMapHandler = dataAndHandler.handler;
 
         var actionsAndLookup =
-                generateMockLookupFunctionWithId(Action.class, ENTRY_ACTION_ID, EXIT_ACTION_ID);
-        mockActionLookup = actionsAndLookup.lookup;
-        mockEntryAction = actionsAndLookup.entities.get(0);
-        mockExitAction = actionsAndLookup.entities.get(1);
+                generateMockLookupFunctionWithId(Consumer.class, ENTRY_CONSUMER_ID, EXIT_CONSUMER_ID);
+        mockConsumerLookup = actionsAndLookup.lookup;
+        mockEntryConsumer = actionsAndLookup.entities.get(0);
+        mockExitConsumer = actionsAndLookup.entities.get(1);
 
-        mockZoneOnEntry = generateMockList(mockEntryAction);
-        mockZoneOnExit = generateMockList(mockExitAction);
+        mockZoneOnEntry = generateMockList(mockEntryConsumer);
+        mockZoneOnExit = generateMockList(mockExitConsumer);
 
         mockZoneTiles = generateMockSet(mockTile);
 
@@ -98,30 +98,30 @@ public class GameZoneHandlerTests {
         lenient().when(mockGameZoneFactory.make(anyString(), any(), any())).thenReturn(mockGameZone);
 
         handler = new GameZoneHandler(mockGameZoneFactory, mockTileHandler,
-                mockMapHandler, mockActionLookup, TILES_PER_BATCH, THREAD_POOL_SIZE);
+                mockMapHandler, mockConsumerLookup, TILES_PER_BATCH, THREAD_POOL_SIZE);
     }
 
     @Test
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneHandler(null, mockTileHandler,
-                        mockMapHandler, mockActionLookup, TILES_PER_BATCH, THREAD_POOL_SIZE));
+                        mockMapHandler, mockConsumerLookup, TILES_PER_BATCH, THREAD_POOL_SIZE));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneHandler(mockGameZoneFactory, null,
-                        mockMapHandler, mockActionLookup, TILES_PER_BATCH, THREAD_POOL_SIZE));
+                        mockMapHandler, mockConsumerLookup, TILES_PER_BATCH, THREAD_POOL_SIZE));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneHandler(mockGameZoneFactory, mockTileHandler,
-                        null, mockActionLookup, TILES_PER_BATCH, THREAD_POOL_SIZE));
+                        null, mockConsumerLookup, TILES_PER_BATCH, THREAD_POOL_SIZE));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneHandler(mockGameZoneFactory, mockTileHandler,
                         mockMapHandler, null, TILES_PER_BATCH, THREAD_POOL_SIZE));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneHandler(mockGameZoneFactory, mockTileHandler,
-                        mockMapHandler, mockActionLookup, randomIntWithInclusiveCeiling(0),
+                        mockMapHandler, mockConsumerLookup, randomIntWithInclusiveCeiling(0),
                         THREAD_POOL_SIZE));
         assertThrows(IllegalArgumentException.class,
                 () -> new GameZoneHandler(mockGameZoneFactory, mockTileHandler,
-                        mockMapHandler, mockActionLookup, TILES_PER_BATCH,
+                        mockMapHandler, mockConsumerLookup, TILES_PER_BATCH,
                         randomIntWithInclusiveCeiling(0)));
     }
 
@@ -137,11 +137,11 @@ public class GameZoneHandlerTests {
         verify(mockGameZone, times(2)).onEntry();
         verify(mockZoneOnEntry).size();
         verify(mockZoneOnEntry).iterator();
-        verify(mockEntryAction).id();
+        verify(mockEntryConsumer).id();
         verify(mockGameZone, times(2)).onExit();
         verify(mockZoneOnEntry).size();
         verify(mockZoneOnEntry).iterator();
-        verify(mockExitAction).id();
+        verify(mockExitConsumer).id();
         verify(mockGameZone).maxCoordinates();
         verify(mockGameZone).tiles();
         verify(mockZoneTiles).iterator();
@@ -176,13 +176,13 @@ public class GameZoneHandlerTests {
         verify(mockMapHandler).read(DATA_STR);
         verify(mockGameZoneFactory).make(eq(ID), eq(MAX_COORDINATES), same(mockData));
         verify(mockGameZone).setName(NAME);
-        verify(mockActionLookup, times(2)).apply(anyString());
-        verify(mockActionLookup).apply(ENTRY_ACTION_ID);
+        verify(mockConsumerLookup, times(2)).apply(anyString());
+        verify(mockConsumerLookup).apply(ENTRY_CONSUMER_ID);
         verify(mockGameZone).onEntry();
-        verify(mockZoneOnEntry).add(mockEntryAction);
-        verify(mockActionLookup).apply(EXIT_ACTION_ID);
+        verify(mockZoneOnEntry).add(mockEntryConsumer);
+        verify(mockConsumerLookup).apply(EXIT_CONSUMER_ID);
         verify(mockGameZone).onExit();
-        verify(mockZoneOnExit).add(mockExitAction);
+        verify(mockZoneOnExit).add(mockExitConsumer);
         verify(mockTileHandler).read(TILE_STR);
         verify(mockGameZone).putTile(same(mockTile), eq(TILE_LOCATION));
     }

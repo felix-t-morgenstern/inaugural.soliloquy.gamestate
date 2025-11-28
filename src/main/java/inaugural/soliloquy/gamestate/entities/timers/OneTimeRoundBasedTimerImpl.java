@@ -1,6 +1,5 @@
 package inaugural.soliloquy.gamestate.entities.timers;
 
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 
 import java.util.function.Consumer;
@@ -9,7 +8,8 @@ public class OneTimeRoundBasedTimerImpl extends AbstractRoundBasedTimer<OneTimeR
         implements OneTimeRoundBasedTimer {
     private final int ROUND_WHEN_GOES_OFF;
 
-    public OneTimeRoundBasedTimerImpl(String timerId, @SuppressWarnings("rawtypes") Action action,
+    public OneTimeRoundBasedTimerImpl(String timerId, @SuppressWarnings("rawtypes")
+                                      soliloquy.specs.common.entities.Consumer action,
                                       int roundWhenGoesOff, int priority,
                                       Consumer<OneTimeRoundBasedTimer>
                                               addRecurringTimerToRoundManager,

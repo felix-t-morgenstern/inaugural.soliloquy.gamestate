@@ -3,7 +3,6 @@ package inaugural.soliloquy.gamestate.entities;
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.collections.Collections;
 import org.apache.commons.lang3.function.TriConsumer;
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.common.valueobjects.Coordinate2d;
 import soliloquy.specs.common.valueobjects.Coordinate3d;
 import soliloquy.specs.gamestate.entities.Character;
@@ -30,9 +29,9 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
     private final Map<WallSegmentOrientation, Map<Integer, Map<Integer, Map<Integer, WallSegment>>>>
             SEGMENTS;
     @SuppressWarnings("rawtypes")
-    private final List<Action> ENTRY_ACTIONS;
+    private final List<soliloquy.specs.common.entities.Consumer> ENTRY_ACTIONS;
     @SuppressWarnings("rawtypes")
-    private final List<Action> EXIT_ACTIONS;
+    private final List<soliloquy.specs.common.entities.Consumer> EXIT_ACTIONS;
     private final Map<String, Object> DATA;
     private final Map<UUID, Character> CHARACTERS_IN_GAME_ZONE;
     private final TriConsumer<GameZoneTerrain, GameZone, Coordinate3d> ASSIGN_LOC_AFTER_PLACE;
@@ -306,13 +305,13 @@ public class GameZoneImpl extends HasDeletionInvariants implements GameZone {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public List<Action> onEntry() {
+    public List<soliloquy.specs.common.entities.Consumer> onEntry() {
         return ENTRY_ACTIONS;
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    public List<Action> onExit() {
+    public List<soliloquy.specs.common.entities.Consumer> onExit() {
         return EXIT_ACTIONS;
     }
 

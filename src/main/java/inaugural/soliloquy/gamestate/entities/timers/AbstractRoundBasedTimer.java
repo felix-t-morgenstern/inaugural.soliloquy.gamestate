@@ -2,7 +2,6 @@ package inaugural.soliloquy.gamestate.entities.timers;
 
 import inaugural.soliloquy.gamestate.entities.HasDeletionInvariants;
 import inaugural.soliloquy.tools.Check;
-import soliloquy.specs.common.entities.Action;
 import soliloquy.specs.gamestate.entities.Deletable;
 import soliloquy.specs.gamestate.entities.timers.RoundBasedTimer;
 
@@ -14,11 +13,12 @@ public abstract class AbstractRoundBasedTimer<T extends RoundBasedTimer>
     private final Consumer<T> REMOVE_TIMER_FROM_MANAGER;
 
     @SuppressWarnings("rawtypes")
-    private final Action ACTION;
+    private final soliloquy.specs.common.entities.Consumer ACTION;
     private final String ID;
     private final int PRIORITY;
 
-    AbstractRoundBasedTimer(String timerId, @SuppressWarnings("rawtypes") Action action,
+    AbstractRoundBasedTimer(String timerId, @SuppressWarnings("rawtypes")
+                            soliloquy.specs.common.entities.Consumer action,
                             int priority, Consumer<T> addTimerToManager,
                             Consumer<T> removeTimerFromManager) {
         ID = Check.ifNullOrEmpty(timerId, "timerId");
@@ -49,7 +49,7 @@ public abstract class AbstractRoundBasedTimer<T extends RoundBasedTimer>
     }
 
     @Override
-    public String actionId() {
+    public String consumerId() {
         return ACTION.id();
     }
 
@@ -73,7 +73,7 @@ public abstract class AbstractRoundBasedTimer<T extends RoundBasedTimer>
     @SuppressWarnings({"SpellCheckingInspection"})
     protected boolean equalz(T o) {
         return ID.equals(o.id()) &&
-                actionId().equals(o.actionId()) &&
+                consumerId().equals(o.consumerId()) &&
                 PRIORITY == o.priority();
     }
 }

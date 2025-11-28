@@ -2,7 +2,7 @@ package inaugural.soliloquy.gamestate.persistence;
 
 import inaugural.soliloquy.tools.Check;
 import inaugural.soliloquy.tools.persistence.AbstractTypeHandler;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.gamestate.entities.timers.RecurringClockBasedTimer;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
 
@@ -12,13 +12,13 @@ public class RecurringClockBasedTimerHandler
         extends AbstractTypeHandler<RecurringClockBasedTimer> {
     private final ClockBasedTimerFactory CLOCK_BASED_TIMER_FACTORY;
     @SuppressWarnings("rawtypes")
-    private final Function<String, Action> GET_ACTION;
+    private final Function<String, Consumer> GET_CONSUMER;
 
     public RecurringClockBasedTimerHandler(ClockBasedTimerFactory clockBasedTimerFactory,
                                            @SuppressWarnings("rawtypes")
-                                           Function<String, Action> getAction) {
+                                           Function<String, Consumer> getConsumer) {
         CLOCK_BASED_TIMER_FACTORY = Check.ifNull(clockBasedTimerFactory, "clockBasedTimerFactory");
-        GET_ACTION = Check.ifNull(getAction, "getAction");
+        GET_CONSUMER = Check.ifNull(getConsumer, "getConsumer");
     }
 
     @SuppressWarnings("unchecked")
@@ -28,7 +28,7 @@ public class RecurringClockBasedTimerHandler
 
         RecurringClockBasedTimerDTO dto = JSON.fromJson(data, RecurringClockBasedTimerDTO.class);
 
-        var firingAction = GET_ACTION.apply(dto.actionId);
+        var firingAction = GET_CONSUMER.apply(dto.consumerId);
 
         //noinspection unchecked
         return CLOCK_BASED_TIMER_FACTORY.make(dto.id, dto.periodDuration, dto.periodModuloOffset,
@@ -43,7 +43,7 @@ public class RecurringClockBasedTimerHandler
         RecurringClockBasedTimerDTO dto = new RecurringClockBasedTimerDTO();
 
         dto.id = recurringClockBasedTimer.id();
-        dto.actionId = recurringClockBasedTimer.actionId();
+        dto.consumerId = recurringClockBasedTimer.consumerId();
         dto.periodDuration = recurringClockBasedTimer.periodDuration();
         dto.periodModuloOffset = recurringClockBasedTimer.periodModuloOffset();
         dto.fireMultipleTimesPerPeriodElapsed =
@@ -56,7 +56,7 @@ public class RecurringClockBasedTimerHandler
 
     private static class RecurringClockBasedTimerDTO {
         String id;
-        String actionId;
+        String consumerId;
         int periodDuration;
         int periodModuloOffset;
         boolean fireMultipleTimesPerPeriodElapsed;

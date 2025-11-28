@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeClockBasedTimer;
 import soliloquy.specs.gamestate.factories.ClockBasedTimerFactory;
@@ -23,32 +23,32 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class OneTimeClockBasedTimerHandlerTests {
     private final String ONE_TIME_CLOCK_TIMER_ID = randomString();
-    private final String ACTION_ID = randomString();
+    private final String CONSUMER_ID = randomString();
     private final long FIRING_TIME = randomLong();
     private final long PAUSE_TIME = randomLong();
 
     @SuppressWarnings("rawtypes")
-    @Mock private Action mockAction;
+    @Mock private Consumer mockConsumer;
     @Mock private OneTimeClockBasedTimer mockOneTimeClockBasedTimer;
     @Mock private ClockBasedTimerFactory mockClockBasedTimerFactory;
 
     @SuppressWarnings("rawtypes")
-    private Map<String, Action> actions = mapOf(pairOf(ACTION_ID, mockAction));
+    private Map<String, Consumer> actions = mapOf(pairOf(CONSUMER_ID, mockConsumer));
 
     private TypeHandler<OneTimeClockBasedTimer> handler;
 
     private final String WRITTEN_VALUE = String.format(
-            "{\"id\":\"%s\",\"actionId\":\"%s\",\"firingTime\":%d,\"pausedTime\":%d}",
-            ONE_TIME_CLOCK_TIMER_ID, ACTION_ID, FIRING_TIME, PAUSE_TIME);
+            "{\"id\":\"%s\",\"consumerId\":\"%s\",\"firingTime\":%d,\"pausedTime\":%d}",
+            ONE_TIME_CLOCK_TIMER_ID, CONSUMER_ID, FIRING_TIME, PAUSE_TIME);
 
     @BeforeEach
     public void setUp() {
-        lenient().when(mockAction.id()).thenReturn(ACTION_ID);
+        lenient().when(mockConsumer.id()).thenReturn(CONSUMER_ID);
 
         lenient().when(mockClockBasedTimerFactory.make(anyString(), anyLong(), any(), anyLong()))
                 .thenReturn(mockOneTimeClockBasedTimer);
 
-        actions = mapOf(pairOf(ACTION_ID, mockAction));
+        actions = mapOf(pairOf(CONSUMER_ID, mockConsumer));
 
         handler = new OneTimeClockBasedTimerHandler(mockClockBasedTimerFactory, actions::get);
     }
@@ -66,7 +66,7 @@ public class OneTimeClockBasedTimerHandlerTests {
         when(mockOneTimeClockBasedTimer.id()).thenReturn(ONE_TIME_CLOCK_TIMER_ID);
         when(mockOneTimeClockBasedTimer.firingTime()).thenReturn(FIRING_TIME);
         when(mockOneTimeClockBasedTimer.pausedTimestamp()).thenReturn(PAUSE_TIME);
-        when(mockOneTimeClockBasedTimer.actionId()).thenReturn(ACTION_ID);
+        when(mockOneTimeClockBasedTimer.consumerId()).thenReturn(CONSUMER_ID);
 
         var result = handler.write(mockOneTimeClockBasedTimer);
 
@@ -85,7 +85,7 @@ public class OneTimeClockBasedTimerHandlerTests {
         assertSame(mockOneTimeClockBasedTimer, result);
         //noinspection unchecked
         verify(mockClockBasedTimerFactory)
-                .make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, mockAction, PAUSE_TIME);
+                .make(ONE_TIME_CLOCK_TIMER_ID, FIRING_TIME, mockConsumer, PAUSE_TIME);
     }
 
     @Test

@@ -40,8 +40,6 @@ public class CharacterEventsImplTests {
 
     @BeforeEach
     public void setUp() {
-        mockCharacter = mock(Character.class);
-
         characterEvents = new CharacterEventsImpl(mockCharacter);
     }
 

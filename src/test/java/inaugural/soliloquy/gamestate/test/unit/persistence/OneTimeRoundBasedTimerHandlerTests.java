@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import soliloquy.specs.common.entities.Action;
+import soliloquy.specs.common.entities.Consumer;
 import soliloquy.specs.common.persistence.TypeHandler;
 import soliloquy.specs.gamestate.entities.timers.OneTimeRoundBasedTimer;
 import soliloquy.specs.gamestate.factories.RoundBasedTimerFactory;
@@ -27,36 +27,36 @@ public class OneTimeRoundBasedTimerHandlerTests {
 
     private final String ONE_TIME_TIMER_ID = "oneTimeRoundBasedTimerId";
 
-    private final String ACTION_ID = "actionId";
+    private final String CONSUMER_ID = "consumerId";
 
     @SuppressWarnings("rawtypes")
-    @Mock private Map<String, Action> actions;
+    @Mock private Map<String, Consumer> consumers;
 
     private final int ROUND_WHEN_GOES_OFF = 123123123;
     private final int PRIORITY = 456;
 
     @SuppressWarnings("rawtypes")
-    @Mock private Action mockAction;
+    @Mock private Consumer mockConsumer;
 
     private final String WRITTEN_VALUE =
-            "{\"id\":\"oneTimeRoundBasedTimerId\",\"actionId\":\"actionId\",\"round\":123123123," +
-                    "\"priority\":456}";
+            "{\"id\":\"oneTimeRoundBasedTimerId\",\"consumerId\":\"consumerId\"," +
+                    "\"round\":123123123,\"priority\":456}";
 
     private TypeHandler<OneTimeRoundBasedTimer> handler;
 
     @BeforeEach
     public void setUp() {
-        lenient().when(mockAction.id()).thenReturn(ACTION_ID);
+        lenient().when(mockConsumer.id()).thenReturn(CONSUMER_ID);
 
-        actions = mapOf(pairOf(ACTION_ID, mockAction));
+        consumers = mapOf(pairOf(CONSUMER_ID, mockConsumer));
 
-        handler = new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, actions::get);
+        handler = new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, consumers::get);
     }
 
     @Test
     public void testConstructorWithInvalidArgs() {
         assertThrows(IllegalArgumentException.class,
-                () -> new OneTimeRoundBasedTimerHandler(null, actions::get));
+                () -> new OneTimeRoundBasedTimerHandler(null, consumers::get));
         assertThrows(IllegalArgumentException.class,
                 () -> new OneTimeRoundBasedTimerHandler(TURN_BASED_TIMER_FACTORY, null));
     }
@@ -64,7 +64,7 @@ public class OneTimeRoundBasedTimerHandlerTests {
     @Test
     public void testWrite() {
         OneTimeRoundBasedTimer oneTimeRoundBasedTimer = new FakeOneTimeRoundBasedTimer(
-                ONE_TIME_TIMER_ID, mockAction, ROUND_WHEN_GOES_OFF, PRIORITY);
+                ONE_TIME_TIMER_ID, mockConsumer, ROUND_WHEN_GOES_OFF, PRIORITY);
 
         String writtenValue = handler.write(oneTimeRoundBasedTimer);
 
@@ -83,7 +83,7 @@ public class OneTimeRoundBasedTimerHandlerTests {
 
         assertNotNull(readResult);
         assertEquals(ONE_TIME_TIMER_ID, readResult.id());
-        assertSame(ACTION_ID, readResult.actionId());
+        assertSame(CONSUMER_ID, readResult.consumerId());
         assertEquals(ROUND_WHEN_GOES_OFF, readResult.roundWhenGoesOff());
         assertEquals(PRIORITY, readResult.priority());
     }
