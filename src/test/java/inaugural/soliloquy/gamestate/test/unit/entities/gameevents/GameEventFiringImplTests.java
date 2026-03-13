@@ -1,7 +1,7 @@
 package inaugural.soliloquy.gamestate.test.unit.entities.gameevents;
 
 import inaugural.soliloquy.gamestate.entities.gameevents.GameEventFiringImpl;
-import inaugural.soliloquy.tools.CheckedExceptionWrapper;
+import inaugural.soliloquy.tools.exception.CheckedExceptionWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
